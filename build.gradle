@@ -1,37 +1,32 @@
 apply plugin: 'com.github.ben-manes.versions'
 
-ext {
-    var = '3.4.1'
-    var1 = '1.8'
-}
-
 buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-        google()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
-        classpath 'com.google.gms:google-services:4.3.0'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.21.0'
+	repositories {
+		mavenCentral()
+		jcenter()
+		google()
+	}
+	dependencies {
+		classpath 'com.android.tools.build:gradle:3.4.2'
+		classpath 'com.google.gms:google-services:4.3.0'
+		classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.21.0'
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
+		// NOTE: Do not place your application dependencies here; they belong
+		// in the individual module build.gradle files
+	}
 }
 
 allprojects {
-    repositories {
-        maven { url "https://jitpack.io" }
-        maven { url "https://maven.google.com" }
-        mavenCentral()
-        jcenter()
-        google()
-    }
+	repositories {
+		maven { url "https://jitpack.io" }
+		maven { url "https://maven.google.com" }
+		mavenCentral()
+		jcenter()
+		google()
+	}
 }
 
 task clean(type: Delete) {
-    delete rootProject.buildDir
+	delete rootProject.buildDir
 }
