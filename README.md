@@ -1,7 +1,7 @@
 # MeetApps  [![](https://img.shields.io/github/license/muramrr/MeetApps.svg)](https://github.com/muramrr/MeetApps/blob/master/LICENSE)
 A simple dating app based on tinder-style cards. WIP 15% done.
 
-Created with such libraries/patterns:
+Used libraries/patterns:
 * butterknife;
 * databinding;
 * glide;
