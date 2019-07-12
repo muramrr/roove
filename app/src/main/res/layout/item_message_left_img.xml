@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="5dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/item_message_ivUserPic"
+        android:layout_alignBottom="@+id/contentMessageChat"
+        android:layout_alignParentStart="true"
+        android:layout_margin="5dp"
+        android:src="@drawable/account_icon"/>
+
+    <me.himanshusoni.chatmessageview.ChatMessageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/contentMessageChat"
+        android:layout_toEndOf="@id/item_message_ivUserPic"
+        app:cmv_arrowMargin="3dp"
+        app:cmv_arrowPosition="left"
+        app:cmv_backgroundColor="@color/colorAccent"
+        app:cmv_backgroundColorPressed="#FFBABABA"
+        app:cmv_contentPadding="10dp"
+        app:cmv_cornerRadius="3dp"
+        app:cmv_showArrow="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#000"
+            android:id="@+id/img_chat"
+            android:minHeight="100dp"
+            android:minWidth="100dp"
+            android:maxHeight="150dp"
+            android:maxWidth="150dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvLocation"
+            android:layout_marginTop="2dp"
+            android:layout_below="@+id/img_chat"
+            android:padding="10dp"
+            android:text="Location textview"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
+    </me.himanshusoni.chatmessageview.ChatMessageView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_message_tvTimestamp"
+        android:layout_below="@+id/contentMessageChat"
+        android:layout_toEndOf="@id/item_message_ivUserPic"
+        android:layout_marginStart="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="3dp"
+        android:text="dd/mm/yyyy"
+        android:textSize="10sp" />
+
+
+</RelativeLayout>

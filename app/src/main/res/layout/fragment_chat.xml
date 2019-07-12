@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/material_blue_100"
+	android:id="@+id/contentRoot"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<androidx.recyclerview.widget.RecyclerView
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:background="@color/material_orange_100"
+		android:id="@+id/messageRecyclerView"
+		android:layout_above="@+id/content_message"
+		android:layout_alignParentTop="true"
+		android:scrollbars="none"
+		tools:listitem="@layout/message_item"/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/content_message"
+		android:layout_alignParentBottom="true"
+		android:background="#fff"
+		android:padding="2dp">
+
+		<ImageView
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:id="@+id/buttonAttachements"
+			android:layout_alignParentStart="true"
+			android:layout_centerVertical="true"
+			android:padding="4dp"
+			android:src="@drawable/ic_attachment"/>
+
+		<EditText
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/editTextMessage"
+			android:layout_toStartOf="@+id/buttonMessage"
+			android:layout_toEndOf="@+id/buttonAttachements"
+			android:hint="Enter message"/>
+
+		<ImageView
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:id="@+id/buttonMessage"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:onClick="sendMessage"
+			android:padding="4dp"
+			android:src="@android:drawable/ic_menu_send"/>
+	</RelativeLayout>
+
+</RelativeLayout>

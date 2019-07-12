@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/app_logo"
+            android:src="@drawable/app_logo"
+            android:id="@+id/dialog_reg_imageview_logo"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="I'm a..."
+            android:textColor="@color/material_black_1000"
+            android:textSize="26sp" />
+
+        <co.ceryle.segmentedbutton.SegmentedButtonGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:id="@+id/dialog_registr_sbg_gender"
+            android:gravity="center"
+            app:sbg_animateSelector="bounce"
+            app:sbg_animateSelectorDuration="1000"
+            app:sbg_backgroundColor="@color/material_white_1000"
+            app:sbg_dividerColor="@color/material_black_1000"
+            app:sbg_dividerPadding="10dp"
+            app:sbg_dividerRadius="10dp"
+            app:sbg_dividerSize="1dp"
+            app:sbg_position="0"
+            app:sbg_radius="2dp"
+            app:sbg_ripple="true"
+            app:sbg_rippleColor="@color/material_blue_400"
+            app:sbg_selectorColor="@color/material_blue_400">
+
+            <co.ceryle.segmentedbutton.SegmentedButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:sb_drawable="@mipmap/ic_diag_reg_gender_male"
+                app:sb_drawableGravity="top"
+                app:sb_text="Male"
+                app:sb_textColor_onSelection="@color/material_black_1000"
+                app:sb_textSize="20sp"/>
+
+            <co.ceryle.segmentedbutton.SegmentedButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:sb_drawable="@mipmap/ic_diag_reg_gender_female"
+                app:sb_drawableGravity="top"
+                app:sb_text="Female"
+                app:sb_textColor_onSelection="@color/material_black_1000"
+                app:sb_textSize="20sp"/>
+
+
+        </co.ceryle.segmentedbutton.SegmentedButtonGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Interested in meeting with..."
+            android:textColor="@color/material_black_1000"
+            android:textSize="26sp" />
+
+        <co.ceryle.segmentedbutton.SegmentedButtonGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:id="@+id/dialog_registr_sbg_preferedgender"
+            android:gravity="center"
+            app:sbg_animateSelector="bounce"
+            app:sbg_animateSelectorDuration="1000"
+            app:sbg_backgroundColor="@color/material_white_1000"
+            app:sbg_dividerColor="@color/material_black_1000"
+            app:sbg_dividerPadding="10dp"
+            app:sbg_dividerRadius="10dp"
+            app:sbg_dividerSize="1dp"
+            app:sbg_position="0"
+            app:sbg_radius="2dp"
+            app:sbg_ripple="true"
+            app:sbg_rippleColor="@color/material_orange_600"
+            app:sbg_selectorColor="@color/material_orange_600">
+
+            <co.ceryle.segmentedbutton.SegmentedButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:sb_drawable="@mipmap/ic_diag_reg_prefgender_male"
+                app:sb_drawableGravity="top"
+                app:sb_text="Male"
+                app:sb_textColor_onSelection="@color/material_black_1000"
+                app:sb_textSize="20sp"/>
+
+            <co.ceryle.segmentedbutton.SegmentedButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:sb_drawable="@mipmap/ic_diag_reg_prefgender_female"
+                app:sb_drawableGravity="top"
+                app:sb_text="Female"
+                app:sb_textColor_onSelection="@color/material_black_1000"
+                app:sb_textSize="20sp"/>
+
+            <co.ceryle.segmentedbutton.SegmentedButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:sb_drawable="@mipmap/ic_diag_reg_prefgender_both"
+                app:sb_drawableGravity="top"
+                app:sb_text="Both"
+                app:sb_textColor_onSelection="@color/material_black_1000"
+                app:sb_textSize="20sp"/>
+
+        </co.ceryle.segmentedbutton.SegmentedButtonGroup>
+
+    <com.mmdev.meetups.ui.custom_views.ProgressButton
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:id="@+id/diag_reg_btn_done"
+        android:layout_margin="20dp"
+        app:backgroundColor="@color/material_blue_a700"
+        app:text="DONE!"/>
+
+</LinearLayout>
+

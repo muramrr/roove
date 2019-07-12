@@ -1,0 +1,17 @@
+*.iml
+*.apk
+*.ap_
+*.dex
+.DS_Store
+.externalNativeBuild
+.gradle
+.idea/
+google-services.json
+/local.properties
+/build
+/bin/
+/gen/
+/androidTest/
+/test/
+/captures
+
