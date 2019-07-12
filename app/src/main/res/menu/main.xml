@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/action_messages"
+        android:onClick="MessagesClick"
+        android:icon="@drawable/ic_toolbar_message_white"
+        android:orderInCategory="300"
+        android:title="messages"
+        app:showAsAction="ifRoom"/>
+
+</menu>
