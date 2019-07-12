@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_feed"
+            android:icon="@drawable/feed_icon"
+            android:title="Feed" />
+        <item
+            android:id="@+id/nav_events"
+            android:icon="@drawable/events_icon"
+            android:title="Events" />
+        <item
+            android:id="@+id/nav_post"
+            android:icon="@drawable/post_icon"
+            android:title="Post" />
+        <item
+            android:id="@+id/nav_notifications"
+            android:icon="@drawable/notifications_icon"
+            android:title="Notifications" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_account"
+                android:icon="@drawable/account_icon"
+                android:title="Account" />
+            <item
+                android:id="@+id/nav_log_out"
+                android:icon="@drawable/log_out_icon"
+                android:title="Log Out" />
+        </menu>
+    </item>
+
+</menu>

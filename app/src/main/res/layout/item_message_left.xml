@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:paddingEnd="60dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/item_message_ivUserPic"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@id/item_message_tvMessage"
+        android:layout_margin="5dp"
+        android:src="@drawable/account_icon" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/left_chat_message"
+        android:id="@+id/item_message_tvMessage"
+        android:layout_toEndOf="@id/item_message_ivUserPic"
+        android:padding="10dp"
+        android:text="Alessandr text \n texxt \ntext text"
+        android:textColor="@color/material_white_1000"
+        android:textIsSelectable="true" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_message_tvTimestamp"
+        android:gravity="start"
+        android:layout_below="@id/item_message_tvMessage"
+        android:layout_marginStart="35dp"
+        android:padding="10dp"
+        android:text="dd/mm/yyyy"
+        android:textSize="10sp" />
+
+</RelativeLayout>
