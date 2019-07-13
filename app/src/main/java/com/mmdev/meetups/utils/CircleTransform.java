@@ -1,4 +1,4 @@
-package com.mmdev.meetups.ui.adapters;
+package com.mmdev.meetups.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;

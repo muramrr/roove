@@ -1,4 +1,4 @@
-package com.mmdev.meetups.ui.adapters;
+package com.mmdev.meetups.ui.chat;
 
 import android.view.View;
 

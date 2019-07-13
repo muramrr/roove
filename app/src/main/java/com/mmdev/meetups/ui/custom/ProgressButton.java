@@ -1,4 +1,4 @@
-package com.mmdev.meetups.ui.custom_views;
+package com.mmdev.meetups.ui.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;

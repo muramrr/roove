@@ -1,4 +1,4 @@
-package com.mmdev.meetups.viewmodels;
+package com.mmdev.meetups.ui.main;
 
 import android.content.Context;
 import android.os.Handler;

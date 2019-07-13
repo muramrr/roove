@@ -1,4 +1,4 @@
-package com.mmdev.meetups.ui.adapters;
+package com.mmdev.meetups.ui.chat;
 /* Created by A on 06.06.2019.*/
 
 import android.content.Context;
@@ -14,7 +14,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.mmdev.meetups.R;
 import com.mmdev.meetups.models.ChatModel;
 import com.mmdev.meetups.models.UserChatModel;
-import com.mmdev.meetups.ui.activities.ChatActivity;
+import com.mmdev.meetups.utils.CircleTransform;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,7 +43,7 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<ChatModel, ChatAdapter
 	 * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
 	 * FirestoreRecyclerOptions} for configuration options.
 	 *
-	 * @param options query options in {@link ChatActivity}
+	 * @param options query options in {@link ChatFragment}
 	 */
 	public ChatAdapter (@NonNull FirestoreRecyclerOptions<ChatModel> options, String userName, ClickChatAttachmentsFirebase clickChatAttachmentsFirebase, Context context) {
 		super(options);
@@ -65,19 +65,19 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<ChatModel, ChatAdapter
 		switch (viewType) {
 			case (RIGHT_MSG):
 				view = LayoutInflater.from(parent.getContext())
-						.inflate(R.layout.item_message_right,parent,false);
+						.inflate(R.layout.fragment_chat_item_message_right,parent,false);
 				break;
 			case (LEFT_MSG):
 				view = LayoutInflater.from(parent.getContext())
-						.inflate(R.layout.item_message_left,parent,false);
+						.inflate(R.layout.fragment_chat_item_message_left,parent,false);
 				break;
 			case (RIGHT_MSG_IMG):
 				view = LayoutInflater.from(parent.getContext())
-						.inflate(R.layout.item_message_right_img,parent,false);
+						.inflate(R.layout.fragment_chat_item_message_right_img,parent,false);
 				break;
 			case (LEFT_MSG_IMG):
 				view = LayoutInflater.from(parent.getContext())
-						.inflate(R.layout.item_message_left_img,parent,false);
+						.inflate(R.layout.fragment_chat_item_message_left_img,parent,false);
 				break;
 			default:
 				view = LayoutInflater.from(parent.getContext())

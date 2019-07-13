@@ -1,4 +1,4 @@
-package com.mmdev.meetups.ui.adapters;
+package com.mmdev.meetups.ui.feed;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -26,7 +26,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedItemHolder
 	public FeedItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 		ActivityMainFeedItemBinding binding = DataBindingUtil.inflate(layoutInflater,
-				R.layout.activity_main_feed_item, parent, false);
+				R.layout.fragment_feed_item, parent, false);
 		return new FeedItemHolder(binding);
 	}
 

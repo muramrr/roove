@@ -1,4 +1,4 @@
-package com.mmdev.meetups.ui.adapters;
+package com.mmdev.meetups.ui.card;
 
 import android.view.LayoutInflater;
 import android.view.View;
