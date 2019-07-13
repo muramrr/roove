@@ -1,4 +1,4 @@
-package com.mmdev.meetups.ui.custom_views;
+package com.mmdev.meetups.ui.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -15,13 +15,10 @@ import android.widget.FrameLayout;
 
 import com.mmdev.meetups.R;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.customview.widget.ViewDragHelper;
@@ -192,10 +189,6 @@ public class SwipeBackLayout extends FrameLayout {
 			e.printStackTrace();
 		}
 	}
-
-	@IntDef({EDGE_LEFT, EDGE_RIGHT, EDGE_ALL})
-	@Retention(RetentionPolicy.SOURCE)
-	public @interface EdgeOrientation {}
 
 	/**
 	 * Set a drawable used for edge shadow.

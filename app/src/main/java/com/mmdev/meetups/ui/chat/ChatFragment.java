@@ -1,4 +1,4 @@
-package com.mmdev.meetups.ui.fragments;
+package com.mmdev.meetups.ui.chat;
 
 import android.Manifest;
 import android.content.Intent;
@@ -29,10 +29,8 @@ import com.mmdev.meetups.models.ChatModel;
 import com.mmdev.meetups.models.FileModel;
 import com.mmdev.meetups.models.ProfileModel;
 import com.mmdev.meetups.models.UserChatModel;
-import com.mmdev.meetups.ui.activities.MainActivity;
-import com.mmdev.meetups.ui.adapters.ChatAdapter;
-import com.mmdev.meetups.ui.adapters.ClickChatAttachmentsFirebase;
-import com.mmdev.meetups.viewmodels.ProfileViewModel;
+import com.mmdev.meetups.ui.main.MainActivity;
+import com.mmdev.meetups.ui.main.ProfileViewModel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,8 +41,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -248,16 +244,10 @@ public class ChatFragment extends Fragment implements ClickChatAttachmentsFireba
 	 * @param urlPhotoClick clicked photo in chat url
 	 */
 	@Override
-	public void clickImageChat(View view, int position,String nameUser,String urlPhotoUser,String urlPhotoClick) {
-		//        Intent intent = new Intent(this,FullScreenImageActivity.class);
-		//        intent.putExtra("urlPhotoClick",urlPhotoClick);
-		//        startActivity(intent);
-		FragmentManager fm = mMainActivity.getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		//ft.setCustomAnimations(R.anim.fragment_enter_from_right, R.anim.fragment_exit_to_left, R.anim.fragment_enter_from_left, R.anim.fragment_exit_to_right);
-		ft.replace(R.id.contentRoot, new ChatPhotoViewFragment(), "ChatPhotoViewFragment");
-		ft.addToBackStack(null);
-		ft.commit();
+	public void clickImageChat(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick) {
+		Intent intent = new Intent(mMainActivity, FullScreenImageActivity.class);
+		intent.putExtra("urlPhotoClick", urlPhotoClick);
+		startActivity(intent);
 	}
 
 

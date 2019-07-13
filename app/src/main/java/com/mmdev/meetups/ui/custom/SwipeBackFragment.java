@@ -1,4 +1,4 @@
-package com.mmdev.meetups.ui.custom_views;
+package com.mmdev.meetups.ui.custom;
 
 /* Created by A on 08.06.2019.*/
 

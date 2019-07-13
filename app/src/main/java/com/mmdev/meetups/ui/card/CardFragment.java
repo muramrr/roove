@@ -1,4 +1,4 @@
-package com.mmdev.meetups.ui.fragments;
+package com.mmdev.meetups.ui.card;
 
 
 import android.os.Bundle;
@@ -7,9 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mmdev.meetups.R;
-import com.mmdev.meetups.ui.activities.MainActivity;
-import com.mmdev.meetups.ui.adapters.CardStackAdapter;
-import com.mmdev.meetups.viewmodels.ProfileViewModel;
+import com.mmdev.meetups.ui.main.MainActivity;
+import com.mmdev.meetups.ui.main.ProfileViewModel;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;

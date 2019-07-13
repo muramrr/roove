@@ -24,6 +24,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+
     <!-- styles for Login buttons -->
     <style name="Widget.Button.Login" parent="Widget.AppCompat.Button">
         <item name="android:textColor">@android:color/white</item>

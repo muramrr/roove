@@ -1,4 +1,4 @@
-package com.mmdev.meetups.utils;
+package com.mmdev.meetups.ui.feed;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;

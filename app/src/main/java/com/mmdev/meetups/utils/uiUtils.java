@@ -24,10 +24,6 @@ public class uiUtils
 		else handler.post(runnable);
 	}
 
-	public static void displayDummyDialog(Context context) {
-		showSafeToast(context,"Yope!");
-	}
-
 	public static String local(String latitudeFinal,String longitudeFinal){
 		return "https://maps.googleapis.com/maps/api/staticmap?center="+latitudeFinal+","+longitudeFinal+"&zoom=18&size=280x280&markers=color:red|"+latitudeFinal+","+longitudeFinal;
 	}

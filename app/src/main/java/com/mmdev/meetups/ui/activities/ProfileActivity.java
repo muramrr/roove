@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import com.mmdev.meetups.R;
 import com.mmdev.meetups.databinding.ActivityProfileBinding;
-import com.mmdev.meetups.viewmodels.ProfileViewModel;
+import com.mmdev.meetups.ui.main.ProfileViewModel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;

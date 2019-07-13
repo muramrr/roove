@@ -2,7 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools">
     <data>
-
         <variable
             name="feedItem"
             type="com.mmdev.meetups.models.FeedItem" />
@@ -190,7 +189,6 @@
                         android:layout_width="wrap_content"
                         android:textSize="16sp"
                         android:id="@+id/feed_comment_counter"
-                        android:layout_marginLeft="5dp"
                         android:layout_marginStart="5dp"
                         android:textColor="@color/icons_color"
                         android:layout_gravity="center_vertical"

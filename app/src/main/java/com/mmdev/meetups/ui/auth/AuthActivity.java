@@ -1,4 +1,4 @@
-package com.mmdev.meetups.ui.activities;
+package com.mmdev.meetups.ui.auth;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -26,10 +26,11 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mmdev.meetups.R;
 import com.mmdev.meetups.models.ProfileModel;
-import com.mmdev.meetups.ui.custom_views.ProgressButton;
-import com.mmdev.meetups.utils.GPSTracker;
+import com.mmdev.meetups.services.GPSTracker;
+import com.mmdev.meetups.ui.custom.ProgressButton;
+import com.mmdev.meetups.ui.main.MainActivity;
+import com.mmdev.meetups.ui.main.ProfileViewModel;
 import com.mmdev.meetups.utils.uiUtils;
-import com.mmdev.meetups.viewmodels.ProfileViewModel;
 
 import java.util.ArrayList;
 

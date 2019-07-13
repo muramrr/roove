@@ -1,4 +1,4 @@
-package com.mmdev.meetups.ui.fragments;
+package com.mmdev.meetups.ui.feed;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,10 +7,7 @@ import android.view.ViewGroup;
 
 import com.mmdev.meetups.R;
 import com.mmdev.meetups.models.FeedItem;
-import com.mmdev.meetups.ui.activities.MainActivity;
-import com.mmdev.meetups.ui.adapters.FeedAdapter;
-import com.mmdev.meetups.utils.EndlessRecyclerViewScrollListener;
-import com.mmdev.meetups.utils.FeedManager;
+import com.mmdev.meetups.ui.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +28,7 @@ public class FeedFragment extends Fragment
 
 	@Override
 	public View onCreateView (@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.content_main, container, false);
+		return inflater.inflate(R.layout.fragment_feed, container, false);
 	}
 
 	@Override
@@ -47,7 +44,7 @@ public class FeedFragment extends Fragment
 	}
 
 	private void initFeeds() {
-		mFeedItems.addAll(FeedManager.generateDUmmyFeeds());
+		mFeedItems.addAll(FeedManager.generateDummyFeeds());
 		mFeedAdapter = new FeedAdapter(mFeedItems);
 		final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mMainActivity, RecyclerView.VERTICAL, false);
 		rvFeedList.setLayoutManager(linearLayoutManager);
@@ -61,7 +58,7 @@ public class FeedFragment extends Fragment
 
 	private void loadMoreFeeds() {
 		rvFeedList.post(() -> {
-			mFeedItems.addAll(FeedManager.generateDUmmyFeeds());
+			mFeedItems.addAll(FeedManager.generateDummyFeeds());
 			mFeedAdapter.notifyItemInserted(mFeedItems.size() - 1);
 		});
 	}
