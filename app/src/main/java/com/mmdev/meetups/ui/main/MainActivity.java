@@ -1,4 +1,4 @@
-package com.mmdev.meetups.ui.activities;
+package com.mmdev.meetups.ui.main;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -22,12 +22,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.mmdev.meetups.R;
 import com.mmdev.meetups.models.ProfileModel;
-import com.mmdev.meetups.ui.fragments.CardFragment;
-import com.mmdev.meetups.ui.fragments.ChatFragment;
-import com.mmdev.meetups.ui.fragments.FeedFragment;
-import com.mmdev.meetups.utils.FeedManager;
+import com.mmdev.meetups.ui.activities.ProfileActivity;
+import com.mmdev.meetups.ui.auth.AuthActivity;
+import com.mmdev.meetups.ui.card.CardFragment;
+import com.mmdev.meetups.ui.chat.ChatFragment;
+import com.mmdev.meetups.ui.feed.FeedFragment;
+import com.mmdev.meetups.ui.feed.FeedManager;
 import com.mmdev.meetups.utils.GlideApp;
-import com.mmdev.meetups.viewmodels.ProfileViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

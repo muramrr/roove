@@ -1,4 +1,4 @@
-package com.mmdev.meetups.utils;
+package com.mmdev.meetups.ui.feed;
 
 import com.mmdev.meetups.R;
 import com.mmdev.meetups.models.FeedItem;
@@ -10,9 +10,7 @@ import java.util.Random;
 
 public class FeedManager
 {
-
-	private List<ProfileModel> usersCards;
-	public static List<FeedItem> generateDUmmyFeeds() {
+	static List<FeedItem> generateDummyFeeds () {
 		List<FeedItem> feedItems = new ArrayList<>();
 		feedItems.add(new FeedItem("Wan Clem", R.drawable.driving_a_car, "Posted", "2hr", R.drawable.mercedes_benz, "A very nice mercedez Benz", 15, 35, 15, 22, true));
 		feedItems.add(new FeedItem("Sean Parker", R.drawable.man_in_suit, "Shared", "3hr", R.drawable.suits, "Men with class", 19, 30, 10, 28, false));
@@ -90,19 +88,9 @@ public class FeedManager
 		return users;
 	}
 
-	public List<ProfileModel> getUsersCards () {
-		return usersCards;
-	}
-
-	public void setUsersCards (List<ProfileModel> usersCards) {
-		this.usersCards = new ArrayList<>();
-		this.usersCards.addAll(usersCards);
-	}
-
     /*
     generate random uid
      */
-
 	private static String generateRandomID() {
 		int leftLimit = 97; // letter 'a'
 		int rightLimit = 122; // letter 'z'

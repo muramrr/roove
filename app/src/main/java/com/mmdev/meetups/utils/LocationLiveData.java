@@ -2,6 +2,8 @@ package com.mmdev.meetups.utils;
 
 import android.location.Location;
 
+import com.mmdev.meetups.services.LocationService;
+
 import androidx.lifecycle.LiveData;
 
 public class LocationLiveData extends LiveData<Location>

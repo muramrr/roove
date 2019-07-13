@@ -1,4 +1,4 @@
-package com.mmdev.meetups.utils;
+package com.mmdev.meetups.services;
 
 import android.app.Service;
 import android.content.Context;
@@ -29,7 +29,7 @@ public class LocationService extends Service {
 	public static class LocationListener implements android.location.LocationListener {
 		Location mLastLocation;
 
-		LocationListener(String provider) {
+		protected LocationListener (String provider) {
 			Log.e(TAG, "LocationListener " + provider);
 			mLastLocation = new Location(provider);
 		}

@@ -1,4 +1,4 @@
-package com.mmdev.meetups.utils;
+package com.mmdev.meetups.services;
 
 import android.Manifest;
 import android.app.Service;

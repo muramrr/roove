@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.MainActivity"
-    tools:showIn="@layout/app_bar"
+    android:background="@color/material_black_1000"
+    tools:context=".ui.chat.FullScreenImageActivity"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/content_main_recyclerview"
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#dddddd"
-        android:overScrollMode="never"/>
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"/>
 
-</LinearLayout>
+</RelativeLayout>
