@@ -4,19 +4,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_feed"
-            android:icon="@drawable/feed_icon"
+            android:icon="@drawable/nav_items_feed_icon"
             android:title="Feed" />
         <item
             android:id="@+id/nav_events"
-            android:icon="@drawable/events_icon"
+            android:icon="@drawable/nav_items_events_icon"
             android:title="Events" />
         <item
             android:id="@+id/nav_post"
-            android:icon="@drawable/post_icon"
+            android:icon="@drawable/nav_items_post_icon"
             android:title="Post" />
         <item
             android:id="@+id/nav_notifications"
-            android:icon="@drawable/notifications_icon"
+            android:icon="@drawable/nav_items_notifications_icon"
             android:title="Notifications" />
     </group>
 
@@ -24,11 +24,11 @@
         <menu>
             <item
                 android:id="@+id/nav_account"
-                android:icon="@drawable/account_icon"
+                android:icon="@drawable/fragment_chat_message_default_account_icon"
                 android:title="Account" />
             <item
                 android:id="@+id/nav_log_out"
-                android:icon="@drawable/log_out_icon"
+                android:icon="@drawable/nav_items_log_out_icon"
                 android:title="Log Out" />
         </menu>
     </item>

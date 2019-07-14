@@ -7,7 +7,7 @@
     <item
         android:id="@+id/action_messages"
         android:onClick="MessagesClick"
-        android:icon="@drawable/ic_toolbar_message_white"
+        android:icon="@drawable/menu_ic_message_white"
         android:orderInCategory="300"
         android:title="messages"
         app:showAsAction="ifRoom"/>

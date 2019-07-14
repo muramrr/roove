@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/selectableItemBackground"
@@ -9,12 +7,15 @@
     app:cardUseCompatPadding="true"
     app:cardPreventCornerOverlap="false"
     app:cardCornerRadius="8dp"
-    app:cardBackgroundColor="@android:color/white">
+    app:cardBackgroundColor="@android:color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:id="@+id/item_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="card image"
         android:scaleType="centerCrop"/>
 
     <LinearLayout
@@ -23,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:padding="16dp"
-        android:background="@drawable/gradation_black">
+        android:background="@drawable/fragment_card_item_gradation_black">
 
         <TextView
             android:id="@+id/item_name"
@@ -47,13 +48,14 @@
         android:id="@+id/left_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/overlay_black">
+        android:background="@drawable/fragment_card_item_overlay_black">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/skip_white_120dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:contentDescription="card skip"
+            android:src="@drawable/fragment_card_item_skip_white_120dp"/>
 
     </FrameLayout>
 
@@ -61,13 +63,14 @@
         android:id="@+id/right_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/overlay_black">
+        android:background="@drawable/fragment_card_item_overlay_black">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/like_white_120dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:contentDescription="card like"
+            android:src="@drawable/fragment_card_item_like_white_120dp" />
 
     </FrameLayout>
 

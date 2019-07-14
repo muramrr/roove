@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/light_coral</color>
+    <color name="colorPrimary">#F67f80</color>
     <color name="colorPrimaryDark">#F46669</color>
     <color name="colorAccent">#3EB890</color>
 
-    <color name="colorPrimaryDarkWithTransparency">#FFF46669</color>
-    <color name="vanila_ice">#f1cfd0</color>
-    <color name="wewak_pink">#ef9e9e</color>
-    <color name="light_coral">#f67f80</color>
-    <color name="peri_winkle_blue">#bbc7e1</color>
+    <color name="actionModeBackground">#f1cfd0</color>
     <color name="colorFacebook">#374D8D</color>
 
-    <color name="feed_content_image_tint_color">#44000000</color>
-    <color name="icons_color">#c0bcc3</color>
-
+    <color name="feed_item_icons_color">#c0bcc3</color>
 
     <!-- Material Color Palette -->
     <color name="material_gray_050">#FAFAFA</color>
@@ -135,9 +129,8 @@
     <color name="material_purple_a400">#D500F9</color>
     <color name="material_purple_a700">#AA00FF</color>
 
-
     <!-- Selectors -->
-    <color name="selector_normal">@android:color/transparent</color>
+    <color name="selector_normal">#00000000</color>
     <color name="selector_white_focused">#22FFFFFF</color>
     <color name="selector_white_pressed">#33FFFFFF</color>
     <color name="selector_black_focused">#12000000</color>
