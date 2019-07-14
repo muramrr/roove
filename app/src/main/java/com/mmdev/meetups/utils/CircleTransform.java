@@ -17,8 +17,6 @@ import androidx.annotation.NonNull;
  */
 public class CircleTransform extends BitmapTransformation {
 
-
-
 	@Override
 	protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
 
@@ -45,7 +43,6 @@ public class CircleTransform extends BitmapTransformation {
 	}
 
 	@Override
-	public void updateDiskCacheKey (@NonNull MessageDigest messageDigest) {
+	public void updateDiskCacheKey (@NonNull MessageDigest messageDigest) { }
 
-	}
 }

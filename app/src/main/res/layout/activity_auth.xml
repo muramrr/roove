@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary">
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/colorPrimary">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:contentDescription="@string/app_logo"
-            android:src="@drawable/app_logo"
-            android:id="@+id/IV_app_logo"/>
+	<ImageView
+		android:id="@+id/IV_app_logo"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:contentDescription="@string/app_logo"
+		android:src="@drawable/app_logo" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/IV_app_logo"
-            android:layout_centerHorizontal="true"
-            android:padding="10dp"
-            android:text="@string/meet_new_people_family_and_friends"
-            android:textColor="@android:color/white"
-            android:textSize="17sp"
-            android:id="@+id/TV_slogan"/>
+	<TextView
+		android:id="@+id/TV_slogan"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/IV_app_logo"
+		android:layout_centerHorizontal="true"
+		android:padding="10dp"
+		android:text="@string/activity_auth_tv_slogan"
+		android:textColor="@android:color/white"
+		android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/facebook_login_button_delegate"
-            android:layout_below="@id/TV_slogan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:drawableStart="@drawable/glyph_facebook"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/btn_text_login_fb"
-            android:textStyle="bold"
-            android:theme="@style/Widget.Button.Login.Facebook" />
+	<Button
+		android:id="@+id/facebook_login_button_delegate"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/TV_slogan"
+		android:layout_marginTop="16dp"
+		android:drawableStart="@drawable/activity_auth_glyph_facebook"
+		android:gravity="center"
+		android:padding="10dp"
+		android:text="@string/activity_auth_facebook_login_button_delegate"
+		android:textStyle="bold"
+		android:theme="@style/Widget.Button.Login.Facebook" />
 
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/facebook_login_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:visibility="gone" />
+	<com.facebook.login.widget.LoginButton
+		android:id="@+id/facebook_login_button"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:visibility="gone" />
 
 </RelativeLayout>

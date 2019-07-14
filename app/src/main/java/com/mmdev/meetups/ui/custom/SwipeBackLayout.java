@@ -116,7 +116,7 @@ public class SwipeBackLayout extends FrameLayout {
 
 	private void init() {
 		mHelper = ViewDragHelper.create(this, new ViewDragCallback());
-		setShadow(R.drawable.shadow_left, EDGE_LEFT);
+		setShadow(R.drawable.custom_swipefrag_shadow_left, EDGE_LEFT);
 		setEdgeOrientation(EDGE_LEFT);
 	}
 
@@ -148,7 +148,7 @@ public class SwipeBackLayout extends FrameLayout {
 		mHelper.setEdgeTrackingEnabled(orientation);
 
 		if (orientation == EDGE_RIGHT || orientation == EDGE_ALL) {
-			setShadow(R.drawable.shadow_right, EDGE_RIGHT);
+			setShadow(R.drawable.custom_swipefrag_shadow_right, EDGE_RIGHT);
 		}
 	}
 

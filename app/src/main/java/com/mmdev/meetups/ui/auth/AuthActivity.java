@@ -191,7 +191,7 @@ public class AuthActivity extends AppCompatActivity
 		AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
 		firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, ((@NonNull Task<AuthResult> task) -> {
 			if (!task.isSuccessful())
-				uiUtils.showSafeToast(getApplicationContext(),getString(R.string.login_aborted));
+				uiUtils.showSafeToast(getApplicationContext(),"LogIn Aborted");
 			dismissProgressDialog();
 		}));
 	}
@@ -205,7 +205,7 @@ public class AuthActivity extends AppCompatActivity
 	}
 
 	private void showProcessProgressDialog () {
-		progressDialog.setMessage(getString(R.string.please_wait));
+		progressDialog.setMessage(getString(R.string.progress_dialog_text));
 		if (!progressDialog.isShowing()) progressDialog.show();
 	}
 

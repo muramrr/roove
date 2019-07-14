@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
@@ -12,20 +11,21 @@
         android:layout_marginTop="5dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
-        android:src="@drawable/app_logo"
-        tools:ignore="ContentDescription" />
+        android:contentDescription="@string/app_logo"
+        android:focusable="true"
+        android:src="@drawable/app_logo" />
 
     <ImageView
+        android:id="@+id/settings_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/settings_button"
         android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
+        android:contentDescription="settings"
         android:focusable="true"
-        android:src="@drawable/settings_icon_dark"
-        tools:ignore="ContentDescription" />
+        android:src="@drawable/nav_header_settings_icon_dark" />
 
     <ImageView
         android:id="@+id/signed_in_user_image_view"
@@ -33,7 +33,8 @@
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:src="@drawable/babe"/>
+        android:contentDescription="user avatar"
+        android:src="@drawable/default_avatar"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -70,16 +71,15 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/heart_icon"
-                tools:ignore="ContentDescription" />
+                android:contentDescription="header like"
+                android:src="@drawable/nav_header_heart_icon" />
 
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
-                android:src="@drawable/hype_grid"
-                tools:ignore="ContentDescription" />
+                android:contentDescription="idk"
+                android:src="@drawable/nav_header_hype_grid" />
 
         </LinearLayout>
 

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+	    android:id="@+id/item_message_ivUserPic"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignBottom="@+id/contentMessageChat"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="5dp"
+	    android:contentDescription="my avatar"
+        android:src="@drawable/fragment_chat_message_default_account_icon"/>
+
+	<LinearLayout
+		android:id="@+id/contentMessageChat"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toStartOf="@+id/item_message_ivUserPic"
+		android:background="@drawable/fragment_chat_message_right"
+		android:orientation="vertical">
+
+	    <ImageView
+		    android:id="@+id/img_chat"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+		    android:layout_margin="10dp"
+	        android:background="@color/colorPrimaryDark"
+		    android:contentDescription="mine image"
+	        android:minHeight="100dp"
+	        android:minWidth="100dp"
+		    android:src="@color/material_black_1000"
+		    android:visibility="visible"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/item_message_tvMessage"
+			android:padding="10dp"
+			android:text="Alessandr text \n texxt \ntext text"
+			android:textColor="@color/material_white_1000"
+			android:textIsSelectable="true" />
+
+	</LinearLayout>
+
+    <TextView
+	    android:id="@+id/item_message_tvTimestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/contentMessageChat"
+        android:layout_below="@id/contentMessageChat"
+	    android:layout_marginStart="10dp"
+	    android:paddingStart="10dp"
+	    android:paddingEnd="10dp"
+	    android:paddingTop="3dp"
+        android:text="dd/mm/yyyy"
+        android:textSize="12sp" />
+
+</RelativeLayout>
