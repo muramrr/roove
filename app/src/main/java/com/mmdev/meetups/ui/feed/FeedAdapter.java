@@ -4,7 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.mmdev.meetups.R;
-import com.mmdev.meetups.databinding.ActivityMainFeedItemBinding;
+import com.mmdev.meetups.databinding.FragmentFeedItemBinding;
 import com.mmdev.meetups.models.FeedItem;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedItemHolder
 
 	private List<FeedItem> feedItems;
 
-	public FeedAdapter(List<FeedItem> feedItems) {
+	FeedAdapter(List<FeedItem> feedItems) {
 		this.feedItems = feedItems;
 	}
 
@@ -25,8 +25,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedItemHolder
 	@NonNull
 	public FeedItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-		ActivityMainFeedItemBinding binding = DataBindingUtil.inflate(layoutInflater,
-				R.layout.fragment_feed_item, parent, false);
+		FragmentFeedItemBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_feed_item, parent, false);
 		return new FeedItemHolder(binding);
 	}
 
@@ -42,9 +41,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedItemHolder
 
 	static class FeedItemHolder extends RecyclerView.ViewHolder {
 
-		ActivityMainFeedItemBinding binding;
+		FragmentFeedItemBinding binding;
 
-		FeedItemHolder(ActivityMainFeedItemBinding binding) {
+		FeedItemHolder(FragmentFeedItemBinding binding) {
 			super(binding.getRoot());
 			this.binding = binding;
 		}
