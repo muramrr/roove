@@ -12,11 +12,11 @@ public class FeedManager
 {
 	static List<FeedItem> generateDummyFeeds () {
 		List<FeedItem> feedItems = new ArrayList<>();
-		feedItems.add(new FeedItem("Wan Clem", R.drawable.driving_a_car, "Posted", "2hr", R.drawable.mercedes_benz, "A very nice mercedez Benz", 15, 35, 15, 22, true));
-		feedItems.add(new FeedItem("Sean Parker", R.drawable.man_in_suit, "Shared", "3hr", R.drawable.suits, "Men with class", 19, 30, 10, 28, false));
-		feedItems.add(new FeedItem("Ivanka TimberLake", R.drawable.girl_jogging, "Shared", "4hr", R.drawable.joggers, "Awesome joggers", 74, 42, 90, 11, true));
-		feedItems.add(new FeedItem("Angelina Blanca", R.drawable.descent, "Posted", "5hr", R.drawable.shoes, "Nice pair of shoes", 18, 39, 20, 25, false));
-		feedItems.add(new FeedItem("Bradly Gates", R.drawable.riding_bycle, "Posted", "6hr", R.drawable.power_bike, "A very nice power bike", 15, 35, 15, 22, true));
+		feedItems.add(new FeedItem("Wan Clem", R.drawable.feed_content_driving_a_car, "Posted", "2hr", R.drawable.feed_content_mercedes_benz, "A very nice mercedez Benz", 15, 35, 15, 22, true));
+		feedItems.add(new FeedItem("Sean Parker", R.drawable.feed_content_man_in_suit, "Shared", "3hr", R.drawable.feed_content_suits, "Men with class", 19, 30, 10, 28, false));
+		feedItems.add(new FeedItem("Ivanka TimberLake", R.drawable.feed_content_girl_jogging, "Shared", "4hr", R.drawable.feed_content_joggers, "Awesome feed_content_joggers", 74, 42, 90, 11, true));
+		feedItems.add(new FeedItem("Angelina Blanca", R.drawable.feed_content_descent, "Posted", "5hr", R.drawable.feed_content_shoes, "Nice pair of feed_content_shoes", 18, 39, 20, 25, false));
+		feedItems.add(new FeedItem("Bradly Gates", R.drawable.feed_content_riding_bycle, "Posted", "6hr", R.drawable.feed_content_power_bike, "A very nice power bike", 15, 35, 15, 22, true));
 		return feedItems;
 	}
 

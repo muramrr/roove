@@ -29,11 +29,11 @@
                 android:padding="8dp">
 
                 <ImageView
+                    android:id="@+id/feed_publisher_image_view"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-
-                    android:id="@+id/feed_publisher_image_view"
-                    android:src="@{feedItem.feedPublisherPhotoId, default=@drawable/babe}" />
+                    android:contentDescription="feed item avatar"
+                    android:src="@{feedItem.feedPublisherPhotoId, default=@drawable/default_avatar}" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -54,38 +54,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/feed_type"
-                        android:textColor="@color/icons_color"
+                        android:textColor="@color/feed_item_icons_color"
                         android:textSize="14sp"
                         android:text="@{feedItem.feedType}"/>
                         <!--app:fontName="Roboto-Medium.ttf" />-->
 
                 </LinearLayout>
 
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top|end"
-                    android:layout_marginEnd="8dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/feed_shared_time_icon"
-                        tools:ignore="ContentDescription" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableEnd="@drawable/feed_shared_time_icon"
-                        android:id="@+id/feed_publish_date"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginTop="2dp"
-                        android:gravity="center_vertical"
-                        android:text="@{feedItem.feedSharedTime}"/>
-
-                </LinearLayout>
+                    android:drawableEnd="@drawable/feed_item_time_icon"
+                    android:id="@+id/feed_publish_date"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center_vertical"
+                    android:text="@{feedItem.feedSharedTime}"/>
 
             </LinearLayout>
 
@@ -135,7 +119,7 @@
                         android:layout_marginBottom="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="5dp"
-                        android:src="@drawable/shopper_bag"
+                        android:src="@drawable/feed_item_shopper_bag"
                         tools:ignore="ContentDescription" />
 
                 </LinearLayout>
@@ -157,14 +141,14 @@
                     <ImageView
                         android:layout_width="25dp"
                         android:id="@+id/like_feed_image_view"
-                        android:src="@drawable/ic_heart_gray"
+                        android:src="@drawable/feed_item_ic_heart_gray"
                         android:layout_height="25dp"
                         tools:ignore="ContentDescription" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:textSize="16sp"
-                        android:textColor="@color/icons_color"
+                        android:textColor="@color/feed_item_icons_color"
                         android:layout_marginStart="5dp"
                         android:id="@+id/feed_likes_counter"
                         android:layout_gravity="center_vertical"
@@ -181,7 +165,7 @@
 
                     <ImageView
                         android:layout_width="30dp"
-                        android:src="@drawable/comment_icon"
+                        android:src="@drawable/feed_item_comment_icon"
                         android:layout_height="30dp"
                         tools:ignore="ContentDescription" />
 
@@ -190,7 +174,7 @@
                         android:textSize="16sp"
                         android:id="@+id/feed_comment_counter"
                         android:layout_marginStart="5dp"
-                        android:textColor="@color/icons_color"
+                        android:textColor="@color/feed_item_icons_color"
                         android:layout_gravity="center_vertical"
                         android:layout_height="wrap_content"
                         android:text="@{Integer.toString(feedItem.feedCommentsCount)}"/>
@@ -204,7 +188,7 @@
 
                     <ImageView
                         android:layout_width="25dp"
-                        android:src="@drawable/share_icon"
+                        android:src="@drawable/feed_item_share_icon"
                         android:layout_height="25dp"
                         tools:ignore="ContentDescription" />
 
@@ -215,7 +199,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="5dp"
                         android:text="@{Integer.toString(feedItem.feedSharesCount)}"
-                        android:textColor="@color/icons_color"
+                        android:textColor="@color/feed_item_icons_color"
                         android:textSize="16sp"/>
 
                 </LinearLayout>

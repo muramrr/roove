@@ -8,7 +8,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeBackground">@color/vanila_ice</item>
+        <item name="actionModeBackground">@color/actionModeBackground</item>
 
     </style>
 
@@ -21,14 +21,12 @@
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
 
 
     <!-- styles for Login buttons -->
     <style name="Widget.Button.Login" parent="Widget.AppCompat.Button">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/material_white_1000</item>
     </style>
 
     <!-- style for facebook login button -->

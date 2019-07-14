@@ -46,7 +46,7 @@ public class SwipeBackFragment extends Fragment {
 			ft.commit();
 		}
 
-		mNoAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.no_anim);
+		mNoAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.custom_swipefrag_no_anim);
 		onFragmentCreate();
 	}
 

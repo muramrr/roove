@@ -145,7 +145,7 @@ public class ChatFragment extends Fragment implements ClickChatAttachmentsFireba
 		mLinearLayoutManager = new LinearLayoutManager(mMainActivity);
 		mLinearLayoutManager.setStackFromEnd(true);
 		ivAttachments.setOnClickListener(v -> photoCameraClick());
-		ivSendMessage.setOnClickListener(v -> photoGalleryClick());
+		ivSendMessage.setOnClickListener(v -> sendMessageClick());
 	}
 
 	/*
@@ -275,7 +275,7 @@ public class ChatFragment extends Fragment implements ClickChatAttachmentsFireba
 			mFirestore.collection(GENERAL_COLLECTION_REFERENCE).document(CHAT_REFERENCE).collection(SECONDARY_COLLECTION_REFERENCE).document().set(chatModel);
 			edMessageWrite.setText(null);
 		}
-		else edMessageWrite.startAnimation(AnimationUtils.loadAnimation(mMainActivity, R.anim.horizontal_shake));
+		else edMessageWrite.startAnimation(AnimationUtils.loadAnimation(mMainActivity, R.anim.edittext_horizontal_shake));
 	}
 
 
