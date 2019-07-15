@@ -21,20 +21,18 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
 	private List<ProfileModel> users;
 
-	public CardStackAdapter (List<ProfileModel> users) { this.users = users; }
+	CardStackAdapter (List<ProfileModel> users) { this.users = users; }
 
 	@NonNull
 	@Override
-	public ViewHolder onCreateViewHolder (@NonNull ViewGroup parent, int viewType)
-	{
+	public ViewHolder onCreateViewHolder (@NonNull ViewGroup parent, int viewType) {
 		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 		View itemView = inflater.inflate(R.layout.fragment_card_item_spot, parent, false);
 		return new ViewHolder(itemView);
 	}
 
 	@Override
-	public void onBindViewHolder (@NonNull ViewHolder holder, int position)
-	{
+	public void onBindViewHolder (@NonNull ViewHolder holder, int position) {
 		ProfileModel user = users.get(position);
 		holder.name.setText(user.getName());
 		holder.city.setText(user.getCity());

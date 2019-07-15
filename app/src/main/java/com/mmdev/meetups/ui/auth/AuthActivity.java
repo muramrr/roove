@@ -16,6 +16,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -23,6 +24,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mmdev.meetups.R;
 import com.mmdev.meetups.models.ProfileModel;
@@ -59,7 +61,8 @@ public class AuthActivity extends AppCompatActivity
 	Button facebookLoginButtonDelegate;
 
 	private FirebaseAuth firebaseAuth;
-	private FirebaseAuth.AuthStateListener authStateListener;
+	private FirebaseAuth.AuthStateListener mAuthStateListener;
+	private FirebaseFirestore mFirestore;
 
 	private FirebaseUser firebaseUser;
 	//Progress dialog for any authentication action
@@ -83,22 +86,76 @@ public class AuthActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_auth);
 		ButterKnife.bind(this);
-		initProgressDialog();
-		profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
 		firebaseAuth = FirebaseAuth.getInstance();
-		authStateListener = ((@NonNull FirebaseAuth firebaseAuth) -> {
-			firebaseUser = firebaseAuth.getCurrentUser();
-			if (firebaseUser != null) showAdditionalInfoDialog();
-		});
+		checkConnection();
+		mFirestore = FirebaseFirestore.getInstance();
 		mCallbackManager = CallbackManager.Factory.create();
 		setUpFacebookLoginButton();
+		initProgressDialog();
+		profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+
+	}
+
+	private void setUpFacebookLoginButton() {
+		facebookLogInButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+			@Override
+			public void onSuccess (LoginResult loginResult) { handleFacebookAccessToken(loginResult.getAccessToken()); }
+
+			@Override
+			public void onCancel () {}
+
+			@Override
+			public void onError (FacebookException error) {}
+		});
+		facebookLoginButtonDelegate.setOnClickListener((View v)-> facebookLogInButton.performClick());
+	}
+
+	/*
+	 * check if user is authentificated
+	 */
+	private void checkConnection(){
+		mAuthStateListener = ((@NonNull FirebaseAuth firebaseAuth) -> {
+			if (firebaseAuth.getCurrentUser() != null) {
+				Intent authIntent = new Intent(AuthActivity.this, MainActivity.class);
+				startActivity(authIntent);
+				finish();
+			}
+		});
+	}
+
+	private void handleFacebookAccessToken (AccessToken token) {
+		showProcessProgressDialog();
+		AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+		firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, ((@NonNull Task<AuthResult> task) -> {
+			if (task.isSuccessful() && firebaseAuth.getCurrentUser() != null) {
+				checkUserExists(firebaseAuth.getCurrentUser().getUid());
+			}
+			else uiUtils.showSafeToast(getApplicationContext(),"LogIn Aborted");
+			dismissProgressDialog();
+		}));
 	}
 
 	@Override
 	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		// Pass the activity result back to the Facebook SDK
 		mCallbackManager.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private boolean checkUserExists(String uId){
+		CollectionReference maleProfiles = mFirestore.collection("gender")
+				.document("male")
+				.collection("users");
+		CollectionReference femaleProfiles = mFirestore.collection("gender")
+				.document("female")
+				.collection("users");
+		maleProfiles.document(uId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+			@Override
+			public void onSuccess (DocumentSnapshot documentSnapshot) {
+				mProfileModel = documentSnapshot.toObject(ProfileModel.class);
+			}
+		});
+		return true;
+		else return false;
 	}
 
 	private void startMainActivity () {
@@ -152,48 +209,19 @@ public class AuthActivity extends AppCompatActivity
 			urls.add(String.valueOf(firebaseUser.getPhotoUrl()));
 			mProfileModel = new ProfileModel(firebaseUser.getDisplayName(), mCity,
 					mGender, mPreferedGender, String.valueOf(firebaseUser.getPhotoUrl()), urls, firebaseUser.getUid());
-			FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
 			CollectionReference profiles = mFirestore.collection("gender")
 					.document(mGender)
 					.collection("users");
-			profiles.document(firebaseUser.getUid()).set(mProfileModel)
-					.addOnSuccessListener(aVoid -> {
-						profileViewModel.saveProfile(this, mProfileModel);
-						profileViewModel.setProfileModel(mProfileModel);
-						Toast.makeText(this,
-								"Successfully uploaded data to firebase + stored into sharedPrefs",
-								Toast.LENGTH_LONG).show();
-						pb_button.stopAnim(this::startMainActivity);
-					});
+			profiles.document(firebaseUser.getUid()).set(mProfileModel).addOnSuccessListener(aVoid -> {
+				profileViewModel.saveProfile(this, mProfileModel);
+				profileViewModel.setProfileModel(mProfileModel);
+				Toast.makeText(this,
+						"Successfully uploaded data to firebase + stored into sharedPrefs",
+						Toast.LENGTH_LONG).show();
+				pb_button.stopAnim(this::startMainActivity);
+			});
 
-			//profileViewModel.saveProfile(this, mProfileModel);
 		}
-	}
-
-	private void setUpFacebookLoginButton() {
-		facebookLogInButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>()
-		{
-			@Override
-			public void onSuccess (LoginResult loginResult) {
-				handleFacebookAccessToken(loginResult.getAccessToken()); }
-
-			@Override
-			public void onCancel () {}
-
-			@Override
-			public void onError (FacebookException error) {}
-		});
-		facebookLoginButtonDelegate.setOnClickListener((View v)-> facebookLogInButton.performClick());
-	}
-
-	private void handleFacebookAccessToken (AccessToken token) {
-		showProcessProgressDialog();
-		AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-		firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, ((@NonNull Task<AuthResult> task) -> {
-			if (!task.isSuccessful())
-				uiUtils.showSafeToast(getApplicationContext(),"LogIn Aborted");
-			dismissProgressDialog();
-		}));
 	}
 
 	/*
@@ -215,14 +243,13 @@ public class AuthActivity extends AppCompatActivity
 	@Override
 	protected void onStart () {
 		super.onStart();
-		firebaseAuth.addAuthStateListener(authStateListener);
+		firebaseAuth.addAuthStateListener(mAuthStateListener);
 	}
 
 	@Override
-	protected void onStop ()
-	{
+	protected void onStop () {
 		super.onStop();
-		if (authStateListener != null) firebaseAuth.removeAuthStateListener(authStateListener);
+		if (mAuthStateListener != null) firebaseAuth.removeAuthStateListener(mAuthStateListener);
 	}
 
 	@Override
