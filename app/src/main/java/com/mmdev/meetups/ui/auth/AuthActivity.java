@@ -16,7 +16,6 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -60,11 +59,11 @@ public class AuthActivity extends AppCompatActivity
 	@BindView(R.id.facebook_login_button_delegate)
 	Button facebookLoginButtonDelegate;
 
-	private FirebaseAuth firebaseAuth;
+	private FirebaseAuth mFirebaseAuth;
 	private FirebaseAuth.AuthStateListener mAuthStateListener;
 	private FirebaseFirestore mFirestore;
 
-	private FirebaseUser firebaseUser;
+	private FirebaseUser mFirebaseUser;
 	//Progress dialog for any authentication action
 	private ProgressDialog progressDialog;
 
@@ -86,8 +85,8 @@ public class AuthActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_auth);
 		ButterKnife.bind(this);
-		firebaseAuth = FirebaseAuth.getInstance();
-		checkConnection();
+		mFirebaseAuth = FirebaseAuth.getInstance();
+		mAuthStateListener = ((@NonNull FirebaseAuth firebaseAuth) -> {});
 		mFirestore = FirebaseFirestore.getInstance();
 		mCallbackManager = CallbackManager.Factory.create();
 		setUpFacebookLoginButton();
@@ -110,62 +109,36 @@ public class AuthActivity extends AppCompatActivity
 		facebookLoginButtonDelegate.setOnClickListener((View v)-> facebookLogInButton.performClick());
 	}
 
-	/*
-	 * check if user is authentificated
-	 */
-	private void checkConnection(){
-		mAuthStateListener = ((@NonNull FirebaseAuth firebaseAuth) -> {
-			if (firebaseAuth.getCurrentUser() != null) {
-				Intent authIntent = new Intent(AuthActivity.this, MainActivity.class);
-				startActivity(authIntent);
-				finish();
-			}
-		});
-	}
-
 	private void handleFacebookAccessToken (AccessToken token) {
 		showProcessProgressDialog();
 		AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-		firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, ((@NonNull Task<AuthResult> task) -> {
-			if (task.isSuccessful() && firebaseAuth.getCurrentUser() != null) {
-				checkUserExists(firebaseAuth.getCurrentUser().getUid());
+		mFirebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, ((@NonNull Task<AuthResult> task) -> {
+			if (task.isSuccessful() && mFirebaseAuth.getCurrentUser() != null){
+				mFirebaseUser = mFirebaseAuth.getCurrentUser();
+				handleUserExistence(mFirebaseUser.getUid());
 			}
 			else uiUtils.showSafeToast(getApplicationContext(),"LogIn Aborted");
 			dismissProgressDialog();
 		}));
 	}
 
-	@Override
-	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		mCallbackManager.onActivityResult(requestCode, resultCode, data);
-	}
-
-	private boolean checkUserExists(String uId){
-		CollectionReference maleProfiles = mFirestore.collection("gender")
-				.document("male")
-				.collection("users");
-		CollectionReference femaleProfiles = mFirestore.collection("gender")
-				.document("female")
-				.collection("users");
-		maleProfiles.document(uId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-			@Override
-			public void onSuccess (DocumentSnapshot documentSnapshot) {
-				mProfileModel = documentSnapshot.toObject(ProfileModel.class);
-			}
+	private void handleUserExistence (String uId){
+		CollectionReference users = mFirestore.collection("users");
+		users.document(uId).get().addOnCompleteListener(task -> {
+			if (task.isSuccessful()) {
+				DocumentSnapshot document = task.getResult();
+				if (document != null && document.exists()) {
+					mProfileModel = document.toObject(ProfileModel.class);
+					profileViewModel.saveProfile(getApplicationContext(), mProfileModel);
+					profileViewModel.setProfileModel(mProfileModel);
+					Toast.makeText(getApplicationContext(), "Exist",Toast.LENGTH_SHORT).show();
+					startMainActivity ();
+				} else showRegistrationDialog();
+			} else Toast.makeText(getApplicationContext(), "Can't connect to server",Toast.LENGTH_SHORT).show();
 		});
-		return true;
-		else return false;
 	}
 
-	private void startMainActivity () {
-		Intent mMainActivityIntent = new Intent(AuthActivity.this, MainActivity.class);
-		startActivity(mMainActivityIntent);
-		if (additionalRegDialog!=null) additionalRegDialog.dismiss();
-		finish();
-	}
-
-	private void showAdditionalInfoDialog() {
+	private void showRegistrationDialog () {
 		additionalRegDialog = new Dialog(this);
 		additionalRegDialog.setContentView(R.layout.dialog_registration);
 		Window window = additionalRegDialog.getWindow();
@@ -201,27 +174,30 @@ public class AuthActivity extends AppCompatActivity
 	}
 
 	private void addUserToFirestore () {
-		firebaseUser = firebaseAuth.getCurrentUser();
-		if (firebaseUser != null) {
-			//mCity = gps.getCity(this);
-			mCity = "Kyiv";
-			ArrayList<String> urls = new ArrayList<>();
-			urls.add(String.valueOf(firebaseUser.getPhotoUrl()));
-			mProfileModel = new ProfileModel(firebaseUser.getDisplayName(), mCity,
-					mGender, mPreferedGender, String.valueOf(firebaseUser.getPhotoUrl()), urls, firebaseUser.getUid());
-			CollectionReference profiles = mFirestore.collection("gender")
-					.document(mGender)
-					.collection("users");
-			profiles.document(firebaseUser.getUid()).set(mProfileModel).addOnSuccessListener(aVoid -> {
-				profileViewModel.saveProfile(this, mProfileModel);
-				profileViewModel.setProfileModel(mProfileModel);
-				Toast.makeText(this,
-						"Successfully uploaded data to firebase + stored into sharedPrefs",
-						Toast.LENGTH_LONG).show();
-				pb_button.stopAnim(this::startMainActivity);
-			});
+		//mCity = gps.getCity(this);
+		mCity = "Kyiv";
+		ArrayList<String> urls = new ArrayList<>();
+		urls.add(String.valueOf(mFirebaseUser.getPhotoUrl()));
+		mProfileModel = new ProfileModel(mFirebaseUser.getDisplayName(), mCity, mGender,
+		                                 mPreferedGender, String.valueOf(mFirebaseUser.getPhotoUrl()),
+		                                 urls, mFirebaseUser.getUid());
+		CollectionReference profiles = mFirestore.collection("users");
+		profiles.document(mFirebaseUser.getUid()).set(mProfileModel).addOnSuccessListener(aVoid -> {
+			profileViewModel.saveProfile(this, mProfileModel);
+			profileViewModel.setProfileModel(mProfileModel);
+			Toast.makeText(this,
+					"Successfully uploaded data to firebase + stored into sharedPrefs",
+					Toast.LENGTH_LONG).show();
+			pb_button.stopAnim(this::startMainActivity);
+		});
 
-		}
+	}
+
+	private void startMainActivity () {
+		Intent mMainActivityIntent = new Intent(AuthActivity.this, MainActivity.class);
+		startActivity(mMainActivityIntent);
+		if (additionalRegDialog!=null) additionalRegDialog.dismiss();
+		finish();
 	}
 
 	/*
@@ -237,19 +213,24 @@ public class AuthActivity extends AppCompatActivity
 		if (!progressDialog.isShowing()) progressDialog.show();
 	}
 
-	private void dismissProgressDialog ()
-	{ if (progressDialog.isShowing()) progressDialog.dismiss(); }
+	private void dismissProgressDialog () { if (progressDialog.isShowing()) progressDialog.dismiss(); }
+
+	@Override
+	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		mCallbackManager.onActivityResult(requestCode, resultCode, data);
+	}
 
 	@Override
 	protected void onStart () {
 		super.onStart();
-		firebaseAuth.addAuthStateListener(mAuthStateListener);
+		mFirebaseAuth.addAuthStateListener(mAuthStateListener);
 	}
 
 	@Override
 	protected void onStop () {
 		super.onStop();
-		if (mAuthStateListener != null) firebaseAuth.removeAuthStateListener(mAuthStateListener);
+		if (mAuthStateListener != null) mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
 	}
 
 	@Override

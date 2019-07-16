@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.facebook.login.LoginManager;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -82,6 +81,8 @@ public class MainActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		ButterKnife.bind(this);
+		mFirebaseAuth = FirebaseAuth.getInstance();
+		checkConnection();
 		setSupportActionBar(toolbar);
 		setupNavigationView();
 		mFragmentManager = getSupportFragmentManager();
@@ -89,8 +90,6 @@ public class MainActivity extends AppCompatActivity
 			if (savedInstanceState != null) return;
 			mFragmentManager.beginTransaction().add(R.id.main_container, new FeedFragment()).commit();
 		}
-		mFirebaseAuth = FirebaseAuth.getInstance();
-		checkConnection();
 		mFirestore = FirebaseFirestore.getInstance();
 		ProfileViewModel profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
 		profileModel = profileViewModel.getProfileModel(this).getValue();
@@ -102,65 +101,23 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	/*
-	 * generate random users to firestore
-	 */
-	private void onAddItemsClicked() {
-		usersCards.clear();
-		CollectionReference profiles = mFirestore.collection("gender");
-		usersCards.addAll(FeedManager.generateUsers());
-		for (ProfileModel i :usersCards)
-			if (i.getGender().equals("female"))
-				profiles.document("female")
-						.collection("users")
-						.document(i.getUserID()).set(i);
-			else profiles.document("male")
-					.collection("users")
-					.document(i.getUserID()).set(i);
-
-
-            /*
-            generate likes/matches/skips lists
-             */
-//        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
-//                .collection("likes")
-//                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(1).getName())
-//                .set(usersCards.get(1));
-//        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
-//                .collection("matches")
-//                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(2).getName())
-//                .set(usersCards.get(2));
-//        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
-//                .collection("skips")
-//                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(3).getName())
-//                .set(usersCards.get(3));
-//
-//        profiles.get().addOnCompleteListener(task -> {
-//            String a;
-//            if (task.isSuccessful())
-//            {
-//                a = task.getResult().getDocuments().get(0).get("Name").toString();
-//                new Handler().postDelayed(() -> Toast.makeText(getApplicationContext(), "Name : " + String.valueOf(a), Toast.LENGTH_SHORT).show(), 1000);
-//            }
-//        });
-
-	}
-
-	/*
 	 * check if user is authentificated
 	 */
 	private void checkConnection(){
 		mAuthStateListener = ((@NonNull FirebaseAuth firebaseAuth) -> {
-			FirebaseUser signedInUser = firebaseAuth.getCurrentUser();
-			if (signedInUser == null) {
+			if (firebaseAuth.getCurrentUser() == null) {
 				Intent authIntent = new Intent(MainActivity.this, AuthActivity.class);
 				startActivity(authIntent);
 				finish();
 			}
 		});
 	}
+	/*
+	 * generate random users to firestore
+	 */
 
 	private void setUpUser () {
-		if (profileModel !=null){
+		if (profileModel != null){
 			String mName = profileModel.getName();
 			String mCity = profileModel.getCity();
 			String mGender = profileModel.getGender();
@@ -200,7 +157,7 @@ public class MainActivity extends AppCompatActivity
 				break;
 			case (R.id.nav_post):
 				//Toast.makeText(this,String.valueOf(usersCards),Toast.LENGTH_SHORT).show();
-				onAddItemsClicked();
+				onGenerateUsers();
 				break;
 			case (R.id.nav_notifications):
 				//Toast.makeText(this,String.valueOf(mFeedManager.getUsersCards()),Toast.LENGTH_SHORT).show();
@@ -217,6 +174,41 @@ public class MainActivity extends AppCompatActivity
 		return true;
 
 	});
+
+	private void onGenerateUsers () {
+		usersCards.clear();
+		CollectionReference usersCollection = mFirestore.collection("users");
+		usersCards.addAll(FeedManager.generateUsers());
+		for (ProfileModel i :usersCards)
+			usersCollection.document(i.getUserID()).set(i);
+
+
+            /*
+            generate likes/matches/skips lists
+             */
+		//        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
+		//                .collection("likes")
+		//                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(1).getName())
+		//                .set(usersCards.get(1));
+		//        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
+		//                .collection("matches")
+		//                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(2).getName())
+		//                .set(usersCards.get(2));
+		//        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
+		//                .collection("skips")
+		//                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(3).getName())
+		//                .set(usersCards.get(3));
+		//
+		//        profiles.get().addOnCompleteListener(task -> {
+		//            String a;
+		//            if (task.isSuccessful())
+		//            {
+		//                a = task.getResult().getDocuments().get(0).get("Name").toString();
+		//                new Handler().postDelayed(() -> Toast.makeText(getApplicationContext(), "Name : " + String.valueOf(a), Toast.LENGTH_SHORT).show(), 1000);
+		//            }
+		//        });
+
+	}
 
 	private void startCardFragment(){
 		FragmentTransaction ft = mFragmentManager.beginTransaction();
@@ -302,10 +294,8 @@ public class MainActivity extends AppCompatActivity
 		progressDialog.show();
 		usersCards.clear();
 		String mPreferedGender = profileModel.getPreferedGender();
-		CollectionReference genderProfiles = mFirestore.collection("gender")
-				.document(mPreferedGender)
-				.collection("users");
-		genderProfiles.get().addOnCompleteListener(task -> {
+		CollectionReference usersCollection = mFirestore.collection("users");
+		usersCollection.whereEqualTo("gender", mPreferedGender).get().addOnCompleteListener(task -> {
 			if (task.isSuccessful() && task.getResult()!=null) {
 				QuerySnapshot result = task.getResult();
 				for (DocumentSnapshot doc :result)
@@ -315,8 +305,7 @@ public class MainActivity extends AppCompatActivity
 					progressDialog.dismiss();
 				startCardFragment();
 			}
-		})
-				.addOnFailureListener(e -> Toast.makeText(this, "Cannot retrieve information", Toast.LENGTH_SHORT).show());
+		}).addOnFailureListener(e -> Toast.makeText(this, "Cannot retrieve information", Toast.LENGTH_SHORT).show());
 
 	}
 
