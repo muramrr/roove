@@ -46,7 +46,6 @@ import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
 /**
  * TODO: fix some bugs bonded with saved user in shared prefs and logging in same user
- * TODO: track if have user already used app
  */
 public class AuthActivity extends AppCompatActivity
 {

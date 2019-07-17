@@ -112,9 +112,6 @@ public class MainActivity extends AppCompatActivity
 			}
 		});
 	}
-	/*
-	 * generate random users to firestore
-	 */
 
 	private void setUpUser () {
 		if (profileModel != null){
@@ -175,6 +172,9 @@ public class MainActivity extends AppCompatActivity
 
 	});
 
+	/*
+	 * generate random users to firestore
+	 */
 	private void onGenerateUsers () {
 		usersCards.clear();
 		CollectionReference usersCollection = mFirestore.collection("users");
@@ -210,6 +210,9 @@ public class MainActivity extends AppCompatActivity
 
 	}
 
+	/*
+	 * start tinder
+	 */
 	private void startCardFragment(){
 		FragmentTransaction ft = mFragmentManager.beginTransaction();
 		ft.setCustomAnimations(R.anim.fragment_enter_from_right, R.anim.fragment_exit_to_left, R.anim.fragment_enter_from_left, R.anim.fragment_exit_to_right);
@@ -218,6 +221,9 @@ public class MainActivity extends AppCompatActivity
 		ft.commit();
 	}
 
+	/*
+	 * start chat
+	 */
 	private void startChatFragment(){
 		FragmentTransaction ft = mFragmentManager.beginTransaction();
 		ft.setCustomAnimations(R.anim.fragment_enter_from_right, R.anim.fragment_exit_to_left, R.anim.fragment_enter_from_left, R.anim.fragment_exit_to_right);

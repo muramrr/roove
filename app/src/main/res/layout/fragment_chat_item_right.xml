@@ -13,7 +13,7 @@
         android:layout_alignBottom="@+id/contentMessageChat"
         android:layout_alignParentEnd="true"
         android:layout_margin="5dp"
-	    android:contentDescription="my avatar"
+	    android:contentDescription="@string/chat_message_my_avatar_img_description"
         android:src="@drawable/fragment_chat_message_default_account_icon"/>
 
 	<LinearLayout
@@ -30,7 +30,7 @@
 	        android:layout_height="wrap_content"
 		    android:layout_margin="10dp"
 	        android:background="@color/colorPrimaryDark"
-		    android:contentDescription="mine image"
+		    android:contentDescription="@string/chat_message_my_attach_img_description"
 	        android:minHeight="100dp"
 	        android:minWidth="100dp"
 		    android:src="@color/material_black_1000"
@@ -41,7 +41,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/item_message_tvMessage"
 			android:padding="10dp"
-			android:text="Alessandr text \n texxt \ntext text"
+			android:text="@string/default_message_text"
 			android:textColor="@color/material_white_1000"
 			android:textIsSelectable="true" />
 
@@ -57,7 +57,7 @@
 	    android:paddingStart="10dp"
 	    android:paddingEnd="10dp"
 	    android:paddingTop="3dp"
-        android:text="dd/mm/yyyy"
+        android:text="@string/default_message_date"
         android:textSize="12sp" />
 
 </RelativeLayout>

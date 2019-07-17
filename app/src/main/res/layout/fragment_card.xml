@@ -1,6 +1,7 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
     android:padding="20dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -16,9 +17,7 @@
     <com.yuyakaido.android.cardstackview.CardStackView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/card_stack_view" />
-
-
-
+        android:id="@+id/card_stack_view"
+        tools:listitem="@layout/fragment_card_item"/>
 
 </RelativeLayout>
