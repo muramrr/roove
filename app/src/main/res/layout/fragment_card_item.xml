@@ -7,15 +7,15 @@
     app:cardUseCompatPadding="true"
     app:cardPreventCornerOverlap="false"
     app:cardCornerRadius="8dp"
-    app:cardBackgroundColor="@android:color/white"
+    app:cardBackgroundColor="@color/material_white_1000"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
-        android:id="@+id/item_image"
+        android:id="@+id/fragment_card_item_img_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="card image"
+        android:contentDescription="@string/fragment_card_item_img_description"
         android:scaleType="centerCrop"/>
 
     <LinearLayout
@@ -27,19 +27,21 @@
         android:background="@drawable/fragment_card_item_gradation_black">
 
         <TextView
-            android:id="@+id/item_name"
+            android:id="@+id/fragment_card_item_text_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/material_white_1000"
             android:textStyle="bold"
-            android:textColor="@android:color/white"
+            android:text="@string/default_name"
             android:textSize="26sp"/>
 
         <TextView
-            android:id="@+id/item_city"
+            android:id="@+id/fragment_card_item_text_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/default_city"
+            android:textColor="@color/material_white_1000"
             android:textStyle="bold"
-            android:textColor="@android:color/white"
             android:textSize="20sp"/>
 
     </LinearLayout>
@@ -54,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:contentDescription="card skip"
+            android:contentDescription="@string/fragment_card_skip_img_description"
             android:src="@drawable/fragment_card_item_skip_white_120dp"/>
 
     </FrameLayout>
@@ -69,21 +71,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:contentDescription="card like"
+            android:contentDescription="@string/fragment_card_like_img_description"
             android:src="@drawable/fragment_card_item_like_white_120dp" />
 
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/top_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/bottom_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
 
 </androidx.cardview.widget.CardView>

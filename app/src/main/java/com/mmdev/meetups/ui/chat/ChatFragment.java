@@ -117,7 +117,7 @@ public class ChatFragment extends Fragment implements ClickChatAttachmentsFireba
 		if (getActivity() != null) mMainActivity = (MainActivity) getActivity();
 		edMessageWrite = view.findViewById(R.id.editTextMessage);
 		rvMessagesList = view.findViewById(R.id.messageRecyclerView);
-		ivAttachments = view.findViewById(R.id.buttonAttachements);
+		ivAttachments = view.findViewById(R.id.buttonAttachments);
 		ivSendMessage = view.findViewById(R.id.buttonMessage);
 		setupViews();
 		getFirebaseInstances();
