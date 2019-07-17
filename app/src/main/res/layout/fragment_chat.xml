@@ -14,8 +14,7 @@
 		android:id="@+id/messageRecyclerView"
 		android:layout_above="@+id/content_message"
 		android:layout_alignParentTop="true"
-		android:scrollbars="none"
-		tools:listitem="@layout/message_item"/>
+		android:scrollbars="none"/>
 
 	<RelativeLayout
 		android:id="@+id/content_message"
@@ -26,12 +25,12 @@
 		android:padding="5dp">
 
 		<ImageView
-			android:id="@+id/buttonAttachements"
+			android:id="@+id/buttonAttachments"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentStart="true"
 			android:layout_centerVertical="true"
-			android:contentDescription="send attachment"
+			android:contentDescription="@string/fragment_chat_attach_img_description"
 			android:src="@drawable/fragment_chat_ic_attachment"/>
 
 		<EditText
@@ -39,9 +38,10 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_toStartOf="@+id/buttonMessage"
-			android:layout_toEndOf="@+id/buttonAttachements"
+			android:layout_toEndOf="@+id/buttonAttachments"
 			android:inputType="text"
-			android:hint="Enter message"/>
+			android:hint="@string/fragment_chat_ed_hint"
+			tools:ignore="Autofill"/>
 
 		<ImageView
 			android:id="@+id/buttonMessage"
@@ -49,7 +49,7 @@
 			android:layout_height="wrap_content"
 			android:layout_alignParentEnd="true"
 			android:layout_centerVertical="true"
-			android:contentDescription="send message"
+			android:contentDescription="@string/fragment_chat_send_img_description"
 			android:src="@android:drawable/ic_menu_send"/>
 	</RelativeLayout>
 
