@@ -19,9 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.ViewHolder>
 {
 
-	private List<ProfileModel> users;
+	private List<ProfileModel> mUsersList;
 
-	CardStackAdapter (List<ProfileModel> users) { this.users = users; }
+	CardStackAdapter (List<ProfileModel> mUsersList) { this.mUsersList = mUsersList; }
 
 	@NonNull
 	@Override
@@ -33,33 +33,33 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
 	@Override
 	public void onBindViewHolder (@NonNull ViewHolder holder, final int position) {
-		ProfileModel user = users.get(position);
+		ProfileModel user = mUsersList.get(position);
 		holder.tvNameCard.setText(user.getName());
 		holder.tvCityCard.setText(user.getCity());
 		GlideApp.with(holder.tvImageCard)
 				.load(user.getMainPhotoUrl())
 				.into(holder.tvImageCard);
-		holder.itemView.setOnClickListener(v -> Toast.makeText(v.getContext(), "clicked", Toast.LENGTH_SHORT).show());
+		holder.itemView
+				.setOnClickListener
+						(v -> Toast.makeText(v.getContext(), "clicked", Toast.LENGTH_SHORT).show());
 
 	}
 
 	@Override
-	public int getItemCount () { return users.size(); }
+	public int getItemCount () { return mUsersList.size(); }
 
 	@Override
 	public long getItemId (int position) { return position; }
 
-	ProfileModel getSwipedProfile (int position){
-		return users.get(position);
-	}
+	ProfileModel getSwipedProfile (int position){ return mUsersList.get(position); }
 
 	public void setSpots(List<ProfileModel> users) {
-		this.users = users;
+		this.mUsersList = users;
 	}
 
 	public List<ProfileModel> getSpots()
 	{
-		return users;
+		return mUsersList;
 	}
 
 	static class ViewHolder extends RecyclerView.ViewHolder
