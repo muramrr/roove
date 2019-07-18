@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedItemHolder> {
 
-	private List<FeedItem> feedItems;
+	private List<FeedItem> mFeedItems;
 
-	FeedAdapter(List<FeedItem> feedItems) {
-		this.feedItems = feedItems;
+	FeedAdapter(List<FeedItem> mFeedItems) {
+		this.mFeedItems = mFeedItems;
 	}
 
 	@Override
@@ -31,13 +31,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedItemHolder
 
 	@Override
 	public void onBindViewHolder(@NonNull FeedItemHolder holder, int position) {
-		FeedItem feedItem = feedItems.get(position);
+		FeedItem feedItem = mFeedItems.get(position);
 		if (feedItem != null)
-			holder.bind(feedItems.get(position));
+			holder.bind(mFeedItems.get(position));
 	}
 
 	@Override
-	public int getItemCount() { return feedItems != null ? feedItems.size() : 0; }
+	public int getItemCount() { return mFeedItems != null ? mFeedItems.size() : 0; }
 
 	static class FeedItemHolder extends RecyclerView.ViewHolder {
 

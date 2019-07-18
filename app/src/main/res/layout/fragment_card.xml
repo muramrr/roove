@@ -1,23 +1,23 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
     android:padding="20dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.yuyakaido.android.cardstackview.CardStackView
+        android:id="@+id/card_stack_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:listitem="@layout/fragment_card_item"/>
 
     <ProgressBar
         android:id="@+id/card_prBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
+        android:visibility="visible"
         style="?android:attr/progressBarStyleLarge"/>
-
-    <com.yuyakaido.android.cardstackview.CardStackView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/card_stack_view"
-        tools:listitem="@layout/fragment_card_item"/>
 
 </RelativeLayout>
