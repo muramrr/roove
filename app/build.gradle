@@ -59,7 +59,7 @@ dependencies {
 	implementation 'com.google.firebase:firebase-firestore:20.1.0'
 	//chat
 	implementation 'me.himanshusoni.chatmessageview:chat-message-view:1.0.7'
-	implementation 'com.google.android.libraries.places:places:1.1.0'
+	implementation 'com.google.android.libraries.places:places:2.0.0'
 	//facebook auth
 	implementation 'com.facebook.android:facebook-android-sdk:5.1.1'
 	implementation 'com.facebook.android:facebook-login:5.1.1'
