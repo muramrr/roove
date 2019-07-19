@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -33,14 +34,25 @@ public class CardFragment extends Fragment {
 	
 	private static final String USERS_COLLECTION_REFERENCE = "users";
 	private static final String USERS_FILTER = "gender";
+	private static final String USER_LIKES_COLLECTION_REFERENCE = "likes";
+	private static final String USER_SKIPS_COLLECTION_REFERENCE = "skips";
+	private static final String USER_MATCHES_COLLECTION_REFERENCE = "matches";
+	
 	
 	private MainActivity mMainActivity;
+	
+	
 	private FirebaseFirestore mFirestore;
 	private CollectionReference mUsersCollection;
+	private DocumentReference mProfileDocument;
+	
+	
 	private CardStackView cardStackView;
 	private CardStackAdapter mCardStackAdapter;
 	private CardStackLayoutManager mCardStackLayoutManager;
-	private ProfileModel mProfileModel;
+	
+	
+	private ProfileModel mProfileModel, mSwipeUser;
 	private String mPreferedGender;
 	private ProgressBar pbStatus;
 	private int limit, total_users;
@@ -64,13 +76,19 @@ public class CardFragment extends Fragment {
 		mFirestore = FirebaseFirestore.getInstance();
 		limit = 1;
 		if (mProfileModel != null) {
+			mUsersCollection = mFirestore.collection(USERS_COLLECTION_REFERENCE);
+			mProfileDocument = mUsersCollection.document(mProfileModel.getUserID());
 			showLoadingBar();
 			mUsersCards.clear();
 			getPotentialUsers();
 		}
 		
-		//mCardStackAdapter = new CardStackAdapter(mUsersCards);
 		mCardStackLayoutManager = new CardStackLayoutManager(mMainActivity, new CardStackListener() {
+			@Override
+			public void onCardAppeared (View view, int position) {
+				mSwipeUser = mCardStackAdapter.getSwipeProfile(position);
+			}
+		
 			@Override
 			public void onCardDragging (Direction direction, float ratio) {
 
@@ -78,8 +96,14 @@ public class CardFragment extends Fragment {
 
 			@Override
 			public void onCardSwiped (Direction direction) {
-				//if(direction == Direction.Right)
-
+				if(direction == Direction.Right) {
+					mProfileDocument.collection(USER_LIKES_COLLECTION_REFERENCE)
+							.document(mSwipeUser.getUserID())
+							.set(mSwipeUser);
+				}
+				else mProfileDocument.collection(USER_SKIPS_COLLECTION_REFERENCE)
+						.document(mSwipeUser.getUserID())
+						.set(mSwipeUser);
 			}
 
 			@Override
@@ -87,14 +111,7 @@ public class CardFragment extends Fragment {
 
 			@Override
 			public void onCardCanceled () {}
-
-			@Override
-			public void onCardAppeared (View view, int position) {
-				Toast.makeText(mMainActivity,
-				               mCardStackAdapter.getSwipedProfile(position).getName() + position,
-				               Toast.LENGTH_SHORT).show();
-			}
-
+			
 			@Override
 			public void onCardDisappeared (View view, int position) {
 				if (position == total_users-1) {
@@ -112,10 +129,8 @@ public class CardFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 	}
 	
-
 	private void getPotentialUsers(){
 		mPreferedGender = mProfileModel.getPreferedGender();
-		mUsersCollection = mFirestore.collection(USERS_COLLECTION_REFERENCE);
 		mUsersCollection.whereEqualTo(USERS_FILTER, mPreferedGender)
 				//.limit(limit)
 				.get()

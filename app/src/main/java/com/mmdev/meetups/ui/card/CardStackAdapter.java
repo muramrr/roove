@@ -51,20 +51,10 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 	@Override
 	public long getItemId (int position) { return position; }
 
-	ProfileModel getSwipedProfile (int position){ return mUsersList.get(position); }
-
-	public void setSpots(List<ProfileModel> users) {
-		this.mUsersList = users;
-	}
-
-	public List<ProfileModel> getSpots()
-	{
-		return mUsersList;
-	}
+	ProfileModel getSwipeProfile (int position){ return mUsersList.get(position); }
 
 	static class ViewHolder extends RecyclerView.ViewHolder
 	{
-
 		private final TextView tvNameCard;
 		private final TextView tvCityCard;
 		private final ImageView tvImageCard;
