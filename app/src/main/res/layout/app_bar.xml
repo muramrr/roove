@@ -13,6 +13,6 @@
             android:background="?attr/colorPrimary"
             android:id="@+id/toolbar"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="Feed"/>
+            app:title="MeetApps"/>
 
 </com.google.android.material.appbar.AppBarLayout>
