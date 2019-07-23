@@ -84,13 +84,18 @@ public class MainActivity extends AppCompatActivity
 		mFragmentManager = getSupportFragmentManager();
 		if (findViewById(R.id.main_container) != null) {
 			if (savedInstanceState != null) return;
-			mFragmentManager.beginTransaction().add(R.id.main_container, new FeedFragment()).commit();
+			mFragmentManager.beginTransaction()
+					.add(R.id.main_container, new FeedFragment(), "FeedFragment").commit();
 		}
 		mFirestore = FirebaseFirestore.getInstance();
 		ProfileViewModel profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
 		profileModel = profileViewModel.getProfileModel(this).getValue();
 		setUpUser();
-		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+				                          drawerLayout,
+				                          toolbar,
+				                          R.string.navigation_drawer_open,
+				                          R.string.navigation_drawer_close);
 		drawerLayout.addDrawerListener(toggle);
 		toggle.syncState();
 
@@ -164,11 +169,10 @@ public class MainActivity extends AppCompatActivity
 		settingsButton.setOnClickListener((View v) -> startActivity(new Intent(MainActivity.this, ProfileActivity.class)));
 	}
 	
-
 	/*
 	 * generate random users to firestore
 	 */
-	private void onGenerateUsers () {
+	private void onGenerateUsers ()  {
 		usersCards.clear();
 		CollectionReference usersCollection = mFirestore.collection("users");
 		usersCards.addAll(FeedManager.generateUsers());
@@ -204,7 +208,7 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	/*
-	 * start tinder
+	 * start card swipe
 	 */
 	private void startCardFragment(){
 		FragmentTransaction ft = mFragmentManager.beginTransaction();
@@ -231,10 +235,9 @@ public class MainActivity extends AppCompatActivity
 		builder.setPositiveButton("YES", ((DialogInterface dialog, int which) -> {
 			dialog.dismiss();
 			//Attempt sign out
-			if (mFirebaseAuth.getCurrentUser() != null) {
-				mFirebaseAuth.signOut();
-				LoginManager.getInstance().logOut();
-			}
+			mFirebaseAuth.signOut();
+			LoginManager.getInstance().logOut();
+			
 		}));
 		builder.setNegativeButton("NO", (DialogInterface dialog, int which) -> dialog.dismiss());
 		builder.create().show();
@@ -260,10 +263,8 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	public void onBackPressed() {
 		drawerLayout = findViewById(R.id.drawer_layout);
-		if (drawerLayout.isDrawerOpen(GravityCompat.START))
-			drawerLayout.closeDrawer(GravityCompat.START);
-		else
-			super.onBackPressed();
+		if (drawerLayout.isDrawerOpen(GravityCompat.START)) drawerLayout.closeDrawer(GravityCompat.START);
+		else super.onBackPressed();
 	}
 
 	@Override
