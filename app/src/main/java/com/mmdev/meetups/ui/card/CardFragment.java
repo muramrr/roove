@@ -6,9 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mmdev.meetups.R;
@@ -28,12 +26,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 
-/* Todo: move data getters to another class */
 
 public class CardFragment extends Fragment {
 	
 	private static final String USERS_COLLECTION_REFERENCE = "users";
-	private static final String USERS_FILTER = "gender";
 	private static final String USER_LIKES_COLLECTION_REFERENCE = "likes";
 	private static final String USER_SKIPS_COLLECTION_REFERENCE = "skips";
 	private static final String USER_MATCHES_COLLECTION_REFERENCE = "matches";
@@ -41,21 +37,14 @@ public class CardFragment extends Fragment {
 	
 	private MainActivity mMainActivity;
 	
-	
-	private FirebaseFirestore mFirestore;
-	private CollectionReference mUsersCollection;
-	private DocumentReference mProfileDocument;
-	
+	private DocumentReference mProfileDocumentRef;
 	
 	private CardStackView cardStackView;
 	private CardStackAdapter mCardStackAdapter;
-	private CardStackLayoutManager mCardStackLayoutManager;
-	private CardsViewModel mCardsViewModel;
 	private List<ProfileModel> mPotentialUsersList;
-	private ProfileModel mProfileModel, mSwipeUser;
-	private String mPreferedGender;
+	private ProfileModel mSwipeUser;
 	private ProgressBar pbStatus;
-	private int limit, total_users;
+	
 	private boolean mProgressShowing;
 	
 	
@@ -71,23 +60,24 @@ public class CardFragment extends Fragment {
 		if (getActivity() != null) mMainActivity = (MainActivity) getActivity();
 		cardStackView = view.findViewById(R.id.card_stack_view);
 		pbStatus = view.findViewById(R.id.card_prBar);
-		ProfileViewModel mProfileViewModel = ViewModelProviders.of(mMainActivity).get(ProfileViewModel.class);
-		mProfileModel = mProfileViewModel.getProfileModel(mMainActivity).getValue();
 		
-		mCardsViewModel = ViewModelProviders.of(mMainActivity).get(CardsViewModel.class);
+		ProfileViewModel profileViewModel = ViewModelProviders.of(mMainActivity).get(ProfileViewModel.class);
+		ProfileModel profileModel = profileViewModel.getProfileModel(mMainActivity).getValue();
 		
-		mFirestore = FirebaseFirestore.getInstance();
-		limit = 1;
+		CardsViewModel cardsViewModel = ViewModelProviders.of(mMainActivity).get(CardsViewModel.class);
+		
+		FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 		mProgressShowing = false;
-		if (mProfileModel != null) {
+		if (profileModel != null) {
 			showLoadingBar();
 			
-			mPreferedGender = mProfileModel.getPreferedGender();
-			mUsersCollection = mFirestore.collection(USERS_COLLECTION_REFERENCE);
-			mProfileDocument = mUsersCollection.document(mProfileModel.getUserID());
+			//current profile reference in firestore
+			mProfileDocumentRef = firestore
+					.collection(USERS_COLLECTION_REFERENCE)
+					.document(profileModel.getUserID());
 			
-			mCardsViewModel
-					.getUsers(mProfileModel.getPreferedGender(), mProfileModel.getUserID())
+			//get users from viewmodel
+			cardsViewModel.getUsers(profileModel.getPreferedGender(), profileModel.getUserID())
 					.observe(mMainActivity, profileModelList -> {
 						mPotentialUsersList = profileModelList;
 						if(mCardStackAdapter == null)
@@ -99,22 +89,16 @@ public class CardFragment extends Fragment {
 						}
 					});
 			
-			
 		}
 		
 		
 		
-		mCardStackLayoutManager = new CardStackLayoutManager(mMainActivity, new CardStackListener() {
+		CardStackLayoutManager cardStackLayoutManager = new CardStackLayoutManager(mMainActivity, new CardStackListener() {
 			
 			@Override
 			public void onCardAppeared (View view, int position) {
-				mSwipeUser = mCardStackAdapter.getSwipeProfile(0);
-				Toast.makeText(
-						mMainActivity,
-						"cards= "+position+" adapter = "+mCardStackAdapter.getItemCount(),
-						Toast.LENGTH_SHORT
-				).show();
-				
+				//get current displayed on card profile
+				mSwipeUser = mCardStackAdapter.getSwipeProfile(position);
 			}
 		
 			@Override
@@ -124,14 +108,18 @@ public class CardFragment extends Fragment {
 
 			@Override
 			public void onCardSwiped (Direction direction) {
+				//if right = add to liked
+				//else = add to skiped
 				if(direction == Direction.Right)
-					mProfileDocument.collection(USER_LIKES_COLLECTION_REFERENCE)
-							.document(mSwipeUser.getUserID())
-							.set(mSwipeUser);
-				else mProfileDocument.collection(USER_SKIPS_COLLECTION_REFERENCE)
+					if (cardsViewModel.checkMatch(mSwipeUser.getUserID()))
+						mProfileDocumentRef.collection(USER_LIKES_COLLECTION_REFERENCE)
+								.document(mSwipeUser.getUserID())
+								.set(mSwipeUser);
+				else mProfileDocumentRef.collection(USER_SKIPS_COLLECTION_REFERENCE)
 						.document(mSwipeUser.getUserID())
 						.set(mSwipeUser);
-				//mPotentialUsersList.remove(mSwipeUser);
+				mCardStackAdapter.notifyDataSetChanged();
+				mPotentialUsersList.remove(mSwipeUser);
 			}
 
 			@Override
@@ -142,15 +130,16 @@ public class CardFragment extends Fragment {
 			
 			@Override
 			public void onCardDisappeared (View view, int position) {
-				
+				//if there is no available user to show - show loading
 				if (position == mCardStackAdapter.getItemCount()-1) {
-					
+					mCardStackAdapter.notifyDataSetChanged();
 					showLoadingBar();
 				}
 			}
+			
 		});
 		
-		cardStackView.setLayoutManager(mCardStackLayoutManager);
+		cardStackView.setLayoutManager(cardStackLayoutManager);
 		
 	}
 
@@ -175,8 +164,7 @@ public class CardFragment extends Fragment {
 		}
 	}
 	
-	private boolean checkMatch() {
-		return true;
-	}
+	
+	
 	
 }
