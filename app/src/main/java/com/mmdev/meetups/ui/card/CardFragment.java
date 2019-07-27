@@ -6,9 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.mmdev.meetups.R;
 import com.mmdev.meetups.models.ProfileModel;
 import com.mmdev.meetups.ui.main.MainActivity;
@@ -29,15 +28,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 public class CardFragment extends Fragment {
 	
-	private static final String USERS_COLLECTION_REFERENCE = "users";
-	private static final String USER_LIKES_COLLECTION_REFERENCE = "likes";
-	private static final String USER_SKIPS_COLLECTION_REFERENCE = "skips";
-	private static final String USER_MATCHES_COLLECTION_REFERENCE = "matches";
-	
-	
 	private MainActivity mMainActivity;
-	
-	private DocumentReference mProfileDocumentRef;
 	
 	private CardStackView cardStackView;
 	private CardStackAdapter mCardStackAdapter;
@@ -66,31 +57,26 @@ public class CardFragment extends Fragment {
 		
 		CardsViewModel cardsViewModel = ViewModelProviders.of(mMainActivity).get(CardsViewModel.class);
 		
-		FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+		
 		mProgressShowing = false;
 		if (profileModel != null) {
 			showLoadingBar();
-			
-			//current profile reference in firestore
-			mProfileDocumentRef = firestore
-					.collection(USERS_COLLECTION_REFERENCE)
-					.document(profileModel.getUserID());
-			
 			//get users from viewmodel
-			cardsViewModel.getUsers(profileModel.getPreferedGender(), profileModel.getUserID())
-					.observe(mMainActivity, profileModelList -> {
-						mPotentialUsersList = profileModelList;
-						if(mCardStackAdapter == null)
-							mCardStackAdapter = new CardStackAdapter(mPotentialUsersList);
-						cardStackView.setAdapter(mCardStackAdapter);
-						if(mCardStackAdapter.getItemCount() != 0) {
-							hideLoadingBar();
-							mCardStackAdapter.notifyDataSetChanged();
-						}
-					});
-			
+			cardsViewModel.init(profileModel);
+			cardsViewModel.getPotentialUsers().observe(mMainActivity, profileModelList -> {
+				mPotentialUsersList = profileModelList;
+				if(mCardStackAdapter == null)
+					mCardStackAdapter = new CardStackAdapter(mPotentialUsersList);
+				cardStackView.setAdapter(mCardStackAdapter);
+				if(mCardStackAdapter.getItemCount() != 0) {
+					hideLoadingBar();
+					mCardStackAdapter.notifyDataSetChanged();
+				}
+			});
+			//handle match event
+			cardsViewModel.getMatchedUser().observe(mMainActivity, matchedUser ->
+					Toast.makeText(mMainActivity,"match!",Toast.LENGTH_SHORT).show());
 		}
-		
 		
 		
 		CardStackLayoutManager cardStackLayoutManager = new CardStackLayoutManager(mMainActivity, new CardStackListener() {
@@ -110,14 +96,10 @@ public class CardFragment extends Fragment {
 			public void onCardSwiped (Direction direction) {
 				//if right = add to liked
 				//else = add to skiped
-				if(direction == Direction.Right)
-					if (cardsViewModel.checkMatch(mSwipeUser.getUserID()))
-						mProfileDocumentRef.collection(USER_LIKES_COLLECTION_REFERENCE)
-								.document(mSwipeUser.getUserID())
-								.set(mSwipeUser);
-				else mProfileDocumentRef.collection(USER_SKIPS_COLLECTION_REFERENCE)
-						.document(mSwipeUser.getUserID())
-						.set(mSwipeUser);
+				if(direction == Direction.Right) {
+					cardsViewModel.handlePossibleMatch(mSwipeUser);
+				}
+				else cardsViewModel.addToSkipped(mSwipeUser);
 				mCardStackAdapter.notifyDataSetChanged();
 				mPotentialUsersList.remove(mSwipeUser);
 			}

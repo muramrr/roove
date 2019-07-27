@@ -33,10 +33,11 @@ public class CardsViewModel extends ViewModel {
 	private static final String USER_SKIPS_COLLECTION_REFERENCE = "skips";
 	private static final String USER_MATCHES_COLLECTION_REFERENCE = "matches";
 	
+	private ProfileModel mCurrentUser;
 	private String mCurrentUserId;
 	
-	private CollectionReference mUsersCollection;
-	private DocumentReference mProfileDocument;
+	private CollectionReference mUsersCollectionRef;
+	private DocumentReference mCurrentProfileDocRef;
 	
 	private List<ProfileModel> mAllUsersCards = new ArrayList<>();
 	private List<String> mSkipedUsersCardsIds = new ArrayList<>();
@@ -45,23 +46,39 @@ public class CardsViewModel extends ViewModel {
 	
 	
 	private MutableLiveData<List<ProfileModel>> potentialUsersCards;
+	private MutableLiveData<ProfileModel> matchedUser;
 	
 	public CardsViewModel() {}
 	
-	public LiveData<List<ProfileModel>> getUsers(String preferedGender, String userId) {
-		FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
-		mUsersCollection = mFirestore.collection(USERS_COLLECTION_REFERENCE);
-		mProfileDocument = mUsersCollection.document(userId);
-		mCurrentUserId = userId;
+	void init (ProfileModel currentUser){
+		mCurrentUser = currentUser;
+		mCurrentUserId = mCurrentUser.getUserID();
+		FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+		mUsersCollectionRef = firestore.collection(USERS_COLLECTION_REFERENCE);
+		mCurrentProfileDocRef = mUsersCollectionRef.document(mCurrentUser.getUserID());
+		//paris like, new york like, paris skip
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("axrknsctqj").collection(USER_LIKES_COLLECTION_REFERENCE).document(mCurrentUserId).set(mCurrentUser);
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("lrgctefskb").collection(USER_LIKES_COLLECTION_REFERENCE).document(mCurrentUserId).set(mCurrentUser);
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("iwdvqluegl").collection(USER_SKIPS_COLLECTION_REFERENCE).document(mCurrentUserId).set(mCurrentUser);
+	}
+	
+	LiveData<List<ProfileModel>> getPotentialUsers () {
 		if (potentialUsersCards == null) {
 			potentialUsersCards = new MutableLiveData<>();
-			loadUsers(preferedGender, userId);
+			loadUsers(mCurrentUser.getPreferedGender());
 		}
 		
 		return potentialUsersCards;
 	}
 	
-	private void loadUsers(String preferedGender, String userId) {
+	LiveData<ProfileModel> getMatchedUser (){
+		if (matchedUser == null) {
+			matchedUser = new MutableLiveData<>();
+		}
+		return matchedUser;
+	}
+	
+	private void loadUsers(String preferedGender) {
 		getAllUsersCards(preferedGender);
 		//potentialUsersCards.postValue(returningModels);
 	}
@@ -71,7 +88,7 @@ public class CardsViewModel extends ViewModel {
 	* GET ALL USERS
 	*/
 	private void getAllUsersCards(String preferedGender){
-		mUsersCollection.whereEqualTo(USERS_FILTER, preferedGender)
+		mUsersCollectionRef.whereEqualTo(USERS_FILTER, preferedGender)
 				//.limit(limit)
 				.get()
 				.addOnCompleteListener(task -> {
@@ -89,7 +106,7 @@ public class CardsViewModel extends ViewModel {
 	 * GET SKIPED USERS
 	 */
 	private void getSkipedUsersCards(){
-		mProfileDocument.collection(USER_SKIPS_COLLECTION_REFERENCE)
+		mCurrentProfileDocRef.collection(USER_SKIPS_COLLECTION_REFERENCE)
 				.get()
 				.addOnCompleteListener(task -> {
 					if(task.getResult() != null) {
@@ -104,12 +121,11 @@ public class CardsViewModel extends ViewModel {
 	
 	}
 	
-	
 	/*
 	 * GET LIKED USERS
 	 */
 	private void getLikedUsersCards(){
-		mProfileDocument.collection(USER_LIKES_COLLECTION_REFERENCE)
+		mCurrentProfileDocRef.collection(USER_LIKES_COLLECTION_REFERENCE)
 				.get()
 				.addOnCompleteListener(task -> {
 					if(task.getResult() != null) {
@@ -128,7 +144,7 @@ public class CardsViewModel extends ViewModel {
 	 * GET MATCHED
 	 */
 	private void getMatchedUsersCards(){
-		mProfileDocument.collection(USER_MATCHES_COLLECTION_REFERENCE)
+		mCurrentProfileDocRef.collection(USER_MATCHES_COLLECTION_REFERENCE)
 				.get()
 				.addOnCompleteListener(task -> {
 					if(task.getResult() != null) {
@@ -165,24 +181,58 @@ public class CardsViewModel extends ViewModel {
 	/*
 	* check if users liked each other
 	*/
-	public boolean checkMatch(String uId) {
-		
-		mUsersCollection.document(uId).collection(USER_LIKES_COLLECTION_REFERENCE)
+	void handlePossibleMatch (ProfileModel likedUser) {
+		String uId = likedUser.getUserID();
+		mUsersCollectionRef.document(uId)
+				.collection(USER_LIKES_COLLECTION_REFERENCE)
 				.document(mCurrentUserId)
 				.get()
 				.addOnSuccessListener(documentSnapshot -> {
-			if (documentSnapshot.exists()) {
-				Log.wtf("logs", "like from that side exists");
-				//return true;
-			}
-			
-		})
-		.addOnFailureListener(e -> {
-			Log.wtf("logs","checkMatch fail");
-		});
+					if (documentSnapshot.exists()) {
+						//add to match collection
+						mUsersCollectionRef
+								.document(uId)
+								.collection(USER_MATCHES_COLLECTION_REFERENCE)
+								.document(mCurrentUserId)
+								.set(mCurrentUser);
+						mCurrentProfileDocRef
+								.collection(USER_MATCHES_COLLECTION_REFERENCE)
+								.document(uId)
+								.set(likedUser);
+						matchedUser.setValue(likedUser);
+						//remove from like collection
+						mUsersCollectionRef
+								.document(uId)
+								.collection(USER_LIKES_COLLECTION_REFERENCE)
+								.document(mCurrentUserId)
+								.delete();
+						mCurrentProfileDocRef
+								.collection(USER_LIKES_COLLECTION_REFERENCE)
+								.document(uId)
+								.delete();
+						Log.wtf("logs", "match handle executed");
+						
+					}
+					else mUsersCollectionRef
+							.document(mCurrentUserId)
+							.collection(USER_LIKES_COLLECTION_REFERENCE)
+							.document(uId)
+							.set(likedUser);
+					
+				})
+				.addOnFailureListener(e -> {
+					Log.wtf("logs","handlePossibleMatch fail");
+				});
 		
-		return false;
+		
 	}
+	
+	void addToSkipped (ProfileModel skipedUser){
+		mCurrentProfileDocRef.collection(USER_SKIPS_COLLECTION_REFERENCE)
+				.document(skipedUser.getUserID())
+				.set(skipedUser);
+	}
+	
 	
 }
 
