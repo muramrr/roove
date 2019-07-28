@@ -125,7 +125,7 @@
 
         </co.ceryle.segmentedbutton.SegmentedButtonGroup>
 
-    <com.mmdev.meetups.ui.custom.ProgressButton
+    <com.mmdev.progressbuttonlib.ProgressButton
         android:layout_height="50dp"
         android:layout_width="match_parent"
         android:id="@+id/diag_reg_btn_done"
