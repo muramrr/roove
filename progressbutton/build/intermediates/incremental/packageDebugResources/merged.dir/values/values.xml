@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ProgressButton</string>
+    <declare-styleable name="ProgressButton">
+        <attr format="color" name="backgroundColor"/>
+        <attr format="color" name="progressColor"/>
+        <attr format="string" name="text"/>
+        <attr format="color" name="textColor"/>
+
+
+    </declare-styleable>
+</resources>
