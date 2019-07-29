@@ -1,10 +1,13 @@
 package com.mmdev.meetups.ui.card;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -12,6 +15,7 @@ import com.mmdev.meetups.R;
 import com.mmdev.meetups.models.ProfileModel;
 import com.mmdev.meetups.ui.main.MainActivity;
 import com.mmdev.meetups.ui.main.ProfileViewModel;
+import com.mmdev.meetups.utils.GlideApp;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
@@ -73,9 +77,12 @@ public class CardFragment extends Fragment {
 					mCardStackAdapter.notifyDataSetChanged();
 				}
 			});
+			
 			//handle match event
-			cardsViewModel.getMatchedUser().observe(mMainActivity, matchedUser ->
-					Toast.makeText(mMainActivity,"match!",Toast.LENGTH_SHORT).show());
+			cardsViewModel.getMatchedUser().observe(mMainActivity, matchedUser ->{
+					Toast.makeText(mMainActivity,"match!",Toast.LENGTH_SHORT).show();
+				showMatchDialog(matchedUser);
+			});
 		}
 		
 		
@@ -146,6 +153,17 @@ public class CardFragment extends Fragment {
 		}
 	}
 	
+	private void showMatchDialog(ProfileModel matchUser){
+		Dialog matchDialog = new Dialog(mMainActivity);
+		matchDialog.setContentView(R.layout.dialog_match);
+		//matchDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+		//matchDialog.getWindow().setDimAmount(0.87f);
+		matchDialog.show();
+		matchDialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+		ImageView backgr = matchDialog.findViewById(R.id.diag_match_iv_backgr_profile_img);
+		GlideApp.with(this).load(matchUser.getMainPhotoUrl()).centerInside().into(backgr);
+		matchDialog.findViewById(R.id.diag_match_tv_keep_swp).setOnClickListener(v -> matchDialog.dismiss());
+	}
 	
 	
 	

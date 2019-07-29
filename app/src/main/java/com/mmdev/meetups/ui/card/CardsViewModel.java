@@ -56,10 +56,15 @@ public class CardsViewModel extends ViewModel {
 		FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 		mUsersCollectionRef = firestore.collection(USERS_COLLECTION_REFERENCE);
 		mCurrentProfileDocRef = mUsersCollectionRef.document(mCurrentUser.getUserID());
+		
+		//TODO:debug only
 		//paris like, new york like, paris skip
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("axrknsctqj").collection(USER_LIKES_COLLECTION_REFERENCE).document(mCurrentUserId).set(mCurrentUser);
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("lrgctefskb").collection(USER_LIKES_COLLECTION_REFERENCE).document(mCurrentUserId).set(mCurrentUser);
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("iwdvqluegl").collection(USER_SKIPS_COLLECTION_REFERENCE).document(mCurrentUserId).set(mCurrentUser);
+//		firestore.collection(USERS_COLLECTION_REFERENCE).document("axrknsctqj").collection(USER_LIKES_COLLECTION_REFERENCE).document(mCurrentUserId).set(mCurrentUser);
+//		firestore.collection(USERS_COLLECTION_REFERENCE).document("lrgctefskb").collection(USER_LIKES_COLLECTION_REFERENCE).document(mCurrentUserId).set(mCurrentUser);
+//		firestore.collection(USERS_COLLECTION_REFERENCE).document("iwdvqluegl").collection(USER_LIKES_COLLECTION_REFERENCE).document(mCurrentUserId).set(mCurrentUser);
+//		firestore.collection(USERS_COLLECTION_REFERENCE).document("xaohydsikc").collection(USER_LIKES_COLLECTION_REFERENCE).document(mCurrentUserId).set(mCurrentUser);
+//		firestore.collection(USERS_COLLECTION_REFERENCE).document("sqbnmdaiuy").collection(USER_LIKES_COLLECTION_REFERENCE).document(mCurrentUserId).set(mCurrentUser);
+//		firestore.collection(USERS_COLLECTION_REFERENCE).document("lsvxwtdcnd").collection(USER_LIKES_COLLECTION_REFERENCE).document(mCurrentUserId).set(mCurrentUser);
 	}
 	
 	LiveData<List<ProfileModel>> getPotentialUsers () {
@@ -201,11 +206,12 @@ public class CardsViewModel extends ViewModel {
 								.set(likedUser);
 						matchedUser.setValue(likedUser);
 						//remove from like collection
-						mUsersCollectionRef
-								.document(uId)
-								.collection(USER_LIKES_COLLECTION_REFERENCE)
-								.document(mCurrentUserId)
-								.delete();
+						//TODO:uncomment for release
+//						mUsersCollectionRef
+//								.document(uId)
+//								.collection(USER_LIKES_COLLECTION_REFERENCE)
+//								.document(mCurrentUserId)
+//								.delete();
 						mCurrentProfileDocRef
 								.collection(USER_LIKES_COLLECTION_REFERENCE)
 								.document(uId)
