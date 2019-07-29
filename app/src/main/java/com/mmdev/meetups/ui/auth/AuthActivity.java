@@ -152,10 +152,12 @@ public class AuthActivity extends AppCompatActivity
 
 		SegmentedButtonGroup sBG_gender = additionalRegDialog.findViewById(R.id.dialog_registr_sbg_gender);
 		SegmentedButtonGroup sBG_prefGender = additionalRegDialog.findViewById(R.id.dialog_registr_sbg_preferedgender);
+		
 		sBG_gender.setOnClickedButtonListener(position -> {
 			if (position == 0) mGender = "male";
 			else mGender = "female";
 		});
+		
 		sBG_prefGender.setOnClickedButtonListener(position -> {
 			switch (position){
 				case 0:

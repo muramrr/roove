@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	android:background="@color/material_black_1000"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<ImageView
+		android:id="@+id/diag_match_iv_backgr_profile_img"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:contentDescription="@string/dialog_match_background_photo"
+		android:src="@drawable/default_avatar"/>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_gravity="bottom"
+		android:layout_margin="@dimen/activity_vertical_margin"
+		android:orientation="vertical">
+
+		<RelativeLayout
+			android:id="@+id/content_message"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:background="@color/material_white_1000"
+			android:padding="5dp">
+
+			<EditText
+				android:id="@+id/editTextMessage"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_toStartOf="@+id/buttonMessage"
+				android:inputType="text"
+				android:hint="@string/dialog_match_ed_hint"
+				tools:ignore="Autofill"/>
+
+			<ImageView
+				android:id="@+id/buttonMessage"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:layout_centerVertical="true"
+				android:contentDescription="@string/fragment_chat_send_img_description"
+				android:src="@drawable/fragment_chat_ic_send_black_24dp"/>
+		</RelativeLayout>
+
+
+		<TextView
+			android:id="@+id/diag_match_tv_keep_swp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginTop="50dp"
+			android:layout_marginBottom="50dp"
+			android:text="KEEP SWIPING"
+			android:textColor="@color/material_white_1000"/>
+
+
+	</LinearLayout>
+
+
+</RelativeLayout>

@@ -50,7 +50,7 @@
 			android:layout_alignParentEnd="true"
 			android:layout_centerVertical="true"
 			android:contentDescription="@string/fragment_chat_send_img_description"
-			android:src="@android:drawable/ic_menu_send"/>
+			android:src="@drawable/fragment_chat_ic_send_black_24dp"/>
 	</RelativeLayout>
 
 </RelativeLayout>
