@@ -57,7 +57,7 @@
 			android:layout_gravity="center"
 			android:layout_marginTop="50dp"
 			android:layout_marginBottom="50dp"
-			android:text="KEEP SWIPING"
+			android:text="KEEP SWIPING..."
 			android:textColor="@color/material_white_1000"/>
 
 

@@ -21,9 +21,9 @@ import com.mmdev.meetups.models.ProfileModel;
 import com.mmdev.meetups.ui.activities.ProfileActivity;
 import com.mmdev.meetups.ui.auth.AuthActivity;
 import com.mmdev.meetups.ui.card.CardFragment;
-import com.mmdev.meetups.ui.chat.ChatFragment;
 import com.mmdev.meetups.ui.feed.FeedFragment;
 import com.mmdev.meetups.ui.feed.FeedManager;
+import com.mmdev.meetups.ui.messages.MessagesFragment;
 import com.mmdev.meetups.utils.GlideApp;
 
 import java.util.ArrayList;
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity
 			int id = item.getItemId();
 			switch (id) {
 				case (R.id.nav_feed):
-					getPotentialUsersCards();
+					startCardFragment();
 					break;
 				case (R.id.nav_events):
 					
@@ -211,6 +211,7 @@ public class MainActivity extends AppCompatActivity
 	 * start card swipe
 	 */
 	private void startCardFragment(){
+		if(mFragmentManager.findFragmentByTag("CardFragment") != null) return;
 		FragmentTransaction ft = mFragmentManager.beginTransaction();
 		ft.setCustomAnimations(R.anim.fragment_enter_from_right, R.anim.fragment_exit_to_left, R.anim.fragment_enter_from_left, R.anim.fragment_exit_to_right);
 		ft.replace(R.id.main_container, new CardFragment(),"CardFragment");
@@ -224,7 +225,7 @@ public class MainActivity extends AppCompatActivity
 	private void startChatFragment(){
 		FragmentTransaction ft = mFragmentManager.beginTransaction();
 		ft.setCustomAnimations(R.anim.fragment_enter_from_right, R.anim.fragment_exit_to_left, R.anim.fragment_enter_from_left, R.anim.fragment_exit_to_right);
-		ft.replace(R.id.main_container, new ChatFragment(), "ChatFragment");
+		ft.replace(R.id.main_container, new MessagesFragment(), "MessagesFragment");
 		ft.addToBackStack(null);
 		ft.commit();
 	}
@@ -256,7 +257,7 @@ public class MainActivity extends AppCompatActivity
 	menu button click handler
 	 */
 	public void MessagesClick (MenuItem item) {
-		if(mFragmentManager.findFragmentByTag("ChatFragment") != null) return;
+		if(mFragmentManager.findFragmentByTag("MessagesFragment") != null) return;
 		startChatFragment();
 	}
 
@@ -278,14 +279,6 @@ public class MainActivity extends AppCompatActivity
 		super.onStop();
 		mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
 	}
-
-	/*
-		getting users from firestore by prefered gender
-		todo: move to another class this shit
-	 */
-	public void getPotentialUsersCards (){
-		if(mFragmentManager.findFragmentByTag("CardFragment") != null) return;
-		startCardFragment();
-	}
+	
 
 }
