@@ -40,7 +40,7 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<ChatModel, ChatAdapter
 
 	private String mUserName;
 	private ClickChatAttachmentsFirebase mClickChatAttachmentsFirebase;
-	private Context context; //for toast messages
+	//private Context context; //for toast messages
 
 	/**
 	 * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
@@ -52,7 +52,7 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<ChatModel, ChatAdapter
 		super(options);
 		mUserName = userName;
 		mClickChatAttachmentsFirebase = clickChatAttachmentsFirebase;
-		this.context = context;
+		//this.context = context;
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<ChatModel, ChatAdapter
 		else return LEFT_MSG;
 	}
 
-	//test
+	//debug
 	public void changeSenderName(UserChatModel userChatModel){
 		mUserName = userChatModel.getName();
 	}
@@ -135,7 +135,6 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<ChatModel, ChatAdapter
 			ivUserAvatar = itemView.findViewById(R.id.item_message_ivUserPic);
 			ivChatPhoto = itemView.findViewById(R.id.img_chat);
 		}
-
 
 		void setMessageType(int messageType){
 			switch (messageType) {

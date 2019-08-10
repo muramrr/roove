@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/content_main_recyclerview"
+        android:id="@+id/content_main_rv_feed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#dddddd"

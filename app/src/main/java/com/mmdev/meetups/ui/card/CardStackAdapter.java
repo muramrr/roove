@@ -19,53 +19,51 @@ import androidx.recyclerview.widget.RecyclerView;
 public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.ViewHolder>
 {
 
-	private List<ProfileModel> users;
+	private List<ProfileModel> mUsersList;
 
-	CardStackAdapter (List<ProfileModel> users) { this.users = users; }
+	CardStackAdapter (List<ProfileModel> mUsersList) { this.mUsersList = mUsersList; }
 
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder (@NonNull ViewGroup parent, int viewType) {
 		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-		View itemView = inflater.inflate(R.layout.fragment_card_item_spot, parent, false);
+		View itemView = inflater.inflate(R.layout.fragment_card_item, parent, false);
 		return new ViewHolder(itemView);
 	}
 
 	@Override
-	public void onBindViewHolder (@NonNull ViewHolder holder, int position) {
-		ProfileModel user = users.get(position);
-		holder.name.setText(user.getName());
-		holder.city.setText(user.getCity());
-		GlideApp.with(holder.image)
+	public void onBindViewHolder (@NonNull ViewHolder holder, final int position) {
+		ProfileModel user = mUsersList.get(position);
+		holder.tvNameCard.setText(user.getName());
+		holder.tvCityCard.setText(user.getCity());
+		GlideApp.with(holder.tvImageCard)
 				.load(user.getMainPhotoUrl())
-				.into(holder.image);
-		holder.itemView.setOnClickListener(v -> Toast.makeText(v.getContext(), user.getName(), Toast.LENGTH_SHORT).show());
+				.into(holder.tvImageCard);
+		holder.itemView
+				.setOnClickListener
+						(v -> Toast.makeText(v.getContext(), "clicked", Toast.LENGTH_SHORT).show());
+
 	}
 
 	@Override
-	public int getItemCount () { return users.size(); }
+	public int getItemCount () { return mUsersList.size(); }
 
-	public void setSpots(List<ProfileModel> users) {
-		this.users = users;
-	}
+	@Override
+	public long getItemId (int position) { return position; }
 
-	public List<ProfileModel> getSpots()
-	{
-		return users;
-	}
+	ProfileModel getSwipeProfile (int position){ return mUsersList.get(position); }
 
 	static class ViewHolder extends RecyclerView.ViewHolder
 	{
-		private final TextView name;
-		private final TextView city;
-		private final ImageView image;
+		private final TextView tvNameCard;
+		private final TextView tvCityCard;
+		private final ImageView tvImageCard;
 
-		private ViewHolder (@NonNull final View itemView)
-		{
+		private ViewHolder (@NonNull final View itemView) {
 			super(itemView);
-			name = itemView.findViewById(R.id.item_name);
-			city = itemView.findViewById(R.id.item_city);
-			image = itemView.findViewById(R.id.item_image);
+			tvNameCard = itemView.findViewById(R.id.fragment_card_item_text_name);
+			tvCityCard = itemView.findViewById(R.id.fragment_card_item_text_city);
+			tvImageCard = itemView.findViewById(R.id.fragment_card_item_img_photo);
 		}
 
 	}
