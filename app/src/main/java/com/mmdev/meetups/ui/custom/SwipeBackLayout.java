@@ -372,7 +372,7 @@ public class SwipeBackLayout extends FrameLayout {
 				if (mPreFragment == null) {
 					if (mFragment != null) {
 						List<Fragment> fragmentList = mFragment.getFragmentManager().getFragments();
-						if (fragmentList != null && fragmentList.size() > 1) {
+						if (fragmentList.size() > 1) {
 							int index = fragmentList.indexOf(mFragment);
 							for (int i = index - 1; i >= 0; i--) {
 								Fragment fragment = fragmentList.get(i);
@@ -504,4 +504,11 @@ public class SwipeBackLayout extends FrameLayout {
 		mHelper.processTouchEvent(event);
 		return true;
 	}
+
+//	@Override
+//	public boolean performClick () {
+//		return super.performClick();
+//	}
+
+
 }

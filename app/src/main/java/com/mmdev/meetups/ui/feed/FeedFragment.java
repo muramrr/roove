@@ -33,7 +33,7 @@ public class FeedFragment extends Fragment
 
 	@Override
 	public void onViewCreated (@NonNull View view, @Nullable Bundle savedInstanceState) {
-		rvFeedList = view.findViewById(R.id.content_main_recyclerview);
+		rvFeedList = view.findViewById(R.id.content_main_rv_feed);
 		initFeeds();
 	}
 

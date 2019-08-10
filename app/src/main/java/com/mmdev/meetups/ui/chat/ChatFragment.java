@@ -117,7 +117,7 @@ public class ChatFragment extends Fragment implements ClickChatAttachmentsFireba
 		if (getActivity() != null) mMainActivity = (MainActivity) getActivity();
 		edMessageWrite = view.findViewById(R.id.editTextMessage);
 		rvMessagesList = view.findViewById(R.id.messageRecyclerView);
-		ivAttachments = view.findViewById(R.id.buttonAttachements);
+		ivAttachments = view.findViewById(R.id.buttonAttachments);
 		ivSendMessage = view.findViewById(R.id.buttonMessage);
 		setupViews();
 		getFirebaseInstances();
@@ -208,8 +208,7 @@ public class ChatFragment extends Fragment implements ClickChatAttachmentsFireba
 		Query query = mFirestore.collection(GENERAL_COLLECTION_REFERENCE)
 				.document(CHAT_REFERENCE)
 				.collection(SECONDARY_COLLECTION_REFERENCE)
-				.orderBy("timestamp")
-				.limit(50);
+				.orderBy("timestamp");
 
 		FirestoreRecyclerOptions<ChatModel> options =
 				new FirestoreRecyclerOptions.Builder<ChatModel>()
@@ -361,7 +360,6 @@ public class ChatFragment extends Fragment implements ClickChatAttachmentsFireba
 	//    }
 
 	/*
-	 * ################################## NOT WORKING ##################################################
 	 * Upload photo taken by camera
 	 */
 	private void photoCameraIntent(){
@@ -427,7 +425,6 @@ public class ChatFragment extends Fragment implements ClickChatAttachmentsFireba
 
 		}
 	}
-
 
 	@Override
 	public void onStart() {

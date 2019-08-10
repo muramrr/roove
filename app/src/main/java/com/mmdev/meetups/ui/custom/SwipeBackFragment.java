@@ -36,7 +36,6 @@ public class SwipeBackFragment extends Fragment {
 
 		if (savedInstanceState != null) {
 			boolean isSupportHidden = savedInstanceState.getBoolean(SWIPEBACKFRAGMENT_STATE_SAVE_IS_HIDDEN);
-
 			FragmentTransaction ft = getFragmentManager().beginTransaction();
 			if (isSupportHidden) {
 				ft.hide(this);
@@ -112,16 +111,18 @@ public class SwipeBackFragment extends Fragment {
 
 	private void setBackground(View view) {
 		if (view != null && view.getBackground() == null) {
-			int defaultBg = 0;
+			int background = getWindowBackground();
+			view.setBackgroundResource(background);
+//			int defaultBg = 0;
 //            if (_mActivity instanceof SwipeBackActivity) {
 //                defaultBg = ((SwipeBackActivity) _mActivity).getDefaultFragmentBackground();
 //            }
-			if (defaultBg == 0) {
-				int background = getWindowBackground();
-				view.setBackgroundResource(background);
-			} else {
-				view.setBackgroundResource(defaultBg);
-			}
+//			if (defaultBg == 0) {
+//				int background = getWindowBackground();
+//				view.setBackgroundResource(background);
+//			} else {
+//				view.setBackgroundResource(defaultBg);
+//			}
 		}
 	}
 
