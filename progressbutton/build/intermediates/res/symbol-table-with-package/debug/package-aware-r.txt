@@ -1,0 +1,7 @@
+com.mmdev.progressbutton
+attr backgroundColor
+attr progressColor
+attr text
+attr textColor
+string app_name
+styleable ProgressButton backgroundColor progressColor text textColor

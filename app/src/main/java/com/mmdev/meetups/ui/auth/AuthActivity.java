@@ -1,13 +1,17 @@
 package com.mmdev.meetups.ui.auth;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -37,6 +41,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
@@ -45,8 +50,7 @@ import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
 
 /**
- * TODO: fix some bugs bonded with saved user in shared prefs and logging in same user
- * TODO: track if have user already used app
+ *
  */
 public class AuthActivity extends AppCompatActivity
 {
@@ -65,7 +69,7 @@ public class AuthActivity extends AppCompatActivity
 
 	private FirebaseUser mFirebaseUser;
 	//Progress dialog for any authentication action
-	private ProgressDialog progressDialog;
+	private AlertDialog progressDialog;
 
 	CallbackManager mCallbackManager;
 
@@ -90,7 +94,7 @@ public class AuthActivity extends AppCompatActivity
 		mFirestore = FirebaseFirestore.getInstance();
 		mCallbackManager = CallbackManager.Factory.create();
 		setUpFacebookLoginButton();
-		initProgressDialog();
+		setProgressDialog();
 		profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
 
 	}
@@ -148,10 +152,12 @@ public class AuthActivity extends AppCompatActivity
 
 		SegmentedButtonGroup sBG_gender = additionalRegDialog.findViewById(R.id.dialog_registr_sbg_gender);
 		SegmentedButtonGroup sBG_prefGender = additionalRegDialog.findViewById(R.id.dialog_registr_sbg_preferedgender);
+		
 		sBG_gender.setOnClickedButtonListener(position -> {
 			if (position == 0) mGender = "male";
 			else mGender = "female";
 		});
+		
 		sBG_prefGender.setOnClickedButtonListener(position -> {
 			switch (position){
 				case 0:
@@ -201,16 +207,52 @@ public class AuthActivity extends AppCompatActivity
 	}
 
 	/*
-	progress dialogs
+	progress dialog
 	 */
-	private void initProgressDialog () {
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setCancelable(false);
+	public void setProgressDialog() {
+		int llPadding = 10;
+		LinearLayout ll = new LinearLayout(this);
+		ll.setOrientation(LinearLayout.HORIZONTAL);
+		ll.setPadding(llPadding, llPadding, llPadding, llPadding);
+		ll.setGravity(Gravity.CENTER);
+		LinearLayout.LayoutParams llParam = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.WRAP_CONTENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
+		llParam.gravity = Gravity.CENTER;
+		ll.setLayoutParams(llParam);
+		
+		ProgressBar progressBar = new ProgressBar(this);
+		progressBar.setIndeterminate(true);
+		progressBar.setPadding(llPadding, llPadding, llPadding, llPadding);
+		progressBar.setLayoutParams(llParam);
+		
+		TextView tvText = new TextView(this);
+		tvText.setText(getString(R.string.progress_dialog_text));
+		tvText.setTextColor(Color.BLACK); //low api
+		tvText.setTextSize(20);
+		tvText.setLayoutParams(llParam);
+		
+		ll.addView(progressBar);
+		ll.addView(tvText);
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setCancelable(true);
+		builder.setView(ll);
+		
+		progressDialog = builder.create();
+		
 	}
 
 	private void showProcessProgressDialog () {
-		progressDialog.setMessage(getString(R.string.progress_dialog_text));
-		if (!progressDialog.isShowing()) progressDialog.show();
+		progressDialog.show();
+		Window window = progressDialog.getWindow();
+		if (window != null) {
+			WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+			layoutParams.copyFrom(progressDialog.getWindow().getAttributes());
+			layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+			layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+			progressDialog.getWindow().setAttributes(layoutParams);
+		}
 	}
 
 	private void dismissProgressDialog () { if (progressDialog.isShowing()) progressDialog.dismiss(); }

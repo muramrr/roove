@@ -1,6 +1,5 @@
 package com.mmdev.meetups.ui.main;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,17 +15,15 @@ import com.facebook.login.LoginManager;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.mmdev.meetups.R;
 import com.mmdev.meetups.models.ProfileModel;
 import com.mmdev.meetups.ui.activities.ProfileActivity;
 import com.mmdev.meetups.ui.auth.AuthActivity;
 import com.mmdev.meetups.ui.card.CardFragment;
-import com.mmdev.meetups.ui.chat.ChatFragment;
 import com.mmdev.meetups.ui.feed.FeedFragment;
 import com.mmdev.meetups.ui.feed.FeedManager;
+import com.mmdev.meetups.ui.messages.MessagesFragment;
 import com.mmdev.meetups.utils.GlideApp;
 
 import java.util.ArrayList;
@@ -47,7 +44,6 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
 {
-
 	private static final String TAG = "myLogs";
 
 	// Views UI
@@ -88,13 +84,18 @@ public class MainActivity extends AppCompatActivity
 		mFragmentManager = getSupportFragmentManager();
 		if (findViewById(R.id.main_container) != null) {
 			if (savedInstanceState != null) return;
-			mFragmentManager.beginTransaction().add(R.id.main_container, new FeedFragment()).commit();
+			mFragmentManager.beginTransaction()
+					.add(R.id.main_container, new FeedFragment(), "FeedFragment").commit();
 		}
 		mFirestore = FirebaseFirestore.getInstance();
 		ProfileViewModel profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
 		profileModel = profileViewModel.getProfileModel(this).getValue();
 		setUpUser();
-		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+				                          drawerLayout,
+				                          toolbar,
+				                          R.string.navigation_drawer_open,
+				                          R.string.navigation_drawer_close);
 		drawerLayout.addDrawerListener(toggle);
 		toggle.syncState();
 
@@ -112,9 +113,6 @@ public class MainActivity extends AppCompatActivity
 			}
 		});
 	}
-	/*
-	 * generate random users to firestore
-	 */
 
 	private void setUpUser () {
 		if (profileModel != null){
@@ -134,7 +132,34 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	private void setupNavigationView () {
-		navView.setNavigationItemSelectedListener(navigationItemSelectedListener);
+		navView.setNavigationItemSelectedListener(item -> {
+			// Handle navigation view item clicks here.
+			int id = item.getItemId();
+			switch (id) {
+				case (R.id.nav_feed):
+					startCardFragment();
+					break;
+				case (R.id.nav_events):
+					
+					break;
+				case (R.id.nav_post):
+					//Toast.makeText(this,String.valueOf(usersCards),Toast.LENGTH_SHORT).show();
+					onGenerateUsers();
+					break;
+				case (R.id.nav_notifications):
+					//Toast.makeText(this,String.valueOf(mFeedManager.getUsersCards()),Toast.LENGTH_SHORT).show();
+					break;
+				case (R.id.nav_account):
+					//Toast.makeText(this, String.valueOf(FeedManager.generateUsers()), Toast.LENGTH_SHORT).show();
+					break;
+				case (R.id.nav_log_out):
+					showSignOutPrompt();
+					break;
+			}
+			if (drawerLayout.isDrawerOpen(GravityCompat.START))
+				drawerLayout.closeDrawer(GravityCompat.START);
+			return true;
+		});
 		navView.getChildAt((navView.getChildCount()-1)).setOverScrollMode(View.OVER_SCROLL_NEVER);
 		View headerView = navView.getHeaderView(0);
 		tvSignedInUserName = headerView.findViewById(R.id.signed_in_username_tv);
@@ -143,39 +168,11 @@ public class MainActivity extends AppCompatActivity
 		ImageView settingsButton = headerView.findViewById(R.id.settings_button);
 		settingsButton.setOnClickListener((View v) -> startActivity(new Intent(MainActivity.this, ProfileActivity.class)));
 	}
-
-	NavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = ((@NonNull MenuItem item) -> {
-		// Handle navigation view item clicks here.
-		int id = item.getItemId();
-		switch (id)
-		{
-			case (R.id.nav_feed):
-				getPotentialUsersCards();
-				break;
-			case (R.id.nav_events):
-
-				break;
-			case (R.id.nav_post):
-				//Toast.makeText(this,String.valueOf(usersCards),Toast.LENGTH_SHORT).show();
-				onGenerateUsers();
-				break;
-			case (R.id.nav_notifications):
-				//Toast.makeText(this,String.valueOf(mFeedManager.getUsersCards()),Toast.LENGTH_SHORT).show();
-				break;
-			case (R.id.nav_account):
-				//Toast.makeText(this, String.valueOf(FeedManager.generateUsers()), Toast.LENGTH_SHORT).show();
-				break;
-			case (R.id.nav_log_out):
-				showSignOutPrompt();
-				break;
-		}
-		if (drawerLayout.isDrawerOpen(GravityCompat.START))
-			drawerLayout.closeDrawer(GravityCompat.START);
-		return true;
-
-	});
-
-	private void onGenerateUsers () {
+	
+	/*
+	 * generate random users to firestore
+	 */
+	private void onGenerateUsers ()  {
 		usersCards.clear();
 		CollectionReference usersCollection = mFirestore.collection("users");
 		usersCards.addAll(FeedManager.generateUsers());
@@ -210,7 +207,11 @@ public class MainActivity extends AppCompatActivity
 
 	}
 
+	/*
+	 * start card swipe
+	 */
 	private void startCardFragment(){
+		if(mFragmentManager.findFragmentByTag("CardFragment") != null) return;
 		FragmentTransaction ft = mFragmentManager.beginTransaction();
 		ft.setCustomAnimations(R.anim.fragment_enter_from_right, R.anim.fragment_exit_to_left, R.anim.fragment_enter_from_left, R.anim.fragment_exit_to_right);
 		ft.replace(R.id.main_container, new CardFragment(),"CardFragment");
@@ -218,10 +219,13 @@ public class MainActivity extends AppCompatActivity
 		ft.commit();
 	}
 
+	/*
+	 * start chat
+	 */
 	private void startChatFragment(){
 		FragmentTransaction ft = mFragmentManager.beginTransaction();
 		ft.setCustomAnimations(R.anim.fragment_enter_from_right, R.anim.fragment_exit_to_left, R.anim.fragment_enter_from_left, R.anim.fragment_exit_to_right);
-		ft.replace(R.id.main_container, new ChatFragment(), "ChatFragment");
+		ft.replace(R.id.main_container, new MessagesFragment(), "MessagesFragment");
 		ft.addToBackStack(null);
 		ft.commit();
 	}
@@ -232,10 +236,9 @@ public class MainActivity extends AppCompatActivity
 		builder.setPositiveButton("YES", ((DialogInterface dialog, int which) -> {
 			dialog.dismiss();
 			//Attempt sign out
-			if (mFirebaseAuth.getCurrentUser() != null) {
-				mFirebaseAuth.signOut();
-				LoginManager.getInstance().logOut();
-			}
+			mFirebaseAuth.signOut();
+			LoginManager.getInstance().logOut();
+			
 		}));
 		builder.setNegativeButton("NO", (DialogInterface dialog, int which) -> dialog.dismiss());
 		builder.create().show();
@@ -245,8 +248,7 @@ public class MainActivity extends AppCompatActivity
 	menu init
 	 */
 	@Override
-	public boolean onCreateOptionsMenu (Menu menu)
-	{
+	public boolean onCreateOptionsMenu (Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
@@ -255,18 +257,15 @@ public class MainActivity extends AppCompatActivity
 	menu button click handler
 	 */
 	public void MessagesClick (MenuItem item) {
-		if(mFragmentManager.findFragmentByTag("ChatFragment")!=null)
-			return;
+		if(mFragmentManager.findFragmentByTag("MessagesFragment") != null) return;
 		startChatFragment();
 	}
 
 	@Override
 	public void onBackPressed() {
 		drawerLayout = findViewById(R.id.drawer_layout);
-		if (drawerLayout.isDrawerOpen(GravityCompat.START))
-			drawerLayout.closeDrawer(GravityCompat.START);
-		else
-			super.onBackPressed();
+		if (drawerLayout.isDrawerOpen(GravityCompat.START)) drawerLayout.closeDrawer(GravityCompat.START);
+		else super.onBackPressed();
 	}
 
 	@Override
@@ -280,33 +279,6 @@ public class MainActivity extends AppCompatActivity
 		super.onStop();
 		mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
 	}
-
-	/*
-		getting users from firestore by prefered gender
-		todo: move to another class this shit
-	 */
-	public void getPotentialUsersCards (){
-		if(mFragmentManager.findFragmentByTag("CardFragment")!=null)
-			return;
-		ProgressDialog progressDialog = new ProgressDialog(this);
-		progressDialog.setCancelable(false);
-		progressDialog.setMessage("Please wait...");
-		progressDialog.show();
-		usersCards.clear();
-		String mPreferedGender = profileModel.getPreferedGender();
-		CollectionReference usersCollection = mFirestore.collection("users");
-		usersCollection.whereEqualTo("gender", mPreferedGender).get().addOnCompleteListener(task -> {
-			if (task.isSuccessful() && task.getResult()!=null) {
-				QuerySnapshot result = task.getResult();
-				for (DocumentSnapshot doc :result)
-					if(!doc.getId().equals(profileModel.getUserID()))
-						usersCards.add(doc.toObject(ProfileModel.class));
-				if (progressDialog.isShowing())
-					progressDialog.dismiss();
-				startCardFragment();
-			}
-		}).addOnFailureListener(e -> Toast.makeText(this, "Cannot retrieve information", Toast.LENGTH_SHORT).show());
-
-	}
+	
 
 }
