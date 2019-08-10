@@ -32,10 +32,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.mmdev.meetups.R;
 import com.mmdev.meetups.models.ProfileModel;
 import com.mmdev.meetups.services.GPSTracker;
-import com.mmdev.meetups.ui.custom.ProgressButton;
 import com.mmdev.meetups.ui.main.MainActivity;
 import com.mmdev.meetups.ui.main.ProfileViewModel;
 import com.mmdev.meetups.utils.uiUtils;
+import com.mmdev.progressbuttonlib.ProgressButton;
 
 import java.util.ArrayList;
 
