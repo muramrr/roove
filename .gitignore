@@ -17,7 +17,7 @@ Thumbs.db
 # generated files
 bin/
 gen/
-build/
+build/*
   
 # Local configuration file (sdk path, etc)
 local.properties
@@ -31,7 +31,7 @@ local.properties
 .gradle
 /*/local.properties
 /*/out
-/*/*/build
+/*/*/build/*
 build
 /*/*/production
 *.iml
