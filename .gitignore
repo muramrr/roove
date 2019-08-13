@@ -1,17 +1,41 @@
-*.iml
+# Windows thumbnail db
+Thumbs.db
+
+# OSX files
+.DS_Store
+
+# built application files
 *.apk
 *.ap_
-*.dex
-.DS_Store
-.externalNativeBuild
-.gradle
-.idea/
-google-services.json
-/local.properties
-/build
-/bin/
-/gen/
-/androidTest/
-/test/
-/captures
 
+# files for the dex VM
+*.dex
+  
+# Java class files
+*.class
+  
+# generated files
+bin/
+gen/
+build/
+  
+# Local configuration file (sdk path, etc)
+local.properties
+  
+# Eclipse project files
+.classpath
+.project
+  
+# Android Studio
+.idea
+.gradle
+/*/local.properties
+/*/out
+/*/*/build
+build
+/*/*/production
+*.iml
+*.iws
+*.ipr
+*~
+*.swp
