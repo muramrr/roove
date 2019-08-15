@@ -13,6 +13,6 @@ import java.util.*
 data class ChatModel (var senderUserModel: UserChatModel? = null, var message: String? = "",
                       var fileModel: FileModel? = null, var mapModel: MapModel? = null){
 
-    @ServerTimestamp val timestamp: Date? = null
+	@ServerTimestamp val timestamp: Date? = null
 
 }
