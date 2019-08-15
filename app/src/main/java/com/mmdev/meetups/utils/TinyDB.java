@@ -2,7 +2,7 @@
  * Copyright 2014 KC Ochibili
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this fileModel except in compliance with the License.
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
@@ -89,9 +89,9 @@ public class TinyDB
 	 * Saves 'theBitmap' into folder 'theFolder' with the name 'theImageName'
 	 *
 	 * @param theFolder    the folder path dir you want to save it to e.g "DropBox/WorkImages"
-	 * @param theImageName the name you want to assign to the image file e.g "MeAtLunch.png"
+	 * @param theImageName the name you want to assign to the image fileModel e.g "MeAtLunch.png"
 	 * @param theBitmap    the image you want to save as a Bitmap
-	 * @return returns the full path(file system address) of the saved image
+	 * @return returns the full path(fileModel system address) of the saved image
 	 */
 	public String putImage (String theFolder, String theImageName, Bitmap theBitmap)
 	{
@@ -113,7 +113,7 @@ public class TinyDB
 	/**
 	 * Saves 'theBitmap' into 'fullPath'
 	 *
-	 * @param fullPath  full path of the image file e.g. "Images/MeAtLunch.png"
+	 * @param fullPath  full path of the image fileModel e.g. "Images/MeAtLunch.png"
 	 * @param theBitmap the image you want to save as a Bitmap
 	 * @return true if image was saved, false otherwise
 	 */
@@ -145,9 +145,9 @@ public class TinyDB
 	}
 
 	/**
-	 * Saves the Bitmap as a PNG file at path 'fullPath'
+	 * Saves the Bitmap as a PNG fileModel at path 'fullPath'
 	 *
-	 * @param fullPath path of the image file
+	 * @param fullPath path of the image fileModel
 	 * @param bitmap   the image as a Bitmap
 	 * @return true if it successfully saved, false otherwise
 	 */
@@ -564,9 +564,9 @@ public class TinyDB
 	 */
 	public void remove (String key) { preferences.edit().remove(key).apply(); }
 	/**
-	 * Delete image file at 'path'
+	 * Delete image fileModel at 'path'
 	 *
-	 * @param path path of image file
+	 * @param path path of image fileModel
 	 * @return true if it successfully deleted, false otherwise
 	 */
 	public boolean deleteImage (String path) { return new File(path).delete(); }
@@ -631,7 +631,7 @@ public class TinyDB
 	}
 
 	/**
-	 * null keys would corrupt the shared pref file and make them unreadable this is a preventive measure
+	 * null keys would corrupt the shared pref fileModel and make them unreadable this is a preventive measure
 	 *
 	 * @param key pref key
 	 */
@@ -644,7 +644,7 @@ public class TinyDB
 	}
 
 	/**
-	 * null keys would corrupt the shared pref file and make them unreadable this is a preventive measure
+	 * null keys would corrupt the shared pref fileModel and make them unreadable this is a preventive measure
 	 *
 	 * @param value pref key
 	 */
