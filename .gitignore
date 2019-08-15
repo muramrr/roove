@@ -32,8 +32,6 @@ local.properties
 /*/local.properties
 /*/out
 /*/*/build/*
-!**/src/**/build
-!**/test/**/build
 build
 /*/*/production
 *.iml

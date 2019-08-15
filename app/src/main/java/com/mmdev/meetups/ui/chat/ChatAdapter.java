@@ -7,7 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
@@ -15,7 +16,6 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.mmdev.meetups.R;
 import com.mmdev.meetups.models.ChatModel;
-import com.mmdev.meetups.models.UserChatModel;
 import com.mmdev.meetups.utils.CircleTransform;
 import com.mmdev.meetups.utils.GlideApp;
 
@@ -23,9 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * This is the documentation block about the class
@@ -118,10 +115,10 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<ChatModel, ChatAdapter
 		else return LEFT_MSG;
 	}
 
-	//debug
-	public void changeSenderName(UserChatModel userChatModel){
-		mUserName = userChatModel.getName();
-	}
+	//TODO: USE FOR -DEBUG ONLY
+//	public void changeSenderName(UserChatModel userChatModel){
+//		mUserName = userChatModel.getName();
+//	}
 
 	class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

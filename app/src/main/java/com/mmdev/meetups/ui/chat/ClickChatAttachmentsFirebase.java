@@ -2,8 +2,7 @@ package com.mmdev.meetups.ui.chat;
 
 import android.view.View;
 
-public interface ClickChatAttachmentsFirebase
-{
+public interface ClickChatAttachmentsFirebase {
 
 	/**
 	 * click attached photo in chat
