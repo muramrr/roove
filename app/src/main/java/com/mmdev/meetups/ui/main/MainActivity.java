@@ -10,25 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.facebook.login.LoginManager;
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.mmdev.meetups.R;
-import com.mmdev.meetups.models.ProfileModel;
-import com.mmdev.meetups.ui.activities.ProfileActivity;
-import com.mmdev.meetups.ui.auth.AuthActivity;
-import com.mmdev.meetups.ui.card.CardFragment;
-import com.mmdev.meetups.ui.feed.FeedFragment;
-import com.mmdev.meetups.ui.feed.FeedManager;
-import com.mmdev.meetups.ui.messages.MessagesFragment;
-import com.mmdev.meetups.utils.GlideApp;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -41,6 +22,23 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.facebook.login.LoginManager;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.mmdev.meetups.R;
+import com.mmdev.meetups.models.ProfileModel;
+import com.mmdev.meetups.ui.activities.ProfileActivity;
+import com.mmdev.meetups.ui.auth.AuthActivity;
+import com.mmdev.meetups.ui.card.CardFragment;
+import com.mmdev.meetups.ui.chat.ChatFragment;
+import com.mmdev.meetups.ui.feed.FeedFragment;
+import com.mmdev.meetups.ui.feed.FeedManager;
+import com.mmdev.meetups.utils.GlideApp;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -225,7 +223,7 @@ public class MainActivity extends AppCompatActivity
 	private void startChatFragment(){
 		FragmentTransaction ft = mFragmentManager.beginTransaction();
 		ft.setCustomAnimations(R.anim.fragment_enter_from_right, R.anim.fragment_exit_to_left, R.anim.fragment_enter_from_left, R.anim.fragment_exit_to_right);
-		ft.replace(R.id.main_container, new MessagesFragment(), "MessagesFragment");
+		ft.replace(R.id.main_container, new ChatFragment(), "MessagesFragment");
 		ft.addToBackStack(null);
 		ft.commit();
 	}
