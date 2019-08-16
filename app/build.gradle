@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 
 android {
@@ -71,11 +72,11 @@ dependencies {
 	implementation 'com.facebook.android:facebook-login:5.2.0'
 	//binding
 	implementation 'com.jakewharton:butterknife:10.1.0'
-	annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+	kapt 'com.jakewharton:butterknife-compiler:10.1.0'
 	//additional
 	implementation 'android.arch.lifecycle:extensions:1.1.1'
 	implementation 'com.github.bumptech.glide:glide:4.9.0'
-	annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+	kapt 'com.github.bumptech.glide:compiler:4.9.0'
 	implementation 'com.google.dagger:dagger:2.24'
 	annotationProcessor 'com.google.dagger:dagger-compiler:2.24'
 
