@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity
 	@BindView(R.id.toolbar)
 	Toolbar toolbar;
 
-	@BindView(R.id.nav_view)
 	NavigationView navView;
 
 	@BindView(R.id.drawer_layout)
@@ -68,13 +67,14 @@ public class MainActivity extends AppCompatActivity
 	public static List<ProfileModel> usersCards = new ArrayList<>();
 	public ProfileModel profileModel;
 	private FragmentManager mFragmentManager;
-	private FeedManager mFeedManager = new FeedManager();
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		ButterKnife.bind(this);
+		navView = findViewById(R.id.nav_view);
 		mFirebaseAuth = FirebaseAuth.getInstance();
 		checkConnection();
 		setSupportActionBar(toolbar);
