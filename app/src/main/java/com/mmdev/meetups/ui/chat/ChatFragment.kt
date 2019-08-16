@@ -47,7 +47,6 @@ import java.util.*
 class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 	private var CHAT_REFERENCE = ""
 
-
 	private var mMainActivity: MainActivity? = null
 
 	// Firebase
@@ -100,7 +99,7 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		if (activity != null) mMainActivity = activity as MainActivity?
+		activity?.let { mMainActivity = it as MainActivity }
 		edMessageWrite = view.findViewById(R.id.editTextMessage)
 		rvMessagesList = view.findViewById(R.id.messageRecyclerView)
 		ivAttachments = view.findViewById(R.id.buttonAttachments)
@@ -141,13 +140,10 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 		val listPermissionsNeeded = ArrayList<String>()
 		for (permission in PERMISSIONS_CAMERA) {
 			result = ActivityCompat.checkSelfPermission(mMainActivity!!, permission)
-			if (result != PackageManager.PERMISSION_GRANTED)
-				listPermissionsNeeded.add(permission)
+			if (result != PackageManager.PERMISSION_GRANTED) listPermissionsNeeded.add(permission)
 		}
-		if (listPermissionsNeeded.isNotEmpty())
-			requestPermissions(PERMISSIONS_CAMERA, REQUEST_CAMERA)
-		else
-			photoCameraIntent()
+		if (listPermissionsNeeded.isNotEmpty()) requestPermissions(PERMISSIONS_CAMERA, REQUEST_CAMERA)
+		else photoCameraIntent()
 	}
 
 	/*
@@ -155,7 +151,7 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 	 * If the app does not has permission then the user will be prompted to grant permissions
 	 */
 	private fun photoGalleryClick() {
-		if (ActivityCompat.checkSelfPermission (mMainActivity!!, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+		if (ActivityCompat.checkSelfPermission(mMainActivity!!, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
 			requestPermissions(PERMISSIONS_STORAGE, REQUEST_STORAGE)
 		else photoGalleryIntent()
 	}
@@ -184,7 +180,7 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 			.setQuery(query, ChatModel::class.java)
 			.build()
 
-		mChatAdapter = ChatAdapter(options, mUserChatModel!!.name, this, mMainActivity)
+		mChatAdapter = ChatAdapter(options, mUserChatModel!!.name, this)
 		mChatAdapter!!.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
 			override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
 				super.onItemRangeInserted(positionStart, itemCount)
@@ -235,16 +231,13 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 	private fun sendMessageClick() {
 		if (edMessageWrite!!.text.isNotEmpty()) {
 			val chatModel = ChatModel(mUserChatModel, edMessageWrite!!.text.toString())
-			mFirestore.collection(GENERAL_COLLECTION_REFERENCE).document(CHAT_REFERENCE)
-				.collection(SECONDARY_COLLECTION_REFERENCE).document().set(chatModel)
+			mFirestore
+				.collection(GENERAL_COLLECTION_REFERENCE).document(CHAT_REFERENCE)
+				.collection(SECONDARY_COLLECTION_REFERENCE).document()
+				.set(chatModel)
 			edMessageWrite!!.text = null
 		} else
-			edMessageWrite!!.startAnimation(
-				AnimationUtils.loadAnimation(
-					mMainActivity,
-					R.anim.edittext_horizontal_shake
-				)
-			)
+			edMessageWrite!!.startAnimation(AnimationUtils.loadAnimation(mMainActivity, R.anim.edittext_horizontal_shake))
 	}
 
 
@@ -274,12 +267,10 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 						.collection(SECONDARY_COLLECTION_REFERENCE)
 						.document()
 						.set(messageModel)
-				} else
-					Log.d(TAG, "sendfile from gallery complete listener isn't succsessful")
+				} else Log.d(TAG, "sendfile from gallery complete listener isn't succsessful")
 			}
 
-		} else
-			Log.d(TAG, "storageReference is null")
+		} else Log.d(TAG, "storageReference is null")
 
 	}
 
@@ -288,18 +279,15 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 	 * Send the fileModel to firebase from camera
 	 */
 	private fun sendFileFirebase(storageReference: StorageReference, file: File) {
-		val photoURI = FileProvider.getUriForFile(
-			mMainActivity!!,
-			BuildConfig.APPLICATION_ID + ".provider",
-			file
-		)
+		val photoURI = FileProvider.getUriForFile(mMainActivity!!, BuildConfig.APPLICATION_ID + ".provider", file)
 
 		val uploadTask = storageReference.putFile(photoURI)
 		uploadTask.continueWithTask<Uri> { task ->
 			if (!task.isSuccessful) task.exception?.let { throw it }
 			return@continueWithTask storageReference.downloadUrl
 
-		}.addOnCompleteListener { task ->
+		}
+			.addOnCompleteListener { task ->
 			if (task.isSuccessful) {
 				val downloadUrl = task.result
 				Log.d(TAG, "onSuccess sendFileFirebase")
@@ -331,16 +319,11 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 	 */
 	private fun photoCameraIntent() {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()
-		mFilePathImageCamera = File(
-			Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-			namePhoto + "camera.jpg"
-		)
+		mFilePathImageCamera = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+			namePhoto + "camera.jpg")
 		val it = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-		val photoURI = FileProvider.getUriForFile(
-			mMainActivity!!,
-			BuildConfig.APPLICATION_ID + ".provider",
-			mFilePathImageCamera!!
-		)
+		val photoURI = FileProvider.getUriForFile(mMainActivity!!, BuildConfig.APPLICATION_ID + ".provider",
+			mFilePathImageCamera!!)
 		it.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
 		startActivityForResult(it, IMAGE_CAMERA_REQUEST)
 	}
@@ -364,10 +347,8 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 		if (requestCode == IMAGE_GALLERY_REQUEST) {
 			if (resultCode == RESULT_OK) {
 				val selectedImageUri = data!!.data
-				if (selectedImageUri != null) {
-					sendFileFirebase(storageRef, selectedImageUri)
-				} else
-					Toast.makeText(mMainActivity, "Photo uri is null", Toast.LENGTH_SHORT).show()
+				if (selectedImageUri != null) { sendFileFirebase(storageRef, selectedImageUri) }
+				else Toast.makeText(mMainActivity, "Photo uri is null", Toast.LENGTH_SHORT).show()
 			}
 		}
 		if (requestCode == IMAGE_CAMERA_REQUEST) {
@@ -376,11 +357,10 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 					val imageCameraRef = storageRef.child(mFilePathImageCamera!!.name + "_camera")
 					sendFileFirebase(imageCameraRef, mFilePathImageCamera!!)
 				} else
-					Toast.makeText(
-						mMainActivity,
+					Toast.makeText(mMainActivity,
 						"filePathImageCamera is null or filePathImageCamera isn't exists",
-						Toast.LENGTH_SHORT
-					).show()
+						Toast.LENGTH_SHORT)
+						.show()
 			}
 			//        }else if (requestCode == PLACE_PICKER_REQUEST){
 			//            if (resultCode == RESULT_OK) {
@@ -401,12 +381,12 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 
 	override fun onStart() {
 		super.onStart()
-		mChatAdapter!!.startListening()
+		mChatAdapter?.startListening()
 	}
 
 	override fun onStop() {
 		super.onStop()
-		mChatAdapter!!.stopListening()
+		mChatAdapter?.stopListening()
 	}
 
 
