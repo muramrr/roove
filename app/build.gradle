@@ -7,7 +7,7 @@ apply plugin: 'com.google.gms.google-services'
 android {
 	compileSdkVersion 28
 	defaultConfig {
-		applicationId "com.mmdev.meetups"
+		applicationId "com.mmdev.meetapp"
 		minSdkVersion 21
 		targetSdkVersion 28
 		versionCode 1
@@ -68,8 +68,8 @@ dependencies {
 	implementation 'me.himanshusoni.chatmessageview:chat-message-view:1.0.7'
 	implementation 'com.google.android.libraries.places:places:2.0.0'
 	//facebook auth
-	implementation 'com.facebook.android:facebook-android-sdk:5.2.0'
-	implementation 'com.facebook.android:facebook-login:5.2.0'
+	implementation 'com.facebook.android:facebook-android-sdk:5.4.0'
+	implementation 'com.facebook.android:facebook-login:5.4.0'
 	//binding
 	implementation 'com.jakewharton:butterknife:10.1.0'
 	kapt 'com.jakewharton:butterknife-compiler:10.1.0'

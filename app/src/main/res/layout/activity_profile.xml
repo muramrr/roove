@@ -4,7 +4,7 @@
     <data>
         <variable
             name="profileViewModel"
-            type="com.mmdev.meetups.ui.main.ProfileViewModel" />
+            type="com.mmdev.meetapp.ui.main.ProfileViewModel" />
     </data>
 
 
