@@ -21,7 +21,7 @@
 #-renamesourcefileattribute SourceFile
 -keepattributes Signature
 -keepattributes *Annotation*
--keepclassmembers class com.mmdev.meetups.models.** {
+-keepclassmembers class com.mmdev.meetapp.models.** {
   *;
 }
 -keep public class * implements com.bumptech.glide.module.GlideModule

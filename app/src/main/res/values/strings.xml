@@ -1,7 +1,7 @@
 <resources>
 	<!--General-->
 	<string name="app_logo">App Logo</string>
-	<string name="app_name" translatable="false">MeetUps</string>
+	<string name="app_name" translatable="false">MeetApp</string>
 	<string name="facebook_app_id">236629450571017</string>
 	<string name="fb_login_protocol_scheme">fb236629450571017</string>
 
