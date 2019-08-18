@@ -23,7 +23,6 @@ import java.util.*
 class CardsViewModel: ViewModel() {
 
 	companion object {
-
 		private const val USERS_COLLECTION_REFERENCE = "users"
 		private const val USERS_FILTER = "gender"
 		private const val USER_LIKES_COLLECTION_REFERENCE = "likes"
