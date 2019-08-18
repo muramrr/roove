@@ -70,9 +70,6 @@ dependencies {
 	//facebook auth
 	implementation 'com.facebook.android:facebook-android-sdk:5.4.0'
 	implementation 'com.facebook.android:facebook-login:5.4.0'
-	//binding
-	implementation 'com.jakewharton:butterknife:10.1.0'
-	kapt 'com.jakewharton:butterknife-compiler:10.1.0'
 	//additional
 	implementation 'android.arch.lifecycle:extensions:1.1.1'
 	implementation 'com.github.bumptech.glide:glide:4.9.0'
