@@ -150,7 +150,6 @@ class CardsViewModel: ViewModel() {
 			val returningProfileModels = ArrayList<ProfileModel>()
 			for (profileModel in mAllUsersCards)
 				if (!mergedLikesSkipsCardsIds.contains(profileModel.userId)) returningProfileModels.add(profileModel)
-			Log.wtf("logs", "all id =  " + mAllUsersCards[0].userId)
 			Log.wtf("logs", "potential users available = " + returningProfileModels.size)
 			potentialUsersCards!!.postValue(returningProfileModels)
 		}
@@ -165,7 +164,7 @@ class CardsViewModel: ViewModel() {
 	* check if users liked each other
 	*/
 	internal fun handlePossibleMatch(likedUser: ProfileModel) {
-		val uId: String = likedUser.userId!!
+		val uId: String = likedUser.userId
 		mUsersCollectionRef!!
 			.document(uId)
 			.collection(USER_LIKES_COLLECTION_REFERENCE)
@@ -212,7 +211,7 @@ class CardsViewModel: ViewModel() {
 	internal fun addToSkipped(skipedUser: ProfileModel) {
 		mCurrentProfileDocRef!!
 			.collection(USER_SKIPS_COLLECTION_REFERENCE)
-			.document(skipedUser.userId!!)
+			.document(skipedUser.userId)
 			.set(skipedUser)
 	}
 

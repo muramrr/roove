@@ -1,8 +1,8 @@
-package com.mmdev.meetapp.ui.chat;
+package com.mmdev.meetapp.ui.chat
 
-import android.view.View;
+import android.view.View
 
-public interface ClickChatAttachmentsFirebase {
+interface ClickChatAttachmentsFirebase {
 
 	/**
 	 * click attached photo in chat
@@ -12,7 +12,7 @@ public interface ClickChatAttachmentsFirebase {
 	 * @param urlPhotoUser photo profile url sender
 	 * @param urlPhotoClick clicked photo in chat url
 	 */
-	void clickImageChat(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick);
+	fun clickImageChat(view: View, position: Int, nameUser: String, urlPhotoUser: String, urlPhotoClick: String)
 
 	/**
 	 * click attached geoposition in chat
@@ -21,6 +21,6 @@ public interface ClickChatAttachmentsFirebase {
 	 * @param latitude latitude
 	 * @param longitude longitude
 	 */
-	void clickMapChat (View view, int position, String latitude, String longitude);
+	fun clickMapChat(view: View, position: Int, latitude: String, longitude: String)
 
 }
