@@ -81,10 +81,10 @@ class ChatAdapter constructor(options: FirestoreRecyclerOptions<ChatModel>, priv
 	override fun getItemViewType(position: Int): Int {
 		val (senderUserModel, _, fileModel, _) = getItem(position)
 		return if (fileModel != null)
-			if (fileModel.fileType.equals("img") && senderUserModel!!.name.equals(mUserName)) RIGHT_MSG_IMG
+			if (fileModel.fileType == "img" && senderUserModel!!.name == mUserName) RIGHT_MSG_IMG
 			else LEFT_MSG_IMG
 		else
-			if (senderUserModel!!.name.equals(mUserName)) RIGHT_MSG
+			if (senderUserModel!!.name == mUserName) RIGHT_MSG
 			else LEFT_MSG
 	}
 
@@ -115,13 +115,13 @@ class ChatAdapter constructor(options: FirestoreRecyclerOptions<ChatModel>, priv
 			val chatModel: ChatModel = getItem(adapterPosition)
 
 			if (chatModel.mapModel != null) mClickChatAttachmentsFirebase.clickMapChat(view, adapterPosition,
-				chatModel.mapModel?.latitude,
-				chatModel.mapModel?.longitude)
+				chatModel.mapModel!!.latitude,
+				chatModel.mapModel!!.longitude)
 			else mClickChatAttachmentsFirebase.clickImageChat(
 					view, adapterPosition,
-					chatModel.senderUserModel?.name,
-					chatModel.senderUserModel?.mainPhotoUrl,
-					chatModel.fileModel?.fileUrl)
+					chatModel.senderUserModel!!.name,
+					chatModel.senderUserModel!!.mainPhotoUrl,
+					chatModel.fileModel!!.fileUrl)
 		}
 
 		/* sets user profile pic in ImgView binded layout */
