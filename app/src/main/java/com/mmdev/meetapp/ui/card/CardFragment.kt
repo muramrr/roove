@@ -32,7 +32,7 @@ class CardFragment: Fragment() {
 	private var mCardStackAdapter: CardStackAdapter? = null
 	private var mPotentialUsersList: MutableList<ProfileModel>? = null
 	private var mSwipeUser: ProfileModel? = null
-	private var pbStatus: ProgressBar? = null
+	private var progressBar: ProgressBar? = null
 
 	private var mProgressShowing: Boolean = false
 
@@ -44,7 +44,7 @@ class CardFragment: Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		if (activity != null) mMainActivity = activity as MainActivity
 		cardStackView = view.findViewById(R.id.card_stack_view)
-		pbStatus = view.findViewById(R.id.card_prBar)
+		progressBar = view.findViewById(R.id.card_prBar)
 
 		val profileViewModel = ViewModelProviders.of(mMainActivity!!).get(ProfileViewModel::class.java)
 		val profileModel = profileViewModel.getProfileModel(mMainActivity).value
@@ -117,14 +117,14 @@ class CardFragment: Fragment() {
 	private fun showLoadingBar() {
 		if (!mProgressShowing) {
 			cardStackView!!.visibility = View.GONE
-			pbStatus!!.visibility = View.VISIBLE
+			progressBar!!.visibility = View.VISIBLE
 			mProgressShowing = true
 		}
 	}
 
 	private fun hideLoadingBar() {
 		if (mProgressShowing) {
-			pbStatus!!.visibility = View.GONE
+			progressBar!!.visibility = View.GONE
 			cardStackView!!.visibility = View.VISIBLE
 			mProgressShowing = false
 		}
