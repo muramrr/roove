@@ -31,7 +31,7 @@ class FullScreenImageActivity: AppCompatActivity() {
 	}
 
 	private fun setValues() {
-		val urlPhotoClick: String = intent.getStringExtra("urlPhotoClick")
+		val urlPhotoClick: String? = intent.getStringExtra("urlPhotoClick")
 		Log.i("TAG", "image received$urlPhotoClick")
 		GlideApp.with(this).load(urlPhotoClick).into(mImageView!!)
 	}
