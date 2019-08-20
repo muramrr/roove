@@ -70,16 +70,11 @@ class ChatAdapter constructor(options: FirestoreRecyclerOptions<ChatModel>, priv
 
 
 
-		//        else if(model.getMapModel() != null){
-		//            viewHolder.setIvChatPhoto(uiUtils.local(model.getMapModel().getLatitude(), model
-		//                    .getMapModel().getLongitude()));
-		//            viewHolder.tvIsLocation(View.VISIBLE);
-		//        }
 
 	}
 
 	override fun getItemViewType(position: Int): Int {
-		val (senderUserModel, _, fileModel, _) = getItem(position)
+		val (senderUserModel, _, fileModel) = getItem(position)
 		return if (fileModel != null)
 			if (fileModel.fileType == "img" && senderUserModel!!.name == mUserName) RIGHT_MSG_IMG
 			else LEFT_MSG_IMG
@@ -114,14 +109,11 @@ class ChatAdapter constructor(options: FirestoreRecyclerOptions<ChatModel>, priv
 		override fun onClick(view: View) {
 			val chatModel: ChatModel = getItem(adapterPosition)
 
-			if (chatModel.mapModel != null) mClickChatAttachmentsFirebase.clickMapChat(view, adapterPosition,
-				chatModel.mapModel!!.latitude,
-				chatModel.mapModel!!.longitude)
-			else mClickChatAttachmentsFirebase.clickImageChat(
-					view, adapterPosition,
-					chatModel.senderUserModel!!.name,
-					chatModel.senderUserModel!!.mainPhotoUrl,
-					chatModel.fileModel!!.fileUrl)
+			if (chatModel.fileModel != null) mClickChatAttachmentsFirebase.clickImageChat(view,
+				adapterPosition,
+				chatModel.senderUserModel!!.name,
+				chatModel.senderUserModel!!.mainPhotoUrl,
+				chatModel.fileModel!!.fileUrl)
 		}
 
 		/* sets user profile pic in ImgView binded layout */
@@ -155,7 +147,7 @@ class ChatAdapter constructor(options: FirestoreRecyclerOptions<ChatModel>, priv
 	 * @param date timestamp made by firestore
 	 * @return string in format hh:mm AM/PM
 	 */
-	private fun convertTimestamp(date: Date?): String {
+	private fun convertTimestamp(date: Date): String {
 		val calendar = Calendar.getInstance()
 		calendar.time = date
 		return SimpleDateFormat("EEE, d MMM yyyy hh:mm a", Locale.ENGLISH).format(calendar.time)

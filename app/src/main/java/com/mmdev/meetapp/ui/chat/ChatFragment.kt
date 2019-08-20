@@ -319,8 +319,9 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 	 */
 	private fun photoCameraIntent() {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()
-		mFilePathImageCamera = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+		mFilePathImageCamera = File(mMainActivity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
 			namePhoto + "camera.jpg")
+
 		val it = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 		val photoURI = FileProvider.getUriForFile(mMainActivity!!, BuildConfig.APPLICATION_ID + ".provider",
 			mFilePathImageCamera!!)
