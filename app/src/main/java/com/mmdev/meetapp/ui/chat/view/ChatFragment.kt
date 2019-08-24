@@ -1,4 +1,4 @@
-package com.mmdev.meetapp.ui.chat
+package com.mmdev.meetapp.ui.chat.view
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
@@ -142,7 +142,10 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 			result = ActivityCompat.checkSelfPermission(mMainActivity!!, permission)
 			if (result != PackageManager.PERMISSION_GRANTED) listPermissionsNeeded.add(permission)
 		}
-		if (listPermissionsNeeded.isNotEmpty()) requestPermissions(PERMISSIONS_CAMERA, REQUEST_CAMERA)
+		if (listPermissionsNeeded.isNotEmpty()) requestPermissions(
+            PERMISSIONS_CAMERA,
+            REQUEST_CAMERA
+        )
 		else photoCameraIntent()
 	}
 
@@ -152,7 +155,10 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 	 */
 	private fun photoGalleryClick() {
 		if (ActivityCompat.checkSelfPermission(mMainActivity!!, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-			requestPermissions(PERMISSIONS_STORAGE, REQUEST_STORAGE)
+			requestPermissions(
+                PERMISSIONS_STORAGE,
+                REQUEST_STORAGE
+            )
 		else photoGalleryIntent()
 	}
 
@@ -180,7 +186,8 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 			.setQuery(query, ChatModel::class.java)
 			.build()
 
-		mChatAdapter = ChatAdapter(options, mUserChatModel?.name!!, this)
+		mChatAdapter =
+			ChatAdapter(options, mUserChatModel?.name!!, this)
 		mChatAdapter!!.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
 			override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
 				super.onItemRangeInserted(positionStart, itemCount)
@@ -326,7 +333,9 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 		val photoURI = FileProvider.getUriForFile(mMainActivity!!, BuildConfig.APPLICATION_ID + ".provider",
 			mFilePathImageCamera!!)
 		it.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-		startActivityForResult(it, IMAGE_CAMERA_REQUEST)
+		startActivityForResult(it,
+            IMAGE_CAMERA_REQUEST
+        )
 	}
 
 	/*
@@ -336,7 +345,9 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 		val intent = Intent()
 		intent.type = "image/*"
 		intent.action = Intent.ACTION_GET_CONTENT
-		startActivityForResult(Intent.createChooser(intent, "Get Photo From "), IMAGE_GALLERY_REQUEST)
+		startActivityForResult(Intent.createChooser(intent, "Get Photo From "),
+            IMAGE_GALLERY_REQUEST
+        )
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -26,7 +26,7 @@ import com.mmdev.meetapp.R
 import com.mmdev.meetapp.models.ProfileModel
 import com.mmdev.meetapp.ui.auth.AuthActivity
 import com.mmdev.meetapp.ui.card.CardFragment
-import com.mmdev.meetapp.ui.chat.ChatFragment
+import com.mmdev.meetapp.ui.chat.view.ChatFragment
 import com.mmdev.meetapp.ui.feed.FeedFragment
 import com.mmdev.meetapp.ui.feed.FeedManager
 import com.mmdev.meetapp.utils.GlideApp

@@ -1,44 +1,54 @@
 apply plugin: 'com.github.ben-manes.versions'
 
 buildscript {
-	ext.kotlin_version = '1.3.41'
-	repositories {
-		mavenCentral()
-		jcenter()
-		google()
-	}
-	dependencies {
-		classpath 'com.android.tools.build:gradle:3.5.0'
-		classpath 'com.google.gms:google-services:4.2.0'
-		classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-		classpath 'com.github.ben-manes:gradle-versions-plugin:0.21.0'
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
-		// NOTE: Do not place your application dependencies here; they belong
-		// in the individual module build.gradle files
-	}
+    ext.kotlin_version = '1.3.50'
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        google()
+    }
+
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.google.gms:google-services:4.1.0'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.21.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
 }
 
 allprojects {
-	repositories {
-		maven { url "https://jitpack.io" }
-		mavenCentral()
-		jcenter()
-		google()
-	}
+    repositories {
+        maven { url "https://jitpack.io" }
+        mavenCentral()
+        jcenter()
+        google()
+    }
 }
 
 task clean(type: Delete) {
-	delete rootProject.buildDir
+    delete rootProject.buildDir
 }
 
 ext{
-	// RxJava
-	rxjava_version = '2.2.2'
+    // RxJava
+    rxjava_version = '2.2.11'
 
-	// RxAndroid
-	rxandroid_version = '2.1.0'
+    // RxAndroid
+    rxandroid_version = '2.1.0'
 
-	// Dagger
-	dagger_version = '2.24'
+    // Dagger
+    dagger_version = '2.24'
+
+    //firebase
+    firebase_core_version = '17.1.0'
+    firebase_firestore_version = '21.0.0'
+    firebase_storage_version = '19.0.0'
+
 }
