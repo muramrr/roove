@@ -6,7 +6,7 @@
 
     <item
         android:id="@+id/action_messages"
-        android:onClick="messagesClick"
+        android:onClick="messagesMenuClick"
         android:icon="@drawable/menu_ic_message_white"
         android:orderInCategory="300"
         android:title="messages"

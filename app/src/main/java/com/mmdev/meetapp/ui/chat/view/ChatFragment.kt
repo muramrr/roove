@@ -2,6 +2,7 @@ package com.mmdev.meetapp.ui.chat.view
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -20,21 +21,27 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.mmdev.domain.messages.model.Message
+import com.mmdev.domain.messages.model.PhotoAttached
+import com.mmdev.domain.messages.model.Sender
 import com.mmdev.meetapp.BuildConfig
 import com.mmdev.meetapp.R
-import com.mmdev.meetapp.models.ChatModel
-import com.mmdev.meetapp.models.FileModel
+import com.mmdev.meetapp.core.injector
 import com.mmdev.meetapp.models.ProfileModel
-import com.mmdev.meetapp.models.UserChatModel
-import com.mmdev.meetapp.ui.main.MainActivity
-import com.mmdev.meetapp.ui.main.ProfileViewModel
+
+import com.mmdev.meetapp.ui.MainActivity
+import com.mmdev.meetapp.ui.MainActivityListeners
+import com.mmdev.meetapp.ui.chat.viewmodel.ChatViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import java.io.File
 import java.util.*
 
@@ -44,37 +51,43 @@ import java.util.*
  * This is the documentation block about the class
  */
 
-class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
+class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 	private var CHAT_REFERENCE = ""
 
-	private var mMainActivity: MainActivity? = null
+	private lateinit var  mMainActivity: MainActivity
+	private lateinit var callback: MainActivityListeners
+
+	private val factory = injector.chatViewModelFactory()
+	private lateinit var chatViewModel: ChatViewModel
+
+
 
 	// Firebase
 	private var mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 	private var mStorage: FirebaseStorage = FirebaseStorage.getInstance()
 
 	// POJO models
-	private var mProfileModel: ProfileModel? = null
-	private var mUserChatModel: UserChatModel? = null
+	private lateinit var mProfileModel: ProfileModel
+	private lateinit var mSender: Sender
 
 	// Views UI
-	private var rvMessagesList: RecyclerView? = null
-	private var edMessageWrite: EditText? = null
-	private var ivAttachments: ImageView? = null
-	private var ivSendMessage: ImageView? = null
-	private var mLinearLayoutManager: LinearLayoutManager? = null
-	private var mChatAdapter: ChatAdapter? = null
+	private lateinit var rvMessagesList: RecyclerView
+	private lateinit var edMessageWrite: EditText
+	private lateinit var ivAttachments: ImageView
+	private lateinit var ivSendMessage: ImageView
+	private lateinit var mLinearLayoutManager: LinearLayoutManager
+	private lateinit var mChatAdapter: ChatAdapter
 
 	// File
-	private var mFilePathImageCamera: File? = null
+	private lateinit var mFilePathImageCamera: File
+
+	private val disposables = CompositeDisposable()
 
 
 	//static fields
 	companion object {
-
 		private const val IMAGE_GALLERY_REQUEST = 1
 		private const val IMAGE_CAMERA_REQUEST = 2
-		private const val PLACE_PICKER_REQUEST = 3
 
 		private val TAG = MainActivity::class.java.simpleName
 		//static final String CHAT_REFERENCE = "chatmodel";
@@ -91,8 +104,27 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 		// Camera Permission
 		private const val REQUEST_CAMERA = 2
 		private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
+
+		private const val ARG_USERNAME = "arg_username"
+
+		fun newInstance(username: String): ChatFragment {
+			val args = Bundle()
+			args.putString(ARG_USERNAME, username)
+
+			val fragment = ChatFragment()
+			fragment.arguments = args
+			return fragment
+		}
 	}
 
+
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		try { callback = context as MainActivityListeners }
+		catch (e: ClassCastException) {
+			throw ClassCastException("Activity must implement MainActivityFragmentsListener")
+		}
+	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		return inflater.inflate(R.layout.fragment_chat, container, false)
@@ -100,33 +132,54 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		activity?.let { mMainActivity = it as MainActivity }
-		edMessageWrite = view.findViewById(R.id.editTextMessage)
-		rvMessagesList = view.findViewById(R.id.messageRecyclerView)
-		ivAttachments = view.findViewById(R.id.buttonAttachments)
-		ivSendMessage = view.findViewById(R.id.buttonMessage)
-		setupViews()
-		val mProfileViewModel = ViewModelProviders.of(mMainActivity!!).get(ProfileViewModel::class.java)
-		mProfileModel = mProfileViewModel.getProfileModel(mMainActivity).value
-		if (mProfileModel != null) {
-			mUserChatModel = UserChatModel(
-				mProfileModel!!.name,
-				mProfileModel!!.gender,
-				mProfileModel!!.mainPhotoUrl,
-				mProfileModel!!.userId
-			)
-			CHAT_REFERENCE = "user_chat_" + mProfileModel!!.userId
-		}
-		readMessagesFirebase()
+		setupViews(view)
+		chatViewModel = ViewModelProvider(this, factory).get(ChatViewModel::class.java)
+
+		mProfileModel = chatViewModel.getProfileModel(mMainActivity).value
+		mSender = Sender(mProfileModel.name, mProfileModel.gender, mProfileModel.mainPhotoUrl,
+			mProfileModel.userId)
+		CHAT_REFERENCE = "user_chat_" + mProfileModel.userId
+		disposables
+			.add(chatViewModel.getMessages()
+				     .observeOn(AndroidSchedulers.mainThread())
+				     .subscribe(
+							{ adapter.updateData(it) },
+							{ showInternetError() }))
 	}
 
 	/*
 	 * setup managers and adapters for views
 	 */
-	private fun setupViews() {
+	private fun setupViews(view: View) {
+		edMessageWrite = view.findViewById(R.id.editTextMessage)
+		rvMessagesList = view.findViewById(R.id.messageRecyclerView)
+		ivAttachments = view.findViewById(R.id.buttonAttachments)
+		ivSendMessage = view.findViewById(R.id.buttonMessage)
 		mLinearLayoutManager = LinearLayoutManager(mMainActivity)
-		mLinearLayoutManager!!.stackFromEnd = true
-		ivAttachments!!.setOnClickListener { photoCameraClick() }
-		ivSendMessage!!.setOnClickListener { sendMessageClick() }
+		mLinearLayoutManager.stackFromEnd = true
+		rvMessagesList.layoutManager = mLinearLayoutManager
+		ivSendMessage.setOnClickListener { sendMessageClick() }
+		ivAttachments.setOnClickListener { photoCameraClick() }
+
+	}
+
+	/*
+	* Send plain text msg to chat if edittext is not empty
+	* else shake animation
+	*/
+	private fun sendMessageClick() {
+		if (edMessageWrite.text.isNotEmpty()) {
+			val message = Message(mSender, edMessageWrite.text.toString(), null)
+			disposables
+				.add(chatViewModel.sendMessage(message)
+					     .observeOn(AndroidSchedulers.mainThread())
+					     .subscribe( { Log.d("ChatFragment", "Message sent") },
+					                 { showInternetError() } ))
+			edMessageWrite.setText("")
+		}
+		else edMessageWrite
+			.startAnimation(AnimationUtils.loadAnimation(mMainActivity, R.anim.edittext_horizontal_shake))
+
 	}
 
 
@@ -139,13 +192,10 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 		var result: Int
 		val listPermissionsNeeded = ArrayList<String>()
 		for (permission in PERMISSIONS_CAMERA) {
-			result = ActivityCompat.checkSelfPermission(mMainActivity!!, permission)
+			result = ActivityCompat.checkSelfPermission(mMainActivity, permission)
 			if (result != PackageManager.PERMISSION_GRANTED) listPermissionsNeeded.add(permission)
 		}
-		if (listPermissionsNeeded.isNotEmpty()) requestPermissions(
-            PERMISSIONS_CAMERA,
-            REQUEST_CAMERA
-        )
+		if (listPermissionsNeeded.isNotEmpty()) requestPermissions(PERMISSIONS_CAMERA, REQUEST_CAMERA)
 		else photoCameraIntent()
 	}
 
@@ -154,11 +204,8 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 	 * If the app does not has permission then the user will be prompted to grant permissions
 	 */
 	private fun photoGalleryClick() {
-		if (ActivityCompat.checkSelfPermission(mMainActivity!!, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-			requestPermissions(
-                PERMISSIONS_STORAGE,
-                REQUEST_STORAGE
-            )
+		if (ActivityCompat.checkSelfPermission(mMainActivity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+			requestPermissions(PERMISSIONS_STORAGE, REQUEST_STORAGE)
 		else photoGalleryIntent()
 	}
 
@@ -182,24 +229,23 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 			.collection(SECONDARY_COLLECTION_REFERENCE)
 			.orderBy("timestamp")
 
-		val options = FirestoreRecyclerOptions.Builder<ChatModel>()
-			.setQuery(query, ChatModel::class.java)
+		val options = FirestoreRecyclerOptions.Builder<Message>()
+			.setQuery(query, Message::class.java)
 			.build()
 
-		mChatAdapter =
-			ChatAdapter(options, mUserChatModel?.name!!, this)
-		mChatAdapter!!.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+		mChatAdapter = ChatAdapter(options, mSender.name, this)
+		mChatAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
 			override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
 				super.onItemRangeInserted(positionStart, itemCount)
-				val friendlyMessageCount = mChatAdapter!!.itemCount
-				val lastVisiblePosition = mLinearLayoutManager!!.findLastCompletelyVisibleItemPosition()
+				val friendlyMessageCount = mChatAdapter.itemCount
+				val lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition()
 				if (lastVisiblePosition == -1 || positionStart >= friendlyMessageCount - 1 && lastVisiblePosition == positionStart - 1) {
-					rvMessagesList!!.scrollToPosition(positionStart)
+					rvMessagesList.scrollToPosition(positionStart)
 				}
 			}
 		})
-		rvMessagesList!!.layoutManager = mLinearLayoutManager
-		rvMessagesList!!.adapter = mChatAdapter
+
+		rvMessagesList.adapter = mChatAdapter
 
 	}
 
@@ -218,38 +264,13 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 	}
 
 
-	/**
-	 * click attached geoposition in chat
-	 * @param view your view
-	 * @param position pos
-	 * @param latitude latitude
-	 * @param longitude longitude
-	 */
-	override fun clickMapChat(view: View, position: Int, latitude: String, longitude: String) {
-		val uri = String.format("geo:%s,%s?z=17&q=%s,%s", latitude, longitude, latitude, longitude)
-		val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-		startActivity(intent)
-	}
-
-	/*
-	 * Send plain text msg to chat if edittext is not empty
-	 * else shake animation
-	 */
-	private fun sendMessageClick() {
-		if (edMessageWrite!!.text.isNotEmpty()) {
-			val chatModel = ChatModel(mUserChatModel, edMessageWrite!!.text.toString())
-			mFirestore
-				.collection(GENERAL_COLLECTION_REFERENCE).document(CHAT_REFERENCE)
-				.collection(SECONDARY_COLLECTION_REFERENCE).document()
-				.set(chatModel)
-			edMessageWrite!!.text = null
-		} else
-			edMessageWrite!!.startAnimation(AnimationUtils.loadAnimation(mMainActivity, R.anim.edittext_horizontal_shake))
+	private fun showInternetError() {
+		Toast.makeText(context, "Check internet connection", Toast.LENGTH_SHORT).show()
 	}
 
 
 	/*
-	 * Sends the fileModel to the firebase from gallery
+	 * Sends photo to the firebase from gallery
 	 */
 	private fun sendFileFirebase(storageReference: StorageReference?, file: Uri) {
 		if (storageReference != null) {
@@ -267,8 +288,8 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 				if (task.isSuccessful) {
 					val downloadUrl = task.result
 					Log.d(TAG, "onSuccess sendFileFirebase")
-					val fileModel = FileModel("img", downloadUrl!!.toString(), name, "")
-					val messageModel = ChatModel(mUserChatModel, fileModel = fileModel)
+					val photoAttached = PhotoAttached("img", downloadUrl!!.toString(), name, "")
+					val messageModel = Message(mSender, photoAttached = photoAttached)
 					mFirestore.collection(GENERAL_COLLECTION_REFERENCE)
 						.document(CHAT_REFERENCE)
 						.collection(SECONDARY_COLLECTION_REFERENCE)
@@ -283,10 +304,10 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 
 
 	/*
-	 * Send the fileModel to firebase from camera
+	 * Send photo to firebase taken directly by camera
 	 */
 	private fun sendFileFirebase(storageReference: StorageReference, file: File) {
-		val photoURI = FileProvider.getUriForFile(mMainActivity!!, BuildConfig.APPLICATION_ID + ".provider", file)
+		val photoURI = FileProvider.getUriForFile(mMainActivity, BuildConfig.APPLICATION_ID + ".provider", file)
 
 		val uploadTask = storageReference.putFile(photoURI)
 		uploadTask.continueWithTask<Uri> { task ->
@@ -298,40 +319,30 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 			if (task.isSuccessful) {
 				val downloadUrl = task.result
 				Log.d(TAG, "onSuccess sendFileFirebase")
-				val fileModel = FileModel("img", downloadUrl!!.toString(), file.name, file.length().toString() + "")
-				val chatModel = ChatModel(mUserChatModel, fileModel = fileModel)
+				val photoAttached = PhotoAttached("img", downloadUrl!!.toString(),
+				                                  file.name,
+				                                  file.length().toString() + "")
+				val messageModel = Message(mSender, photoAttached = photoAttached)
 				mFirestore.collection(GENERAL_COLLECTION_REFERENCE)
 					.document(CHAT_REFERENCE)
 					.collection(SECONDARY_COLLECTION_REFERENCE)
-					.document().set(chatModel)
+					.document().set(messageModel)
 			} else Log.d(TAG, "sendfile from camera completelistener isn't succsessful")
 		}
 	}
 
 
 	/*
-	 Get user location
-	 */
-	//    private void locationPlacesIntent(){
-	//        try {
-	//            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-	//            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
-	//        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-	//            e.printStackTrace();
-	//        }
-	//    }
-
-	/*
-	 * Upload photo taken by camera
+	 * take photo directly by camera
 	 */
 	private fun photoCameraIntent() {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()
-		mFilePathImageCamera = File(mMainActivity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+		mFilePathImageCamera = File(mMainActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
 			namePhoto + "camera.jpg")
 
 		val it = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-		val photoURI = FileProvider.getUriForFile(mMainActivity!!, BuildConfig.APPLICATION_ID + ".provider",
-			mFilePathImageCamera!!)
+		val photoURI = FileProvider.getUriForFile(mMainActivity, BuildConfig.APPLICATION_ID + ".provider",
+			mFilePathImageCamera)
 		it.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
 		startActivityForResult(it,
             IMAGE_CAMERA_REQUEST
@@ -339,7 +350,7 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 	}
 
 	/*
-	 * Upload photo in gallery
+	 * choose photo from gallery
 	 */
 	private fun photoGalleryIntent() {
 		val intent = Intent()
@@ -365,40 +376,28 @@ class ChatFragment : Fragment(), ClickChatAttachmentsFirebase {
 		}
 		if (requestCode == IMAGE_CAMERA_REQUEST) {
 			if (resultCode == RESULT_OK) {
-				if (mFilePathImageCamera != null && mFilePathImageCamera!!.exists()) {
-					val imageCameraRef = storageRef.child(mFilePathImageCamera!!.name + "_camera")
-					sendFileFirebase(imageCameraRef, mFilePathImageCamera!!)
+				if (mFilePathImageCamera.exists()) {
+					val imageCameraRef = storageRef.child(mFilePathImageCamera.name + "_camera")
+					sendFileFirebase(imageCameraRef, mFilePathImageCamera)
 				} else
 					Toast.makeText(mMainActivity,
 						"filePathImageCamera is null or filePathImageCamera isn't exists",
 						Toast.LENGTH_SHORT)
 						.show()
 			}
-			//        }else if (requestCode == PLACE_PICKER_REQUEST){
-			//            if (resultCode == RESULT_OK) {
-			//                Place place = PlacePicker.getPlace(this, data);
-			//                if (place!=null){
-			//                    LatLng latLng = place.getLatLng();
-			//                    MapModel mapModel = new MapModel(latLng.latitude+"", latLng.longitude+"");
-			//                    MessageModel chatModel = new MessageModel(userChatModel, Calendar
-			//                            .getInstance().getTime().getTime()+"", mapModel);
-			//                    mFirestore.child(CHAT_REFERENCE).push().setValue(chatModel);
-			//                }else{
-			//                    //PLACE IS NULL
-			//                }
-			//            }
 
 		}
 	}
 
 	override fun onStart() {
 		super.onStart()
-		mChatAdapter?.startListening()
+		mChatAdapter.startListening()
 	}
 
 	override fun onStop() {
 		super.onStop()
-		mChatAdapter?.stopListening()
+		mChatAdapter.stopListening()
+		disposables.clear()
 	}
 
 
