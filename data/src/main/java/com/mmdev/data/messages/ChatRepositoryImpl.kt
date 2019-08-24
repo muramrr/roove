@@ -3,7 +3,7 @@ package com.mmdev.data.messages
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.mmdev.domain.messages.model.Message
-import com.mmdev.domain.messages.repository.MessagesRepository
+import com.mmdev.domain.messages.repository.ChatRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -12,14 +12,25 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MessagesRepositoryImpl @Inject constructor(private val db: FirebaseFirestore): MessagesRepository{
+class ChatRepositoryImpl @Inject constructor(private val db: FirebaseFirestore): ChatRepository{
+
+    companion object{
+        private const val GENERAL_COLLECTION_REFERENCE = "chats"
+        private const val SECONDARY_COLLECTION_REFERENCE = "messages"
+        //private const val CHAT_REFERENCE = "messages"
+        private const val URL_STORAGE_REFERENCE = "gs://meetups-c34b0.appspot.com"
+        private const val FOLDER_STORAGE_IMG = "images"
+    }
 
     override fun sendMessage(message: Message): Completable {
         return Completable.create { emitter ->
-            db.collection("messages")
-                    .add(message)
-                    .addOnSuccessListener { emitter.onComplete() }
-                    .addOnFailureListener { emitter.onError(it) }
+            db.collection(GENERAL_COLLECTION_REFERENCE).document()
+                .collection(SECONDARY_COLLECTION_REFERENCE)
+                .document()
+                .set(message)
+                .addOnSuccessListener { emitter.onComplete() }
+                .addOnFailureListener { emitter.onError(it) }
+
         }.subscribeOn(Schedulers.io())
     }
 

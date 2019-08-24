@@ -1,4 +1,4 @@
-package com.mmdev.meetapp.ui.main
+package com.mmdev.meetapp.ui
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -17,7 +17,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.facebook.login.LoginManager
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -29,17 +29,18 @@ import com.mmdev.meetapp.ui.card.CardFragment
 import com.mmdev.meetapp.ui.chat.view.ChatFragment
 import com.mmdev.meetapp.ui.feed.FeedFragment
 import com.mmdev.meetapp.ui.feed.FeedManager
+import com.mmdev.meetapp.ui.main.ProfileViewModel
 import com.mmdev.meetapp.utils.GlideApp
 import java.util.*
 
-class MainActivity: AppCompatActivity() {
+class MainActivity: AppCompatActivity(), MainActivityListeners  {
 
 	private val TAG = "myLogs"
 
 	// Data
 	private var usersCards: MutableList<ProfileModel> = ArrayList()
 
-
+	private lateinit var navView: NavigationView
 	private var toolbar: Toolbar? = null
 
 	private var drawerLayout: DrawerLayout? = null
@@ -60,32 +61,76 @@ class MainActivity: AppCompatActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
-		val navView: NavigationView = findViewById(R.id.nav_view)
-		drawerLayout = findViewById(R.id.drawer_layout)
-		toolbar = findViewById(R.id.toolbar)
+		setUpViews()
+		setSupportActionBar(toolbar)
+		setUpNavigationView(navView, drawerLayout!!)
+		showFeedFragment()
 		mFirebaseAuth = FirebaseAuth.getInstance()
 		checkConnection()
-		setSupportActionBar(toolbar)
-		setupNavigationView(navView, drawerLayout!!)
 		mFragmentManager = supportFragmentManager
-		if (findViewById<View>(R.id.main_container) != null) {
-			if (savedInstanceState != null) return
-			mFragmentManager!!.beginTransaction().add(R.id.main_container, FeedFragment(), "FeedFragment").commit()
-		}
+
 		mFirestore = FirebaseFirestore.getInstance()
-		val profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
+		val profileViewModel =
+			ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(ProfileViewModel::class.java)
 		profileModel = profileViewModel.getProfileModel(this).value
 		setUpUser()
 
-		val toggle = ActionBarDrawerToggle(this,
-		                                   drawerLayout,
-		                                   toolbar,
-		                                   R.string.navigation_drawer_open,
-		                                   R.string.navigation_drawer_close)
+	}
 
-		drawerLayout!!.addDrawerListener(toggle)
-		toggle.syncState()
+	override fun onCardsClick() = startCardFragment()
+	//todo: change this to messages fragment
+	override fun onMessagesClick(username: String) = startChatFragment(username)
 
+	override fun onLogOutClick() = showSignOutPrompt()
+
+	/*
+	 * start card swipe
+	 */
+	private fun startCardFragment() {
+		supportFragmentManager.findFragmentByTag("CardFragment") ?: supportFragmentManager
+			.beginTransaction().apply{
+				setCustomAnimations(R.anim.fragment_enter_from_right,
+				                    R.anim.fragment_exit_to_left,
+				                    R.anim.fragment_enter_from_left,
+				                    R.anim.fragment_exit_to_right)
+				replace(R.id.main_container, CardFragment(), "CardFragment")
+				addToBackStack(null)
+				commit()
+			}
+
+	}
+
+	/*
+	 * start chat
+	 */
+	private fun startChatFragment(username: String) {
+		supportFragmentManager.findFragmentByTag("ChatFragment") ?: supportFragmentManager
+			.beginTransaction().apply {
+				setCustomAnimations(R.anim.fragment_enter_from_right,
+				                    R.anim.fragment_exit_to_left,
+				                    R.anim.fragment_enter_from_left,
+				                    R.anim.fragment_exit_to_right)
+				replace(R.id.main_container, ChatFragment.newInstance(username), "ChatFragment")
+				addToBackStack(null)
+				commit()
+			}
+	}
+
+	/*
+	* log out pop up
+	*/
+	private fun showSignOutPrompt() {
+		val builder = AlertDialog.Builder(this)
+		builder.setMessage("Do you wish to sign out?")
+		builder.setPositiveButton("YES") { dialog: DialogInterface, _: Int ->
+			dialog.dismiss()
+			//Attempt sign out
+			mFirebaseAuth!!.signOut()
+			LoginManager.getInstance().logOut()
+
+		}
+		builder.setNegativeButton("NO") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
+		builder.create().show()
 	}
 
 	/*
@@ -109,8 +154,8 @@ class MainActivity: AppCompatActivity() {
 			val mPreferedGender = profileModel!!.preferedGender
 			val signedInUserPhotoUrl = profileModel!!.mainPhotoUrl
 			val uID = profileModel!!.userId
-			if (!TextUtils.isEmpty(signedInUserPhotoUrl)) GlideApp.with(this).load(signedInUserPhotoUrl).into(
-					ivSignedInUserAvatar!!)
+			if (!TextUtils.isEmpty(signedInUserPhotoUrl))
+				GlideApp.with(this).load(signedInUserPhotoUrl).into(ivSignedInUserAvatar!!)
 			tvSignedInUserName!!.text = mName
 			tvSignedInUserId!!.text = uID
 		}
@@ -118,29 +163,47 @@ class MainActivity: AppCompatActivity() {
 
 	}
 
-	private fun setupNavigationView(navView: NavigationView, drawerLayout: DrawerLayout) {
-		navView.setNavigationItemSelectedListener { item ->
-			// Handle navigation view item clicks here.
-			when (item.itemId) {
-				R.id.nav_feed -> startCardFragment()
-				R.id.nav_events -> { }
-				R.id.nav_post ->
-					//Toast.makeText(this,String.valueOf(usersCards),Toast.LENGTH_SHORT).show();
-					onGenerateUsers()
-				R.id.nav_notifications -> { }
-				R.id.nav_account -> { }
-				R.id.nav_log_out -> showSignOutPrompt()
-			} //Toast.makeText(this,String.valueOf(mFeedManager.getUsersCards()),Toast.LENGTH_SHORT).show();
-			//Toast.makeText(this, String.valueOf(FeedManager.generateUsers()), Toast.LENGTH_SHORT).show();
-			if (drawerLayout.isDrawerOpen(GravityCompat.START)) drawerLayout.closeDrawer(GravityCompat.START)
-			return@setNavigationItemSelectedListener true
-		}
+	private fun setUpViews(){
+		navView = findViewById(R.id.nav_view)
+		drawerLayout = findViewById(R.id.drawer_layout)
+		toolbar = findViewById(R.id.toolbar)
+		val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,
+		                                   R.string.navigation_drawer_open,
+		                                   R.string.navigation_drawer_close)
+
+		drawerLayout!!.addDrawerListener(toggle)
+		toggle.syncState()
+	}
+
+	private fun setUpNavigationView(navView: NavigationView, drawerLayout: DrawerLayout) {
 		navView.getChildAt(navView.childCount - 1).overScrollMode = View.OVER_SCROLL_NEVER
 		val headerView = navView.getHeaderView(0)
 		tvSignedInUserName = headerView.findViewById(R.id.signed_in_username_tv)
 		ivSignedInUserAvatar = headerView.findViewById(R.id.signed_in_user_image_view)
 		tvSignedInUserId = headerView.findViewById(R.id.user_facebookID)
 
+		navView.setNavigationItemSelectedListener { item ->
+			drawerLayout.closeDrawer(GravityCompat.START)
+			// Handle navigation view item clicks here.
+			when (item.itemId) {
+				R.id.nav_feed -> onCardsClick()
+				R.id.nav_events -> { }
+				R.id.nav_post -> onGenerateUsers()
+				R.id.nav_notifications -> { }
+				R.id.nav_account -> { }
+				R.id.nav_log_out -> onLogOutClick()
+			} //Toast.makeText(this,String.valueOf(mFeedManager.getUsersCards()),Toast.LENGTH_SHORT).show();
+			//Toast.makeText(this, String.valueOf(FeedManager.generateUsers()), Toast.LENGTH_SHORT).show();
+			return@setNavigationItemSelectedListener true
+		}
+
+	}
+
+	private fun showFeedFragment(){
+		supportFragmentManager.beginTransaction().apply {
+			add(R.id.main_container, FeedFragment(), "FeedFragment")
+			commit()
+		}
 	}
 
 	/*
@@ -181,49 +244,6 @@ class MainActivity: AppCompatActivity() {
 	}
 
 	/*
-	 * start card swipe
-	 */
-	private fun startCardFragment() {
-		if (mFragmentManager!!.findFragmentByTag("CardFragment") != null) return
-		val ft = mFragmentManager!!.beginTransaction()
-		ft.setCustomAnimations(R.anim.fragment_enter_from_right,
-		                       R.anim.fragment_exit_to_left,
-		                       R.anim.fragment_enter_from_left,
-		                       R.anim.fragment_exit_to_right)
-		ft.replace(R.id.main_container, CardFragment(), "CardFragment")
-		ft.addToBackStack(null)
-		ft.commit()
-	}
-
-	/*
-	 * start chat
-	 */
-	private fun startChatFragment() {
-		val ft = mFragmentManager!!.beginTransaction()
-		ft.setCustomAnimations(R.anim.fragment_enter_from_right,
-		                       R.anim.fragment_exit_to_left,
-		                       R.anim.fragment_enter_from_left,
-		                       R.anim.fragment_exit_to_right)
-		ft.replace(R.id.main_container, ChatFragment(), "MessagesFragment")
-		ft.addToBackStack(null)
-		ft.commit()
-	}
-
-	private fun showSignOutPrompt() {
-		val builder = AlertDialog.Builder(this)
-		builder.setMessage("Do you wish to sign out?")
-		builder.setPositiveButton("YES") { dialog: DialogInterface, _: Int ->
-			dialog.dismiss()
-			//Attempt sign out
-			mFirebaseAuth!!.signOut()
-			LoginManager.getInstance().logOut()
-
-		}
-		builder.setNegativeButton("NO") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
-		builder.create().show()
-	}
-
-	/*
 	menu init
 	 */
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -234,9 +254,8 @@ class MainActivity: AppCompatActivity() {
 	/*
 	menu button click handler
 	 */
-	fun messagesClick(item: MenuItem) {
-		if (mFragmentManager!!.findFragmentByTag("MessagesFragment") != null) return
-		startChatFragment()
+	fun messagesMenuClick(item: MenuItem) {
+		//startMessagesFragment()
 	}
 
 	override fun onBackPressed() {
@@ -244,15 +263,15 @@ class MainActivity: AppCompatActivity() {
 		else super.onBackPressed()
 	}
 
-	override fun onStart() {
-		super.onStart()
-		mFirebaseAuth!!.addAuthStateListener(mAuthStateListener!!)
-	}
-
-	override fun onStop() {
-		super.onStop()
-		mFirebaseAuth!!.removeAuthStateListener(mAuthStateListener!!)
-	}
+//	override fun onStart() {
+//		super.onStart()
+//		mFirebaseAuth!!.addAuthStateListener(mAuthStateListener!!)
+//	}
+//
+//	override fun onStop() {
+//		super.onStop()
+//		mFirebaseAuth!!.removeAuthStateListener(mAuthStateListener!!)
+//	}
 
 
 
