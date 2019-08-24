@@ -1,4 +1,4 @@
-package com.mmdev.meetapp.ui.chat
+package com.mmdev.meetapp.ui.chat.view
 
 import android.os.Build
 import android.os.Bundle

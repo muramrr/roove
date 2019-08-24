@@ -1,4 +1,4 @@
-package com.mmdev.meetapp.ui.chat
+package com.mmdev.meetapp.ui.chat.view
 
 /* Created by A on 06.06.2019.*/
 
@@ -28,7 +28,8 @@ import java.util.*
  */
 
 class ChatAdapter constructor(options: FirestoreRecyclerOptions<ChatModel>, private val mUserName: String,
-                              private val mClickChatAttachmentsFirebase: ClickChatAttachmentsFirebase) :
+                              private val mClickChatAttachmentsFirebase: ClickChatAttachmentsFirebase
+) :
 
 	FirestoreRecyclerAdapter<ChatModel, ChatAdapter.ChatViewHolder>(options) {
 
