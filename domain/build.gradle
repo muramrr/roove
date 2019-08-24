@@ -9,7 +9,7 @@ dependencies {
     // RxJava
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
 
-    implementation 'com.google.firebase:firebase-firestore:21.0.0'
+    //implementation "com.google.firebase:firebase-firestore:$firebase_firestore_vesion"
 }
 
 sourceCompatibility = "1.8"
