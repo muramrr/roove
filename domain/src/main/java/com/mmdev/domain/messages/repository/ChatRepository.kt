@@ -6,7 +6,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 
 
-interface MessagesRepository {
+interface ChatRepository {
 
     fun sendMessage(message: Message): Completable
 

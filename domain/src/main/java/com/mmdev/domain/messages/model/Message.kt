@@ -9,8 +9,8 @@ package com.mmdev.domain.messages.model
 
 
 
-data class Message (var senderUser: Sender? = null, val text: String = "",
-                    var file: File? = null){
+data class Message (val senderUser: Sender, val text: String = "",
+                    val photoAttached: PhotoAttached?){
 
 	//@ServerTimestamp val timestamp: Date? = null
 

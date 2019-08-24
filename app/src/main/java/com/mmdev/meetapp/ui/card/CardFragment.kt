@@ -15,7 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.models.ProfileModel
-import com.mmdev.meetapp.ui.main.MainActivity
+import com.mmdev.meetapp.ui.MainActivity
 import com.mmdev.meetapp.ui.main.ProfileViewModel
 import com.mmdev.meetapp.utils.GlideApp
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
