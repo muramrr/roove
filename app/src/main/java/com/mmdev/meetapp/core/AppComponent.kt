@@ -1,6 +1,7 @@
 package com.mmdev.meetapp.core
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mmdev.data.core.AuthModule
 import com.mmdev.data.core.DatabaseModule
 import com.mmdev.data.core.RepositoryModule
 import com.mmdev.domain.messages.repository.ChatRepository
@@ -10,6 +11,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Component(modules = [
+    AuthModule::class,
     RepositoryModule::class,
     DatabaseModule::class,
     ViewModelModule::class

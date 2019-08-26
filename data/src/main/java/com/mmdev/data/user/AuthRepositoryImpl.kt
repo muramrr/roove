@@ -1,5 +1,6 @@
 package com.mmdev.data.user
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.domain.user.model.User
 import com.mmdev.domain.user.repository.AuthRepository
@@ -10,7 +11,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AuthRepositoryImpl @Inject constructor(private val db: FirebaseFirestore) : AuthRepository {
+class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
+                                             private val db: FirebaseFirestore) : AuthRepository {
 
     override fun signup(username: String, password: String): Single<User> {
         return Single.create(SingleOnSubscribe<User> { emitter ->
