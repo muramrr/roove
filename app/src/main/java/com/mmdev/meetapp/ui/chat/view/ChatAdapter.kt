@@ -11,9 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.firestore.ServerTimestamp
 import com.mmdev.domain.messages.model.Message
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.utils.CircleTransform
@@ -21,22 +18,15 @@ import com.mmdev.meetapp.utils.GlideApp
 import java.text.SimpleDateFormat
 import java.util.*
 
+class ChatAdapter (private val mUserName: String,
+                   private var chats: List<Message>,
+                   private val mClickChatAttachmentFirebase: ClickChatAttachmentFirebase):
 
-/**
- * Create a new RecyclerView adapter that listens to a Firestore Query.  See [ ] for configuration options.
- *
- * @param options query options in [ChatFragment]
- */
+	RecyclerView.Adapter<ChatAdapter.ChatViewHolder>(){
 
-class ChatAdapter constructor(options: FirestoreRecyclerOptions<Message>, private val mUserName: String,
-                              private val mClickChatAttachmentFirebase: ClickChatAttachmentFirebase) :
-
-	FirestoreRecyclerAdapter<Message, ChatAdapter.ChatViewHolder>(options) {
-
-	@ServerTimestamp lateinit var timestamp: Date
+	//@ServerTimestamp lateinit var timestamp: Date
 
 	companion object {
-
 		private const val RIGHT_MSG = 0
 		private const val LEFT_MSG = 1
 		private const val RIGHT_MSG_IMG = 2
@@ -61,19 +51,23 @@ class ChatAdapter constructor(options: FirestoreRecyclerOptions<Message>, privat
 	}
 
 
-	override fun onBindViewHolder(viewHolder: ChatViewHolder, position: Int, message: Message) {
+	override fun onBindViewHolder(viewHolder: ChatViewHolder, position: Int) {
 		viewHolder.setMessageType(getItemViewType(position))
-		viewHolder.bindMessage(message)
+		viewHolder.bindMessage(chats[position])
 	}
 
 	override fun getItemViewType(position: Int): Int {
-		val (sender, _, file) = getItem(position)
-		return if (file != null)
-			if (file.fileType == "img" && sender.name == mUserName) RIGHT_MSG_IMG
-			else LEFT_MSG_IMG
-		else
-			if (sender.name == mUserName) RIGHT_MSG
-			else LEFT_MSG
+		val (sender, _, photoAttached) = chats[position]
+		return if (photoAttached != null)
+			if (sender.name == mUserName) RIGHT_MSG_IMG else LEFT_MSG_IMG
+		else if (sender.name == mUserName) RIGHT_MSG else LEFT_MSG
+	}
+
+	override fun getItemCount() = chats.size
+
+	fun updateData(chats: List<Message>) {
+		this.chats = chats
+		notifyDataSetChanged()
 	}
 
 
@@ -101,13 +95,13 @@ class ChatAdapter constructor(options: FirestoreRecyclerOptions<Message>, privat
 		fun bindMessage (message: Message) {
 			setIvUserAvatar(message.senderUser.mainPhotoUrl)
 			setTextMessage(message.text)
-			setTvTimestamp(convertTimestamp(timestamp))
+			//setTvTimestamp(convertTimestamp(timestamp))
 			setIvChatPhoto(message.photoAttached?.fileUrl)
 		}
 
 		/* handle image or map attachment click */
 		override fun onClick(view: View) {
-			val message: Message = getItem(adapterPosition)
+			val message: Message = chats[adapterPosition]
 
 			if (message.photoAttached != null)
 				mClickChatAttachmentFirebase.clickImageChat(view, adapterPosition,

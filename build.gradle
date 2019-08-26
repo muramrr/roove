@@ -6,7 +6,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
-        classpath 'com.google.gms:google-services:4.3.1'
+        classpath 'com.google.gms:google-services:4.1.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.22.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -41,7 +41,7 @@ ext{
     firebase_core_version = '17.1.0'
     firebase_firestore_version = '21.0.0'
     firebase_storage_version = '19.0.0'
-
+    firebase_auth_version = '19.0.0'
     // Dagger
     dagger_version = '2.24'
 
