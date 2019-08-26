@@ -29,7 +29,6 @@ import com.mmdev.meetapp.ui.card.CardFragment
 import com.mmdev.meetapp.ui.chat.view.ChatFragment
 import com.mmdev.meetapp.ui.feed.FeedFragment
 import com.mmdev.meetapp.ui.feed.FeedManager
-import com.mmdev.meetapp.ui.main.ProfileViewModel
 import com.mmdev.meetapp.utils.GlideApp
 import java.util.*
 

@@ -38,8 +38,10 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
 
     // Firebase
-    implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
+    implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
     implementation "com.google.firebase:firebase-core:$firebase_core_version"
+    implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
+    implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
 
     // RxJava
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"

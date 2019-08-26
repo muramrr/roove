@@ -1,12 +1,14 @@
-package com.mmdev.meetapp.ui.main;
+package com.mmdev.meetapp.ui;
 
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mmdev.meetapp.models.ProfileModel;
@@ -14,8 +16,8 @@ import com.mmdev.meetapp.utils.TinyDB;
 
 import java.util.ArrayList;
 
-public class ProfileViewModel extends ViewModel
-{
+public class ProfileViewModel extends ViewModel {
+
 	private MutableLiveData<ProfileModel> mProfileModel = new MutableLiveData<>();
 	public MutableLiveData<String> Name = new MutableLiveData<>();
 	private MutableLiveData<Integer> busy = new MutableLiveData<>();

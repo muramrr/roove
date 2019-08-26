@@ -27,7 +27,7 @@ import com.mmdev.meetapp.R
 import com.mmdev.meetapp.models.ProfileModel
 import com.mmdev.meetapp.services.GPSTracker
 import com.mmdev.meetapp.ui.MainActivity
-import com.mmdev.meetapp.ui.main.ProfileViewModel
+import com.mmdev.meetapp.ui.ProfileViewModel
 import com.mmdev.meetapp.utils.uiUtils
 import com.mmdev.progressbuttonlib.ProgressButton
 import java.util.*

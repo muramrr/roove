@@ -1,7 +1,4 @@
 package com.mmdev.domain.messages.model
-
-//import com.google.firebase.firestore.ServerTimestamp
-
 /* Created by A on 06.06.2019.*/
 
 /* store chatmodel data class
@@ -10,8 +7,8 @@ package com.mmdev.domain.messages.model
 
 
 data class Message (val senderUser: Sender, val text: String = "",
-                    val photoAttached: PhotoAttached?){
+                    var photoAttached: PhotoAttached?){
 
-	//@ServerTimestamp val timestamp: Date? = null
+    //val messageType: String = if (photoAttached != null) "photo" else "text"
 
 }

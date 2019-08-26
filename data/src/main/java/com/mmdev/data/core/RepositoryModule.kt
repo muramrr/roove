@@ -17,7 +17,7 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesMessagesRepository(repository: ChatRepositoryImpl): ChatRepository {
+    fun providesChatRepository(repository: ChatRepositoryImpl): ChatRepository {
         return repository
     }
 }
