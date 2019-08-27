@@ -7,11 +7,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.mmdev.domain.user.model.User
 import com.mmdev.meetapp.R
-import com.mmdev.meetapp.models.ProfileModel
 import com.mmdev.meetapp.utils.GlideApp
 
-class CardStackAdapter internal constructor(private val mUsersList: List<ProfileModel>):
+class CardStackAdapter internal constructor(private val mUsersList: List<User>):
 		RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,7 +32,7 @@ class CardStackAdapter internal constructor(private val mUsersList: List<Profile
 
 	override fun getItemId(position: Int): Long { return position.toLong() }
 
-	internal fun getSwipeProfile(position: Int): ProfileModel { return mUsersList[position] }
+	internal fun getSwipeProfile(position: Int): User { return mUsersList[position] }
 
 	inner class ViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
 		internal val tvNameCard: TextView = itemView.findViewById(R.id.fragment_card_item_text_name)
