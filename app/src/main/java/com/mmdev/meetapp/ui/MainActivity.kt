@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -21,57 +20,49 @@ import androidx.lifecycle.ViewModelProvider
 import com.facebook.login.LoginManager
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.mmdev.domain.user.model.User
 import com.mmdev.meetapp.R
-import com.mmdev.meetapp.models.ProfileModel
-import com.mmdev.meetapp.ui.auth.AuthActivity
+import com.mmdev.meetapp.ui.auth.view.AuthActivity
 import com.mmdev.meetapp.ui.card.CardFragment
 import com.mmdev.meetapp.ui.chat.view.ChatFragment
 import com.mmdev.meetapp.ui.feed.FeedFragment
-import com.mmdev.meetapp.ui.feed.FeedManager
 import com.mmdev.meetapp.utils.GlideApp
-import java.util.*
 
 class MainActivity: AppCompatActivity(), MainActivityListeners  {
 
 	private val TAG = "myLogs"
 
-	// Data
-	private var usersCards: MutableList<ProfileModel> = ArrayList()
-
 	private lateinit var navView: NavigationView
-	private var toolbar: Toolbar? = null
+	private lateinit var toolbar: Toolbar
 
-	private var drawerLayout: DrawerLayout? = null
+	private lateinit var drawerLayout: DrawerLayout
 
-	private var tvSignedInUserName: TextView? = null
-	private var tvSignedInUserId: TextView? = null
-	private var ivSignedInUserAvatar: ImageView? = null
+	private lateinit var tvSignedInUserName: TextView
+	private lateinit var tvSignedInUserId: TextView
+	private lateinit var ivSignedInUserAvatar: ImageView
 
 
 	// Firebase
-	private var mFirebaseAuth: FirebaseAuth? = null
+	private lateinit var mFirebaseAuth: FirebaseAuth
 	private var mAuthStateListener: FirebaseAuth.AuthStateListener? = null
-	private var mFirestore: FirebaseFirestore? = null
-	var profileModel: ProfileModel? = null
-	private var mFragmentManager: FragmentManager? = null
+	lateinit var userModel: User
+	private lateinit var mFragmentManager: FragmentManager
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
-		setUpViews()
+		toolbar = findViewById(R.id.toolbar)
 		setSupportActionBar(toolbar)
-		setUpNavigationView(navView, drawerLayout!!)
+		setUpNavigationView()
+		mFragmentManager = supportFragmentManager
 		showFeedFragment()
 		mFirebaseAuth = FirebaseAuth.getInstance()
 		checkConnection()
-		mFragmentManager = supportFragmentManager
 
-		mFirestore = FirebaseFirestore.getInstance()
-		val profileViewModel =
-			ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(ProfileViewModel::class.java)
-		profileModel = profileViewModel.getProfileModel(this).value
+
+		val profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+		userModel = profileViewModel.getProfileModel(this).value!!
 		setUpUser()
 
 	}
@@ -86,7 +77,7 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 	 * start card swipe
 	 */
 	private fun startCardFragment() {
-		supportFragmentManager.findFragmentByTag("CardFragment") ?: supportFragmentManager
+		mFragmentManager.findFragmentByTag("CardFragment") ?: mFragmentManager
 			.beginTransaction().apply{
 				setCustomAnimations(R.anim.fragment_enter_from_right,
 				                    R.anim.fragment_exit_to_left,
@@ -103,7 +94,7 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 	 * start chat
 	 */
 	private fun startChatFragment(username: String) {
-		supportFragmentManager.findFragmentByTag("ChatFragment") ?: supportFragmentManager
+		mFragmentManager.findFragmentByTag("ChatFragment") ?: mFragmentManager
 			.beginTransaction().apply {
 				setCustomAnimations(R.anim.fragment_enter_from_right,
 				                    R.anim.fragment_exit_to_left,
@@ -124,7 +115,7 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 		builder.setPositiveButton("YES") { dialog: DialogInterface, _: Int ->
 			dialog.dismiss()
 			//Attempt sign out
-			mFirebaseAuth!!.signOut()
+			mFirebaseAuth.signOut()
 			LoginManager.getInstance().logOut()
 
 		}
@@ -146,35 +137,29 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 	}
 
 	private fun setUpUser() {
-		if (profileModel != null) {
-			val mName = profileModel!!.name
-			val mCity = profileModel!!.city
-			val mGender = profileModel!!.gender
-			val mPreferedGender = profileModel!!.preferedGender
-			val signedInUserPhotoUrl = profileModel!!.mainPhotoUrl
-			val uID = profileModel!!.userId
-			if (!TextUtils.isEmpty(signedInUserPhotoUrl))
-				GlideApp.with(this).load(signedInUserPhotoUrl).into(ivSignedInUserAvatar!!)
-			tvSignedInUserName!!.text = mName
-			tvSignedInUserId!!.text = uID
-		}
-		else Toast.makeText(this, "No user login info", Toast.LENGTH_LONG).show()
+		val mName = userModel.name
+		val mCity = userModel.city
+		val mGender = userModel.gender
+		val mPreferedGender = userModel.preferedGender
+		val signedInUserPhotoUrl = userModel.mainPhotoUrl
+		val uID = userModel.userId
+		if (!TextUtils.isEmpty(signedInUserPhotoUrl))
+			GlideApp.with(this).load(signedInUserPhotoUrl).into(ivSignedInUserAvatar)
+		tvSignedInUserName.text = mName
+		tvSignedInUserId.text = uID
 
 	}
 
-	private fun setUpViews(){
+
+	private fun setUpNavigationView() {
 		navView = findViewById(R.id.nav_view)
 		drawerLayout = findViewById(R.id.drawer_layout)
-		toolbar = findViewById(R.id.toolbar)
 		val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,
 		                                   R.string.navigation_drawer_open,
 		                                   R.string.navigation_drawer_close)
 
-		drawerLayout!!.addDrawerListener(toggle)
+		drawerLayout.addDrawerListener(toggle)
 		toggle.syncState()
-	}
-
-	private fun setUpNavigationView(navView: NavigationView, drawerLayout: DrawerLayout) {
 		navView.getChildAt(navView.childCount - 1).overScrollMode = View.OVER_SCROLL_NEVER
 		val headerView = navView.getHeaderView(0)
 		tvSignedInUserName = headerView.findViewById(R.id.signed_in_username_tv)
@@ -187,19 +172,18 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 			when (item.itemId) {
 				R.id.nav_feed -> onCardsClick()
 				R.id.nav_events -> { }
-				R.id.nav_post -> onGenerateUsers()
+				R.id.nav_post -> {}
 				R.id.nav_notifications -> { }
 				R.id.nav_account -> { }
 				R.id.nav_log_out -> onLogOutClick()
-			} //Toast.makeText(this,String.valueOf(mFeedManager.getUsersCards()),Toast.LENGTH_SHORT).show();
-			//Toast.makeText(this, String.valueOf(FeedManager.generateUsers()), Toast.LENGTH_SHORT).show();
+			}
 			return@setNavigationItemSelectedListener true
 		}
 
 	}
 
 	private fun showFeedFragment(){
-		supportFragmentManager.beginTransaction().apply {
+		mFragmentManager.beginTransaction().apply {
 			add(R.id.main_container, FeedFragment(), "FeedFragment")
 			commit()
 		}
@@ -208,39 +192,39 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 	/*
 	 * generate random users to firestore
 	 */
-	private fun onGenerateUsers() {
-		usersCards.clear()
-		val usersCollection = mFirestore!!.collection("users")
-		usersCards.addAll(FeedManager.generateUsers())
-		for (i in usersCards) usersCollection.document(i.userId).set(i)
-
-
-		/*
-            generate likes/matches/skips lists
-             */
-		//        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
-		//                .collection("likes")
-		//                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(1).getName())
-		//                .set(usersCards.get(1));
-		//        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
-		//                .collection("matches")
-		//                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(2).getName())
-		//                .set(usersCards.get(2));
-		//        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
-		//                .collection("skips")
-		//                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(3).getName())
-		//                .set(usersCards.get(3));
-		//
-		//        profiles.get().addOnCompleteListener(task -> {
-		//            String a;
-		//            if (task.isSuccessful())
-		//            {
-		//                a = task.getResult().getDocuments().get(0).get("Name").toString();
-		//                new Handler().postDelayed(() -> Toast.makeText(getApplicationContext(), "Name : " + String.valueOf(a), Toast.LENGTH_SHORT).show(), 1000);
-		//            }
-		//        });
-
-	}
+//	private fun onGenerateUsers() {
+//		usersCards.clear()
+//		val usersCollection = mFirestore!!.collection("users")
+//		usersCards.addAll(FeedManager.generateUsers())
+//		for (i in usersCards) usersCollection.document(i.userId).set(i)
+//
+//
+//		/*
+//            generate likes/matches/skips lists
+//             */
+//		        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
+//		                .collection("likes")
+//		                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(1).getName())
+//		                .set(usersCards.get(1));
+//		        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
+//		                .collection("matches")
+//		                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(2).getName())
+//		                .set(usersCards.get(2));
+//		        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
+//		                .collection("skips")
+//		                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(3).getName())
+//		                .set(usersCards.get(3));
+//
+//		        profiles.get().addOnCompleteListener(task -> {
+//		            String a;
+//		            if (task.isSuccessful())
+//		            {
+//		                a = task.getResult().getDocuments().get(0).get("Name").toString();
+//		                new Handler().postDelayed(() -> Toast.makeText(getApplicationContext(), "Name : " + String.valueOf(a), Toast.LENGTH_SHORT).show(), 1000);
+//		            }
+//		        });
+//
+//	}
 
 	/*
 	menu init
@@ -258,19 +242,19 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 	}
 
 	override fun onBackPressed() {
-		if (drawerLayout!!.isDrawerOpen(GravityCompat.START)) drawerLayout!!.closeDrawer(GravityCompat.START)
+		if (drawerLayout.isDrawerOpen(GravityCompat.START)) drawerLayout.closeDrawer(GravityCompat.START)
 		else super.onBackPressed()
 	}
 
-//	override fun onStart() {
-//		super.onStart()
-//		mFirebaseAuth!!.addAuthStateListener(mAuthStateListener!!)
-//	}
-//
-//	override fun onStop() {
-//		super.onStop()
-//		mFirebaseAuth!!.removeAuthStateListener(mAuthStateListener!!)
-//	}
+	override fun onStart() {
+		super.onStart()
+		mFirebaseAuth.addAuthStateListener(mAuthStateListener!!)
+	}
+
+	override fun onStop() {
+		super.onStop()
+		mFirebaseAuth.removeAuthStateListener(mAuthStateListener!!)
+	}
 
 
 

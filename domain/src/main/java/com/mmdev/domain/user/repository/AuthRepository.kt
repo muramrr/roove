@@ -6,7 +6,8 @@ import io.reactivex.Single
 
 interface AuthRepository {
 
-    fun signup(username: String, password: String): Single<User>
+    fun handleUserExistence(userId: String): Single<User>
 
-    fun login(username: String, password: String): Single<User>
+    fun signup(user: User): Single<User>
+
 }

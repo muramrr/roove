@@ -6,7 +6,7 @@ import com.mmdev.domain.user.repository.AuthRepository
 
 
 //TODO: optimize for facebook
-class SignUpUseCase(private val repository: AuthRepository) : SingleWithParamUseCase<User, User> {
+class SignUpUseCase(private val repository: AuthRepository) : SingleWithParamUseCase<User> {
 
-    override fun execute(t: User) = repository.signup(t.name, t.name)
+    override fun execute(t: User) = repository.signup(t)
 }

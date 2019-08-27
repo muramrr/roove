@@ -3,7 +3,8 @@ package com.mmdev.domain.core
 import io.reactivex.Single
 
 
-interface SingleWithParamUseCase<in T, R> {
+interface SingleWithParamUseCase<T> {
 
-    fun execute(t: T): Single<R>
+    fun execute(t: T): Single<T>
+
 }

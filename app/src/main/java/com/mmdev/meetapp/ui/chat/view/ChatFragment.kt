@@ -25,10 +25,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mmdev.domain.messages.model.Message
 import com.mmdev.domain.messages.model.Sender
+import com.mmdev.domain.user.model.User
 import com.mmdev.meetapp.BuildConfig
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.injector
-import com.mmdev.meetapp.models.ProfileModel
 import com.mmdev.meetapp.ui.MainActivity
 import com.mmdev.meetapp.ui.ProfileViewModel
 import com.mmdev.meetapp.ui.chat.viewmodel.ChatViewModel
@@ -47,11 +47,11 @@ class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 
 	private lateinit var  mMainActivity: MainActivity
 
-	private val factory = injector.chatViewModelFactory()
+	private val chatViewModelFactory = injector.chatViewModelFactory()
 	private lateinit var chatViewModel: ChatViewModel
 
 	// POJO models
-	private lateinit var mProfileModel: ProfileModel
+	private lateinit var userModel: User
 	private lateinit var mSender: Sender
 
 	// Views UI
@@ -101,13 +101,13 @@ class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		activity?.let { mMainActivity = it as MainActivity }
 		setupViews(view)
-		chatViewModel = ViewModelProvider(mMainActivity, factory).get(ChatViewModel::class.java)
+		chatViewModel = ViewModelProvider(mMainActivity, chatViewModelFactory).get(ChatViewModel::class.java)
 
-		mProfileModel = ViewModelProvider(mMainActivity, defaultViewModelProviderFactory)
+		userModel = ViewModelProvider(mMainActivity, defaultViewModelProviderFactory)
 			.get(ProfileViewModel::class.java)
 			.getProfileModel(mMainActivity).value!!
-		mSender = Sender(mProfileModel.name, mProfileModel.gender, mProfileModel.mainPhotoUrl,
-			mProfileModel.userId)
+		mSender = Sender(userModel.name, userModel.gender, userModel.mainPhotoUrl,
+		                 userModel.userId)
 
 		disposables
 			.add(chatViewModel.getMessages()

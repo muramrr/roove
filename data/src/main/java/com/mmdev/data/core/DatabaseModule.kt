@@ -9,11 +9,12 @@ import javax.inject.Singleton
 @Module
 class DatabaseModule {
 
-    @Provides
-    @Singleton
-    fun providesFirebaseFirestore() = FirebaseFirestore.getInstance()
+	@Provides
+	@Singleton
+	fun providesFirebaseFirestore() = FirebaseFirestore.getInstance()
 
-    @Provides
-    @Singleton
-    fun providesFirebaseStorage() = FirebaseStorage.getInstance()
+	@Provides
+	@Singleton
+	fun providesFirebaseStorage() = FirebaseStorage.getInstance()
+
 }
