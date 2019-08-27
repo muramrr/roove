@@ -1,11 +1,11 @@
 package com.mmdev.meetapp.core
 
-import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.data.core.AuthModule
 import com.mmdev.data.core.DatabaseModule
 import com.mmdev.data.core.RepositoryModule
 import com.mmdev.domain.messages.repository.ChatRepository
 import com.mmdev.domain.user.repository.AuthRepository
+import com.mmdev.meetapp.ui.auth.viewmodel.AuthViewModelFactory
 import com.mmdev.meetapp.ui.chat.viewmodel.ChatViewModelFactory
 import dagger.Component
 import javax.inject.Singleton
@@ -19,13 +19,11 @@ import javax.inject.Singleton
 @Singleton
 interface AppComponent {
 
-   // fun chatViewModelFactory(): ChatViewModelFactory
-
     fun chatViewModelFactory(): ChatViewModelFactory
+
+    fun authViewModelFactory(): AuthViewModelFactory
 
     fun authRepository(): AuthRepository
 
     fun messagesRepository(): ChatRepository
-
-    fun firebaseFirestore(): FirebaseFirestore
 }

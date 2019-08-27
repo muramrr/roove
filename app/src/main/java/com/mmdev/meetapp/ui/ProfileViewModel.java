@@ -11,14 +11,14 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mmdev.meetapp.models.ProfileModel;
+import com.mmdev.domain.user.model.User;
 import com.mmdev.meetapp.utils.TinyDB;
 
 import java.util.ArrayList;
 
 public class ProfileViewModel extends ViewModel {
 
-	private MutableLiveData<ProfileModel> mProfileModel = new MutableLiveData<>();
+	private MutableLiveData<User> mProfileModel = new MutableLiveData<>();
 	public MutableLiveData<String> Name = new MutableLiveData<>();
 	private MutableLiveData<Integer> busy = new MutableLiveData<>();
 
@@ -35,7 +35,7 @@ public class ProfileViewModel extends ViewModel {
 	check if already attached - return our viewmodel
 	else check if stored profile in sharedprefs and return it
 	 */
-	public MutableLiveData<ProfileModel> getProfileModel (Context context) {
+	public MutableLiveData<User> getProfileModel (Context context) {
 		if (mProfileModel.getValue() != null)
 			return mProfileModel;
 		if (getSavedProfile(context) != null)
@@ -43,7 +43,7 @@ public class ProfileViewModel extends ViewModel {
 		return mProfileModel;
 	}
 
-	public void setProfileModel (ProfileModel profileModel) { mProfileModel.setValue(profileModel); }
+	public void setProfileModel (User profileModel) { mProfileModel.setValue(profileModel); }
 
 	public void onLoginClicked() {
 		setBusy(View.VISIBLE);
@@ -51,7 +51,7 @@ public class ProfileViewModel extends ViewModel {
 		if (signedInUser != null && !TextUtils.isEmpty(signedInUser.getDisplayName())) {
 			new Handler().postDelayed(() -> {
 //                mProfileModel mProfileModel = new mProfileModel(signedInUser.getDisplayName(),"Kyiv", "male", signedInUser.getEmail());
-//                setProfileModel(mProfileModel);
+//                setUserModel(mProfileModel);
 				Name.setValue(signedInUser.getDisplayName());
 				setBusy(View.GONE);
 			}, 1000);
@@ -61,8 +61,8 @@ public class ProfileViewModel extends ViewModel {
 	/*
 		get user info from sharedPrefs
 	 */
-	private ProfileModel getSavedProfile(Context context) {
-		TinyDB prefs = new TinyDB("profileModel", context);
+	private User getSavedProfile(Context context) {
+		TinyDB prefs = new TinyDB("userModel", context);
 		if (prefs.getBoolean("saved", false)){
 			String mName = prefs.getString("name", "");
 			String mCity = prefs.getString("city", "");
@@ -71,7 +71,7 @@ public class ProfileViewModel extends ViewModel {
 			ArrayList<String> mPhotoUrls = prefs.getListString("photourls");
 			String mMainPhotoUrl = prefs.getString("mainphotourl","");
 			String mUID = prefs.getString("uid", "");
-			return new ProfileModel(mName, mCity, mGender, mPreferedGender, mMainPhotoUrl, mPhotoUrls, mUID);
+			return new User(mName, mCity, mGender, mPreferedGender, mMainPhotoUrl, mPhotoUrls, mUID);
 		}
 		else {
 			Log.d("logs", "Can't get user, seems it is not saved");
@@ -79,8 +79,8 @@ public class ProfileViewModel extends ViewModel {
 		}
 	}
 
-	public void saveProfile(Context context, ProfileModel profileModel){
-		TinyDB prefs = new TinyDB("profileModel", context);
+	public void saveProfile(Context context, User profileModel){
+		TinyDB prefs = new TinyDB("userModel", context);
 		prefs.clear();
 		prefs.putString("name", profileModel.getName());
 		prefs.putString("city", profileModel.getCity());

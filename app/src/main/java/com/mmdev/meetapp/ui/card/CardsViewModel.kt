@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mmdev.meetapp.models.ProfileModel
+import com.mmdev.domain.user.model.User
 import java.util.*
 
 /* Created by A on 20.07.2019.*/
@@ -30,28 +30,28 @@ class CardsViewModel: ViewModel() {
 		private const val USER_MATCHES_COLLECTION_REFERENCE = "matches"
 	}
 
-	private var mCurrentUser: ProfileModel? = null
+	private lateinit var mCurrentUser: User
 	private var mCurrentUserId: String? = ""
 
 	private var mUsersCollectionRef: CollectionReference? = null
 	private var mCurrentProfileDocRef: DocumentReference? = null
 
-	private val mAllUsersCards = ArrayList<ProfileModel>()
+	private val mAllUsersCards = ArrayList<User>()
 	private val mSkipedUsersCardsIds = ArrayList<String>()
 	private val mLikedUsersCardsIds = ArrayList<String>()
 	private val mMatchedUsersCardsIds = ArrayList<String>()
 
-	internal var matchedUser: MutableLiveData<ProfileModel>? = MutableLiveData()
+	internal var matchedUser: MutableLiveData<User>? = MutableLiveData()
 
-	internal var potentialUsersCards: MutableLiveData<List<ProfileModel>>? = MutableLiveData()
+	internal var potentialUsersCards: MutableLiveData<List<User>>? = MutableLiveData()
 
-	internal fun init(currentUser: ProfileModel) {
+	internal fun init(currentUser: User) {
 		mCurrentUser = currentUser
-		mCurrentUserId = mCurrentUser!!.userId
+		mCurrentUserId = mCurrentUser.userId
 		val firestore = FirebaseFirestore.getInstance()
 		mUsersCollectionRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 		mCurrentProfileDocRef = mUsersCollectionRef!!.document(mCurrentUserId!!)
-		loadUsers(mCurrentUser!!.preferedGender)
+		loadUsers(mCurrentUser.preferedGender)
 		//TODO:debug only
 		//
 //		firestore.collection(USERS_COLLECTION_REFERENCE).document("scmxqiwwci").collection(USER_LIKES_COLLECTION_REFERENCE).document(mCurrentUserId!!).set(mCurrentUser!!)
@@ -78,7 +78,7 @@ class CardsViewModel: ViewModel() {
 			.get()
 			.addOnCompleteListener { task ->
 				if (task.result != null) {
-					for (doc in task.result!!.documents) mAllUsersCards.add(doc.toObject(ProfileModel::class.java)!!)
+					for (doc in task.result!!.documents) mAllUsersCards.add(doc.toObject(User::class.java)!!)
 					getSkipedUsersCards()
 					Log.wtf("logs", "all on complete, size = " + mAllUsersCards.size)
 				}
@@ -146,7 +146,7 @@ class CardsViewModel: ViewModel() {
 		mergedLikesSkipsCardsIds.addAll(mSkipedUsersCardsIds)
 		mergedLikesSkipsCardsIds.addAll(mMatchedUsersCardsIds)
 		if (mergedLikesSkipsCardsIds.size != 0) {
-			val returningProfileModels = ArrayList<ProfileModel>()
+			val returningProfileModels = ArrayList<User>()
 			for (profileModel in mAllUsersCards)
 				if (!mergedLikesSkipsCardsIds.contains(profileModel.userId)) returningProfileModels.add(profileModel)
 			Log.wtf("logs", "potential users available = " + returningProfileModels.size)
@@ -162,7 +162,7 @@ class CardsViewModel: ViewModel() {
 	/*
 	* check if users liked each other
 	*/
-	internal fun handlePossibleMatch(likedUser: ProfileModel) {
+	internal fun handlePossibleMatch(likedUser: User) {
 		val uId: String = likedUser.userId
 		mUsersCollectionRef!!
 			.document(uId)
@@ -175,7 +175,7 @@ class CardsViewModel: ViewModel() {
 						.document(uId)
 						.collection(USER_MATCHES_COLLECTION_REFERENCE)
 						.document(mCurrentUserId!!)
-						.set(mCurrentUser!!)
+						.set(mCurrentUser)
 					mCurrentProfileDocRef!!
 						.collection(USER_MATCHES_COLLECTION_REFERENCE)
 						.document(uId)
@@ -207,7 +207,7 @@ class CardsViewModel: ViewModel() {
 
 	}
 
-	internal fun addToSkipped(skipedUser: ProfileModel) {
+	internal fun addToSkipped(skipedUser: User) {
 		mCurrentProfileDocRef!!
 			.collection(USER_SKIPS_COLLECTION_REFERENCE)
 			.document(skipedUser.userId)

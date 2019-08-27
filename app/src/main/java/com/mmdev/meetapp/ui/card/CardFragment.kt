@@ -12,9 +12,9 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import com.mmdev.domain.user.model.User
 import com.mmdev.meetapp.R
-import com.mmdev.meetapp.models.ProfileModel
 import com.mmdev.meetapp.ui.MainActivity
 import com.mmdev.meetapp.ui.ProfileViewModel
 import com.mmdev.meetapp.utils.GlideApp
@@ -26,12 +26,12 @@ import com.yuyakaido.android.cardstackview.Direction
 
 class CardFragment: Fragment() {
 
-	private var mMainActivity: MainActivity? = null
+	private lateinit var mMainActivity: MainActivity
 
 	private var cardStackView: CardStackView? = null
 	private var mCardStackAdapter: CardStackAdapter? = null
-	private var mPotentialUsersList: MutableList<ProfileModel>? = null
-	private var mSwipeUser: ProfileModel? = null
+	private var mPotentialUsersList: MutableList<User>? = null
+	private lateinit var mSwipeUser: User
 	private var progressBar: ProgressBar? = null
 
 	private var mProgressShowing: Boolean = false
@@ -46,10 +46,10 @@ class CardFragment: Fragment() {
 		cardStackView = view.findViewById(R.id.card_stack_view)
 		progressBar = view.findViewById(R.id.card_prBar)
 
-		val profileViewModel = ViewModelProviders.of(mMainActivity!!).get(ProfileViewModel::class.java)
+		val profileViewModel = ViewModelProvider(mMainActivity).get(ProfileViewModel::class.java)
 		val profileModel = profileViewModel.getProfileModel(mMainActivity).value
 
-		val cardsViewModel = ViewModelProviders.of(mMainActivity!!).get(CardsViewModel::class.java)
+		val cardsViewModel = ViewModelProvider(mMainActivity).get(CardsViewModel::class.java)
 
 
 		mProgressShowing = false
@@ -57,8 +57,9 @@ class CardFragment: Fragment() {
 			showLoadingBar()
 			//get users from viewmodel
 			cardsViewModel.init(profileModel)
-			cardsViewModel.potentialUsersCards?.observe(mMainActivity!!, Observer<List<ProfileModel>>{ profileModelList ->
-				mPotentialUsersList = profileModelList as MutableList<ProfileModel>?
+			cardsViewModel.potentialUsersCards?.observe(mMainActivity, Observer<List<User>>{
+				profileModelList ->
+				mPotentialUsersList = profileModelList as MutableList<User>?
 				mCardStackAdapter = CardStackAdapter(mPotentialUsersList!!)
 				cardStackView!!.adapter = mCardStackAdapter!!
 				if (mCardStackAdapter!!.itemCount != 0) {
@@ -69,7 +70,7 @@ class CardFragment: Fragment() {
 
 			//handle match event
 
-			cardsViewModel.matchedUser?.observe(mMainActivity!!, Observer<ProfileModel>{ matchedUser ->
+			cardsViewModel.matchedUser?.observe(mMainActivity, Observer<User>{ matchedUser ->
 				Toast.makeText(mMainActivity, "match!", Toast.LENGTH_SHORT).show()
 				showMatchDialog(matchedUser)
 			})
@@ -89,11 +90,11 @@ class CardFragment: Fragment() {
 				//if right = add to liked
 				//else = add to skiped
 				if (direction == Direction.Right) {
-					cardsViewModel.handlePossibleMatch(mSwipeUser!!)
+					cardsViewModel.handlePossibleMatch(mSwipeUser)
 				}
-				else cardsViewModel.addToSkipped(mSwipeUser!!)
+				else cardsViewModel.addToSkipped(mSwipeUser)
 				mCardStackAdapter!!.notifyDataSetChanged()
-				mPotentialUsersList!!.remove(mSwipeUser!!)
+				mPotentialUsersList!!.remove(mSwipeUser)
 			}
 
 			override fun onCardRewound() {}
@@ -130,8 +131,8 @@ class CardFragment: Fragment() {
 		}
 	}
 
-	private fun showMatchDialog(matchUser: ProfileModel) {
-		val matchDialog = Dialog(mMainActivity!!)
+	private fun showMatchDialog(matchUser: User) {
+		val matchDialog = Dialog(mMainActivity)
 		matchDialog.setContentView(R.layout.dialog_match)
 		//matchDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 		//matchDialog.getWindow().setDimAmount(0.87f);
