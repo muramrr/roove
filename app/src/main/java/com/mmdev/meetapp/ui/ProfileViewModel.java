@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mmdev.domain.user.model.User;
+import com.mmdev.domain.auth.model.User;
 import com.mmdev.meetapp.utils.TinyDB;
 
 import java.util.ArrayList;

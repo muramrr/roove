@@ -1,10 +1,10 @@
 package com.mmdev.data.core
 
 
+import com.mmdev.data.auth.AuthRepositoryImpl
 import com.mmdev.data.messages.ChatRepositoryImpl
-import com.mmdev.data.user.AuthRepositoryImpl
+import com.mmdev.domain.auth.repository.AuthRepository
 import com.mmdev.domain.messages.repository.ChatRepository
-import com.mmdev.domain.user.repository.AuthRepository
 import dagger.Module
 import dagger.Provides
 

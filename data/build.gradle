@@ -43,6 +43,10 @@ dependencies {
     implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
     implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
 
+    //facebook auth
+    implementation 'com.facebook.android:facebook-android-sdk:5.4.0'
+    implementation 'com.facebook.android:facebook-login:5.4.0'
+
     // RxJava
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
 
