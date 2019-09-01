@@ -1,13 +1,12 @@
 package com.mmdev.meetapp.core
 
 
+import com.mmdev.data.auth.AuthRepositoryImpl
 import com.mmdev.data.messages.ChatRepositoryImpl
-import com.mmdev.data.user.AuthRepositoryImpl
+import com.mmdev.domain.auth.usecase.*
 import com.mmdev.domain.messages.usecase.GetMessagesUseCase
 import com.mmdev.domain.messages.usecase.SendMessageUseCase
 import com.mmdev.domain.messages.usecase.SendPhotoUseCase
-import com.mmdev.domain.user.usecase.SignUpUseCase
-import com.mmdev.domain.user.usecase.UserExistenceUseCase
 import com.mmdev.meetapp.ui.auth.viewmodel.AuthViewModelFactory
 import com.mmdev.meetapp.ui.chat.viewmodel.ChatViewModelFactory
 import dagger.Module
@@ -18,7 +17,11 @@ class ViewModelModule {
 
 	@Provides
 	fun providesAuthViewModelFactory(repository: AuthRepositoryImpl): AuthViewModelFactory{
-		return AuthViewModelFactory(UserExistenceUseCase(repository), SignUpUseCase(repository))
+		return AuthViewModelFactory(HandleUserExistenceUseCase(repository),
+		                            IsAuthenticatedUseCase(repository),
+		                            LogOutUseCase(repository),
+		                            SignInWithFacebookUseCase(repository),
+		                            SignUpUseCase(repository))
 	}
 
 	@Provides

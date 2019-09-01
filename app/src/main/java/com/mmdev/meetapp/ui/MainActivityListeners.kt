@@ -8,6 +8,7 @@ package com.mmdev.meetapp.ui
 
 interface MainActivityListeners {
 
+	fun startAuthActivity()
 	fun onCardsClick()
 	fun onMessagesClick(username: String)
 	fun onLogOutClick()

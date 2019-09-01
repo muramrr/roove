@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -17,16 +18,18 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import com.facebook.login.LoginManager
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FirebaseAuth
-import com.mmdev.domain.user.model.User
+import com.mmdev.domain.auth.model.User
 import com.mmdev.meetapp.R
+import com.mmdev.meetapp.core.injector
 import com.mmdev.meetapp.ui.auth.view.AuthActivity
+import com.mmdev.meetapp.ui.auth.viewmodel.AuthViewModel
 import com.mmdev.meetapp.ui.card.CardFragment
 import com.mmdev.meetapp.ui.chat.view.ChatFragment
 import com.mmdev.meetapp.ui.feed.FeedFragment
 import com.mmdev.meetapp.utils.GlideApp
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 
 class MainActivity: AppCompatActivity(), MainActivityListeners  {
 
@@ -41,30 +44,39 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 	private lateinit var tvSignedInUserId: TextView
 	private lateinit var ivSignedInUserAvatar: ImageView
 
-
-	// Firebase
-	private lateinit var mFirebaseAuth: FirebaseAuth
-	private var mAuthStateListener: FirebaseAuth.AuthStateListener? = null
 	lateinit var userModel: User
 	private lateinit var mFragmentManager: FragmentManager
+
+	private lateinit var authViewModel: AuthViewModel
+	private val authViewModelFactory = injector.authViewModelFactory()
+	private val disposables = CompositeDisposable()
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
+		authViewModel = ViewModelProvider(this, authViewModelFactory)
+			.get(AuthViewModel::class.java)
 		toolbar = findViewById(R.id.toolbar)
 		setSupportActionBar(toolbar)
 		setUpNavigationView()
 		mFragmentManager = supportFragmentManager
 		showFeedFragment()
-		mFirebaseAuth = FirebaseAuth.getInstance()
 		checkConnection()
 
 
 		val profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-		userModel = profileViewModel.getProfileModel(this).value!!
-		setUpUser()
+//		userModel = profileViewModel.getProfileModel(this).value!!
+//		setUpUser()
 
+	}
+
+	// show main feed fragment
+	private fun showFeedFragment(){
+		mFragmentManager.beginTransaction().apply {
+			add(R.id.main_container, FeedFragment(), "FeedFragment")
+			commit()
+		}
 	}
 
 	override fun onCardsClick() = startCardFragment()
@@ -115,8 +127,7 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 		builder.setPositiveButton("YES") { dialog: DialogInterface, _: Int ->
 			dialog.dismiss()
 			//Attempt sign out
-			mFirebaseAuth.signOut()
-			LoginManager.getInstance().logOut()
+			authViewModel.logOut()
 
 		}
 		builder.setNegativeButton("NO") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
@@ -127,13 +138,20 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 	 * check if user is authentificated
 	 */
 	private fun checkConnection() {
-		mAuthStateListener = FirebaseAuth.AuthStateListener{
-			if (it.currentUser == null) {
-				val authIntent = Intent(this@MainActivity, AuthActivity::class.java)
-				startActivity(authIntent)
-				finish()
-			}
-		}
+		disposables.add(authViewModel.isAuthenticated()
+			                .observeOn(AndroidSchedulers.mainThread())
+			                .subscribe({ logged -> if (logged == false) startAuthActivity()
+			                           else Toast.makeText(this,"logged", Toast.LENGTH_SHORT).show()},
+			                           {
+				                           Toast.makeText(this,"not logged", Toast.LENGTH_SHORT)
+				                           .show()
+			                           }))
+	}
+
+	override fun startAuthActivity(){
+		val authIntent = Intent(this@MainActivity, AuthActivity::class.java)
+		startActivity(authIntent)
+		finish()
 	}
 
 	private fun setUpUser() {
@@ -182,12 +200,7 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 
 	}
 
-	private fun showFeedFragment(){
-		mFragmentManager.beginTransaction().apply {
-			add(R.id.main_container, FeedFragment(), "FeedFragment")
-			commit()
-		}
-	}
+
 
 	/*
 	 * generate random users to firestore
@@ -244,16 +257,6 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 	override fun onBackPressed() {
 		if (drawerLayout.isDrawerOpen(GravityCompat.START)) drawerLayout.closeDrawer(GravityCompat.START)
 		else super.onBackPressed()
-	}
-
-	override fun onStart() {
-		super.onStart()
-		mFirebaseAuth.addAuthStateListener(mAuthStateListener!!)
-	}
-
-	override fun onStop() {
-		super.onStop()
-		mFirebaseAuth.removeAuthStateListener(mAuthStateListener!!)
 	}
 
 
