@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mmdev.domain.user.model.User
+import com.mmdev.domain.auth.model.User
 import java.util.*
 
 /* Created by A on 20.07.2019.*/

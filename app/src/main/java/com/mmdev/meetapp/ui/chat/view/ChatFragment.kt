@@ -23,9 +23,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mmdev.domain.auth.model.User
 import com.mmdev.domain.messages.model.Message
 import com.mmdev.domain.messages.model.Sender
-import com.mmdev.domain.user.model.User
 import com.mmdev.meetapp.BuildConfig
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.injector
