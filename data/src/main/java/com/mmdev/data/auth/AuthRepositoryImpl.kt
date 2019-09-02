@@ -17,6 +17,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
+
+
 //todo: save user locally
 
 @Singleton
@@ -28,12 +30,20 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		private const val GENERAL_COLLECTION_REFERENCE = "users"
 	}
 
-	override fun isAuthenticated(): Observable<Boolean> {
-		return Observable.create(ObservableOnSubscribe<Boolean> { emitter ->
-			if (auth.currentUser == null)
-				emitter.onNext(false)
+	/**
+	 * Observable which track the auth changes of [FirebaseAuth] to listen when an user is logged or not.
+	 *
+	 * @param firebaseAuth firebaseAuth instance.
+	 * @return an [Observable] which emits every time that the [FirebaseAuth] state change.
+	 */
+	override fun  isAuthenticated(): Observable<Boolean> {
+		return Observable.create(ObservableOnSubscribe<Boolean>{ emitter ->
+			val authStateListener = FirebaseAuth.AuthStateListener {
+				auth -> if (auth.currentUser == null) emitter.onNext(false)
 			else emitter.onNext(true)
-
+			}
+			auth.addAuthStateListener(authStateListener)
+			emitter.setCancellable { auth.removeAuthStateListener(authStateListener) }
 		}).subscribeOn(Schedulers.io())
 	}
 
