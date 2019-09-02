@@ -65,20 +65,19 @@ class AuthActivity: AppCompatActivity()  {
 			override fun onSuccess(loginResult: LoginResult) {
 				showProgressDialog()
 				disposables.add(authViewModel.signInWithFacebook(loginResult.accessToken.token)
-					                .flatMap { user -> userModel = user
-						                authViewModel.handleUserExistence(user.userId)
-					                }
-					                .observeOn(AndroidSchedulers.mainThread())
-					                .subscribe({ user ->
-						                           //todo:save User info on local
-						                           dismissProgressDialog()
-						                           startMainActivity()
-					                           },
-					                           {
-						                           dismissProgressDialog()
-						                           showRegistrationDialog()
-					                           }
-					                ))
+	                .flatMap { user -> userModel = user
+		                authViewModel.handleUserExistence(user.userId) }
+	                .observeOn(AndroidSchedulers.mainThread())
+
+	                .subscribe({
+		                           dismissProgressDialog()
+		                           startMainActivity()
+	                           },
+	                           {
+		                           dismissProgressDialog()
+		                           showRegistrationDialog()
+	                           }
+	                ))
 			}
 
 			override fun onCancel() {}
@@ -200,5 +199,9 @@ class AuthActivity: AppCompatActivity()  {
 		mCallbackManager.onActivityResult(requestCode, resultCode, data)
 	}
 
+	override fun onDestroy() {
+		super.onDestroy()
+		disposables.dispose()
+	}
 }
 

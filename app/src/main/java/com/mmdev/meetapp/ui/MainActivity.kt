@@ -4,12 +4,12 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -62,7 +62,6 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 		setUpNavigationView()
 		mFragmentManager = supportFragmentManager
 		showFeedFragment()
-		checkConnection()
 
 
 		val profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
@@ -140,11 +139,11 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 	private fun checkConnection() {
 		disposables.add(authViewModel.isAuthenticated()
 			                .observeOn(AndroidSchedulers.mainThread())
-			                .subscribe({ logged -> if (logged == false) startAuthActivity()
-			                           else Toast.makeText(this,"logged", Toast.LENGTH_SHORT).show()},
+			                .subscribe({if (it == false) {Log.wtf(TAG, "USER LOGGED OUT")
+				                startAuthActivity()}
+				                else Log.wtf(TAG, "user is auth") },
 			                           {
-				                           Toast.makeText(this,"not logged", Toast.LENGTH_SHORT)
-				                           .show()
+				                           Log.wtf(TAG, it)
 			                           }))
 	}
 
@@ -251,7 +250,7 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 	menu button click handler
 	 */
 	fun messagesMenuClick(item: MenuItem) {
-		//startMessagesFragment()
+		startChatFragment("")
 	}
 
 	override fun onBackPressed() {
@@ -259,6 +258,8 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 		else super.onBackPressed()
 	}
 
-
-
+	override fun onStart() {
+		super.onStart()
+		checkConnection()
+	}
 }

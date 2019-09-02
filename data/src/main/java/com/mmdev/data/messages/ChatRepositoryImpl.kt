@@ -1,6 +1,7 @@
 package com.mmdev.data.messages
 
 import android.net.Uri
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
@@ -66,6 +67,7 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 
 
 	override fun getMessages(): Observable<List<Message>> {
+		val messages = arrayListOf<Message>()
 		return Observable.create(ObservableOnSubscribe<List<Message>> { emitter ->
 			firestore.collection(GENERAL_COLLECTION_REFERENCE)
 				.document(CHAT_REFERENCE)
@@ -76,16 +78,17 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 						emitter.onError(e)
 						return@addSnapshotListener
 					}
+					Log.wtf("mylogs", snapshots!!.size().toString())
+					snapshots.let {
+						for (doc in snapshots) {
 
-					val messages = arrayListOf<Message>()
-                    snapshots?.let {
-                        for (doc in snapshots) {
-                            messages.add(doc.toObject(Message::class.java))
-                        }
-                    }
+							messages.add(doc.toObject(Message::class.java))
+						}
+					}
 
 					emitter.onNext(messages)
 				}
+
 		}).subscribeOn(Schedulers.io())
 	}
 
