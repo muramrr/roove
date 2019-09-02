@@ -69,7 +69,7 @@ class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 		private const val IMAGE_GALLERY_REQUEST = 1
 		private const val IMAGE_CAMERA_REQUEST = 2
 
-		private val TAG = MainActivity::class.java.simpleName
+		private val TAG = "mylogs"
 		//static final String CHAT_REFERENCE = "chatmodel";
 
 		// Gallery Permissions
@@ -100,7 +100,7 @@ class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		activity?.let { mMainActivity = it as MainActivity }
-		setupViews(view)
+
 		chatViewModel = ViewModelProvider(mMainActivity, chatViewModelFactory).get(ChatViewModel::class.java)
 
 		userModel = ViewModelProvider(mMainActivity, defaultViewModelProviderFactory)
@@ -108,12 +108,13 @@ class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 			.getProfileModel(mMainActivity).value!!
 		mSender = Sender(userModel.name, userModel.gender, userModel.mainPhotoUrl,
 		                 userModel.userId)
-
+		setupViews(view)
 		disposables
 			.add(chatViewModel.getMessages()
 				     .observeOn(AndroidSchedulers.mainThread())
 				     .subscribe(
-							{ mChatAdapter.updateData(it) },
+							{ //Log.wtf(TAG, it.size.toString())
+								mChatAdapter.updateData(it) },
 							{ showInternetError() }))
 	}
 
