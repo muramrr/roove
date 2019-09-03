@@ -24,7 +24,7 @@ class ChatAdapter (private val mUserName: String,
 
 	RecyclerView.Adapter<ChatAdapter.ChatViewHolder>(){
 
-	//@ServerTimestamp lateinit var timestamp: Date
+
 
 	companion object {
 		private const val RIGHT_MSG = 0
@@ -57,7 +57,7 @@ class ChatAdapter (private val mUserName: String,
 	}
 
 	override fun getItemViewType(position: Int): Int {
-		val (sender, _, photoAttached) = chats[position]
+		val (sender, _, _,photoAttached) = chats[position]
 		return if (photoAttached != null)
 			if (sender.name == mUserName) RIGHT_MSG_IMG else LEFT_MSG_IMG
 		else if (sender.name == mUserName) RIGHT_MSG else LEFT_MSG
@@ -93,9 +93,9 @@ class ChatAdapter (private val mUserName: String,
 		}
 
 		fun bindMessage (message: Message) {
-			setIvUserAvatar(message.senderUser.mainPhotoUrl)
+			setIvUserAvatar(message.sender.mainPhotoUrl)
 			setTextMessage(message.text)
-			//setTvTimestamp(convertTimestamp(timestamp))
+			//setTvTimestamp(convertTimestamp(message.timestamp!!))
 			setIvChatPhoto(message.photoAttached?.fileUrl)
 		}
 
@@ -105,8 +105,8 @@ class ChatAdapter (private val mUserName: String,
 
 			if (message.photoAttached != null)
 				mClickChatAttachmentFirebase.clickImageChat(view, adapterPosition,
-				                                            message.senderUser.name,
-				                                            message.senderUser.mainPhotoUrl,
+				                                            message.sender.name,
+				                                            message.sender.mainPhotoUrl,
 				                                            message.photoAttached!!.fileUrl)
 		}
 

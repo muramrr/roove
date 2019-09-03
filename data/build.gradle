@@ -35,7 +35,7 @@ dependencies {
 
     // Kotlin
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
 
     // Firebase
     implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
@@ -44,8 +44,8 @@ dependencies {
     implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
 
     //facebook auth
-    implementation 'com.facebook.android:facebook-android-sdk:5.4.0'
-    implementation 'com.facebook.android:facebook-login:5.4.0'
+    implementation 'com.facebook.android:facebook-android-sdk:5.5.0'
+    implementation 'com.facebook.android:facebook-login:5.5.0'
 
     // RxJava
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
