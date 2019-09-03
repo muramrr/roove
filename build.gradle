@@ -38,7 +38,7 @@ task clean(type: Delete) {
 ext{
 
     //firebase
-    firebase_core_version = '17.1.0'
+    firebase_core_version = '17.2.0'
     firebase_firestore_version = '21.0.0'
     firebase_storage_version = '19.0.0'
     firebase_auth_version = '19.0.0'
@@ -46,7 +46,7 @@ ext{
     dagger_version = '2.24'
 
     // RxJava
-    rxjava_version = '2.2.11'
+    rxjava_version = '2.2.12'
 
     // RxAndroid
     rxandroid_version = '2.1.1'

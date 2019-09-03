@@ -9,9 +9,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.format.DateFormat
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.ImageView
@@ -25,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mmdev.domain.auth.model.User
 import com.mmdev.domain.messages.model.Message
-import com.mmdev.domain.messages.model.Sender
 import com.mmdev.meetapp.BuildConfig
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.injector
@@ -36,6 +33,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 /* Created by A on 10.07.2019.*/
 
@@ -43,7 +41,7 @@ import java.util.*
  * This is the documentation block about the class
  */
 
-class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
+class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFirebase {
 
 	private lateinit var  mMainActivity: MainActivity
 
@@ -52,7 +50,6 @@ class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 
 	// POJO models
 	private lateinit var userModel: User
-	private lateinit var mSender: Sender
 
 	// Views UI
 	private lateinit var edMessageWrite: EditText
@@ -93,11 +90,6 @@ class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 		}
 	}
 
-
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		return inflater.inflate(R.layout.fragment_chat, container, false)
-	}
-
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		activity?.let { mMainActivity = it as MainActivity }
 
@@ -106,9 +98,10 @@ class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 		userModel = ViewModelProvider(mMainActivity, defaultViewModelProviderFactory)
 			.get(ProfileViewModel::class.java)
 			.getProfileModel(mMainActivity).value!!
-		mSender = Sender(userModel.name, userModel.gender, userModel.mainPhotoUrl,
-		                 userModel.userId)
+
 		setupViews(view)
+
+		Log.wtf("mylogs", "user info = $userModel")
 		disposables
 			.add(chatViewModel.getMessages()
 				     .observeOn(AndroidSchedulers.mainThread())
@@ -117,6 +110,7 @@ class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 								mChatAdapter.updateData(it) },
 							{ showInternetError() }))
 	}
+
 
 	/*
 	 * setup managers and adapters for views
@@ -131,7 +125,7 @@ class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 		rvMessagesList.layoutManager = linearLayoutManager
 		ivSendMessage.setOnClickListener { sendMessageClick() }
 		ivAttachments.setOnClickListener { photoCameraClick() }
-		mChatAdapter = ChatAdapter(mSender.name, listOf(),this)
+		mChatAdapter = ChatAdapter(userModel.name, listOf(),this)
 		mChatAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
 			override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
 				super.onItemRangeInserted(positionStart, itemCount)
@@ -151,7 +145,7 @@ class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 	*/
 	private fun sendMessageClick() {
 		if (edMessageWrite.text.isNotEmpty()) {
-			val message = Message(mSender, edMessageWrite.text.toString(), null)
+			val message = Message(userModel, edMessageWrite.text.toString(), photoAttached = null)
 			disposables
 				.add(chatViewModel.sendMessage(message)
 					     .observeOn(AndroidSchedulers.mainThread())
@@ -254,8 +248,9 @@ class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 				val selectedImage = data?.data?.toFile()
 				if (selectedImage != null) {
 					disposables
-						.add(chatViewModel.sendPhoto(Message(mSender,"", null),
-						                             selectedImage)
+						.add(chatViewModel.sendPhoto(Message(userModel,
+						                                     "",
+						                                     photoAttached = null), selectedImage)
 						     .observeOn(AndroidSchedulers.mainThread())
 						     .subscribe( { Log.d("ChatFragment", "Photo gallery sent") },
 						                 { showInternetError() }))
@@ -268,8 +263,8 @@ class ChatFragment : Fragment(), ClickChatAttachmentFirebase {
 			if (resultCode == RESULT_OK) {
 				if (mFilePathImageCamera.exists()) {
 					disposables
-						.add(chatViewModel.sendPhoto(Message(mSender,"", null),
-						                            mFilePathImageCamera)
+						.add(chatViewModel.sendPhoto(Message(userModel, "", photoAttached = null),
+						                             mFilePathImageCamera)
 							     .observeOn(AndroidSchedulers.mainThread())
 							     .subscribe( { Log.d("ChatFragment", "Photo camera sent") },
 							                 { showInternetError() }))

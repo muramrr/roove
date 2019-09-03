@@ -31,7 +31,7 @@ import com.mmdev.meetapp.utils.GlideApp
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
-class MainActivity: AppCompatActivity(), MainActivityListeners  {
+class MainActivity: AppCompatActivity(R.layout.activity_main), MainActivityListeners  {
 
 	private val TAG = "myLogs"
 
@@ -54,7 +54,6 @@ class MainActivity: AppCompatActivity(), MainActivityListeners  {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_main)
 		authViewModel = ViewModelProvider(this, authViewModelFactory)
 			.get(AuthViewModel::class.java)
 		toolbar = findViewById(R.id.toolbar)
