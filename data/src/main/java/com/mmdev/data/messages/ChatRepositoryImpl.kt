@@ -3,20 +3,14 @@ package com.mmdev.data.messages
 import android.net.Uri
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.storage.FirebaseStorage
 import com.mmdev.domain.messages.model.Message
 import com.mmdev.domain.messages.model.PhotoAttached
 import com.mmdev.domain.messages.repository.ChatRepository
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
+import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
-import java.io.File
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 
 @Singleton
 class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
@@ -24,7 +18,6 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 
 
 
-	@ServerTimestamp val mTimestamp: Date? = null
 	companion object{
 
 		// Firebase firestore references
@@ -39,7 +32,6 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 	}
 
 	override fun sendMessage(message: Message): Completable {
-		message.timestamp = mTimestamp!!
 		return Completable.create { emitter ->
 			firestore.collection(GENERAL_COLLECTION_REFERENCE)
 				.document(CHAT_REFERENCE)
@@ -52,24 +44,23 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 		}.subscribeOn(Schedulers.io())
 	}
 
-	override fun sendPhoto(message: Message, photo: File): Completable {
-		val storagRef = storage.getReferenceFromUrl(URL_STORAGE_REFERENCE)
+	override fun sendPhoto(photoUri: String): Single<PhotoAttached> {
+		val storagRef = storage
+			.getReferenceFromUrl(URL_STORAGE_REFERENCE)
 			.child(FOLDER_STORAGE_IMG)
-		return Completable.create{ emitter ->
-				storagRef.child(photo.name)
-				.putFile(Uri.fromFile(photo))
+		return Single.create(SingleOnSubscribe<PhotoAttached>{ emitter ->
+				storagRef.child(photoUri)
+				.putFile(Uri.parse(photoUri))
 				.addOnCompleteListener{ task ->
 					if (task.isSuccessful) {
-						val downloadUrl = task.result
-						val photoAttached = PhotoAttached(downloadUrl!!.toString(), photo.name)
-						message.photoAttached = photoAttached
-						sendMessage(message)
+						val photoAttached = PhotoAttached(task.result!!.toString(), photoUri)
+						emitter.onSuccess(photoAttached)
 					}
-					emitter.onComplete()
+					else emitter.onError(Exception("task is not successful"))
 				}
 				.addOnFailureListener { emitter.onError(it) }
 
-		}.subscribeOn(Schedulers.io())
+		}).subscribeOn(Schedulers.io())
 	}
 
 
@@ -78,6 +69,7 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 			firestore.collection(GENERAL_COLLECTION_REFERENCE)
 				.document(CHAT_REFERENCE)
 				.collection(SECONDARY_COLLECTION_REFERENCE)
+				.orderBy("timestamp")
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
 						emitter.onError(e)

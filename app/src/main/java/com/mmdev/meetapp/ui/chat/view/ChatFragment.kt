@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -16,7 +17,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -127,13 +127,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		ivAttachments.setOnClickListener { photoCameraClick() }
 		mChatAdapter = ChatAdapter(userModel.name, listOf(),this)
 		mChatAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-			override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-				super.onItemRangeInserted(positionStart, itemCount)
+			override fun onChanged() {
+				super.onChanged()
 				val friendlyMessageCount = mChatAdapter.itemCount
-				val lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition()
-				if (lastVisiblePosition == -1 || positionStart >= friendlyMessageCount - 1 && lastVisiblePosition == positionStart - 1) {
-					rvMessagesList.scrollToPosition(positionStart)
-				}
+				rvMessagesList.scrollToPosition(friendlyMessageCount-1)
 			}
 		})
 		rvMessagesList.adapter = mChatAdapter
@@ -245,29 +242,27 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		super.onActivityResult(requestCode, resultCode, data)
 		if (requestCode == IMAGE_GALLERY_REQUEST) {
 			if (resultCode == RESULT_OK) {
-				val selectedImage = data?.data?.toFile()
-				if (selectedImage != null) {
-					disposables
-						.add(chatViewModel.sendPhoto(Message(userModel,
-						                                     "",
-						                                     photoAttached = null), selectedImage)
-						     .observeOn(AndroidSchedulers.mainThread())
-						     .subscribe( { Log.d("ChatFragment", "Photo gallery sent") },
-						                 { showInternetError() }))
-				}
-				else Toast.makeText(mMainActivity, "Photo uri is null", Toast.LENGTH_SHORT).show()
+				val selectedUri = data?.data
+				disposables.add(chatViewModel.sendPhoto(selectedUri.toString())
+					                .observeOn(AndroidSchedulers.mainThread())
+					                .subscribe( { Log.wtf("ChatFragment", "Photo gallery sent") },
+					                            { showInternetError() }))
+
+
 			}
 		}
 
 		if (requestCode == IMAGE_CAMERA_REQUEST) {
 			if (resultCode == RESULT_OK) {
 				if (mFilePathImageCamera.exists()) {
-					disposables
-						.add(chatViewModel.sendPhoto(Message(userModel, "", photoAttached = null),
-						                             mFilePathImageCamera)
-							     .observeOn(AndroidSchedulers.mainThread())
-							     .subscribe( { Log.d("ChatFragment", "Photo camera sent") },
-							                 { showInternetError() }))
+					disposables.add(chatViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString())
+						                .observeOn(AndroidSchedulers.mainThread())
+						                .subscribe( {
+							                            Log.wtf("ChatFragment", "Photo camera " +
+							                                                    "sent $it") },
+						                            { showInternetError() })
+
+					)
 				}
 				else Toast.makeText(mMainActivity,
 						"filePathImageCamera is null or filePathImageCamera isn't exists",
