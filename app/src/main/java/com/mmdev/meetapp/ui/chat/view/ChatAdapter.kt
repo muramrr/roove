@@ -95,7 +95,7 @@ class ChatAdapter (private val mUserName: String,
 		fun bindMessage (message: Message) {
 			setIvUserAvatar(message.sender.mainPhotoUrl)
 			setTextMessage(message.text)
-			//setTvTimestamp(convertTimestamp(message.timestamp!!))
+			message.timestamp?.let { setTvTimestamp(convertTimestamp(message.timestamp!!)) }
 			setIvChatPhoto(message.photoAttached?.fileUrl)
 		}
 
@@ -142,9 +142,7 @@ class ChatAdapter (private val mUserName: String,
 	 * @return string in format hh:mm AM/PM
 	 */
 	private fun convertTimestamp(date: Date): String {
-		val calendar = Calendar.getInstance()
-		calendar.time = date
-		return SimpleDateFormat("EEE, d MMM yyyy hh:mm a", Locale.ENGLISH).format(calendar.time)
+		return SimpleDateFormat("EEE, d MMM yyyy hh:mm a", Locale.ENGLISH).format(date)
 	}
 
 
