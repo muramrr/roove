@@ -102,13 +102,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		setupViews(view)
 
 		Log.wtf("mylogs", "user info = $userModel")
-		disposables
-			.add(chatViewModel.getMessages()
-				     .observeOn(AndroidSchedulers.mainThread())
-				     .subscribe(
-							{ //Log.wtf(TAG, it.size.toString())
-								mChatAdapter.updateData(it) },
-							{ showInternetError() }))
+		disposables.add(chatViewModel.getMessages()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+			{  Log.wtf(TAG, "${it[it.size - 1]}")
+				mChatAdapter.updateData(it) },
+			{ showInternetError() }))
 	}
 
 
@@ -124,7 +123,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		linearLayoutManager.stackFromEnd = true
 		rvMessagesList.layoutManager = linearLayoutManager
 		ivSendMessage.setOnClickListener { sendMessageClick() }
-		ivAttachments.setOnClickListener { photoCameraClick() }
+		ivAttachments.setOnClickListener { photoGalleryClick() }
 		mChatAdapter = ChatAdapter(userModel.name, listOf(),this)
 		mChatAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
 			override fun onChanged() {
@@ -224,7 +223,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 	}
 
 	private fun showInternetError() {
-		Toast.makeText(context, "Check internet connection", Toast.LENGTH_SHORT).show()
+		Toast.makeText(context, "internal error", Toast.LENGTH_SHORT).show()
 	}
 
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -242,11 +241,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		super.onActivityResult(requestCode, resultCode, data)
 		if (requestCode == IMAGE_GALLERY_REQUEST) {
 			if (resultCode == RESULT_OK) {
+
 				val selectedUri = data?.data
 				disposables.add(chatViewModel.sendPhoto(selectedUri.toString())
-					                .observeOn(AndroidSchedulers.mainThread())
-					                .subscribe( { Log.wtf("ChatFragment", "Photo gallery sent") },
-					                            { showInternetError() }))
+	                .flatMapCompletable { chatViewModel.sendMessage(Message(userModel, photoAttached = it)) }
+	                .observeOn(AndroidSchedulers.mainThread())
+	                .subscribe({ Log.wtf(TAG, "Photo gallery sent") },
+	                           { showInternetError() }))
 
 
 			}
@@ -256,11 +257,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 			if (resultCode == RESULT_OK) {
 				if (mFilePathImageCamera.exists()) {
 					disposables.add(chatViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString())
-						                .observeOn(AndroidSchedulers.mainThread())
-						                .subscribe( {
-							                            Log.wtf("ChatFragment", "Photo camera " +
-							                                                    "sent $it") },
-						                            { showInternetError() })
+		                .flatMapCompletable { chatViewModel.sendMessage(Message(userModel, photoAttached = it))}
+		                .observeOn(AndroidSchedulers.mainThread())
+		                .subscribe( { Log.wtf(TAG, "Photo camera sent")  },
+		                            { showInternetError() })
+
 
 					)
 				}
