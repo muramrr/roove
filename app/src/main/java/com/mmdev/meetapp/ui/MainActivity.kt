@@ -137,13 +137,15 @@ class MainActivity: AppCompatActivity(R.layout.activity_main), MainActivityListe
 	 */
 	private fun checkConnection() {
 		disposables.add(authViewModel.isAuthenticated()
-			                .observeOn(AndroidSchedulers.mainThread())
-			                .subscribe({if (it == false) {Log.wtf(TAG, "USER LOGGED OUT")
-				                startAuthActivity()}
-				                else Log.wtf(TAG, "user is auth") },
-			                           {
-				                           Log.wtf(TAG, it)
-			                           }))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ if (it == false) {
+	            Log.wtf(TAG, "USER LOGGED OUT")
+	            startAuthActivity()
+            }
+            else Log.wtf(TAG, "user is auth") },
+                   {
+                       Log.wtf(TAG, it)
+                   }))
 	}
 
 	override fun startAuthActivity(){

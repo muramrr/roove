@@ -10,4 +10,4 @@ import java.util.*
 
 
 data class Message (var sender: User = User(), var text: String = "", val timestamp: Date? = Date(),
-                    var photoAttached: PhotoAttached? = null)
+                    var photoAttached: PhotoAttached? = PhotoAttached())

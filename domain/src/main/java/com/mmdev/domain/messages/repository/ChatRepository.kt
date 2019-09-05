@@ -5,7 +5,6 @@ import com.mmdev.domain.messages.model.Message
 import com.mmdev.domain.messages.model.PhotoAttached
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 
 
 interface ChatRepository {
@@ -14,6 +13,6 @@ interface ChatRepository {
 
     fun sendMessage(message: Message): Completable
 
-    fun sendPhoto(photoUri: String): Single<PhotoAttached>
+    fun sendPhoto(photoUri: String): Observable<PhotoAttached>
 
 }

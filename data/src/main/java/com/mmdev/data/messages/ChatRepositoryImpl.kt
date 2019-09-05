@@ -1,16 +1,21 @@
 package com.mmdev.data.messages
 
 import android.net.Uri
+import android.text.format.DateFormat
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.mmdev.domain.messages.model.Message
 import com.mmdev.domain.messages.model.PhotoAttached
 import com.mmdev.domain.messages.repository.ChatRepository
-import io.reactivex.*
+import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.ArrayList
 
 @Singleton
 class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
@@ -44,46 +49,56 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 		}.subscribeOn(Schedulers.io())
 	}
 
-	override fun sendPhoto(photoUri: String): Single<PhotoAttached> {
-		val storagRef = storage
+	override fun sendPhoto(photoUri: String): Observable<PhotoAttached> {
+		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()+".jpg"
+		val storageRef = storage
 			.getReferenceFromUrl(URL_STORAGE_REFERENCE)
 			.child(FOLDER_STORAGE_IMG)
-		return Single.create(SingleOnSubscribe<PhotoAttached>{ emitter ->
-				storagRef.child(photoUri)
-				.putFile(Uri.parse(photoUri))
+			.child(namePhoto)
+
+		return Observable.create(ObservableOnSubscribe<PhotoAttached>{ emitter ->
+			val uploadTask = storageRef.putFile(Uri.parse(photoUri))
+			uploadTask
+				.continueWithTask<Uri> { task ->
+					if (!task.isSuccessful) task.exception?.let { emitter.onError(it) }
+					return@continueWithTask storageRef.downloadUrl
+				}
 				.addOnCompleteListener{ task ->
 					if (task.isSuccessful) {
-						val photoAttached = PhotoAttached(task.result!!.toString(), photoUri)
-						emitter.onSuccess(photoAttached)
+						val downloadUrl = task.result
+						val photoAttached = PhotoAttached(downloadUrl.toString(), namePhoto)
+
+						emitter.onNext(photoAttached)
 					}
 					else emitter.onError(Exception("task is not successful"))
 				}
 				.addOnFailureListener { emitter.onError(it) }
 
+			emitter.setCancellable{ uploadTask.cancel() }
 		}).subscribeOn(Schedulers.io())
 	}
 
 
 	override fun getMessages(): Observable<List<Message>> {
 		return Observable.create(ObservableOnSubscribe<List<Message>> { emitter ->
-			firestore.collection(GENERAL_COLLECTION_REFERENCE)
+			val listener = firestore.collection(GENERAL_COLLECTION_REFERENCE)
 				.document(CHAT_REFERENCE)
 				.collection(SECONDARY_COLLECTION_REFERENCE)
 				.orderBy("timestamp")
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
-						emitter.onError(e)
-						Log.wtf("mylogs", "Listen failed.", e)
-						return@addSnapshotListener
-					}
-					val messages = ArrayList<Message>()
-					Log.wtf("mylogs", "size snapshot ${snapshots!!.size()}")
-					for (doc in snapshots) {
-						doc?.let { messages.add(it.toObject(Message::class.java)) }
-					}
-					emitter.onNext(messages)
+					emitter.onError(e)
+					Log.wtf("mylogs", "Listen failed.", e)
+					return@addSnapshotListener
 				}
-
+				val messages = ArrayList<Message>()
+				Log.wtf("mylogs", "size snapshot ${snapshots!!.size()}")
+				for (doc in snapshots) {
+					doc?.let { messages.add(it.toObject(Message::class.java)) }
+				}
+				emitter.onNext(messages)
+			}
+			emitter.setCancellable{ listener.remove() }
 		}).subscribeOn(Schedulers.io())
 	}
 
