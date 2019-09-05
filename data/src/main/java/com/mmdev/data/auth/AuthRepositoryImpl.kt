@@ -36,7 +36,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	 * @param firebaseAuth firebaseAuth instance.
 	 * @return an [Observable] which emits every time that the [FirebaseAuth] state change.
 	 */
-	override fun  isAuthenticated(): Observable<Boolean> {
+	override fun isAuthenticated(): Observable<Boolean> {
 		return Observable.create(ObservableOnSubscribe<Boolean>{ emitter ->
 			val authStateListener = FirebaseAuth.AuthStateListener {
 				auth -> if (auth.currentUser == null) emitter.onNext(false)
