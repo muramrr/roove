@@ -58,22 +58,13 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 
 		return Observable.create(ObservableOnSubscribe<PhotoAttached>{ emitter ->
 			val uploadTask = storageRef.putFile(Uri.parse(photoUri))
-			uploadTask
-				.continueWithTask<Uri> { task ->
-					if (!task.isSuccessful) task.exception?.let { emitter.onError(it) }
-					return@continueWithTask storageRef.downloadUrl
-				}
-				.addOnCompleteListener{ task ->
-					if (task.isSuccessful) {
-						val downloadUrl = task.result
-						val photoAttached = PhotoAttached(downloadUrl.toString(), namePhoto)
-
+				.addOnSuccessListener {
+					storageRef.downloadUrl.addOnSuccessListener{
+						val photoAttached = PhotoAttached(it.toString(), namePhoto)
 						emitter.onNext(photoAttached)
 					}
-					else emitter.onError(Exception("task is not successful"))
 				}
 				.addOnFailureListener { emitter.onError(it) }
-
 			emitter.setCancellable{ uploadTask.cancel() }
 		}).subscribeOn(Schedulers.io())
 	}
@@ -94,7 +85,7 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 				val messages = ArrayList<Message>()
 				Log.wtf("mylogs", "size snapshot ${snapshots!!.size()}")
 				for (doc in snapshots) {
-					doc?.let { messages.add(it.toObject(Message::class.java)) }
+					messages.add(doc.toObject(Message::class.java))
 				}
 				emitter.onNext(messages)
 			}

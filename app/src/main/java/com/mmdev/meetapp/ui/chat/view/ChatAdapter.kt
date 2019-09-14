@@ -18,7 +18,7 @@ import com.mmdev.meetapp.utils.GlideApp
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatAdapter (private val mUserName: String,
+class ChatAdapter (private var mUserName: String,
                    private var chats: List<Message>,
                    private val mClickChatAttachmentFirebase: ClickChatAttachmentFirebase):
 
@@ -71,10 +71,10 @@ class ChatAdapter (private val mUserName: String,
 	}
 
 
-	/* TODO: USE FOR -DEBUG ONLY */
-	//	public void changeSenderName(UserChatModel userChatModel){
-	//		mUserName = userChatModel.getName();
-	//	}
+	/* note: USE FOR -DEBUG ONLY */
+//	fun changeSenderName(name:String){
+//		mUserName = name
+//	}
 
 	inner class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
