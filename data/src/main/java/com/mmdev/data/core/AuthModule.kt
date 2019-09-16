@@ -17,7 +17,6 @@ class AuthModule{
 
 	@Provides
 	@Singleton
-	fun providesFacebookAuth() = LoginManager.getInstance()
-
+	fun providesFacebookAuth(): LoginManager = LoginManager.getInstance()
 
 }

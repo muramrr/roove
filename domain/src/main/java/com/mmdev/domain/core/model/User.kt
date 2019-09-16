@@ -1,4 +1,4 @@
-package com.mmdev.domain.auth.model
+package com.mmdev.domain.core.model
 
 import java.util.*
 

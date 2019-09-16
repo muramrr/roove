@@ -1,6 +1,6 @@
 package com.mmdev.domain.auth.repository
 
-import com.mmdev.domain.auth.model.User
+import com.mmdev.domain.core.model.User
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
