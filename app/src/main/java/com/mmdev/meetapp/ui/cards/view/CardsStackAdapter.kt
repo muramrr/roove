@@ -1,4 +1,4 @@
-package com.mmdev.meetapp.ui.card
+package com.mmdev.meetapp.ui.cards.view
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,12 +7,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.domain.auth.model.User
+import com.mmdev.domain.core.model.User
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.utils.GlideApp
 
-class CardStackAdapter internal constructor(private val mUsersList: List<User>):
-		RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
+class CardsStackAdapter internal constructor(private val mUsersList: List<User>):
+		RecyclerView.Adapter<CardsStackAdapter.ViewHolder>() {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 		val itemView = LayoutInflater.from(parent.context).inflate(R.layout.fragment_card_item, parent, false)

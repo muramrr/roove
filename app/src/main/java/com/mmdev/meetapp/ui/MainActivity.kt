@@ -19,12 +19,12 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView
-import com.mmdev.domain.auth.model.User
+import com.mmdev.domain.core.model.User
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.injector
 import com.mmdev.meetapp.ui.auth.view.AuthActivity
 import com.mmdev.meetapp.ui.auth.viewmodel.AuthViewModel
-import com.mmdev.meetapp.ui.card.CardFragment
+import com.mmdev.meetapp.ui.cards.view.CardsFragment
 import com.mmdev.meetapp.ui.chat.view.ChatFragment
 import com.mmdev.meetapp.ui.feed.FeedFragment
 import com.mmdev.meetapp.utils.GlideApp
@@ -87,13 +87,13 @@ class MainActivity: AppCompatActivity(R.layout.activity_main), MainActivityListe
 	 * start card swipe
 	 */
 	private fun startCardFragment() {
-		mFragmentManager.findFragmentByTag("CardFragment") ?: mFragmentManager
+		mFragmentManager.findFragmentByTag("CardsFragment") ?: mFragmentManager
 			.beginTransaction().apply{
 				setCustomAnimations(R.anim.fragment_enter_from_right,
 				                    R.anim.fragment_exit_to_left,
 				                    R.anim.fragment_enter_from_left,
 				                    R.anim.fragment_exit_to_right)
-				replace(R.id.main_container, CardFragment(), "CardFragment")
+				replace(R.id.main_container, CardsFragment(), "CardsFragment")
 				addToBackStack(null)
 				commit()
 			}

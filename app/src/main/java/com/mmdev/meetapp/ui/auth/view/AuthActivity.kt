@@ -19,7 +19,7 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
-import com.mmdev.domain.auth.model.User
+import com.mmdev.domain.core.model.User
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.injector
 import com.mmdev.meetapp.ui.MainActivity

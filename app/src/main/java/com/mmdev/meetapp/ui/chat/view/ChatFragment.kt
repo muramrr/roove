@@ -21,7 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.domain.auth.model.User
+import com.mmdev.domain.core.model.User
 import com.mmdev.domain.messages.model.Message
 import com.mmdev.meetapp.BuildConfig
 import com.mmdev.meetapp.R
@@ -139,7 +139,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 	*/
 	private fun sendMessageClick() {
 		if (edMessageWrite.text.isNotEmpty()) {
-			val message = Message(userModel, edMessageWrite.text.toString(), photoAttached = null)
+			val message = Message(userModel,
+			                                                      edMessageWrite.text.toString(),
+			                                                      photoAttached = null)
 			disposables.add(chatViewModel.sendMessage(message)
 					     .observeOn(AndroidSchedulers.mainThread())
 					     .subscribe( { Log.d(TAG, "Message sent") },
@@ -237,7 +239,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 
 				val selectedUri = data?.data
 				disposables.add(chatViewModel.sendPhoto(selectedUri.toString())
-	                .flatMapCompletable { chatViewModel.sendMessage(Message(userModel, photoAttached = it)) }
+	                .flatMapCompletable { chatViewModel.sendMessage(Message(
+			                userModel,
+			                photoAttached = it)) }
 	                .observeOn(AndroidSchedulers.mainThread())
 	                .subscribe({ Log.wtf(TAG, "Photo gallery sent")
 		                        mChatAdapter.notifyDataSetChanged()},
@@ -252,7 +256,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 			if (resultCode == RESULT_OK) {
 				if (mFilePathImageCamera.exists()) {
 					disposables.add(chatViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString())
-		                .flatMapCompletable { chatViewModel.sendMessage(Message(userModel, photoAttached = it)) }
+		                .flatMapCompletable { chatViewModel.sendMessage(Message(
+				                userModel,
+				                photoAttached = it)) }
 		                .observeOn(AndroidSchedulers.mainThread())
 		                .subscribe( { Log.wtf(TAG, "Photo camera sent") },
                                     { showInternetError() })
