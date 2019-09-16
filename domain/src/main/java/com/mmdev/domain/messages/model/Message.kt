@@ -1,6 +1,6 @@
 package com.mmdev.domain.messages.model
 
-import com.mmdev.domain.auth.model.User
+import com.mmdev.domain.core.model.User
 import java.util.*
 
 /* Created by A on 06.06.2019.*/

@@ -1,11 +1,9 @@
-package com.mmdev.meetapp.ui.card
+package com.mmdev.meetapp.ui.cards.view
 
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -13,10 +11,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.mmdev.domain.auth.model.User
+import com.mmdev.domain.core.model.User
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.ui.MainActivity
 import com.mmdev.meetapp.ui.ProfileViewModel
+import com.mmdev.meetapp.ui.cards.viewmodel.CardsViewModel
 import com.mmdev.meetapp.utils.GlideApp
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
@@ -24,22 +23,18 @@ import com.yuyakaido.android.cardstackview.CardStackView
 import com.yuyakaido.android.cardstackview.Direction
 
 
-class CardFragment: Fragment() {
+class CardsFragment: Fragment(R.layout.fragment_card) {
 
 	private lateinit var mMainActivity: MainActivity
 
-	private var cardStackView: CardStackView? = null
-	private var mCardStackAdapter: CardStackAdapter? = null
-	private var mPotentialUsersList: MutableList<User>? = null
+	private lateinit var cardStackView: CardStackView
+	private lateinit var mCardsStackAdapter: CardsStackAdapter
+	private lateinit var mPotentialUsersList: MutableList<User>
 	private lateinit var mSwipeUser: User
-	private var progressBar: ProgressBar? = null
+	private lateinit var progressBar: ProgressBar
 
 	private var mProgressShowing: Boolean = false
 
-
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		return inflater.inflate(R.layout.fragment_card, container, false)
-	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		if (activity != null) mMainActivity = activity as MainActivity
@@ -57,20 +52,19 @@ class CardFragment: Fragment() {
 			showLoadingBar()
 			//get users from viewmodel
 			cardsViewModel.init(profileModel)
-			cardsViewModel.potentialUsersCards?.observe(mMainActivity, Observer<List<User>>{
-				profileModelList ->
-				mPotentialUsersList = profileModelList as MutableList<User>?
-				mCardStackAdapter = CardStackAdapter(mPotentialUsersList!!)
-				cardStackView!!.adapter = mCardStackAdapter!!
-				if (mCardStackAdapter!!.itemCount != 0) {
+			cardsViewModel.potentialUsersCards.observe(mMainActivity, Observer<List<User>>{ profileModelList ->
+				mPotentialUsersList = profileModelList as MutableList<User>
+				mCardsStackAdapter = CardsStackAdapter(mPotentialUsersList)
+				cardStackView.adapter = mCardsStackAdapter
+				if (mCardsStackAdapter.itemCount != 0) {
 					hideLoadingBar()
-					mCardStackAdapter!!.notifyDataSetChanged()
+					mCardsStackAdapter.notifyDataSetChanged()
 				}
 			})
 
 			//handle match event
 
-			cardsViewModel.matchedUser?.observe(mMainActivity, Observer<User>{ matchedUser ->
+			cardsViewModel.matchedUser.observe(mMainActivity, Observer<User>{ matchedUser ->
 				Toast.makeText(mMainActivity, "match!", Toast.LENGTH_SHORT).show()
 				showMatchDialog(matchedUser)
 			})
@@ -81,7 +75,7 @@ class CardFragment: Fragment() {
 
 			override fun onCardAppeared(view: View, position: Int) {
 				//get current displayed on card profile
-				mSwipeUser = mCardStackAdapter!!.getSwipeProfile(position)
+				mSwipeUser = mCardsStackAdapter.getSwipeProfile(position)
 			}
 
 			override fun onCardDragging(direction: Direction, ratio: Float) {}
@@ -93,8 +87,8 @@ class CardFragment: Fragment() {
 					cardsViewModel.handlePossibleMatch(mSwipeUser)
 				}
 				else cardsViewModel.addToSkipped(mSwipeUser)
-				mCardStackAdapter!!.notifyDataSetChanged()
-				mPotentialUsersList!!.remove(mSwipeUser)
+				mCardsStackAdapter.notifyDataSetChanged()
+				mPotentialUsersList.remove(mSwipeUser)
 			}
 
 			override fun onCardRewound() {}
@@ -103,30 +97,30 @@ class CardFragment: Fragment() {
 
 			override fun onCardDisappeared(view: View, position: Int) {
 				//if there is no available user to show - show loading
-				if (position == mCardStackAdapter!!.itemCount - 1) {
-					mCardStackAdapter!!.notifyDataSetChanged()
+				if (position == mCardsStackAdapter.itemCount - 1) {
+					mCardsStackAdapter.notifyDataSetChanged()
 					showLoadingBar()
 				}
 			}
 
 		})
 
-		cardStackView!!.layoutManager = cardStackLayoutManager
+		cardStackView.layoutManager = cardStackLayoutManager
 
 	}
 
 	private fun showLoadingBar() {
 		if (!mProgressShowing) {
-			cardStackView!!.visibility = View.GONE
-			progressBar!!.visibility = View.VISIBLE
+			cardStackView.visibility = View.GONE
+			progressBar.visibility = View.VISIBLE
 			mProgressShowing = true
 		}
 	}
 
 	private fun hideLoadingBar() {
 		if (mProgressShowing) {
-			progressBar!!.visibility = View.GONE
-			cardStackView!!.visibility = View.VISIBLE
+			progressBar.visibility = View.GONE
+			cardStackView.visibility = View.VISIBLE
 			mProgressShowing = false
 		}
 	}
