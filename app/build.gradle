@@ -52,14 +52,14 @@ dependencies {
 	implementation project(':data')
 
 	//core
-	implementation 'androidx.core:core-ktx:1.2.0-alpha03'
+	implementation 'androidx.core:core-ktx:1.2.0-alpha04'
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-	implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+	implementation 'androidx.appcompat:appcompat:1.1.0'
 
 	//UI
-	implementation 'com.google.android.material:material:1.1.0-alpha09'
-	implementation 'androidx.recyclerview:recyclerview:1.1.0-beta03'
+	implementation 'com.google.android.material:material:1.1.0-alpha10'
+	implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
 	implementation 'androidx.cardview:cardview:1.0.0'
 	implementation 'com.yuyakaido.android:card-stack-view:2.3.4'
 	implementation 'com.github.ceryle:SegmentedButton:2.0.2'
@@ -68,13 +68,12 @@ dependencies {
 	//firebase
 	implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
 	implementation "com.google.firebase:firebase-core:$firebase_core_version"
-	implementation 'com.firebaseui:firebase-ui-firestore:5.0.0'
 	implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
 	implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
 
 	//facebook auth
-	implementation 'com.facebook.android:facebook-android-sdk:5.4.0'
-	implementation 'com.facebook.android:facebook-login:5.4.0'
+	implementation 'com.facebook.android:facebook-android-sdk:5.5.1'
+	implementation 'com.facebook.android:facebook-login:5.5.1'
 
 	//glide
 	implementation 'com.github.bumptech.glide:glide:4.9.0'
