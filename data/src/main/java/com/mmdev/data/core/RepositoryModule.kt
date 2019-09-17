@@ -13,19 +13,13 @@ import dagger.Provides
 @Module
 class RepositoryModule {
 
-    @Provides
-    fun providesAuthRepository(repository: AuthRepositoryImpl): AuthRepository {
-        return repository
-    }
+	@Provides
+	fun providesAuthRepository(repository: AuthRepositoryImpl): AuthRepository { return repository }
 
-    @Provides
-    fun providesChatRepository(repository: ChatRepositoryImpl): ChatRepository {
-        return repository
-    }
+	@Provides
+	fun providesChatRepository(repository: ChatRepositoryImpl): ChatRepository { return repository }
 
-    @Provides
-    fun providesCardsRepository(repository: CardsRepositoryImpl): CardsRepository{
-        return repository
-    }
+	@Provides
+	fun providesCardsRepository(repository: CardsRepositoryImpl): CardsRepository{ return repository }
 
 }

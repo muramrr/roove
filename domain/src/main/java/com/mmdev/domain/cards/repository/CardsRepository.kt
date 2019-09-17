@@ -1,6 +1,7 @@
 package com.mmdev.domain.cards.repository
 
 import com.mmdev.domain.core.model.User
+import io.reactivex.Single
 
 /* Created by A on 14.09.2019.*/
 
@@ -10,7 +11,13 @@ import com.mmdev.domain.core.model.User
 
 interface CardsRepository {
 
+	fun addToSkipped(skipedUser: User)
+
+	fun getPotentialUserCards(): Single<List<User>>
+
 	fun handlePossibleMatch(likedUser: User)
 
-	fun addToSkipped(skipedUser: User)
+
+
+
 }
