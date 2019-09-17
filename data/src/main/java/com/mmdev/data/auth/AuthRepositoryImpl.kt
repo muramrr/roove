@@ -7,6 +7,7 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mmdev.data.user.UserRepository
 import com.mmdev.domain.auth.repository.AuthRepository
 import com.mmdev.domain.core.model.User
 import io.reactivex.*
@@ -20,8 +21,9 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
+                                             private val db: FirebaseFirestore,
                                              private val fbLogin: LoginManager,
-                                             private val db: FirebaseFirestore): AuthRepository {
+                                             private val userRepository: UserRepository): AuthRepository {
 
 	companion object {
 		private const val GENERAL_COLLECTION_REFERENCE = "users"
@@ -52,9 +54,8 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					val document = task.result
 					if (document!!.exists()) {
 						val user = document.toObject(User::class.java)
-						//saveProfile(applicationContext, mProfileModel)
-						//profileViewModel!!.setProfileModel(mProfileModel)
-						emitter.onSuccess(user!!)
+						userRepository.saveUserInfo(user!!)
+						emitter.onSuccess(user)
 					}
 					else emitter.onError(Exception("User do not exist"))
 				}
@@ -91,12 +92,16 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		return Completable.create { emitter ->
 			val ref = db.collection(GENERAL_COLLECTION_REFERENCE).document(user.userId)
 			ref.set(user)
-				.addOnSuccessListener { emitter.onComplete() }
+				.addOnSuccessListener {
+					saveProfile(user)
+					emitter.onComplete()
+				}
 				.addOnFailureListener { task -> emitter.onError(task) }
 		}.subscribeOn(Schedulers.io())
 	}
 
 	private fun saveProfile(user: User) {
+		userRepository.saveUserInfo(user)
 
 	}
 

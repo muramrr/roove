@@ -1,6 +1,10 @@
 package com.mmdev.meetapp.ui.cards.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.mmdev.domain.cards.usecase.AddToSkippedUseCase
+import com.mmdev.domain.cards.usecase.GetPotentialUserCardsUseCase
+import com.mmdev.domain.cards.usecase.HandlePossibleMatchUseCase
+import com.mmdev.domain.core.model.User
 
 /* Created by A on 20.07.2019.*/
 
@@ -13,5 +17,14 @@ import androidx.lifecycle.ViewModel
  * TODO: convert likes -> matches on other user side
  */
 
-class CardsViewModel: ViewModel()
+class CardsViewModel(private val addToSkipped: AddToSkippedUseCase,
+                     private val getPotentialUserCards: GetPotentialUserCardsUseCase,
+                     private val handlePossibleMatch: HandlePossibleMatchUseCase):
+		ViewModel(){
+
+	fun addToSkipped(skippedUser: User) = addToSkipped.execute(skippedUser)
+	fun getPotentialUserCards() = getPotentialUserCards.execute()
+	fun handlePossibleMatch(likedUser: User) = handlePossibleMatch.execute(likedUser)
+
+}
 
