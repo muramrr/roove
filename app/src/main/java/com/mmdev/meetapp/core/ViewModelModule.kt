@@ -5,6 +5,8 @@ import com.mmdev.data.auth.AuthRepositoryImpl
 import com.mmdev.data.cards.CardsRepositoryImpl
 import com.mmdev.data.messages.ChatRepositoryImpl
 import com.mmdev.domain.auth.usecase.*
+import com.mmdev.domain.cards.usecase.AddToSkippedUseCase
+import com.mmdev.domain.cards.usecase.GetPotentialUserCardsUseCase
 import com.mmdev.domain.cards.usecase.HandlePossibleMatchUseCase
 import com.mmdev.domain.messages.usecase.GetMessagesUseCase
 import com.mmdev.domain.messages.usecase.SendMessageUseCase
@@ -35,7 +37,9 @@ class ViewModelModule {
 
 	@Provides
 	fun providesCardsViewModelFactory(repository: CardsRepositoryImpl): CardsViewModelFactory{
-		return CardsViewModelFactory(HandlePossibleMatchUseCase(repository))
+		return CardsViewModelFactory(AddToSkippedUseCase(repository),
+		                             GetPotentialUserCardsUseCase(repository),
+		                             HandlePossibleMatchUseCase(repository))
 	}
 
 
