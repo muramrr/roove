@@ -15,9 +15,7 @@ interface CardsRepository {
 
 	fun getPotentialUserCards(): Single<List<User>>
 
-	fun handlePossibleMatch(likedUser: User)
-
-
+	fun handlePossibleMatch(likedUser: User): Single<Boolean>
 
 
 }

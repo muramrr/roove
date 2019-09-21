@@ -3,16 +3,16 @@ package com.mmdev.meetapp.ui.cards.view
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mmdev.domain.core.model.User
 import com.mmdev.meetapp.R
+import com.mmdev.meetapp.core.injector
 import com.mmdev.meetapp.ui.MainActivity
 import com.mmdev.meetapp.ui.ProfileViewModel
 import com.mmdev.meetapp.ui.cards.viewmodel.CardsViewModel
@@ -21,54 +21,57 @@ import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.CardStackView
 import com.yuyakaido.android.cardstackview.Direction
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 
 
 class CardsFragment: Fragment(R.layout.fragment_card) {
 
 	private lateinit var mMainActivity: MainActivity
-
 	private lateinit var cardStackView: CardStackView
 	private lateinit var mCardsStackAdapter: CardsStackAdapter
-	private lateinit var mPotentialUsersList: MutableList<User>
-	private lateinit var mSwipeUser: User
 	private lateinit var progressBar: ProgressBar
-
 	private var mProgressShowing: Boolean = false
+
+	private var mSwipeUser: User = User()
+
+	private lateinit var cardsViewModel: CardsViewModel
+
+	private val disposables = CompositeDisposable()
+	private val cardsViewModelFactory = injector.cardsViewModelFactory()
 
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		if (activity != null) mMainActivity = activity as MainActivity
+		activity?.let { mMainActivity = it as MainActivity }
 		cardStackView = view.findViewById(R.id.card_stack_view)
 		progressBar = view.findViewById(R.id.card_prBar)
+		mCardsStackAdapter = CardsStackAdapter(listOf())
+		cardStackView.adapter = mCardsStackAdapter
 
-		val profileViewModel = ViewModelProvider(mMainActivity).get(ProfileViewModel::class.java)
-		val profileModel = profileViewModel.getProfileModel(mMainActivity).value
+		val userModel = ViewModelProvider(mMainActivity, defaultViewModelProviderFactory)
+			.get(ProfileViewModel::class.java)
+			.getProfileModel(mMainActivity).value!!
+		cardsViewModel = ViewModelProvider(mMainActivity, cardsViewModelFactory).get(CardsViewModel::class.java)
 
-		val cardsViewModel = ViewModelProvider(mMainActivity).get(CardsViewModel::class.java)
+
+		showLoadingBar()
+		//get users from viewmodel
+		disposables.add(cardsViewModel.getPotentialUserCards()
+			                .observeOn(AndroidSchedulers.mainThread())
+			                .subscribe({
+				                           Log.wtf("mylogs", "filtered" +
+				                                        it.size)
+				                           mCardsStackAdapter.updateData(it)
+				                           hideLoadingBar()
+			                           },
+			                           {
+
+			                           }))
 
 
-		mProgressShowing = false
-		if (profileModel != null) {
-			showLoadingBar()
-			//get users from viewmodel
-			cardsViewModel.init(profileModel)
-			cardsViewModel.potentialUsersCards.observe(mMainActivity, Observer<List<User>>{ profileModelList ->
-				mPotentialUsersList = profileModelList as MutableList<User>
-				mCardsStackAdapter = CardsStackAdapter(mPotentialUsersList)
-				cardStackView.adapter = mCardsStackAdapter
-				if (mCardsStackAdapter.itemCount != 0) {
-					hideLoadingBar()
-					mCardsStackAdapter.notifyDataSetChanged()
-				}
-			})
+		//handle match event
 
-			//handle match event
 
-			cardsViewModel.matchedUser.observe(mMainActivity, Observer<User>{ matchedUser ->
-				Toast.makeText(mMainActivity, "match!", Toast.LENGTH_SHORT).show()
-				showMatchDialog(matchedUser)
-			})
-		}
 
 
 		val cardStackLayoutManager = CardStackLayoutManager(mMainActivity, object: CardStackListener {
@@ -76,6 +79,14 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 			override fun onCardAppeared(view: View, position: Int) {
 				//get current displayed on card profile
 				mSwipeUser = mCardsStackAdapter.getSwipeProfile(position)
+				disposables.add(cardsViewModel.handlePossibleMatch(mSwipeUser)
+					                .subscribe({
+						                           if (it) showMatchDialog(mSwipeUser)
+						                           Log.wtf("mylogs", mSwipeUser.toString())
+					                           },
+					                           {
+						                           Log.wtf("mylogs", it)
+					                           }))
 			}
 
 			override fun onCardDragging(direction: Direction, ratio: Float) {}
@@ -87,8 +98,8 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 					cardsViewModel.handlePossibleMatch(mSwipeUser)
 				}
 				else cardsViewModel.addToSkipped(mSwipeUser)
-				mCardsStackAdapter.notifyDataSetChanged()
-				mPotentialUsersList.remove(mSwipeUser)
+//				mCardsStackAdapter.notifyDataSetChanged()
+//				mPotentialUsersList.remove(mSwipeUser)
 			}
 
 			override fun onCardRewound() {}
