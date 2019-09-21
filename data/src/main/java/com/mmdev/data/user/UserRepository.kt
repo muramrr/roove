@@ -29,7 +29,7 @@ class UserRepository @Inject constructor(private val context: Context){
 		private const val PREF_KEY_CURRENT_USER_ID = "uid"
 	}
 
-	fun getSavedUser(): User? {
+	fun getSavedUser(): User {
 		val prefs = TinyDB(PREF_KEY_GENERAL_USER_STORE, context)
 		return if (prefs.getBoolean(PREF_KEY_GENERAL_IF_SAVED, false)) {
 			val name = prefs.getString(PREF_KEY_CURRENT_USER_NAME , "")
@@ -43,7 +43,7 @@ class UserRepository @Inject constructor(private val context: Context){
 		}
 		else {
 			Log.wtf("mylogs", "Can't get user, seems it is not saved")
-			null
+			User(name = "no user saved")
 		}
 	}
 

@@ -6,8 +6,8 @@ import com.mmdev.domain.cards.repository.CardsRepository
 import com.mmdev.domain.core.model.User
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
+import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -57,71 +57,93 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	* note: swiped right
  	* check if users liked each other
 	*/
-	override fun handlePossibleMatch(likedUser: User) {
+	override fun handlePossibleMatch(likedUser: User): Single<Boolean> {
 		val likedUserId = likedUser.userId
-		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(likedUserId)
-			.collection(USER_LIKES_COLLECTION_REFERENCE)
-			.document(currentUserId)
-			.get()
-			.addOnSuccessListener { documentSnapshot ->
-				if (documentSnapshot.exists()) {
-					//add to match collection
-					firestore.collection(USERS_COLLECTION_REFERENCE)
-						.document(likedUserId)
-						.collection(USER_MATCHES_COLLECTION_REFERENCE)
-						.document(currentUserId)
-						.set(currentUser)
-					firestore.collection(USERS_COLLECTION_REFERENCE)
-						.document(currentUserId)
-						.collection(USER_MATCHES_COLLECTION_REFERENCE)
-						.document(likedUserId)
-						.set(likedUser)
+		return Single.create(SingleOnSubscribe<Boolean> { emitter ->
 
-					//remove from like collection
-					//note:uncomment for release
-//					mUsersCollectionRef
-//							.document(uId)
-//							.collection(USER_LIKES_COLLECTION_REFERENCE)
-//							.document(mCurrentUserId)
-//							.delete();
-					firestore.collection(USERS_COLLECTION_REFERENCE)
-						.document(currentUserId)
-						.collection(USER_LIKES_COLLECTION_REFERENCE)
-						.document(likedUserId)
-						.delete()
-					Log.wtf(TAG, "match handle executed")
+			firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(likedUserId)
+				.collection(USER_LIKES_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.get()
+				.addOnSuccessListener{ documentSnapshot ->
+					if (documentSnapshot.exists()) {
+						//add to match collection
+						firestore.collection(USERS_COLLECTION_REFERENCE)
+							.document(likedUserId)
+							.collection(USER_MATCHES_COLLECTION_REFERENCE)
+							.document(currentUserId)
+							.set(currentUser)
+						firestore.collection(USERS_COLLECTION_REFERENCE)
+							.document(currentUserId)
+							.collection(USER_MATCHES_COLLECTION_REFERENCE)
+							.document(likedUserId)
+							.set(likedUser)
 
-				}
-				else firestore.collection(USERS_COLLECTION_REFERENCE)
-					.document(currentUserId)
-					.collection(USER_LIKES_COLLECTION_REFERENCE)
-					.document(likedUserId)
-					.set(likedUser)
+						//remove from like collection
+						//note:uncomment for release
+		//					firestore.collection(USERS_COLLECTION_REFERENCE)
+		//							.document(likedUserId)
+		//							.collection(USER_LIKES_COLLECTION_REFERENCE)
+		//							.document(mCurrentUserId)
+		//							.delete();
+						firestore.collection(USERS_COLLECTION_REFERENCE)
+							.document(currentUserId)
+							.collection(USER_LIKES_COLLECTION_REFERENCE)
+							.document(likedUserId)
+							.delete()
+						Log.wtf(TAG, "match handle executed")
 
-			}.addOnFailureListener { Log.wtf(TAG, "handlePossibleMatch fail") }
+						emitter.onSuccess(true)
+					}
+
+					else {
+						firestore.collection(USERS_COLLECTION_REFERENCE)
+							.document(currentUserId)
+							.collection(USER_LIKES_COLLECTION_REFERENCE)
+							.document(likedUserId)
+							.set(likedUser)
+						emitter.onSuccess(false)
+					}
+
+			}.addOnFailureListener {
+				Log.wtf(TAG, "handlePossibleMatch fail")
+				emitter.onError(it)
+			}
+
+		}).subscribeOn(Schedulers.io())
 	}
 
 
 
 	override fun getPotentialUserCards(): Single<List<User>> {
-		return Single.create(SingleOnSubscribe<List<User>>{
-			emitter -> getAllUsersCards()
-
-		}).subscribeOn(Schedulers.io())
-	}
-
-	fun getPotentialUser(){
-		val b = getLikedUsersCards()
-		val a = getAllUsersCards()
-			.map { userList -> userList.filter {user -> user.userId.equals("a") }}
-
-
-
+		val uidList = zipLists()
+		return getAllUsersCards().map { listUser ->
+			listUser.filter { user -> uidList.contains(user.userId) }
+		}.subscribeOn(Schedulers.io())
 
 	}
 
 
+
+	private fun zipLists(): Single<List<String>>{
+		return Single.zip(getLikedUsersCards(),
+		                  getMatchedUsersCards(),
+		                  getSkippedUsersCards(),
+		                  Function3<List<String>, List<String>, List<String>, List<String>>
+		                  { likes, matches, skipped -> mergeLists(likes, matches, skipped) })
+			.subscribeOn(Schedulers.io())
+	}
+
+	private fun mergeLists(likes:List<String>,
+	                       matches:List<String>,
+	                       skipped: List<String>): List<String>{
+		val uidList = ArrayList<String>()
+		uidList.addAll(likes)
+		uidList.addAll(matches)
+		uidList.addAll(skipped)
+		return uidList
+	}
 	/*
 	* GET ALL USERS
 	*/
@@ -151,6 +173,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	* GET LIKED USERS
 	*/
 	private fun getLikedUsersCards(): Single<List<String>> {
+
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUserId)
 			.collection(USER_LIKES_COLLECTION_REFERENCE)
@@ -165,11 +188,10 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					emitter.onSuccess(likedUsersCardsIds)
 				}
 			}.addOnFailureListener {
-				Log.wtf(TAG, "liked fail")
+				Log.wtf(TAG, "liked fail + $it")
 				emitter.onError(it)
 			}
-
-		}).subscribeOn(Schedulers.io())
+		}).observeOn(Schedulers.io())
 
 	}
 
@@ -191,7 +213,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					emitter.onSuccess(matchedUsersCardsIds)
 				}
 			}.addOnFailureListener {
-				Log.wtf(TAG, "matches fail")
+				Log.wtf(TAG, "matches fail + $it")
 				emitter.onError(it)
 			}
 
@@ -201,7 +223,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	/*
 	* GET SKIPED USERS
 	*/
-	private fun getSkipedUsersCards(): Single<List<String>> {
+	private fun getSkippedUsersCards(): Single<List<String>> {
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUserId)
 			.collection(USER_SKIPS_COLLECTION_REFERENCE)
@@ -217,7 +239,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				}
 			}.addOnFailureListener {
 				emitter.onError(it)
-				Log.wtf(TAG, "skipped fail")
+				Log.wtf(TAG, "skipped fail + $it")
 			}
 
 		}).subscribeOn(Schedulers.io())
