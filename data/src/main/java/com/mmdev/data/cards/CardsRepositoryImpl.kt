@@ -6,6 +6,7 @@ import com.mmdev.domain.cards.repository.CardsRepository
 import com.mmdev.domain.core.model.User
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
+import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -116,16 +117,27 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 
 
+	/* return filtered users list as Single */
 	override fun getPotentialUserCards(): Single<List<User>> {
-		val uidList = zipLists()
-		return getAllUsersCards().map { listUser ->
-			listUser.filter { user -> uidList.contains(user.userId) }
-		}.subscribeOn(Schedulers.io())
+		return Single.zip(getAllUsersCards(),
+		                  zipLists(),
+		                  BiFunction<List<User>, List<String>, List<User>>
+		                  { userList, ids  -> filterUsers(userList, ids) })
+			.observeOn(Schedulers.io())
 
 	}
 
+	/* return filtered all users list from already written ids as List<User> */
+	private fun filterUsers(userList: List<User>, ids: List<String>): List<User>{
+		val filteredUsersList = ArrayList<User>()
+		for (user in userList)
+			if (!ids.contains(user.userId))
+				filteredUsersList.add(user)
+		return filteredUsersList
+	}
 
 
+	/* return merged lists as Single */
 	private fun zipLists(): Single<List<String>>{
 		return Single.zip(getLikedUsersCards(),
 		                  getMatchedUsersCards(),
@@ -135,6 +147,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.subscribeOn(Schedulers.io())
 	}
 
+	/* merge all liked + matched + skipped users lists */
 	private fun mergeLists(likes:List<String>,
 	                       matches:List<String>,
 	                       skipped: List<String>): List<String>{
@@ -144,8 +157,9 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		uidList.addAll(skipped)
 		return uidList
 	}
+
 	/*
-	* GET ALL USERS
+	* GET ALL USERS OBJECTS
 	*/
 	private fun getAllUsersCards(): Single<List<User>> {
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
@@ -170,7 +184,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	}
 
 	/*
-	* GET LIKED USERS
+	* GET LIKED USERS IDS LIST
 	*/
 	private fun getLikedUsersCards(): Single<List<String>> {
 
@@ -196,7 +210,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	}
 
 	/*
-	* GET MATCHED
+	* GET MATCHED IDS LIST
 	*/
 	private fun getMatchedUsersCards(): Single<List<String>> {
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
@@ -221,7 +235,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	}
 
 	/*
-	* GET SKIPED USERS
+	* GET SKIPED USERS IDS LIST
 	*/
 	private fun getSkippedUsersCards(): Single<List<String>> {
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
