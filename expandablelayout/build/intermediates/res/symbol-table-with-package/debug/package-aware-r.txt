@@ -1,2 +1,0 @@
-com.mmdev.expandablelayout
-string app_name

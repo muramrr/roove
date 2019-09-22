@@ -17,11 +17,11 @@
 #-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
-# hide the original source file Name.
+# hide the original source fileModel Name.
 #-renamesourcefileattribute SourceFile
 -keepattributes Signature
 -keepattributes *Annotation*
--keepclassmembers class com.mmdev.meetups.models.** {
+-keepclassmembers class com.mmdev.meetapp.models.** {
   *;
 }
 -keep public class * implements com.bumptech.glide.module.GlideModule

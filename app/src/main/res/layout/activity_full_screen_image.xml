@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/material_black_1000"
-    tools:context=".ui.chat.FullScreenImageActivity"
+    tools:context=".ui.chat.view.FullScreenImageActivity"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
