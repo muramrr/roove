@@ -65,7 +65,7 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 				                           hideLoadingBar()
 			                           },
 			                           {
-
+				                           Log.wtf("mylogs", "error + $it")
 			                           }))
 
 
