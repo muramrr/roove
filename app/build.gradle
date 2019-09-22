@@ -1,16 +1,22 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-	compileSdkVersion 28
+
+	compileSdkVersion 29
+
 	defaultConfig {
-		applicationId "com.mmdev.meetups"
+		applicationId "com.mmdev.meetapp"
 		minSdkVersion 21
-		targetSdkVersion 28
+		targetSdkVersion 29
 		versionCode 1
 		versionName "1.0"
 	}
-	buildToolsVersion = '29.0.0'
+
+	buildToolsVersion = '29.0.2'
 	buildTypes {
 		debug {
 			versionNameSuffix '-DEBUG'
@@ -32,44 +38,64 @@ android {
 		enabled true
 	}
 
+	sourceSets {
+		main.java.srcDirs += 'src/main/kotlin'
+	}
+
 }
 
 dependencies {
+
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
+	implementation project(':progressbutton')
+	implementation project(':domain')
+	implementation project(':data')
+
+	//core
+	implementation 'androidx.core:core-ktx:1.2.0-alpha04'
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+	implementation 'androidx.appcompat:appcompat:1.1.0'
+
 	//UI
-	implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
-	implementation 'com.google.android.material:material:1.1.0-alpha08'
-	implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
-	implementation 'androidx.recyclerview:recyclerview:1.1.0-beta01'
+	implementation 'com.google.android.material:material:1.1.0-alpha10'
+	implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
 	implementation 'androidx.cardview:cardview:1.0.0'
 	implementation 'com.yuyakaido.android:card-stack-view:2.3.4'
 	implementation 'com.github.ceryle:SegmentedButton:2.0.2'
 	implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-	//firebase
-	implementation 'com.google.firebase:firebase-auth:18.1.0'
-	implementation 'com.google.firebase:firebase-core:17.0.1'
-	implementation 'com.firebaseui:firebase-ui-firestore:5.0.0'
-	implementation 'com.google.firebase:firebase-storage:18.1.1'
-	implementation 'com.google.firebase:firebase-firestore:20.2.0'
-	//chat
-	implementation 'me.himanshusoni.chatmessageview:chat-message-view:1.0.7'
-	implementation 'com.google.android.libraries.places:places:2.0.0'
-	//facebook auth
-	implementation 'com.facebook.android:facebook-android-sdk:5.1.1'
-	implementation 'com.facebook.android:facebook-login:5.1.1'
-	//binding
-	implementation 'com.jakewharton:butterknife:10.1.0'
-	annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
-	//additional
-	implementation 'android.arch.lifecycle:extensions:1.1.1'
-	implementation 'com.github.bumptech.glide:glide:4.9.0'
-	annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-	implementation 'com.google.dagger:dagger:2.23.2'
-	annotationProcessor 'com.google.dagger:dagger-compiler:2.23.2'
 
+	//firebase
+	implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
+	implementation "com.google.firebase:firebase-core:$firebase_core_version"
+	implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
+	implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
+
+	//facebook auth
+	implementation 'com.facebook.android:facebook-android-sdk:5.5.1'
+	implementation 'com.facebook.android:facebook-login:5.5.1'
+
+	//glide
+	implementation 'com.github.bumptech.glide:glide:4.9.0'
+	kapt 'com.github.bumptech.glide:compiler:4.9.0'
+
+	// Dagger
+	implementation "com.google.dagger:dagger:$dagger_version"
+	kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+	// RxJava
+	implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+
+	// RxAndroid
+	implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+
+	// ViewModel and LiveData
+	implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+	implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
 	compileOnly 'javax.annotation:jsr250-api:1.0'
-	implementation project(path: ':progressbutton')
+
+
+
 
 }
