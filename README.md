@@ -1,11 +1,11 @@
 # MeetApps  [![](https://img.shields.io/github/license/muramrr/MeetApps.svg)](https://github.com/muramrr/MeetApps/blob/master/LICENSE)
-A simple dating app based on tinder-style cards. WIP 15% done.
+A simple dating app based on tinder-style cards. WIP 62% done.
 
 Used libraries/patterns:
-* butterknife;
-* databinding;
-* glide;
 * MVVM pattern;
+* Dagger 2;
+* RxJava 2;
+* Glide;
 * Firebase Auth;
 * Firestore to store user data
 * Facebook SDK to login.
