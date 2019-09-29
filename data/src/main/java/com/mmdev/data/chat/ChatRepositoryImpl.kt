@@ -1,13 +1,13 @@
-package com.mmdev.data.messages
+package com.mmdev.data.chat
 
 import android.net.Uri
 import android.text.format.DateFormat
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.mmdev.domain.messages.model.Message
-import com.mmdev.domain.messages.model.PhotoAttached
-import com.mmdev.domain.messages.repository.ChatRepository
+import com.mmdev.domain.chat.model.Message
+import com.mmdev.domain.chat.model.PhotoAttached
+import com.mmdev.domain.chat.repository.ChatRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -35,6 +35,32 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 		private const val URL_STORAGE_REFERENCE = "gs://meetups-c34b0.appspot.com"
 		private const val FOLDER_STORAGE_IMG = "images"
 	}
+
+
+
+	override fun getMessages(): Observable<List<Message>> {
+		return Observable.create(ObservableOnSubscribe<List<Message>> { emitter ->
+			val listener = firestore.collection(GENERAL_COLLECTION_REFERENCE)
+				.document(CHAT_REFERENCE)
+				.collection(SECONDARY_COLLECTION_REFERENCE)
+				.orderBy("timestamp")
+				.addSnapshotListener { snapshots, e ->
+					if (e != null) {
+					emitter.onError(e)
+					Log.wtf("mylogs", "Listen failed.", e)
+					return@addSnapshotListener
+				}
+				val messages = ArrayList<Message>()
+				Log.wtf("mylogs", "size snapshot ${snapshots!!.size()}")
+				for (doc in snapshots) {
+					messages.add(doc.toObject(Message::class.java))
+				}
+				emitter.onNext(messages)
+			}
+			emitter.setCancellable{ listener.remove() }
+		}).subscribeOn(Schedulers.io())
+	}
+
 
 	override fun sendMessage(message: Message): Completable {
 		return Completable.create { emitter ->
@@ -68,31 +94,6 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 			emitter.setCancellable{ uploadTask.cancel() }
 		}).subscribeOn(Schedulers.io())
 	}
-
-
-	override fun getMessages(): Observable<List<Message>> {
-		return Observable.create(ObservableOnSubscribe<List<Message>> { emitter ->
-			val listener = firestore.collection(GENERAL_COLLECTION_REFERENCE)
-				.document(CHAT_REFERENCE)
-				.collection(SECONDARY_COLLECTION_REFERENCE)
-				.orderBy("timestamp")
-				.addSnapshotListener { snapshots, e ->
-					if (e != null) {
-					emitter.onError(e)
-					Log.wtf("mylogs", "Listen failed.", e)
-					return@addSnapshotListener
-				}
-				val messages = ArrayList<Message>()
-				Log.wtf("mylogs", "size snapshot ${snapshots!!.size()}")
-				for (doc in snapshots) {
-					messages.add(doc.toObject(Message::class.java))
-				}
-				emitter.onNext(messages)
-			}
-			emitter.setCancellable{ listener.remove() }
-		}).subscribeOn(Schedulers.io())
-	}
-
 
 
 

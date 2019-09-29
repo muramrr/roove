@@ -1,4 +1,4 @@
-package com.mmdev.meetapp.ui
+package com.mmdev.meetapp.ui.main.view
 
 /* Created by A on 24.08.2019.*/
 

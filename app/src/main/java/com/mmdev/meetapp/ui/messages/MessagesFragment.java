@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.mmdev.meetapp.R;
-import com.mmdev.meetapp.ui.MainActivity;
+import com.mmdev.meetapp.ui.main.view.MainActivity;
 
 
 public class MessagesFragment extends Fragment {

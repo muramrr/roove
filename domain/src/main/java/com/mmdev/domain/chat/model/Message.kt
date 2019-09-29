@@ -1,4 +1,4 @@
-package com.mmdev.domain.messages.model
+package com.mmdev.domain.chat.model
 
 import com.mmdev.domain.core.model.User
 import java.util.*

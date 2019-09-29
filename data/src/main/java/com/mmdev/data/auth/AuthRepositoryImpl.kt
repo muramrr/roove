@@ -7,7 +7,7 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mmdev.data.user.UserRepository
+import com.mmdev.data.user.UserRepositoryImpl
 import com.mmdev.domain.auth.repository.AuthRepository
 import com.mmdev.domain.core.model.User
 import io.reactivex.*
@@ -23,7 +23,7 @@ import javax.inject.Singleton
 class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
                                              private val db: FirebaseFirestore,
                                              private val fbLogin: LoginManager,
-                                             private val userRepository: UserRepository): AuthRepository {
+                                             private val userRepositoryImpl: UserRepositoryImpl): AuthRepository {
 
 	companion object {
 		private const val GENERAL_COLLECTION_REFERENCE = "users"
@@ -39,13 +39,18 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		return Observable.create(ObservableOnSubscribe<Boolean>{ emitter ->
 			val authStateListener = FirebaseAuth.AuthStateListener {
 				auth -> if (auth.currentUser == null) emitter.onNext(false)
-			else emitter.onNext(true)
+				else emitter.onNext(true)
 			}
 			auth.addAuthStateListener(authStateListener)
 			emitter.setCancellable { auth.removeAuthStateListener(authStateListener) }
 		}).subscribeOn(Schedulers.io())
 	}
 
+
+	/**
+	 * check is user id already stored in db
+	 * @return [User] object which is stored in db and store it locally
+	 */
 	override fun handleUserExistence(userId: String): Single<User> {
 		return Single.create(SingleOnSubscribe<User> { emitter ->
 			val ref = db.collection(GENERAL_COLLECTION_REFERENCE).document(userId)
@@ -54,7 +59,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					val document = task.result
 					if (document!!.exists()) {
 						val user = document.toObject(User::class.java)
-						userRepository.saveUserInfo(user!!)
+						userRepositoryImpl.saveUserInfo(user!!)
 						emitter.onSuccess(user)
 					}
 					else emitter.onError(Exception("User do not exist"))
@@ -65,6 +70,10 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	}
 
 
+	/**
+	 * this fun is called first when user is trying to sign in via facebook
+	 * creates a basic [User] object based on public facebook profile
+	 */
 	override fun signInWithFacebook(token: String): Single<User> {
 		val credential = FacebookAuthProvider.getCredential(token)
 		return Single.create(SingleOnSubscribe<User> { emitter ->
@@ -88,21 +97,20 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		}).subscribeOn(Schedulers.io())
 	}
 
+
+	/**
+	 * if [User] is not stored in db -> create new document + save locally
+	 */
 	override fun signUp(user: User): Completable {
 		return Completable.create { emitter ->
 			val ref = db.collection(GENERAL_COLLECTION_REFERENCE).document(user.userId)
 			ref.set(user)
 				.addOnSuccessListener {
-					saveProfile(user)
+					userRepositoryImpl.saveUserInfo(user)
 					emitter.onComplete()
 				}
 				.addOnFailureListener { task -> emitter.onError(task) }
 		}.subscribeOn(Schedulers.io())
-	}
-
-	private fun saveProfile(user: User) {
-		userRepository.saveUserInfo(user)
-
 	}
 
 	override fun logOut(){

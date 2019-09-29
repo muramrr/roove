@@ -1,4 +1,4 @@
-package com.mmdev.domain.messages.model
+package com.mmdev.domain.chat.model
 
 /* Created by A on 06.06.2019.*/
 
