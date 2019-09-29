@@ -8,7 +8,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.5.0'
         classpath 'com.google.gms:google-services:4.3.2'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.24.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.25.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
     
@@ -38,10 +38,11 @@ task clean(type: Delete) {
 ext{
 
     //firebase
+    firebase_auth_version = '19.1.0'
     firebase_core_version = '17.2.0'
     firebase_firestore_version = '21.1.1'
-    firebase_storage_version = '19.0.1'
-    firebase_auth_version = '19.0.0'
+    firebase_storage_version = '19.1.0'
+
     // Dagger
     dagger_version = '2.24'
 
@@ -52,7 +53,7 @@ ext{
     rxandroid_version = '2.1.1'
 
     // ViewModel and LiveData
-    lifecycle_version = '2.2.0-alpha04'
+    lifecycle_version = '2.2.0-alpha05'
 
 
 }
