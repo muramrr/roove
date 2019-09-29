@@ -59,8 +59,7 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 		disposables.add(cardsViewModel.getPotentialUserCards()
 			                .observeOn(AndroidSchedulers.mainThread())
 			                .subscribe({
-				                           Log.wtf("mylogs", "filtered" +
-				                                        it.size)
+				                           Log.wtf("mylogs", "users to show: ${it.size}")
 				                           mCardsStackAdapter.updateData(it)
 				                           hideLoadingBar()
 			                           },
