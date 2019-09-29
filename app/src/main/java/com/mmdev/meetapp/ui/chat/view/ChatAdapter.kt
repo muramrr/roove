@@ -11,16 +11,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.mmdev.domain.messages.model.Message
+import com.mmdev.domain.chat.model.Message
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.utils.CircleTransform
 import com.mmdev.meetapp.utils.GlideApp
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatAdapter (private var mUserName: String,
-                   private var chats: List<Message>,
-                   private val mClickChatAttachmentFirebase: ClickChatAttachmentFirebase):
+class ChatAdapter (private var userName: String,
+                   private var listMessages: List<Message>,
+                   private val clickChatAttachmentFirebase: ClickChatAttachmentFirebase):
 
 	RecyclerView.Adapter<ChatAdapter.ChatViewHolder>(){
 
@@ -53,27 +53,27 @@ class ChatAdapter (private var mUserName: String,
 
 	override fun onBindViewHolder(viewHolder: ChatViewHolder, position: Int) {
 		viewHolder.setMessageType(getItemViewType(position))
-		viewHolder.bindMessage(chats[position])
+		viewHolder.bindMessage(listMessages[position])
 	}
 
 	override fun getItemViewType(position: Int): Int {
-		val (sender, _, _,photoAttached) = chats[position]
+		val (sender, _, _,photoAttached) = listMessages[position]
 		return if (photoAttached != null)
-			if (sender.name == mUserName) RIGHT_MSG_IMG else LEFT_MSG_IMG
-		else if (sender.name == mUserName) RIGHT_MSG else LEFT_MSG
+			if (sender.name == userName) RIGHT_MSG_IMG else LEFT_MSG_IMG
+		else if (sender.name == userName) RIGHT_MSG else LEFT_MSG
 	}
 
-	override fun getItemCount() = chats.size
+	override fun getItemCount() = listMessages.size
 
 	fun updateData(chats: List<Message>) {
-		this.chats = chats
+		this.listMessages = chats
 		notifyDataSetChanged()
 	}
 
 
 	/* note: USE FOR -DEBUG ONLY */
 //	fun changeSenderName(name:String){
-//		mUserName = name
+//		userName = name
 //	}
 
 	inner class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
@@ -101,13 +101,13 @@ class ChatAdapter (private var mUserName: String,
 
 		/* handle image or map attachment click */
 		override fun onClick(view: View) {
-			val message: Message = chats[adapterPosition]
+			val message: Message = listMessages[adapterPosition]
 
 			if (message.photoAttached != null)
-				mClickChatAttachmentFirebase.clickImageChat(view, adapterPosition,
-				                                            message.sender.name,
-				                                            message.sender.mainPhotoUrl,
-				                                            message.photoAttached!!.fileUrl)
+				clickChatAttachmentFirebase.clickImageChat(view, adapterPosition,
+				                                           message.sender.name,
+				                                           message.sender.mainPhotoUrl,
+				                                           message.photoAttached!!.fileUrl)
 		}
 
 		/* sets user profile pic in ImgView binded layout */

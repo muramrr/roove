@@ -1,9 +1,9 @@
-package com.mmdev.domain.messages.usecase
+package com.mmdev.domain.chat.usecase
 
 
+import com.mmdev.domain.chat.model.Message
+import com.mmdev.domain.chat.repository.ChatRepository
 import com.mmdev.domain.core.CompletableWithParamUseCase
-import com.mmdev.domain.messages.model.Message
-import com.mmdev.domain.messages.repository.ChatRepository
 
 class SendMessageUseCase(private val repository: ChatRepository) :
     CompletableWithParamUseCase<Message> {
