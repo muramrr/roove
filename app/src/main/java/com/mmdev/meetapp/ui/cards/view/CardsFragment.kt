@@ -13,9 +13,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.mmdev.domain.core.model.User
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.injector
-import com.mmdev.meetapp.ui.MainActivity
-import com.mmdev.meetapp.ui.ProfileViewModel
 import com.mmdev.meetapp.ui.cards.viewmodel.CardsViewModel
+import com.mmdev.meetapp.ui.main.view.MainActivity
+import com.mmdev.meetapp.ui.main.viewmodel.MainViewModel
 import com.mmdev.meetapp.utils.GlideApp
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
@@ -39,6 +39,7 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 
 	private val disposables = CompositeDisposable()
 	private val cardsViewModelFactory = injector.cardsViewModelFactory()
+	private val mainViewModelFactory = injector.mainViewModelFactory()
 
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,9 +49,9 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 		mCardsStackAdapter = CardsStackAdapter(listOf())
 		cardStackView.adapter = mCardsStackAdapter
 
-		val userModel = ViewModelProvider(mMainActivity, defaultViewModelProviderFactory)
-			.get(ProfileViewModel::class.java)
-			.getProfileModel(mMainActivity).value!!
+		val userModel = ViewModelProvider(mMainActivity, mainViewModelFactory)
+			.get(MainViewModel::class.java)
+			.getSavedUser()
 		cardsViewModel = ViewModelProvider(mMainActivity, cardsViewModelFactory).get(CardsViewModel::class.java)
 
 

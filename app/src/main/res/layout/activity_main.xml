@@ -6,7 +6,7 @@
     android:id="@+id/drawer_layout"
     android:windowFullscreen="true"
     tools:openDrawer="start"
-    tools:context=".ui.MainActivity"
+    tools:context=".ui.main.view.MainActivity"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">

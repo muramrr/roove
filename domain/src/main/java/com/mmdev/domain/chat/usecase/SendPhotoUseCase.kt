@@ -1,6 +1,6 @@
-package com.mmdev.domain.messages.usecase
+package com.mmdev.domain.chat.usecase
 
-import com.mmdev.domain.messages.repository.ChatRepository
+import com.mmdev.domain.chat.repository.ChatRepository
 
 /* Created by A on 26.08.2019.*/
 

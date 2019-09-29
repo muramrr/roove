@@ -22,8 +22,8 @@ import com.facebook.login.widget.LoginButton
 import com.mmdev.domain.core.model.User
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.injector
-import com.mmdev.meetapp.ui.MainActivity
 import com.mmdev.meetapp.ui.auth.viewmodel.AuthViewModel
+import com.mmdev.meetapp.ui.main.view.MainActivity
 import com.mmdev.meetapp.utils.uiUtils
 import com.mmdev.progressbuttonlib.ProgressButton
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -33,7 +33,7 @@ import io.reactivex.disposables.CompositeDisposable
 /**
  *
  */
-class AuthActivity: AppCompatActivity()  {
+class AuthActivity: AppCompatActivity(R.layout.activity_auth)  {
 
 	//Progress dialog for any authentication action
 	private lateinit var progressDialog: AlertDialog
@@ -49,12 +49,10 @@ class AuthActivity: AppCompatActivity()  {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_auth)
 		mCallbackManager = CallbackManager.Factory.create()
 		setUpFacebookLoginButton()
 		setProgressDialog()
-		authViewModel = ViewModelProvider(this, authViewModelFactory)
-			.get(AuthViewModel::class.java)
+		authViewModel = ViewModelProvider(this, authViewModelFactory).get(AuthViewModel::class.java)
 	}
 
 	private fun setUpFacebookLoginButton() {
@@ -66,7 +64,8 @@ class AuthActivity: AppCompatActivity()  {
 				showProgressDialog()
 				disposables.add(authViewModel.signInWithFacebook(loginResult.accessToken.token)
 	                .flatMap { user -> userModel = user
-		                authViewModel.handleUserExistence(user.userId) }
+		                authViewModel.handleUserExistence(user.userId)
+	                }
 	                .observeOn(AndroidSchedulers.mainThread())
 
 	                .subscribe({

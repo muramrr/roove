@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mmdev.meetapp.R;
 import com.mmdev.meetapp.models.FeedItem;
-import com.mmdev.meetapp.ui.MainActivity;
+import com.mmdev.meetapp.ui.main.view.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -21,14 +21,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mmdev.domain.chat.model.Message
 import com.mmdev.domain.core.model.User
-import com.mmdev.domain.messages.model.Message
 import com.mmdev.meetapp.BuildConfig
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.injector
-import com.mmdev.meetapp.ui.MainActivity
-import com.mmdev.meetapp.ui.ProfileViewModel
 import com.mmdev.meetapp.ui.chat.viewmodel.ChatViewModel
+import com.mmdev.meetapp.ui.main.view.MainActivity
+import com.mmdev.meetapp.ui.main.viewmodel.MainViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.io.File
@@ -46,6 +46,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 	private lateinit var  mMainActivity: MainActivity
 
 	private val chatViewModelFactory = injector.chatViewModelFactory()
+	private val mainViewModelFactory = injector.mainViewModelFactory()
 	private lateinit var chatViewModel: ChatViewModel
 
 	// POJO models
@@ -95,9 +96,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 
 		chatViewModel = ViewModelProvider(mMainActivity, chatViewModelFactory).get(ChatViewModel::class.java)
 
-		userModel = ViewModelProvider(mMainActivity, defaultViewModelProviderFactory)
-			.get(ProfileViewModel::class.java)
-			.getProfileModel(mMainActivity).value!!
+		userModel = ViewModelProvider(mMainActivity, mainViewModelFactory)
+			.get(MainViewModel::class.java)
+			.getSavedUser()
 
 		setupViews(view)
 
@@ -139,9 +140,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 	*/
 	private fun sendMessageClick() {
 		if (edMessageWrite.text.isNotEmpty()) {
-			val message = Message(userModel,
-			                                                      edMessageWrite.text.toString(),
-			                                                      photoAttached = null)
+			val message = Message(userModel, edMessageWrite.text.toString(), photoAttached = null)
 			disposables.add(chatViewModel.sendMessage(message)
 					     .observeOn(AndroidSchedulers.mainThread())
 					     .subscribe( { Log.d(TAG, "Message sent") },
@@ -149,7 +148,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 			edMessageWrite.setText("")
 		}
 		else edMessageWrite
-			.startAnimation(AnimationUtils.loadAnimation(mMainActivity, R.anim.edittext_horizontal_shake))
+			.startAnimation(AnimationUtils.loadAnimation(mMainActivity,
+			                                             R.anim.edittext_horizontal_shake))
 
 	}
 
@@ -239,9 +239,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 
 				val selectedUri = data?.data
 				disposables.add(chatViewModel.sendPhoto(selectedUri.toString())
-	                .flatMapCompletable { chatViewModel.sendMessage(Message(
-			                userModel,
-			                photoAttached = it)) }
+	                .flatMapCompletable { chatViewModel.sendMessage(Message(userModel, photoAttached = it)) }
 	                .observeOn(AndroidSchedulers.mainThread())
 	                .subscribe({ Log.wtf(TAG, "Photo gallery sent")
 		                        mChatAdapter.notifyDataSetChanged()},
@@ -256,9 +254,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 			if (resultCode == RESULT_OK) {
 				if (mFilePathImageCamera.exists()) {
 					disposables.add(chatViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString())
-		                .flatMapCompletable { chatViewModel.sendMessage(Message(
-				                userModel,
-				                photoAttached = it)) }
+		                .flatMapCompletable { chatViewModel.sendMessage(Message(userModel, photoAttached = it)) }
 		                .observeOn(AndroidSchedulers.mainThread())
 		                .subscribe( { Log.wtf(TAG, "Photo camera sent") },
                                     { showInternetError() })

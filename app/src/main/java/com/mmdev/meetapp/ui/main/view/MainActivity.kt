@@ -1,4 +1,4 @@
-package com.mmdev.meetapp.ui
+package com.mmdev.meetapp.ui.main.view
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -27,11 +27,13 @@ import com.mmdev.meetapp.ui.auth.viewmodel.AuthViewModel
 import com.mmdev.meetapp.ui.cards.view.CardsFragment
 import com.mmdev.meetapp.ui.chat.view.ChatFragment
 import com.mmdev.meetapp.ui.feed.FeedFragment
+import com.mmdev.meetapp.ui.main.viewmodel.MainViewModel
 import com.mmdev.meetapp.utils.GlideApp
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
-class MainActivity: AppCompatActivity(R.layout.activity_main), MainActivityListeners  {
+class MainActivity: AppCompatActivity(R.layout.activity_main),
+                    MainActivityListeners {
 
 	private val TAG = "myLogs"
 
@@ -63,7 +65,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main), MainActivityListe
 		showFeedFragment()
 
 
-		val profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+		val profileViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 //		userModel = profileViewModel.getProfileModel(this).value!!
 //		setUpUser()
 

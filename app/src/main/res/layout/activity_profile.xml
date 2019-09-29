@@ -3,8 +3,8 @@
 
     <data>
         <variable
-            name="profileViewModel"
-            type="com.mmdev.meetapp.ui.ProfileViewModel" />
+            name="mainViewModel"
+            type="com.mmdev.meetapp.ui.main.viewmodel.MainViewModel" />
     </data>
 
 
@@ -24,14 +24,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="@={profileViewModel.Name}" />
+                    android:text="@={mainViewModel.Name}" />
 
                 <Button
                     android:id="@+id/button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:onClick="@{()-> profileViewModel.onLoginClicked()}"
+                    android:onClick="@{()-> mainViewModel.onLoginClicked()}"
                     android:text="LOGIN" />
 
 
@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="8dp"
-                    android:visibility="@{safeUnbox(profileViewModel.busy)}"
+                    android:visibility="@{safeUnbox(mainViewModel.busy)}"
                     style="?android:attr/progressBarStyleLarge"/>
 
 

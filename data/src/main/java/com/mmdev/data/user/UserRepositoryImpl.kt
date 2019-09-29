@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.mmdev.data.utils.TinyDB
 import com.mmdev.domain.core.model.User
+import com.mmdev.domain.user.repository.UserRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,7 +15,7 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class UserRepository @Inject constructor(private val context: Context){
+class UserRepositoryImpl @Inject constructor(private val context: Context): UserRepository {
 
 
 	companion object{
@@ -29,7 +30,7 @@ class UserRepository @Inject constructor(private val context: Context){
 		private const val PREF_KEY_CURRENT_USER_ID = "uid"
 	}
 
-	fun getSavedUser(): User {
+	override fun getSavedUser(): User {
 		val prefs = TinyDB(PREF_KEY_GENERAL_USER_STORE, context)
 		return if (prefs.getBoolean(PREF_KEY_GENERAL_IF_SAVED, false)) {
 			val name = prefs.getString(PREF_KEY_CURRENT_USER_NAME , "")
@@ -48,7 +49,7 @@ class UserRepository @Inject constructor(private val context: Context){
 	}
 
 
-	fun saveUserInfo(currentUser: User) {
+	override fun saveUserInfo(currentUser: User) {
 		val prefs = TinyDB(PREF_KEY_GENERAL_USER_STORE, context)
 		prefs.clear()
 		prefs.putString(PREF_KEY_CURRENT_USER_NAME, currentUser.name)
