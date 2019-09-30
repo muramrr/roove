@@ -51,6 +51,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	private lateinit var authViewModel: AuthViewModel
 	private val authViewModelFactory = injector.authViewModelFactory()
+	private val mainViewModelFactory = injector.mainViewModelFactory()
 	private val disposables = CompositeDisposable()
 
 
@@ -65,9 +66,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		showFeedFragment()
 
 
-		val profileViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-//		userModel = profileViewModel.getProfileModel(this).value!!
-//		setUpUser()
+		userModel = ViewModelProvider(this, mainViewModelFactory)
+			.get(MainViewModel::class.java)
+			.getSavedUser()
+		setUpUser()
 
 	}
 
