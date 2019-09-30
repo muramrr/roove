@@ -40,6 +40,7 @@ class UserRepositoryImpl @Inject constructor(private val context: Context): User
 			val mainPhotoUrl = prefs.getString(PREF_KEY_CURRENT_USER_MAIN_PIC_URL, "")
 			val photoUrls = prefs.getListString(PREF_KEY_CURRENT_USER_PHOTO_URLS)
 			val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")
+			Log.wtf("mylogs", "retrieved user info from sharedpref successfully")
 			User(name, city, gender, preferedGender, mainPhotoUrl, photoUrls, uid)
 		}
 		else {
