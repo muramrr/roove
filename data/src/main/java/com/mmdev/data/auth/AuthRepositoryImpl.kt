@@ -7,9 +7,9 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mmdev.business.auth.repository.AuthRepository
+import com.mmdev.business.user.model.User
 import com.mmdev.data.user.UserRepositoryImpl
-import com.mmdev.domain.auth.repository.AuthRepository
-import com.mmdev.domain.core.model.User
 import io.reactivex.*
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -32,7 +32,6 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	/**
 	 * Observable which track the auth changes of [FirebaseAuth] to listen when an user is logged or not.
 	 *
-	 * @param firebaseAuth firebaseAuth instance.
 	 * @return an [Observable] which emits every time that the [FirebaseAuth] state change.
 	 */
 	override fun isAuthenticated(): Observable<Boolean> {
@@ -84,10 +83,10 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					val urls = ArrayList<String>()
 					urls.add(photoUrl)
 					val user = User(name = firebaseUser.displayName!!,
-									city = "Kyiv",
-									mainPhotoUrl = photoUrl,
-									photoURLs = urls,
-									userId = firebaseUser.uid)
+					                                              city = "Kyiv",
+					                                              mainPhotoUrl = photoUrl,
+					                                              photoURLs = urls,
+					                                              userId = firebaseUser.uid)
 
 					emitter.onSuccess(user)
 				}

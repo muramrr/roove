@@ -2,9 +2,9 @@ package com.mmdev.meetapp.ui.chat.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.mmdev.domain.chat.usecase.GetMessagesUseCase
-import com.mmdev.domain.chat.usecase.SendMessageUseCase
-import com.mmdev.domain.chat.usecase.SendPhotoUseCase
+import com.mmdev.business.chat.usecase.GetMessagesUseCase
+import com.mmdev.business.chat.usecase.SendMessageUseCase
+import com.mmdev.business.chat.usecase.SendPhotoUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 

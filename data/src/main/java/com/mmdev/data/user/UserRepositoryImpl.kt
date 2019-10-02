@@ -2,9 +2,9 @@ package com.mmdev.data.user
 
 import android.content.Context
 import android.util.Log
+import com.mmdev.business.user.model.User
+import com.mmdev.business.user.repository.UserRepository
 import com.mmdev.data.utils.TinyDB
-import com.mmdev.domain.core.model.User
-import com.mmdev.domain.user.repository.UserRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

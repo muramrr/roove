@@ -1,10 +1,10 @@
 package com.mmdev.meetapp.ui.cards.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.mmdev.domain.cards.usecase.AddToSkippedUseCase
-import com.mmdev.domain.cards.usecase.GetPotentialUserCardsUseCase
-import com.mmdev.domain.cards.usecase.HandlePossibleMatchUseCase
-import com.mmdev.domain.core.model.User
+import com.mmdev.business.cards.usecase.AddToSkippedUseCase
+import com.mmdev.business.cards.usecase.GetPotentialUserCardsUseCase
+import com.mmdev.business.cards.usecase.HandlePossibleMatchUseCase
+import com.mmdev.business.user.model.User
 
 /* Created by A on 20.07.2019.*/
 

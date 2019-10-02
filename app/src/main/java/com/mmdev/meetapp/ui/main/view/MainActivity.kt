@@ -3,13 +3,13 @@ package com.mmdev.meetapp.ui.main.view
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -19,8 +19,9 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView
-import com.mmdev.domain.core.model.User
+import com.mmdev.business.user.model.User
 import com.mmdev.meetapp.R
+import com.mmdev.meetapp.core.GlideApp
 import com.mmdev.meetapp.core.injector
 import com.mmdev.meetapp.ui.auth.view.AuthActivity
 import com.mmdev.meetapp.ui.auth.viewmodel.AuthViewModel
@@ -28,14 +29,16 @@ import com.mmdev.meetapp.ui.cards.view.CardsFragment
 import com.mmdev.meetapp.ui.chat.view.ChatFragment
 import com.mmdev.meetapp.ui.feed.FeedFragment
 import com.mmdev.meetapp.ui.main.viewmodel.MainViewModel
-import com.mmdev.meetapp.utils.GlideApp
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
 class MainActivity: AppCompatActivity(R.layout.activity_main),
                     MainActivityListeners {
 
-	private val TAG = "myLogs"
+	companion object{
+		private const val TAG = "myLogs"
+	}
+
 
 	private lateinit var navView: NavigationView
 	private lateinit var toolbar: Toolbar
@@ -83,7 +86,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	override fun onCardsClick() = startCardFragment()
 	//todo: change this to messages fragment
-	override fun onMessagesClick(username: String) = startChatFragment(username)
+	override fun onMessagesClick() = startChatFragment()
 
 	override fun onLogOutClick() = showSignOutPrompt()
 
@@ -107,14 +110,14 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	/*
 	 * start chat
 	 */
-	private fun startChatFragment(username: String) {
+	private fun startChatFragment() {
 		mFragmentManager.findFragmentByTag("ChatFragment") ?: mFragmentManager
 			.beginTransaction().apply {
 				setCustomAnimations(R.anim.fragment_enter_from_right,
 				                    R.anim.fragment_exit_to_left,
 				                    R.anim.fragment_enter_from_left,
 				                    R.anim.fragment_exit_to_right)
-				replace(R.id.main_container, ChatFragment.newInstance(username), "ChatFragment")
+				replace(R.id.main_container, ChatFragment(), "ChatFragment")
 				addToBackStack(null)
 				commit()
 			}
@@ -137,7 +140,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	}
 
 	/*
-	 * check if user is authentificated
+	 * adds an background thread that listens user auth status
 	 */
 	private fun checkConnection() {
 		disposables.add(authViewModel.isAuthenticated()
@@ -159,16 +162,12 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	}
 
 	private fun setUpUser() {
-		val mName = userModel.name
 		val mCity = userModel.city
 		val mGender = userModel.gender
 		val mPreferedGender = userModel.preferedGender
-		val signedInUserPhotoUrl = userModel.mainPhotoUrl
-		val uID = userModel.userId
-		if (!TextUtils.isEmpty(signedInUserPhotoUrl))
-			GlideApp.with(this).load(signedInUserPhotoUrl).into(ivSignedInUserAvatar)
-		tvSignedInUserName.text = mName
-		tvSignedInUserId.text = uID
+		GlideApp.with(this).load(userModel.mainPhotoUrl).into(ivSignedInUserAvatar)
+		tvSignedInUserName.text = userModel.name
+		tvSignedInUserId.text = userModel.userId
 
 	}
 
@@ -193,7 +192,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			// Handle navigation view item clicks here.
 			when (item.itemId) {
 				R.id.nav_feed -> onCardsClick()
-				R.id.nav_events -> { }
+				R.id.nav_events -> { Log.wtf("mylogs", "$userModel") }
 				R.id.nav_post -> {}
 				R.id.nav_notifications -> { }
 				R.id.nav_account -> { }
@@ -255,7 +254,11 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	menu button click handler
 	 */
 	fun messagesMenuClick(item: MenuItem) {
-		startChatFragment("")
+		startChatFragment()
+	}
+
+	fun showInternetError() {
+		Toast.makeText(this, "internal error", Toast.LENGTH_SHORT).show()
 	}
 
 	override fun onBackPressed() {
@@ -266,5 +269,11 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	override fun onStart() {
 		super.onStart()
 		checkConnection()
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+		disposables.dispose()
+		disposables.clear()
 	}
 }

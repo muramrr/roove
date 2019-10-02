@@ -1,8 +1,8 @@
 package com.mmdev.data.core
 
 import android.content.Context
+import com.mmdev.business.user.model.User
 import com.mmdev.data.user.UserRepositoryImpl
-import com.mmdev.domain.core.model.User
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -26,6 +26,6 @@ class UserModule (private val context: Context) {
 	/* get user info from sharedPrefs */
 	@Provides
 	@Singleton
-	fun provideSavedUser(repositoryImpl: UserRepositoryImpl): User = repositoryImpl.getSavedUser()
+	fun provideSavedUser(repository: UserRepositoryImpl): User = repository.getSavedUser()
 
 }

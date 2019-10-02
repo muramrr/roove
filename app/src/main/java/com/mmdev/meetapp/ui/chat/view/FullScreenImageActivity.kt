@@ -7,11 +7,11 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.github.chrisbanes.photoview.PhotoView
 import com.mmdev.meetapp.R
-import com.mmdev.meetapp.utils.GlideApp
+import com.mmdev.meetapp.core.GlideApp
 
 class FullScreenImageActivity: AppCompatActivity() {
 
-	private var mImageView: PhotoView? = null
+	private lateinit var mImageView: PhotoView
 	private var isHide = false
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,19 +21,18 @@ class FullScreenImageActivity: AppCompatActivity() {
 	}
 
 	private fun bindViews() {
-
 		mImageView = findViewById(R.id.imageView)
-		mImageView!!.setOnClickListener { fullScreenCall() }
+		mImageView.setOnClickListener { fullScreenCall() }
 		// Set the content to appear under the system bars so that the
 		// content doesn't resize when the system bars hide and show.
-		mImageView!!.systemUiVisibility =
+		mImageView.systemUiVisibility =
 			View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 	}
 
 	private fun setValues() {
 		val urlPhotoClick: String? = intent.getStringExtra("urlPhotoClick")
 		Log.i("TAG", "image received$urlPhotoClick")
-		GlideApp.with(this).load(urlPhotoClick).into(mImageView!!)
+		GlideApp.with(this).load(urlPhotoClick).into(mImageView)
 	}
 
 	//hide bottom navigation to see fullscreen image

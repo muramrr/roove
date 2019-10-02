@@ -48,7 +48,7 @@ dependencies {
 
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
 	implementation project(':progressbutton')
-	implementation project(':domain')
+	implementation project(':business')
 	implementation project(':data')
 
 	//core
