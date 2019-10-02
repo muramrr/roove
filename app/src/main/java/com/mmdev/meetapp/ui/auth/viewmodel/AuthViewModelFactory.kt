@@ -2,7 +2,7 @@ package com.mmdev.meetapp.ui.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.mmdev.domain.auth.usecase.*
+import com.mmdev.business.auth.usecase.*
 import javax.inject.Inject
 import javax.inject.Singleton
 

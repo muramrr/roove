@@ -2,8 +2,8 @@ package com.mmdev.data.cards
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mmdev.domain.cards.repository.CardsRepository
-import com.mmdev.domain.core.model.User
+import com.mmdev.business.cards.repository.CardsRepository
+import com.mmdev.business.user.model.User
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.functions.BiFunction
@@ -47,12 +47,12 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	/*
 	* note: swiped left
 	*/
-	override fun addToSkipped(skipedUser: User) {
+	override fun addToSkipped(skippedUser: User) {
 		firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUserId)
 			.collection(USER_SKIPS_COLLECTION_REFERENCE)
-			.document(skipedUser.userId)
-			.set(skipedUser)
+			.document(skippedUser.userId)
+			.set(skippedUser)
 	}
 	/*
 	* note: swiped right
@@ -166,7 +166,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.whereEqualTo(USERS_FILTER, preferedGender)
 			//.limit(limit)
 			.get()
-		return Single.create(SingleOnSubscribe<List<User>>{emitter ->
+		return Single.create(SingleOnSubscribe<List<User>>{ emitter ->
 			query.addOnCompleteListener {
 				if (it.result != null) {
 					val allUsersCards = ArrayList<User>()
@@ -260,27 +260,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 
 	}
-
-//
-//	//merge liked, skiped, matched lists
-//	private fun mergeLikedSkipedMatched() {
-//		val mergedLikesSkipsCardsIds = ArrayList(mLikedUsersCardsIds)
-//		mergedLikesSkipsCardsIds.addAll(mSkipedUsersCardsIds)
-//		mergedLikesSkipsCardsIds.addAll(mMatchedUsersCardsIds)
-//		if (mergedLikesSkipsCardsIds.size != 0) {
-//			val returningProfileModels = ArrayList<User>()
-//			for (profileModel in mAllUsersCards)
-//				if (!mergedLikesSkipsCardsIds.contains(profileModel.userId)) returningProfileModels.add(profileModel)
-//			Log.wtf("logs", "potential users available = " + returningProfileModels.size)
-//			potentialUsersCards!!.postValue(returningProfileModels)
-//		}
-//		else {
-//			potentialUsersCards!!.postValue(mAllUsersCards)
-//			Log.wtf("logs", "likes + skips + matches = 0 ")
-//		}
-//
-//	}
-
 
 
 

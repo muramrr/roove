@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.Button
@@ -19,12 +20,11 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
-import com.mmdev.domain.core.model.User
+import com.mmdev.business.user.model.User
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.injector
 import com.mmdev.meetapp.ui.auth.viewmodel.AuthViewModel
 import com.mmdev.meetapp.ui.main.view.MainActivity
-import com.mmdev.meetapp.utils.uiUtils
 import com.mmdev.progressbuttonlib.ProgressButton
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -128,8 +128,7 @@ class AuthActivity: AppCompatActivity(R.layout.activity_auth)  {
 							                }
 						                },
 						                {
-							                uiUtils.showSafeToast(applicationContext,
-					                                           "LogIn Aborted")
+							                Log.wtf("mylogs", it)
 						                })
 			)
 		}

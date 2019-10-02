@@ -1,19 +1,19 @@
 package com.mmdev.meetapp.core
 
 
-import com.mmdev.data.auth.AuthRepositoryImpl
-import com.mmdev.data.cards.CardsRepositoryImpl
-import com.mmdev.data.chat.ChatRepositoryImpl
-import com.mmdev.data.user.UserRepositoryImpl
-import com.mmdev.domain.auth.usecase.*
-import com.mmdev.domain.cards.usecase.AddToSkippedUseCase
-import com.mmdev.domain.cards.usecase.GetPotentialUserCardsUseCase
-import com.mmdev.domain.cards.usecase.HandlePossibleMatchUseCase
-import com.mmdev.domain.chat.usecase.GetMessagesUseCase
-import com.mmdev.domain.chat.usecase.SendMessageUseCase
-import com.mmdev.domain.chat.usecase.SendPhotoUseCase
-import com.mmdev.domain.user.usecase.GetSavedUser
-import com.mmdev.domain.user.usecase.SaveUserInfo
+import com.mmdev.business.auth.repository.AuthRepository
+import com.mmdev.business.auth.usecase.*
+import com.mmdev.business.cards.repository.CardsRepository
+import com.mmdev.business.cards.usecase.AddToSkippedUseCase
+import com.mmdev.business.cards.usecase.GetPotentialUserCardsUseCase
+import com.mmdev.business.cards.usecase.HandlePossibleMatchUseCase
+import com.mmdev.business.chat.repository.ChatRepository
+import com.mmdev.business.chat.usecase.GetMessagesUseCase
+import com.mmdev.business.chat.usecase.SendMessageUseCase
+import com.mmdev.business.chat.usecase.SendPhotoUseCase
+import com.mmdev.business.user.repository.UserRepository
+import com.mmdev.business.user.usecase.GetSavedUserUseCase
+import com.mmdev.business.user.usecase.SaveUserInfoUseCase
 import com.mmdev.meetapp.ui.auth.viewmodel.AuthViewModelFactory
 import com.mmdev.meetapp.ui.cards.viewmodel.CardsViewModelFactory
 import com.mmdev.meetapp.ui.chat.viewmodel.ChatViewModelFactory
@@ -25,7 +25,7 @@ import dagger.Provides
 class ViewModelModule {
 
 	@Provides
-	fun providesAuthViewModelFactory(repository: AuthRepositoryImpl): AuthViewModelFactory{
+	fun providesAuthViewModelFactory(repository: AuthRepository): AuthViewModelFactory{
 		return AuthViewModelFactory(HandleUserExistenceUseCase(repository),
 		                            IsAuthenticatedUseCase(repository),
 		                            LogOutUseCase(repository),
@@ -34,22 +34,22 @@ class ViewModelModule {
 	}
 
 	@Provides
-	fun providesChatViewModelFactory(repository: ChatRepositoryImpl): ChatViewModelFactory {
+	fun providesChatViewModelFactory(repository: ChatRepository): ChatViewModelFactory {
 		return ChatViewModelFactory(GetMessagesUseCase(repository), SendMessageUseCase(repository),
 		                            SendPhotoUseCase(repository))
 	}
 
 	@Provides
-	fun providesCardsViewModelFactory(repository: CardsRepositoryImpl): CardsViewModelFactory{
+	fun providesCardsViewModelFactory(repository: CardsRepository): CardsViewModelFactory{
 		return CardsViewModelFactory(AddToSkippedUseCase(repository),
 		                             GetPotentialUserCardsUseCase(repository),
 		                             HandlePossibleMatchUseCase(repository))
 	}
 
 	@Provides
-	fun providesMainViewModelFactory(repository: UserRepositoryImpl): MainViewModelFactory {
-		return MainViewModelFactory(GetSavedUser(repository),
-									SaveUserInfo(repository))
+	fun providesMainViewModelFactory(repository: UserRepository): MainViewModelFactory {
+		return MainViewModelFactory(GetSavedUserUseCase(repository),
+		                            SaveUserInfoUseCase(repository))
 	}
 
 

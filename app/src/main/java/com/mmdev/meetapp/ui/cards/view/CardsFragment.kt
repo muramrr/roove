@@ -10,13 +10,12 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.mmdev.domain.core.model.User
+import com.mmdev.business.user.model.User
 import com.mmdev.meetapp.R
+import com.mmdev.meetapp.core.GlideApp
 import com.mmdev.meetapp.core.injector
 import com.mmdev.meetapp.ui.cards.viewmodel.CardsViewModel
 import com.mmdev.meetapp.ui.main.view.MainActivity
-import com.mmdev.meetapp.ui.main.viewmodel.MainViewModel
-import com.mmdev.meetapp.utils.GlideApp
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.CardStackView
@@ -33,13 +32,14 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 	private lateinit var progressBar: ProgressBar
 	private var mProgressShowing: Boolean = false
 
-	private var mSwipeUser: User = User()
+	private lateinit var mSwipeUser: User
 
 	private lateinit var cardsViewModel: CardsViewModel
+	private val cardsViewModelFactory = injector.cardsViewModelFactory()
 
 	private val disposables = CompositeDisposable()
-	private val cardsViewModelFactory = injector.cardsViewModelFactory()
-	private val mainViewModelFactory = injector.mainViewModelFactory()
+
+
 
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,24 +49,23 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 		mCardsStackAdapter = CardsStackAdapter(listOf())
 		cardStackView.adapter = mCardsStackAdapter
 
-		val userModel = ViewModelProvider(mMainActivity, mainViewModelFactory)
-			.get(MainViewModel::class.java)
-			.getSavedUser()
+		val userModel = mMainActivity.userModel
 		cardsViewModel = ViewModelProvider(mMainActivity, cardsViewModelFactory).get(CardsViewModel::class.java)
 
 
-		showLoadingBar()
 		//get users from viewmodel
 		disposables.add(cardsViewModel.getPotentialUserCards()
-			                .observeOn(AndroidSchedulers.mainThread())
-			                .subscribe({
-				                           Log.wtf("mylogs", "users to show: ${it.size}")
-				                           mCardsStackAdapter.updateData(it)
-				                           hideLoadingBar()
-			                           },
-			                           {
-				                           Log.wtf("mylogs", "error + $it")
-			                           }))
+			.observeOn(AndroidSchedulers.mainThread())
+			.doOnSubscribe { showLoadingBar() }
+			.subscribe({
+			               Log.wtf("mylogs", "users to show: ${it.size}")
+			               mCardsStackAdapter.updateData(it)
+			               if(it.isNotEmpty())
+			                   hideLoadingBar()
+			           },
+			           {
+			               Log.wtf("mylogs", "error + $it")
+			           }))
 
 
 		//handle match event
@@ -79,14 +78,7 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 			override fun onCardAppeared(view: View, position: Int) {
 				//get current displayed on card profile
 				mSwipeUser = mCardsStackAdapter.getSwipeProfile(position)
-				disposables.add(cardsViewModel.handlePossibleMatch(mSwipeUser)
-					                .subscribe({
-						                           if (it) showMatchDialog(mSwipeUser)
-						                           Log.wtf("mylogs", mSwipeUser.toString())
-					                           },
-					                           {
-						                           Log.wtf("mylogs", it)
-					                           }))
+
 			}
 
 			override fun onCardDragging(direction: Direction, ratio: Float) {}
@@ -95,11 +87,16 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 				//if right = add to liked
 				//else = add to skiped
 				if (direction == Direction.Right) {
-					cardsViewModel.handlePossibleMatch(mSwipeUser)
+					disposables.add(cardsViewModel.handlePossibleMatch(mSwipeUser)
+						                .subscribe({
+							                           if (it) showMatchDialog(mSwipeUser)
+							                           Log.wtf("mylogs", mSwipeUser.toString())
+						                           },
+						                           {
+							                           Log.wtf("mylogs", it)
+						                           }))
 				}
 				else cardsViewModel.addToSkipped(mSwipeUser)
-//				mCardsStackAdapter.notifyDataSetChanged()
-//				mPotentialUsersList.remove(mSwipeUser)
 			}
 
 			override fun onCardRewound() {}

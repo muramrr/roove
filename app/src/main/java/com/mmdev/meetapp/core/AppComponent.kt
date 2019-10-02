@@ -1,13 +1,13 @@
 package com.mmdev.meetapp.core
 
+import com.mmdev.business.auth.repository.AuthRepository
+import com.mmdev.business.cards.repository.CardsRepository
+import com.mmdev.business.chat.repository.ChatRepository
+import com.mmdev.business.user.repository.UserRepository
 import com.mmdev.data.core.AuthModule
 import com.mmdev.data.core.DatabaseModule
 import com.mmdev.data.core.RepositoryModule
 import com.mmdev.data.core.UserModule
-import com.mmdev.domain.auth.repository.AuthRepository
-import com.mmdev.domain.cards.repository.CardsRepository
-import com.mmdev.domain.chat.repository.ChatRepository
-import com.mmdev.domain.user.repository.UserRepository
 import com.mmdev.meetapp.ui.auth.viewmodel.AuthViewModelFactory
 import com.mmdev.meetapp.ui.cards.viewmodel.CardsViewModelFactory
 import com.mmdev.meetapp.ui.chat.viewmodel.ChatViewModelFactory

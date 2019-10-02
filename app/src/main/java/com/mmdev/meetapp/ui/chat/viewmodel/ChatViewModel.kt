@@ -1,10 +1,10 @@
 package com.mmdev.meetapp.ui.chat.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.mmdev.domain.chat.model.Message
-import com.mmdev.domain.chat.usecase.GetMessagesUseCase
-import com.mmdev.domain.chat.usecase.SendMessageUseCase
-import com.mmdev.domain.chat.usecase.SendPhotoUseCase
+import com.mmdev.business.chat.model.Message
+import com.mmdev.business.chat.usecase.GetMessagesUseCase
+import com.mmdev.business.chat.usecase.SendMessageUseCase
+import com.mmdev.business.chat.usecase.SendPhotoUseCase
 
 class ChatViewModel(private val getMessages: GetMessagesUseCase,
                     private val sendMessage: SendMessageUseCase,

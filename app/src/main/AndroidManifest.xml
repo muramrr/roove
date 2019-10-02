@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 		  package="com.mmdev.meetapp">
 
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
 	<uses-permission android:name="android.permission.CAMERA"/>
 	<uses-permission android:name="android.permission.INTERNET"/>
 
@@ -64,13 +63,6 @@
 		</activity>
 
 		<activity
-			android:name=".ui.activities.ProfileActivity"
-			android:configChanges="orientation|keyboard|keyboardHidden"
-			android:theme="@style/AppTheme"
-			android:windowSoftInputMode="stateHidden">
-		</activity>
-
-		<activity
 			android:name=".ui.chat.view.FullScreenImageActivity"
 			android:theme="@style/AppTheme.NoActionBar">
 		</activity>
@@ -86,8 +78,8 @@
 				android:resource="@xml/provider_paths"/>
 		</provider>
 
-		<service android:name=".services.LocationService"/>
-		<service android:name=".services.GPSTracker"/>
+		<service android:name="com.mmdev.data.services.LocationService"/>
+		<service android:name="com.mmdev.data.services.GPSTracker"/>
 	</application>
 
 </manifest>
