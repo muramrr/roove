@@ -21,14 +21,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.domain.chat.model.Message
-import com.mmdev.domain.core.model.User
+import com.mmdev.business.chat.model.Message
+import com.mmdev.business.user.model.User
 import com.mmdev.meetapp.BuildConfig
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.injector
 import com.mmdev.meetapp.ui.chat.viewmodel.ChatViewModel
 import com.mmdev.meetapp.ui.main.view.MainActivity
-import com.mmdev.meetapp.ui.main.viewmodel.MainViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.io.File
@@ -46,7 +45,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 	private lateinit var  mMainActivity: MainActivity
 
 	private val chatViewModelFactory = injector.chatViewModelFactory()
-	private val mainViewModelFactory = injector.mainViewModelFactory()
 	private lateinit var chatViewModel: ChatViewModel
 
 	// POJO models
@@ -67,8 +65,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		private const val IMAGE_GALLERY_REQUEST = 1
 		private const val IMAGE_CAMERA_REQUEST = 2
 
-		private val TAG = "mylogs"
-		//static final String CHAT_REFERENCE = "chatmodel";
+		private const val TAG = "mylogs"
 
 		// Gallery Permissions
 		private const val REQUEST_STORAGE = 1
@@ -79,16 +76,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		private const val REQUEST_CAMERA = 2
 		private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
 
-		private const val ARG_USERNAME = "arg_username"
-
-		fun newInstance(username: String): ChatFragment {
-			val args = Bundle()
-			args.putString(ARG_USERNAME, username)
-
-			val fragment = ChatFragment()
-			fragment.arguments = args
-			return fragment
-		}
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,9 +83,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 
 		chatViewModel = ViewModelProvider(mMainActivity, chatViewModelFactory).get(ChatViewModel::class.java)
 
-		userModel = ViewModelProvider(mMainActivity, mainViewModelFactory)
-			.get(MainViewModel::class.java)
-			.getSavedUser()
+		userModel = mMainActivity.userModel
 
 		setupViews(view)
 
@@ -106,7 +91,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({Log.wtf(TAG, "${it[it.size - 1]}")
 	                    mChatAdapter.updateData(it) },
-                       { showInternetError() }))
+                       { mMainActivity.showInternetError() }))
 	}
 
 
@@ -123,7 +108,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		rvMessagesList.layoutManager = linearLayoutManager
 		ivSendMessage.setOnClickListener { sendMessageClick() }
 		ivAttachments.setOnClickListener { photoGalleryClick() }
-		mChatAdapter = ChatAdapter(userModel.name, listOf(),this)
+		mChatAdapter = ChatAdapter(userModel.userId, listOf(),this)
 		mChatAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
 			override fun onChanged() {
 				super.onChanged()
@@ -144,7 +129,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 			disposables.add(chatViewModel.sendMessage(message)
 					     .observeOn(AndroidSchedulers.mainThread())
 					     .subscribe( { Log.d(TAG, "Message sent") },
-					                 { showInternetError() } ))
+					                 { mMainActivity.showInternetError() } ))
 			edMessageWrite.setText("")
 		}
 		else edMessageWrite
@@ -202,7 +187,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		val intent = Intent().apply {
 			action = Intent.ACTION_GET_CONTENT
 			type = "image/*"
-
 		}
 		startActivityForResult(Intent.createChooser(intent, "Select picture"), IMAGE_GALLERY_REQUEST)
 	}
@@ -241,9 +225,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 				disposables.add(chatViewModel.sendPhoto(selectedUri.toString())
 	                .flatMapCompletable { chatViewModel.sendMessage(Message(userModel, photoAttached = it)) }
 	                .observeOn(AndroidSchedulers.mainThread())
-	                .subscribe({ Log.wtf(TAG, "Photo gallery sent")
-		                        mChatAdapter.notifyDataSetChanged()},
-	                           { showInternetError() }))
+	                .subscribe({ Log.wtf(TAG, "Photo gallery sent") },
+	                           { mMainActivity.showInternetError() }))
 
 
 
@@ -257,7 +240,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		                .flatMapCompletable { chatViewModel.sendMessage(Message(userModel, photoAttached = it)) }
 		                .observeOn(AndroidSchedulers.mainThread())
 		                .subscribe( { Log.wtf(TAG, "Photo camera sent") },
-                                    { showInternetError() })
+                                    { mMainActivity.showInternetError() })
 
 
 					)
@@ -270,9 +253,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		}
 	}
 
-	private fun showInternetError() {
-		Toast.makeText(context, "internal error", Toast.LENGTH_SHORT).show()
-	}
+
 
 	override fun onDestroy() {
 		super.onDestroy()

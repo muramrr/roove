@@ -11,14 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.mmdev.domain.chat.model.Message
+import com.mmdev.business.chat.model.Message
 import com.mmdev.meetapp.R
-import com.mmdev.meetapp.utils.CircleTransform
-import com.mmdev.meetapp.utils.GlideApp
+import com.mmdev.meetapp.core.GlideApp
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatAdapter (private var userName: String,
+class ChatAdapter (private var userId: String,
                    private var listMessages: List<Message>,
                    private val clickChatAttachmentFirebase: ClickChatAttachmentFirebase):
 
@@ -59,8 +58,8 @@ class ChatAdapter (private var userName: String,
 	override fun getItemViewType(position: Int): Int {
 		val (sender, _, _,photoAttached) = listMessages[position]
 		return if (photoAttached != null)
-			if (sender.name == userName) RIGHT_MSG_IMG else LEFT_MSG_IMG
-		else if (sender.name == userName) RIGHT_MSG else LEFT_MSG
+			if (sender.userId == userId) RIGHT_MSG_IMG else LEFT_MSG_IMG
+		else if (sender.userId == userId) RIGHT_MSG else LEFT_MSG
 	}
 
 	override fun getItemCount() = listMessages.size
@@ -73,7 +72,7 @@ class ChatAdapter (private var userName: String,
 
 	/* note: USE FOR -DEBUG ONLY */
 //	fun changeSenderName(name:String){
-//		userName = name
+//		userId = name
 //	}
 
 	inner class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
@@ -99,7 +98,7 @@ class ChatAdapter (private var userName: String,
 			setIvChatPhoto(message.photoAttached?.fileUrl)
 		}
 
-		/* handle image or map attachment click */
+		/* handle image attachment click */
 		override fun onClick(view: View) {
 			val message: Message = listMessages[adapterPosition]
 
@@ -114,7 +113,7 @@ class ChatAdapter (private var userName: String,
 		private fun setIvUserAvatar(urlPhotoUser: String) {
 			Glide.with(ivUserAvatar.context).load(urlPhotoUser)
 				.centerCrop()
-				.transform(CircleTransform()).override(35, 35)
+				.apply(RequestOptions().circleCrop())
 				.into(ivUserAvatar)
 		}
 

@@ -7,9 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.domain.core.model.User
+import com.mmdev.business.user.model.User
 import com.mmdev.meetapp.R
-import com.mmdev.meetapp.utils.GlideApp
+import com.mmdev.meetapp.core.GlideApp
 
 class CardsStackAdapter (private var usersList: List<User>):
 		RecyclerView.Adapter<CardsStackAdapter.ViewHolder>() {

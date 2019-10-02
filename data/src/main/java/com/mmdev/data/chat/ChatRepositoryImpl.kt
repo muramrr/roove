@@ -5,9 +5,9 @@ import android.text.format.DateFormat
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.mmdev.domain.chat.model.Message
-import com.mmdev.domain.chat.model.PhotoAttached
-import com.mmdev.domain.chat.repository.ChatRepository
+import com.mmdev.business.chat.model.Message
+import com.mmdev.business.chat.model.PhotoAttached
+import com.mmdev.business.chat.repository.ChatRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe

@@ -1,8 +1,8 @@
 package com.mmdev.meetapp.ui.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.mmdev.domain.auth.usecase.*
-import com.mmdev.domain.core.model.User
+import com.mmdev.business.auth.usecase.*
+import com.mmdev.business.user.model.User
 
 class AuthViewModel(private val handleHandleUserExistence: HandleUserExistenceUseCase,
                     private val isAuthenticated: IsAuthenticatedUseCase,

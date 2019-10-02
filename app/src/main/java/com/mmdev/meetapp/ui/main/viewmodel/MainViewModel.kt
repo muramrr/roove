@@ -1,13 +1,12 @@
 package com.mmdev.meetapp.ui.main.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.mmdev.domain.core.model.User
-import com.mmdev.domain.user.usecase.GetSavedUser
-import com.mmdev.domain.user.usecase.SaveUserInfo
+import com.mmdev.business.user.model.User
+import com.mmdev.business.user.usecase.GetSavedUserUseCase
+import com.mmdev.business.user.usecase.SaveUserInfoUseCase
 
-class MainViewModel (private val getSavedUser: GetSavedUser,
-                     private val saveUserInfo: SaveUserInfo): ViewModel() {
-
+class MainViewModel (private val getSavedUser: GetSavedUserUseCase,
+                     private val saveUserInfo: SaveUserInfoUseCase): ViewModel() {
 
 	fun getSavedUser() = getSavedUser.execute()
 	fun saveUserInfo(currentUser: User) = saveUserInfo.execute(currentUser)
