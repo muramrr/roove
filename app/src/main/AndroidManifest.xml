@@ -17,7 +17,7 @@
 		android:label="@string/app_name"
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
-		android:theme="@style/AppTheme"
+		android:theme="@style/AppTheme.NoActionBar"
 		android:fullBackupContent="@xml/backup_descriptor">
 
 		<meta-data android:name="com.facebook.sdk.ApplicationId"
@@ -26,6 +26,9 @@
 				   android:value="false"/>
 		<meta-data android:name="com.facebook.sdk.AutoLogAppEventsEnabled"
 				   android:value="false"/>
+		<meta-data
+			android:name="preloaded_fonts"
+			android:resource="@array/preloaded_fonts" />
 
 		<activity
 			android:name="com.facebook.FacebookActivity"
@@ -58,7 +61,7 @@
 		<activity
 			android:name=".ui.auth.view.AuthActivity"
 			android:configChanges="orientation|keyboard|keyboardHidden"
-			android:theme="@style/AppTheme"
+			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateHidden">
 		</activity>
 
