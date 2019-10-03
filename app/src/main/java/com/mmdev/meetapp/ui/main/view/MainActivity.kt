@@ -18,6 +18,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.navigation.NavigationView
 import com.mmdev.business.user.model.User
 import com.mmdev.meetapp.R
@@ -46,7 +47,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	private lateinit var drawerLayout: DrawerLayout
 
 	private lateinit var tvSignedInUserName: TextView
-	private lateinit var tvSignedInUserId: TextView
+
 	private lateinit var ivSignedInUserAvatar: ImageView
 
 	lateinit var userModel: User
@@ -66,7 +67,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		setSupportActionBar(toolbar)
 		setUpNavigationView()
 		mFragmentManager = supportFragmentManager
-		showFeedFragment()
+		//showFeedFragment()
 
 
 		userModel = ViewModelProvider(this, mainViewModelFactory)
@@ -165,9 +166,11 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		val mCity = userModel.city
 		val mGender = userModel.gender
 		val mPreferedGender = userModel.preferedGender
-		GlideApp.with(this).load(userModel.mainPhotoUrl).into(ivSignedInUserAvatar)
+		GlideApp.with(this)
+			.load(userModel.mainPhotoUrl)
+			.apply(RequestOptions().circleCrop())
+			.into(ivSignedInUserAvatar)
 		tvSignedInUserName.text = userModel.name
-		tvSignedInUserId.text = userModel.userId
 
 	}
 
@@ -185,7 +188,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		val headerView = navView.getHeaderView(0)
 		tvSignedInUserName = headerView.findViewById(R.id.signed_in_username_tv)
 		ivSignedInUserAvatar = headerView.findViewById(R.id.signed_in_user_image_view)
-		tvSignedInUserId = headerView.findViewById(R.id.user_facebookID)
 
 		navView.setNavigationItemSelectedListener { item ->
 			drawerLayout.closeDrawer(GravityCompat.START)

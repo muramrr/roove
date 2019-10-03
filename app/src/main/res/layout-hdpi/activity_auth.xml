@@ -27,8 +27,7 @@
 		android:text="With milions of users\nall around the world"
 		android:fontFamily="@font/nunito_sans_bold"
 		android:textSize="18sp"
-		android:textColor="@color/white"
-		/>
+		android:textColor="@color/white" />
 
 	<Button
 		android:id="@+id/facebook_login_button_delegate"
