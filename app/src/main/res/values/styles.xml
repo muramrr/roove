@@ -4,10 +4,8 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/white</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="windowActionModeOverlay">true</item>
         <item name="actionModeBackground">@color/actionModeBackground</item>
 
     </style>
@@ -23,15 +21,20 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
-    <!-- styles for Login buttons -->
-    <style name="Widget.Button.Login" parent="Widget.AppCompat.Button">
-        <item name="android:textColor">@color/material_white_1000</item>
+
+    <!-- basic tv -->
+    <style name="regular_text_white_16sp_85op" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/white_85</item>
+        <item name="android:fontFamily">@font/nunito_sans_regular</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
-    <!-- style for facebook login button -->
-    <style name="Widget.Button.Login.Facebook" parent="Widget.Button.Login">
-        <item name="colorButtonNormal">@color/colorFacebook</item>
-
+    <!-- header 3 -->
+    <style name="regular_text_white_20sp_85op" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/white_85</item>
+        <item name="android:fontFamily">@font/nunito_sans_regular</item>
+        <item name="android:textSize">20sp</item>
     </style>
+
 
 </resources>
