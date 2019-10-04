@@ -1,212 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
-    <data>
-        <variable
-            name="feedItem"
-            type="com.mmdev.meetapp.models.FeedItem" />
-    </data>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.main.view.MainActivity">
 
-    <androidx.cardview.widget.CardView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/content_main_rv_feed"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="1dp"
-        android:layout_marginBottom="12dp"
-        app:cardElevation="1dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/card_margin_fix_rview_8"
+        android:layout_marginTop="@dimen/general_margin_16"
+        android:layout_marginEnd="@dimen/general_margin_16"
+        android:layout_marginBottom="@dimen/card_margin_fix_rview_8"
+        android:background="@color/baseline"
+        android:overScrollMode="never"
+        app:layoutManager="GridLayoutManager"
+        app:spanCount="2"
+        tools:listitem="@layout/fragment_feed_rv_item" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <ImageView
-                    android:id="@+id/feed_publisher_image_view"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:contentDescription="feed item avatar"
-                    android:src="@{feedItem.feedPublisherPhotoId, default=@drawable/default_avatar}" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:id="@+id/feed_publisher_name_view"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:text="@{feedItem.feedPublisherName}"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/feed_type"
-                        android:textColor="@color/feed_item_icons_color"
-                        android:textSize="14sp"
-                        android:text="@{feedItem.feedType}"/>
-                        <!--app:fontName="Roboto-Medium.ttf" />-->
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableEnd="@drawable/feed_item_time_icon"
-                    android:id="@+id/feed_publish_date"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="2dp"
-                    android:gravity="center_vertical"
-                    android:text="@{feedItem.feedSharedTime}"/>
-
-            </LinearLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/feed_content_image_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:src="@{feedItem.feedContentImageView}"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:scaleType="centerCrop"
-                    android:background="?attr/selectableItemBackground"
-                    tools:ignore="ContentDescription"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:id="@+id/feed_content_description"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp"
-                        android:text="@{feedItem.feedContentDescription}"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/feed_available_slots"
-                        android:textColor="@android:color/white"
-                        android:textSize="15sp"
-                        android:text="@{Integer.toString(feedItem.leftAvailSlots)}"/>
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="5dp"
-                        android:src="@drawable/feed_item_shopper_bag"
-                        tools:ignore="ContentDescription" />
-
-                </LinearLayout>
-
-            </FrameLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:padding="15dp"
-                android:layout_height="wrap_content"
-                android:baselineAligned="false">
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:id="@+id/like_feed_image_view"
-                        android:src="@drawable/feed_item_ic_heart_gray"
-                        android:layout_height="25dp"
-                        tools:ignore="ContentDescription" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:textSize="16sp"
-                        android:textColor="@color/feed_item_icons_color"
-                        android:layout_marginStart="5dp"
-                        android:id="@+id/feed_likes_counter"
-                        android:layout_gravity="center_vertical"
-                        android:layout_height="wrap_content"
-                        android:text="@{Integer.toString(feedItem.feedLikesCount)}"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:src="@drawable/feed_item_comment_icon"
-                        android:layout_height="30dp"
-                        tools:ignore="ContentDescription" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:textSize="16sp"
-                        android:id="@+id/feed_comment_counter"
-                        android:layout_marginStart="5dp"
-                        android:textColor="@color/feed_item_icons_color"
-                        android:layout_gravity="center_vertical"
-                        android:layout_height="wrap_content"
-                        android:text="@{Integer.toString(feedItem.feedCommentsCount)}"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:src="@drawable/feed_item_share_icon"
-                        android:layout_height="25dp"
-                        tools:ignore="ContentDescription" />
-
-                    <TextView
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:id="@+id/feed_shares_counter"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="5dp"
-                        android:text="@{Integer.toString(feedItem.feedSharesCount)}"
-                        android:textColor="@color/feed_item_icons_color"
-                        android:textSize="16sp"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-</layout>
+</LinearLayout>

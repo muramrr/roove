@@ -67,7 +67,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		setSupportActionBar(toolbar)
 		setUpNavigationView()
 		mFragmentManager = supportFragmentManager
-		//showFeedFragment()
+		showFeedFragment()
 
 
 		userModel = ViewModelProvider(this, mainViewModelFactory)

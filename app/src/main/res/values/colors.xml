@@ -9,6 +9,9 @@
 	<color name="black">#000000</color>
 	<color name="white">#ffffff</color>
 	<color name="white_85">#d8ffffff</color>
+	<color name="white_25">#40FFFFFF</color>
+	<color name="white_10">#1AFFFFFF</color>
+	<color name="transparent">#00FFFFFF</color>
 
 
 	<color name="actionModeBackground">#f1cfd0</color>
