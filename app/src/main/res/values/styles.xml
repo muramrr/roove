@@ -22,6 +22,21 @@
 
 
 
+    <!-- header 3 -->
+    <style name="regular_text_white_20sp_85op" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/white_85</item>
+        <item name="android:fontFamily">@font/nunito_sans_regular</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- tabs -->
+    <style name="tab_text_36sp" parent="TextAppearance.Design.Tab">
+        <item name="android:fontFamily">@font/nunito_sans_regular</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/white_10</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
     <!-- basic tv -->
     <style name="regular_text_white_16sp_85op" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white_85</item>
@@ -29,12 +44,25 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <!-- header 3 -->
-    <style name="regular_text_white_20sp_85op" parent="Widget.AppCompat.TextView">
+    <style name="regular_text_white_12sp_85op" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white_85</item>
         <item name="android:fontFamily">@font/nunito_sans_regular</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
+
+    <style name="regular_text_white_8sp_25op" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/white_25</item>
+        <item name="android:fontFamily">@font/nunito_sans_regular</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="light_text_white_10sp_85op" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/white_85</item>
+        <item name="android:fontFamily">@font/nunito_sans_light</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+
 
 
 </resources>

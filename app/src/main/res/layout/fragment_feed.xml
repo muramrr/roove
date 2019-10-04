@@ -1,18 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.main.view.MainActivity"
-    tools:showIn="@layout/app_bar"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	android:orientation="vertical"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/content_main_rv_feed"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#dddddd"
-        android:overScrollMode="never"
-        tools:listitem="@layout/fragment_feed_item"/>
+	<com.google.android.material.tabs.TabLayout
+		android:id="@+id/tabLayout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/baseline"
+		android:overScrollMode="never"
+		app:tabIndicator="@color/transparent"
+		app:tabMode="scrollable"
+		app:tabRippleColor="@color/transparent"
+		app:tabSelectedTextColor="@color/white_85"
+		app:tabTextAppearance="@style/tab_text_36sp">
+
+		<com.google.android.material.tabs.TabItem
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Popular" />
+
+		<com.google.android.material.tabs.TabItem
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Latest" />
+
+		<com.google.android.material.tabs.TabItem
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Featured" />
+
+		<com.google.android.material.tabs.TabItem
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Friends" />
+
+	</com.google.android.material.tabs.TabLayout>
+
+
+	<androidx.viewpager2.widget.ViewPager2
+		android:id="@+id/viewPager"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:overScrollMode="never"/>
 
 </LinearLayout>
