@@ -8,15 +8,50 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class FeedManager
-{
+public class FeedManager {
+
 	static List<FeedItem> generateDummyFeeds () {
 		List<FeedItem> feedItems = new ArrayList<>();
-		feedItems.add(new FeedItem("Wan Clem", R.drawable.feed_content_driving_a_car, "Posted", "2hr", R.drawable.feed_content_mercedes_benz, "A very nice mercedez Benz", 15, 35, 15, 22, true));
-		feedItems.add(new FeedItem("Sean Parker", R.drawable.feed_content_man_in_suit, "Shared", "3hr", R.drawable.feed_content_suits, "Men with class", 19, 30, 10, 28, false));
-		feedItems.add(new FeedItem("Ivanka TimberLake", R.drawable.feed_content_girl_jogging, "Shared", "4hr", R.drawable.feed_content_joggers, "Awesome feed_content_joggers", 74, 42, 90, 11, true));
-		feedItems.add(new FeedItem("Angelina Blanca", R.drawable.feed_content_descent, "Posted", "5hr", R.drawable.feed_content_shoes, "Nice pair of feed_content_shoes", 18, 39, 20, 25, false));
-		feedItems.add(new FeedItem("Bradly Gates", R.drawable.feed_content_riding_bycle, "Posted", "6hr", R.drawable.feed_content_power_bike, "A very nice power bike", 15, 35, 15, 22, true));
+		feedItems.add(new FeedItem("Wan Clem",
+				R.drawable.feed_content_driving_a_car,
+				"Posted",
+				"2hr",
+				"https://images.unsplash.com/photo-1569183839911-5a9e0ef9c74e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max",
+				"A very nice mercedez Benz",
+				15));
+
+		feedItems.add(new FeedItem("Sean Parker",
+				R.drawable.feed_content_man_in_suit,
+				"Shared",
+				"3hr",
+				"",
+				"Men with class",
+				19));
+
+		feedItems.add(new FeedItem("Ivanka TimberLake",
+				R.drawable.feed_content_girl_jogging,
+				"Shared",
+				"4hr",
+				"https://images.unsplash.com/photo-1568841228566-455c6533e892?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max",
+				"Awesome feed_content_joggers",
+				74));
+
+		feedItems.add(new FeedItem("Angelina Blanca",
+				R.drawable.feed_content_descent,
+				"Posted",
+				"5hr",
+				"",
+				"Nice pair of feed_content_shoes",
+				18));
+
+		feedItems.add(new FeedItem("Bradly Gates",
+				R.drawable.feed_content_riding_bycle,
+				"Posted",
+				"6hr",
+				"https://images.unsplash.com/photo-1568481694572-585cff34ee84?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max",
+				"A very nice power bike",
+				15));
+
 		return feedItems;
 	}
 
