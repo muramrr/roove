@@ -24,8 +24,8 @@ import com.mmdev.business.user.model.User
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.injector
 import com.mmdev.meetapp.ui.auth.viewmodel.AuthViewModel
+import com.mmdev.meetapp.ui.custom.ProgressButton
 import com.mmdev.meetapp.ui.main.view.MainActivity
-import com.mmdev.progressbuttonlib.ProgressButton
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 

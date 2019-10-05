@@ -1,66 +1,91 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+	<!-- Base application theme. -->
+	<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="actionModeBackground">@color/actionModeBackground</item>
+		<!-- Customize your theme here. -->
+		<item name="colorPrimary">@color/white</item>
+		<item name="colorAccent">@color/colorAccent</item>
+		<item name="actionModeBackground">@color/actionModeBackground</item>
 
-    </style>
+	</style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
+	<style name="AppTheme.NoActionBar">
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
+		<item name="android:windowTranslucentStatus">true</item>
+	</style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+	<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 
-    <!-- header 3 -->
-    <style name="regular_text_white_20sp_85op" parent="Widget.AppCompat.TextView">
-        <item name="android:textColor">@color/white_85</item>
-        <item name="android:fontFamily">@font/nunito_sans_regular</item>
-        <item name="android:textSize">20sp</item>
-    </style>
+	<!-- auth tv 1 -->
+	<style name="auth_slogan1" parent="Widget.AppCompat.TextView">
+		<item name="android:textColor">@color/white</item>
+		<item name="android:fontFamily">@font/nunito_sans_bold</item>
+		<item name="android:textSize">@dimen/auth_tv_slogan1</item>
+	</style>
 
-    <!-- tabs -->
-    <style name="tab_text_36sp" parent="TextAppearance.Design.Tab">
-        <item name="android:fontFamily">@font/nunito_sans_regular</item>
-        <item name="textAllCaps">false</item>
-        <item name="android:textColor">@color/white_10</item>
-        <item name="android:textSize">36sp</item>
-    </style>
+	<!-- auth tv 2 -->
+	<style name="auth_slogan2" parent="Widget.AppCompat.TextView">
+		<item name="android:textColor">@color/white</item>
+		<item name="android:fontFamily">@font/nunito_sans_bold</item>
+		<item name="android:textSize">@dimen/auth_tv_slogan2</item>
+	</style>
 
-    <!-- basic tv -->
-    <style name="regular_text_white_16sp_85op" parent="Widget.AppCompat.TextView">
-        <item name="android:textColor">@color/white_85</item>
-        <item name="android:fontFamily">@font/nunito_sans_regular</item>
-        <item name="android:textSize">16sp</item>
-    </style>
 
-    <style name="regular_text_white_12sp_85op" parent="Widget.AppCompat.TextView">
-        <item name="android:textColor">@color/white_85</item>
-        <item name="android:fontFamily">@font/nunito_sans_regular</item>
-        <item name="android:textSize">12sp</item>
-    </style>
 
-    <style name="regular_text_white_8sp_25op" parent="Widget.AppCompat.TextView">
-        <item name="android:textColor">@color/white_25</item>
-        <item name="android:fontFamily">@font/nunito_sans_regular</item>
-        <item name="android:textSize">12sp</item>
-    </style>
+	<!-- header 3 -->
+	<style name="regular_text_white_20sp_85op" parent="Widget.AppCompat.TextView">
+		<item name="android:textColor">@color/white_85</item>
+		<item name="android:fontFamily">@font/nunito_sans_regular</item>
+		<item name="android:textSize">20sp</item>
+	</style>
 
-    <style name="light_text_white_10sp_85op" parent="Widget.AppCompat.TextView">
-        <item name="android:textColor">@color/white_85</item>
-        <item name="android:fontFamily">@font/nunito_sans_light</item>
-        <item name="android:textSize">10sp</item>
-    </style>
+	<!-- tabs text -->
+	<style name="tab_text_36sp" parent="TextAppearance.Design.Tab">
+		<item name="android:fontFamily">@font/nunito_sans_regular</item>
+		<item name="textAllCaps">false</item>
+		<item name="android:textColor">@color/white_10</item>
+		<item name="android:textSize">36sp</item>
+	</style>
+
+	<!-- basic tv -->
+	<style name="regular_text_white_16sp_85op" parent="Widget.AppCompat.TextView">
+		<item name="android:textColor">@color/white_85</item>
+		<item name="android:fontFamily">@font/nunito_sans_regular</item>
+		<item name="android:textSize">16sp</item>
+	</style>
+
+	<!-- feed content author name -->
+	<style name="regular_text_white_14sp_85op" parent="Widget.AppCompat.TextView">
+		<item name="android:textColor">@color/white_85</item>
+		<item name="android:fontFamily">@font/nunito_sans_regular</item>
+		<item name="android:textSize">16sp</item>
+	</style>
+
+	<style name="regular_text_white_12sp_85op" parent="Widget.AppCompat.TextView">
+		<item name="android:textColor">@color/white_85</item>
+		<item name="android:fontFamily">@font/nunito_sans_regular</item>
+		<item name="android:textSize">12sp</item>
+	</style>
+
+	<style name="regular_text_white_8sp_25op" parent="Widget.AppCompat.TextView">
+		<item name="android:textColor">@color/white_25</item>
+		<item name="android:fontFamily">@font/nunito_sans_regular</item>
+		<item name="android:textSize">12sp</item>
+	</style>
+
+
+	<!-- feed content text-->
+	<style name="light_text_white_12sp_85op" parent="Widget.AppCompat.TextView">
+		<item name="android:textColor">@color/white_85</item>
+		<item name="android:fontFamily">@font/nunito_sans_light</item>
+		<item name="android:textSize">12sp</item>
+	</style>
 
 
 
