@@ -10,21 +10,23 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
-	<RelativeLayout
+	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
 		<include layout="@layout/app_bar"
 			android:id="@+id/main_toolbar"/>
 
-		<RelativeLayout
+		<LinearLayout
 			android:id="@+id/main_container"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:background="@color/baseline"
-			android:layout_below="@id/main_toolbar"/>
+			android:layout_below="@id/main_toolbar"
+			app:layout_behavior="@string/appbar_scrolling_view_behavior"
+			android:orientation="vertical"/>
 
-	</RelativeLayout>
+	</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 	<com.google.android.material.navigation.NavigationView
 		android:id="@+id/nav_view"

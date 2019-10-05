@@ -47,7 +47,6 @@ android {
 dependencies {
 
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
-	implementation project(':progressbutton')
 	implementation project(':business')
 	implementation project(':data')
 

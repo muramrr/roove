@@ -84,7 +84,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="some text"
-					style="@style/light_text_white_10sp_85op"/>
+					style="@style/light_text_white_12sp_85op"/>
 
 			</LinearLayout>
 
