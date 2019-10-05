@@ -52,6 +52,54 @@ public class FeedManager {
 				"A very nice power bike",
 				15));
 
+		feedItems.add(new FeedItem("Sean Parker",
+				R.drawable.feed_content_man_in_suit,
+				"Shared",
+				"3hr",
+				"",
+				"Men with class",
+				19));
+
+		feedItems.add(new FeedItem("Sean Parker",
+				R.drawable.feed_content_man_in_suit,
+				"Shared",
+				"3hr",
+				"",
+				"Men with class",
+				19));
+
+		feedItems.add(new FeedItem("Sean Parker",
+				R.drawable.feed_content_man_in_suit,
+				"Shared",
+				"3hr",
+				"",
+				"Men with class",
+				19));
+
+		feedItems.add(new FeedItem("Sean Parker",
+				R.drawable.feed_content_man_in_suit,
+				"Shared",
+				"3hr",
+				"",
+				"Men with class",
+				19));
+
+		feedItems.add(new FeedItem("Sean Parker",
+				R.drawable.feed_content_man_in_suit,
+				"Shared",
+				"3hr",
+				"",
+				"Men with class",
+				19));
+
+		feedItems.add(new FeedItem("Sean Parker",
+				R.drawable.feed_content_man_in_suit,
+				"Shared",
+				"3hr",
+				"",
+				"Men with class",
+				19));
+
 		return feedItems;
 	}
 

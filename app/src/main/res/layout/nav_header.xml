@@ -5,7 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@color/baseline_tint1"
-	android:paddingTop="24dp">
+	android:paddingTop="@dimen/notifbar_size_24">
 
 
 	<ImageView

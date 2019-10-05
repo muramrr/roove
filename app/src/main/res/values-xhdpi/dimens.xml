@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<dimen name="auth_tv_slogan1">48sp</dimen>
+	<dimen name="auth_tv_slogan2">22sp</dimen>
+</resources>
