@@ -17,14 +17,12 @@
 		<include layout="@layout/app_bar"
 			android:id="@+id/main_toolbar"/>
 
-		<LinearLayout
+		<androidx.constraintlayout.widget.ConstraintLayout
 			android:id="@+id/main_container"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:background="@color/baseline"
-			android:layout_below="@id/main_toolbar"
-			app:layout_behavior="@string/appbar_scrolling_view_behavior"
-			android:orientation="vertical"/>
+			app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -12,7 +12,7 @@ import com.mmdev.meetapp.models.FeedItem
 import com.mmdev.meetapp.ui.main.view.MainActivity
 import java.util.*
 
-class FeedFragmentPage: Fragment(R.layout.fragment_feed_item) {
+class FeedFragmentPage: Fragment(R.layout.fragment_feed_page_item) {
 
 	private lateinit var mMainActivity: MainActivity
 	private lateinit var rvFeedList: RecyclerView

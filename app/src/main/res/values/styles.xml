@@ -7,6 +7,7 @@
 		<item name="colorPrimary">@color/white</item>
 		<item name="colorAccent">@color/colorAccent</item>
 		<item name="actionModeBackground">@color/actionModeBackground</item>
+		<item name="android:windowLayoutInDisplayCutoutMode">never</item>
 
 	</style>
 
@@ -15,6 +16,7 @@
 		<item name="windowNoTitle">true</item>
 		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
 		<item name="android:windowTranslucentStatus">true</item>
+
 	</style>
 
 	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -67,6 +69,13 @@
 		<item name="android:textSize">16sp</item>
 	</style>
 
+	<!-- feed content text-->
+	<style name="light_text_white_12sp_85op" parent="Widget.AppCompat.TextView">
+		<item name="android:textColor">@color/white_85</item>
+		<item name="android:fontFamily">@font/nunito_sans_light</item>
+		<item name="android:textSize">12sp</item>
+	</style>
+
 	<style name="regular_text_white_12sp_85op" parent="Widget.AppCompat.TextView">
 		<item name="android:textColor">@color/white_85</item>
 		<item name="android:fontFamily">@font/nunito_sans_regular</item>
@@ -80,12 +89,7 @@
 	</style>
 
 
-	<!-- feed content text-->
-	<style name="light_text_white_12sp_85op" parent="Widget.AppCompat.TextView">
-		<item name="android:textColor">@color/white_85</item>
-		<item name="android:fontFamily">@font/nunito_sans_light</item>
-		<item name="android:textSize">12sp</item>
-	</style>
+
 
 
 
