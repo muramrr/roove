@@ -57,7 +57,7 @@ public class FeedManager {
 				"Shared",
 				"3hr",
 				"",
-				"Men with class",
+				"I was born in an empty sea, My tears created oceans Producing tsunami waves with emotions Patrolling the open seas of an unknown galaxy I was floating in front of who I am physically Spiritually paralyzing mind body and soul It gives me energy when I'm lyrically exercising I gotta spit 'til the story is told in a dream by celestial bodies Follow me baby",
 				19));
 
 		feedItems.add(new FeedItem("Sean Parker",
