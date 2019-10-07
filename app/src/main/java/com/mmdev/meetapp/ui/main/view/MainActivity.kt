@@ -1,8 +1,8 @@
 package com.mmdev.meetapp.ui.main.view
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -11,7 +11,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -28,6 +27,8 @@ import com.mmdev.meetapp.ui.auth.view.AuthActivity
 import com.mmdev.meetapp.ui.auth.viewmodel.AuthViewModel
 import com.mmdev.meetapp.ui.cards.view.CardsFragment
 import com.mmdev.meetapp.ui.chat.view.ChatFragment
+import com.mmdev.meetapp.ui.custom.CustomAlertDialog
+import com.mmdev.meetapp.ui.custom.LoadingDialog
 import com.mmdev.meetapp.ui.feed.FeedFragment
 import com.mmdev.meetapp.ui.main.viewmodel.MainViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -40,6 +41,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		private const val TAG = "myLogs"
 	}
 
+	private lateinit var progressDialog: LoadingDialog
 
 	private lateinit var navView: NavigationView
 	private lateinit var toolbar: Toolbar
@@ -68,7 +70,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		setUpNavigationView()
 		mFragmentManager = supportFragmentManager
 		showFeedFragment()
-
+		progressDialog = LoadingDialog(this)
 
 		userModel = ViewModelProvider(this, mainViewModelFactory)
 			.get(MainViewModel::class.java)
@@ -128,16 +130,25 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	* log out pop up
 	*/
 	private fun showSignOutPrompt() {
-		val builder = AlertDialog.Builder(this)
+		val builder = CustomAlertDialog.Builder(this)
 		builder.setMessage("Do you wish to sign out?")
-		builder.setPositiveButton("YES") { dialog: DialogInterface, _: Int ->
-			dialog.dismiss()
-			//Attempt sign out
+		builder.setPositiveBtnText("Yes")
+		builder.setNegativeBtnText("NO")
+		builder.OnPositiveClicked(View.OnClickListener {
 			authViewModel.logOut()
+		})
 
-		}
-		builder.setNegativeButton("NO") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
-		builder.create().show()
+		builder.build()
+
+//		builder.setPositiveButton("YES") { dialog: DialogInterface, _: Int ->
+//			dialog.dismiss()
+//			//Attempt sign out
+//			authViewModel.logOut()
+//
+//		}
+
+		//builder.setNegativeButton("NO") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
+
 	}
 
 	/*
@@ -195,7 +206,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			when (item.itemId) {
 				R.id.nav_feed -> onCardsClick()
 				R.id.nav_events -> { Log.wtf("mylogs", "$userModel") }
-				R.id.nav_post -> {}
+				R.id.nav_post -> {
+					progressDialog.showDialog()
+					Handler().postDelayed({ progressDialog.dismissDialog() }, 5000)
+				}
 				R.id.nav_notifications -> { }
 				R.id.nav_account -> { }
 				R.id.nav_log_out -> onLogOutClick()
