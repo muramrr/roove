@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.mmdev.business.user.model.User
@@ -15,6 +14,7 @@ import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.GlideApp
 import com.mmdev.meetapp.core.injector
 import com.mmdev.meetapp.ui.cards.viewmodel.CardsViewModel
+import com.mmdev.meetapp.ui.custom.LoadingDialog
 import com.mmdev.meetapp.ui.main.view.MainActivity
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
@@ -29,7 +29,7 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 	private lateinit var mMainActivity: MainActivity
 	private lateinit var cardStackView: CardStackView
 	private lateinit var mCardsStackAdapter: CardsStackAdapter
-	private lateinit var progressBar: ProgressBar
+	private lateinit var progressDialog: LoadingDialog
 	private var mProgressShowing: Boolean = false
 
 	private lateinit var mSwipeUser: User
@@ -45,7 +45,7 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		activity?.let { mMainActivity = it as MainActivity }
 		cardStackView = view.findViewById(R.id.card_stack_view)
-		progressBar = view.findViewById(R.id.card_prBar)
+		progressDialog = LoadingDialog(mMainActivity)
 		mCardsStackAdapter = CardsStackAdapter(listOf())
 		cardStackView.adapter = mCardsStackAdapter
 
@@ -56,12 +56,12 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 		//get users from viewmodel
 		disposables.add(cardsViewModel.getPotentialUserCards()
 			.observeOn(AndroidSchedulers.mainThread())
-			.doOnSubscribe { showLoadingBar() }
+			.doOnSubscribe { showLoadingDialog() }
+            .doFinally { hideLoadingDialog() }
 			.subscribe({
 			               Log.wtf("mylogs", "users to show: ${it.size}")
 			               mCardsStackAdapter.updateData(it)
-			               if(it.isNotEmpty())
-			                   hideLoadingBar()
+			               if(it.isNotEmpty()) hideLoadingDialog()
 			           },
 			           {
 			               Log.wtf("mylogs", "error + $it")
@@ -107,7 +107,7 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 				//if there is no available user to show - show loading
 				if (position == mCardsStackAdapter.itemCount - 1) {
 					mCardsStackAdapter.notifyDataSetChanged()
-					showLoadingBar()
+					showLoadingDialog()
 				}
 			}
 
@@ -117,17 +117,17 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 
 	}
 
-	private fun showLoadingBar() {
+	private fun showLoadingDialog() {
 		if (!mProgressShowing) {
 			cardStackView.visibility = View.GONE
-			progressBar.visibility = View.VISIBLE
+			progressDialog.showDialog()
 			mProgressShowing = true
 		}
 	}
 
-	private fun hideLoadingBar() {
+	private fun hideLoadingDialog() {
 		if (mProgressShowing) {
-			progressBar.visibility = View.GONE
+			progressDialog.dismissDialog()
 			cardStackView.visibility = View.VISIBLE
 			mProgressShowing = false
 		}
