@@ -13,8 +13,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
  * This is the documentation block about the class
  */
 
-class FeedViewPagerAdapter constructor(fm: FragmentManager,
-                                       lifecycle: Lifecycle) : FragmentStateAdapter(fm, lifecycle) {
+class FeedViewPagerAdapter (fm: FragmentManager, lifecycle: Lifecycle) :
+		FragmentStateAdapter(fm, lifecycle) {
 
 
 

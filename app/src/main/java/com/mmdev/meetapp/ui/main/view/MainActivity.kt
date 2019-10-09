@@ -41,16 +41,12 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		private const val TAG = "myLogs"
 	}
 
-	private lateinit var progressDialog: LoadingDialog
-
-	private lateinit var navView: NavigationView
-	private lateinit var toolbar: Toolbar
+	lateinit var progressDialog: LoadingDialog
 
 	private lateinit var drawerLayout: DrawerLayout
 
-	private lateinit var tvSignedInUserName: TextView
-
 	private lateinit var ivSignedInUserAvatar: ImageView
+	private lateinit var tvSignedInUserName: TextView
 
 	lateinit var userModel: User
 	private lateinit var mFragmentManager: FragmentManager
@@ -65,8 +61,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		super.onCreate(savedInstanceState)
 		authViewModel = ViewModelProvider(this, authViewModelFactory)
 			.get(AuthViewModel::class.java)
-		toolbar = findViewById(R.id.toolbar)
-		setSupportActionBar(toolbar)
+		drawerLayout = findViewById(R.id.drawer_layout)
 		setUpNavigationView()
 		mFragmentManager = supportFragmentManager
 		showFeedFragment()
@@ -140,15 +135,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 		builder.build()
 
-//		builder.setPositiveButton("YES") { dialog: DialogInterface, _: Int ->
-//			dialog.dismiss()
-//			//Attempt sign out
-//			authViewModel.logOut()
-//
-//		}
-
-		//builder.setNegativeButton("NO") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
-
 	}
 
 	/*
@@ -174,21 +160,20 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	}
 
 	private fun setUpUser() {
-		val mCity = userModel.city
-		val mGender = userModel.gender
-		val mPreferedGender = userModel.preferedGender
+		tvSignedInUserName.text = userModel.name
 		GlideApp.with(this)
 			.load(userModel.mainPhotoUrl)
 			.apply(RequestOptions().circleCrop())
 			.into(ivSignedInUserAvatar)
-		tvSignedInUserName.text = userModel.name
+
 
 	}
 
 
 	private fun setUpNavigationView() {
-		navView = findViewById(R.id.nav_view)
-		drawerLayout = findViewById(R.id.drawer_layout)
+		val navView: NavigationView = findViewById(R.id.nav_view)
+		val toolbar: Toolbar = findViewById(R.id.toolbar)
+		setSupportActionBar(toolbar)
 		val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,
 		                                   R.string.navigation_drawer_open,
 		                                   R.string.navigation_drawer_close)
@@ -289,7 +274,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	override fun onDestroy() {
 		super.onDestroy()
-		disposables.dispose()
+		//disposables.dispose()
 		disposables.clear()
 	}
 }

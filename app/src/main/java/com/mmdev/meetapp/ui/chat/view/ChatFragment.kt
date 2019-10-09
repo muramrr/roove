@@ -88,6 +88,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		setupViews(view)
 
 		disposables.add(chatViewModel.getMessages()
+            .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
+            .doOnNext { mMainActivity.progressDialog.dismissDialog() }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({Log.wtf(TAG, "${it[it.size - 1]}")
 	                    mChatAdapter.updateData(it) },
