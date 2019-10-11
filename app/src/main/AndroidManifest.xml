@@ -68,6 +68,7 @@
 			android:name=".ui.chat.view.FullScreenImageActivity"
 			android:theme="@style/AppTheme.NoActionBar">
 		</activity>
+		<activity android:name=".ui.feed.tabitem.FeedItemActivity" />
 
 		<provider
 			android:name="androidx.core.content.FileProvider"
