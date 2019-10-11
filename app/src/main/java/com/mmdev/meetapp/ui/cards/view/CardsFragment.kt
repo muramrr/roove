@@ -24,9 +24,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
 
+
+
 class CardsFragment: Fragment(R.layout.fragment_card) {
 
 	private lateinit var mMainActivity: MainActivity
+
 	private lateinit var cardStackView: CardStackView
 	private lateinit var mCardsStackAdapter: CardsStackAdapter
 	private lateinit var progressDialog: LoadingDialog
@@ -117,6 +120,7 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 
 	}
 
+
 	private fun showLoadingDialog() {
 		if (!mProgressShowing) {
 			cardStackView.visibility = View.GONE
@@ -146,4 +150,9 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 	}
 
 
+	override fun onDestroyView() {
+		super.onDestroyView()
+		disposables.clear()
+		mMainActivity.setScrollableToolbar()
+	}
 }

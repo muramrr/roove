@@ -19,7 +19,8 @@ class FeedFragment: Fragment(R.layout.fragment_feed) {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		if (activity != null) mMainActivity = activity as MainActivity
 		viewPager = view.findViewById(R.id.viewPager)
-		viewPagerAdapter = FeedViewPagerAdapter(childFragmentManager, lifecycle)
+		viewPagerAdapter =
+			FeedViewPagerAdapter(childFragmentManager, lifecycle)
 		viewPager.adapter = viewPagerAdapter
 		tabLayout = view.findViewById(R.id.tabLayout)
 

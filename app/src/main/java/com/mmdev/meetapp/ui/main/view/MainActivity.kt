@@ -18,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationView
 import com.mmdev.business.user.model.User
 import com.mmdev.meetapp.R
@@ -44,6 +45,9 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	lateinit var progressDialog: LoadingDialog
 
 	private lateinit var drawerLayout: DrawerLayout
+	private lateinit var toggle: ActionBarDrawerToggle
+	private lateinit var toolbar: Toolbar
+	private lateinit var params: AppBarLayout.LayoutParams
 
 	private lateinit var ivSignedInUserAvatar: ImageView
 	private lateinit var tvSignedInUserName: TextView
@@ -59,18 +63,26 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+
 		authViewModel = ViewModelProvider(this, authViewModelFactory)
 			.get(AuthViewModel::class.java)
-		drawerLayout = findViewById(R.id.drawer_layout)
-		setUpNavigationView()
-		mFragmentManager = supportFragmentManager
-		showFeedFragment()
-		progressDialog = LoadingDialog(this)
 
 		userModel = ViewModelProvider(this, mainViewModelFactory)
 			.get(MainViewModel::class.java)
 			.getSavedUser()
-		setUpUser()
+
+		drawerLayout = findViewById(R.id.drawer_layout)
+		toolbar = findViewById(R.id.toolbar)
+		setSupportActionBar(toolbar)
+		params = toolbar.layoutParams as AppBarLayout.LayoutParams
+		setToolbarNavigation()
+		setNavigationView()
+
+		mFragmentManager = supportFragmentManager
+		showFeedFragment()
+
+		progressDialog = LoadingDialog(this)
+
 
 	}
 
@@ -101,6 +113,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 				replace(R.id.main_container, CardsFragment(), "CardsFragment")
 				addToBackStack(null)
 				commit()
+				setNonScrollableToolbar()
 			}
 
 	}
@@ -118,7 +131,14 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 				replace(R.id.main_container, ChatFragment(), "ChatFragment")
 				addToBackStack(null)
 				commit()
+				setNonScrollableToolbar()
 			}
+	}
+
+	override fun startAuthActivity(){
+		val authIntent = Intent(this@MainActivity, AuthActivity::class.java)
+		startActivity(authIntent)
+		finish()
 	}
 
 	/*
@@ -153,11 +173,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
                    }))
 	}
 
-	override fun startAuthActivity(){
-		val authIntent = Intent(this@MainActivity, AuthActivity::class.java)
-		startActivity(authIntent)
-		finish()
-	}
 
 	private fun setUpUser() {
 		tvSignedInUserName.text = userModel.name
@@ -166,25 +181,24 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			.apply(RequestOptions().circleCrop())
 			.into(ivSignedInUserAvatar)
 
-
 	}
 
-
-	private fun setUpNavigationView() {
-		val navView: NavigationView = findViewById(R.id.nav_view)
-		val toolbar: Toolbar = findViewById(R.id.toolbar)
-		setSupportActionBar(toolbar)
-		val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,
+	private fun setToolbarNavigation(){
+		toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,
 		                                   R.string.navigation_drawer_open,
 		                                   R.string.navigation_drawer_close)
 
 		drawerLayout.addDrawerListener(toggle)
 		toggle.syncState()
+	}
+
+	private fun setNavigationView() {
+		val navView: NavigationView = findViewById(R.id.nav_view)
 		navView.getChildAt(navView.childCount - 1).overScrollMode = View.OVER_SCROLL_NEVER
 		val headerView = navView.getHeaderView(0)
 		tvSignedInUserName = headerView.findViewById(R.id.signed_in_username_tv)
 		ivSignedInUserAvatar = headerView.findViewById(R.id.signed_in_user_image_view)
-
+		setUpUser()
 		navView.setNavigationItemSelectedListener { item ->
 			drawerLayout.closeDrawer(GravityCompat.START)
 			// Handle navigation view item clicks here.
@@ -204,6 +218,18 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	}
 
+	private fun setNonScrollableToolbar(){
+		params.scrollFlags = 0
+		toolbar.layoutParams = params
+
+	}
+
+	fun setScrollableToolbar(){
+		params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or
+				AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS or
+				AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
+		toolbar.layoutParams = params
+	}
 
 
 	/*
@@ -267,14 +293,16 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		else super.onBackPressed()
 	}
 
-	override fun onStart() {
-		super.onStart()
-		checkConnection()
-	}
-
 	override fun onDestroy() {
 		super.onDestroy()
 		//disposables.dispose()
 		disposables.clear()
 	}
+
+	override fun onStart() {
+		super.onStart()
+		checkConnection()
+	}
+
+
 }
