@@ -1,4 +1,4 @@
-package com.mmdev.meetapp.ui.feed;
+package com.mmdev.meetapp.ui.feed.misc;
 
 import com.mmdev.meetapp.R;
 import com.mmdev.meetapp.models.FeedItem;
@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class FeedManager {
 
-	static List<FeedItem> generateDummyFeeds () {
+	public static List<FeedItem> generateDummyFeeds () {
 		List<FeedItem> feedItems = new ArrayList<>();
 		feedItems.add(new FeedItem("Wan Clem",
 				R.drawable.feed_content_driving_a_car,

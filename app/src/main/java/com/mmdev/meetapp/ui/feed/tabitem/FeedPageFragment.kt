@@ -1,18 +1,20 @@
-package com.mmdev.meetapp.ui.feed
+package com.mmdev.meetapp.ui.feed.tabitem
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.models.FeedItem
+import com.mmdev.meetapp.ui.feed.misc.EndlessRecyclerViewScrollListener
+import com.mmdev.meetapp.ui.feed.misc.FeedManager
 import com.mmdev.meetapp.ui.main.view.MainActivity
 import java.util.*
 
-class FeedFragmentPage: Fragment(R.layout.fragment_feed_page_item) {
+class FeedPageFragment: Fragment(R.layout.fragment_feed_page_item) {
 
 	private lateinit var mMainActivity: MainActivity
 	private lateinit var rvFeedList: RecyclerView
@@ -23,12 +25,21 @@ class FeedFragmentPage: Fragment(R.layout.fragment_feed_page_item) {
 		if (activity != null) mMainActivity = activity as MainActivity
 		rvFeedList = view.findViewById(R.id.content_main_rv_feed)
 		initFeeds()
+
+
+		mFeedRecyclerAdapter.setOnItemClickListener(object: FeedRecyclerAdapter.OnItemClickListener {
+			override fun onItemClick(view: View, position: Int) {
+				val intent = Intent(mMainActivity, FeedItemActivity::class.java)
+				//intent.putExtra("urlPhotoClick", urlPhotoClick)
+				startActivity(intent)
+
+			}
+		})
 	}
 
 	private fun initFeeds() {
 		mFeedItems.addAll(FeedManager.generateDummyFeeds())
 		mFeedRecyclerAdapter.updateData(mFeedItems)
-		val gridLayoutManager = GridLayoutManager(rvFeedList.context, 2)
 		val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 		rvFeedList.apply {
 			adapter = mFeedRecyclerAdapter
@@ -36,7 +47,7 @@ class FeedFragmentPage: Fragment(R.layout.fragment_feed_page_item) {
 			itemAnimator = DefaultItemAnimator()
 		}
 
-		rvFeedList.addOnScrollListener(object: EndlessRecyclerViewScrollListener(gridLayoutManager) {
+		rvFeedList.addOnScrollListener(object: EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
 			override fun onLoadMore(page: Int, totalItemsCount: Int) {
 				loadMoreFeeds()
 			}
@@ -49,4 +60,8 @@ class FeedFragmentPage: Fragment(R.layout.fragment_feed_page_item) {
 			mFeedRecyclerAdapter.notifyItemInserted(mFeedItems.size - 1)
 		}
 	}
+
+
+
+
 }

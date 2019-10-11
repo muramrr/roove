@@ -1,4 +1,4 @@
-package com.mmdev.meetapp.ui.feed;
+package com.mmdev.meetapp.ui.feed.misc;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -6,9 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-/**
- * @author Wan Clem
- */
 public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
 	// The minimum amount of items to have below your current scroll position
 	// before loading more.
@@ -33,7 +30,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
 		visibleThreshold = visibleThreshold * layoutManager.getSpanCount();
 	}
 
-	EndlessRecyclerViewScrollListener(StaggeredGridLayoutManager layoutManager) {
+	public EndlessRecyclerViewScrollListener(StaggeredGridLayoutManager layoutManager) {
 		this.mLayoutManager = layoutManager;
 		visibleThreshold = visibleThreshold * layoutManager.getSpanCount();
 	}

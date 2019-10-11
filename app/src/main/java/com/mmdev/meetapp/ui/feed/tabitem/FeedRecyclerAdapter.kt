@@ -1,4 +1,4 @@
-package com.mmdev.meetapp.ui.feed
+package com.mmdev.meetapp.ui.feed.tabitem
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +11,15 @@ import com.bumptech.glide.request.RequestOptions
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.models.FeedItem
 
+
+
+
+
+
 class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 		RecyclerView.Adapter<FeedRecyclerAdapter.FeedItemHolder>() {
+
+	private lateinit var mClickListener: OnItemClickListener
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedItemHolder =
 		FeedItemHolder(LayoutInflater.from(parent.context)
@@ -30,7 +37,25 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 		notifyDataSetChanged()
 	}
 
-	inner class FeedItemHolder(view: View) : RecyclerView.ViewHolder(view){
+	fun getFeedItem(position: Int): FeedItem{
+		return mFeedItems[position]
+	}
+
+
+	// allows clicks events to be caught
+	fun setOnItemClickListener(itemClickListener: OnItemClickListener) {
+		mClickListener = itemClickListener
+	}
+
+
+	inner class FeedItemHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+
+		init {
+			itemView.setOnClickListener {
+				mClickListener.onItemClick(itemView.rootView, adapterPosition)
+			}
+		}
 
 		//publisher user
 		private val tvFeedUserName: TextView = itemView.findViewById(R.id.feed_publisher_name_view)
@@ -43,13 +68,21 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 		fun bindItem(feedItem: FeedItem) {
 			tvFeedUserName.text = feedItem.feedPublisherName
 			tvFeedTimestamp.text = feedItem.feedSharedTime
+			setUserAvatar(feedItem.feedPublisherPhotoId)
+			tvFeedTextMessage.text = feedItem.feedContentDescription
+			setFeedPhoto(feedItem.feedContentImageView)
+		}
+
+		fun getAdapterPostition(): FeedItem {
+			return mFeedItems[adapterPosition]
+		}
+
+		private fun setUserAvatar(url: Int){
 			Glide.with(ivFeedUserAvatar.context)
-				.load(feedItem.feedPublisherPhotoId)
+				.load(url)
 				.centerCrop()
 				.apply(RequestOptions().circleCrop())
 				.into(ivFeedUserAvatar)
-			tvFeedTextMessage.text = feedItem.feedContentDescription
-			setFeedPhoto(feedItem.feedContentImageView)
 		}
 
 		private fun setFeedPhoto(url: String){
@@ -60,6 +93,13 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 			else ivFeedPhoto.visibility = View.GONE
 		}
 
+	}
+
+
+
+	// parent activity will implement this method to respond to click events
+	interface OnItemClickListener {
+		fun onItemClick(view: View, position: Int)
 	}
 
 }
