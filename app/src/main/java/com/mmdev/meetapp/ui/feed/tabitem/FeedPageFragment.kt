@@ -30,7 +30,7 @@ class FeedPageFragment: Fragment(R.layout.fragment_feed_page_item) {
 		mFeedRecyclerAdapter.setOnItemClickListener(object: FeedRecyclerAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
 				val intent = Intent(mMainActivity, FeedItemActivity::class.java)
-				//intent.putExtra("urlPhotoClick", urlPhotoClick)
+				intent.putExtra("feedId", mFeedRecyclerAdapter.getFeedItem(position).feedPublisherName)
 				startActivity(intent)
 
 			}
