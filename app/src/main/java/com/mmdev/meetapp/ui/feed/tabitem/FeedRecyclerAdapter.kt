@@ -4,12 +4,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mmdev.meetapp.R
+import com.mmdev.meetapp.databinding.FragmentFeedRvItemBinding
 import com.mmdev.meetapp.models.FeedItem
+
+
 
 
 
@@ -22,12 +25,13 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 	private lateinit var mClickListener: OnItemClickListener
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedItemHolder =
-		FeedItemHolder(LayoutInflater.from(parent.context)
-			               .inflate(R.layout.fragment_feed_rv_item, parent, false))
+		FeedItemHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+			                               R.layout.fragment_feed_rv_item, parent,
+			                               false))
 
 
 	override fun onBindViewHolder(holder: FeedItemHolder, position: Int) {
-		holder.bindItem(mFeedItems[position])
+		holder.bind(mFeedItems[position])
 	}
 
 	override fun getItemCount(): Int { return mFeedItems.size }
@@ -48,8 +52,8 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 	}
 
 
-	inner class FeedItemHolder(view: View) : RecyclerView.ViewHolder(view) {
-
+	inner class FeedItemHolder(private val binding: FragmentFeedRvItemBinding) : RecyclerView.ViewHolder
+	                                                                     (binding.root) {
 
 		init {
 			itemView.setOnClickListener {
@@ -57,25 +61,17 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 			}
 		}
 
+		fun bind(feedItem: FeedItem) {
+			binding.feedItem = feedItem
+			setUserAvatar(feedItem.feedPublisherPhotoId)
+			setFeedPhoto(feedItem.feedContentImageView)
+			binding.executePendingBindings()
+		}
+
 		//publisher user
-		private val tvFeedUserName: TextView = itemView.findViewById(R.id.feed_publisher_name_view)
-		private val tvFeedTimestamp: TextView = itemView.findViewById(R.id.feed_publish_date)
 		private val ivFeedUserAvatar: ImageView = itemView.findViewById(R.id.feed_publisher_image_view)
 		//feed content
-		private val tvFeedTextMessage: TextView = itemView.findViewById(R.id.feed_content_description)
 		private val ivFeedPhoto: ImageView = itemView.findViewById(R.id.feed_content_image_view)
-
-		fun bindItem(feedItem: FeedItem) {
-			tvFeedUserName.text = feedItem.feedPublisherName
-			tvFeedTimestamp.text = feedItem.feedSharedTime
-			setUserAvatar(feedItem.feedPublisherPhotoId)
-			tvFeedTextMessage.text = feedItem.feedContentDescription
-			setFeedPhoto(feedItem.feedContentImageView)
-		}
-
-		fun getAdapterPostition(): FeedItem {
-			return mFeedItems[adapterPosition]
-		}
 
 		private fun setUserAvatar(url: Int){
 			Glide.with(ivFeedUserAvatar.context)
@@ -95,9 +91,7 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 
 	}
 
-
-
-	// parent activity will implement this method to respond to click events
+	// parent fragment will override this method to respond to click events
 	interface OnItemClickListener {
 		fun onItemClick(view: View, position: Int)
 	}

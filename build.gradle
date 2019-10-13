@@ -2,58 +2,85 @@ apply plugin: 'com.github.ben-manes.versions'
 
 buildscript {
 
-    ext.kotlin_version = '1.3.50'
+	ext {
 
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.1'
-        classpath 'com.google.gms:google-services:4.3.2'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.25.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-    
-    repositories {
-        mavenCentral()
-        jcenter()
-        google()
-    }
+		kotlin_version = '1.3.50'
+		//firebase
+		firebase_auth_version = '19.1.0'
+		firebase_core_version = '17.2.0'
+		firebase_firestore_version = '21.1.1'
+		firebase_storage_version = '19.1.0'
+
+		// Dagger
+		dagger_version = '2.24'
+
+		// RxJava
+		rxjava_version = '2.2.12'
+
+		// RxAndroid
+		rxandroid_version = '2.1.1'
+
+		// ViewModel and LiveData
+		lifecycle_version = '2.2.0-beta01'
+
+
+		//tests
+		junitVersion = "4.12"
+		mockitoKotlinVersion = "1.5.0"
+
+		hamcrestVersion = "2.0.0.0"
+
+		libs = [
+				rxJava          : ('io.reactivex.rxjava2:rxjava:' + rxjava_version),
+				rxAndroid       : ('io.reactivex.rxjava2:rxandroid:' + rxandroid_version),
+				junit           : ('junit:junit:' + junitVersion),
+				mockitoKotlin   : ('com.nhaarman:mockito-kotlin-kt1.1:' + mockitoKotlinVersion),
+				hamcrest        : ('org.hamcrest:java-hamcrest:' + hamcrestVersion)
+		]
+
+
+	}
+
+
+	dependencies {
+		classpath 'com.android.tools.build:gradle:3.5.1'
+		classpath 'com.google.gms:google-services:4.3.2'
+		classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.25.0'
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+	}
+
+	repositories {
+		mavenCentral()
+		jcenter()
+		google()
+	}
 
 
 
 }
 
 allprojects {
-    repositories {
-        maven { url "https://jitpack.io" }
-        mavenCentral()
-        jcenter()
-        google()
-    }
+
+	ext {
+		androidCompileSdkVersion = 29
+		androidVersionCode = 1
+		androidVersionName = "1.0"
+		androidMinSdkVersion = 21
+		androidTargetSdkVersion = 29
+		testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
+	}
+
+
+	repositories {
+		mavenCentral()
+		maven { url 'https://jitpack.io' }
+		jcenter()
+		google()
+	}
 }
 
 task clean(type: Delete) {
-    delete rootProject.buildDir
+	delete rootProject.buildDir
 }
 
-ext{
-
-    //firebase
-    firebase_auth_version = '19.1.0'
-    firebase_core_version = '17.2.0'
-    firebase_firestore_version = '21.1.1'
-    firebase_storage_version = '19.1.0'
-
-    // Dagger
-    dagger_version = '2.24'
-
-    // RxJava
-    rxjava_version = '2.2.12'
-
-    // RxAndroid
-    rxandroid_version = '2.1.1'
-
-    // ViewModel and LiveData
-    lifecycle_version = '2.2.0-alpha05'
-
-
-}
