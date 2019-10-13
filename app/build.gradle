@@ -6,19 +6,24 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
 
-	compileSdkVersion 29
+	def globalConfiguration = rootProject.extensions.getByName("ext")
+	compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
+
 
 	defaultConfig {
 		applicationId "com.mmdev.meetapp"
-		minSdkVersion 21
-		targetSdkVersion 29
-		versionCode 1
-		versionName "1.0"
+		minSdkVersion globalConfiguration["androidMinSdkVersion"]
+		targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
+		versionCode globalConfiguration["androidVersionCode"]
+		versionName globalConfiguration["androidVersionName"]
+		testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
+		multiDexEnabled = true
 	}
-
-	buildToolsVersion = '29.0.2'
+	
 	buildTypes {
 		debug {
+
+			testCoverageEnabled = true
 			versionNameSuffix '-DEBUG'
 		}
 
@@ -51,13 +56,13 @@ dependencies {
 	implementation project(':data')
 
 	//core
-	implementation 'androidx.core:core-ktx:1.2.0-alpha04'
+	implementation 'androidx.core:core-ktx:1.2.0-beta01'
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 	implementation 'androidx.appcompat:appcompat:1.1.0'
 	implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
 	implementation 'com.google.android.material:material:1.1.0-beta01'
-	implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
+	implementation 'androidx.recyclerview:recyclerview:1.1.0-beta05'
 	implementation 'androidx.cardview:cardview:1.0.0'
 
 	//custom UI
@@ -97,6 +102,15 @@ dependencies {
 	implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
 	compileOnly 'javax.annotation:jsr250-api:1.0'
+
+	// JUnit
+	testImplementation libs.junit
+
+	// Mockito Kotlin
+	testImplementation libs.mockitoKotlin
+
+	// Hamcrest
+	testImplementation libs.hamcrest
 
 
 

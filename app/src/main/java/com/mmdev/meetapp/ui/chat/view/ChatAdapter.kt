@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.mmdev.business.chat.model.Message
@@ -102,16 +103,20 @@ class ChatAdapter (private var userId: String,
 		override fun onClick(view: View) {
 			val message: Message = listMessages[adapterPosition]
 
-			if (message.photoAttached != null)
-				clickChatAttachmentFirebase.clickImageChat(view, adapterPosition,
-				                                           message.sender.name,
-				                                           message.sender.mainPhotoUrl,
-				                                           message.photoAttached!!.fileUrl)
+			message.photoAttached?.let { clickChatAttachmentFirebase
+				.clickImageChat(view,
+				                adapterPosition,
+				                message.sender.name,
+				                message.sender.mainPhotoUrl,
+				                it.fileUrl) }
+
 		}
 
 		/* sets user profile pic in ImgView binded layout */
 		private fun setIvUserAvatar(urlPhotoUser: String) {
-			Glide.with(ivUserAvatar.context).load(urlPhotoUser)
+			Glide.with(ivUserAvatar.context)
+				.load(urlPhotoUser)
+				.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
 				.centerCrop()
 				.apply(RequestOptions().circleCrop())
 				.into(ivUserAvatar)
@@ -127,6 +132,7 @@ class ChatAdapter (private var userId: String,
 		private fun setIvChatPhoto(url: String?) {
 			GlideApp.with(ivChatPhoto.context)
 				.load(url)
+				.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
 				.apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
 				.override(250, 250)
 				.into(ivChatPhoto)
