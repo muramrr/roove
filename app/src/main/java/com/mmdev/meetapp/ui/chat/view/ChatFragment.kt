@@ -255,8 +255,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		}
 	}
 
-
-
 	override fun onDestroy() {
 		super.onDestroy()
 		disposables.clear()

@@ -5,18 +5,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.chrisbanes.photoview.PhotoView
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.GlideApp
 
-class FullScreenImageActivity: AppCompatActivity() {
+class FullScreenImageActivity: AppCompatActivity(R.layout.activity_full_screen_image) {
 
 	private lateinit var mImageView: PhotoView
 	private var isHide = false
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_full_screen_image)
 		bindViews()
 	}
 
@@ -30,9 +30,12 @@ class FullScreenImageActivity: AppCompatActivity() {
 	}
 
 	private fun setValues() {
-		val urlPhotoClick: String? = intent.getStringExtra("urlPhotoClick")
+		val urlPhotoClick: String = intent.getStringExtra("urlPhotoClick")!!
 		Log.i("TAG", "image received$urlPhotoClick")
-		GlideApp.with(this).load(urlPhotoClick).into(mImageView)
+		GlideApp.with(this)
+			.load(urlPhotoClick)
+			.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+			.into(mImageView)
 	}
 
 	//hide bottom navigation to see fullscreen image
@@ -62,9 +65,9 @@ class FullScreenImageActivity: AppCompatActivity() {
 		setValues()
 	}
 
-	override fun onBackPressed() {
-		super.onBackPressed()
-		Runtime.getRuntime().gc()
-		finish()
-	}
+//	override fun onBackPressed() {
+//		super.onBackPressed()
+//		Runtime.getRuntime().gc()
+//		finish()
+//	}
 }

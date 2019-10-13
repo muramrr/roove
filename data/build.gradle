@@ -5,26 +5,48 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+	compileSdkVersion 29
+	buildToolsVersion "29.0.2"
 
 
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+	defaultConfig {
+		minSdkVersion 21
+		targetSdkVersion 29
+		versionCode 1
+		versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles 'consumer-rules.pro'
-    }
+		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+		consumerProguardFiles 'consumer-rules.pro'
+	}
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
+	def globalConfiguration = rootProject.extensions.getByName("ext")
+	compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
+
+	defaultConfig {
+		minSdkVersion globalConfiguration["androidMinSdkVersion"]
+		targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
+		versionCode globalConfiguration["androidVersionCode"]
+		versionName globalConfiguration["androidVersionName"]
+		testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
+	}
+
+	buildTypes {
+		debug {
+			testCoverageEnabled true
+		}
+
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+
+
+	}
+
+	sourceSets {
+		main.java.srcDirs += 'src/main/kotlin'
+	}
+
 	compileOptions {
 		sourceCompatibility = 1.8
 		targetCompatibility = 1.8
@@ -33,32 +55,40 @@ android {
 }
 
 dependencies {
-    implementation project(':business')
+	implementation project(':business')
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+	//implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    // Kotlin
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+	// Kotlin
+	implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+	implementation 'androidx.appcompat:appcompat:1.1.0'
 
-    // Firebase
-    implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
-    implementation "com.google.firebase:firebase-core:$firebase_core_version"
-    implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
-    implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
+	// Firebase
+	implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
+	implementation "com.google.firebase:firebase-core:$firebase_core_version"
+	implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
+	implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
 
-    //facebook auth
-    implementation 'com.facebook.android:facebook-android-sdk:5.5.1'
-    implementation 'com.facebook.android:facebook-login:5.5.1'
+	//facebook auth
+	implementation 'com.facebook.android:facebook-android-sdk:5.5.1'
+	implementation 'com.facebook.android:facebook-login:5.5.1'
 
-    // RxJava
-    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+	// RxJava
+	implementation libs.rxJava
 
-    // Dagger
-    implementation "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+	// Dagger
+	implementation "com.google.dagger:dagger:$dagger_version"
+	kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+	androidTestImplementation 'androidx.test:runner:1.2.0'
+	androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+	// JUnit
+	testImplementation libs.junit
+
+	// Mockito Kotlin
+	testImplementation libs.mockitoKotlin
+
+	// Hamcrest
+	testImplementation libs.hamcrest
 }
