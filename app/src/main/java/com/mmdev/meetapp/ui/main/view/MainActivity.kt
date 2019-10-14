@@ -113,7 +113,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 				replace(R.id.main_container, CardsFragment(), "CardsFragment")
 				addToBackStack(null)
 				commit()
-				setNonScrollableToolbar()
 			}
 
 	}
@@ -131,7 +130,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 				replace(R.id.main_container, ChatFragment(), "ChatFragment")
 				addToBackStack(null)
 				commit()
-				setNonScrollableToolbar()
 			}
 	}
 
@@ -204,8 +202,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			// Handle navigation view item clicks here.
 			when (item.itemId) {
 				R.id.nav_feed -> onCardsClick()
-				R.id.nav_events -> { Log.wtf("mylogs", "$userModel") }
-				R.id.nav_post -> {
+				R.id.nav_cards -> { Log.wtf("mylogs", "$userModel") }
+				R.id.nav_messages -> {
 					progressDialog.showDialog()
 					Handler().postDelayed({ progressDialog.dismissDialog() }, 5000)
 				}
@@ -218,7 +216,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	}
 
-	private fun setNonScrollableToolbar(){
+	fun setNonScrollableToolbar(){
 		params.scrollFlags = 0
 		toolbar.layoutParams = params
 

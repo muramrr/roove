@@ -2,8 +2,10 @@
 <RelativeLayout
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
+	android:background="@color/baseline"
 	android:paddingTop="10dp"
 	android:paddingBottom="10dp"
+	android:layout_marginEnd="48dp"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<ImageView
@@ -12,7 +14,8 @@
 		android:layout_height="35dp"
 		android:layout_alignBottom="@+id/contentMessageChat"
 		android:layout_alignParentStart="true"
-		android:layout_margin="5dp"
+		android:layout_marginStart="5dp"
+		android:layout_marginEnd="5dp"
 		android:contentDescription="@string/chat_message_sender_avatar_img_description"
 		android:src="@drawable/fragment_chat_message_default_account_icon"/>
 
@@ -26,24 +29,22 @@
 
 		<ImageView
 			android:id="@+id/img_chat"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
+			android:layout_width="200dp"
+			android:layout_height="250dp"
 			android:layout_margin="10dp"
-			android:background="@color/colorAccent"
+			android:background="@color/baseline_tint2"
 			android:contentDescription="@string/chat_message_sender_attach_img_description"
-			android:minHeight="100dp"
-			android:minWidth="100dp"
-			android:src="@color/material_black_1000"
+			android:src="@drawable/feed_content_man_in_suit"
 			android:visibility="visible"/>
 
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/item_message_tvMessage"
-			android:padding="10dp"
+			android:layout_margin="10dp"
 			android:text="@string/default_message_text"
-			android:textColor="@color/material_white_1000"
-			android:textIsSelectable="true" />
+			android:textIsSelectable="true"
+			style="@style/regular_text_white_16sp_85op"/>
 
 	</LinearLayout>
 
@@ -53,12 +54,9 @@
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/contentMessageChat"
 		android:layout_toEndOf="@id/item_message_ivUserPic"
-		android:layout_marginStart="10dp"
-		android:paddingStart="10dp"
-		android:paddingEnd="10dp"
-		android:paddingTop="3dp"
+		android:layout_marginTop="3dp"
 		android:text="@string/default_message_date"
-		android:textSize="12sp" />
+		style="@style/regular_text_white_8sp_25op" />
 
 
 </RelativeLayout>

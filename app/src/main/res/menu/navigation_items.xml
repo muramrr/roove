@@ -7,13 +7,13 @@
             android:icon="@drawable/nav_items_feed_icon"
             android:title="Feed" />
         <item
-            android:id="@+id/nav_events"
+            android:id="@+id/nav_cards"
             android:icon="@drawable/nav_items_events_icon"
-            android:title="Events" />
+            android:title="Cards" />
         <item
-            android:id="@+id/nav_post"
+            android:id="@+id/nav_messages"
             android:icon="@drawable/nav_items_post_icon"
-            android:title="Post" />
+            android:title="Inbox" />
         <item
             android:id="@+id/nav_notifications"
             android:icon="@drawable/nav_items_notifications_icon"

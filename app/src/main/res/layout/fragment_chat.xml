@@ -3,17 +3,17 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@color/material_blue_100"
-	android:id="@+id/contentRoot"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
-		android:background="@color/material_orange_100"
+		android:background="@color/baseline"
 		android:id="@+id/messageRecyclerView"
 		android:layout_above="@+id/content_message"
 		android:layout_alignParentTop="true"
+		android:overScrollMode="never"
 		android:scrollbars="none"/>
 
 	<RelativeLayout
@@ -22,7 +22,7 @@
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
 		android:background="@color/material_white_1000"
-		android:padding="5dp">
+		>
 
 		<ImageView
 			android:id="@+id/buttonAttachments"
@@ -30,6 +30,7 @@
 			android:layout_height="wrap_content"
 			android:layout_alignParentStart="true"
 			android:layout_centerVertical="true"
+			android:layout_margin="@dimen/general_margin_16"
 			android:contentDescription="@string/fragment_chat_attach_img_description"
 			android:src="@drawable/fragment_chat_ic_attachment"/>
 
@@ -39,6 +40,7 @@
 			android:layout_height="wrap_content"
 			android:layout_toStartOf="@+id/buttonMessage"
 			android:layout_toEndOf="@+id/buttonAttachments"
+			android:layout_centerVertical="true"
 			android:inputType="text"
 			android:hint="@string/fragment_chat_ed_hint"
 			tools:ignore="Autofill"/>
@@ -49,6 +51,7 @@
 			android:layout_height="wrap_content"
 			android:layout_alignParentEnd="true"
 			android:layout_centerVertical="true"
+			android:layout_margin="@dimen/general_margin_16"
 			android:contentDescription="@string/fragment_chat_send_img_description"
 			android:src="@drawable/fragment_chat_ic_send_black_24dp"/>
 	</RelativeLayout>

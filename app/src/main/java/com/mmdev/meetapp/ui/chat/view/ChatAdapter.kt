@@ -134,7 +134,6 @@ class ChatAdapter (private var userId: String,
 				.load(url)
 				.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
 				.apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
-				.override(250, 250)
 				.into(ivChatPhoto)
 			ivChatPhoto.setOnClickListener(this)
 		}

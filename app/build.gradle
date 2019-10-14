@@ -68,7 +68,6 @@ dependencies {
 	//custom UI
 	implementation 'com.yuyakaido.android:card-stack-view:2.3.4'
 	implementation 'com.github.ceryle:SegmentedButton:2.0.2'
-	implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 	//navigation drawer
 	implementation 'com.mxn.soul:flowingdrawer-core:2.1.0'
 	implementation 'com.nineoldandroids:library:2.4.0'

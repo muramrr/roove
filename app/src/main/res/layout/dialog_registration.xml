@@ -2,7 +2,7 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/baseline_tint1"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,8 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="I'm a..."
-            android:textColor="@color/material_black_1000"
-            android:textSize="26sp" />
+            style="@style/regular_text_white_24sp_85op" />
 
         <co.ceryle.segmentedbutton.SegmentedButtonGroup
             android:layout_width="match_parent"
@@ -64,8 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="Interested in meeting with..."
-            android:textColor="@color/material_black_1000"
-            android:textSize="26sp" />
+            style="@style/regular_text_white_24sp_85op" />
 
         <co.ceryle.segmentedbutton.SegmentedButtonGroup
             android:layout_width="match_parent"
