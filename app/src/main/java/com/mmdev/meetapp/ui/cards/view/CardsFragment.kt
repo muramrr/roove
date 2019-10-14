@@ -153,6 +153,6 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 	override fun onDestroyView() {
 		super.onDestroyView()
 		disposables.clear()
-		mMainActivity.setScrollableToolbar()
+
 	}
 }

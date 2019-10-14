@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<androidx.cardview.widget.CardView xmlns:tools="http://schemas.android.com/tools"
 	android:layout_height="wrap_content"
 	android:layout_width="wrap_content"
 	app:cardCornerRadius="10dp"
@@ -31,7 +31,8 @@
 			app:layout_constraintTop_toTopOf="@id/background"
 			app:layout_constraintBottom_toBottomOf="@id/background"
 			app:layout_constraintEnd_toEndOf="@id/background"
-			app:layout_constraintStart_toStartOf="@id/background" />
+			app:layout_constraintStart_toStartOf="@id/background"
+			tools:ignore="ContentDescription" />
 
 		<TextView
 			android:id="@+id/title"
@@ -39,7 +40,7 @@
 			android:layout_height="wrap_content"
 			android:gravity="center"
 			android:layout_margin="@dimen/general_margin_16"
-			android:text="Rate us if you like the app"
+			android:text="Rate 5 stars if you like the app"
 			android:textAlignment="center"
 			android:textColor="#000000"
 			android:textSize="16sp"
@@ -57,7 +58,7 @@
 			android:layout_marginBottom="@dimen/general_margin_16"
 			android:layout_marginStart="@dimen/general_margin_16"
 			android:layout_marginTop="@dimen/general_margin_16"
-			android:text="Do you really want to Exit ?"
+			android:text="Do you really want to Sign Out ?"
 			android:textAlignment="center"
 			android:textSize="14sp"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +76,7 @@
 			android:layout_marginEnd="@dimen/general_margin_16"
 			android:layout_marginStart="@dimen/general_margin_16"
 			android:layout_marginTop="@dimen/general_margin_16"
-			android:text="Rate"
+			android:text="NO"
 			android:textColor="#ffffff"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@id/positiveBtn"
@@ -89,7 +90,7 @@
 			android:layout_marginEnd="@dimen/general_margin_16"
 			android:layout_marginBottom="@dimen/general_margin_16"
 			android:background="@drawable/alert_button_positive"
-			android:text="Ok"
+			android:text="YES"
 			android:textColor="#ffffff"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"

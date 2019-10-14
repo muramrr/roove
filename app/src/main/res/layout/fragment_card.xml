@@ -1,6 +1,8 @@
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/baseline"
     android:gravity="center"
     android:padding="20dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -8,9 +10,13 @@
 
     <com.yuyakaido.android.cardstackview.CardStackView
         android:id="@+id/card_stack_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        tools:listitem="@layout/fragment_card_item"/>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        tools:listitem="@layout/fragment_card_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
