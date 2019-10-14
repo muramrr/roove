@@ -6,6 +6,9 @@
 
 	<color name="baseline">#12121A</color>
 	<color name="baseline_tint1">#1A1A25</color>
+	<color name="baseline_tint2">#323248</color>
+	<color name="baseline_tint3">#6b6b99</color>
+
 	<color name="black">#000000</color>
 	<color name="white">#ffffff</color>
 	<color name="white_85">#d8ffffff</color>

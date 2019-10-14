@@ -4,20 +4,21 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.github.chrisbanes.photoview.PhotoView
 import com.mmdev.meetapp.R
 import com.mmdev.meetapp.core.GlideApp
 
 class FullScreenImageActivity: AppCompatActivity(R.layout.activity_full_screen_image) {
 
-	private lateinit var mImageView: PhotoView
+	private lateinit var mImageView: ImageView
 	private var isHide = false
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		bindViews()
+		setValues()
 	}
 
 	private fun bindViews() {
@@ -60,10 +61,6 @@ class FullScreenImageActivity: AppCompatActivity(R.layout.activity_full_screen_i
 		}
 	}
 
-	override fun onResume() {
-		super.onResume()
-		setValues()
-	}
 
 //	override fun onBackPressed() {
 //		super.onBackPressed()

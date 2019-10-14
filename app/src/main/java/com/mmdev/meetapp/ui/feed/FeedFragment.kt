@@ -35,4 +35,13 @@ class FeedFragment: Fragment(R.layout.fragment_feed) {
 
 	}
 
+	override fun onResume() {
+		super.onResume()
+		mMainActivity.setScrollableToolbar()
+	}
+
+	override fun onStop() {
+		super.onStop()
+		mMainActivity.setNonScrollableToolbar()
+	}
 }
