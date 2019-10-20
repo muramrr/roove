@@ -16,11 +16,16 @@ class FeedFragment: Fragment(R.layout.fragment_feed) {
 	private lateinit var tabLayout: TabLayout
 	private lateinit var viewPager: ViewPager2
 
+	companion object{
+		fun newInstance(): FeedFragment {
+			return FeedFragment()
+		}
+	}
+
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		if (activity != null) mMainActivity = activity as MainActivity
 		viewPager = view.findViewById(R.id.viewPager)
-		viewPagerAdapter =
-			FeedViewPagerAdapter(childFragmentManager, lifecycle)
+		viewPagerAdapter = FeedViewPagerAdapter(childFragmentManager, lifecycle)
 		viewPager.adapter = viewPagerAdapter
 		tabLayout = view.findViewById(R.id.tabLayout)
 
@@ -38,6 +43,7 @@ class FeedFragment: Fragment(R.layout.fragment_feed) {
 	override fun onResume() {
 		super.onResume()
 		mMainActivity.setScrollableToolbar()
+		mMainActivity.toolbar.title = "Feed"
 	}
 
 	override fun onStop() {

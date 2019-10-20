@@ -76,6 +76,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		private const val REQUEST_CAMERA = 2
 		private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
 
+		fun newInstance(): ChatFragment {
+			return ChatFragment()
+		}
+
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -126,13 +130,18 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 	* else shake animation
 	*/
 	private fun sendMessageClick() {
-		if (edMessageWrite.text.isNotEmpty()) {
-			val message = Message(userModel, edMessageWrite.text.toString(), photoAttached = null)
+		if (edMessageWrite.text.isNotEmpty() &&
+		    edMessageWrite.text.toString().trim().isNotEmpty()) {
+
+			val message = Message(userModel,
+			                      edMessageWrite.text.toString().trim(),
+			                      photoAttached = null)
 			disposables.add(chatViewModel.sendMessage(message)
 					     .observeOn(AndroidSchedulers.mainThread())
 					     .subscribe( { Log.d(TAG, "Message sent") },
 					                 { mMainActivity.showInternetError() } ))
 			edMessageWrite.setText("")
+
 		}
 		else edMessageWrite
 			.startAnimation(AnimationUtils.loadAnimation(mMainActivity,
@@ -253,6 +262,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 						.show()
 			}
 		}
+	}
+
+	override fun onResume() {
+		super.onResume()
+		mMainActivity.toolbar.title = "Chat"
 	}
 
 	override fun onDestroy() {

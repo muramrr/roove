@@ -18,7 +18,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/card_margin_fix_rview_8"
 		android:layout_marginBottom="@dimen/card_margin_fix_rview_8"
-		app:cardBackgroundColor="@color/baseline_tint1"
+		app:cardBackgroundColor="@color/colorPrimary"
 		app:cardCornerRadius="6dp"
 		app:cardElevation="1dp"
 		xmlns:app="http://schemas.android.com/apk/res-auto">

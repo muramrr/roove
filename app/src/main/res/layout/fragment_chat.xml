@@ -2,14 +2,13 @@
 <RelativeLayout
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@color/material_blue_100"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
-		android:background="@color/baseline"
+		android:background="@color/colorPrimaryDark"
 		android:id="@+id/messageRecyclerView"
 		android:layout_above="@+id/content_message"
 		android:layout_alignParentTop="true"
@@ -20,40 +19,50 @@
 		android:id="@+id/content_message"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true"
-		android:background="@color/material_white_1000"
-		>
+		android:background="@color/colorAccentDark"
+		android:layout_alignParentBottom="true">
 
 		<ImageView
 			android:id="@+id/buttonAttachments"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:background="?attr/selectableItemBackgroundBorderless"
+			android:clickable="true"
+			android:focusable="true"
 			android:layout_alignParentStart="true"
 			android:layout_centerVertical="true"
 			android:layout_margin="@dimen/general_margin_16"
 			android:contentDescription="@string/fragment_chat_attach_img_description"
-			android:src="@drawable/fragment_chat_ic_attachment"/>
+			android:src="@drawable/fragment_chat_ic_attachment_24dp"/>
 
 		<EditText
 			android:id="@+id/editTextMessage"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:background="@null"
 			android:layout_toStartOf="@+id/buttonMessage"
 			android:layout_toEndOf="@+id/buttonAttachments"
 			android:layout_centerVertical="true"
-			android:inputType="text"
+			android:imeOptions="actionSend"
+			android:inputType="text|textMultiLine"
 			android:hint="@string/fragment_chat_ed_hint"
-			tools:ignore="Autofill"/>
+			android:textColorHint="@color/white_50"
+			tools:ignore="Autofill"
+			style="@style/regular_text_white_16sp_85op"/>
 
 		<ImageView
 			android:id="@+id/buttonMessage"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:background="?attr/selectableItemBackgroundBorderless"
+			android:clickable="true"
+			android:focusable="true"
 			android:layout_alignParentEnd="true"
 			android:layout_centerVertical="true"
 			android:layout_margin="@dimen/general_margin_16"
 			android:contentDescription="@string/fragment_chat_send_img_description"
-			android:src="@drawable/fragment_chat_ic_send_black_24dp"/>
+			android:src="@drawable/fragment_chat_ic_send_black_24dp"
+			 />
 	</RelativeLayout>
 
 </RelativeLayout>

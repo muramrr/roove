@@ -1,13 +1,20 @@
 <resources>
 
 	<!-- Base application theme. -->
-	<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+	<style name="AppTheme" parent="Theme.AppCompat.DayNight">
 
 		<!-- Customize your theme here. -->
-		<item name="colorPrimary">@color/white</item>
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 		<item name="colorAccent">@color/colorAccent</item>
+		<item name="colorError">@color/colorError</item>
+		<item name="colorOnSurface">@color/colorSurface</item>
+
+
 		<item name="actionModeBackground">@color/actionModeBackground</item>
-		<item name="android:windowLayoutInDisplayCutoutMode">never</item>
+		<item name="android:colorBackground">@color/colorPrimaryDark</item>
+
+
 
 	</style>
 
@@ -16,7 +23,6 @@
 		<item name="windowNoTitle">true</item>
 		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
 		<item name="android:windowTranslucentStatus">true</item>
-
 	</style>
 
 	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -25,6 +31,10 @@
 	<style name="AlertDialogAnimation">
 		<item name="android:windowEnterAnimation">@anim/alert_enter</item>
 		<item name="android:windowExitAnimation">@anim/alert_exit</item>
+	</style>
+
+	<style name="AppTheme.NavigationView" >
+		<item name="android:textAppearance">@style/regular_text_white_16sp_85op</item>
 	</style>
 
 
@@ -78,13 +88,6 @@
 		<item name="android:textSize">16sp</item>
 	</style>
 
-	<!-- feed content author name -->
-	<style name="regular_text_white_14sp_85op" parent="Widget.AppCompat.TextView">
-		<item name="android:textColor">@color/white_85</item>
-		<item name="android:fontFamily">@font/nunito_sans_regular</item>
-		<item name="android:textSize">16sp</item>
-	</style>
-
 	<!-- feed content text-->
 	<style name="light_text_white_12sp_85op" parent="Widget.AppCompat.TextView">
 		<item name="android:textColor">@color/white_85</item>
@@ -92,12 +95,15 @@
 		<item name="android:textSize">12sp</item>
 	</style>
 
+	<!-- feed content author name -->
 	<style name="regular_text_white_12sp_85op" parent="Widget.AppCompat.TextView">
 		<item name="android:textColor">@color/white_85</item>
 		<item name="android:fontFamily">@font/nunito_sans_regular</item>
 		<item name="android:textSize">12sp</item>
 	</style>
 
+
+	<!-- chat timestamp textview	-->
 	<style name="regular_text_white_8sp_25op" parent="Widget.AppCompat.TextView">
 		<item name="android:textColor">@color/white_25</item>
 		<item name="android:fontFamily">@font/nunito_sans_regular</item>
@@ -105,7 +111,11 @@
 	</style>
 
 
-
+	<style name="regular_text_white_14sp_85op" parent="Widget.AppCompat.TextView">
+		<item name="android:textColor">@color/white_85</item>
+		<item name="android:fontFamily">@font/nunito_sans_regular</item>
+		<item name="android:textSize">16sp</item>
+	</style>
 
 
 
