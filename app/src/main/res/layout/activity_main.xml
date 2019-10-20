@@ -21,7 +21,7 @@
 			android:id="@+id/main_container"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:background="@color/baseline"
+			android:background="@color/colorPrimaryDark"
 			app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -31,7 +31,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
 		android:layout_gravity="start"
-		android:background="@color/baseline"
+		android:background="@color/colorPrimaryDark"
 		android:divider="@android:color/transparent"
 		android:dividerHeight="14dp"
 		android:fitsSystemWindows="true"

@@ -9,7 +9,7 @@
 		android:id="@+id/tabLayout"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:background="@color/baseline"
+		android:background="@color/colorPrimaryDark"
 		android:overScrollMode="never"
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
