@@ -10,7 +10,7 @@
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/baseline_tint1"
+            android:background="@color/colorPrimary"
             android:id="@+id/toolbar"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:titleTextAppearance="@style/regular_text_white_20sp_85op"

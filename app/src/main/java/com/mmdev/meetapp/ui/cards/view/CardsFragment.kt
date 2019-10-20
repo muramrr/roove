@@ -42,6 +42,12 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 
 	private val disposables = CompositeDisposable()
 
+	companion object{
+		fun newInstance(): CardsFragment {
+			return CardsFragment()
+		}
+	}
+
 
 
 
@@ -150,8 +156,13 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 	}
 
 
-	override fun onDestroyView() {
-		super.onDestroyView()
+	override fun onResume() {
+		super.onResume()
+		mMainActivity.toolbar.title = "Cards"
+	}
+
+	override fun onDestroy(){
+		super.onDestroy()
 		disposables.clear()
 
 	}

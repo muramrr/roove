@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.request.RequestOptions
@@ -46,7 +47,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	private lateinit var drawerLayout: DrawerLayout
 	private lateinit var toggle: ActionBarDrawerToggle
-	private lateinit var toolbar: Toolbar
+	lateinit var toolbar: Toolbar
 	private lateinit var params: AppBarLayout.LayoutParams
 
 	private lateinit var ivSignedInUserAvatar: ImageView
@@ -63,7 +64,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-
 		authViewModel = ViewModelProvider(this, authViewModelFactory)
 			.get(AuthViewModel::class.java)
 
@@ -88,10 +88,18 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	// show main feed fragment
 	private fun showFeedFragment(){
-		mFragmentManager.beginTransaction().apply {
-			add(R.id.main_container, FeedFragment(), "FeedFragment")
-			commit()
-		}
+		if (mFragmentManager.findFragmentByTag(FeedFragment::class.java.canonicalName) == null)
+			mFragmentManager.beginTransaction().apply {
+				add(R.id.main_container,
+				    FeedFragment.newInstance(),
+				    FeedFragment::class.java.canonicalName)
+				commit()
+			}
+		else mFragmentManager.popBackStack(null,
+		                                   FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+
+
 	}
 
 	override fun onCardsClick() = startCardFragment()
@@ -104,33 +112,51 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	 * start card swipe
 	 */
 	private fun startCardFragment() {
-		mFragmentManager.findFragmentByTag("CardsFragment") ?: mFragmentManager
-			.beginTransaction().apply{
+		mFragmentManager.findFragmentByTag(CardsFragment::class.java.canonicalName) ?:
+		mFragmentManager.beginTransaction().apply {
+			setCustomAnimations(R.anim.fragment_enter_from_right,
+			                    R.anim.fragment_exit_to_left,
+			                    R.anim.fragment_enter_from_left,
+			                    R.anim.fragment_exit_to_right)
+			replace(R.id.main_container,
+			    CardsFragment.newInstance(),
+			    CardsFragment::class.java.canonicalName)
+			addToBackStack(CardsFragment::class.java.canonicalName)
+			commit()
+		}
+	}
+
+	private fun replaceFragment (fragment: Fragment) {
+		val backStateName = fragment.javaClass.name
+		val fragmentPopped = mFragmentManager.popBackStackImmediate(backStateName, 0)
+
+		if (!fragmentPopped){ //fragment not in back stack, create it.
+			mFragmentManager.beginTransaction().apply {
 				setCustomAnimations(R.anim.fragment_enter_from_right,
 				                    R.anim.fragment_exit_to_left,
 				                    R.anim.fragment_enter_from_left,
 				                    R.anim.fragment_exit_to_right)
-				replace(R.id.main_container, CardsFragment(), "CardsFragment")
-				addToBackStack(null)
+				replace(R.id.main_container, fragment, fragment.javaClass.name)
+				addToBackStack(backStateName)
 				commit()
 			}
-
+		}
 	}
 
 	/*
 	 * start chat
 	 */
 	private fun startChatFragment() {
-		mFragmentManager.findFragmentByTag("ChatFragment") ?: mFragmentManager
-			.beginTransaction().apply {
-				setCustomAnimations(R.anim.fragment_enter_from_right,
-				                    R.anim.fragment_exit_to_left,
-				                    R.anim.fragment_enter_from_left,
-				                    R.anim.fragment_exit_to_right)
-				replace(R.id.main_container, ChatFragment(), "ChatFragment")
-				addToBackStack(null)
-				commit()
-			}
+		mFragmentManager.findFragmentByTag(ChatFragment::class.java.canonicalName) ?:
+		mFragmentManager.beginTransaction().apply {
+			setCustomAnimations(R.anim.fragment_enter_from_right,
+			                    R.anim.fragment_exit_to_left,
+			                    R.anim.fragment_enter_from_left,
+			                    R.anim.fragment_exit_to_right)
+			replace(R.id.main_container, ChatFragment.newInstance(), ChatFragment::class.java.canonicalName)
+			addToBackStack(null)
+			commit()
+		}
 	}
 
 	override fun startAuthActivity(){
@@ -201,13 +227,11 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			drawerLayout.closeDrawer(GravityCompat.START)
 			// Handle navigation view item clicks here.
 			when (item.itemId) {
-				R.id.nav_feed -> onCardsClick()
-				R.id.nav_cards -> { Log.wtf("mylogs", "$userModel") }
-				R.id.nav_messages -> {
-					progressDialog.showDialog()
-					Handler().postDelayed({ progressDialog.dismissDialog() }, 5000)
-				}
-				R.id.nav_notifications -> { }
+				R.id.nav_feed -> { showFeedFragment() }
+				R.id.nav_cards -> onCardsClick()
+				R.id.nav_messages -> onMessagesClick()
+				R.id.nav_notifications -> { progressDialog.showDialog()
+					Handler().postDelayed({ progressDialog.dismissDialog() }, 5000) }
 				R.id.nav_account -> { }
 				R.id.nav_log_out -> onLogOutClick()
 			}

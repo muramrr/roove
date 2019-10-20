@@ -2,7 +2,7 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-	android:background="@color/baseline"
+	android:background="@color/colorPrimaryDark"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
 	android:layout_marginStart="48dp"
@@ -32,7 +32,7 @@
 		    android:layout_width="200dp"
 		    android:layout_height="250dp"
 		    android:layout_margin="10dp"
-	        android:background="@color/baseline_tint3"
+	        android:background="@color/colorAccent"
 		    android:contentDescription="@string/chat_message_my_attach_img_description"
 		    android:src="@drawable/feed_content_man_in_suit"
 		    android:visibility="visible"/>

@@ -2,7 +2,7 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/baseline_tint1"
+    android:background="@color/colorPrimary"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,8 +24,8 @@
             android:gravity="center"
             app:sbg_animateSelector="bounce"
             app:sbg_animateSelectorDuration="1000"
-            app:sbg_backgroundColor="@color/material_white_1000"
-            app:sbg_dividerColor="@color/material_black_1000"
+            app:sbg_backgroundColor="@color/white"
+            app:sbg_dividerColor="@color/black"
             app:sbg_dividerPadding="10dp"
             app:sbg_dividerRadius="10dp"
             app:sbg_dividerSize="1dp"
@@ -42,7 +42,7 @@
                 app:sb_drawable="@mipmap/ic_diag_reg_gender_male"
                 app:sb_drawableGravity="top"
                 app:sb_text="Male"
-                app:sb_textColor_onSelection="@color/material_black_1000"
+                app:sb_textColor_onSelection="@color/black"
                 app:sb_textSize="20sp"/>
 
             <co.ceryle.segmentedbutton.SegmentedButton
@@ -52,7 +52,7 @@
                 app:sb_drawable="@mipmap/ic_diag_reg_gender_female"
                 app:sb_drawableGravity="top"
                 app:sb_text="Female"
-                app:sb_textColor_onSelection="@color/material_black_1000"
+                app:sb_textColor_onSelection="@color/black"
                 app:sb_textSize="20sp"/>
 
 
@@ -73,8 +73,8 @@
             android:gravity="center"
             app:sbg_animateSelector="bounce"
             app:sbg_animateSelectorDuration="1000"
-            app:sbg_backgroundColor="@color/material_white_1000"
-            app:sbg_dividerColor="@color/material_black_1000"
+            app:sbg_backgroundColor="@color/white"
+            app:sbg_dividerColor="@color/black"
             app:sbg_dividerPadding="10dp"
             app:sbg_dividerRadius="10dp"
             app:sbg_dividerSize="1dp"
@@ -91,7 +91,7 @@
                 app:sb_drawable="@mipmap/ic_diag_reg_prefgender_male"
                 app:sb_drawableGravity="top"
                 app:sb_text="Male"
-                app:sb_textColor_onSelection="@color/material_black_1000"
+                app:sb_textColor_onSelection="@color/black"
                 app:sb_textSize="20sp"/>
 
             <co.ceryle.segmentedbutton.SegmentedButton
@@ -101,7 +101,7 @@
                 app:sb_drawable="@mipmap/ic_diag_reg_prefgender_female"
                 app:sb_drawableGravity="top"
                 app:sb_text="Female"
-                app:sb_textColor_onSelection="@color/material_black_1000"
+                app:sb_textColor_onSelection="@color/black"
                 app:sb_textSize="20sp"/>
 
             <co.ceryle.segmentedbutton.SegmentedButton
@@ -111,7 +111,7 @@
                 app:sb_drawable="@mipmap/ic_diag_reg_prefgender_both"
                 app:sb_drawableGravity="top"
                 app:sb_text="Both"
-                app:sb_textColor_onSelection="@color/material_black_1000"
+                app:sb_textColor_onSelection="@color/black"
                 app:sb_textSize="20sp"/>
 
         </co.ceryle.segmentedbutton.SegmentedButtonGroup>
