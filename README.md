@@ -1,4 +1,4 @@
-# MeetApps  [![](https://img.shields.io/github/license/muramrr/MeetApps.svg)](https://github.com/muramrr/MeetApps/blob/master/LICENSE)
+# roove  [![](https://img.shields.io/github/license/muramrr/MeetApps.svg)](https://github.com/muramrr/roove/blob/master/LICENSE)
 A simple dating app based on tinder-style cards. WIP 62% done.
 
 Used libraries/patterns:
