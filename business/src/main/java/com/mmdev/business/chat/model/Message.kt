@@ -9,5 +9,7 @@ import java.util.*
     empty constructor needed for firebase */
 
 
-data class Message (var sender: User = User(), var text: String = "", val timestamp: Date? = Date(),
+data class Message (var sender: User = User(),
+                    var text: String = "",
+                    val timestamp: Date? = Date(),
                     var photoAttached: PhotoAttached? = PhotoAttached())

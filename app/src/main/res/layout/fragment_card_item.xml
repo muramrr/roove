@@ -7,7 +7,7 @@
     app:cardUseCompatPadding="true"
     app:cardPreventCornerOverlap="false"
     app:cardCornerRadius="8dp"
-    app:cardBackgroundColor="@color/material_white_1000"
+    app:cardBackgroundColor="@color/white"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -30,19 +30,15 @@
             android:id="@+id/fragment_card_item_text_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/material_white_1000"
-            android:textStyle="bold"
             android:text="@string/default_name"
-            android:textSize="26sp"/>
+            style="@style/regular_text_white_24sp_85op"/>
 
         <TextView
             android:id="@+id/fragment_card_item_text_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/default_city"
-            android:textColor="@color/material_white_1000"
-            android:textStyle="bold"
-            android:textSize="20sp"/>
+            style="@style/regular_text_white_20sp_85op"/>
 
     </LinearLayout>
 
