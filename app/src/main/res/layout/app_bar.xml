@@ -10,9 +10,10 @@
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/colorPrimary"
             android:id="@+id/toolbar"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:titleTextAppearance="@style/regular_text_white_20sp_85op"
             app:title="MeetApps"/>
 
 </com.google.android.material.appbar.AppBarLayout>

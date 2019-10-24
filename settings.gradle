@@ -1,1 +1,1 @@
-include ':app', ':expandablelayout', ':progressbutton', ':business', ':data'
+include ':app', ':business', ':data'

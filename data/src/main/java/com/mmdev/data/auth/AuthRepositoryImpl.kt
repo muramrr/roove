@@ -17,7 +17,7 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
-//todo: save user locally
+//todo: HANDLE USER PROPERLY BUGGGGGGZZZZZZZ
 
 @Singleton
 class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,

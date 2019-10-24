@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		  package="com.mmdev.meetapp">
+		  package="com.mmdev.roove">
 
 
 	<uses-permission android:name="android.permission.CAMERA"/>
 	<uses-permission android:name="android.permission.INTERNET"/>
-
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
@@ -17,7 +16,7 @@
 		android:label="@string/app_name"
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
-		android:theme="@style/AppTheme"
+		android:theme="@style/AppTheme.NoActionBar"
 		android:fullBackupContent="@xml/backup_descriptor">
 
 		<meta-data android:name="com.facebook.sdk.ApplicationId"
@@ -26,6 +25,9 @@
 				   android:value="false"/>
 		<meta-data android:name="com.facebook.sdk.AutoLogAppEventsEnabled"
 				   android:value="false"/>
+		<meta-data
+			android:name="preloaded_fonts"
+			android:resource="@array/preloaded_fonts" />
 
 		<activity
 			android:name="com.facebook.FacebookActivity"
@@ -44,7 +46,7 @@
 		</activity>
 
 		<activity
-			android:name=".ui.main.view.MainActivity"
+			android:name="com.mmdev.roove.ui.main.view.MainActivity"
 			android:label="@string/app_name"
 			android:theme="@style/AppTheme.NoActionBar">
 			<intent-filter>
@@ -56,27 +58,32 @@
 		</activity>
 
 		<activity
-			android:name=".ui.auth.view.AuthActivity"
+			android:name="com.mmdev.roove.ui.auth.view.AuthActivity"
 			android:configChanges="orientation|keyboard|keyboardHidden"
-			android:theme="@style/AppTheme"
+			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateHidden">
 		</activity>
 
 		<activity
-			android:name=".ui.chat.view.FullScreenImageActivity"
+			android:name="com.mmdev.roove.ui.chat.view.FullScreenImageActivity"
 			android:theme="@style/AppTheme.NoActionBar">
 		</activity>
+
+
+		<activity android:name="com.mmdev.roove.ui.feed.tabitem.FeedItemActivity" />
 
 		<provider
 			android:name="androidx.core.content.FileProvider"
 			android:authorities="${applicationId}.provider"
 			android:exported="false"
-			android:grantUriPermissions="true"
-			>
+			android:grantUriPermissions="true">
+
 			<meta-data
 				android:name="android.support.FILE_PROVIDER_PATHS"
 				android:resource="@xml/provider_paths"/>
+
 		</provider>
+
 
 		<service android:name="com.mmdev.data.services.LocationService"/>
 		<service android:name="com.mmdev.data.services.GPSTracker"/>
