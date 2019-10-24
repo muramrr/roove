@@ -39,3 +39,6 @@ build
 *.ipr
 *~
 *.swp
+*.psd
+*.png
+/Screenshots
