@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		  package="com.mmdev.meetapp">
+		  package="com.mmdev.roove">
 
 
 	<uses-permission android:name="android.permission.CAMERA"/>
@@ -46,7 +46,7 @@
 		</activity>
 
 		<activity
-			android:name=".ui.main.view.MainActivity"
+			android:name="com.mmdev.roove.ui.main.view.MainActivity"
 			android:label="@string/app_name"
 			android:theme="@style/AppTheme.NoActionBar">
 			<intent-filter>
@@ -58,19 +58,19 @@
 		</activity>
 
 		<activity
-			android:name=".ui.auth.view.AuthActivity"
+			android:name="com.mmdev.roove.ui.auth.view.AuthActivity"
 			android:configChanges="orientation|keyboard|keyboardHidden"
 			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateHidden">
 		</activity>
 
 		<activity
-			android:name=".ui.chat.view.FullScreenImageActivity"
+			android:name="com.mmdev.roove.ui.chat.view.FullScreenImageActivity"
 			android:theme="@style/AppTheme.NoActionBar">
 		</activity>
 
 
-		<activity android:name=".ui.feed.tabitem.FeedItemActivity" />
+		<activity android:name="com.mmdev.roove.ui.feed.tabitem.FeedItemActivity" />
 
 		<provider
 			android:name="androidx.core.content.FileProvider"

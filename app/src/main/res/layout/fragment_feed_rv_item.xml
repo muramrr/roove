@@ -7,7 +7,7 @@
 <!--			type="com.mmdev.business.feed.model.FeedItem" />-->
 		<variable
 			name="feedItem"
-			type="com.mmdev.meetapp.models.FeedItem" />
+			type="com.mmdev.roove.models.FeedItem" />
 		<variable
 			name="user"
 			type="com.mmdev.business.user.model.User" />

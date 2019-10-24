@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/auth_container"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@drawable/background"
-	android:paddingTop="@dimen/notifbar_size_24">
+	android:paddingTop="24dp"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
 	<TextView
@@ -13,12 +14,12 @@
 		style="@style/auth_slogan1"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="110dp"
 		android:text="Find new\nfriends nearby"
-		app:layout_constraintBottom_toTopOf="@id/tv_logan2"
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.1"/>
 
 
 	<TextView
@@ -30,17 +31,19 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.6"
 		style="@style/auth_slogan2"/>
 
 	<Button
 		android:id="@+id/facebook_login_button_delegate"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="50dp"
 		android:background="@drawable/facebook_btn"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"/>
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.85"/>
 
 	<com.facebook.login.widget.LoginButton
 		android:id="@+id/facebook_login_button"

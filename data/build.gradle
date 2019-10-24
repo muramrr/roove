@@ -2,22 +2,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.google.gms.google-services'
 
 android {
-	compileSdkVersion 29
-	buildToolsVersion "29.0.2"
-
-
-	defaultConfig {
-		minSdkVersion 21
-		targetSdkVersion 29
-		versionCode 1
-		versionName "1.0"
-
-		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-		consumerProguardFiles 'consumer-rules.pro'
-	}
 
 	def globalConfiguration = rootProject.extensions.getByName("ext")
 	compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
@@ -56,8 +42,6 @@ android {
 
 dependencies {
 	implementation project(':business')
-
-	//implementation fileTree(dir: 'libs', include: ['*.jar'])
 
 	// Kotlin
 	implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"

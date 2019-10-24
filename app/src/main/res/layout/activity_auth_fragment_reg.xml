@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_margin="20dp"
+	app:contentPadding="20dp"
+	app:cardBackgroundColor="@color/colorPrimary"
+	app:cardCornerRadius="20dp"
+	app:cardElevation="1dp"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<TextView
+			android:id="@+id/tv_reg_1"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="I'm a..."
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_bias="0"
+			style="@style/regular_text_white_24sp_85op" />
+
+		<co.ceryle.segmentedbutton.SegmentedButtonGroup
+			android:id="@+id/dialog_registr_sbg_gender"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="10dp"
+			android:gravity="center"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tv_reg_1"
+			app:layout_constraintBottom_toTopOf="@id/tv_reg_2"
+			app:sbg_animateSelector="bounce"
+			app:sbg_animateSelectorDuration="1000"
+			app:sbg_backgroundColor="@color/white"
+			app:sbg_dividerColor="@color/black"
+			app:sbg_dividerPadding="10dp"
+			app:sbg_dividerRadius="10dp"
+			app:sbg_dividerSize="1dp"
+			app:sbg_position="0"
+			app:sbg_radius="2dp"
+			app:sbg_ripple="true"
+			app:sbg_rippleColor="@color/material_blue_400"
+			app:sbg_selectorColor="@color/material_blue_400">
+
+			<co.ceryle.segmentedbutton.SegmentedButton
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				app:sb_drawable="@mipmap/ic_diag_reg_gender_male"
+				app:sb_drawableGravity="top"
+				app:sb_text="Male"
+				app:sb_textColor_onSelection="@color/black"
+				app:sb_textSize="20sp"/>
+
+			<co.ceryle.segmentedbutton.SegmentedButton
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				app:sb_drawable="@mipmap/ic_diag_reg_gender_female"
+				app:sb_drawableGravity="top"
+				app:sb_text="Female"
+				app:sb_textColor_onSelection="@color/black"
+				app:sb_textSize="20sp"/>
+
+
+		</co.ceryle.segmentedbutton.SegmentedButtonGroup>
+
+		<TextView
+			android:id="@+id/tv_reg_2"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="Interested in meeting with..."
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/dialog_registr_sbg_gender"
+			app:layout_constraintBottom_toTopOf="@id/dialog_registr_sbg_preferedgender"
+			style="@style/regular_text_white_24sp_85op" />
+
+		<co.ceryle.segmentedbutton.SegmentedButtonGroup
+			android:id="@+id/dialog_registr_sbg_preferedgender"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="10dp"
+			android:gravity="center"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tv_reg_2"
+			app:layout_constraintBottom_toTopOf="@id/diag_reg_btn_done"
+			app:sbg_animateSelector="bounce"
+			app:sbg_animateSelectorDuration="1000"
+			app:sbg_backgroundColor="@color/white"
+			app:sbg_dividerColor="@color/black"
+			app:sbg_dividerPadding="10dp"
+			app:sbg_dividerRadius="10dp"
+			app:sbg_dividerSize="1dp"
+			app:sbg_position="0"
+			app:sbg_radius="2dp"
+			app:sbg_ripple="true"
+			app:sbg_rippleColor="@color/material_orange_600"
+			app:sbg_selectorColor="@color/material_orange_600">
+
+			<co.ceryle.segmentedbutton.SegmentedButton
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				app:sb_drawable="@mipmap/ic_diag_reg_prefgender_male"
+				app:sb_drawableGravity="top"
+				app:sb_text="Male"
+				app:sb_textColor_onSelection="@color/black"
+				app:sb_textSize="20sp"/>
+
+			<co.ceryle.segmentedbutton.SegmentedButton
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				app:sb_drawable="@mipmap/ic_diag_reg_prefgender_female"
+				app:sb_drawableGravity="top"
+				app:sb_text="Female"
+				app:sb_textColor_onSelection="@color/black"
+				app:sb_textSize="20sp"/>
+
+			<co.ceryle.segmentedbutton.SegmentedButton
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				app:sb_drawable="@mipmap/ic_diag_reg_prefgender_both"
+				app:sb_drawableGravity="top"
+				app:sb_text="Both"
+				app:sb_textColor_onSelection="@color/black"
+				app:sb_textSize="20sp"/>
+
+		</co.ceryle.segmentedbutton.SegmentedButtonGroup>
+
+		<com.mmdev.roove.ui.custom.ProgressButton
+			android:id="@+id/diag_reg_btn_done"
+			android:layout_height="50dp"
+			android:layout_width="match_parent"
+			android:layout_marginTop="24dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/dialog_registr_sbg_preferedgender"
+			app:layout_constraintVertical_bias="1"
+			app:backgroundColor="@color/material_blue_a700"
+			app:text="DONE!"/>
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

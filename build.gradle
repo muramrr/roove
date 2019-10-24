@@ -8,7 +8,7 @@ buildscript {
 		//firebase
 		firebase_auth_version = '19.1.0'
 		firebase_core_version = '17.2.0'
-		firebase_firestore_version = '21.1.1'
+		firebase_firestore_version = '21.2.0'
 		firebase_storage_version = '19.1.0'
 
 		// Dagger
