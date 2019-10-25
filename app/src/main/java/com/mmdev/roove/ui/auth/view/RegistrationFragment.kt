@@ -17,7 +17,7 @@ import com.mmdev.roove.ui.custom.ProgressButton
 class RegistrationFragment: Fragment(R.layout.activity_auth_fragment_reg){
 
 	private lateinit var mAuthActivity: AuthActivity
-	lateinit var progressButton: ProgressButton
+	private var isRegistrationCompleted = false
 
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
@@ -26,8 +26,6 @@ class RegistrationFragment: Fragment(R.layout.activity_auth_fragment_reg){
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-
 		var gender = "male"
 		var preferedGender = "male"
 		val sbgGender = view.findViewById(R.id.dialog_registr_sbg_gender) as SegmentedButtonGroup
@@ -44,17 +42,19 @@ class RegistrationFragment: Fragment(R.layout.activity_auth_fragment_reg){
 				2 -> preferedGender = "both"
 			}
 		}
-		progressButton = view.findViewById(R.id.diag_reg_btn_done) as ProgressButton
+		val progressButton = view.findViewById(R.id.diag_reg_btn_done) as ProgressButton
 		progressButton.setOnClickListener {
+			isRegistrationCompleted = true
 			progressButton.startAnim()
-			mAuthActivity.userModel.gender = gender
-			mAuthActivity.userModel.preferedGender = preferedGender
-			mAuthActivity.authCallback(progressButton)
+			mAuthActivity.fragmentRegistrationCallback(progressButton, gender, preferedGender)
 		}
 	}
 
 	override fun onStop() {
 		super.onStop()
-		mAuthActivity.showFacebookButton()
+		if (!isRegistrationCompleted) {
+			mAuthActivity.fragmentNotSuccessfulRegistrationCallback()
+			mAuthActivity.showFacebookButton()
+		}
 	}
 }

@@ -27,7 +27,9 @@ import kotlinx.android.synthetic.main.activity_auth.*
 /**
  *
  */
-class AuthActivity: AppCompatActivity(R.layout.activity_auth)  {
+class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
+
+
 
 	//Progress dialog for any authentication action
 	private lateinit var progressDialog: LoadingDialog
@@ -39,6 +41,8 @@ class AuthActivity: AppCompatActivity(R.layout.activity_auth)  {
 	private val authViewModelFactory = injector.authViewModelFactory()
 
 	private val disposables = CompositeDisposable()
+
+
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -52,27 +56,26 @@ class AuthActivity: AppCompatActivity(R.layout.activity_auth)  {
 		val facebookLogInButton: LoginButton = findViewById(R.id.facebook_login_button)
 		val facebookLoginButtonDelegate: Button = findViewById(R.id.facebook_login_button_delegate)
 		facebookLogInButton.registerCallback(mCallbackManager, object: FacebookCallback<LoginResult> {
+
 			override fun onSuccess(loginResult: LoginResult) {
-				progressDialog.showDialog()
 				disposables.add(authViewModel.signInWithFacebook(loginResult.accessToken.token)
 	                .flatMap {
 		                user -> userModel = user
 		                authViewModel.handleUserExistence(user.userId)
 	                }
 	                .observeOn(AndroidSchedulers.mainThread())
-
+	                .doOnSubscribe { progressDialog.showDialog() }
+	                .doFinally { progressDialog.dismissDialog() }
 	                .subscribe({
-		                           progressDialog.dismissDialog()
 		                           startMainActivity()
 	                           },
 	                           {
-		                           progressDialog.dismissDialog()
 		                           startRegistrationFragment()
 	                           }
 	                ))
 			}
 
-			override fun onCancel() {}
+			override fun onCancel() { authViewModel.logOut() }
 
 			override fun onError(error: FacebookException) {}
 		})
@@ -91,17 +94,23 @@ class AuthActivity: AppCompatActivity(R.layout.activity_auth)  {
 		}
 	}
 
-	fun authCallback(progressButton: ProgressButton) {
+	fun fragmentRegistrationCallback(progressButton: ProgressButton,
+	                                 gender:String,
+	                                 preferedGender:String) {
+		userModel.gender = gender
+		userModel.preferedGender = preferedGender
 		disposables.add(authViewModel.signUp(userModel)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-	                {
-		                progressButton.stopAnim { startMainActivity() }
-	                },
-	                {
-		                Log.wtf("mylogs", it)
-	                })
-		)
+            .subscribe({
+						progressButton.stopAnim { startMainActivity() }
+                       },
+                       {
+						Log.wtf("mylogs", it)
+                       }))
+	}
+
+	fun fragmentNotSuccessfulRegistrationCallback(){
+		authViewModel.logOut()
 	}
 
 	fun showFacebookButton(){
@@ -115,7 +124,7 @@ class AuthActivity: AppCompatActivity(R.layout.activity_auth)  {
 	}
 
 	private fun startMainActivity() {
-		val mMainActivityIntent = Intent(this@AuthActivity, MainActivity::class.java)
+		val mMainActivityIntent = Intent(this, MainActivity::class.java)
 		startActivity(mMainActivityIntent)
 		finish()
 	}
@@ -129,5 +138,6 @@ class AuthActivity: AppCompatActivity(R.layout.activity_auth)  {
 		super.onDestroy()
 		disposables.dispose()
 	}
+
 }
 
