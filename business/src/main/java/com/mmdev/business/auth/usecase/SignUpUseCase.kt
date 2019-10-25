@@ -8,5 +8,5 @@ import com.mmdev.business.user.model.User
 class SignUpUseCase(private val repository: AuthRepository) :
 		CompletableWithParamUseCase<User> {
 
-    override fun execute(t: User) = repository.signUp(t)
+    override fun execute(t: User) = repository.registerUser(t)
 }
