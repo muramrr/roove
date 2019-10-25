@@ -14,7 +14,7 @@ interface AuthRepository {
 
 	fun signInWithFacebook(token: String): Single<User>
 
-	fun signUp(user: User): Completable
+	fun registerUser(user: User): Completable
 
 	fun logOut()
 

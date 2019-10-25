@@ -1,6 +1,5 @@
 package com.mmdev.data.core
 
-import android.content.Context
 import com.mmdev.business.user.model.User
 import com.mmdev.data.user.UserRepositoryImpl
 import dagger.Module
@@ -15,13 +14,7 @@ import javax.inject.Singleton
  */
 
 @Module
-class UserModule (private val context: Context) {
-
-
-	@Provides
-	@Singleton
-	fun provideContext(): Context { return context }
-
+class UserModule {
 
 	/* get user info from sharedPrefs */
 	@Provides
