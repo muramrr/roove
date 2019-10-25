@@ -13,23 +13,29 @@ import com.mmdev.data.feed.FeedRepositoryImpl
 import com.mmdev.data.user.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
+import javax.inject.Singleton
 
 @Module
 class RepositoryModule {
 
 	@Provides
-	fun providesAuthRepository(repository: AuthRepositoryImpl): AuthRepository { return repository }
+	@Singleton
+	fun authRepository(repository: AuthRepositoryImpl): AuthRepository { return repository }
 
 	@Provides
-	fun providesChatRepository(repository: ChatRepositoryImpl): ChatRepository { return repository }
+	@Singleton
+	fun chatRepository(repository: ChatRepositoryImpl): ChatRepository { return repository }
 
 	@Provides
-	fun providesCardsRepository(repository: CardsRepositoryImpl): CardsRepository { return repository }
+	@Singleton
+	fun cardsRepository(repository: CardsRepositoryImpl): CardsRepository { return repository }
 
 	@Provides
-	fun providesFeedRepository(repository: FeedRepositoryImpl): FeedRepository { return repository }
+	@Singleton
+	fun feedRepository(repository: FeedRepositoryImpl): FeedRepository { return repository }
 
 	@Provides
-	fun providesUserRepository(repository: UserRepositoryImpl): UserRepository { return repository }
+	@Singleton
+	fun userRepository(repository: UserRepositoryImpl): UserRepository { return repository }
 
 }

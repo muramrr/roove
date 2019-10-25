@@ -5,7 +5,7 @@ import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.user.repository.UserRepository
 import com.mmdev.data.core.AuthModule
-import com.mmdev.data.core.DatabaseModule
+import com.mmdev.data.core.FirebaseModule
 import com.mmdev.data.core.RepositoryModule
 import com.mmdev.data.core.UserModule
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModelFactory
@@ -16,9 +16,10 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Component(modules = [
+    AppModule::class,
     AuthModule::class,
     RepositoryModule::class,
-    DatabaseModule::class,
+    FirebaseModule::class,
     ViewModelModule::class,
     UserModule::class
 ])
