@@ -1,11 +1,11 @@
 package com.mmdev.data.auth
 
+import android.util.Log
 import com.facebook.login.LoginManager
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.user.model.User
@@ -75,24 +75,26 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	 */
 	override fun signInWithFacebook(token: String): Single<User> {
 		val credential = FacebookAuthProvider.getCredential(token)
+		Log.wtf("mylogs", "$credential")
 		return Single.create(SingleOnSubscribe<User> { emitter ->
 			auth.signInWithCredential(credential).addOnCompleteListener { task: Task<AuthResult> ->
 				if (task.isSuccessful && auth.currentUser != null) {
-					val firebaseUser: FirebaseUser = auth.currentUser!!
-					val photoUrl: String = firebaseUser.photoUrl.toString()
+					val firebaseUser = auth.currentUser!!
+					val photoUrl = firebaseUser.photoUrl.toString() + "?height=500"
 					val urls = ArrayList<String>()
 					urls.add(photoUrl)
 					val user = User(name = firebaseUser.displayName!!,
-					                                              city = "Kyiv",
-					                                              mainPhotoUrl = photoUrl,
-					                                              photoURLs = urls,
-					                                              userId = firebaseUser.uid)
+					                city = "Kyiv",
+					                mainPhotoUrl = photoUrl,
+					                photoURLs = urls,
+					                userId = firebaseUser.uid)
 
 					emitter.onSuccess(user)
 				}
 				else emitter.onError(task.exception!!)
 
 			}
+
 		}).subscribeOn(Schedulers.io())
 	}
 
@@ -100,7 +102,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	/**
 	 * if [User] is not stored in db -> create new document + save locally
 	 */
-	override fun signUp(user: User): Completable {
+	override fun registerUser(user: User): Completable {
 		return Completable.create { emitter ->
 			val ref = db.collection(GENERAL_COLLECTION_REFERENCE).document(user.userId)
 			ref.set(user)
@@ -116,6 +118,8 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		auth.signOut()
 		fbLogin.logOut()
 	}
+
+
 
 
 }
