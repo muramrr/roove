@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationView
-import com.mmdev.business.user.model.User
+import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
@@ -53,7 +53,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	private lateinit var ivSignedInUserAvatar: ImageView
 	private lateinit var tvSignedInUserName: TextView
 
-	lateinit var userModel: User
+	lateinit var userItemModel: UserItem
 	private lateinit var mFragmentManager: FragmentManager
 
 	private lateinit var authViewModel: AuthViewModel
@@ -67,7 +67,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		authViewModel = ViewModelProvider(this, authViewModelFactory)
 			.get(AuthViewModel::class.java)
 
-		userModel = ViewModelProvider(this, mainViewModelFactory)
+		userItemModel = ViewModelProvider(this, mainViewModelFactory)
 			.get(MainViewModel::class.java)
 			.getSavedUser()
 
@@ -199,9 +199,9 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 
 	private fun setUpUser() {
-		tvSignedInUserName.text = userModel.name
+		tvSignedInUserName.text = userItemModel.name
 		GlideApp.with(this)
-			.load(userModel.mainPhotoUrl)
+			.load(userItemModel.mainPhotoUrl)
 			.apply(RequestOptions().circleCrop())
 			.into(ivSignedInUserAvatar)
 

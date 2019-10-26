@@ -2,7 +2,7 @@ package com.mmdev.roove.ui.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.mmdev.business.auth.usecase.*
-import com.mmdev.business.user.model.User
+import com.mmdev.business.user.model.UserItem
 
 class AuthViewModel(private val handleHandleUserExistence: HandleUserExistenceUseCase,
                     private val isAuthenticated: IsAuthenticatedUseCase,
@@ -15,7 +15,7 @@ class AuthViewModel(private val handleHandleUserExistence: HandleUserExistenceUs
     fun isAuthenticated() = isAuthenticated.execute()
     fun logOut() = logOut.execute()
     fun signInWithFacebook(token: String) = signInWithFacebook.execute(token)
-    fun signUp(user: User) = signUp.execute(user)
+    fun signUp(userItem: UserItem) = signUp.execute(userItem)
 
 
 
