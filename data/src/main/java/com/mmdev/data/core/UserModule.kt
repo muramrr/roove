@@ -1,6 +1,6 @@
 package com.mmdev.data.core
 
-import com.mmdev.business.user.model.User
+import com.mmdev.business.user.model.UserItem
 import com.mmdev.data.user.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
@@ -19,6 +19,6 @@ class UserModule {
 	/* get user info from sharedPrefs */
 	@Provides
 	@Singleton
-	fun provideSavedUser(repository: UserRepositoryImpl): User = repository.getSavedUser()
+	fun provideSavedUser(repository: UserRepositoryImpl): UserItem = repository.getSavedUser()
 
 }

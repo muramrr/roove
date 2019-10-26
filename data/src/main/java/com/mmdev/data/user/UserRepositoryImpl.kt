@@ -2,7 +2,7 @@ package com.mmdev.data.user
 
 import android.content.Context
 import android.util.Log
-import com.mmdev.business.user.model.User
+import com.mmdev.business.user.model.UserItem
 import com.mmdev.business.user.repository.UserRepository
 import com.mmdev.data.utils.TinyDB
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class UserRepositoryImpl @Inject constructor(private val context: Context): User
 		private const val PREF_KEY_CURRENT_USER_ID = "uid"
 	}
 
-	override fun getSavedUser(): User {
+	override fun getSavedUser(): UserItem {
 		val prefs = TinyDB(PREF_KEY_GENERAL_USER_STORE, context)
 		return if (prefs.getBoolean(PREF_KEY_GENERAL_IF_SAVED, false)) {
 			val name = prefs.getString(PREF_KEY_CURRENT_USER_NAME , "")
@@ -41,27 +41,27 @@ class UserRepositoryImpl @Inject constructor(private val context: Context): User
 			val photoUrls = prefs.getListString(PREF_KEY_CURRENT_USER_PHOTO_URLS)
 			val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")
 			Log.wtf("mylogs", "retrieved user info from sharedpref successfully")
-			User(name, city, gender, preferedGender, mainPhotoUrl, photoUrls, uid)
+			UserItem(name, city, gender, preferedGender, mainPhotoUrl, photoUrls, uid)
 		}
 		else {
 			Log.wtf("mylogs", "Can't get user, seems it is not saved")
-			User(name = "no user saved")
+			UserItem(name = "no user saved")
 		}
 	}
 
 
-	override fun saveUserInfo(currentUser: User) {
+	override fun saveUserInfo(currentUserItem: UserItem) {
 		val prefs = TinyDB(PREF_KEY_GENERAL_USER_STORE, context)
 		prefs.clear()
-		prefs.putString(PREF_KEY_CURRENT_USER_NAME, currentUser.name)
-		prefs.putString(PREF_KEY_CURRENT_USER_CITY, currentUser.city)
-		prefs.putString(PREF_KEY_CURRENT_USER_GENDER, currentUser.gender)
-		prefs.putString(PREF_KEY_CURRENT_USER_P_GENDER, currentUser.preferedGender)
-		prefs.putString(PREF_KEY_CURRENT_USER_MAIN_PIC_URL, currentUser.mainPhotoUrl)
-		prefs.putListString(PREF_KEY_CURRENT_USER_PHOTO_URLS, currentUser.photoURLs!!)
-		prefs.putString(PREF_KEY_CURRENT_USER_ID, currentUser.userId)
+		prefs.putString(PREF_KEY_CURRENT_USER_NAME, currentUserItem.name)
+		prefs.putString(PREF_KEY_CURRENT_USER_CITY, currentUserItem.city)
+		prefs.putString(PREF_KEY_CURRENT_USER_GENDER, currentUserItem.gender)
+		prefs.putString(PREF_KEY_CURRENT_USER_P_GENDER, currentUserItem.preferedGender)
+		prefs.putString(PREF_KEY_CURRENT_USER_MAIN_PIC_URL, currentUserItem.mainPhotoUrl)
+		prefs.putListString(PREF_KEY_CURRENT_USER_PHOTO_URLS, currentUserItem.photoURLs!!)
+		prefs.putString(PREF_KEY_CURRENT_USER_ID, currentUserItem.userId)
 		prefs.putBoolean(PREF_KEY_GENERAL_IF_SAVED, true)
-		Log.wtf("mylogs", "User successfully saved")
+		Log.wtf("mylogs", "UserItem successfully saved")
 	}
 
 }

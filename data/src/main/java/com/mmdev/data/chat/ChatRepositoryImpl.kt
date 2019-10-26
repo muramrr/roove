@@ -5,8 +5,8 @@ import android.text.format.DateFormat
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.mmdev.business.chat.model.Message
-import com.mmdev.business.chat.model.PhotoAttached
+import com.mmdev.business.chat.model.MessageItem
+import com.mmdev.business.chat.model.PhotoAttachementItem
 import com.mmdev.business.chat.repository.ChatRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -26,22 +26,20 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 	companion object{
 
 		// Firebase firestore references
-		private const val GENERAL_COLLECTION_REFERENCE = "chats"
+		private const val GENERAL_COLLECTION_REFERENCE = "conversations"
 		private const val SECONDARY_COLLECTION_REFERENCE = "messages"
-		//todo: structure user chats properly
-		private const val CHAT_REFERENCE = "user_chat"
-
 		// Firebase Storage references
 		private const val URL_STORAGE_REFERENCE = "gs://meetups-c34b0.appspot.com"
-		private const val FOLDER_STORAGE_IMG = "images"
+		private const val GENERAL_FOLDER_STORAGE_IMG = "images"
+		private const val CONVERSATION_FOLDER_STORAGE_IMG = "images"
 	}
 
 
 
-	override fun getMessages(): Observable<List<Message>> {
-		return Observable.create(ObservableOnSubscribe<List<Message>> { emitter ->
+	override fun getMessagesList(conversationId: String): Observable<List<MessageItem>> {
+		return Observable.create(ObservableOnSubscribe<List<MessageItem>> { emitter ->
 			val listener = firestore.collection(GENERAL_COLLECTION_REFERENCE)
-				.document(CHAT_REFERENCE)
+				.document("someid")
 				.collection(SECONDARY_COLLECTION_REFERENCE)
 				.orderBy("timestamp")
 				.addSnapshotListener { snapshots, e ->
@@ -50,10 +48,10 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 					Log.wtf("mylogs", "Listen failed.", e)
 					return@addSnapshotListener
 				}
-				val messages = ArrayList<Message>()
+				val messages = ArrayList<MessageItem>()
 				Log.wtf("mylogs", "size snapshot ${snapshots!!.size()}")
 				for (doc in snapshots) {
-					messages.add(doc.toObject(Message::class.java))
+					messages.add(doc.toObject(MessageItem::class.java))
 				}
 				emitter.onNext(messages)
 			}
@@ -62,31 +60,31 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 	}
 
 
-	override fun sendMessage(message: Message): Completable {
+	override fun sendMessage(messageItem: MessageItem): Completable {
 		return Completable.create { emitter ->
 			firestore.collection(GENERAL_COLLECTION_REFERENCE)
-				.document(CHAT_REFERENCE)
+				.document("someid")
 				.collection(SECONDARY_COLLECTION_REFERENCE)
 				.document()
-				.set(message)
+				.set(messageItem)
 				.addOnSuccessListener { emitter.onComplete() }
 				.addOnFailureListener { emitter.onError(it) }
 
 		}.subscribeOn(Schedulers.io())
 	}
 
-	override fun sendPhoto(photoUri: String): Observable<PhotoAttached> {
+	override fun sendPhoto(photoUri: String): Observable<PhotoAttachementItem> {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()+".jpg"
 		val storageRef = storage
 			.getReferenceFromUrl(URL_STORAGE_REFERENCE)
-			.child(FOLDER_STORAGE_IMG)
+			.child(GENERAL_FOLDER_STORAGE_IMG)
 			.child(namePhoto)
 
-		return Observable.create(ObservableOnSubscribe<PhotoAttached>{ emitter ->
+		return Observable.create(ObservableOnSubscribe<PhotoAttachementItem>{ emitter ->
 			val uploadTask = storageRef.putFile(Uri.parse(photoUri))
 				.addOnSuccessListener {
 					storageRef.downloadUrl.addOnSuccessListener{
-						val photoAttached = PhotoAttached(it.toString(), namePhoto)
+						val photoAttached = PhotoAttachementItem(it.toString(), namePhoto)
 						emitter.onNext(photoAttached)
 					}
 				}
