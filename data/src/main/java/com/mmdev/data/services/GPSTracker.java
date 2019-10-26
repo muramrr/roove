@@ -149,7 +149,7 @@ public class GPSTracker
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
 		// Setting Dialog Title
 		alertDialog.setTitle("Location settings");
-		// Setting Dialog Message
+		// Setting Dialog MessageItem
 		alertDialog.setMessage("Location is not enabled. Do you want to go to settings menu?");
 		// On pressing Settings button
 		alertDialog.setPositiveButton("Settings", (dialog, which) -> {
@@ -158,7 +158,7 @@ public class GPSTracker
 		});
 		// on pressing cancel button
 		alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-		// Showing Alert Message
+		// Showing Alert MessageItem
 		alertDialog.show();
 	}
 	@Override

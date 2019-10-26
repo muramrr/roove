@@ -10,14 +10,14 @@ import javax.inject.Singleton
 
 @Suppress("UNCHECKED_CAST")
 @Singleton
-class ChatViewModelFactory @Inject constructor(private val getMessages: GetMessagesUseCase,
-                                               private val sendMessage: SendMessageUseCase,
-                                               private val sendPhoto: SendPhotoUseCase) :
+class ChatViewModelFactory @Inject constructor(private val getMessagesUseCase: GetMessagesUseCase,
+                                               private val sendMessageUseCase: SendMessageUseCase,
+                                               private val sendPhotoUseCase: SendPhotoUseCase) :
         ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ChatViewModel::class.java)) {
-            return ChatViewModel(getMessages, sendMessage, sendPhoto) as T
+            return ChatViewModel(getMessagesUseCase, sendMessageUseCase, sendPhotoUseCase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -12,7 +12,7 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
-import com.mmdev.business.user.model.User
+import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModel
@@ -35,7 +35,7 @@ class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
 	private lateinit var progressDialog: LoadingDialog
 	private lateinit var mCallbackManager: CallbackManager
 
-	lateinit var userModel: User
+	lateinit var userItemModel: UserItem
 
 	private lateinit var authViewModel: AuthViewModel
 	private val authViewModelFactory = injector.authViewModelFactory()
@@ -60,7 +60,7 @@ class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
 			override fun onSuccess(loginResult: LoginResult) {
 				disposables.add(authViewModel.signInWithFacebook(loginResult.accessToken.token)
 	                .flatMap {
-		                user -> userModel = user
+		                user -> userItemModel = user
 		                authViewModel.handleUserExistence(user.userId)
 	                }
 	                .observeOn(AndroidSchedulers.mainThread())
@@ -97,9 +97,9 @@ class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
 	fun fragmentRegistrationCallback(progressButton: ProgressButton,
 	                                 gender:String,
 	                                 preferedGender:String) {
-		userModel.gender = gender
-		userModel.preferedGender = preferedGender
-		disposables.add(authViewModel.signUp(userModel)
+		userItemModel.gender = gender
+		userItemModel.preferedGender = preferedGender
+		disposables.add(authViewModel.signUp(userItemModel)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 						progressButton.stopAnim { startMainActivity() }

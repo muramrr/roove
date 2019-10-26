@@ -1,12 +1,10 @@
 package com.mmdev.business.chat.usecase
 
 
-import com.mmdev.business.chat.model.Message
 import com.mmdev.business.chat.repository.ChatRepository
-import com.mmdev.business.core.usecase.ObservableUseCase
 
-class GetMessagesUseCase (private val repository: ChatRepository) :
-		ObservableUseCase<List<Message>> {
+class GetMessagesUseCase (private val repository: ChatRepository) {
 
-    override fun execute() = repository.getMessages()
+    fun execute(t: String) = repository.getMessagesList(t)
+
 }

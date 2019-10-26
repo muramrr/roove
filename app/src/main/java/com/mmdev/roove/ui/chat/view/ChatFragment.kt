@@ -21,8 +21,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.business.chat.model.Message
-import com.mmdev.business.user.model.User
+import com.mmdev.business.chat.model.MessageItem
+import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
@@ -48,7 +48,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 	private lateinit var chatViewModel: ChatViewModel
 
 	// POJO models
-	private lateinit var userModel: User
+	private lateinit var userItemModel: UserItem
 
 	// Views UI
 	private lateinit var edMessageWrite: EditText
@@ -87,11 +87,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 
 		chatViewModel = ViewModelProvider(mMainActivity, chatViewModelFactory).get(ChatViewModel::class.java)
 
-		userModel = mMainActivity.userModel
+		userItemModel = mMainActivity.userItemModel
 
 		setupViews(view)
 
-		disposables.add(chatViewModel.getMessages()
+		disposables.add(chatViewModel.getMessages("SOMEid")
             .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
             .doOnNext { mMainActivity.progressDialog.dismissDialog() }
             .observeOn(AndroidSchedulers.mainThread())
@@ -114,7 +114,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		rvMessagesList.layoutManager = linearLayoutManager
 		ivSendMessage.setOnClickListener { sendMessageClick() }
 		ivAttachments.setOnClickListener { photoGalleryClick() }
-		mChatAdapter = ChatAdapter(userModel.userId, listOf(),this)
+		mChatAdapter = ChatAdapter(userItemModel.userId, listOf(), this)
 		mChatAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
 			override fun onChanged() {
 				super.onChanged()
@@ -133,12 +133,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		if (edMessageWrite.text.isNotEmpty() &&
 		    edMessageWrite.text.toString().trim().isNotEmpty()) {
 
-			val message = Message(userModel,
-			                      edMessageWrite.text.toString().trim(),
-			                      photoAttached = null)
+			val message = MessageItem(userItemModel,
+			                          edMessageWrite.text.toString().trim(),
+			                          photoAttachementItem = null)
 			disposables.add(chatViewModel.sendMessage(message)
 					     .observeOn(AndroidSchedulers.mainThread())
-					     .subscribe( { Log.d(TAG, "Message sent") },
+					     .subscribe( { Log.d(TAG, "MessageItem sent") },
 					                 { mMainActivity.showInternetError() } ))
 			edMessageWrite.setText("")
 
@@ -234,7 +234,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 
 				val selectedUri = data?.data
 				disposables.add(chatViewModel.sendPhoto(selectedUri.toString())
-	                .flatMapCompletable { chatViewModel.sendMessage(Message(userModel, photoAttached = it)) }
+	                .flatMapCompletable { chatViewModel.sendMessage(MessageItem(userItemModel, photoAttachementItem = it)) }
 	                .observeOn(AndroidSchedulers.mainThread())
 	                .subscribe({ Log.wtf(TAG, "Photo gallery sent") },
 	                           { mMainActivity.showInternetError() }))
@@ -248,7 +248,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 			if (resultCode == RESULT_OK) {
 				if (mFilePathImageCamera.exists()) {
 					disposables.add(chatViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString())
-		                .flatMapCompletable { chatViewModel.sendMessage(Message(userModel, photoAttached = it)) }
+		                .flatMapCompletable { chatViewModel.sendMessage(MessageItem(userItemModel, photoAttachementItem = it)) }
 		                .observeOn(AndroidSchedulers.mainThread())
 		                .subscribe( { Log.wtf(TAG, "Photo camera sent") },
                                     { mMainActivity.showInternetError() })

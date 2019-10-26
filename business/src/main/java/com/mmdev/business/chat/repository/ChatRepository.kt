@@ -1,18 +1,18 @@
 package com.mmdev.business.chat.repository
 
 
-import com.mmdev.business.chat.model.Message
-import com.mmdev.business.chat.model.PhotoAttached
+import com.mmdev.business.chat.model.MessageItem
+import com.mmdev.business.chat.model.PhotoAttachementItem
 import io.reactivex.Completable
 import io.reactivex.Observable
 
 
 interface ChatRepository {
 
-	fun getMessages(): Observable<List<Message>>
+	fun getMessagesList(conversationId: String): Observable<List<MessageItem>>
 
-	fun sendMessage(message: Message): Completable
+	fun sendMessage(messageItem: MessageItem): Completable
 
-	fun sendPhoto(photoUri: String): Observable<PhotoAttached>
+	fun sendPhoto(photoUri: String): Observable<PhotoAttachementItem>
 
 }

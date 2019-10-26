@@ -7,11 +7,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.business.user.model.User
+import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 
-class CardsStackAdapter (private var usersList: List<User>):
+class CardsStackAdapter (private var usersList: List<UserItem>):
 		RecyclerView.Adapter<CardsStackAdapter.ViewHolder>() {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,10 +29,10 @@ class CardsStackAdapter (private var usersList: List<User>):
 
 	override fun getItemId(position: Int): Long { return position.toLong() }
 
-	internal fun getSwipeProfile(position: Int): User { return usersList[position] }
+	internal fun getSwipeProfile(position: Int): UserItem { return usersList[position] }
 
-	fun updateData(newUsers: List<User>) {
-		this.usersList = newUsers
+	fun updateData(newUserItems: List<UserItem>) {
+		this.usersList = newUserItems
 		notifyDataSetChanged()
 	}
 
@@ -41,10 +41,10 @@ class CardsStackAdapter (private var usersList: List<User>):
 		private val tvCityCard: TextView = itemView.findViewById(R.id.fragment_card_item_text_city)
 		private val tvImageCard: ImageView = itemView.findViewById(R.id.fragment_card_item_img_photo)
 
-		fun bindCard(user: User){
-			tvNameCard.text = user.name
-			tvCityCard.text = user.city
-			GlideApp.with(tvImageCard).load(user.mainPhotoUrl).into(tvImageCard)
+		fun bindCard(userItem: UserItem){
+			tvNameCard.text = userItem.name
+			tvCityCard.text = userItem.city
+			GlideApp.with(tvImageCard).load(userItem.mainPhotoUrl).into(tvImageCard)
 		}
 
 	}

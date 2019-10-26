@@ -1,7 +1,7 @@
 package com.mmdev.business.feed.model
 
-import com.mmdev.business.chat.model.PhotoAttached
-import com.mmdev.business.user.model.User
+import com.mmdev.business.chat.model.PhotoAttachementItem
+import com.mmdev.business.user.model.UserItem
 import java.util.*
 
 /* Created by A on 12.10.2019.*/
@@ -15,6 +15,6 @@ data class FeedItem(var description: String = "",
                     var interested: Int = 0,
                     var views: Int = 0,
                     var category: ArrayList<String>? = null,
-                    var sender: User = User(),
+                    var sender: UserItem = UserItem(),
                     val timestamp: Date? = Date(),
-                    var customPhotoAttached: PhotoAttached? = PhotoAttached())
+                    var customPhotoAttachementItem: PhotoAttachementItem? = PhotoAttachementItem())
