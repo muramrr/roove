@@ -7,4 +7,6 @@ package com.mmdev.business.conversations.model
  */
 
 data class ConversationItem(val partnerId:String = "",
-                            val partnerName: String = "")
+                            val partnerName: String = "",
+                            val partnerPhotoUrl: String = "",
+                            val lastMessageText: String = "")
