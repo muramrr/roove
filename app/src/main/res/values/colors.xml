@@ -18,10 +18,10 @@
 	<color name="lolite">#6236FF</color>
 	<color name="amethyst">#B620E0</color>
 
-	<color name="actionModeBackground">#f1cfd0</color>
-	<color name="colorFacebook">#374D8D</color>
+	<color name="gradient1">#FEAC5E</color>
+	<color name="gradient2">#C779D0</color>
+	<color name="gradient3">#4BC0C8</color>
 
-	<color name="feed_item_icons_color">#c0bcc3</color>
 
 	<color name="material_orange_600">#FB8C00</color>
 	<color name="material_blue_400">#42A5F5</color>
