@@ -106,7 +106,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 	 */
 	private fun setupViews(view: View) {
 		edMessageWrite = view.findViewById(R.id.editTextMessage)
-		val rvMessagesList: RecyclerView = view.findViewById(R.id.messageRecyclerView)
+		val rvMessagesList: RecyclerView = view.findViewById(R.id.chat_messages_rv)
 		val ivAttachments: ImageView = view.findViewById(R.id.buttonAttachments)
 		val ivSendMessage: ImageView = view.findViewById(R.id.buttonMessage)
 		val linearLayoutManager = LinearLayoutManager(mMainActivity)
