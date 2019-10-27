@@ -9,8 +9,8 @@
 			name="feedItem"
 			type="com.mmdev.roove.models.FeedItem" />
 		<variable
-			name="user"
-			type="com.mmdev.business.user.model.User" />
+			name="userItem"
+			type="com.mmdev.business.user.model.UserItem" />
 	</data>
 
 	<androidx.cardview.widget.CardView

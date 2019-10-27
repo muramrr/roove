@@ -8,7 +8,7 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.auth.repository.AuthRepository
-import com.mmdev.business.user.model.User
+import com.mmdev.business.user.model.UserItem
 import com.mmdev.data.user.UserRepositoryImpl
 import io.reactivex.*
 import io.reactivex.Observable
@@ -48,20 +48,20 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 
 	/**
 	 * check is user id already stored in db
-	 * @return [User] object which is stored in db and store it locally
+	 * @return [UserItem] object which is stored in db and store it locally
 	 */
-	override fun handleUserExistence(userId: String): Single<User> {
-		return Single.create(SingleOnSubscribe<User> { emitter ->
+	override fun handleUserExistence(userId: String): Single<UserItem> {
+		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
 			val ref = db.collection(GENERAL_COLLECTION_REFERENCE).document(userId)
 			ref.get().addOnCompleteListener { task ->
 				if (task.isSuccessful) {
 					val document = task.result
 					if (document!!.exists()) {
-						val user = document.toObject(User::class.java)
+						val user = document.toObject(UserItem::class.java)
 						userRepositoryImpl.saveUserInfo(user!!)
 						emitter.onSuccess(user)
 					}
-					else emitter.onError(Exception("User do not exist"))
+					else emitter.onError(Exception("UserItem do not exist"))
 				}
 				else emitter.onError(Exception("task is not successful"))
 			}
@@ -71,23 +71,23 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 
 	/**
 	 * this fun is called first when user is trying to sign in via facebook
-	 * creates a basic [User] object based on public facebook profile
+	 * creates a basic [UserItem] object based on public facebook profile
 	 */
-	override fun signInWithFacebook(token: String): Single<User> {
+	override fun signInWithFacebook(token: String): Single<UserItem> {
 		val credential = FacebookAuthProvider.getCredential(token)
 		Log.wtf("mylogs", "$credential")
-		return Single.create(SingleOnSubscribe<User> { emitter ->
+		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
 			auth.signInWithCredential(credential).addOnCompleteListener { task: Task<AuthResult> ->
 				if (task.isSuccessful && auth.currentUser != null) {
 					val firebaseUser = auth.currentUser!!
 					val photoUrl = firebaseUser.photoUrl.toString() + "?height=500"
 					val urls = ArrayList<String>()
 					urls.add(photoUrl)
-					val user = User(name = firebaseUser.displayName!!,
-					                city = "Kyiv",
-					                mainPhotoUrl = photoUrl,
-					                photoURLs = urls,
-					                userId = firebaseUser.uid)
+					val user = UserItem(name = firebaseUser.displayName!!,
+					                    city = "Kyiv",
+					                    mainPhotoUrl = photoUrl,
+					                    photoURLs = urls,
+					                    userId = firebaseUser.uid)
 
 					emitter.onSuccess(user)
 				}
@@ -100,14 +100,14 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 
 
 	/**
-	 * if [User] is not stored in db -> create new document + save locally
+	 * if [UserItem] is not stored in db -> create new document + save locally
 	 */
-	override fun registerUser(user: User): Completable {
+	override fun registerUser(userItem: UserItem): Completable {
 		return Completable.create { emitter ->
-			val ref = db.collection(GENERAL_COLLECTION_REFERENCE).document(user.userId)
-			ref.set(user)
+			val ref = db.collection(GENERAL_COLLECTION_REFERENCE).document(userItem.userId)
+			ref.set(userItem)
 				.addOnSuccessListener {
-					userRepositoryImpl.saveUserInfo(user)
+					userRepositoryImpl.saveUserInfo(userItem)
 					emitter.onComplete()
 				}
 				.addOnFailureListener { task -> emitter.onError(task) }

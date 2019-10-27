@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.mmdev.business.cards.usecase.AddToSkippedUseCase
 import com.mmdev.business.cards.usecase.GetPotentialUserCardsUseCase
 import com.mmdev.business.cards.usecase.HandlePossibleMatchUseCase
-import com.mmdev.business.user.model.User
+import com.mmdev.business.user.model.UserItem
 
 /* Created by A on 20.07.2019.*/
 
@@ -22,9 +22,9 @@ class CardsViewModel(private val addToSkipped: AddToSkippedUseCase,
                      private val handlePossibleMatch: HandlePossibleMatchUseCase):
 		ViewModel(){
 
-	fun addToSkipped(skippedUser: User) = addToSkipped.execute(skippedUser)
+	fun addToSkipped(skippedUserItem: UserItem) = addToSkipped.execute(skippedUserItem)
 	fun getPotentialUserCards() = getPotentialUserCards.execute()
-	fun handlePossibleMatch(likedUser: User) = handlePossibleMatch.execute(likedUser)
+	fun handlePossibleMatch(likedUserItem: UserItem) = handlePossibleMatch.execute(likedUserItem)
 
 }
 

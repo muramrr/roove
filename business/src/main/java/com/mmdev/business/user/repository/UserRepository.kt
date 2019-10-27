@@ -1,6 +1,6 @@
 package com.mmdev.business.user.repository
 
-import com.mmdev.business.user.model.User
+import com.mmdev.business.user.model.UserItem
 
 /* Created by A on 29.09.2019.*/
 
@@ -10,8 +10,8 @@ import com.mmdev.business.user.model.User
 
 interface UserRepository {
 
-	fun getSavedUser(): User
+	fun getSavedUser(): UserItem
 
-	fun saveUserInfo(currentUser: User)
+	fun saveUserInfo(currentUserItem: UserItem)
 
 }

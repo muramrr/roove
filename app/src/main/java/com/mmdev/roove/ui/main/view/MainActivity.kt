@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationView
-import com.mmdev.business.user.model.User
+import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
@@ -29,6 +29,7 @@ import com.mmdev.roove.ui.auth.view.AuthActivity
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModel
 import com.mmdev.roove.ui.cards.view.CardsFragment
 import com.mmdev.roove.ui.chat.view.ChatFragment
+import com.mmdev.roove.ui.conversations.view.ConversationsFragment
 import com.mmdev.roove.ui.custom.CustomAlertDialog
 import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.feed.FeedFragment
@@ -53,7 +54,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	private lateinit var ivSignedInUserAvatar: ImageView
 	private lateinit var tvSignedInUserName: TextView
 
-	lateinit var userModel: User
+	lateinit var userItemModel: UserItem
 	private lateinit var mFragmentManager: FragmentManager
 
 	private lateinit var authViewModel: AuthViewModel
@@ -67,7 +68,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		authViewModel = ViewModelProvider(this, authViewModelFactory)
 			.get(AuthViewModel::class.java)
 
-		userModel = ViewModelProvider(this, mainViewModelFactory)
+		userItemModel = ViewModelProvider(this, mainViewModelFactory)
 			.get(MainViewModel::class.java)
 			.getSavedUser()
 
@@ -104,7 +105,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	override fun onCardsClick() = startCardFragment()
 	//todo: change this to messages fragment
-	override fun onMessagesClick() = startChatFragment()
+	override fun onMessagesClick() = startConversationsFragment()
 
 	override fun onLogOutClick() = showSignOutPrompt()
 
@@ -143,6 +144,21 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		}
 	}
 
+
+	private fun startConversationsFragment(){
+		mFragmentManager.findFragmentByTag(ConversationsFragment::class.java.canonicalName) ?:
+		mFragmentManager.beginTransaction().apply {
+			setCustomAnimations(R.anim.fragment_enter_from_right,
+			                    R.anim.fragment_exit_to_left,
+			                    R.anim.fragment_enter_from_left,
+			                    R.anim.fragment_exit_to_right)
+			replace(R.id.main_container,
+			        ConversationsFragment.newInstance(),
+			        ConversationsFragment::class.java.canonicalName)
+			addToBackStack(null)
+			commit()
+		}
+	}
 	/*
 	 * start chat
 	 */
@@ -199,9 +215,9 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 
 	private fun setUpUser() {
-		tvSignedInUserName.text = userModel.name
+		tvSignedInUserName.text = userItemModel.name
 		GlideApp.with(this)
-			.load(userModel.mainPhotoUrl)
+			.load(userItemModel.mainPhotoUrl)
 			.apply(RequestOptions().circleCrop())
 			.into(ivSignedInUserAvatar)
 
@@ -303,7 +319,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	menu button click handler
 	 */
 	fun messagesMenuClick(item: MenuItem) {
-		startChatFragment()
+		//startSearch()
 	}
 
 	fun showInternetError() {

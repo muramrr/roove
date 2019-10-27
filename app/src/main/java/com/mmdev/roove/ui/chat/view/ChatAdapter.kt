@@ -12,14 +12,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.mmdev.business.chat.model.Message
+import com.mmdev.business.chat.model.MessageItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import java.text.SimpleDateFormat
 import java.util.*
 
 class ChatAdapter (private var userId: String,
-                   private var listMessages: List<Message>,
+                   private var listMessageItems: List<MessageItem>,
                    private val clickChatAttachmentFirebase: ClickChatAttachmentFirebase):
 
 	RecyclerView.Adapter<ChatAdapter.ChatViewHolder>(){
@@ -53,20 +53,20 @@ class ChatAdapter (private var userId: String,
 
 	override fun onBindViewHolder(viewHolder: ChatViewHolder, position: Int) {
 		viewHolder.setMessageType(getItemViewType(position))
-		viewHolder.bindMessage(listMessages[position])
+		viewHolder.bindMessage(listMessageItems[position])
 	}
 
 	override fun getItemViewType(position: Int): Int {
-		val (sender, _, _,photoAttached) = listMessages[position]
+		val (sender, _, _,photoAttached) = listMessageItems[position]
 		return if (photoAttached != null)
 			if (sender.userId == userId) RIGHT_MSG_IMG else LEFT_MSG_IMG
 		else if (sender.userId == userId) RIGHT_MSG else LEFT_MSG
 	}
 
-	override fun getItemCount() = listMessages.size
+	override fun getItemCount() = listMessageItems.size
 
-	fun updateData(chats: List<Message>) {
-		this.listMessages = chats
+	fun updateData(chats: List<MessageItem>) {
+		this.listMessageItems = chats
 		notifyDataSetChanged()
 	}
 
@@ -92,22 +92,22 @@ class ChatAdapter (private var userId: String,
 			}
 		}
 
-		fun bindMessage (message: Message) {
-			setIvUserAvatar(message.sender.mainPhotoUrl)
-			setTextMessage(message.text)
-			message.timestamp?.let { setTvTimestamp(convertTimestamp(message.timestamp!!)) }
-			setIvChatPhoto(message.photoAttached?.fileUrl)
+		fun bindMessage (messageItem: MessageItem) {
+			setIvUserAvatar(messageItem.sender.mainPhotoUrl)
+			setTextMessage(messageItem.text)
+			messageItem.timestamp?.let { setTvTimestamp(convertTimestamp(messageItem.timestamp!!)) }
+			setIvChatPhoto(messageItem.photoAttachementItem?.fileUrl)
 		}
 
 		/* handle image attachment click */
 		override fun onClick(view: View) {
-			val message: Message = listMessages[adapterPosition]
+			val messageItem: MessageItem = listMessageItems[adapterPosition]
 
-			message.photoAttached?.let { clickChatAttachmentFirebase
+			messageItem.photoAttachementItem?.let { clickChatAttachmentFirebase
 				.clickImageChat(view,
 				                adapterPosition,
-				                message.sender.name,
-				                message.sender.mainPhotoUrl,
+				                messageItem.sender.name,
+				                messageItem.sender.mainPhotoUrl,
 				                it.fileUrl) }
 
 		}
