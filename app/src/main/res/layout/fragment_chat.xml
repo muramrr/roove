@@ -6,10 +6,10 @@
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/chat_messages_rv"
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
 		android:background="@color/colorPrimaryDark"
-		android:id="@+id/messageRecyclerView"
 		android:layout_above="@+id/content_message"
 		android:layout_alignParentTop="true"
 		android:overScrollMode="never"
