@@ -13,12 +13,6 @@ import com.mmdev.roove.databinding.FragmentFeedRvItemBinding
 import com.mmdev.roove.models.FeedItem
 
 
-
-
-
-
-
-
 class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 		RecyclerView.Adapter<FeedRecyclerAdapter.FeedItemHolder>() {
 
@@ -26,8 +20,9 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedItemHolder =
 		FeedItemHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
-			                               R.layout.fragment_feed_rv_item, parent,
-			                               false))
+		                                       R.layout.fragment_feed_rv_item,
+			                                   parent,
+			                                   false))
 
 
 	override fun onBindViewHolder(holder: FeedItemHolder, position: Int) {
@@ -41,9 +36,7 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 		notifyDataSetChanged()
 	}
 
-	fun getFeedItem(position: Int): FeedItem{
-		return mFeedItems[position]
-	}
+	fun getFeedItem(position: Int): FeedItem{ return mFeedItems[position] }
 
 
 	// allows clicks events to be caught
@@ -61,6 +54,11 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 			}
 		}
 
+		//publisher user
+		private val ivFeedUserAvatar: ImageView = itemView.findViewById(R.id.feed_publisher_image_view)
+		//feed content
+		private val ivFeedPhoto: ImageView = itemView.findViewById(R.id.feed_content_image_view)
+
 		fun bind(feedItem: FeedItem) {
 			binding.feedItem = feedItem
 			setUserAvatar(feedItem.feedPublisherPhotoId)
@@ -68,10 +66,7 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 			binding.executePendingBindings()
 		}
 
-		//publisher user
-		private val ivFeedUserAvatar: ImageView = itemView.findViewById(R.id.feed_publisher_image_view)
-		//feed content
-		private val ivFeedPhoto: ImageView = itemView.findViewById(R.id.feed_content_image_view)
+
 
 		private fun setUserAvatar(url: Int){
 			Glide.with(ivFeedUserAvatar.context)
