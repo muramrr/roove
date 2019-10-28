@@ -2,5 +2,5 @@
 <resources>
 
 	<dimen name="auth_tv_slogan1">52sp</dimen>
-	<dimen name="auth_tv_slogan2">24sp</dimen>
+	<dimen name="auth_tv_slogan2">26sp</dimen>
 </resources>
