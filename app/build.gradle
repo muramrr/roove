@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 
@@ -22,8 +22,6 @@ android {
 	
 	buildTypes {
 		debug {
-
-			testCoverageEnabled = true
 			versionNameSuffix '-DEBUG'
 		}
 
@@ -43,6 +41,12 @@ android {
 		enabled true
 	}
 
+	kapt {
+		arguments {
+			arg("databinding.incremental", "true")
+		}
+	}
+
 	sourceSets {
 		main.java.srcDirs += 'src/main/kotlin'
 	}
@@ -60,17 +64,14 @@ dependencies {
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 	implementation 'androidx.appcompat:appcompat:1.1.0'
-	implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+	implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
 	implementation 'com.google.android.material:material:1.2.0-alpha01'
-	implementation 'androidx.recyclerview:recyclerview:1.1.0-beta05'
+	implementation 'androidx.recyclerview:recyclerview:1.1.0-rc01'
 	implementation 'androidx.cardview:cardview:1.0.0'
 
 	//custom UI
 	implementation 'com.yuyakaido.android:card-stack-view:2.3.4'
 	implementation 'com.github.ceryle:SegmentedButton:2.0.2'
-	//navigation drawer
-	implementation 'com.mxn.soul:flowingdrawer-core:2.1.0'
-	implementation 'com.nineoldandroids:library:2.4.0'
 
 	//firebase
 	implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
@@ -79,8 +80,8 @@ dependencies {
 	implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
 
 	//facebook auth
-	implementation 'com.facebook.android:facebook-android-sdk:5.5.1'
-	implementation 'com.facebook.android:facebook-login:5.5.1'
+	implementation "com.facebook.android:facebook-android-sdk:$facebook_sdk_version"
+	implementation "com.facebook.android:facebook-login:$facebook_sdk_version"
 
 	//glide
 	implementation 'com.github.bumptech.glide:glide:4.10.0'
@@ -91,26 +92,15 @@ dependencies {
 	kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
 	// RxJava
-	implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+	implementation libs.rxJava
 
 	// RxAndroid
-	implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+	implementation libs.rxAndroid
 
 	// ViewModel and LiveData
 	implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 	implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
 	compileOnly 'javax.annotation:jsr250-api:1.0'
-
-	// JUnit
-	testImplementation libs.junit
-
-	// Mockito Kotlin
-	testImplementation libs.mockitoKotlin
-
-	// Hamcrest
-	testImplementation libs.hamcrest
-
-
 
 }
