@@ -17,15 +17,11 @@ android {
 	}
 
 	buildTypes {
-		debug {
-			testCoverageEnabled true
-		}
 
 		release {
 			minifyEnabled false
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 		}
-
 
 	}
 
@@ -45,17 +41,16 @@ dependencies {
 
 	// Kotlin
 	implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-	implementation 'androidx.appcompat:appcompat:1.1.0'
+
+	//facebook auth
+	implementation "com.facebook.android:facebook-android-sdk:$facebook_sdk_version"
+	implementation "com.facebook.android:facebook-login:$facebook_sdk_version"
 
 	// Firebase
 	implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
 	implementation "com.google.firebase:firebase-core:$firebase_core_version"
 	implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
 	implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
-
-	//facebook auth
-	implementation 'com.facebook.android:facebook-android-sdk:5.5.1'
-	implementation 'com.facebook.android:facebook-login:5.5.1'
 
 	// RxJava
 	implementation libs.rxJava
@@ -64,15 +59,4 @@ dependencies {
 	implementation "com.google.dagger:dagger:$dagger_version"
 	kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
-	androidTestImplementation 'androidx.test:runner:1.2.0'
-	androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
-	// JUnit
-	testImplementation libs.junit
-
-	// Mockito Kotlin
-	testImplementation libs.mockitoKotlin
-
-	// Hamcrest
-	testImplementation libs.hamcrest
 }
