@@ -24,7 +24,7 @@
         <menu>
             <item
                 android:id="@+id/nav_account"
-                android:icon="@drawable/fragment_chat_message_default_account_icon"
+                android:icon="@drawable/default_avatar"
                 android:title="Account" />
             <item
                 android:id="@+id/nav_log_out"

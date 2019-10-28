@@ -22,30 +22,8 @@
 	<color name="gradient2">#C779D0</color>
 	<color name="gradient3">#4BC0C8</color>
 
-
 	<color name="material_orange_600">#FB8C00</color>
 	<color name="material_blue_400">#42A5F5</color>
 	<color name="material_blue_a700">#2962FF</color>
-
-	<!-- Selectors just in case-->
-	<color name="selector_normal">#00000000</color>
-	<color name="selector_white_focused">#22FFFFFF</color>
-	<color name="selector_white_pressed">#33FFFFFF</color>
-	<color name="selector_black_focused">#12000000</color>
-	<color name="selector_black_pressed">#1F000000</color>
-	<color name="selector_red_focused">#22D50000</color>
-	<color name="selector_red_pressed">#44D50000</color>
-	<color name="selector_orange_focused">#22FF6D00</color>
-	<color name="selector_orange_pressed">#44FF6D00</color>
-	<color name="selector_lime_focused">#22AEEA00</color>
-	<color name="selector_lime_pressed">#44AEEA00</color>
-	<color name="selector_green_focused">#2200C853</color>
-	<color name="selector_green_pressed">#4400C853</color>
-	<color name="selector_teal_focused">#2200BFA5</color>
-	<color name="selector_teal_pressed">#4400BFA5</color>
-	<color name="selector_blue_focused">#222962FF</color>
-	<color name="selector_blue_pressed">#442962FF</color>
-	<color name="selector_purple_focused">#22AA00FF</color>
-	<color name="selector_purple_pressed">#44AA00FF</color>
 
 </resources>

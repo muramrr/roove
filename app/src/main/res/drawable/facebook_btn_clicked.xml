@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+	<item>
+		<bitmap android:src="@drawable/facebook_btn_img"/>
+	</item>
+	<item>
+		<shape>
+
+			<corners android:radius="9dp"/>
+			<gradient android:angle="270"
+				android:startColor="#1A5D5D5E"
+				android:centerColor="#4D0D0D0F"
+				android:endColor="#3F51B5"/>
+		</shape>
+	</item>
+</layer-list>
