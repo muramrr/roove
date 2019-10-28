@@ -17,7 +17,7 @@
 		android:layout_marginStart="5dp"
 		android:layout_marginEnd="5dp"
 		android:contentDescription="@string/chat_message_sender_avatar_img_description"
-		android:src="@drawable/fragment_chat_message_default_account_icon"/>
+		android:src="@drawable/default_avatar"/>
 
 	<LinearLayout
 		android:id="@+id/contentMessageChat"
