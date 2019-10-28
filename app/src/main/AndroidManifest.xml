@@ -69,7 +69,6 @@
 			android:theme="@style/AppTheme.NoActionBar">
 		</activity>
 
-
 		<activity android:name="com.mmdev.roove.ui.feed.tabitem.FeedItemActivity" />
 
 		<provider
@@ -84,9 +83,9 @@
 
 		</provider>
 
-
 		<service android:name="com.mmdev.data.services.LocationService"/>
 		<service android:name="com.mmdev.data.services.GPSTracker"/>
+
 	</application>
 
 </manifest>
