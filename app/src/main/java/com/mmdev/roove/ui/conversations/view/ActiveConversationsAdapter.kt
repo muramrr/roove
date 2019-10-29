@@ -10,7 +10,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mmdev.business.conversations.model.ConversationItem
 import com.mmdev.roove.R
-import com.mmdev.roove.databinding.FragmentConversationItemBinding
+import com.mmdev.roove.databinding.FragmentConversationActiveItemBinding
+
 
 /* Created by A on 27.10.2019.*/
 
@@ -18,36 +19,36 @@ import com.mmdev.roove.databinding.FragmentConversationItemBinding
  * This is the documentation block about the class
  */
 
-class ConversationsAdapter (private var mConversationsList: List<ConversationItem>):
-		RecyclerView.Adapter<ConversationsAdapter.ConversationsViewHolder>() {
+class ActiveConversationsAdapter (private var mActiveConversationsList: List<ConversationItem>):
+		RecyclerView.Adapter<ActiveConversationsAdapter.ConversationsViewHolder>() {
 
 	private lateinit var clickListener: OnItemClickListener
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConversationsViewHolder =
 		ConversationsViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
-		                                                R.layout.fragment_conversation_item,
+		                                                R.layout.fragment_conversation_active_item,
 		                                                parent,
 		                                                false))
 
 	override fun onBindViewHolder(holder: ConversationsViewHolder, position: Int) {
-		holder.bind(mConversationsList[position])
+		holder.bind(mActiveConversationsList[position])
 	}
 
-	override fun getItemCount(): Int { return mConversationsList.size }
+	override fun getItemCount(): Int { return mActiveConversationsList.size }
 
 	fun updateData(conversations: List<ConversationItem>) {
-		mConversationsList = conversations
+		mActiveConversationsList = conversations
 		notifyDataSetChanged()
 	}
 
-	fun getFeedItem(position: Int): ConversationItem{ return mConversationsList[position] }
+	fun getConversationItem(position: Int): ConversationItem{ return mActiveConversationsList[position] }
 
 	// allows clicks events to be caught
 	fun setOnItemClickListener(itemClickListener: OnItemClickListener) {
 		clickListener = itemClickListener
 	}
 
-	inner class ConversationsViewHolder(private val binding: FragmentConversationItemBinding):
+	inner class ConversationsViewHolder(private val binding: FragmentConversationActiveItemBinding):
 			RecyclerView.ViewHolder(binding.root){
 
 		init {
@@ -57,7 +58,7 @@ class ConversationsAdapter (private var mConversationsList: List<ConversationIte
 		}
 
 		//publisher user
-		private val ivUserAvatar: ImageView = itemView.findViewById(R.id.conversation_item_userpic_iv)
+		private val ivUserAvatar: ImageView = itemView.findViewById(R.id.conversation_active_item_userpic_iv)
 
 		fun bind(conversationItem: ConversationItem){
 			binding.conversationItem = conversationItem

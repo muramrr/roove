@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:layout_margin="@dimen/general_margin_16"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<ImageView
+		android:id="@+id/conversation_potential_item_userpic_iv"
+		android:layout_width="64dp"
+		android:layout_height="64dp"
+		android:src="@drawable/default_avatar"/>
+	<ImageView
+		android:id="@+id/conversation_potential_item_indicator_iv"
+		android:layout_width="16dp"
+		android:layout_height="16dp"
+		android:layout_gravity="bottom|end"
+		android:src="@color/gradient3"/>
+
+</FrameLayout>
