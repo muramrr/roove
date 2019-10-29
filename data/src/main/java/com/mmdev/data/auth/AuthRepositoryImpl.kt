@@ -61,7 +61,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 						userRepositoryImpl.saveUserInfo(user!!)
 						emitter.onSuccess(user)
 					}
-					else emitter.onError(Exception("UserItem do not exist"))
+					else emitter.onError(Exception("User do not exist"))
 				}
 				else emitter.onError(Exception("task is not successful"))
 			}

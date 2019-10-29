@@ -33,15 +33,20 @@ class UserRepositoryImpl @Inject constructor(private val context: Context): User
 	override fun getSavedUser(): UserItem {
 		val prefs = TinyDB(PREF_KEY_GENERAL_USER_STORE, context)
 		return if (prefs.getBoolean(PREF_KEY_GENERAL_IF_SAVED, false)) {
-			val name = prefs.getString(PREF_KEY_CURRENT_USER_NAME , "")
-			val city = prefs.getString(PREF_KEY_CURRENT_USER_CITY, "")
-			val gender = prefs.getString(PREF_KEY_CURRENT_USER_GENDER, "")
-			val preferedGender = prefs.getString(PREF_KEY_CURRENT_USER_P_GENDER, "")
-			val mainPhotoUrl = prefs.getString(PREF_KEY_CURRENT_USER_MAIN_PIC_URL, "")
-			val photoUrls = prefs.getListString(PREF_KEY_CURRENT_USER_PHOTO_URLS)
-			val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")
-			Log.wtf("mylogs", "retrieved user info from sharedpref successfully")
-			UserItem(name, city, gender, preferedGender, mainPhotoUrl, photoUrls, uid)
+			try {
+				val name = prefs.getString(PREF_KEY_CURRENT_USER_NAME , "")
+				val city = prefs.getString(PREF_KEY_CURRENT_USER_CITY, "")
+				val gender = prefs.getString(PREF_KEY_CURRENT_USER_GENDER, "")
+				val preferedGender = prefs.getString(PREF_KEY_CURRENT_USER_P_GENDER, "")
+				val mainPhotoUrl = prefs.getString(PREF_KEY_CURRENT_USER_MAIN_PIC_URL, "")
+				val photoUrls = prefs.getListString(PREF_KEY_CURRENT_USER_PHOTO_URLS)
+				val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")
+				Log.wtf("mylogs", "retrieved user info from sharedpref successfully")
+				UserItem(name, city, gender, preferedGender, mainPhotoUrl, photoUrls, uid)
+			}finally {
+				UserItem(name = "local internal error")
+			}
+
 		}
 		else {
 			Log.wtf("mylogs", "Can't get user, seems it is not saved")
@@ -61,7 +66,7 @@ class UserRepositoryImpl @Inject constructor(private val context: Context): User
 		prefs.putListString(PREF_KEY_CURRENT_USER_PHOTO_URLS, currentUserItem.photoURLs!!)
 		prefs.putString(PREF_KEY_CURRENT_USER_ID, currentUserItem.userId)
 		prefs.putBoolean(PREF_KEY_GENERAL_IF_SAVED, true)
-		Log.wtf("mylogs", "UserItem successfully saved")
+		Log.wtf("mylogs", "User successfully saved")
 	}
 
 }
