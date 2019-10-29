@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.facebook.CallbackManager
@@ -70,6 +71,9 @@ class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
 		                           startMainActivity()
 	                           },
 	                           {
+		                           Toast.makeText(this@AuthActivity,
+		                                          "User is not registered",
+		                                          Toast.LENGTH_SHORT).show()
 		                           startRegistrationFragment()
 	                           }
 	                ))
@@ -105,7 +109,10 @@ class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
 						progressButton.stopAnim { startMainActivity() }
                        },
                        {
-						Log.wtf("mylogs", it)
+                       Toast.makeText(this,
+                                      "$it",
+                                      Toast.LENGTH_SHORT).show()
+                       Log.wtf("mylogs", it)
                        }))
 	}
 

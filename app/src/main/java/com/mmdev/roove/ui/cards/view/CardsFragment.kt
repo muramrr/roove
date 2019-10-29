@@ -62,7 +62,7 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 		cardsViewModel = ViewModelProvider(mMainActivity, cardsViewModelFactory).get(CardsViewModel::class.java)
 
 
-		//get users from viewmodel
+		//get potential users
 		disposables.add(cardsViewModel.getPotentialUserCards()
 			.observeOn(AndroidSchedulers.mainThread())
 			.doOnSubscribe { showLoadingDialog() }
