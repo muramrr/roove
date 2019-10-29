@@ -8,19 +8,40 @@
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/conversations_rv"
+		android:id="@+id/potential_partners_rv"
 		android:layout_width="0dp"
-		android:layout_height="0dp"
-
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/general_margin_16"
+		android:layout_margin="@dimen/general_margin_16"
+		android:orientation="horizontal"
 		android:overScrollMode="never"
-		android:scrollbars="vertical"
-		tools:itemCount="5"
+		android:scrollbars="none"
+
 		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/active_conversations_rv"
+
+		tools:itemCount="5"
+		tools:listitem="@layout/fragment_conversation_potential_item" />
+
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/active_conversations_rv"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:overScrollMode="never"
+		android:scrollbars="vertical"
+
+		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/potential_partners_rv"
+		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintBottom_toBottomOf="parent"
 
-		tools:listitem="@layout/fragment_conversation_item"/>
+		tools:itemCount="5"
+		tools:listitem="@layout/fragment_conversation_active_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

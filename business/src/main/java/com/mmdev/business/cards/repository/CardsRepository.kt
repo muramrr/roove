@@ -13,7 +13,9 @@ interface CardsRepository {
 
 	fun addToSkipped(skippedUserItem: UserItem)
 
-	fun getPotentialUserCards(): Single<List<UserItem>>
+	fun getMatchedUserItems(): Single<List<UserItem>>
+
+	fun getPotentialUserItems(): Single<List<UserItem>>
 
 	fun handlePossibleMatch(likedUserItem: UserItem): Single<Boolean>
 

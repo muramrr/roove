@@ -8,7 +8,7 @@ import com.mmdev.business.cards.repository.CardsRepository
  * This is the documentation block about the class
  */
 
-class GetPotentialUserCardsUseCase(private val repository: CardsRepository) {
+class GetPotentialUsersUseCase (private val repository: CardsRepository) {
 
-	fun execute() = repository.getPotentialUserCards()
+	fun execute() = repository.getPotentialUserItems()
 }

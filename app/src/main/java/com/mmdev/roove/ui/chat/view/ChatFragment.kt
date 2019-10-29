@@ -57,7 +57,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 	// File
 	private lateinit var mFilePathImageCamera: File
 
+	private lateinit var conversationId: String
+
 	private val disposables = CompositeDisposable()
+
 
 
 	//static fields
@@ -76,45 +79,50 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		private const val REQUEST_CAMERA = 2
 		private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
 
-		fun newInstance(): ChatFragment {
-			return ChatFragment()
+
+		@JvmStatic
+		fun newInstance(conversationId: String) = ChatFragment().apply {
+			arguments = Bundle().apply {
+				putString(CONVERSATION_KEY, conversationId)
+			}
 		}
 
+		private const val CONVERSATION_KEY = "CONVERSATION_ID"
 	}
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
 		activity?.let { mMainActivity = it as MainActivity }
+		arguments?.let {
+			conversationId = it.getString(CONVERSATION_KEY, "")
+		}
 
 		chatViewModel = ViewModelProvider(mMainActivity, chatViewModelFactory).get(ChatViewModel::class.java)
+		chatViewModel.setConversation(conversationId)
 
 		userItemModel = mMainActivity.userItemModel
 
-		setupViews(view)
+		mChatAdapter = ChatAdapter(userItemModel.userId, listOf(), this)
 
-		disposables.add(chatViewModel.getMessages("SOMEid")
-            .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
-            .doOnNext { mMainActivity.progressDialog.dismissDialog() }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({Log.wtf(TAG, "${it[it.size - 1]}")
-	                    mChatAdapter.updateData(it) },
-                       { mMainActivity.showInternetError() }))
+		disposables.add(chatViewModel.getMessages()
+			                .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
+			                .doOnNext { mMainActivity.progressDialog.dismissDialog() }
+			                .observeOn(AndroidSchedulers.mainThread())
+			                .subscribe({Log.wtf(TAG, "${it[it.size - 1]}")
+				                mChatAdapter.updateData(it) },
+			                           { mMainActivity.showInternetError() }))
 	}
 
-
-	/*
-	 * setup managers and adapters for views
-	 */
-	private fun setupViews(view: View) {
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		edMessageWrite = view.findViewById(R.id.editTextMessage)
 		val rvMessagesList: RecyclerView = view.findViewById(R.id.chat_messages_rv)
 		val ivAttachments: ImageView = view.findViewById(R.id.buttonAttachments)
 		val ivSendMessage: ImageView = view.findViewById(R.id.buttonMessage)
 		val linearLayoutManager = LinearLayoutManager(mMainActivity)
 		linearLayoutManager.stackFromEnd = true
-		rvMessagesList.layoutManager = linearLayoutManager
 		ivSendMessage.setOnClickListener { sendMessageClick() }
 		ivAttachments.setOnClickListener { photoGalleryClick() }
-		mChatAdapter = ChatAdapter(userItemModel.userId, listOf(), this)
+
 		mChatAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
 			override fun onChanged() {
 				super.onChanged()
@@ -122,7 +130,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 				rvMessagesList.scrollToPosition(friendlyMessageCount-1)
 			}
 		})
-		rvMessagesList.adapter = mChatAdapter
+
+		rvMessagesList.apply {
+			adapter = mChatAdapter
+			layoutManager = linearLayoutManager
+		}
+
 	}
 
 	/*

@@ -162,14 +162,16 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	/*
 	 * start chat
 	 */
-	private fun startChatFragment() {
+	fun startChatFragment(conversationId: String) {
 		mFragmentManager.findFragmentByTag(ChatFragment::class.java.canonicalName) ?:
 		mFragmentManager.beginTransaction().apply {
 			setCustomAnimations(R.anim.fragment_enter_from_right,
 			                    R.anim.fragment_exit_to_left,
 			                    R.anim.fragment_enter_from_left,
 			                    R.anim.fragment_exit_to_right)
-			replace(R.id.main_container, ChatFragment.newInstance(), ChatFragment::class.java.canonicalName)
+			replace(R.id.main_container,
+			        ChatFragment.newInstance(conversationId),
+			        ChatFragment::class.java.canonicalName)
 			addToBackStack(null)
 			commit()
 		}

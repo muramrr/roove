@@ -115,8 +115,33 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		}).subscribeOn(Schedulers.io())
 	}
 
+	/*
+	* GET MATCHED [UserItem] LIST
+	*/
+	override fun getMatchedUserItems(): Single<List<UserItem>> {
+		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(currentUserId)
+			.collection(USER_MATCHES_COLLECTION_REFERENCE)
+			.get()
+		return Single.create(SingleOnSubscribe<List<UserItem>> { emitter ->
+			query.addOnCompleteListener {
+				if (it.result != null) {
+					val matchedUsersList = ArrayList<UserItem>()
+					for (doc in it.result!!.documents)
+						matchedUsersList.add(doc.toObject(UserItem::class.java)!!)
+					Log.wtf(TAG, "matches on complete, size = " + matchedUsersList.size)
+					emitter.onSuccess(matchedUsersList)
+				}
+			}.addOnFailureListener {
+				Log.wtf(TAG, "matches fail + $it")
+				emitter.onError(it)
+			}
+
+		}).subscribeOn(Schedulers.io())
+	}
+
 	/* return filtered users list as Single */
-	override fun getPotentialUserCards(): Single<List<UserItem>> {
+	override fun getPotentialUserItems(): Single<List<UserItem>> {
 		return Single.zip(getAllUsersCards(),
 		                  zipLists(),
 		                  BiFunction<List<UserItem>, List<String>, List<UserItem>>

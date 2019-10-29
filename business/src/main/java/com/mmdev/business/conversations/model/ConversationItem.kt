@@ -6,7 +6,8 @@ package com.mmdev.business.conversations.model
  * This is the documentation block about the class
  */
 
-data class ConversationItem(val partnerId:String = "",
+data class ConversationItem(val conversationId: String = "",
+                            val partnerId: String = "",
                             val partnerName: String = "",
                             val partnerPhotoUrl: String = "",
                             val lastMessageText: String = "")
