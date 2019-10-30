@@ -1,0 +1,34 @@
+<resources>
+	<!--General-->
+	<string name="app_logo">App Logo</string>
+	<string name="app_name" translatable="false">roove</string>
+
+	<!--Default strings-->
+	<string name="default_name">John Doe</string>
+	<string name="default_city">Anytown</string>
+	<string name="default_message_text">Alessandr text \n text \n text text</string>
+	<string name="default_message_date">dd/mm/yyyy</string>
+
+	<!--Some UI strings-->
+	<string name="navigation_drawer_open">Open navigation drawer</string>
+	<string name="navigation_drawer_close">Close navigation drawer</string>
+	<string name="progress_dialog_text">Please wait…</string>
+
+	<!--Layouts hardcoded strings-->
+	<string name="activity_auth_facebook_login_button_delegate">Login with Facebook</string>
+	<string name="activity_auth_tv_slogan">Meet new People, Family &amp; Friends</string>
+	<string name="fragment_card_skip_img_description">card skip</string>
+	<string name="fragment_card_like_img_description">card like</string>
+	<string name="fragment_card_item_img_description">card image</string>
+	<string name="fragment_chat_ed_hint">Enter messageItem</string>
+	<string name="fragment_chat_send_img_description">send messageItem</string>
+	<string name="fragment_chat_attach_img_description">send attachment</string>
+	<string name="chat_message_sender_avatar_img_description">sender avatar</string>
+	<string name="chat_message_sender_attach_img_description">sender_image</string>
+	<string name="chat_message_my_avatar_img_description">my avatar</string>
+	<string name="chat_message_my_attach_img_description">my image</string>
+	<string name="dialog_match_background_photo">main card photo</string>
+	<string name="dialog_match_ed_hint">Write first messageItem…</string>
+
+
+</resources>
