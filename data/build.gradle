@@ -8,7 +8,13 @@ android {
 	def globalConfiguration = rootProject.extensions.getByName("ext")
 	compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
 
+	def keyPropertiesFile = rootProject.file("key.properties")
+	def keyProperties = new Properties()
+	keyProperties.load(new FileInputStream(keyPropertiesFile))
+
 	defaultConfig {
+		buildConfigField("String", "FIREBASE_STORAGE_URL", keyProperties['FIREBASE_STORAGE_URL'])
+
 		minSdkVersion globalConfiguration["androidMinSdkVersion"]
 		targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
 		versionCode globalConfiguration["androidVersionCode"]
