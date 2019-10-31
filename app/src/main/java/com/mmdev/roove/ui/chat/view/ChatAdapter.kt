@@ -96,7 +96,9 @@ class ChatAdapter (private var userId: String,
 			setIvUserAvatar(messageItem.sender.mainPhotoUrl)
 			setTextMessage(messageItem.text)
 			messageItem.timestamp?.let { setTvTimestamp(convertTimestamp(messageItem.timestamp!!)) }
-			setIvChatPhoto(messageItem.photoAttachementItem?.fileUrl)
+			if (messageItem.photoAttachementItem != null &&
+			    messageItem.photoAttachementItem!!.fileUrl.isNotEmpty())
+				setIvChatPhoto(messageItem.photoAttachementItem?.fileUrl)
 		}
 
 		/* handle image attachment click */
