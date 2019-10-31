@@ -65,10 +65,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		authViewModel = ViewModelProvider(this, authViewModelFactory)
+		authViewModel = ViewModelProvider(this@MainActivity, authViewModelFactory)
 			.get(AuthViewModel::class.java)
 
-		userItemModel = ViewModelProvider(this, mainViewModelFactory)
+		userItemModel = ViewModelProvider(this@MainActivity, mainViewModelFactory)
 			.get(MainViewModel::class.java)
 			.getSavedUser()
 
@@ -82,7 +82,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		mFragmentManager = supportFragmentManager
 		showFeedFragment()
 
-		progressDialog = LoadingDialog(this)
+		progressDialog = LoadingDialog(this@MainActivity)
 
 
 	}
@@ -187,7 +187,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	* log out pop up
 	*/
 	private fun showSignOutPrompt() {
-		val builder = CustomAlertDialog.Builder(this)
+		val builder = CustomAlertDialog.Builder(this@MainActivity)
 		builder.setMessage("Do you wish to sign out?")
 		builder.setPositiveBtnText("Yes")
 		builder.setNegativeBtnText("NO")
@@ -218,7 +218,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	private fun setUpUser() {
 		tvSignedInUserName.text = userItemModel.name
-		GlideApp.with(this)
+		GlideApp.with(this@MainActivity)
 			.load(userItemModel.mainPhotoUrl)
 			.apply(RequestOptions().circleCrop())
 			.into(ivSignedInUserAvatar)
@@ -226,7 +226,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	}
 
 	private fun setToolbarNavigation(){
-		toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,
+		toggle = ActionBarDrawerToggle(this@MainActivity, drawerLayout, toolbar,
 		                                   R.string.navigation_drawer_open,
 		                                   R.string.navigation_drawer_close)
 
