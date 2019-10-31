@@ -78,18 +78,14 @@ class PotentialPartnersAdapter (private var mPotentialPartnersList: List<UserIte
 		}
 
 		private fun setUserAvatar(url: String){
-			Glide.with(ivIndicator.context)
-				.load(R.color.gradient3)
-				.apply(RequestOptions().circleCrop())
-				.into(ivIndicator)
-			if (url.isNotEmpty())
-				Glide.with(ivUserAvatar.context)
-					.load(url)
-					.centerCrop()
-					.apply(RequestOptions().circleCrop())
-					.into(ivUserAvatar)
-			else Glide.with(ivUserAvatar.context)
-				.load(R.drawable.default_avatar)
+//			Glide.with(ivIndicator.context)
+//				.load(Color)
+//				.apply(RequestOptions().circleCrop())
+//				.into(ivIndicator)
+
+			Glide.with(ivUserAvatar.context)
+				.load(url)
+				.fallback(R.drawable.default_avatar)
 				.centerCrop()
 				.apply(RequestOptions().circleCrop())
 				.into(ivUserAvatar)
