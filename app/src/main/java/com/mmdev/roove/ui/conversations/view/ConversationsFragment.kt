@@ -136,4 +136,10 @@ class ConversationsFragment: Fragment(R.layout.fragment_conversations){
 		super.onResume()
 		mMainActivity.toolbar.title = "Messages"
 	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+		//disposables.dispose()
+		disposables.clear()
+	}
 }
