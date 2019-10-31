@@ -5,11 +5,10 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.view.Window.FEATURE_NO_TITLE
+import android.view.Window
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.mmdev.roove.R
 
 
@@ -22,21 +21,21 @@ import com.mmdev.roove.R
 class LoadingDialog(private var context: Context) {
 
 	private lateinit var dialog: Dialog
-
+	
 	fun showDialog() {
 		dialog = Dialog(context)
-		dialog.requestWindowFeature(FEATURE_NO_TITLE)
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 		dialog.setCancelable(false)
 		dialog.setContentView(R.layout.loading)
 
 		val gifImageView: ImageView = dialog.findViewById(R.id.iv_loading)
 
 		Glide.with(context)
+			.asGif()
 			.load(R.drawable.loading)
-			.placeholder(R.drawable.loading)
 			.centerCrop()
 			.apply(RequestOptions().circleCrop())
-			.into(DrawableImageViewTarget(gifImageView))
+			.into(gifImageView)
 		dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 		dialog.show()
 	}
