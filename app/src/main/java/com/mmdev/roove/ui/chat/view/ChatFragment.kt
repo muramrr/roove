@@ -108,9 +108,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 			                .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
 			                .doOnNext { mMainActivity.progressDialog.dismissDialog() }
 			                .observeOn(AndroidSchedulers.mainThread())
-			                .subscribe({Log.wtf(TAG, "${it[it.size - 1]}")
-				                mChatAdapter.updateData(it) },
-			                           { mMainActivity.showInternetError() }))
+			                .subscribe({ if(it.isNotEmpty()) mChatAdapter.updateData(it) },
+			                           { mMainActivity.showInternetError("$it") }))
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -151,8 +150,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 			                          photoAttachementItem = null)
 			disposables.add(chatViewModel.sendMessage(message)
 					     .observeOn(AndroidSchedulers.mainThread())
-					     .subscribe( { Log.d(TAG, "MessageItem sent") },
-					                 { mMainActivity.showInternetError() } ))
+					     .subscribe( { Log.d(TAG, "Message sent fragment_chat") },
+					                 { Log.d(TAG, "can't send message fragment_chat") } ))
 			edMessageWrite.setText("")
 
 		}
@@ -250,7 +249,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 	                .flatMapCompletable { chatViewModel.sendMessage(MessageItem(userItemModel, photoAttachementItem = it)) }
 	                .observeOn(AndroidSchedulers.mainThread())
 	                .subscribe({ Log.wtf(TAG, "Photo gallery sent") },
-	                           { mMainActivity.showInternetError() }))
+	                           { mMainActivity.showInternetError("$it") }))
 
 
 
@@ -264,7 +263,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		                .flatMapCompletable { chatViewModel.sendMessage(MessageItem(userItemModel, photoAttachementItem = it)) }
 		                .observeOn(AndroidSchedulers.mainThread())
 		                .subscribe( { Log.wtf(TAG, "Photo camera sent") },
-                                    { mMainActivity.showInternetError() })
+                                    { mMainActivity.showInternetError("$it") })
 
 
 					)

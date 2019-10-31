@@ -324,8 +324,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		//startSearch()
 	}
 
-	fun showInternetError() {
-		Toast.makeText(this, "internal error", Toast.LENGTH_SHORT).show()
+	fun showInternetError(error: String) {
+		Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
 	}
 
 	override fun onBackPressed() {
