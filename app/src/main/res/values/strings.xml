@@ -20,15 +20,15 @@
 	<string name="fragment_card_skip_img_description">card skip</string>
 	<string name="fragment_card_like_img_description">card like</string>
 	<string name="fragment_card_item_img_description">card image</string>
-	<string name="fragment_chat_ed_hint">Enter messageItem</string>
-	<string name="fragment_chat_send_img_description">send messageItem</string>
+	<string name="fragment_chat_ed_hint">Enter message</string>
+	<string name="fragment_chat_send_img_description">send message</string>
 	<string name="fragment_chat_attach_img_description">send attachment</string>
 	<string name="chat_message_sender_avatar_img_description">sender avatar</string>
 	<string name="chat_message_sender_attach_img_description">sender_image</string>
 	<string name="chat_message_my_avatar_img_description">my avatar</string>
 	<string name="chat_message_my_attach_img_description">my image</string>
 	<string name="dialog_match_background_photo">main card photo</string>
-	<string name="dialog_match_ed_hint">Write first messageItem…</string>
+	<string name="dialog_match_ed_hint">Write first message…</string>
 
 
 </resources>

@@ -58,7 +58,6 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 		mCardsStackAdapter = CardsStackAdapter(listOf())
 		cardStackView.adapter = mCardsStackAdapter
 
-		val userModel = mMainActivity.userItemModel
 		cardsViewModel = ViewModelProvider(mMainActivity, cardsViewModelFactory).get(CardsViewModel::class.java)
 
 
@@ -151,9 +150,14 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 		matchDialog.show()
 		matchDialog.window!!.setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
 		val backgr = matchDialog.findViewById<ImageView>(R.id.diag_match_iv_backgr_profile_img)
-		GlideApp.with(this).load(matchUserItem.mainPhotoUrl).centerInside().into(backgr)
+		GlideApp.with(this@CardsFragment)
+			.load(matchUserItem.mainPhotoUrl)
+			.centerInside()
+			.into(backgr)
 		matchDialog.findViewById<View>(R.id.diag_match_tv_keep_swp).setOnClickListener { matchDialog.dismiss() }
 	}
+
+
 
 
 	override fun onResume() {
