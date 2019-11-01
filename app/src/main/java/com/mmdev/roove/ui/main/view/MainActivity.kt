@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
@@ -65,6 +66,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		FirebaseAnalytics.getInstance(this@MainActivity)
 		authViewModel = ViewModelProvider(this@MainActivity, authViewModelFactory)
 			.get(AuthViewModel::class.java)
 

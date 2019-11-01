@@ -7,11 +7,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.business.user.model.UserItem
+import com.mmdev.business.cards.model.CardItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 
-class CardsStackAdapter (private var usersList: List<UserItem>):
+class CardsStackAdapter (private var cardsList: List<CardItem>):
 		RecyclerView.Adapter<CardsStackAdapter.ViewHolder>() {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -20,31 +20,29 @@ class CardsStackAdapter (private var usersList: List<UserItem>):
 	}
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-		holder.bindCard(usersList[position])
+		holder.bindCard(cardsList[position])
 		holder.itemView.setOnClickListener { v -> Toast.makeText(v.context, "clicked", Toast.LENGTH_SHORT).show() }
 
 	}
 
-	override fun getItemCount(): Int { return usersList.size }
+	override fun getItemCount(): Int { return cardsList.size }
 
 	override fun getItemId(position: Int): Long { return position.toLong() }
 
-	internal fun getSwipeProfile(position: Int): UserItem { return usersList[position] }
+	internal fun getSwipeProfile(position: Int): CardItem { return cardsList[position] }
 
-	fun updateData(newUserItems: List<UserItem>) {
-		this.usersList = newUserItems
+	fun updateData(newCardItems: List<CardItem>) {
+		this.cardsList = newCardItems
 		notifyDataSetChanged()
 	}
 
 	inner class ViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
 		private val tvNameCard: TextView = itemView.findViewById(R.id.fragment_card_item_text_name)
-		private val tvCityCard: TextView = itemView.findViewById(R.id.fragment_card_item_text_city)
 		private val tvImageCard: ImageView = itemView.findViewById(R.id.fragment_card_item_img_photo)
 
-		fun bindCard(userItem: UserItem){
-			tvNameCard.text = userItem.name
-			tvCityCard.text = userItem.city
-			GlideApp.with(tvImageCard).load(userItem.mainPhotoUrl).into(tvImageCard)
+		fun bindCard(cardItem: CardItem){
+			tvNameCard.text = cardItem.name
+			GlideApp.with(tvImageCard).load(cardItem.mainPhotoUrl).into(tvImageCard)
 		}
 
 	}

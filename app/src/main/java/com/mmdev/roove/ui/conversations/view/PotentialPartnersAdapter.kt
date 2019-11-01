@@ -1,13 +1,16 @@
 package com.mmdev.roove.ui.conversations.view
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.mmdev.business.user.model.UserItem
+import com.mmdev.business.cards.model.CardItem
 import com.mmdev.roove.R
 
 /* Created by A on 29.10.2019.*/
@@ -17,16 +20,7 @@ import com.mmdev.roove.R
  */
 
 
-
-
-
-/* Created by A on 27.10.2019.*/
-
-/**
- * This is the documentation block about the class
- */
-
-class PotentialPartnersAdapter (private var mPotentialPartnersList: List<UserItem>):
+class PotentialPartnersAdapter (private var mPotentialPartnersList: List<CardItem>):
 
 		RecyclerView.Adapter<PotentialPartnersAdapter.PotentialPartnersViewHolder>() {
 
@@ -44,12 +38,12 @@ class PotentialPartnersAdapter (private var mPotentialPartnersList: List<UserIte
 
 	override fun getItemCount(): Int { return mPotentialPartnersList.size }
 
-	fun updateData(partnersList: List<UserItem>) {
+	fun updateData(partnersList: List<CardItem>) {
 		mPotentialPartnersList = partnersList
 		notifyDataSetChanged()
 	}
 
-	fun getPotentialPartnerItem(position: Int): UserItem {
+	fun getPotentialPartnerItem(position: Int): CardItem {
 		return mPotentialPartnersList[position]
 	}
 
@@ -66,22 +60,24 @@ class PotentialPartnersAdapter (private var mPotentialPartnersList: List<UserIte
 			}
 		}
 
-		//potential user conversation
 		private val ivUserAvatar: ImageView = itemView
 			.findViewById(R.id.conversation_potential_item_userpic_iv)
-
 		private val ivIndicator: ImageView = itemView
 			.findViewById(R.id.conversation_potential_item_indicator_iv)
 
-		fun bind(userItem: UserItem){
+		private val tvName: TextView = itemView.findViewById(R.id.conversation_potential_item_name_tv)
+
+		fun bind(userItem: CardItem){
 			setUserAvatar(userItem.mainPhotoUrl)
+			setUserName(userItem.name)
 		}
 
 		private fun setUserAvatar(url: String){
-//			Glide.with(ivIndicator.context)
-//				.load(Color)
-//				.apply(RequestOptions().circleCrop())
-//				.into(ivIndicator)
+			//neon green color indicator
+			Glide.with(ivIndicator.context)
+				.load(ColorDrawable(Color.parseColor("#39ff14")))
+				.apply(RequestOptions().circleCrop())
+				.into(ivIndicator)
 
 			Glide.with(ivUserAvatar.context)
 				.load(url)
@@ -90,6 +86,8 @@ class PotentialPartnersAdapter (private var mPotentialPartnersList: List<UserIte
 				.apply(RequestOptions().circleCrop())
 				.into(ivUserAvatar)
 		}
+
+		private fun setUserName(name: String){ tvName.text = name.split(" ")[0]}
 	}
 
 

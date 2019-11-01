@@ -60,7 +60,7 @@ class ConversationsFragment: Fragment(R.layout.fragment_conversations){
 		disposables.add(cardsViewModel.getMatchedUserItems()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                           Log.wtf("mylogs", "users to show: ${it.size}")
+                           Log.wtf("mylogs", "potential users to show: ${it.size}")
 	                       mPotentialPartnersAdapter.updateData(it)
                        },
                        {
@@ -80,7 +80,6 @@ class ConversationsFragment: Fragment(R.layout.fragment_conversations){
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
 		rvActiveConversationsList = view.findViewById(R.id.active_conversations_rv)
 		rvPotentialPartnersList = view.findViewById(R.id.potential_partners_rv)
 
@@ -139,7 +138,6 @@ class ConversationsFragment: Fragment(R.layout.fragment_conversations){
 
 	override fun onDestroy() {
 		super.onDestroy()
-		//disposables.dispose()
 		disposables.clear()
 	}
 }

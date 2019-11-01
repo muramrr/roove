@@ -41,6 +41,5 @@ build
 *~
 *.swp
 *.psd
-*.png
 /Screenshots
 bfg.jar

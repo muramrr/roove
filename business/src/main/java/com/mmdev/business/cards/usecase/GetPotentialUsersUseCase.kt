@@ -10,5 +10,5 @@ import com.mmdev.business.cards.repository.CardsRepository
 
 class GetPotentialUsersUseCase (private val repository: CardsRepository) {
 
-	fun execute() = repository.getPotentialUserItems()
+	fun execute() = repository.getPotentialCardItems()
 }

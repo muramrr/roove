@@ -10,6 +10,6 @@ import com.mmdev.business.cards.repository.CardsRepository
 
 class GetMatchedUsersUseCase (private val repository: CardsRepository)  {
 
-	fun execute() = repository.getMatchedUserItems()
+	fun execute() = repository.getMatchedCardItems()
 
 }
