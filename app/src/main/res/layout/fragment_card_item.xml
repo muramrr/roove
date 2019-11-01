@@ -33,12 +33,6 @@
             android:text="@string/default_name"
             style="@style/regular_text_white_24sp_85op"/>
 
-        <TextView
-            android:id="@+id/fragment_card_item_text_city"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/default_city"
-            style="@style/regular_text_white_20sp_85op"/>
 
     </LinearLayout>
 

@@ -1,5 +1,6 @@
 <resources>
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
+	<dimen name="general_margin_8">8dp</dimen>
     <dimen name="general_margin_16">16dp</dimen>
 	<dimen name="card_margin_fix_rview_8">8dp</dimen>
     <dimen name="notifbar_size_24">24dp</dimen>
