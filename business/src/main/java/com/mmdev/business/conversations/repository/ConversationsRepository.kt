@@ -1,7 +1,7 @@
 package com.mmdev.business.conversations.repository
 
+import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.conversations.model.ConversationItem
-import com.mmdev.business.user.model.UserItem
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -15,7 +15,7 @@ import io.reactivex.Single
 
 interface ConversationsRepository {
 
-	fun createConversation(partnerUserItem: UserItem): Single<ConversationItem>
+	fun createConversation(partnerCardItem: CardItem): Single<ConversationItem>
 
 	fun getConversationsList(): Observable<List<ConversationItem>>
 

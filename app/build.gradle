@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 
+
 android {
 
 	def globalConfiguration = rootProject.extensions.getByName("ext")
@@ -23,12 +24,18 @@ android {
 	buildTypes {
 		debug {
 			versionNameSuffix '-DEBUG'
+			multiDexEnabled = true
 		}
 
 		release {
+			lintOptions {
+				checkReleaseBuilds true
+				abortOnError true
+			}
 			minifyEnabled true
 			shrinkResources true
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+			multiDexEnabled = true
 		}
 	}
 
@@ -78,6 +85,7 @@ dependencies {
 	implementation "com.google.firebase:firebase-core:$firebase_core_version"
 	implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
 	implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
+	implementation 'com.google.firebase:firebase-analytics:17.2.1'
 
 	//facebook auth
 	implementation "com.facebook.android:facebook-android-sdk:$facebook_sdk_version"

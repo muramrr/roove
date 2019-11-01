@@ -1,7 +1,7 @@
 package com.mmdev.business.cards.usecase
 
+import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.cards.repository.CardsRepository
-import com.mmdev.business.user.model.UserItem
 
 /* Created by A on 14.09.2019.*/
 
@@ -11,6 +11,6 @@ import com.mmdev.business.user.model.UserItem
 
 class HandlePossibleMatchUseCase (private val repository: CardsRepository)  {
 
-	fun execute(t: UserItem) = repository.handlePossibleMatch(t)
+	fun execute(t: CardItem) = repository.handlePossibleMatch(t)
 
 }
