@@ -25,5 +25,6 @@
 	<color name="material_orange_600">#FB8C00</color>
 	<color name="material_blue_400">#42A5F5</color>
 	<color name="material_blue_a700">#2962FF</color>
+	<color name="conversations_indicator">#39ff14</color>
 
 </resources>
