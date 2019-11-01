@@ -2,6 +2,7 @@ package com.mmdev.data.conversations
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.conversations.model.ConversationItem
 import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.user.model.UserItem
@@ -25,6 +26,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 	companion object{
 		// firestore users references
 		private const val USERS_COLLECTION_REFERENCE = "users"
+		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
 
 		// firestore conversations reference
 		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
@@ -33,57 +35,51 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 	private val currentUserId = currentUserItem.userId
 
 
-	override fun createConversation(partnerUserItem: UserItem): Single<ConversationItem> {
+	override fun createConversation(partnerCardItem: CardItem): Single<ConversationItem> {
 
 		return Single.create(SingleOnSubscribe<ConversationItem> { emitter ->
+			//generate id for new conversation
+			val conversationId = firestore
+				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document()
+				.id
 
-			//if conversation with this user does not exists
-			if(!firestore.collection(USERS_COLLECTION_REFERENCE)
+			val conversationItem = ConversationItem(conversationId,
+			                                        partnerCardItem.userId,
+			                                        partnerCardItem.name,
+			                                        partnerCardItem.mainPhotoUrl)
+
+			//set conversation for current user
+			firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(currentUserId)
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.whereEqualTo("partnerId", partnerUserItem.userId)
-				.get().isSuccessful) {
+				.document(conversationId)
+				.set(conversationItem)
+			//set "started" status to conversation for current user
+			firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.collection(USER_MATCHED_COLLECTION_REFERENCE)
+				.document(partnerCardItem.userId)
+				.update("conversationStarted", true)
 
-				//generate id for new conversation
-				val conversationId =
-					firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE).document().id
+			//set conversation for another user
+			firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(partnerCardItem.userId)
+				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(conversationId)
+				.set(ConversationItem(conversationId,
+				                      currentUserItem.userId,
+				                      currentUserItem.name,
+				                      currentUserItem.mainPhotoUrl))
+			//set "started" status to conversation for another user
+			firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(partnerCardItem.userId)
+				.collection(USER_MATCHED_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.update("conversationStarted", true)
 
-				val conversationItem = ConversationItem(conversationId,
-				                                        partnerUserItem.userId,
-				                                        partnerUserItem.name,
-				                                        partnerUserItem.mainPhotoUrl)
-
-				//set conversation for current user
-				firestore.collection(USERS_COLLECTION_REFERENCE).document(currentUserId)
-					.collection(CONVERSATIONS_COLLECTION_REFERENCE).document(conversationId)
-					.set(conversationItem)
-
-				//set conversation for another user
-				firestore.collection(USERS_COLLECTION_REFERENCE).document(partnerUserItem.userId)
-					.collection(CONVERSATIONS_COLLECTION_REFERENCE).document(conversationId)
-					.set(ConversationItem(conversationId,
-					                      currentUserItem.userId,
-					                      currentUserItem.name,
-					                      currentUserItem.mainPhotoUrl))
-
-
-					.addOnSuccessListener { emitter.onSuccess(conversationItem) }
-					.addOnFailureListener { emitter.onError(it) }
-			}
-			//if exists = get()
-			else {
-				firestore.collection(USERS_COLLECTION_REFERENCE)
-					.document(currentUserId)
-					.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-					.whereEqualTo("partnerId", partnerUserItem.userId)
-					.get()
-					.addOnSuccessListener {
-						val conversationItem = it.documents[0]
-							.toObject(ConversationItem::class.java)!!
-						emitter.onSuccess(conversationItem)
-					}
-					.addOnFailureListener { emitter.onError(it) }
-			}
+				.addOnSuccessListener { emitter.onSuccess(conversationItem) }
+				.addOnFailureListener { emitter.onError(it) }
 
 		}).subscribeOn(Schedulers.io())
 	}

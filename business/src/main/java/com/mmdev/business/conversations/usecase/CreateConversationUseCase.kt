@@ -1,7 +1,7 @@
 package com.mmdev.business.conversations.usecase
 
+import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.conversations.repository.ConversationsRepository
-import com.mmdev.business.user.model.UserItem
 
 /* Created by A on 26.10.2019.*/
 
@@ -11,6 +11,6 @@ import com.mmdev.business.user.model.UserItem
 
 class CreateConversationUseCase (private val repository: ConversationsRepository) {
 
-	fun execute(t: UserItem) = repository.createConversation(t)
+	fun execute(t: CardItem) = repository.createConversation(t)
 
 }

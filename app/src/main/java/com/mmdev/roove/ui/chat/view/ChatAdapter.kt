@@ -96,9 +96,7 @@ class ChatAdapter (private var userId: String,
 			setIvUserAvatar(messageItem.sender.mainPhotoUrl)
 			setTextMessage(messageItem.text)
 			messageItem.timestamp?.let { setTvTimestamp(convertTimestamp(messageItem.timestamp!!)) }
-			if (messageItem.photoAttachementItem != null &&
-			    messageItem.photoAttachementItem!!.fileUrl.isNotEmpty())
-				setIvChatPhoto(messageItem.photoAttachementItem?.fileUrl)
+			setIvChatPhoto(messageItem.photoAttachementItem?.fileUrl)
 		}
 
 		/* handle image attachment click */
@@ -134,6 +132,7 @@ class ChatAdapter (private var userId: String,
 		private fun setIvChatPhoto(url: String?) {
 			GlideApp.with(ivChatPhoto.context)
 				.load(url)
+				.fallback(R.drawable.default_avatar)
 				.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
 				.apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
 				.into(ivChatPhoto)

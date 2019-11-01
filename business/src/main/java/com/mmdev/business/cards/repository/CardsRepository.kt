@@ -1,6 +1,6 @@
 package com.mmdev.business.cards.repository
 
-import com.mmdev.business.user.model.UserItem
+import com.mmdev.business.cards.model.CardItem
 import io.reactivex.Single
 
 /* Created by A on 14.09.2019.*/
@@ -11,13 +11,13 @@ import io.reactivex.Single
 
 interface CardsRepository {
 
-	fun addToSkipped(skippedUserItem: UserItem)
+	fun addToSkipped(skippedCardItem: CardItem)
 
-	fun getMatchedUserItems(): Single<List<UserItem>>
+	fun getMatchedCardItems(): Single<List<CardItem>>
 
-	fun getPotentialUserItems(): Single<List<UserItem>>
+	fun getPotentialCardItems(): Single<List<CardItem>>
 
-	fun handlePossibleMatch(likedUserItem: UserItem): Single<Boolean>
+	fun handlePossibleMatch(likedCardItem: CardItem): Single<Boolean>
 
 
 }
