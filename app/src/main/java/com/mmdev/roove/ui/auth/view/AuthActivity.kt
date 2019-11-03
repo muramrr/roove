@@ -106,7 +106,11 @@ class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
 		disposables.add(authViewModel.signUp(userItemModel)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-						progressButton.stopAnim { startMainActivity() }
+						progressButton.stopAnim (object: ProgressButton.OnStopAnim{
+							override fun stop() {
+								startMainActivity()
+							}
+						})
                        },
                        {
                        Toast.makeText(this,

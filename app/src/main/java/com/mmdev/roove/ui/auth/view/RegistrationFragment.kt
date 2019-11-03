@@ -42,7 +42,7 @@ class RegistrationFragment: Fragment(R.layout.activity_auth_fragment_reg){
 				2 -> preferedGender = "both"
 			}
 		}
-		val progressButton = view.findViewById(R.id.diag_reg_btn_done) as ProgressButton
+		val progressButton = view.findViewById(R.id.reg_btn_done) as ProgressButton
 		progressButton.setOnClickListener {
 			isRegistrationCompleted = true
 			progressButton.startAnim()
