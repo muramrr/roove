@@ -7,14 +7,17 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.cards.viewmodel.CardsViewModel
-import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.main.view.MainActivity
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
@@ -30,10 +33,11 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 
 	private lateinit var cardStackView: CardStackView
 	private val mCardsStackAdapter: CardsStackAdapter = CardsStackAdapter(listOf())
-	private lateinit var progressDialog: LoadingDialog
+
+	private lateinit var mLoadingImageView: ImageView
 	private var mProgressShowing: Boolean = false
 
-	private lateinit var mSwipedCardItem: CardItem
+	private lateinit var mAppearedCardItem: CardItem
 
 	private lateinit var cardsViewModel: CardsViewModel
 	private val cardsViewModelFactory = injector.cardsViewModelFactory()
@@ -41,6 +45,8 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 	private val disposables = CompositeDisposable()
 
 	companion object{
+		private const val TAG = "mylogs"
+
 		fun newInstance(): CardsFragment {
 			return CardsFragment()
 		}
@@ -51,52 +57,66 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 		super.onCreate(savedInstanceState)
 		activity?.let { mMainActivity = it as MainActivity }
 		cardsViewModel = ViewModelProvider(mMainActivity, cardsViewModelFactory).get(CardsViewModel::class.java)
-		progressDialog = LoadingDialog(mMainActivity)
-
 
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		cardStackView = view.findViewById(R.id.card_stack_view)
 
+		mCardsStackAdapter.setOnItemClickListener(object: CardsStackAdapter.OnItemClickListener{
+			override fun onItemClick(view: View, position: Int) {
+				Toast.makeText(mMainActivity,
+				               "Clicked ${mCardsStackAdapter.getCard(position)}",
+				               Toast.LENGTH_SHORT).show()
+			}
+		})
+
+		mLoadingImageView = view.findViewById(R.id.card_loading_progress_iv)
+		initLoadingGif()
+
+		val textViewDescriptionHelper = view.findViewById<TextView>(R.id.card_helper_text_tv)
 		//get potential users
 		disposables.add(cardsViewModel.getPotentialUserCards()
 			                .observeOn(AndroidSchedulers.mainThread())
-			                .doOnSubscribe { showLoadingDialog() }
-			                .doFinally { hideLoadingDialog() }
+			                .doOnSubscribe { showLoading() }
+			                .doOnSuccess {
+				                if(it.isNotEmpty()) hideLoading()
+				                else textViewDescriptionHelper.visibility = View.VISIBLE
+			                }
 			                .subscribe({
-				                           Log.wtf("mylogs", "cards to show: ${it.size}")
+				                           Log.wtf(TAG, "cards to show: ${it.size}")
 				                           mCardsStackAdapter.updateData(it)
-				                           if(it.isNotEmpty()) hideLoadingDialog()
+
 			                           },
 			                           {
-				                           Log.wtf("mylogs", "get potential users error + $it")
+				                           Log.wtf(TAG, "get potential users error + $it")
 			                           }))
 
 		val cardStackLayoutManager = CardStackLayoutManager(mMainActivity, object: CardStackListener {
 
 			override fun onCardAppeared(view: View, position: Int) {
 				//get current displayed on card profile
-				mSwipedCardItem = mCardsStackAdapter.getSwipeProfile(position)
+				mAppearedCardItem = mCardsStackAdapter.getCard(position)
 
 			}
 
 			override fun onCardDragging(direction: Direction, ratio: Float) {}
 
 			override fun onCardSwiped(direction: Direction) {
+				val swipedCard = mAppearedCardItem
 				//if right = add to liked
 				//else = add to skiped
 				if (direction == Direction.Right) {
-					disposables.add(cardsViewModel.handlePossibleMatch(mSwipedCardItem)
+					disposables.add(cardsViewModel.handlePossibleMatch(swipedCard)
 						                .subscribe({
-							                           if (it) showMatchDialog(mSwipedCardItem)
-							                           Log.wtf("mylogs", mSwipedCardItem.toString())
+							                           if (it) showMatchDialog(swipedCard)
+							                           Log.wtf(TAG, swipedCard.toString())
 						                           },
 						                           {
-							                           Log.wtf("mylogs", it)
+							                           Log.wtf(TAG, "error swiped + $it")
 						                           }))
 				}
-				else cardsViewModel.addToSkipped(mSwipedCardItem)
+				else cardsViewModel.addToSkipped(swipedCard)
 			}
 
 			override fun onCardRewound() {}
@@ -107,9 +127,11 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 				//if there is no available user to show - show loading
 				if (position == mCardsStackAdapter.itemCount - 1) {
 					mCardsStackAdapter.notifyDataSetChanged()
-					showLoadingDialog()
+					showLoading()
+					textViewDescriptionHelper.visibility = View.VISIBLE
 				}
 			}
+
 
 		})
 
@@ -121,21 +143,6 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 	}
 
 
-	private fun showLoadingDialog() {
-		if (!mProgressShowing) {
-			cardStackView.visibility = View.GONE
-			progressDialog.showDialog()
-			mProgressShowing = true
-		}
-	}
-
-	private fun hideLoadingDialog() {
-		if (mProgressShowing) {
-			progressDialog.dismissDialog()
-			cardStackView.visibility = View.VISIBLE
-			mProgressShowing = false
-		}
-	}
 
 	private fun showMatchDialog(matchCardItem: CardItem) {
 		val matchDialog = Dialog(mMainActivity)
@@ -152,6 +159,31 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 		matchDialog.findViewById<View>(R.id.diag_match_tv_keep_swp).setOnClickListener { matchDialog.dismiss() }
 	}
 
+
+	private fun initLoadingGif(){
+		Glide.with(mLoadingImageView.context)
+			.asGif()
+			.load(R.drawable.loading)
+			.centerCrop()
+			.apply(RequestOptions().circleCrop())
+			.into(mLoadingImageView)
+	}
+
+	private fun showLoading() {
+		if (!mProgressShowing) {
+			cardStackView.visibility = View.GONE
+			mLoadingImageView.visibility = View.VISIBLE
+			mProgressShowing = true
+		}
+	}
+
+	private fun hideLoading() {
+		if (mProgressShowing) {
+			mLoadingImageView.visibility = View.GONE
+			cardStackView.visibility = View.VISIBLE
+			mProgressShowing = false
+		}
+	}
 
 	override fun onResume() {
 		super.onResume()
