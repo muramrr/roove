@@ -3,6 +3,7 @@ package com.mmdev.business.user.model
 import java.util.*
 
 data class UserItem (val name: String = "",
+                     //var age: Int = 0,
                      var city: String = "",
                      var gender: String = "",
                      var preferedGender: String = "",
