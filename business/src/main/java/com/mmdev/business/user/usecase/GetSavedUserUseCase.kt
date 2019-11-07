@@ -8,7 +8,7 @@ import com.mmdev.business.user.repository.UserRepository
  * This is the documentation block about the class
  */
 
-class GetSavedUserUseCase (private val repository: UserRepository) {
+class GetSavedUserUseCase (private val repository: UserRepository.LocalUserRepository) {
 
 	fun execute() = repository.getSavedUser()
 }

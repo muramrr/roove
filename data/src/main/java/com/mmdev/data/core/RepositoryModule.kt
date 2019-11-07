@@ -43,6 +43,7 @@ class RepositoryModule {
 
 	@Provides
 	@Singleton
-	fun userRepository(repository: UserRepositoryImpl): UserRepository { return repository }
+	fun userRepository(repository: UserRepositoryImpl): UserRepository.LocalUserRepository
+	{ return repository }
 
 }
