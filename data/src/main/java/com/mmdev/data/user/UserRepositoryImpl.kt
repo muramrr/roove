@@ -1,10 +1,9 @@
 package com.mmdev.data.user
 
-import android.content.Context
 import android.util.Log
+import com.ironz.binaryprefs.Preferences
 import com.mmdev.business.user.model.UserItem
 import com.mmdev.business.user.repository.UserRepository
-import com.mmdev.data.utils.TinyDB
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,7 +14,8 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class UserRepositoryImpl @Inject constructor(private val context: Context): UserRepository {
+class UserRepositoryImpl @Inject constructor(private val prefs: Preferences):
+		UserRepository.LocalUserRepository {
 
 
 	companion object{
@@ -31,18 +31,18 @@ class UserRepositoryImpl @Inject constructor(private val context: Context): User
 	}
 
 	override fun getSavedUser(): UserItem {
-		val prefs = TinyDB(PREF_KEY_GENERAL_USER_STORE, context)
+
 		return if (prefs.getBoolean(PREF_KEY_GENERAL_IF_SAVED, false)) {
 			try {
-				val name = prefs.getString(PREF_KEY_CURRENT_USER_NAME , "")
-				val city = prefs.getString(PREF_KEY_CURRENT_USER_CITY, "")
-				val gender = prefs.getString(PREF_KEY_CURRENT_USER_GENDER, "")
-				val preferedGender = prefs.getString(PREF_KEY_CURRENT_USER_P_GENDER, "")
-				val mainPhotoUrl = prefs.getString(PREF_KEY_CURRENT_USER_MAIN_PIC_URL, "")
-				val photoUrls = prefs.getListString(PREF_KEY_CURRENT_USER_PHOTO_URLS)
-				val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")
+				val name = prefs.getString(PREF_KEY_CURRENT_USER_NAME , "")!!
+				val city = prefs.getString(PREF_KEY_CURRENT_USER_CITY, "")!!
+				val gender = prefs.getString(PREF_KEY_CURRENT_USER_GENDER, "")!!
+				val preferedGender = prefs.getString(PREF_KEY_CURRENT_USER_P_GENDER, "")!!
+				val mainPhotoUrl = prefs.getString(PREF_KEY_CURRENT_USER_MAIN_PIC_URL, "")!!
+				val photoUrls = prefs.getStringSet(PREF_KEY_CURRENT_USER_PHOTO_URLS, setOf(""))!!
+				val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")!!
 				Log.wtf("mylogs", "retrieved user info from sharedpref successfully")
-				UserItem(name, city, gender, preferedGender, mainPhotoUrl, photoUrls, uid)
+				UserItem(name, city, gender, preferedGender, mainPhotoUrl, photoUrls.toList(), uid)
 			}finally {
 				UserItem(name = "local internal error")
 			}
@@ -56,16 +56,16 @@ class UserRepositoryImpl @Inject constructor(private val context: Context): User
 
 
 	override fun saveUserInfo(currentUserItem: UserItem) {
-		val prefs = TinyDB(PREF_KEY_GENERAL_USER_STORE, context)
-		prefs.clear()
-		prefs.putString(PREF_KEY_CURRENT_USER_NAME, currentUserItem.name)
-		prefs.putString(PREF_KEY_CURRENT_USER_CITY, currentUserItem.city)
-		prefs.putString(PREF_KEY_CURRENT_USER_GENDER, currentUserItem.gender)
-		prefs.putString(PREF_KEY_CURRENT_USER_P_GENDER, currentUserItem.preferedGender)
-		prefs.putString(PREF_KEY_CURRENT_USER_MAIN_PIC_URL, currentUserItem.mainPhotoUrl)
-		prefs.putListString(PREF_KEY_CURRENT_USER_PHOTO_URLS, currentUserItem.photoURLs!!)
-		prefs.putString(PREF_KEY_CURRENT_USER_ID, currentUserItem.userId)
-		prefs.putBoolean(PREF_KEY_GENERAL_IF_SAVED, true)
+		val editor = prefs.edit()
+		editor.putString(PREF_KEY_CURRENT_USER_NAME, currentUserItem.name)
+		editor.putString(PREF_KEY_CURRENT_USER_CITY, currentUserItem.city)
+		editor.putString(PREF_KEY_CURRENT_USER_GENDER, currentUserItem.gender)
+		editor.putString(PREF_KEY_CURRENT_USER_P_GENDER, currentUserItem.preferedGender)
+		editor.putString(PREF_KEY_CURRENT_USER_MAIN_PIC_URL, currentUserItem.mainPhotoUrl)
+		editor.putStringSet(PREF_KEY_CURRENT_USER_PHOTO_URLS, currentUserItem.photoURLs!!.toSet())
+		editor.putString(PREF_KEY_CURRENT_USER_ID, currentUserItem.userId)
+		editor.putBoolean(PREF_KEY_GENERAL_IF_SAVED, true)
+		editor.apply()
 		Log.wtf("mylogs", "User successfully saved")
 	}
 
