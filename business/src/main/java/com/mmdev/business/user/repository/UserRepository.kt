@@ -7,11 +7,14 @@ import com.mmdev.business.user.model.UserItem
 /**
  * This is the documentation block about the class
  */
+class UserRepository {
 
-interface UserRepository {
+	interface LocalUserRepository {
 
-	fun getSavedUser(): UserItem
+		fun getSavedUser(): UserItem
 
-	fun saveUserInfo(currentUserItem: UserItem)
+		fun saveUserInfo(currentUserItem: UserItem)
+	}
+
 
 }

@@ -9,7 +9,7 @@ import com.mmdev.business.user.repository.UserRepository
  * This is the documentation block about the class
  */
 
-class SaveUserInfoUseCase (private val repository: UserRepository) {
+class SaveUserInfoUseCase (private val repository: UserRepository.LocalUserRepository) {
 
 	fun execute(currentUserItem: UserItem) = repository.saveUserInfo(currentUserItem)
 

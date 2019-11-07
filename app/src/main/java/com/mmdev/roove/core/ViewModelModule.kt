@@ -64,7 +64,7 @@ class ViewModelModule {
 	}
 
 	@Provides
-	fun mainViewModelFactory(repository: UserRepository): MainViewModelFactory {
+	fun mainViewModelFactory(repository: UserRepository.LocalUserRepository): MainViewModelFactory {
 		return MainViewModelFactory(GetSavedUserUseCase(repository),
 		                            SaveUserInfoUseCase(repository))
 	}

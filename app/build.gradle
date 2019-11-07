@@ -109,6 +109,9 @@ dependencies {
 	implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 	implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
+	//binary prefs
+	implementation "com.github.yandextaxitech:binaryprefs:1.0.1"
+
 	compileOnly 'javax.annotation:jsr250-api:1.0'
 
 }

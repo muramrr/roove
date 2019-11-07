@@ -31,13 +31,13 @@ android {
 
 	}
 
-	sourceSets {
-		main.java.srcDirs += 'src/main/kotlin'
-	}
-
 	compileOptions {
 		sourceCompatibility = 1.8
 		targetCompatibility = 1.8
+	}
+
+	sourceSets {
+		main.java.srcDirs += 'src/main/kotlin'
 	}
 
 }
@@ -64,5 +64,8 @@ dependencies {
 	// Dagger
 	implementation "com.google.dagger:dagger:$dagger_version"
 	kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+	//binary prefs
+	implementation "com.github.yandextaxitech:binaryprefs:1.0.1"
 
 }

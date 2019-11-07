@@ -1,5 +1,6 @@
 package com.mmdev.roove.core
 
+import android.app.Application
 import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.chat.repository.ChatRepository
@@ -14,11 +15,11 @@ import com.mmdev.roove.ui.cards.viewmodel.CardsViewModelFactory
 import com.mmdev.roove.ui.chat.viewmodel.ChatViewModelFactory
 import com.mmdev.roove.ui.conversations.viewmodel.ConversationsViewModelFactory
 import com.mmdev.roove.ui.main.viewmodel.MainViewModelFactory
+import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 @Component(modules = [
-    AppModule::class,
     AuthModule::class,
     RepositoryModule::class,
     FirebaseModule::class,
@@ -28,6 +29,14 @@ import javax.inject.Singleton
 
 @Singleton
 interface AppComponent {
+
+    @Component.Builder
+    interface Builder {
+        fun build(): AppComponent
+
+        @BindsInstance
+        fun application(application: Application): Builder
+    }
 
     //factories
     fun authViewModelFactory(): AuthViewModelFactory
@@ -42,6 +51,6 @@ interface AppComponent {
     fun cardsRepository(): CardsRepository
     fun chatRepository(): ChatRepository
     fun conversationsRepository(): ConversationsRepository
-    fun userRepository(): UserRepository
+    fun userRepository(): UserRepository.LocalUserRepository
 
 }
