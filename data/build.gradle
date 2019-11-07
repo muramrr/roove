@@ -19,7 +19,7 @@ android {
 		targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
 		versionCode globalConfiguration["androidVersionCode"]
 		versionName globalConfiguration["androidVersionName"]
-		testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
+		//testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
 	}
 
 	buildTypes {
