@@ -14,7 +14,8 @@ import com.mmdev.roove.ui.auth.viewmodel.AuthViewModelFactory
 import com.mmdev.roove.ui.cards.viewmodel.CardsViewModelFactory
 import com.mmdev.roove.ui.chat.viewmodel.ChatViewModelFactory
 import com.mmdev.roove.ui.conversations.viewmodel.ConversationsViewModelFactory
-import com.mmdev.roove.ui.main.viewmodel.MainViewModelFactory
+import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoVMFactory
+import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoVMFactory
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -43,7 +44,8 @@ interface AppComponent {
     fun cardsViewModelFactory(): CardsViewModelFactory
     fun chatViewModelFactory(): ChatViewModelFactory
     fun conversationsViewModelFactory(): ConversationsViewModelFactory
-    fun mainViewModelFactory(): MainViewModelFactory
+    fun localUserRepoVMFactory(): LocalUserRepoVMFactory
+    fun remoteUserRepoVMFactory(): RemoteUserRepoVMFactory
 
 
     //repos
@@ -51,6 +53,7 @@ interface AppComponent {
     fun cardsRepository(): CardsRepository
     fun chatRepository(): ChatRepository
     fun conversationsRepository(): ConversationsRepository
-    fun userRepository(): UserRepository.LocalUserRepository
+    fun localUserRepository(): UserRepository.LocalUserRepository
+    fun remoteUserRepository(): UserRepository.RemoteUserRepository
 
 }

@@ -18,13 +18,17 @@ import com.mmdev.business.conversations.usecase.CreateConversationUseCase
 import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
 import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
 import com.mmdev.business.user.repository.UserRepository
-import com.mmdev.business.user.usecase.GetSavedUserUseCase
-import com.mmdev.business.user.usecase.SaveUserInfoUseCase
+import com.mmdev.business.user.usecase.local.GetSavedUserUseCase
+import com.mmdev.business.user.usecase.local.SaveUserInfoUseCase
+import com.mmdev.business.user.usecase.remote.CreateUserUseCase
+import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
+import com.mmdev.business.user.usecase.remote.GetUserByIdUseCase
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModelFactory
 import com.mmdev.roove.ui.cards.viewmodel.CardsViewModelFactory
 import com.mmdev.roove.ui.chat.viewmodel.ChatViewModelFactory
 import com.mmdev.roove.ui.conversations.viewmodel.ConversationsViewModelFactory
-import com.mmdev.roove.ui.main.viewmodel.MainViewModelFactory
+import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoVMFactory
+import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoVMFactory
 import dagger.Module
 import dagger.Provides
 
@@ -59,15 +63,21 @@ class ViewModelModule {
 	@Provides
 	fun conversationsViewModelFactory(repository: ConversationsRepository): ConversationsViewModelFactory {
 		return ConversationsViewModelFactory(CreateConversationUseCase(repository),
-		                            DeleteConversationUseCase(repository),
-		                            GetConversationsListUseCase(repository))
+		                                     DeleteConversationUseCase(repository),
+		                                     GetConversationsListUseCase(repository))
 	}
 
 	@Provides
-	fun mainViewModelFactory(repository: UserRepository.LocalUserRepository): MainViewModelFactory {
-		return MainViewModelFactory(GetSavedUserUseCase(repository),
-		                            SaveUserInfoUseCase(repository))
+	fun localUserRepoVMFactory(repository: UserRepository.LocalUserRepository): LocalUserRepoVMFactory {
+		return LocalUserRepoVMFactory(GetSavedUserUseCase(
+				repository), SaveUserInfoUseCase(repository))
 	}
 
+
+	@Provides
+	fun remoteUserRepoVMFactory(repository: UserRepository.RemoteUserRepository): RemoteUserRepoVMFactory {
+		return RemoteUserRepoVMFactory(CreateUserUseCase(
+				repository), DeleteUserUseCase(repository), GetUserByIdUseCase(repository))
+	}
 
 }

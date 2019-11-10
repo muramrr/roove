@@ -68,20 +68,21 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 				Toast.makeText(mMainActivity,
 				               "Clicked ${mCardsStackAdapter.getCard(position)}",
 				               Toast.LENGTH_SHORT).show()
+				mMainActivity.startProfileFragment(mCardsStackAdapter.getCard(position).userId)
 			}
 		})
 
 		mLoadingImageView = view.findViewById(R.id.card_loading_progress_iv)
 		initLoadingGif()
 
-		val textViewDescriptionHelper = view.findViewById<TextView>(R.id.card_helper_text_tv)
+		val tvLoaderHelper = view.findViewById<TextView>(R.id.card_helper_text_tv)
 		//get potential users
 		disposables.add(cardsViewModel.getPotentialUserCards()
 			                .observeOn(AndroidSchedulers.mainThread())
 			                .doOnSubscribe { showLoading() }
 			                .doOnSuccess {
 				                if(it.isNotEmpty()) hideLoading()
-				                else textViewDescriptionHelper.visibility = View.VISIBLE
+				                else tvLoaderHelper.visibility = View.VISIBLE
 			                }
 			                .subscribe({
 				                           Log.wtf(TAG, "cards to show: ${it.size}")
@@ -128,7 +129,7 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 				if (position == mCardsStackAdapter.itemCount - 1) {
 					mCardsStackAdapter.notifyDataSetChanged()
 					showLoading()
-					textViewDescriptionHelper.visibility = View.VISIBLE
+					tvLoaderHelper.visibility = View.VISIBLE
 				}
 			}
 
