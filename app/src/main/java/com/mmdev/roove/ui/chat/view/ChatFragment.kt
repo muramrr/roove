@@ -80,6 +80,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
 
 
+		//todo: remove data transfer between fragments, need to make it more abstract
 		@JvmStatic
 		fun newInstance(conversationId: String) = ChatFragment().apply {
 			arguments = Bundle().apply {

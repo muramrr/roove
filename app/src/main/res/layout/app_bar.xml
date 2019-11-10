@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.appbar.AppBarLayout
-    android:layout_width="match_parent"
-    android:layout_height="?actionBarSize"
-    android:id="@+id/app_bar"
-    android:theme="@style/AppTheme.AppBarOverlay"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+	android:id="@+id/app_bar"
+	android:layout_width="match_parent"
+	android:layout_height="?actionBarSize"
+	android:theme="@style/AppTheme.AppBarOverlay"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <androidx.appcompat.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:id="@+id/toolbar"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:titleTextAppearance="@style/regular_text_white_20sp_85op"
-            app:title="MeetApps"/>
+	<androidx.appcompat.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:background="@color/colorPrimary"
+		app:layout_scrollFlags="scroll|enterAlways|snap"
+		app:titleTextAppearance="@style/regular_text_white_20sp_85op"
+		app:title="@string/app_name"/>
 
 </com.google.android.material.appbar.AppBarLayout>

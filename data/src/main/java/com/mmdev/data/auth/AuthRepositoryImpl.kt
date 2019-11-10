@@ -9,7 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.user.model.UserItem
-import com.mmdev.data.user.UserRepositoryImpl
+import com.mmdev.data.user.UserRepositoryLocal
 import io.reactivex.*
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -23,7 +23,7 @@ import javax.inject.Singleton
 class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
                                              private val db: FirebaseFirestore,
                                              private val fbLogin: LoginManager,
-                                             private val userRepositoryImpl: UserRepositoryImpl): AuthRepository {
+                                             private val userRepositoryLocal: UserRepositoryLocal): AuthRepository {
 
 	companion object {
 		private const val GENERAL_COLLECTION_REFERENCE = "users"
@@ -58,7 +58,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					val document = task.result
 					if (document!!.exists()) {
 						val user = document.toObject(UserItem::class.java)
-						userRepositoryImpl.saveUserInfo(user!!)
+						userRepositoryLocal.saveUserInfo(user!!)
 						emitter.onSuccess(user)
 					}
 					else emitter.onError(Exception("User do not exist"))
@@ -107,7 +107,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 			val ref = db.collection(GENERAL_COLLECTION_REFERENCE).document(userItem.userId)
 			ref.set(userItem)
 				.addOnSuccessListener {
-					userRepositoryImpl.saveUserInfo(userItem)
+					userRepositoryLocal.saveUserInfo(userItem)
 					emitter.onComplete()
 				}
 				.addOnFailureListener { task -> emitter.onError(task) }

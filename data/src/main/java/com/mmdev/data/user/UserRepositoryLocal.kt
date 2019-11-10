@@ -14,12 +14,11 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class UserRepositoryImpl @Inject constructor(private val prefs: Preferences):
+class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 		UserRepository.LocalUserRepository {
 
 
 	companion object{
-		private const val PREF_KEY_GENERAL_USER_STORE = "userModel"
 		private const val PREF_KEY_GENERAL_IF_SAVED = "saved"
 		private const val PREF_KEY_CURRENT_USER_NAME = "name"
 		private const val PREF_KEY_CURRENT_USER_CITY = "city"

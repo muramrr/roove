@@ -34,7 +34,8 @@ import com.mmdev.roove.ui.conversations.view.ConversationsFragment
 import com.mmdev.roove.ui.custom.CustomAlertDialog
 import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.feed.FeedFragment
-import com.mmdev.roove.ui.main.viewmodel.MainViewModel
+import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoVM
+import com.mmdev.roove.ui.profile.view.ProfileFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
@@ -60,7 +61,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	private lateinit var authViewModel: AuthViewModel
 	private val authViewModelFactory = injector.authViewModelFactory()
-	private val mainViewModelFactory = injector.mainViewModelFactory()
+	private val mainViewModelFactory = injector.localUserRepoVMFactory()
 	private val disposables = CompositeDisposable()
 
 
@@ -71,7 +72,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			.get(AuthViewModel::class.java)
 
 		userItemModel = ViewModelProvider(this@MainActivity, mainViewModelFactory)
-			.get(MainViewModel::class.java)
+			.get(LocalUserRepoVM::class.java)
 			.getSavedUser()
 
 		drawerLayout = findViewById(R.id.drawer_layout)
@@ -174,6 +175,21 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			replace(R.id.main_container,
 			        ChatFragment.newInstance(conversationId),
 			        ChatFragment::class.java.canonicalName)
+			addToBackStack(null)
+			commit()
+		}
+	}
+
+	fun startProfileFragment(userId: String) {
+		mFragmentManager.findFragmentByTag(ProfileFragment::class.java.canonicalName) ?:
+		mFragmentManager.beginTransaction().apply {
+			setCustomAnimations(R.anim.fragment_enter_from_right,
+			                    R.anim.fragment_exit_to_left,
+			                    R.anim.fragment_enter_from_left,
+			                    R.anim.fragment_exit_to_right)
+			replace(R.id.main_container,
+			        ProfileFragment.newInstance(userId),
+			        ProfileFragment::class.java.canonicalName)
 			addToBackStack(null)
 			commit()
 		}

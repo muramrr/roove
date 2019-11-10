@@ -12,7 +12,8 @@ import com.mmdev.data.cards.CardsRepositoryImpl
 import com.mmdev.data.chat.ChatRepositoryImpl
 import com.mmdev.data.conversations.ConversationsRepositoryImpl
 import com.mmdev.data.feed.FeedRepositoryImpl
-import com.mmdev.data.user.UserRepositoryImpl
+import com.mmdev.data.user.UserRepositoryLocal
+import com.mmdev.data.user.UserRepositoryRemote
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -43,7 +44,12 @@ class RepositoryModule {
 
 	@Provides
 	@Singleton
-	fun userRepository(repository: UserRepositoryImpl): UserRepository.LocalUserRepository
+	fun localUserRepository(repository: UserRepositoryLocal): UserRepository.LocalUserRepository
+	{ return repository }
+
+	@Provides
+	@Singleton
+	fun remoteUserRepository(repository: UserRepositoryRemote): UserRepository.RemoteUserRepository
 	{ return repository }
 
 }
