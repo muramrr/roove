@@ -1,4 +1,4 @@
-package com.mmdev.business.user.usecase
+package com.mmdev.business.user.usecase.local
 
 import com.mmdev.business.user.repository.UserRepository
 
