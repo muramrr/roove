@@ -27,7 +27,7 @@
 	<string name="chat_message_sender_attach_img_description">sender_image</string>
 	<string name="chat_message_my_avatar_img_description">my avatar</string>
 	<string name="chat_message_my_attach_img_description">my image</string>
-	<string name="dialog_match_background_photo">main card photo</string>
+	<string name="description_user_photo">main user photo</string>
 	<string name="dialog_match_ed_hint">Write first message…</string>
 
 

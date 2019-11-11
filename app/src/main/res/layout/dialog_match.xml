@@ -11,7 +11,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
-		android:contentDescription="@string/dialog_match_background_photo"
+		android:contentDescription="@string/description_user_photo"
 		android:src="@drawable/default_avatar"/>
 
 	<LinearLayout

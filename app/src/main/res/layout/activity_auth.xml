@@ -26,8 +26,6 @@
 
 	<TextView
 		android:id="@+id/tv_logan1"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
 		android:text="Find new\nfriends nearby"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -39,8 +37,6 @@
 
 	<TextView
 		android:id="@+id/tv_logan2"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
 		android:text="With milions of users\nall around the world"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"

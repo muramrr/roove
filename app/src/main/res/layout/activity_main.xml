@@ -3,6 +3,7 @@
 	android:id="@+id/drawer_layout"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:background="@color/colorPrimaryDark"
 	android:fitsSystemWindows="true"
 	tools:context=".ui.main.view.MainActivity"
 	tools:openDrawer="start"
@@ -11,11 +12,28 @@
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
+		android:id="@+id/main_core_container"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:background="@color/colorPrimaryDark">
 
-		<include layout="@layout/app_bar"
-			android:id="@+id/main_toolbar"/>
+		<com.google.android.material.appbar.AppBarLayout
+			android:id="@+id/app_bar"
+			android:layout_width="match_parent"
+			android:layout_height="?actionBarSize"
+			android:theme="@style/AppTheme.AppBarOverlay">
+
+			<androidx.appcompat.widget.Toolbar
+				android:id="@+id/toolbar"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:background="@color/colorPrimary"
+				app:layout_scrollFlags="scroll|enterAlways|snap"
+				app:popupTheme="@style/AppTheme.PopupOverlay"
+				app:titleTextAppearance="@style/regular_text_white_20sp_85op"
+				app:title="@string/app_name"/>
+
+		</com.google.android.material.appbar.AppBarLayout>
 
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:id="@+id/main_container"

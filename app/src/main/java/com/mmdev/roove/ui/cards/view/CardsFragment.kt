@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -65,9 +64,6 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 
 		mCardsStackAdapter.setOnItemClickListener(object: CardsStackAdapter.OnItemClickListener{
 			override fun onItemClick(view: View, position: Int) {
-				Toast.makeText(mMainActivity,
-				               "Clicked ${mCardsStackAdapter.getCard(position)}",
-				               Toast.LENGTH_SHORT).show()
 				mMainActivity.startProfileFragment(mCardsStackAdapter.getCard(position).userId)
 			}
 		})

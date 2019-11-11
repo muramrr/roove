@@ -88,10 +88,10 @@ class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
 
 	private fun startRegistrationFragment() {
 		supportFragmentManager.beginTransaction().apply {
-			setCustomAnimations(R.anim.fragment_enter_from_right,
-			                    R.anim.fragment_exit_to_left,
-			                    R.anim.fragment_enter_from_left,
-			                    R.anim.fragment_exit_to_right)
+			setCustomAnimations(R.anim.enter_from_right,
+			                    R.anim.exit_to_left,
+			                    R.anim.enter_from_left,
+			                    R.anim.exit_to_right)
 			replace(R.id.auth_container, RegistrationFragment())
 			addToBackStack(null)
 			commit()
