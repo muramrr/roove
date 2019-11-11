@@ -158,7 +158,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		}
 		else edMessageWrite
 			.startAnimation(AnimationUtils.loadAnimation(mMainActivity,
-			                                             R.anim.edittext_horizontal_shake))
+			                                             R.anim.horizontal_shake))
 
 	}
 
