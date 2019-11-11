@@ -10,22 +10,25 @@
 		android:id="@+id/profile_app_bar"
 		android:layout_width="match_parent"
 		android:layout_height="300dp"
-		android:theme="@style/AppTheme.AppBarOverlay"
-		android:fitsSystemWindows="true" >
+		android:theme="@style/AppTheme.AppBarOverlay" >
 
 		<com.google.android.material.appbar.CollapsingToolbarLayout
+			android:id="@+id/profile_collapsing_toolbar"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
+			app:collapsedTitleTextAppearance="@style/regular_text_white_20sp_85op"
+			app:contentScrim="@color/colorPrimary"
+			app:expandedTitleTextAppearance="@style/medium_text_white_28sp_85op"
 			app:layout_scrollFlags="scroll|exitUntilCollapsed"
-			app:contentScrim="@color/colorPrimary" >
+			app:title="@string/default_name">
 
 			<ImageView
 				android:id="@+id/profile_user_pic"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:background="@drawable/gradient_transparent"
-				android:scaleType="centerInside"
-				android:src="@drawable/default_avatar" />
+				android:scaleType="centerCrop"
+				android:contentDescription="@string/description_user_photo"/>
 
 			<androidx.appcompat.widget.Toolbar
 				android:id="@+id/profile_toolbar"
@@ -33,9 +36,7 @@
 				android:layout_height="?attr/actionBarSize"
 				app:layout_collapseMode="pin"
 				app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
-				app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-				app:titleTextAppearance="@style/regular_text_white_20sp_85op"
-				app:title="@string/default_name"/>
+				app:popupTheme="@style/menuPopupStyle" />
 
 		</com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -44,6 +45,7 @@
 	<androidx.core.widget.NestedScrollView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:overScrollMode="never"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 		<androidx.constraintlayout.widget.ConstraintLayout

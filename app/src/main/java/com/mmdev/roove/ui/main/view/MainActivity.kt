@@ -4,8 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -51,6 +49,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	private lateinit var drawerLayout: DrawerLayout
 	private lateinit var toggle: ActionBarDrawerToggle
 	lateinit var toolbar: Toolbar
+	lateinit var appbar: AppBarLayout
 	private lateinit var params: AppBarLayout.LayoutParams
 
 	private lateinit var ivSignedInUserAvatar: ImageView
@@ -76,8 +75,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			.getSavedUser()
 
 		drawerLayout = findViewById(R.id.drawer_layout)
+		appbar = findViewById(R.id.app_bar)
 		toolbar = findViewById(R.id.toolbar)
 		setSupportActionBar(toolbar)
+
 		params = toolbar.layoutParams as AppBarLayout.LayoutParams
 		setToolbarNavigation()
 		setNavigationView()
@@ -118,10 +119,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	private fun startCardFragment() {
 		mFragmentManager.findFragmentByTag(CardsFragment::class.java.canonicalName) ?:
 		mFragmentManager.beginTransaction().apply {
-			setCustomAnimations(R.anim.fragment_enter_from_right,
-			                    R.anim.fragment_exit_to_left,
-			                    R.anim.fragment_enter_from_left,
-			                    R.anim.fragment_exit_to_right)
+			setCustomAnimations(R.anim.enter_from_right,
+			                    R.anim.exit_to_left,
+			                    R.anim.enter_from_left,
+			                    R.anim.exit_to_right)
 			replace(R.id.main_container,
 			    CardsFragment.newInstance(),
 			    CardsFragment::class.java.canonicalName)
@@ -136,10 +137,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 		if (!fragmentPopped){ //fragment not in back stack, create it.
 			mFragmentManager.beginTransaction().apply {
-				setCustomAnimations(R.anim.fragment_enter_from_right,
-				                    R.anim.fragment_exit_to_left,
-				                    R.anim.fragment_enter_from_left,
-				                    R.anim.fragment_exit_to_right)
+				setCustomAnimations(R.anim.enter_from_right,
+				                    R.anim.exit_to_left,
+				                    R.anim.enter_from_left,
+				                    R.anim.exit_to_right)
 				replace(R.id.main_container, fragment, fragment.javaClass.name)
 				addToBackStack(backStateName)
 				commit()
@@ -151,10 +152,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	private fun startConversationsFragment(){
 		mFragmentManager.findFragmentByTag(ConversationsFragment::class.java.canonicalName) ?:
 		mFragmentManager.beginTransaction().apply {
-			setCustomAnimations(R.anim.fragment_enter_from_right,
-			                    R.anim.fragment_exit_to_left,
-			                    R.anim.fragment_enter_from_left,
-			                    R.anim.fragment_exit_to_right)
+			setCustomAnimations(R.anim.enter_from_right,
+			                    R.anim.exit_to_left,
+			                    R.anim.enter_from_left,
+			                    R.anim.exit_to_right)
 			replace(R.id.main_container,
 			        ConversationsFragment.newInstance(),
 			        ConversationsFragment::class.java.canonicalName)
@@ -168,10 +169,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	fun startChatFragment(conversationId: String) {
 		mFragmentManager.findFragmentByTag(ChatFragment::class.java.canonicalName) ?:
 		mFragmentManager.beginTransaction().apply {
-			setCustomAnimations(R.anim.fragment_enter_from_right,
-			                    R.anim.fragment_exit_to_left,
-			                    R.anim.fragment_enter_from_left,
-			                    R.anim.fragment_exit_to_right)
+			setCustomAnimations(R.anim.enter_from_right,
+			                    R.anim.exit_to_left,
+			                    R.anim.enter_from_left,
+			                    R.anim.exit_to_right)
 			replace(R.id.main_container,
 			        ChatFragment.newInstance(conversationId),
 			        ChatFragment::class.java.canonicalName)
@@ -183,11 +184,11 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	fun startProfileFragment(userId: String) {
 		mFragmentManager.findFragmentByTag(ProfileFragment::class.java.canonicalName) ?:
 		mFragmentManager.beginTransaction().apply {
-			setCustomAnimations(R.anim.fragment_enter_from_right,
-			                    R.anim.fragment_exit_to_left,
-			                    R.anim.fragment_enter_from_left,
-			                    R.anim.fragment_exit_to_right)
-			replace(R.id.main_container,
+			setCustomAnimations(R.anim.enter_from_bottom,
+			                    R.anim.exit_to_top,
+			                    R.anim.enter_from_top,
+			                    R.anim.exit_to_bottom)
+			replace(R.id.main_core_container,
 			        ProfileFragment.newInstance(userId),
 			        ProfileFragment::class.java.canonicalName)
 			addToBackStack(null)
@@ -326,21 +327,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 //		        });
 //
 //	}
-
-	/*
-	menu init
-	 */
-	override fun onCreateOptionsMenu(menu: Menu): Boolean {
-		menuInflater.inflate(R.menu.main, menu)
-		return true
-	}
-
-	/*
-	menu button click handler
-	 */
-	fun messagesMenuClick(item: MenuItem) {
-		//startSearch()
-	}
 
 	fun showInternetError(error: String) {
 		Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
