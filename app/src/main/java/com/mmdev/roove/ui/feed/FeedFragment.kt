@@ -12,9 +12,6 @@ import com.mmdev.roove.ui.main.view.MainActivity
 class FeedFragment: Fragment(R.layout.fragment_feed) {
 
 	private lateinit var mMainActivity: MainActivity
-	private lateinit var viewPagerAdapter: FeedViewPagerAdapter
-	private lateinit var tabLayout: TabLayout
-	private lateinit var viewPager: ViewPager2
 
 	companion object{
 		fun newInstance(): FeedFragment {
@@ -22,12 +19,16 @@ class FeedFragment: Fragment(R.layout.fragment_feed) {
 		}
 	}
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
 		if (activity != null) mMainActivity = activity as MainActivity
-		viewPager = view.findViewById(R.id.viewPager)
-		viewPagerAdapter = FeedViewPagerAdapter(childFragmentManager, lifecycle)
-		viewPager.adapter = viewPagerAdapter
-		tabLayout = view.findViewById(R.id.tabLayout)
+	}
+
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		val viewPager: ViewPager2 = view.findViewById(R.id.feed_vp)
+		viewPager.adapter = FeedViewPagerAdapter(childFragmentManager, lifecycle)
+
+		val tabLayout: TabLayout= view.findViewById(R.id.tabLayout)
 
 		TabLayoutMediator(tabLayout, viewPager) { tab: TabLayout.Tab, position: Int ->
 			when(position){

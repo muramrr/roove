@@ -36,7 +36,7 @@ class PotentialPartnersAdapter (private var mPotentialPartnersList: List<CardIte
 		holder.bind(mPotentialPartnersList[position])
 	}
 
-	override fun getItemCount(): Int { return mPotentialPartnersList.size }
+	override fun getItemCount() = mPotentialPartnersList.size
 
 	fun updateData(partnersList: List<CardItem>) {
 		mPotentialPartnersList = partnersList
