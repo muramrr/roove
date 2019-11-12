@@ -2,16 +2,18 @@ package com.mmdev.roove.ui.profile.view
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
-import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.main.view.MainActivity
 import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoVM
@@ -25,7 +27,7 @@ import io.reactivex.disposables.CompositeDisposable
  * This is the documentation block about the class
  */
 
-class ProfileFragment: Fragment(R.layout.fragment_profile_view) {
+class ProfileFragment: Fragment(R.layout.fragment_profile) {
 
 	private lateinit var mMainActivity: MainActivity
 
@@ -68,13 +70,19 @@ class ProfileFragment: Fragment(R.layout.fragment_profile_view) {
 	}
 
 	private fun updateContent(view:View, userItem: UserItem){
-		val ivProfileUserPic = view.findViewById<ImageView>(R.id.profile_user_pic)
+		val viewPager: ViewPager2 = view.findViewById(R.id.profile_photos_vp)
+		viewPager.adapter = ProfilePagerAdapter(userItem.photoURLs)
+		val tabLayout: TabLayout = view.findViewById(R.id.dots_indicator)
+
+		TabLayoutMediator(tabLayout, viewPager){
+			tab: TabLayout.Tab, position: Int ->
+			Log.d("mylogs", "${tab.text} + $position")
+		}.attach()
+
 		val toolbarProfile = view.findViewById<Toolbar>(R.id.profile_toolbar)
 		val collapsingToolbarLayout: CollapsingToolbarLayout = view.findViewById(R.id.profile_collapsing_toolbar)
 		collapsingToolbarLayout.title = userItem.name
-		GlideApp.with(ivProfileUserPic.context)
-			.load(userItem.mainPhotoUrl)
-			.into(ivProfileUserPic)
+
 		toolbarProfile.setNavigationOnClickListener { mMainActivity.onBackPressed() }
 		toolbarProfile.inflateMenu(R.menu.profile_view_options)
 		toolbarProfile.setOnMenuItemClickListener { item ->

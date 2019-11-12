@@ -6,7 +6,7 @@ data class UserItem (val name: String = "",
                      var gender: String = "",
                      var preferedGender: String = "",
                      val mainPhotoUrl: String = "",
-                     var photoURLs: List<String>? = null,
+                     var photoURLs: List<String> = listOf(),
                      val userId: String = ""){
 
     override fun toString(): String {
