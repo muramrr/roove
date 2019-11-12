@@ -34,7 +34,7 @@ class ActiveConversationsAdapter (private var mActiveConversationsList: List<Con
 		holder.bind(mActiveConversationsList[position])
 	}
 
-	override fun getItemCount(): Int { return mActiveConversationsList.size }
+	override fun getItemCount() = mActiveConversationsList.size
 
 	fun updateData(conversations: List<ConversationItem>) {
 		mActiveConversationsList = conversations

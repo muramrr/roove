@@ -17,11 +17,7 @@ class FeedViewPagerAdapter (fm: FragmentManager, lifecycle: Lifecycle) :
 		FragmentStateAdapter(fm, lifecycle) {
 
 
-
-	override fun createFragment(position: Int): Fragment {
-		return FeedPageFragment()
-	}
-
+	override fun createFragment(position: Int) = FeedPageFragment()
 
 
 	// Returns the fragment to display for that page
@@ -44,4 +40,3 @@ class FeedViewPagerAdapter (fm: FragmentManager, lifecycle: Lifecycle) :
 
 
 }
-

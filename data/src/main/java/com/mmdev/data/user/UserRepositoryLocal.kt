@@ -61,7 +61,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 		editor.putString(PREF_KEY_CURRENT_USER_GENDER, currentUserItem.gender)
 		editor.putString(PREF_KEY_CURRENT_USER_P_GENDER, currentUserItem.preferedGender)
 		editor.putString(PREF_KEY_CURRENT_USER_MAIN_PIC_URL, currentUserItem.mainPhotoUrl)
-		editor.putStringSet(PREF_KEY_CURRENT_USER_PHOTO_URLS, currentUserItem.photoURLs!!.toSet())
+		editor.putStringSet(PREF_KEY_CURRENT_USER_PHOTO_URLS, currentUserItem.photoURLs.toSet())
 		editor.putString(PREF_KEY_CURRENT_USER_ID, currentUserItem.userId)
 		editor.putBoolean(PREF_KEY_GENERAL_IF_SAVED, true)
 		editor.apply()

@@ -22,13 +22,25 @@
 			app:layout_scrollFlags="scroll|exitUntilCollapsed"
 			app:title="@string/default_name">
 
-			<ImageView
-				android:id="@+id/profile_user_pic"
+
+			<androidx.viewpager2.widget.ViewPager2
+				android:id="@+id/profile_photos_vp"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:background="@drawable/gradient_transparent"
-				android:scaleType="centerCrop"
-				android:contentDescription="@string/description_user_photo"/>
+				android:background="@color/colorPrimary" />
+
+			<com.google.android.material.tabs.TabLayout
+				android:id="@+id/dots_indicator"
+				android:layout_width="match_parent"
+				android:layout_height="10dp"
+				android:layout_gravity="bottom"
+				android:layout_marginBottom="8dp"
+				app:tabBackground="@drawable/dot_unselected_state"
+				app:tabIndicator="@drawable/dot_selection_indicator"
+				app:tabIndicatorColor="@color/gradient1"
+				app:tabIndicatorGravity="center"
+				app:tabGravity="center"
+				app:tabMaxWidth="12dp" />
 
 			<androidx.appcompat.widget.Toolbar
 				android:id="@+id/profile_toolbar"
