@@ -1,4 +1,4 @@
-package com.mmdev.roove.ui.feed
+package com.mmdev.roove.ui.activities
 
 import android.os.Bundle
 import android.view.View
@@ -9,13 +9,19 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.main.view.MainActivity
 
-class FeedFragment: Fragment(R.layout.fragment_feed) {
+/* Created by A on 13.11.2019.*/
+
+/**
+ * This is the documentation block about the class
+ */
+
+class ActivitiesFragment : Fragment(R.layout.fragment_activities) {
 
 	private lateinit var mMainActivity: MainActivity
 
 	companion object{
-		fun newInstance(): FeedFragment {
-			return FeedFragment()
+		fun newInstance(): ActivitiesFragment {
+			return ActivitiesFragment()
 		}
 	}
 
@@ -25,17 +31,16 @@ class FeedFragment: Fragment(R.layout.fragment_feed) {
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		val viewPager: ViewPager2 = view.findViewById(R.id.feed_vp)
-		viewPager.adapter = FeedPagerAdapter(childFragmentManager, lifecycle)
 
-		val tabLayout: TabLayout= view.findViewById(R.id.tabLayout)
+		val viewPager: ViewPager2 = view.findViewById(R.id.fragment_activities_vp)
+		viewPager.adapter = ActivitiesPagerAdapter(childFragmentManager, lifecycle)
+
+		val tabLayout: TabLayout = view.findViewById(R.id.fragment_activities_tabs)
 
 		TabLayoutMediator(tabLayout, viewPager) { tab: TabLayout.Tab, position: Int ->
 			when(position){
-				0 -> tab.text = "Popular"
-				1 -> tab.text = "Latest"
-				2 -> tab.text = "Featured"
-				3 -> tab.text = "Friends"
+				0 -> tab.text = "Chats"
+				1 -> tab.text = "Pairs"
 			}
 		}.attach()
 
@@ -44,7 +49,7 @@ class FeedFragment: Fragment(R.layout.fragment_feed) {
 	override fun onResume() {
 		super.onResume()
 		mMainActivity.setScrollableToolbar()
-		mMainActivity.toolbar.title = "Feed"
+		mMainActivity.toolbar.title = "Activities"
 	}
 
 	override fun onStop() {

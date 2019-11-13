@@ -1,4 +1,4 @@
-package com.mmdev.roove.ui.conversations.viewmodel
+package com.mmdev.roove.ui.activities.conversations.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.mmdev.business.cards.model.CardItem

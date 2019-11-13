@@ -24,11 +24,12 @@ import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
+import com.mmdev.roove.ui.activities.ActivitiesFragment
+import com.mmdev.roove.ui.activities.conversations.view.ConversationsFragment
 import com.mmdev.roove.ui.auth.view.AuthActivity
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModel
 import com.mmdev.roove.ui.cards.view.CardsFragment
 import com.mmdev.roove.ui.chat.view.ChatFragment
-import com.mmdev.roove.ui.conversations.view.ConversationsFragment
 import com.mmdev.roove.ui.custom.CustomAlertDialog
 import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.feed.FeedFragment
@@ -112,6 +113,22 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	override fun onMessagesClick() = startConversationsFragment()
 
 	override fun onLogOutClick() = showSignOutPrompt()
+
+
+	private fun startActivitiesFragment(){
+		mFragmentManager.findFragmentByTag(ActivitiesFragment::class.java.canonicalName) ?:
+		mFragmentManager.beginTransaction().apply {
+			setCustomAnimations(R.anim.enter_from_right,
+			                    R.anim.exit_to_left,
+			                    R.anim.enter_from_left,
+			                    R.anim.exit_to_right)
+			replace(R.id.main_container,
+			        ActivitiesFragment.newInstance(),
+			        ActivitiesFragment::class.java.canonicalName)
+			addToBackStack(null)
+			commit()
+		}
+	}
 
 	/*
 	 * start card swipe
@@ -266,7 +283,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			when (item.itemId) {
 				R.id.nav_feed -> { showFeedFragment() }
 				R.id.nav_cards -> onCardsClick()
-				R.id.nav_messages -> onMessagesClick()
+				R.id.nav_activities -> startActivitiesFragment()
 				R.id.nav_notifications -> { progressDialog.showDialog()
 					Handler().postDelayed({ progressDialog.dismissDialog() }, 5000) }
 				R.id.nav_account -> { }

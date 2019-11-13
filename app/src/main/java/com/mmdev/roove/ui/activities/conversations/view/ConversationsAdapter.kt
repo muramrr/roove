@@ -1,4 +1,4 @@
-package com.mmdev.roove.ui.conversations.view
+package com.mmdev.roove.ui.activities.conversations.view
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mmdev.business.conversations.model.ConversationItem
 import com.mmdev.roove.R
-import com.mmdev.roove.databinding.FragmentConversationActiveItemBinding
+import com.mmdev.roove.databinding.FragmentConversationsItemBinding
 
 
 /* Created by A on 27.10.2019.*/
@@ -19,14 +19,16 @@ import com.mmdev.roove.databinding.FragmentConversationActiveItemBinding
  * This is the documentation block about the class
  */
 
-class ActiveConversationsAdapter (private var mActiveConversationsList: List<ConversationItem>):
-		RecyclerView.Adapter<ActiveConversationsAdapter.ConversationsViewHolder>() {
+class ConversationsAdapter (private var mActiveConversationsList: List<ConversationItem>):
+		RecyclerView.Adapter<ConversationsAdapter.ConversationsViewHolder>() {
+
 
 	private lateinit var clickListener: OnItemClickListener
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConversationsViewHolder =
+
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
 		ConversationsViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
-		                                                R.layout.fragment_conversation_active_item,
+		                                                R.layout.fragment_conversations_item,
 		                                                parent,
 		                                                false))
 
@@ -48,7 +50,7 @@ class ActiveConversationsAdapter (private var mActiveConversationsList: List<Con
 		clickListener = itemClickListener
 	}
 
-	inner class ConversationsViewHolder(private val binding: FragmentConversationActiveItemBinding):
+	inner class ConversationsViewHolder(private val binding: FragmentConversationsItemBinding):
 			RecyclerView.ViewHolder(binding.root){
 
 		init {
@@ -57,7 +59,6 @@ class ActiveConversationsAdapter (private var mActiveConversationsList: List<Con
 			}
 		}
 
-		//publisher user
 		private val ivUserAvatar: ImageView = itemView.findViewById(R.id.conversation_active_item_userpic_iv)
 
 		fun bind(conversationItem: ConversationItem){
