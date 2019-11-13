@@ -8,8 +8,8 @@ object BindingAdapterUtils {
 
 	@JvmStatic
 	@BindingAdapter("android:src")
-	fun loadImage(imageView: ImageView, id: Int) {
-		Glide.with(imageView.context).load(id).into(imageView)
+	fun loadImage(imageView: ImageView, url: String?) {
+		if (!url.isNullOrEmpty()) Glide.with(imageView.context).load(url).into(imageView)
 	}
 
 }
