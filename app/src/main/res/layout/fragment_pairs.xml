@@ -7,22 +7,21 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
-
 	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/active_conversations_rv"
+		android:id="@+id/pairs_container_rv"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
+		android:background="@color/colorPrimaryDark"
 		android:overScrollMode="never"
-		android:scrollbars="vertical"
-
-		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
+		app:layoutManager="GridLayoutManager"
+		android:layout_marginStart="@dimen/card_margin_fix_rview_8"
+		android:layout_marginEnd="@dimen/general_margin_16"
+		android:layout_marginBottom="@dimen/card_margin_fix_rview_8"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintBottom_toBottomOf="parent"
-
-		tools:itemCount="5"
-		tools:listitem="@layout/fragment_conversations_item" />
+		app:spanCount="2"
+		tools:listitem="@layout/fragment_pairs_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

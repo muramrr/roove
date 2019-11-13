@@ -74,20 +74,20 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 		val tvLoaderHelper = view.findViewById<TextView>(R.id.card_helper_text_tv)
 		//get potential users
 		disposables.add(cardsViewModel.getPotentialUserCards()
-			                .observeOn(AndroidSchedulers.mainThread())
-			                .doOnSubscribe { showLoading() }
-			                .doOnSuccess {
-				                if(it.isNotEmpty()) hideLoading()
-				                else tvLoaderHelper.visibility = View.VISIBLE
-			                }
-			                .subscribe({
-				                           Log.wtf(TAG, "cards to show: ${it.size}")
-				                           mCardsStackAdapter.updateData(it)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { showLoading() }
+            .doOnSuccess {
+                if(it.isNotEmpty()) hideLoading()
+                else tvLoaderHelper.visibility = View.VISIBLE
+            }
+            .subscribe({
+                           Log.wtf(TAG, "cards to show: ${it.size}")
+                           mCardsStackAdapter.updateData(it)
 
-			                           },
-			                           {
-				                           Log.wtf(TAG, "get potential users error + $it")
-			                           }))
+                       },
+                       {
+                           Log.wtf(TAG, "get potential users error + $it")
+                       }))
 
 		val cardStackLayoutManager = CardStackLayoutManager(mMainActivity, object: CardStackListener {
 
@@ -105,13 +105,13 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 				//else = add to skiped
 				if (direction == Direction.Right) {
 					disposables.add(cardsViewModel.handlePossibleMatch(swipedCard)
-						                .subscribe({
-							                           if (it) showMatchDialog(swipedCard)
-							                           Log.wtf(TAG, swipedCard.toString())
-						                           },
-						                           {
-							                           Log.wtf(TAG, "error swiped + $it")
-						                           }))
+		                .subscribe({
+			                           if (it) showMatchDialog(swipedCard)
+			                           Log.wtf(TAG, swipedCard.toString())
+		                           },
+		                           {
+			                           Log.wtf(TAG, "error swiped + $it")
+		                           }))
 				}
 				else cardsViewModel.addToSkipped(swipedCard)
 			}

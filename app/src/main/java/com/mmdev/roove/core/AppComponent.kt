@@ -10,10 +10,10 @@ import com.mmdev.data.core.AuthModule
 import com.mmdev.data.core.FirebaseModule
 import com.mmdev.data.core.RepositoryModule
 import com.mmdev.data.core.UserModule
+import com.mmdev.roove.ui.activities.conversations.viewmodel.ConversationsViewModelFactory
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModelFactory
 import com.mmdev.roove.ui.cards.viewmodel.CardsViewModelFactory
 import com.mmdev.roove.ui.chat.viewmodel.ChatViewModelFactory
-import com.mmdev.roove.ui.conversations.viewmodel.ConversationsViewModelFactory
 import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoVMFactory
 import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoVMFactory
 import dagger.BindsInstance
