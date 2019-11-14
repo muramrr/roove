@@ -1,4 +1,4 @@
-package com.mmdev.roove.ui.activities
+package com.mmdev.roove.ui.actions
 
 import android.os.Bundle
 import android.view.View
@@ -15,13 +15,13 @@ import com.mmdev.roove.ui.main.view.MainActivity
  * This is the documentation block about the class
  */
 
-class ActivitiesFragment : Fragment(R.layout.fragment_activities) {
+class ActionsFragment : Fragment(R.layout.fragment_actions) {
 
 	private lateinit var mMainActivity: MainActivity
 
 	companion object{
-		fun newInstance(): ActivitiesFragment {
-			return ActivitiesFragment()
+		fun newInstance(): ActionsFragment {
+			return ActionsFragment()
 		}
 	}
 
@@ -33,7 +33,7 @@ class ActivitiesFragment : Fragment(R.layout.fragment_activities) {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 		val viewPager: ViewPager2 = view.findViewById(R.id.fragment_activities_vp)
-		viewPager.adapter = ActivitiesPagerAdapter(childFragmentManager, lifecycle)
+		viewPager.adapter = ActionsPagerAdapter(childFragmentManager, lifecycle)
 
 		val tabLayout: TabLayout = view.findViewById(R.id.fragment_activities_tabs)
 
@@ -49,7 +49,7 @@ class ActivitiesFragment : Fragment(R.layout.fragment_activities) {
 	override fun onResume() {
 		super.onResume()
 		mMainActivity.setScrollableToolbar()
-		mMainActivity.toolbar.title = "Activities"
+		mMainActivity.toolbar.title = "Actions"
 	}
 
 	override fun onStop() {

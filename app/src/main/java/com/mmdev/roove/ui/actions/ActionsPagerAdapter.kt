@@ -1,10 +1,10 @@
-package com.mmdev.roove.ui.activities
+package com.mmdev.roove.ui.actions
 
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.mmdev.roove.ui.activities.conversations.view.ConversationsFragment
-import com.mmdev.roove.ui.activities.pairs.view.PairsFragment
+import com.mmdev.roove.ui.actions.conversations.view.ConversationsFragment
+import com.mmdev.roove.ui.actions.pairs.view.PairsFragment
 
 /* Created by A on 13.11.2019.*/
 
@@ -12,7 +12,7 @@ import com.mmdev.roove.ui.activities.pairs.view.PairsFragment
  * This is the documentation block about the class
  */
 
-class ActivitiesPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
+class ActionsPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
 		FragmentStateAdapter(fm, lifecycle) {
 
 	// Returns the fragment to display for that page

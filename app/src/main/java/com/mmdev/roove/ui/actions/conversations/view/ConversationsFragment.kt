@@ -1,4 +1,4 @@
-package com.mmdev.roove.ui.activities.conversations.view
+package com.mmdev.roove.ui.actions.conversations.view
 
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mmdev.business.conversations.model.ConversationItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
-import com.mmdev.roove.ui.activities.conversations.viewmodel.ConversationsViewModel
+import com.mmdev.roove.ui.actions.conversations.viewmodel.ConversationsViewModel
 import com.mmdev.roove.ui.main.view.MainActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

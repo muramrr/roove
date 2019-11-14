@@ -20,7 +20,7 @@ android {
 		//testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
 		multiDexEnabled = true
 	}
-	
+
 	buildTypes {
 		debug {
 			versionNameSuffix '-DEBUG'
@@ -67,7 +67,7 @@ dependencies {
 	implementation project(':data')
 
 	//core
-	implementation 'androidx.core:core-ktx:1.2.0-beta01'
+	implementation 'androidx.core:core-ktx:1.2.0-beta02'
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 	implementation 'androidx.appcompat:appcompat:1.1.0'

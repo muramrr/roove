@@ -1,4 +1,4 @@
-package com.mmdev.roove.ui.activities.pairs.view
+package com.mmdev.roove.ui.actions.pairs.view
 
 import android.view.LayoutInflater
 import android.view.View
@@ -48,7 +48,7 @@ class PairsAdapter (private var mPairsList: List<CardItem>):
 	}
 
 
-	inner class PairsViewHolder(private val binding: FragmentPairsItemBinding):
+	inner class PairsViewHolder (private val binding: FragmentPairsItemBinding):
 			RecyclerView.ViewHolder(binding.root) {
 
 
