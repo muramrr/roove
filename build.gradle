@@ -12,7 +12,7 @@ buildscript {
 		//firebase
 		firebase_auth_version = '19.1.0'
 		firebase_core_version = '17.2.1'
-		firebase_firestore_version = '21.2.1'
+		firebase_firestore_version = '21.3.0'
 		firebase_storage_version = '19.1.0'
 
 		// Dagger
@@ -25,7 +25,7 @@ buildscript {
 		rxandroid_version = '2.1.1'
 
 		// ViewModel and LiveData
-		lifecycle_version = '2.2.0-rc01'
+		lifecycle_version = '2.2.0-rc02'
 
 		//tests
 		junitVersion = "4.12"
@@ -41,7 +41,7 @@ buildscript {
 
 	dependencies {
 		classpath 'com.android.tools.build:gradle:3.5.2'
-		classpath 'com.google.gms:google-services:4.3.2'
+		classpath 'com.google.gms:google-services:4.3.3'
 		classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.27.0'
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"

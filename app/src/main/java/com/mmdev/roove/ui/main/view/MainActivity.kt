@@ -24,8 +24,8 @@ import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
-import com.mmdev.roove.ui.activities.ActivitiesFragment
-import com.mmdev.roove.ui.activities.conversations.view.ConversationsFragment
+import com.mmdev.roove.ui.actions.ActionsFragment
+import com.mmdev.roove.ui.actions.conversations.view.ConversationsFragment
 import com.mmdev.roove.ui.auth.view.AuthActivity
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModel
 import com.mmdev.roove.ui.cards.view.CardsFragment
@@ -35,14 +35,13 @@ import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.feed.FeedFragment
 import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoVM
 import com.mmdev.roove.ui.profile.view.ProfileFragment
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
 class MainActivity: AppCompatActivity(R.layout.activity_main),
                     MainActivityListeners {
 
 	companion object{
-		private const val TAG = "myLogs"
+		private const val TAG = "mylogs"
 	}
 
 	lateinit var progressDialog: LoadingDialog
@@ -115,16 +114,16 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	override fun onLogOutClick() = showSignOutPrompt()
 
 
-	private fun startActivitiesFragment(){
-		mFragmentManager.findFragmentByTag(ActivitiesFragment::class.java.canonicalName) ?:
+	private fun startActionsFragment(){
+		mFragmentManager.findFragmentByTag(ActionsFragment::class.java.canonicalName) ?:
 		mFragmentManager.beginTransaction().apply {
 			setCustomAnimations(R.anim.enter_from_right,
 			                    R.anim.exit_to_left,
 			                    R.anim.enter_from_left,
 			                    R.anim.exit_to_right)
 			replace(R.id.main_container,
-			        ActivitiesFragment.newInstance(),
-			        ActivitiesFragment::class.java.canonicalName)
+			        ActionsFragment.newInstance(),
+			        ActionsFragment::class.java.canonicalName)
 			addToBackStack(null)
 			commit()
 		}
@@ -201,10 +200,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	fun startProfileFragment(userId: String) {
 		mFragmentManager.findFragmentByTag(ProfileFragment::class.java.canonicalName) ?:
 		mFragmentManager.beginTransaction().apply {
-			setCustomAnimations(R.anim.enter_from_bottom,
-			                    R.anim.exit_to_top,
-			                    R.anim.enter_from_top,
-			                    R.anim.exit_to_bottom)
+			setCustomAnimations(R.anim.enter_from_top,
+			                    R.anim.exit_to_bottom,
+			                    R.anim.enter_from_bottom,
+			                    R.anim.exit_to_top)
 			replace(R.id.main_core_container,
 			        ProfileFragment.newInstance(userId),
 			        ProfileFragment::class.java.canonicalName)
@@ -228,27 +227,13 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		builder.setPositiveBtnText("Yes")
 		builder.setNegativeBtnText("NO")
 		builder.OnPositiveClicked(View.OnClickListener {
+			Log.wtf(TAG, "USER PROMT TO LOG OUT")
 			authViewModel.logOut()
+			startAuthActivity()
 		})
 
 		builder.build()
 
-	}
-
-	/*
-	 * adds an background thread that listens user auth status
-	 */
-	private fun checkConnection() {
-		disposables.add(authViewModel.isAuthenticated()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ if (it == false) {
-	            Log.wtf(TAG, "USER LOGGED OUT")
-	            startAuthActivity()
-            }
-            else Log.wtf(TAG, "user is auth") },
-                   {
-                       Log.wtf(TAG, it)
-                   }))
 	}
 
 
@@ -281,9 +266,9 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			drawerLayout.closeDrawer(GravityCompat.START)
 			// Handle navigation view item clicks here.
 			when (item.itemId) {
+				R.id.nav_actions -> startActionsFragment()
 				R.id.nav_feed -> { showFeedFragment() }
 				R.id.nav_cards -> onCardsClick()
-				R.id.nav_activities -> startActivitiesFragment()
 				R.id.nav_notifications -> { progressDialog.showDialog()
 					Handler().postDelayed({ progressDialog.dismissDialog() }, 5000) }
 				R.id.nav_account -> { }
@@ -360,10 +345,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		disposables.clear()
 	}
 
-	override fun onStart() {
-		super.onStart()
-		checkConnection()
-	}
 
 
 }

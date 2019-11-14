@@ -1,4 +1,4 @@
-package com.mmdev.roove.ui.activities.pairs.view
+package com.mmdev.roove.ui.actions.pairs.view
 
 import android.os.Bundle
 import android.util.Log

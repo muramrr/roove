@@ -1,4 +1,4 @@
-package com.mmdev.roove.ui.activities.conversations.view
+package com.mmdev.roove.ui.actions.conversations.view
 
 import android.view.LayoutInflater
 import android.view.View

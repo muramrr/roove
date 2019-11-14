@@ -5,6 +5,7 @@
 
 		<item name="actionOverflowMenuStyle">@style/overFlowMenuStyle</item>
 
+		<item name="android:windowBackground">@color/colorPrimaryDark</item>
 		<!-- Customize your theme here. -->
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -43,8 +44,8 @@
 
 
 	<style name="AlertDialogAnimation">
-		<item name="android:windowEnterAnimation">@anim/alert_enter</item>
-		<item name="android:windowExitAnimation">@anim/alert_exit</item>
+		<item name="android:windowEnterAnimation">@anim/enter_from_bottom</item>
+		<item name="android:windowExitAnimation">@anim/exit_to_bottom</item>
 	</style>
 
 
