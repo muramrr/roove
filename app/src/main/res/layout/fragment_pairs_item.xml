@@ -28,6 +28,16 @@
 			android:scaleType="centerCrop"
 			android:src="@{matchedItem.mainPhotoUrl}"/>
 
+		<ImageView
+			android:id="@+id/profile_user_gradient"
+			android:layout_width="match_parent"
+			android:layout_height="100dp"
+			android:layout_gravity="bottom"
+			android:scaleType="centerCrop"
+			android:src="@drawable/gradient_transparent"
+			android:contentDescription="@string/description_user_photo"
+			/>
+
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

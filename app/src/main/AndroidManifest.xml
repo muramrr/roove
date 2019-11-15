@@ -23,6 +23,8 @@
 
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
@@ -35,17 +37,12 @@
 		<activity
 			android:name=".ui.auth.view.AuthActivity"
 			android:configChanges="orientation|keyboard|keyboardHidden"
-			android:screenOrientation="portrait"
-			android:windowSoftInputMode="stateHidden" />
+			android:screenOrientation="portrait" />
 
 
 		<activity
 			android:name=".ui.chat.view.FullScreenImageActivity"
-			android:screenOrientation="portrait" >
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-			</intent-filter>
-		</activity>
+			android:screenOrientation="portrait" />
 
 		<activity android:name=".ui.feed.tabitem.FeedItemActivity" />
 
