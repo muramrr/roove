@@ -2,41 +2,30 @@ package com.mmdev.roove.ui.chat.view
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.load.engine.DiskCacheStrategy
+import androidx.databinding.DataBindingUtil
 import com.mmdev.roove.R
-import com.mmdev.roove.core.GlideApp
+import com.mmdev.roove.databinding.ActivityFullScreenImageBinding
 
-class FullScreenImageActivity: AppCompatActivity(R.layout.activity_full_screen_image) {
+class FullScreenImageActivity: AppCompatActivity() {
 
-	private lateinit var mImageView: ImageView
 	private var isHide = false
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		bindViews()
-		setValues()
-	}
+		val binding: ActivityFullScreenImageBinding = DataBindingUtil
+			.setContentView(this, R.layout.activity_full_screen_image)
 
-	private fun bindViews() {
-		mImageView = findViewById(R.id.imageView)
-		mImageView.setOnClickListener { fullScreenCall() }
+		binding.photoUrl = intent.getStringExtra("urlPhotoClick")!!
+		val imageView = findViewById<ImageView>(R.id.imageView)
+		imageView.setOnClickListener { fullScreenCall() }
 		// Set the content to appear under the system bars so that the
 		// content doesn't resize when the system bars hide and show.
-		mImageView.systemUiVisibility =
-			View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-	}
-
-	private fun setValues() {
-		val urlPhotoClick: String = intent.getStringExtra("urlPhotoClick")!!
-		Log.i("TAG", "image received$urlPhotoClick")
-		GlideApp.with(this)
-			.load(urlPhotoClick)
-			.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-			.into(mImageView)
+		imageView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+				View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 	}
 
 	//hide bottom navigation to see fullscreen image
@@ -67,4 +56,5 @@ class FullScreenImageActivity: AppCompatActivity(R.layout.activity_full_screen_i
 //		Runtime.getRuntime().gc()
 //		finish()
 //	}
+
 }

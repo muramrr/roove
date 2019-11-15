@@ -26,7 +26,7 @@
 			android:background="@color/colorAccentDark"
 			android:contentDescription="@string/description_user_photo"
 			android:scaleType="centerCrop"
-			android:src="@{matchedItem.mainPhotoUrl}"/>
+			app:photoUrl="@{matchedItem.mainPhotoUrl}"/>
 
 		<ImageView
 			android:id="@+id/profile_user_gradient"
@@ -43,7 +43,7 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center|bottom"
 			android:layout_margin="@dimen/general_margin_8"
-			android:text="@{matchedItem.name, default = `John Doe`}"
+			android:text="@{matchedItem.name, default = @string/default_name}"
 			style="@style/regular_text_white_20sp_85op"/>
 
 

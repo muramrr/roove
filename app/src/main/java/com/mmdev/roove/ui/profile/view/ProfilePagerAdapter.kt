@@ -1,12 +1,11 @@
 package com.mmdev.roove.ui.profile.view
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mmdev.roove.R
-import com.mmdev.roove.core.GlideApp
+import com.mmdev.roove.databinding.FragmentProfilePagerItemBinding
 
 
 /* Created by A on 04.10.2019.*/
@@ -16,32 +15,28 @@ import com.mmdev.roove.core.GlideApp
  */
 
 class ProfilePagerAdapter (private var listPhotoUrls: List<String>):
-		RecyclerView.Adapter<ProfilePagerAdapter.ProfileImageHolder>() {
+		RecyclerView.Adapter<ProfilePagerAdapter.ProfileImagesHolder>() {
 
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-		ProfileImageHolder(LayoutInflater.from(parent.context)
-			                   .inflate(R.layout.fragment_profile_pager_item,
-			                            parent,
-			                            false))
+		ProfileImagesHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+		                                            R.layout.fragment_profile_pager_item,
+		                                            parent,
+		                                            false))
 
 
-	override fun onBindViewHolder(holder: ProfileImageHolder, position: Int) {
+	override fun onBindViewHolder(holder: ProfileImagesHolder, position: Int) =
 		holder.bind(listPhotoUrls[position])
-	}
+
 
 	override fun getItemCount() = listPhotoUrls.size
 
 
-	inner class ProfileImageHolder (view: View) : RecyclerView.ViewHolder(view) {
-
-		private val ivProfilePhoto: ImageView = itemView
-			.findViewById(R.id.profile_user_pic)
+	inner class ProfileImagesHolder (private val binding: FragmentProfilePagerItemBinding) :
+			RecyclerView.ViewHolder(binding.root) {
 
 		fun bind(photoUrl: String) {
-			GlideApp.with(ivProfilePhoto.context)
-				.load(photoUrl)
-				.into(ivProfilePhoto)
+			binding.photoUrl = photoUrl
 		}
 
 	}

@@ -1,6 +1,5 @@
 package com.mmdev.roove.ui.feed.tabitem
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -27,9 +26,6 @@ class FeedPageFragment: Fragment(R.layout.fragment_feed_page_item) {
 
 		mFeedRecyclerAdapter.setOnItemClickListener(object: FeedRecyclerAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
-				val intent = Intent(mMainActivity, FeedItemActivity::class.java)
-				intent.putExtra("feedId", mFeedRecyclerAdapter.getFeedItem(position).feedPublisherName)
-				startActivity(intent)
 
 			}
 		})

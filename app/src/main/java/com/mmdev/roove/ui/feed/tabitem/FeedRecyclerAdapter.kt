@@ -17,7 +17,7 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 
 	private lateinit var mClickListener: OnItemClickListener
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedItemHolder =
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
 		FeedItemHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
 		                                       R.layout.fragment_feed_rv_item,
 			                                   parent,
@@ -35,7 +35,7 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 		notifyDataSetChanged()
 	}
 
-	fun getFeedItem(position: Int): FeedItem{ return mFeedItems[position] }
+	fun getFeedItem(position: Int) = mFeedItems[position]
 
 
 	// allows clicks events to be caught

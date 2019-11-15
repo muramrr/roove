@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
 	android:id="@+id/auth_container"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@color/colorPrimaryDark"
 	android:paddingTop="24dp"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
 
 	<FrameLayout
 		android:layout_width="0dp"
@@ -26,7 +27,7 @@
 
 	<TextView
 		android:id="@+id/tv_logan1"
-		android:text="Find new\nfriends nearby"
+		android:text="@string/auth_slogan1"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +38,7 @@
 
 	<TextView
 		android:id="@+id/tv_logan2"
-		android:text="With milions of users\nall around the world"
+		android:text="@string/auth_slogan2"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
