@@ -84,6 +84,14 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 		}).subscribeOn(Schedulers.io())
 	}
 
+	private fun setStartedFlagConversation(partnerId: String){
+		firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(partnerId)
+			.collection(USER_MATCHED_COLLECTION_REFERENCE)
+			.document(currentUserId)
+			.update("conversationStarted", true)
+	}
+
 	override fun deleteConversation(conversationItem: ConversationItem): Completable {
 		return Completable.create { emitter ->
 
