@@ -7,10 +7,9 @@ import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentFeedRvItemBinding
-import com.mmdev.roove.models.FeedItem
+import com.mmdev.roove.utils.models.FeedItem
 
 
 class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
@@ -25,11 +24,11 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 			                                   false))
 
 
-	override fun onBindViewHolder(holder: FeedItemHolder, position: Int) {
+	override fun onBindViewHolder(holder: FeedItemHolder, position: Int) =
 		holder.bind(mFeedItems[position])
-	}
 
-	override fun getItemCount(): Int { return mFeedItems.size }
+
+	override fun getItemCount() = mFeedItems.size
 
 	fun updateData(feed: List<FeedItem>) {
 		mFeedItems = feed
@@ -45,8 +44,8 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 	}
 
 
-	inner class FeedItemHolder(private val binding: FragmentFeedRvItemBinding) : RecyclerView.ViewHolder
-	                                                                     (binding.root) {
+	inner class FeedItemHolder(private val binding: FragmentFeedRvItemBinding) :
+			RecyclerView.ViewHolder(binding.root) {
 
 		init {
 			itemView.setOnClickListener {
@@ -54,27 +53,15 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 			}
 		}
 
-		//publisher user
-		private val ivFeedUserAvatar: ImageView = itemView.findViewById(R.id.feed_publisher_image_view)
 		//feed content
 		private val ivFeedPhoto: ImageView = itemView.findViewById(R.id.feed_content_image_view)
 
 		fun bind(feedItem: FeedItem) {
 			binding.feedItem = feedItem
-			setUserAvatar(feedItem.feedPublisherPhotoId)
 			setFeedPhoto(feedItem.feedContentImageView)
 			binding.executePendingBindings()
 		}
 
-
-
-		private fun setUserAvatar(url: Int){
-			Glide.with(ivFeedUserAvatar.context)
-				.load(url)
-				.centerCrop()
-				.apply(RequestOptions().circleCrop())
-				.into(ivFeedUserAvatar)
-		}
 
 		private fun setFeedPhoto(url: String){
 			if (url.isNotEmpty())

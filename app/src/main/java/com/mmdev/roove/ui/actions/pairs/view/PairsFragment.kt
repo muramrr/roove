@@ -69,7 +69,7 @@ class PairsFragment: Fragment(R.layout.fragment_pairs) {
 
 		mPairsAdapter.setOnItemClickListener(object: PairsAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
-				mMainActivity.startProfileFragment(mPairsAdapter.getPairItem(position).userId)
+				mMainActivity.startProfileFragment(mPairsAdapter.getPairItem(position).userId, true)
 
 			}
 		})

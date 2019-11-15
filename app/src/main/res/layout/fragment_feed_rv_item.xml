@@ -7,7 +7,7 @@
 <!--			type="com.mmdev.business.feed.model.FeedItem" />-->
 		<variable
 			name="feedItem"
-			type="com.mmdev.roove.models.FeedItem" />
+			type="com.mmdev.roove.utils.models.FeedItem" />
 		<variable
 			name="userItem"
 			type="com.mmdev.business.user.model.UserItem" />
@@ -34,6 +34,7 @@
 				android:layout_gravity="center"
 				android:layout_margin="@dimen/card_content_margin_8"
 				android:src="@drawable/default_avatar"
+				app:circleImage="@{feedItem.feedPublisherPhotoId}"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
 				app:layout_constraintBottom_toTopOf="@id/feed_content_image_view"

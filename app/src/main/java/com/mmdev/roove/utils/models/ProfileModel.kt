@@ -1,4 +1,4 @@
-package com.mmdev.roove.models
+package com.mmdev.roove.utils.models
 
 import java.util.*
 

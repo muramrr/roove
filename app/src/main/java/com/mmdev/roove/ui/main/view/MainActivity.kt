@@ -147,24 +147,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		}
 	}
 
-	private fun replaceFragment (fragment: Fragment) {
-		val backStateName = fragment.javaClass.name
-		val fragmentPopped = mFragmentManager.popBackStackImmediate(backStateName, 0)
-
-		if (!fragmentPopped){ //fragment not in back stack, create it.
-			mFragmentManager.beginTransaction().apply {
-				setCustomAnimations(R.anim.enter_from_right,
-				                    R.anim.exit_to_left,
-				                    R.anim.enter_from_left,
-				                    R.anim.exit_to_right)
-				replace(R.id.main_container, fragment, fragment.javaClass.name)
-				addToBackStack(backStateName)
-				commit()
-			}
-		}
-	}
-
-
 	private fun startConversationsFragment(){
 		mFragmentManager.findFragmentByTag(ConversationsFragment::class.java.canonicalName) ?:
 		mFragmentManager.beginTransaction().apply {
@@ -182,7 +164,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	/*
 	 * start chat
 	 */
-	fun startChatFragment(conversationId: String) {
+	fun startChatFragment(partnerId: String) {
 		mFragmentManager.findFragmentByTag(ChatFragment::class.java.canonicalName) ?:
 		mFragmentManager.beginTransaction().apply {
 			setCustomAnimations(R.anim.enter_from_right,
@@ -190,14 +172,14 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			                    R.anim.enter_from_left,
 			                    R.anim.exit_to_right)
 			replace(R.id.main_container,
-			        ChatFragment.newInstance(conversationId),
+			        ChatFragment.newInstance(partnerId),
 			        ChatFragment::class.java.canonicalName)
 			addToBackStack(null)
 			commit()
 		}
 	}
 
-	fun startProfileFragment(userId: String) {
+	fun startProfileFragment(userId: String, fabVisible: Boolean) {
 		mFragmentManager.findFragmentByTag(ProfileFragment::class.java.canonicalName) ?:
 		mFragmentManager.beginTransaction().apply {
 			setCustomAnimations(R.anim.enter_from_top,
@@ -205,10 +187,27 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			                    R.anim.enter_from_bottom,
 			                    R.anim.exit_to_top)
 			replace(R.id.main_core_container,
-			        ProfileFragment.newInstance(userId),
+			        ProfileFragment.newInstance(userId, fabVisible),
 			        ProfileFragment::class.java.canonicalName)
 			addToBackStack(null)
 			commit()
+		}
+	}
+
+	private fun replaceFragment (fragment: Fragment) {
+		val backStateName = fragment.javaClass.name
+		val fragmentPopped = mFragmentManager.popBackStackImmediate(backStateName, 0)
+
+		if (!fragmentPopped){ //fragment not in back stack, create it.
+			mFragmentManager.beginTransaction().apply {
+				setCustomAnimations(R.anim.enter_from_right,
+				                    R.anim.exit_to_left,
+				                    R.anim.enter_from_left,
+				                    R.anim.exit_to_right)
+				replace(R.id.main_container, fragment, fragment.javaClass.name)
+				addToBackStack(backStateName)
+				commit()
+			}
 		}
 	}
 

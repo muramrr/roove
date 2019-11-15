@@ -33,7 +33,6 @@ class ProfilePagerAdapter (private var listPhotoUrls: List<String>):
 	override fun getItemCount() = listPhotoUrls.size
 
 
-
 	inner class ProfileImageHolder (view: View) : RecyclerView.ViewHolder(view) {
 
 		private val ivProfilePhoto: ImageView = itemView
