@@ -23,7 +23,7 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
                                              private val storage: FirebaseStorage): ChatRepository{
 
 
-	private lateinit var conversationId: String
+	private var conversationId = ""
 
 	companion object{
 		// Firebase firestore references

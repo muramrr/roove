@@ -29,7 +29,6 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 	}
 
 
-
 	/*
 	* GET ALL USERS OBJECTS
 	*/

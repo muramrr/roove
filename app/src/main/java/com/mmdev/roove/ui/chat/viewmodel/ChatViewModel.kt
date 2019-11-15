@@ -1,5 +1,6 @@
 package com.mmdev.roove.ui.chat.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mmdev.business.chat.model.MessageItem
 import com.mmdev.business.chat.usecase.GetMessagesUseCase
@@ -12,13 +13,18 @@ class ChatViewModel(private val getMessagesUC: GetMessagesUseCase,
                     private val sendPhotoUC: SendPhotoUseCase,
                     private val setConversationUC: SetConversationUseCase) : ViewModel() {
 
-    fun getMessages() = getMessagesUC.execute()
 
-    fun sendMessage(messageItem: MessageItem) = sendMessageUC.execute(messageItem)
+	val conversationId: MutableLiveData<String> by lazy {
+		MutableLiveData<String>()
+	}
 
-    fun sendPhoto(photoUri: String) = sendPhotoUC.execute(photoUri)
+	fun getMessages() = getMessagesUC.execute()
 
-    fun setConversation(conversationId: String) = setConversationUC.execute(conversationId)
+	fun sendMessage(messageItem: MessageItem) = sendMessageUC.execute(messageItem)
+
+	fun sendPhoto(photoUri: String) = sendPhotoUC.execute(photoUri)
+
+	fun setConversation() = setConversationUC.execute(conversationId.toString())
 
 
 }
