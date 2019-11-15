@@ -1,6 +1,6 @@
 package com.mmdev.roove.ui.feed.misc
 
-import com.mmdev.roove.models.ProfileModel
+import com.mmdev.roove.utils.models.ProfileModel
 import java.util.*
 
 object FeedManager {

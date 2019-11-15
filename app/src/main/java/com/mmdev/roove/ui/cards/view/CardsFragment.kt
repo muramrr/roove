@@ -64,7 +64,8 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 
 		mCardsStackAdapter.setOnItemClickListener(object: CardsStackAdapter.OnItemClickListener{
 			override fun onItemClick(view: View, position: Int) {
-				mMainActivity.startProfileFragment(mCardsStackAdapter.getCard(position).userId)
+				mMainActivity.startProfileFragment(mCardsStackAdapter.getCard(position).userId,
+				                                   false)
 			}
 		})
 
@@ -187,9 +188,10 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 		mMainActivity.toolbar.title = "Cards"
 	}
 
-	override fun onDestroy(){
+	override fun onDestroy() {
 		super.onDestroy()
 		disposables.clear()
 
 	}
+
 }

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.business.user.model.UserItem
@@ -31,23 +32,32 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 
 	private lateinit var mMainActivity: MainActivity
 
-	private val disposables = CompositeDisposable()
+	private lateinit var fab: FloatingActionButton
 
 	private lateinit var remoteRepoViewModel: RemoteUserRepoVM
 	private val remoteUserRepoFactory = injector.remoteUserRepoVMFactory()
 
 	private lateinit var userId: String
+	private var fabVisible: Boolean = false
+
+	private val disposables = CompositeDisposable()
+
 
 	companion object{
+
+		private const val USER_ID_KEY = "USER_ID"
+		private const val FAB_VISIBLE_KEY = "FAB_VISIBLE"
+
 		//todo: remove data transfer between fragments, need to make it more abstract
 		@JvmStatic
-		fun newInstance(userId: String) = ProfileFragment().apply {
+		fun newInstance(userId: String, fabVisible: Boolean) = ProfileFragment().apply {
 			arguments = Bundle().apply {
+				putBoolean(FAB_VISIBLE_KEY, fabVisible)
 				putString(USER_ID_KEY, userId)
 			}
 		}
 
-		private const val USER_ID_KEY = "USER_ID"
+
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +65,7 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 		activity?.let { mMainActivity = it as MainActivity }
 		arguments?.let {
 			userId = it.getString(USER_ID_KEY, "")
+			fabVisible = it.getBoolean(FAB_VISIBLE_KEY)
 		}
 
 		remoteRepoViewModel = ViewModelProvider(mMainActivity, remoteUserRepoFactory).get(RemoteUserRepoVM::class.java)
@@ -62,6 +73,8 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		fab = view.findViewById(R.id.fab_send_message)
+		if (!fabVisible) fab.visibility = View.GONE
 		disposables.add(remoteRepoViewModel.getUserById(userId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ updateContent(view, it) },
@@ -94,6 +107,10 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 			}
 			return@setOnMenuItemClickListener true
 		}
+		if (fabVisible)
+			fab.setOnClickListener {
+				mMainActivity.startChatFragment(userItem.userId)
+			}
 
 
 	}

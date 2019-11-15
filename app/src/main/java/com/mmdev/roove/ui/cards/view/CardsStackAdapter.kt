@@ -27,7 +27,7 @@ class CardsStackAdapter (private var cardsList: List<CardItem>):
 
 	override fun getItemCount(): Int { return cardsList.size }
 
-	fun getCard(position: Int): CardItem { return cardsList[position] }
+	fun getCard(position: Int) = cardsList[position]
 
 	fun updateData(newCardItems: List<CardItem>) {
 		this.cardsList = newCardItems

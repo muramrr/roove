@@ -1,4 +1,4 @@
-package com.mmdev.roove.models
+package com.mmdev.roove.utils.models
 
 data class FeedItem (val feedPublisherName: String,
                      val feedPublisherPhotoId: Int,

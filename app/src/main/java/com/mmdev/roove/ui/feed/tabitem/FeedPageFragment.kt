@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.roove.R
-import com.mmdev.roove.models.FeedItem
 import com.mmdev.roove.ui.feed.misc.EndlessRecyclerViewScrollListener
 import com.mmdev.roove.ui.main.view.MainActivity
+import com.mmdev.roove.utils.models.FeedItem
 
 class FeedPageFragment: Fragment(R.layout.fragment_feed_page_item) {
 

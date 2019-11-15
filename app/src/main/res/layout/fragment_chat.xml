@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-	android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools">
+	xmlns:tools="http://schemas.android.com/tools"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/chat_messages_rv"
@@ -13,7 +13,10 @@
 		android:layout_above="@+id/content_message"
 		android:layout_alignParentTop="true"
 		android:overScrollMode="never"
-		android:scrollbars="none"/>
+		android:scrollbars="none"
+		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+		tools:itemCount="3"
+		tools:listitem="@layout/fragment_chat_item_left"/>
 
 	<RelativeLayout
 		android:id="@+id/content_message"
