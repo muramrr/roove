@@ -51,7 +51,6 @@ class PairsAdapter (private var mPairsList: List<CardItem>):
 	inner class PairsViewHolder (private val binding: FragmentPairsItemBinding):
 			RecyclerView.ViewHolder(binding.root) {
 
-
 		init {
 			itemView.setOnClickListener {
 				clickListener.onItemClick(itemView.rootView, adapterPosition)

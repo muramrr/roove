@@ -3,34 +3,36 @@ package com.mmdev.roove.ui.cards.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.roove.R
-import com.mmdev.roove.core.GlideApp
+import com.mmdev.roove.databinding.FragmentCardsItemBinding
 
 class CardsStackAdapter (private var cardsList: List<CardItem>):
-		RecyclerView.Adapter<CardsStackAdapter.ViewHolder>() {
+		RecyclerView.Adapter<CardsStackAdapter.CardsViewHolder>() {
+
 
 	private lateinit var clickListener: OnItemClickListener
 
+
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-		ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_card_item,
-		                                                       parent,
-		                                                       false))
+		CardsViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+		                                        R.layout.fragment_cards_item,
+		                                        parent,
+		                                        false))
 
 
-	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-		holder.bindCard(cardsList[position])
+	override fun onBindViewHolder(holderCards: CardsViewHolder, position: Int) {
+		holderCards.bind(cardsList[position])
 	}
 
-	override fun getItemCount(): Int { return cardsList.size }
+	override fun getItemCount() = cardsList.size
 
-	fun getCard(position: Int) = cardsList[position]
+	fun getCardItem(position: Int) = cardsList[position]
 
 	fun updateData(newCardItems: List<CardItem>) {
-		this.cardsList = newCardItems
+		cardsList = newCardItems
 		notifyDataSetChanged()
 	}
 
@@ -39,7 +41,8 @@ class CardsStackAdapter (private var cardsList: List<CardItem>):
 		clickListener = itemClickListener
 	}
 
-	inner class ViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
+	inner class CardsViewHolder (private val binding: FragmentCardsItemBinding):
+			RecyclerView.ViewHolder(binding.root) {
 
 		init {
 			itemView.setOnClickListener {
@@ -47,12 +50,9 @@ class CardsStackAdapter (private var cardsList: List<CardItem>):
 			}
 		}
 
-		private val tvNameCard: TextView = itemView.findViewById(R.id.fragment_card_item_text_name)
-		private val tvImageCard: ImageView = itemView.findViewById(R.id.fragment_card_item_img_photo)
-
-		fun bindCard(cardItem: CardItem){
-			tvNameCard.text = cardItem.name
-			GlideApp.with(tvImageCard).load(cardItem.mainPhotoUrl).into(tvImageCard)
+		fun bind(cardItem: CardItem){
+			binding.cardItem = cardItem
+			binding.executePendingBindings()
 		}
 
 	}

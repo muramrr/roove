@@ -26,7 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
 
-class CardsFragment: Fragment(R.layout.fragment_card) {
+class CardsFragment: Fragment(R.layout.fragment_cards) {
 
 	private lateinit var mMainActivity: MainActivity
 
@@ -64,7 +64,7 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 
 		mCardsStackAdapter.setOnItemClickListener(object: CardsStackAdapter.OnItemClickListener{
 			override fun onItemClick(view: View, position: Int) {
-				mMainActivity.startProfileFragment(mCardsStackAdapter.getCard(position).userId,
+				mMainActivity.startProfileFragment(mCardsStackAdapter.getCardItem(position).userId,
 				                                   false)
 			}
 		})
@@ -94,7 +94,7 @@ class CardsFragment: Fragment(R.layout.fragment_card) {
 
 			override fun onCardAppeared(view: View, position: Int) {
 				//get current displayed on card profile
-				mAppearedCardItem = mCardsStackAdapter.getCard(position)
+				mAppearedCardItem = mCardsStackAdapter.getCardItem(position)
 
 			}
 

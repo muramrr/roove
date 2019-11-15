@@ -40,7 +40,7 @@ import kotlin.collections.ArrayList
  * This is the documentation block about the class
  */
 
-class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFirebase {
+class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 	private lateinit var  mMainActivity: MainActivity
 
@@ -58,6 +58,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 	private lateinit var mFilePathImageCamera: File
 
 	private lateinit var conversationId: String
+	private lateinit var partnerId: String
 
 	private val disposables = CompositeDisposable()
 
@@ -80,44 +81,47 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
 
 
+		private const val PARTNER_KEY = "partner_key"
 		//todo: remove data transfer between fragments, need to make it more abstract
 		@JvmStatic
-		fun newInstance(conversationId: String) = ChatFragment().apply {
+		fun newInstance(partnerId: String) = ChatFragment().apply {
 			arguments = Bundle().apply {
-				putString(CONVERSATION_KEY, conversationId)
+				putString(PARTNER_KEY, partnerId)
 			}
 		}
 
-		private const val CONVERSATION_KEY = "CONVERSATION_ID"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		activity?.let { mMainActivity = it as MainActivity }
+
 		arguments?.let {
-			conversationId = it.getString(CONVERSATION_KEY, "")
+			partnerId = it.getString(PARTNER_KEY, "")
 		}
 
 		chatViewModel = ViewModelProvider(mMainActivity, chatViewModelFactory).get(ChatViewModel::class.java)
-		chatViewModel.setConversation(conversationId)
+//		chatViewModel.conversationId.value = conversationId
+//		chatViewModel.setConversation()
 
 		userItemModel = mMainActivity.userItemModel
 
-		mChatAdapter = ChatAdapter(userItemModel.userId, listOf(), this)
+		mChatAdapter = ChatAdapter(userItemModel.userId, listOf())
 
 		disposables.add(chatViewModel.getMessages()
-			                .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
-			                .doOnNext { mMainActivity.progressDialog.dismissDialog() }
-			                .observeOn(AndroidSchedulers.mainThread())
-			                .subscribe({ if(it.isNotEmpty()) mChatAdapter.updateData(it) },
-			                           { mMainActivity.showInternetError("$it") }))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
+            .doOnNext { mMainActivity.progressDialog.dismissDialog() }
+            .doFinally { mMainActivity.progressDialog.dismissDialog() }
+            .subscribe({ if(it.isNotEmpty()) mChatAdapter.updateData(it) },
+                       { mMainActivity.showInternetError("$it") }))
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		edMessageWrite = view.findViewById(R.id.editTextMessage)
-		val rvMessagesList: RecyclerView = view.findViewById(R.id.chat_messages_rv)
-		val ivAttachments: ImageView = view.findViewById(R.id.buttonAttachments)
-		val ivSendMessage: ImageView = view.findViewById(R.id.buttonMessage)
+		val rvMessagesList = view.findViewById<RecyclerView>(R.id.chat_messages_rv)
+		val ivAttachments = view.findViewById<ImageView>(R.id.buttonAttachments)
+		val ivSendMessage = view.findViewById<ImageView>(R.id.buttonMessage)
 		val linearLayoutManager = LinearLayoutManager(mMainActivity)
 		linearLayoutManager.stackFromEnd = true
 		ivSendMessage.setOnClickListener { sendMessageClick() }
@@ -128,6 +132,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 				super.onChanged()
 				val friendlyMessageCount = mChatAdapter.itemCount
 				rvMessagesList.scrollToPosition(friendlyMessageCount-1)
+			}
+		})
+		mChatAdapter.setOnItemClickListener(object: ChatAdapter.OnItemClickListener{
+			override fun onItemClick(view: View, position: Int) {
+				val intent = Intent(mMainActivity, FullScreenImageActivity::class.java)
+				intent.putExtra("urlPhotoClick",
+				                mChatAdapter.getItem(position).photoAttachementItem!!.fileUrl)
+				startActivity(intent)
 			}
 		})
 
@@ -149,16 +161,16 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 			val message = MessageItem(userItemModel,
 			                          edMessageWrite.text.toString().trim(),
 			                          photoAttachementItem = null)
+
 			disposables.add(chatViewModel.sendMessage(message)
-					     .observeOn(AndroidSchedulers.mainThread())
-					     .subscribe( { Log.d(TAG, "Message sent fragment_chat") },
-					                 { Log.d(TAG, "can't send message fragment_chat") } ))
-			edMessageWrite.setText("")
+				.observeOn(AndroidSchedulers.mainThread())
+                .doOnComplete{edMessageWrite.setText("")}
+				.subscribe( { Log.d(TAG, "Message sent fragment_chat") },
+							{ Log.d(TAG, "can't send message fragment_chat") } ))
 
 		}
-		else edMessageWrite
-			.startAnimation(AnimationUtils.loadAnimation(mMainActivity,
-			                                             R.anim.horizontal_shake))
+		else edMessageWrite.startAnimation(AnimationUtils.loadAnimation(mMainActivity,
+		                                                                R.anim.horizontal_shake))
 
 	}
 
@@ -215,40 +227,30 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 		startActivityForResult(Intent.createChooser(intent, "Select picture"), IMAGE_GALLERY_REQUEST)
 	}
 
-	/**
-	 * click attached photo in chat
-	 * @param view your view
-	 * @param position pos
-	 * @param nameUser sender name
-	 * @param urlPhotoUser photo profile url sender
-	 * @param urlPhotoClick clicked photo in chat url
-	 */
-	override fun clickImageChat(view: View, position: Int, nameUser: String, urlPhotoUser: String, urlPhotoClick: String) {
-		val intent = Intent(mMainActivity, FullScreenImageActivity::class.java)
-		intent.putExtra("urlPhotoClick", urlPhotoClick)
-		startActivity(intent)
-	}
-
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 		// If request is cancelled, the result arrays are empty.
 		if (requestCode == REQUEST_CAMERA)
-		// permission was granted
-			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) startCameraIntent()
+		// check camera permission was granted
+			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+				startCameraIntent()
 		if (requestCode == REQUEST_STORAGE)
-		// permission was granted
+		// check gallery permission was granted
 			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
 				startGalleryIntent()
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
+		// send photo from gallery
 		if (requestCode == IMAGE_GALLERY_REQUEST) {
 			if (resultCode == RESULT_OK) {
 
 				val selectedUri = data?.data
 				disposables.add(chatViewModel.sendPhoto(selectedUri.toString())
-	                .flatMapCompletable { chatViewModel.sendMessage(MessageItem(userItemModel, photoAttachementItem = it)) }
 	                .observeOn(AndroidSchedulers.mainThread())
+	                .flatMapCompletable { chatViewModel.sendMessage(MessageItem(userItemModel, photoAttachementItem = it)) }
+	                .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
+	                .doOnComplete { mMainActivity.progressDialog.dismissDialog() }
 	                .subscribe({ Log.wtf(TAG, "Photo gallery sent") },
 	                           { mMainActivity.showInternetError("$it") }))
 
@@ -256,22 +258,23 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 
 			}
 		}
-
+		// send photo taken by camera
 		if (requestCode == IMAGE_CAMERA_REQUEST) {
 			if (resultCode == RESULT_OK) {
+
 				if (mFilePathImageCamera.exists()) {
 					disposables.add(chatViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString())
-		                .flatMapCompletable { chatViewModel.sendMessage(MessageItem(userItemModel, photoAttachementItem = it)) }
 		                .observeOn(AndroidSchedulers.mainThread())
+		                .flatMapCompletable { chatViewModel.sendMessage(MessageItem(userItemModel, photoAttachementItem = it)) }
+		                .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
+		                .doOnComplete { mMainActivity.progressDialog.dismissDialog() }
 		                .subscribe( { Log.wtf(TAG, "Photo camera sent") },
-                                    { mMainActivity.showInternetError("$it") })
+                                    { mMainActivity.showInternetError("$it") }))
 
-
-					)
 				}
 				else Toast.makeText(mMainActivity,
 						"filePathImageCamera is null or filePathImageCamera isn't exists",
-						Toast.LENGTH_SHORT)
+						Toast.LENGTH_LONG)
 						.show()
 			}
 		}
@@ -279,7 +282,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat), ClickChatAttachmentFireba
 
 	override fun onResume() {
 		super.onResume()
-		mMainActivity.toolbar.title = "Chat"
+		mMainActivity.toolbar.title = userItemModel.name
 	}
 
 	override fun onDestroy() {
