@@ -10,7 +10,7 @@ interface MainActivityListeners {
 
 	fun startAuthActivity()
 	fun onCardsClick()
-	fun onMessagesClick()
+
 	fun onLogOutClick()
 
 }

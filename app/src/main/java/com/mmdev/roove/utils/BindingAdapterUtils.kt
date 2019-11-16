@@ -11,21 +11,23 @@ object BindingAdapterUtils {
 
 	@JvmStatic
 	@BindingAdapter("android:src")
-	fun loadImage(imageView: ImageView, url: String?) {
-		if (!url.isNullOrEmpty())
+	fun loadImage(imageView: ImageView, url: Int?) {
+		if (url != null)
 			Glide.with(imageView.context)
 				.load(url)
+				.centerCrop()
+				.apply(RequestOptions().circleCrop())
 				.into(imageView)
 	}
 
 	@JvmStatic
 	@BindingAdapter("app:circleImage")
-	fun loadCircleImage(imageView: ImageView, url: Int?) {
-		if (url != null)
+	fun loadCircleImage(imageView: ImageView, url: String?) {
+		if (!url.isNullOrEmpty())
 			Glide.with(imageView.context)
 				.load(url)
-				.apply(RequestOptions().circleCrop())
 				.centerCrop()
+				.apply(RequestOptions().circleCrop())
 				.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
 				.into(imageView)
 	}

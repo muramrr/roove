@@ -26,6 +26,7 @@ import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
+import com.mmdev.roove.ui.actions.conversations.viewmodel.ConversationsViewModel
 import com.mmdev.roove.ui.chat.viewmodel.ChatViewModel
 import com.mmdev.roove.ui.main.view.MainActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -47,6 +48,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	private val chatViewModelFactory = injector.chatViewModelFactory()
 	private lateinit var chatViewModel: ChatViewModel
 
+	private lateinit var conversationsVM: ConversationsViewModel
+	private val conversationsVMFactory = injector.conversationsViewModelFactory()
+
 	// POJO models
 	private lateinit var userItemModel: UserItem
 
@@ -58,7 +62,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	private lateinit var mFilePathImageCamera: File
 
 	private lateinit var conversationId: String
-	private lateinit var partnerId: String
 
 	private val disposables = CompositeDisposable()
 
@@ -80,13 +83,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		private const val REQUEST_CAMERA = 2
 		private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
 
-
-		private const val PARTNER_KEY = "partner_key"
 		//todo: remove data transfer between fragments, need to make it more abstract
+		private const val CONVERSATION_KEY = "CONVERSATION_ID"
 		@JvmStatic
-		fun newInstance(partnerId: String) = ChatFragment().apply {
+		fun newInstance(conversationId: String) = ChatFragment().apply {
 			arguments = Bundle().apply {
-				putString(PARTNER_KEY, partnerId)
+				putString(CONVERSATION_KEY, conversationId)
 			}
 		}
 
@@ -97,24 +99,27 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		activity?.let { mMainActivity = it as MainActivity }
 
 		arguments?.let {
-			partnerId = it.getString(PARTNER_KEY, "")
+			conversationId = it.getString(CONVERSATION_KEY, "")
 		}
 
-		chatViewModel = ViewModelProvider(mMainActivity, chatViewModelFactory).get(ChatViewModel::class.java)
-//		chatViewModel.conversationId.value = conversationId
-//		chatViewModel.setConversation()
-
 		userItemModel = mMainActivity.userItemModel
-
 		mChatAdapter = ChatAdapter(userItemModel.userId, listOf())
 
-		disposables.add(chatViewModel.getMessages()
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
-            .doOnNext { mMainActivity.progressDialog.dismissDialog() }
-            .doFinally { mMainActivity.progressDialog.dismissDialog() }
-            .subscribe({ if(it.isNotEmpty()) mChatAdapter.updateData(it) },
-                       { mMainActivity.showInternetError("$it") }))
+		chatViewModel = ViewModelProvider(mMainActivity, chatViewModelFactory).get(ChatViewModel::class.java)
+		conversationsVM = ViewModelProvider(mMainActivity, conversationsVMFactory).get(ConversationsViewModel::class.java)
+
+		if (conversationId.isNotEmpty()) {
+			chatViewModel.setConversation(conversationId)
+			disposables.add(chatViewModel.getMessages()
+				.observeOn(AndroidSchedulers.mainThread())
+				.doOnSubscribe { mMainActivity.progressDialog.showDialog() }
+				.doOnNext { mMainActivity.progressDialog.dismissDialog() }
+				.doFinally { mMainActivity.progressDialog.dismissDialog() }
+				.subscribe({ if(it.isNotEmpty()) mChatAdapter.updateData(it)
+				           Log.wtf(TAG, "messages to show + $it")},
+				           { mMainActivity.showInternetError("$it") }))
+		}
+
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -134,6 +139,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 				rvMessagesList.scrollToPosition(friendlyMessageCount-1)
 			}
 		})
+
 		mChatAdapter.setOnItemClickListener(object: ChatAdapter.OnItemClickListener{
 			override fun onItemClick(view: View, position: Int) {
 				val intent = Intent(mMainActivity, FullScreenImageActivity::class.java)
@@ -162,11 +168,32 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			                          edMessageWrite.text.toString().trim(),
 			                          photoAttachementItem = null)
 
+			if (conversationId.isEmpty()) {
+				disposables.add(conversationsVM.createConversation(mMainActivity.cardItemClicked)
+	                .map {
+		                chatViewModel.setConversation(it.conversationId)
+	                }
+	                .observeOn(AndroidSchedulers.mainThread())
+	                .subscribe({
+		                           Log.wtf(TAG, "creating conversations")
+		                           disposables.add(chatViewModel.getMessages()
+                                       .observeOn(AndroidSchedulers.mainThread())
+                                       .subscribe({
+	                                                  if(it.isNotEmpty()) mChatAdapter.updateData(it)
+	                                                  Log.wtf(TAG, "messages to show + $it")
+                                                  },
+                                                  { mMainActivity.showInternetError("$it") }))
+	                           },
+	                           {
+		                           Log.wtf(TAG, "error + $it")
+	                           }))
+			}
+
 			disposables.add(chatViewModel.sendMessage(message)
 				.observeOn(AndroidSchedulers.mainThread())
                 .doOnComplete{edMessageWrite.setText("")}
-				.subscribe( { Log.d(TAG, "Message sent fragment_chat") },
-							{ Log.d(TAG, "can't send message fragment_chat") } ))
+				.subscribe( { Log.wtf(TAG, "Message sent fragment_chat") },
+							{ Log.wtf(TAG, "can't send message fragment_chat") } ))
 
 		}
 		else edMessageWrite.startAnimation(AnimationUtils.loadAnimation(mMainActivity,
@@ -282,7 +309,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 	override fun onResume() {
 		super.onResume()
-		mMainActivity.toolbar.title = userItemModel.name
+		mMainActivity.toolbar.title = mMainActivity.partnerName
+		mMainActivity.setNonScrollableToolbar()
 	}
 
 	override fun onDestroy() {

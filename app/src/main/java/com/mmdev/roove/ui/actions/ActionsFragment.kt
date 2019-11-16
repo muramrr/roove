@@ -52,8 +52,4 @@ class ActionsFragment : Fragment(R.layout.fragment_actions) {
 		mMainActivity.toolbar.title = "Actions"
 	}
 
-	override fun onStop() {
-		super.onStop()
-		mMainActivity.setNonScrollableToolbar()
-	}
 }

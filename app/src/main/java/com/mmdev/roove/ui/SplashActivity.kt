@@ -42,12 +42,14 @@ class SplashActivity: AppCompatActivity(R.layout.activity_splash) {
             .subscribe({
 	                       if (it == false) {
 		                       Log.wtf(TAG, "USER IS NOT LOGGED IN")
-		                       Handler().postDelayed({ startAuthActivity() }, 2000)
+		                       startAuthActivity()
+		                       Handler().postDelayed({  }, 2000)
 
 	                       }
 	                       else {
 		                       Log.wtf(TAG, "USER IS LOGGED IN")
-		                       Handler().postDelayed({ startMainActivity() }, 2000)
+		                       startMainActivity()
+		                       Handler().postDelayed({  }, 2000)
 	                       }
                        },
                        {
