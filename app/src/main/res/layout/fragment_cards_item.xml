@@ -20,7 +20,7 @@
 		app:cardUseCompatPadding="true"
 		app:cardPreventCornerOverlap="false"
 		app:cardCornerRadius="10dp"
-		app:cardBackgroundColor="@color/white" >
+		app:cardBackgroundColor="@color/colorPrimary" >
 
 		<ImageView
 			android:id="@+id/fragment_card_item_img_photo"

@@ -3,11 +3,8 @@ package com.mmdev.roove.ui.actions.conversations.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.mmdev.business.conversations.model.ConversationItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentConversationsItemBinding
@@ -19,7 +16,7 @@ import com.mmdev.roove.databinding.FragmentConversationsItemBinding
  * This is the documentation block about the class
  */
 
-class ConversationsAdapter (private var mActiveConversationsList: List<ConversationItem>):
+class ConversationsAdapter (private var conversationsList: List<ConversationItem>):
 		RecyclerView.Adapter<ConversationsAdapter.ConversationsViewHolder>() {
 
 
@@ -33,17 +30,17 @@ class ConversationsAdapter (private var mActiveConversationsList: List<Conversat
 		                                                false))
 
 	override fun onBindViewHolder(holder: ConversationsViewHolder, position: Int) {
-		holder.bind(mActiveConversationsList[position])
+		holder.bind(conversationsList[position])
 	}
 
-	override fun getItemCount() = mActiveConversationsList.size
+	override fun getItemCount() = conversationsList.size
 
 	fun updateData(conversations: List<ConversationItem>) {
-		mActiveConversationsList = conversations
+		conversationsList = conversations
 		notifyDataSetChanged()
 	}
 
-	fun getConversationItem(position: Int): ConversationItem{ return mActiveConversationsList[position] }
+	fun getConversationItem(position: Int) = conversationsList[position]
 
 	// allows clicks events to be caught
 	fun setOnItemClickListener(itemClickListener: OnItemClickListener) {
@@ -59,27 +56,11 @@ class ConversationsAdapter (private var mActiveConversationsList: List<Conversat
 			}
 		}
 
-		private val ivUserAvatar: ImageView = itemView.findViewById(R.id.conversation_active_item_userpic_iv)
-
 		fun bind(conversationItem: ConversationItem){
 			binding.conversationItem = conversationItem
-			setUserAvatar(conversationItem.partnerPhotoUrl)
 			binding.executePendingBindings()
 		}
 
-		private fun setUserAvatar(url: String){
-			if (url.isNotEmpty())
-				Glide.with(ivUserAvatar.context)
-					.load(url)
-					.centerCrop()
-					.apply(RequestOptions().circleCrop())
-					.into(ivUserAvatar)
-			else Glide.with(ivUserAvatar.context)
-				.load(R.drawable.default_avatar)
-				.centerCrop()
-				.apply(RequestOptions().circleCrop())
-				.into(ivUserAvatar)
-		}
 	}
 
 

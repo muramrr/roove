@@ -17,6 +17,7 @@ class ConversationsViewModel(private val createUC: CreateConversationUseCase,
                              private val deleteUC: DeleteConversationUseCase,
                              private val getUC: GetConversationsListUseCase): ViewModel(){
 
+
 	fun createConversation(partnerCardItem: CardItem) = createUC.execute(partnerCardItem)
 
 	fun deleteConversation(conversationItem: ConversationItem) = deleteUC.execute(conversationItem)

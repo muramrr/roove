@@ -109,7 +109,12 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 		}
 		if (fabVisible)
 			fab.setOnClickListener {
-				mMainActivity.startChatFragment(userItem.userId)
+
+				mMainActivity.supportFragmentManager.popBackStack()
+				// if user is listed in matched container = conversation is not created
+				// so empty string given
+				mMainActivity.startChatFragment("")
+
 			}
 
 

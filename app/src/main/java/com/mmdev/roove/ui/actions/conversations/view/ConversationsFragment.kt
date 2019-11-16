@@ -56,7 +56,7 @@ class ConversationsFragment: Fragment(R.layout.fragment_conversations){
 		disposables.add(conversationsVM.getConversationsList()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                           Log.wtf(TAG, "users to show: ${it.size}")
+                           Log.wtf(TAG, "conversations to show: ${it.size}")
                            mConversationsAdapter.updateData(it)
                        },
                        {
@@ -76,10 +76,14 @@ class ConversationsFragment: Fragment(R.layout.fragment_conversations){
 
 		mConversationsAdapter.setOnItemClickListener(object: ConversationsAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
+				val conversationItem = mConversationsAdapter.getConversationItem(position)
 
-				mMainActivity.startChatFragment(mConversationsAdapter
-					                                .getConversationItem(position)
-					                                .conversationId)
+				mMainActivity.conversationItemClicked = conversationItem
+				mMainActivity.partnerName = conversationItem.partnerName
+
+				// if conversation is stored in conversations container
+				// seems conversation was started and valid id is given
+				mMainActivity.startChatFragment(conversationItem.conversationId)
 
 			}
 		})

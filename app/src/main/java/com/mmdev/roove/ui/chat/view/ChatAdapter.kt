@@ -100,7 +100,9 @@ class ChatAdapter (private var userId: String,
 			setIvUserAvatar(messageItem.sender.mainPhotoUrl)
 			setTextMessage(messageItem.text)
 			messageItem.timestamp?.let { setTvTimestamp(convertTimestamp(messageItem.timestamp!!)) }
-			setIvChatPhoto(messageItem.photoAttachementItem?.fileUrl)
+			messageItem.photoAttachementItem?.let { setIvChatPhoto(messageItem
+				                                                       .photoAttachementItem!!
+				                                                       .fileUrl) }
 		}
 
 		/* sets user profile pic in ImgView binded layout */
@@ -124,8 +126,6 @@ class ChatAdapter (private var userId: String,
 			GlideApp.with(ivChatPhoto.context)
 				.load(url)
 				.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-				.centerCrop()
-				.apply(RequestOptions().circleCrop())
 				.into(ivChatPhoto)
 		}
 

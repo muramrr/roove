@@ -25,7 +25,7 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 
 	private var conversationId = ""
 
-	companion object{
+	companion object {
 		// Firebase firestore references
 		private const val GENERAL_COLLECTION_REFERENCE = "conversations"
 		private const val SECONDARY_COLLECTION_REFERENCE = "messages"
@@ -39,8 +39,10 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 		this.conversationId = conversationId
 	}
 
+
+
 	override fun getMessagesList(): Observable<List<MessageItem>> {
-		Log.wtf("mylogs", conversationId)
+		Log.wtf("mylogs", "conversation set, id = $conversationId")
 		return Observable.create(ObservableOnSubscribe<List<MessageItem>> { emitter ->
 			val listener = firestore.collection(GENERAL_COLLECTION_REFERENCE)
 				.document(conversationId)
@@ -49,12 +51,10 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
 					emitter.onError(e)
-					Log.wtf("mylogs", "Listen failed.", e)
 					return@addSnapshotListener
 				}
 				val messages = ArrayList<MessageItem>()
-				Log.wtf("mylogs", "size snapshot ${snapshots!!.size()}")
-				for (doc in snapshots) {
+				for (doc in snapshots!!) {
 					messages.add(doc.toObject(MessageItem::class.java))
 				}
 				emitter.onNext(messages)

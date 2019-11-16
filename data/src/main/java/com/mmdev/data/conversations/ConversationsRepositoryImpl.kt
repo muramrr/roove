@@ -1,6 +1,5 @@
 package com.mmdev.data.conversations
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.conversations.model.ConversationItem
@@ -21,7 +20,7 @@ import javax.inject.Singleton
 @Singleton
 class ConversationsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
                                                       private val currentUserItem: UserItem):
-		ConversationsRepository{
+		ConversationsRepository {
 
 	companion object{
 		// firestore users references
@@ -129,12 +128,10 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
 						emitter.onError(e)
-						Log.wtf("mylogs", "Listen failed.", e)
 						return@addSnapshotListener
 					}
 					val conversations = ArrayList<ConversationItem>()
-					Log.wtf("mylogs", "size snapshot ${snapshots!!.size()}")
-					for (doc in snapshots) {
+					for (doc in snapshots!!) {
 						conversations.add(doc.toObject(ConversationItem::class.java))
 					}
 					emitter.onNext(conversations)

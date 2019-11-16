@@ -45,8 +45,7 @@ class PairsFragment: Fragment(R.layout.fragment_pairs) {
 		cardsViewModel = ViewModelProvider(mMainActivity, cardsViewModelFactory).get(CardsViewModel::class.java)
 
 		//get matched users
-		//disposables.add(cardsViewModel.getMatchedUserItems()
-		disposables.add(cardsViewModel.getPotentialUserCards()
+		disposables.add(cardsViewModel.getMatchedUserItems()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                            Log.wtf(TAG, "pairs to show: ${it.size}")
@@ -60,7 +59,6 @@ class PairsFragment: Fragment(R.layout.fragment_pairs) {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		val rvPairsList = view.findViewById<RecyclerView>(R.id.pairs_container_rv)
-		//mConversationsAdapter.updateData(generateConversationsList())
 		rvPairsList.apply {
 			adapter = mPairsAdapter
 			layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -69,11 +67,18 @@ class PairsFragment: Fragment(R.layout.fragment_pairs) {
 
 		mPairsAdapter.setOnItemClickListener(object: PairsAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
-				mMainActivity.startProfileFragment(mPairsAdapter.getPairItem(position).userId, true)
+				val pairItem = mPairsAdapter.getPairItem(position)
+
+				mMainActivity.partnerName = pairItem.name
+				mMainActivity.cardItemClicked = pairItem
+
+				mMainActivity.startProfileFragment(pairItem.userId, true)
+
 
 			}
 		})
 	}
+
 
 
 	override fun onDestroy() {

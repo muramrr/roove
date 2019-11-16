@@ -20,12 +20,13 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.mmdev.business.cards.model.CardItem
+import com.mmdev.business.conversations.model.ConversationItem
 import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.actions.ActionsFragment
-import com.mmdev.roove.ui.actions.conversations.view.ConversationsFragment
 import com.mmdev.roove.ui.auth.view.AuthActivity
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModel
 import com.mmdev.roove.ui.cards.view.CardsFragment
@@ -56,6 +57,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	private lateinit var tvSignedInUserName: TextView
 
 	lateinit var userItemModel: UserItem
+	lateinit var cardItemClicked: CardItem
+	lateinit var conversationItemClicked: ConversationItem
+	lateinit var partnerName: String
+
 	private lateinit var mFragmentManager: FragmentManager
 
 	private lateinit var authViewModel: AuthViewModel
@@ -108,11 +113,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	}
 
 	override fun onCardsClick() = startCardFragment()
-	//todo: change this to messages fragment
-	override fun onMessagesClick() = startConversationsFragment()
 
 	override fun onLogOutClick() = showSignOutPrompt()
-
 
 	private fun startActionsFragment(){
 		mFragmentManager.findFragmentByTag(ActionsFragment::class.java.canonicalName) ?:
@@ -124,7 +126,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			replace(R.id.main_container,
 			        ActionsFragment.newInstance(),
 			        ActionsFragment::class.java.canonicalName)
-			addToBackStack(null)
+			addToBackStack(ActionsFragment::class.java.canonicalName)
 			commit()
 		}
 	}
@@ -147,24 +149,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		}
 	}
 
-	private fun startConversationsFragment(){
-		mFragmentManager.findFragmentByTag(ConversationsFragment::class.java.canonicalName) ?:
-		mFragmentManager.beginTransaction().apply {
-			setCustomAnimations(R.anim.enter_from_right,
-			                    R.anim.exit_to_left,
-			                    R.anim.enter_from_left,
-			                    R.anim.exit_to_right)
-			replace(R.id.main_container,
-			        ConversationsFragment.newInstance(),
-			        ConversationsFragment::class.java.canonicalName)
-			addToBackStack(null)
-			commit()
-		}
-	}
 	/*
 	 * start chat
 	 */
-	fun startChatFragment(partnerId: String) {
+	fun startChatFragment(conversationId: String) {
 		mFragmentManager.findFragmentByTag(ChatFragment::class.java.canonicalName) ?:
 		mFragmentManager.beginTransaction().apply {
 			setCustomAnimations(R.anim.enter_from_right,
@@ -172,9 +160,9 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			                    R.anim.enter_from_left,
 			                    R.anim.exit_to_right)
 			replace(R.id.main_container,
-			        ChatFragment.newInstance(partnerId),
+			        ChatFragment.newInstance(conversationId),
 			        ChatFragment::class.java.canonicalName)
-			addToBackStack(null)
+			addToBackStack(ChatFragment::class.java.canonicalName)
 			commit()
 		}
 	}
@@ -186,10 +174,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			                    R.anim.exit_to_bottom,
 			                    R.anim.enter_from_bottom,
 			                    R.anim.exit_to_top)
-			replace(R.id.main_core_container,
+			add(R.id.main_core_container,
 			        ProfileFragment.newInstance(userId, fabVisible),
 			        ProfileFragment::class.java.canonicalName)
-			addToBackStack(null)
+			addToBackStack(ProfileFragment::class.java.canonicalName)
 			commit()
 		}
 	}

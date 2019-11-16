@@ -108,7 +108,7 @@ class CardsFragment: Fragment(R.layout.fragment_cards) {
 					disposables.add(cardsViewModel.handlePossibleMatch(swipedCard)
 		                .subscribe({
 			                           if (it) showMatchDialog(swipedCard)
-			                           Log.wtf(TAG, swipedCard.toString())
+			                           Log.wtf(TAG, "its a match! + ${swipedCard.name}")
 		                           },
 		                           {
 			                           Log.wtf(TAG, "error swiped + $it")
@@ -186,6 +186,7 @@ class CardsFragment: Fragment(R.layout.fragment_cards) {
 	override fun onResume() {
 		super.onResume()
 		mMainActivity.toolbar.title = "Cards"
+		mMainActivity.setNonScrollableToolbar()
 	}
 
 	override fun onDestroy() {
