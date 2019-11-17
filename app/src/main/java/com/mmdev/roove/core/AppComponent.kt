@@ -21,39 +21,39 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Component(modules = [
-    AuthModule::class,
-    RepositoryModule::class,
-    FirebaseModule::class,
-    ViewModelModule::class,
-    UserModule::class
+	AuthModule::class,
+	RepositoryModule::class,
+	FirebaseModule::class,
+	ViewModelModule::class,
+	UserModule::class
 ])
 
 @Singleton
 interface AppComponent {
 
-    @Component.Builder
-    interface Builder {
-        fun build(): AppComponent
+	@Component.Builder
+	interface Builder {
+		fun build(): AppComponent
 
-        @BindsInstance
-        fun application(application: Application): Builder
-    }
+		@BindsInstance
+		fun application(application: Application): Builder
+	}
 
-    //factories
-    fun authViewModelFactory(): AuthViewModelFactory
-    fun cardsViewModelFactory(): CardsViewModelFactory
-    fun chatViewModelFactory(): ChatViewModelFactory
-    fun conversationsViewModelFactory(): ConversationsViewModelFactory
-    fun localUserRepoVMFactory(): LocalUserRepoVMFactory
-    fun remoteUserRepoVMFactory(): RemoteUserRepoVMFactory
+	//factories
+	fun authViewModelFactory(): AuthViewModelFactory
+	fun cardsViewModelFactory(): CardsViewModelFactory
+	fun chatViewModelFactory(): ChatViewModelFactory
+	fun conversationsViewModelFactory(): ConversationsViewModelFactory
+	fun localUserRepoVMFactory(): LocalUserRepoVMFactory
+	fun remoteUserRepoVMFactory(): RemoteUserRepoVMFactory
 
 
-    //repos
-    fun authRepository(): AuthRepository
-    fun cardsRepository(): CardsRepository
-    fun chatRepository(): ChatRepository
-    fun conversationsRepository(): ConversationsRepository
-    fun localUserRepository(): UserRepository.LocalUserRepository
-    fun remoteUserRepository(): UserRepository.RemoteUserRepository
+	//repos
+	fun authRepository(): AuthRepository
+	fun cardsRepository(): CardsRepository
+	fun chatRepository(): ChatRepository
+	fun conversationsRepository(): ConversationsRepository
+	fun localUserRepository(): UserRepository.LocalUserRepository
+	fun remoteUserRepository(): UserRepository.RemoteUserRepository
 
 }
