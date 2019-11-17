@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -36,6 +35,7 @@ import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.feed.FeedFragment
 import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoVM
 import com.mmdev.roove.ui.profile.view.ProfileFragment
+import com.mmdev.roove.utils.showToastText
 import io.reactivex.disposables.CompositeDisposable
 
 class MainActivity: AppCompatActivity(R.layout.activity_main),
@@ -48,7 +48,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	lateinit var progressDialog: LoadingDialog
 
 	private lateinit var drawerLayout: DrawerLayout
-	private lateinit var toggle: ActionBarDrawerToggle
 	lateinit var toolbar: Toolbar
 	lateinit var appbar: AppBarLayout
 	private lateinit var params: AppBarLayout.LayoutParams
@@ -83,8 +82,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		appbar = findViewById(R.id.app_bar)
 		toolbar = findViewById(R.id.toolbar)
 		setSupportActionBar(toolbar)
-
 		params = toolbar.layoutParams as AppBarLayout.LayoutParams
+
 		setToolbarNavigation()
 		setNavigationView()
 
@@ -105,10 +104,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 				    FeedFragment::class.java.canonicalName)
 				commit()
 			}
-		else mFragmentManager.popBackStack(null,
-		                                   FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
-
+		else mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
 	}
 
@@ -116,55 +112,18 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	override fun onLogOutClick() = showSignOutPrompt()
 
-	private fun startActionsFragment(){
-		mFragmentManager.findFragmentByTag(ActionsFragment::class.java.canonicalName) ?:
-		mFragmentManager.beginTransaction().apply {
-			setCustomAnimations(R.anim.enter_from_right,
-			                    R.anim.exit_to_left,
-			                    R.anim.enter_from_left,
-			                    R.anim.exit_to_right)
-			replace(R.id.main_container,
-			        ActionsFragment.newInstance(),
-			        ActionsFragment::class.java.canonicalName)
-			addToBackStack(ActionsFragment::class.java.canonicalName)
-			commit()
-		}
-	}
+	private fun startActionsFragment(){ replaceFragment(ActionsFragment.newInstance()) }
 
 	/*
 	 * start card swipe
 	 */
-	private fun startCardFragment() {
-		mFragmentManager.findFragmentByTag(CardsFragment::class.java.canonicalName) ?:
-		mFragmentManager.beginTransaction().apply {
-			setCustomAnimations(R.anim.enter_from_right,
-			                    R.anim.exit_to_left,
-			                    R.anim.enter_from_left,
-			                    R.anim.exit_to_right)
-			replace(R.id.main_container,
-			    CardsFragment.newInstance(),
-			    CardsFragment::class.java.canonicalName)
-			addToBackStack(CardsFragment::class.java.canonicalName)
-			commit()
-		}
-	}
+	private fun startCardFragment() { replaceFragment(CardsFragment()) }
 
 	/*
 	 * start chat
 	 */
 	fun startChatFragment(conversationId: String) {
-		mFragmentManager.findFragmentByTag(ChatFragment::class.java.canonicalName) ?:
-		mFragmentManager.beginTransaction().apply {
-			setCustomAnimations(R.anim.enter_from_right,
-			                    R.anim.exit_to_left,
-			                    R.anim.enter_from_left,
-			                    R.anim.exit_to_right)
-			replace(R.id.main_container,
-			        ChatFragment.newInstance(conversationId),
-			        ChatFragment::class.java.canonicalName)
-			addToBackStack(ChatFragment::class.java.canonicalName)
-			commit()
-		}
+		replaceFragment(ChatFragment.newInstance(conversationId))
 	}
 
 	fun startProfileFragment(userId: String, fabVisible: Boolean) {
@@ -183,8 +142,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	}
 
 	private fun replaceFragment (fragment: Fragment) {
-		val backStateName = fragment.javaClass.name
-		val fragmentPopped = mFragmentManager.popBackStackImmediate(backStateName, 0)
+		val fragmentName = fragment.javaClass.name
+		val fragmentPopped = mFragmentManager.popBackStackImmediate(fragmentName, 0)
 
 		if (!fragmentPopped){ //fragment not in back stack, create it.
 			mFragmentManager.beginTransaction().apply {
@@ -192,8 +151,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 				                    R.anim.exit_to_left,
 				                    R.anim.enter_from_left,
 				                    R.anim.exit_to_right)
-				replace(R.id.main_container, fragment, fragment.javaClass.name)
-				addToBackStack(backStateName)
+				replace(R.id.main_container, fragment, fragmentName)
+				addToBackStack(fragmentName)
 				commit()
 			}
 		}
@@ -223,7 +182,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	}
 
-
 	private fun setUpUser() {
 		tvSignedInUserName.text = userItemModel.name
 		GlideApp.with(this@MainActivity)
@@ -234,7 +192,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	}
 
 	private fun setToolbarNavigation(){
-		toggle = ActionBarDrawerToggle(this@MainActivity, drawerLayout, toolbar,
+		val toggle = ActionBarDrawerToggle(this@MainActivity, drawerLayout, toolbar,
 		                                   R.string.navigation_drawer_open,
 		                                   R.string.navigation_drawer_close)
 
@@ -317,9 +275,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 //
 //	}
 
-	fun showInternetError(error: String) {
-		Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
-	}
+	fun showToast(text: String) = showToastText(text)
 
 	override fun onBackPressed() {
 		if (drawerLayout.isDrawerOpen(GravityCompat.START)) drawerLayout.closeDrawer(GravityCompat.START)
@@ -328,7 +284,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	override fun onDestroy() {
 		super.onDestroy()
-		//disposables.dispose()
 		disposables.clear()
 	}
 

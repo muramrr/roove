@@ -99,13 +99,14 @@
 				app:layout_constraintTop_toBottomOf="@id/profile_about_content_tv"
 				style="@style/medium_text_white_22sp_85op" />
 
-			<androidx.recyclerview.widget.RecyclerView
-				android:id="@+id/profile_want_togo_container_rv"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/profile_want_togo_header_tv"/>
+<!--			<androidx.recyclerview.widget.RecyclerView-->
+<!--				android:id="@+id/profile_want_togo_container_rv"-->
+<!--				android:layout_width="wrap_content"-->
+<!--				android:layout_height="wrap_content"-->
+<!--				android:visibility="gone"-->
+<!--				app:layout_constraintStart_toStartOf="parent"-->
+<!--				app:layout_constraintEnd_toEndOf="parent"-->
+<!--				app:layout_constraintTop_toBottomOf="@id/profile_want_togo_header_tv"/>-->
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,4 +1,4 @@
-package com.mmdev.data.core
+package com.mmdev.roove.core.di
 
 import com.facebook.login.LoginManager
 import dagger.Module

@@ -6,10 +6,10 @@ import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.user.repository.UserRepository
-import com.mmdev.data.core.AuthModule
-import com.mmdev.data.core.FirebaseModule
-import com.mmdev.data.core.RepositoryModule
-import com.mmdev.data.core.UserModule
+import com.mmdev.roove.core.di.AuthModule
+import com.mmdev.roove.core.di.FirebaseModule
+import com.mmdev.roove.core.di.RepositoryModule
+import com.mmdev.roove.core.di.UserModule
 import com.mmdev.roove.ui.actions.conversations.viewmodel.ConversationsViewModelFactory
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModelFactory
 import com.mmdev.roove.ui.cards.viewmodel.CardsViewModelFactory

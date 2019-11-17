@@ -20,7 +20,6 @@
 		<activity
 			android:name=".ui.SplashActivity"
 			android:screenOrientation="portrait">
-
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<action android:name="android.intent.action.VIEW" />
@@ -39,12 +38,10 @@
 			android:configChanges="orientation|keyboard|keyboardHidden"
 			android:screenOrientation="portrait" />
 
-
 		<activity
 			android:name=".ui.chat.view.FullScreenImageActivity"
 			android:screenOrientation="portrait" />
 
-		<activity android:name=".ui.feed.tabitem.FeedItemActivity" />
 
 		<meta-data
 			android:name="com.facebook.sdk.ApplicationId"

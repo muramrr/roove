@@ -111,13 +111,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		if (conversationId.isNotEmpty()) {
 			chatViewModel.setConversation(conversationId)
 			disposables.add(chatViewModel.getMessages()
-				.observeOn(AndroidSchedulers.mainThread())
 				.doOnSubscribe { mMainActivity.progressDialog.showDialog() }
 				.doOnNext { mMainActivity.progressDialog.dismissDialog() }
 				.doFinally { mMainActivity.progressDialog.dismissDialog() }
+                .observeOn(AndroidSchedulers.mainThread())
 				.subscribe({ if(it.isNotEmpty()) mChatAdapter.updateData(it)
-				           Log.wtf(TAG, "messages to show + $it")},
-				           { mMainActivity.showInternetError("$it") }))
+				           Log.wtf(TAG, "messages to show + ${it.size}")},
+				           { mMainActivity.showToast("$it") }))
+
 		}
 
 	}
@@ -180,9 +181,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                                        .observeOn(AndroidSchedulers.mainThread())
                                        .subscribe({
 	                                                  if(it.isNotEmpty()) mChatAdapter.updateData(it)
-	                                                  Log.wtf(TAG, "messages to show + $it")
+	                                                  Log.wtf(TAG, "messages to show + ${it.size}")
                                                   },
-                                                  { mMainActivity.showInternetError("$it") }))
+                                                  { mMainActivity.showToast("$it") }))
 	                           },
 	                           {
 		                           Log.wtf(TAG, "error + $it")
@@ -191,9 +192,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 			disposables.add(chatViewModel.sendMessage(message)
 				.observeOn(AndroidSchedulers.mainThread())
-                .doOnComplete{edMessageWrite.setText("")}
 				.subscribe( { Log.wtf(TAG, "Message sent fragment_chat") },
 							{ Log.wtf(TAG, "can't send message fragment_chat") } ))
+
+			edMessageWrite.setText("")
 
 		}
 		else edMessageWrite.startAnimation(AnimationUtils.loadAnimation(mMainActivity,
@@ -279,7 +281,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	                .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
 	                .doOnComplete { mMainActivity.progressDialog.dismissDialog() }
 	                .subscribe({ Log.wtf(TAG, "Photo gallery sent") },
-	                           { mMainActivity.showInternetError("$it") }))
+	                           { mMainActivity.showToast("$it") }))
 
 
 
@@ -296,7 +298,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		                .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
 		                .doOnComplete { mMainActivity.progressDialog.dismissDialog() }
 		                .subscribe( { Log.wtf(TAG, "Photo camera sent") },
-                                    { mMainActivity.showInternetError("$it") }))
+                                    { mMainActivity.showToast("$it") }))
 
 				}
 				else Toast.makeText(mMainActivity,

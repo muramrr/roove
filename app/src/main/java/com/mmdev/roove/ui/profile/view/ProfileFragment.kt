@@ -78,7 +78,7 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 		disposables.add(remoteRepoViewModel.getUserById(userId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ updateContent(view, it) },
-                       { mMainActivity.showInternetError("$it") }))
+                       { mMainActivity.showToast("$it") }))
 
 	}
 
