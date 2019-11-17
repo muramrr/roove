@@ -28,8 +28,12 @@ class ProfilePagerAdapter (private var listPhotoUrls: List<String>):
 	override fun onBindViewHolder(holder: ProfileImagesHolder, position: Int) =
 		holder.bind(listPhotoUrls[position])
 
-
 	override fun getItemCount() = listPhotoUrls.size
+
+	fun updateData(newPhotosUrlList: List<String>) {
+		listPhotoUrls = newPhotosUrlList
+		notifyDataSetChanged()
+	}
 
 
 	inner class ProfileImagesHolder (private val binding: FragmentProfilePagerItemBinding) :
