@@ -3,7 +3,6 @@ package com.mmdev.roove.core.di
 import android.app.Application
 import com.ironz.binaryprefs.BinaryPreferencesBuilder
 import com.ironz.binaryprefs.Preferences
-import com.mmdev.business.user.model.UserItem
 import com.mmdev.data.user.UserRepositoryLocal
 import dagger.Module
 import dagger.Provides
@@ -22,7 +21,7 @@ class UserModule {
 	/* get user info from sharedPrefs */
 	@Provides
 	@Singleton
-	fun provideSavedUser(repository: UserRepositoryLocal): UserItem = repository.getSavedUser()
+	fun provideSavedUser(repository: UserRepositoryLocal) = repository.getSavedUser()
 
 	@Provides
 	@Singleton

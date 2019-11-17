@@ -36,48 +36,48 @@ import dagger.Provides
 class ViewModelModule {
 
 	@Provides
-	fun authViewModelFactory(repository: AuthRepository): AuthViewModelFactory{
-		return AuthViewModelFactory(HandleUserExistenceUseCase(repository),
-		                            IsAuthenticatedUseCase(repository),
-		                            LogOutUseCase(repository),
-		                            SignInWithFacebookUseCase(repository),
-		                            SignUpUseCase(repository))
-	}
+	fun authViewModelFactory(repository: AuthRepository)=
+		AuthViewModelFactory(HandleUserExistenceUseCase(repository),
+		                     IsAuthenticatedUseCase(repository),
+		                     LogOutUseCase(repository),
+		                     SignInWithFacebookUseCase(repository),
+		                     SignUpUseCase(repository))
 
 	@Provides
-	fun cardsViewModelFactory(repository: CardsRepository): CardsViewModelFactory{
-		return CardsViewModelFactory(AddToSkippedUseCase(repository),
-		                             GetMatchedUsersUseCase(repository),
-		                             GetPotentialUsersUseCase(repository),
-		                             HandlePossibleMatchUseCase(repository))
-	}
-
-	@Provides
-	fun chatViewModelFactory(repository: ChatRepository): ChatViewModelFactory {
-		return ChatViewModelFactory(GetMessagesUseCase(repository),
-		                            SendMessageUseCase(repository),
-		                            SendPhotoUseCase(repository),
-		                            SetConversationUseCase(repository))
-	}
-
-	@Provides
-	fun conversationsViewModelFactory(repository: ConversationsRepository): ConversationsViewModelFactory {
-		return ConversationsViewModelFactory(CreateConversationUseCase(repository),
-		                                     DeleteConversationUseCase(repository),
-		                                     GetConversationsListUseCase(repository))
-	}
-
-	@Provides
-	fun localUserRepoVMFactory(repository: UserRepository.LocalUserRepository): LocalUserRepoVMFactory {
-		return LocalUserRepoVMFactory(GetSavedUserUseCase(
-				repository), SaveUserInfoUseCase(repository))
-	}
+	fun cardsViewModelFactory(repository: CardsRepository)=
+		CardsViewModelFactory(AddToSkippedUseCase(repository),
+		                      GetMatchedUsersUseCase(repository),
+		                      GetPotentialUsersUseCase(repository),
+		                      HandlePossibleMatchUseCase(repository))
 
 
 	@Provides
-	fun remoteUserRepoVMFactory(repository: UserRepository.RemoteUserRepository): RemoteUserRepoVMFactory {
-		return RemoteUserRepoVMFactory(CreateUserUseCase(
-				repository), DeleteUserUseCase(repository), GetUserByIdUseCase(repository))
-	}
+	fun chatViewModelFactory(repository: ChatRepository)=
+		ChatViewModelFactory(GetMessagesUseCase(repository),
+		                     SendMessageUseCase(repository),
+		                     SendPhotoUseCase(repository),
+		                     SetConversationUseCase(repository))
+
+
+	@Provides
+	fun conversationsViewModelFactory(repository: ConversationsRepository)=
+		ConversationsViewModelFactory(CreateConversationUseCase(repository),
+		                              DeleteConversationUseCase(repository),
+		                              GetConversationsListUseCase(repository))
+
+
+	@Provides
+	fun localUserRepoVMFactory(repository: UserRepository.LocalUserRepository) =
+		LocalUserRepoVMFactory(GetSavedUserUseCase(repository),
+		                       SaveUserInfoUseCase(repository))
+
+
+
+	@Provides
+	fun remoteUserRepoVMFactory(repository: UserRepository.RemoteUserRepository) =
+		RemoteUserRepoVMFactory(CreateUserUseCase(repository),
+		                        DeleteUserUseCase(repository),
+		                        GetUserByIdUseCase(repository))
+
 
 }
