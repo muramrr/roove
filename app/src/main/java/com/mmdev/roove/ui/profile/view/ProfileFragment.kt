@@ -2,7 +2,6 @@ package com.mmdev.roove.ui.profile.view
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -13,7 +12,6 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.main.view.MainActivity
@@ -32,7 +30,7 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 
 	private lateinit var mMainActivity: MainActivity
 
-	private lateinit var fab: FloatingActionButton
+	private val profilePagerAdapter = ProfilePagerAdapter(listOf())
 
 	private lateinit var remoteRepoViewModel: RemoteUserRepoVM
 	private val remoteUserRepoFactory = injector.remoteUserRepoVMFactory()
@@ -73,32 +71,26 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		fab = view.findViewById(R.id.fab_send_message)
-		if (!fabVisible) fab.visibility = View.GONE
+		val viewPager= view.findViewById<ViewPager2>(R.id.profile_photos_vp)
+		val tbProfile = view.findViewById<Toolbar>(R.id.profile_toolbar)
+		val tbLayout = view.findViewById<CollapsingToolbarLayout>(R.id.profile_collapsing_toolbar)
+		val tabLayout = view.findViewById<TabLayout>(R.id.dots_indicator)
+		val fab = view.findViewById<FloatingActionButton>(R.id.fab_send_message)
+
+
 		disposables.add(remoteRepoViewModel.getUserById(userId)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateContent(view, it) },
+            .subscribe({ profilePagerAdapter.updateData(it.photoURLs)
+	                    tbLayout.title = it.name},
                        { mMainActivity.showToast("$it") }))
 
-	}
+		viewPager.adapter = profilePagerAdapter
 
-	private fun updateContent(view:View, userItem: UserItem){
-		val viewPager: ViewPager2 = view.findViewById(R.id.profile_photos_vp)
-		viewPager.adapter = ProfilePagerAdapter(userItem.photoURLs)
-		val tabLayout: TabLayout = view.findViewById(R.id.dots_indicator)
+		TabLayoutMediator(tabLayout, viewPager){ tab: TabLayout.Tab, position: Int -> }.attach()
 
-		TabLayoutMediator(tabLayout, viewPager){
-			tab: TabLayout.Tab, position: Int ->
-			Log.d("mylogs", "${tab.text} + $position")
-		}.attach()
-
-		val toolbarProfile = view.findViewById<Toolbar>(R.id.profile_toolbar)
-		val collapsingToolbarLayout: CollapsingToolbarLayout = view.findViewById(R.id.profile_collapsing_toolbar)
-		collapsingToolbarLayout.title = userItem.name
-
-		toolbarProfile.setNavigationOnClickListener { mMainActivity.onBackPressed() }
-		toolbarProfile.inflateMenu(R.menu.profile_view_options)
-		toolbarProfile.setOnMenuItemClickListener { item ->
+		tbProfile.setNavigationOnClickListener { mMainActivity.onBackPressed() }
+		tbProfile.inflateMenu(R.menu.profile_view_options)
+		tbProfile.setOnMenuItemClickListener { item ->
 			when (item.itemId) {
 				R.id.action_report -> { Toast.makeText(mMainActivity,
 				                                       "action report click",
@@ -107,22 +99,21 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 			}
 			return@setOnMenuItemClickListener true
 		}
+
 		if (fabVisible)
 			fab.setOnClickListener {
-
 				mMainActivity.supportFragmentManager.popBackStack()
 				// if user is listed in matched container = conversation is not created
 				// so empty string given
 				mMainActivity.startChatFragment("")
 
 			}
-
-
+		else fab.visibility = View.GONE
 	}
 
 
-	override fun onResume() {
-		super.onResume()
+	override fun onStart() {
+		super.onStart()
 		mMainActivity.appbar.visibility = View.GONE
 		mMainActivity.toolbar.visibility = View.GONE
 	}
