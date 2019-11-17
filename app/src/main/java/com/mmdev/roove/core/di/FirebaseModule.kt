@@ -3,6 +3,8 @@ package com.mmdev.roove.core.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.mmdev.data.BuildConfig
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -26,5 +28,6 @@ class FirebaseModule {
 
 	@Provides
 	@Singleton
-	fun firebaseStorage(): FirebaseStorage = FirebaseStorage.getInstance()
+	fun firebaseStorage(): StorageReference =
+		FirebaseStorage.getInstance().getReferenceFromUrl(BuildConfig.FIREBASE_STORAGE_URL)
 }

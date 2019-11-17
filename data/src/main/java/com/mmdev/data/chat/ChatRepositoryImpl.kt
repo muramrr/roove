@@ -4,11 +4,10 @@ import android.net.Uri
 import android.text.format.DateFormat
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.mmdev.business.chat.model.MessageItem
 import com.mmdev.business.chat.model.PhotoAttachementItem
 import com.mmdev.business.chat.repository.ChatRepository
-import com.mmdev.data.BuildConfig
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -20,7 +19,7 @@ import kotlin.collections.ArrayList
 
 @Singleton
 class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
-                                             private val storage: FirebaseStorage): ChatRepository{
+                                             private val storage: StorageReference): ChatRepository{
 
 
 	private var conversationId = ""
@@ -30,7 +29,7 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 		private const val GENERAL_COLLECTION_REFERENCE = "conversations"
 		private const val SECONDARY_COLLECTION_REFERENCE = "messages"
 		// Firebase Storage references
-		private const val URL_STORAGE_REFERENCE = BuildConfig.FIREBASE_STORAGE_URL
+
 		private const val GENERAL_FOLDER_STORAGE_IMG = "images"
 	}
 
@@ -80,7 +79,6 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 	override fun sendPhoto(photoUri: String): Observable<PhotoAttachementItem> {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()+".jpg"
 		val storageRef = storage
-			.getReferenceFromUrl(URL_STORAGE_REFERENCE)
 			.child(GENERAL_FOLDER_STORAGE_IMG)
 			.child(conversationId)
 			.child(namePhoto)
