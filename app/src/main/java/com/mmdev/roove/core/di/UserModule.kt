@@ -1,4 +1,4 @@
-package com.mmdev.data.core
+package com.mmdev.roove.core.di
 
 import android.app.Application
 import com.ironz.binaryprefs.BinaryPreferencesBuilder
