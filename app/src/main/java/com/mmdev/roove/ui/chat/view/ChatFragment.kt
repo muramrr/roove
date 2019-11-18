@@ -109,14 +109,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		conversationsVM = ViewModelProvider(mMainActivity, conversationsVMFactory).get(ConversationsViewModel::class.java)
 
 		if (conversationId.isNotEmpty()) {
-			chatViewModel.setConversation(conversationId)
-			disposables.add(chatViewModel.getMessages()
+			disposables.add(chatViewModel.getMessages(conversationId)
 				.doOnSubscribe { mMainActivity.progressDialog.showDialog() }
 				.doOnNext { mMainActivity.progressDialog.dismissDialog() }
 				.doFinally { mMainActivity.progressDialog.dismissDialog() }
                 .observeOn(AndroidSchedulers.mainThread())
 				.subscribe({ if(it.isNotEmpty()) mChatAdapter.updateData(it)
-				           Log.wtf(TAG, "messages to show + ${it.size}")},
+				           Log.wtf(TAG, "messages to show: ${it.size}")},
 				           { mMainActivity.showToast("$it") }))
 
 		}
@@ -171,31 +170,32 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 			if (conversationId.isEmpty()) {
 				disposables.add(conversationsVM.createConversation(mMainActivity.cardItemClicked)
-	                .map {
-		                chatViewModel.setConversation(it.conversationId)
+	                .flatMapCompletable {
+		                Log.wtf(TAG, "creating conversation")
+		                conversationId = it.conversationId
+		                mMainActivity.conversationItemClicked = it
+		                chatViewModel.setConversation(conversationId)
+		                chatViewModel.sendMessage(message)
+
 	                }
 	                .observeOn(AndroidSchedulers.mainThread())
-	                .subscribe({
-		                           Log.wtf(TAG, "creating conversations")
-		                           disposables.add(chatViewModel.getMessages()
-                                       .observeOn(AndroidSchedulers.mainThread())
-                                       .subscribe({
-	                                                  if(it.isNotEmpty()) mChatAdapter.updateData(it)
-	                                                  Log.wtf(TAG, "messages to show + ${it.size}")
-                                                  },
-                                                  { mMainActivity.showToast("$it") }))
-	                           },
-	                           {
-		                           Log.wtf(TAG, "error + $it")
-	                           }))
+					                .andThen { chatViewModel.getMessages(conversationId)
+						                .observeOn(AndroidSchedulers.mainThread())
+						                .subscribe({ if(it.isNotEmpty()) mChatAdapter.updateData(it)
+							                Log.wtf(TAG, "messages to show: ${it.size}")},
+						                           { mMainActivity.showToast("$it") }) }
+	                .subscribe({ Log.wtf(TAG, "Message sent after creating conv") },
+	                           { mMainActivity.showToast("error + $it") }))
+				edMessageWrite.setText("")
 			}
+			else {
+				disposables.add(chatViewModel.sendMessage(message)
+	                .observeOn(AndroidSchedulers.mainThread())
+	                .subscribe({ Log.wtf(TAG, "Message sent fragment_chat") },
+	                           { Log.wtf(TAG, "can't send message fragment_chat") }))
 
-			disposables.add(chatViewModel.sendMessage(message)
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe( { Log.wtf(TAG, "Message sent fragment_chat") },
-							{ Log.wtf(TAG, "can't send message fragment_chat") } ))
-
-			edMessageWrite.setText("")
+				edMessageWrite.setText("")
+			}
 
 		}
 		else edMessageWrite.startAnimation(AnimationUtils.loadAnimation(mMainActivity,

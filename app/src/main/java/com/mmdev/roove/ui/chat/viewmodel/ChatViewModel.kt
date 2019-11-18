@@ -14,7 +14,7 @@ class ChatViewModel(private val getMessagesUC: GetMessagesUseCase,
 
 
 
-	fun getMessages() = getMessagesUC.execute()
+	fun getMessages(conversationId: String) = getMessagesUC.execute(conversationId)
 
 	fun sendMessage(messageItem: MessageItem) = sendMessageUC.execute(messageItem)
 

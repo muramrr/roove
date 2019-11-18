@@ -56,7 +56,7 @@ class ConversationsFragment: Fragment(R.layout.fragment_conversations){
 		disposables.add(conversationsVM.getConversationsList()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                           Log.wtf(TAG, "conversations to show: ${it.size}")
+                           Log.wtf(TAG, "conversations to show: ${it.size}, conv_frag")
                            mConversationsAdapter.updateData(it)
                        },
                        {

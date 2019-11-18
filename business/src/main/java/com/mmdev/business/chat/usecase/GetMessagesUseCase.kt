@@ -5,6 +5,6 @@ import com.mmdev.business.chat.repository.ChatRepository
 
 class GetMessagesUseCase (private val repository: ChatRepository) {
 
-    fun execute() = repository.getMessagesList()
+    fun execute(s: String) = repository.getMessagesList(s)
 
 }
