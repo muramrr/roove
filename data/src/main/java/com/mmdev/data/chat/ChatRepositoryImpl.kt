@@ -40,7 +40,8 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 
 
 
-	override fun getMessagesList(): Observable<List<MessageItem>> {
+	override fun getMessagesList(conversationId: String): Observable<List<MessageItem>> {
+		setConversation(conversationId)
 		Log.wtf("mylogs", "conversation set, id = $conversationId")
 		return Observable.create(ObservableOnSubscribe<List<MessageItem>> { emitter ->
 			val listener = firestore.collection(GENERAL_COLLECTION_REFERENCE)
@@ -49,15 +50,15 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 				.orderBy("timestamp")
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
-					emitter.onError(e)
-					return@addSnapshotListener
+						emitter.onError(e)
+						return@addSnapshotListener
+					}
+					val messages = ArrayList<MessageItem>()
+					for (doc in snapshots!!) {
+						messages.add(doc.toObject(MessageItem::class.java))
+					}
+					emitter.onNext(messages)
 				}
-				val messages = ArrayList<MessageItem>()
-				for (doc in snapshots!!) {
-					messages.add(doc.toObject(MessageItem::class.java))
-				}
-				emitter.onNext(messages)
-			}
 			emitter.setCancellable{ listener.remove() }
 		}).subscribeOn(Schedulers.io())
 	}

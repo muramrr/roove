@@ -9,7 +9,7 @@ import io.reactivex.Observable
 
 interface ChatRepository {
 
-	fun getMessagesList(): Observable<List<MessageItem>>
+	fun getMessagesList(conversationId: String): Observable<List<MessageItem>>
 
 	fun sendMessage(messageItem: MessageItem): Completable
 

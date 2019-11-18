@@ -54,12 +54,6 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversationId)
 				.set(conversationItem)
-			//set "started" status to conversation for current user
-			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUserId)
-				.collection(USER_MATCHED_COLLECTION_REFERENCE)
-				.document(partnerCardItem.userId)
-				.update("conversationStarted", true)
 
 			//set conversation for another user
 			firestore.collection(USERS_COLLECTION_REFERENCE)
@@ -70,7 +64,15 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				                      currentUserItem.userId,
 				                      currentUserItem.name,
 				                      currentUserItem.mainPhotoUrl))
-			//set "started" status to conversation for another user
+
+			//set "started" status to conversations for both users
+			//note: uncomment for release
+			firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.collection(USER_MATCHED_COLLECTION_REFERENCE)
+				.document(partnerCardItem.userId)
+				.update("conversationStarted", true)
+
 			firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(partnerCardItem.userId)
 				.collection(USER_MATCHED_COLLECTION_REFERENCE)
@@ -83,13 +85,6 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 		}).subscribeOn(Schedulers.io())
 	}
 
-	private fun setStartedFlagConversation(partnerId: String){
-		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(partnerId)
-			.collection(USER_MATCHED_COLLECTION_REFERENCE)
-			.document(currentUserId)
-			.update("conversationStarted", true)
-	}
 
 	override fun deleteConversation(conversationItem: ConversationItem): Completable {
 		return Completable.create { emitter ->
@@ -120,7 +115,6 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 	}
 
 	override fun getConversationsList(): Observable<List<ConversationItem>> {
-
 		return Observable.create(ObservableOnSubscribe<List<ConversationItem>> { emitter ->
 			val listener = firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(currentUserId)

@@ -5,6 +5,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.user.model.UserItem
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.functions.BiFunction
@@ -40,11 +42,14 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 	//note:debug only
 	//
-	//		firestore.collection(USERS_COLLECTION_REFERENCE).document("scmxqiwwci").collection(USER_LIKED_COLLECTION_REFERENCE).document(mCurrentUserId!!).set(mCurrentUser!!)
-	//		firestore.collection(USERS_COLLECTION_REFERENCE).document("vuwtmiegcl").collection(USER_LIKED_COLLECTION_REFERENCE).document(mCurrentUserId!!).set(mCurrentUser!!)
-	//		firestore.collection(USERS_COLLECTION_REFERENCE).document("qjfarvjwne").collection(USER_LIKED_COLLECTION_REFERENCE).document(mCurrentUserId!!).set(mCurrentUser!!)
-	//		firestore.collection(USERS_COLLECTION_REFERENCE).document("sqbnmdaiuy").collection(USER_LIKED_COLLECTION_REFERENCE).document(mCurrentUserId!!).set(mCurrentUser!!)
-	//		firestore.collection(USERS_COLLECTION_REFERENCE).document("wosfvtydqb").collection(USER_LIKED_COLLECTION_REFERENCE).document(mCurrentUserId!!).set(mCurrentUser!!)
+	private fun setLikedForBots(){
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("scmxqiwwci").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("vuwtmiegcl").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("qjfarvjwne").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("sqbnmdaiuy").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("nenvmbxeft").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("frtywqocto").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+	}
 
 	/*
 	* note: swiped left
@@ -122,27 +127,25 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	/*
 	* GET MATCHED [CardItem] LIST
 	*/
-	override fun getMatchedCardItems(): Single<List<CardItem>> {
-		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUserId)
-			.collection(USER_MATCHED_COLLECTION_REFERENCE)
-			.whereEqualTo("conversationStarted", false)
-			.get()
-		return Single.create(SingleOnSubscribe<List<CardItem>> { emitter ->
-			query.addOnCompleteListener {
-				if (it.result != null) {
-					val matchedUsersList = ArrayList<CardItem>()
-					for (doc in it.result!!.documents) {
-						matchedUsersList.add(doc.toObject(CardItem::class.java)!!)
+	override fun getMatchedCardItems(): Observable<List<CardItem>> {
+		setLikedForBots()
+		return Observable.create(ObservableOnSubscribe<List<CardItem>> { emitter ->
+			val listener = firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.collection(USER_MATCHED_COLLECTION_REFERENCE)
+				.whereEqualTo("conversationStarted", false)
+				.addSnapshotListener { snapshots, e ->
+					if (e != null) {
+						emitter.onError(e)
+						return@addSnapshotListener
 					}
-					Log.wtf(TAG, "matches on complete, size = " + matchedUsersList.size)
-					emitter.onSuccess(matchedUsersList)
+					val matchedUsersList = ArrayList<CardItem>()
+					for (doc in snapshots!!) {
+						matchedUsersList.add(doc.toObject(CardItem::class.java))
+					}
+					emitter.onNext(matchedUsersList)
 				}
-			}.addOnFailureListener {
-				Log.wtf(TAG, "matches fail + $it")
-				emitter.onError(it)
-			}
-
+			emitter.setCancellable { listener.remove() }
 		}).subscribeOn(Schedulers.io())
 	}
 
