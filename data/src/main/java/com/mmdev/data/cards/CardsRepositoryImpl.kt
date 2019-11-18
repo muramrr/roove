@@ -128,7 +128,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	* GET MATCHED [CardItem] LIST
 	*/
 	override fun getMatchedCardItems(): Observable<List<CardItem>> {
-		setLikedForBots()
+		//setLikedForBots()
 		return Observable.create(ObservableOnSubscribe<List<CardItem>> { emitter ->
 			val listener = firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(currentUserId)
