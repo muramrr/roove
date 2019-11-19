@@ -47,6 +47,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="?attr/actionBarSize"
 				app:layout_collapseMode="pin"
+				app:menu="@menu/profile_view_options"
 				app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
 				app:popupTheme="@style/menuPopupStyle" />
 

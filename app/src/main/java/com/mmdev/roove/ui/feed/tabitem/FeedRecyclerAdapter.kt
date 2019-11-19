@@ -3,10 +3,8 @@ package com.mmdev.roove.ui.feed.tabitem
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentFeedRvItemBinding
 import com.mmdev.roove.utils.models.FeedItem
@@ -53,22 +51,9 @@ class FeedRecyclerAdapter (private var mFeedItems: List<FeedItem>):
 			}
 		}
 
-		//feed content
-		private val ivFeedPhoto: ImageView = itemView.findViewById(R.id.feed_content_image_view)
-
 		fun bind(feedItem: FeedItem) {
 			binding.feedItem = feedItem
-			setFeedPhoto(feedItem.feedContentImageView)
 			binding.executePendingBindings()
-		}
-
-
-		private fun setFeedPhoto(url: String){
-			if (url.isNotEmpty())
-				Glide.with(ivFeedPhoto.context)
-					.load(url)
-					.into(ivFeedPhoto)
-			else ivFeedPhoto.visibility = View.GONE
 		}
 
 	}

@@ -14,12 +14,16 @@ import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.format.DateFormat
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.EditText
@@ -31,10 +35,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.mmdev.business.chat.model.MessageItem
 import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
+import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.actions.conversations.viewmodel.ConversationsViewModel
 import com.mmdev.roove.ui.chat.viewmodel.ChatViewModel
@@ -111,11 +119,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			conversationId = it.getString(CONVERSATION_KEY, "")
 		}
 
+		setHasOptionsMenu(true)
+
 		userItemModel = mMainActivity.userItemModel
 		mChatAdapter = ChatAdapter(userItemModel.userId, listOf())
 
-		chatViewModel = ViewModelProvider(mMainActivity, chatViewModelFactory).get(ChatViewModel::class.java)
-		conversationsVM = ViewModelProvider(mMainActivity, conversationsVMFactory).get(ConversationsViewModel::class.java)
+		chatViewModel = ViewModelProvider(this, chatViewModelFactory).get(ChatViewModel::class.java)
+		conversationsVM = ViewModelProvider(this, conversationsVMFactory).get(ConversationsViewModel::class.java)
 
 		if (conversationId.isNotEmpty()) {
 			disposables.add(chatViewModel.getMessages(conversationId)
@@ -149,7 +159,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			}
 		})
 
-		mChatAdapter.setOnItemClickListener(object: ChatAdapter.OnItemClickListener{
+		mChatAdapter.setOnAttachedPhotoClickListener(object: ChatAdapter.OnItemClickListener{
 			override fun onItemClick(view: View, position: Int) {
 				val intent = Intent(mMainActivity, FullScreenImageActivity::class.java)
 				intent.putExtra("urlPhotoClick",
@@ -315,6 +325,37 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 						.show()
 			}
 		}
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		inflater.inflate(R.menu.chat_menu, menu)
+		super.onCreateOptionsMenu(menu, inflater)
+	}
+
+	override fun onPrepareOptionsMenu(menu: Menu) {
+		val partnerIcon = menu.findItem(R.id.action_user)
+		GlideApp.with(this)
+			.load(mMainActivity.partnerMainPhotoUrl)
+			.centerCrop()
+			.apply(RequestOptions().circleCrop())
+			.into(object : CustomTarget<Drawable>(){
+				override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+					partnerIcon.icon = resource
+				}
+
+				override fun onLoadCleared(placeholder: Drawable?) {}
+			})
+		super.onPrepareOptionsMenu(menu)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		when (item.itemId) {
+			R.id.action_user -> {
+				mMainActivity.startProfileFragment(mMainActivity.partnerId, false)
+			}
+			R.id.action_report -> { mMainActivity.showToast("report clicked") }
+		}
+		return true
 	}
 
 	override fun onResume() {

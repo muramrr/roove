@@ -15,3 +15,40 @@ import androidx.appcompat.app.AppCompatActivity
 
 fun AppCompatActivity.showToastText(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG)
 	.show()
+
+/*
+	 * generate random users to firestore
+	 */
+//	private fun onGenerateUsers() {
+//		usersCards.clear()
+//		val usersCollection = mFirestore!!.collection("users")
+//		usersCards.addAll(FeedManager.generateUsers())
+//		for (i in usersCards) usersCollection.document(i.userId).set(i)
+//
+//
+//		/*
+//            generate likes/matches/skips lists
+//             */
+//		        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
+//		                .collection("likes")
+//		                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(1).getName())
+//		                .set(usersCards.get(1));
+//		        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
+//		                .collection("matches")
+//		                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(2).getName())
+//		                .set(usersCards.get(2));
+//		        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
+//		                .collection("skips")
+//		                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(3).getName())
+//		                .set(usersCards.get(3));
+//
+//		        profiles.get().addOnCompleteListener(task -> {
+//		            String a;
+//		            if (task.isSuccessful())
+//		            {
+//		                a = task.getResult().getDocuments().get(0).get("Name").toString();
+//		                new Handler().postDelayed(() -> Toast.makeText(getApplicationContext(), "Name : " + String.valueOf(a), Toast.LENGTH_SHORT).show(), 1000);
+//		            }
+//		        });
+//
+//	}
