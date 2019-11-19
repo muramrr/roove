@@ -168,6 +168,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	/*
 	* Send plain text msg to chat if edittext is not empty
 	* else shake animation
+	* rx chain: create conversation -> set conversation id -> send message -> observe new messages
 	*/
 	private fun sendMessageClick() {
 		if (edMessageWrite.text.isNotEmpty() &&
@@ -185,14 +186,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		                mMainActivity.conversationItemClicked = it
 		                chatViewModel.setConversation(conversationId)
 		                chatViewModel.sendMessage(message)
-
 	                }
+	                .andThen { chatViewModel.getMessages(conversationId)
+                                .subscribe({ if(it.isNotEmpty()) mChatAdapter.updateData(it)
+	                                        Log.wtf(TAG, "messages to show: ${it.size}")},
+                                           { mMainActivity.showToast("$it") }) }
 	                .observeOn(AndroidSchedulers.mainThread())
-					                .andThen { chatViewModel.getMessages(conversationId)
-						                .observeOn(AndroidSchedulers.mainThread())
-						                .subscribe({ if(it.isNotEmpty()) mChatAdapter.updateData(it)
-							                Log.wtf(TAG, "messages to show: ${it.size}")},
-						                           { mMainActivity.showToast("$it") }) }
 	                .subscribe({ Log.wtf(TAG, "Message sent after creating conv") },
 	                           { mMainActivity.showToast("error + $it") }))
 				edMessageWrite.setText("")

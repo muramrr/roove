@@ -4,10 +4,10 @@ buildscript {
 
 	ext {
 
-		kotlin_version = '1.3.50'
+		kotlin_version = '1.3.60'
 
 		// facebook
-		facebook_sdk_version = '5.9.0'
+		facebook_sdk_version = '5.11.0'
 
 		//firebase
 		firebase_auth_version = '19.1.0'
@@ -19,7 +19,7 @@ buildscript {
 		dagger_version = '2.25.2'
 
 		// RxJava
-		rxjava_version = '2.2.13'
+		rxjava_version = '2.2.14'
 
 		// RxAndroid
 		rxandroid_version = '2.1.1'
