@@ -30,7 +30,7 @@ class ChatAdapter (private var userId: String,
                    private var listMessageItems: List<MessageItem>):
 	RecyclerView.Adapter<ChatAdapter.ChatViewHolder>(){
 
-	private lateinit var clickListener: OnItemClickListener
+	private lateinit var attachedPhotoClickListener: OnItemClickListener
 
 	companion object {
 		private const val RIGHT_MSG = 0
@@ -78,23 +78,23 @@ class ChatAdapter (private var userId: String,
 //		userId = name
 //	}
 
-	// allows clicks events to be caught
-	fun setOnItemClickListener(itemClickListener: OnItemClickListener) {
-		clickListener = itemClickListener
+	// allows clicks events on attached photo
+	fun setOnAttachedPhotoClickListener(itemClickListener: OnItemClickListener) {
+		attachedPhotoClickListener = itemClickListener
 	}
 
 	inner class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view){
-
-		init {
-			itemView.setOnClickListener {
-				clickListener.onItemClick(itemView.rootView, adapterPosition)
-			}
-		}
 
 		private val tvTextMessage: TextView = itemView.findViewById(R.id.item_message_tvMessage)
 		private val tvTimestamp: TextView = itemView.findViewById(R.id.item_message_tvTimestamp)
 		private val ivUserAvatar: ImageView = itemView.findViewById(R.id.item_message_ivUserPic)
 		private val ivChatPhoto: ImageView = itemView.findViewById(R.id.img_chat)
+
+		init {
+			ivChatPhoto.setOnClickListener {
+				attachedPhotoClickListener.onItemClick(itemView.rootView, adapterPosition)
+			}
+		}
 
 		fun setMessageType(messageType: Int) {
 			when (messageType) {

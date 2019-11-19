@@ -87,6 +87,9 @@ class ConversationsFragment: Fragment(R.layout.fragment_conversations){
 				val conversationItem = mConversationsAdapter.getConversationItem(position)
 
 				mMainActivity.conversationItemClicked = conversationItem
+
+				mMainActivity.partnerId = conversationItem.partnerId
+				mMainActivity.partnerMainPhotoUrl = conversationItem.partnerPhotoUrl
 				mMainActivity.partnerName = conversationItem.partnerName
 
 				// if conversation is stored in conversations container

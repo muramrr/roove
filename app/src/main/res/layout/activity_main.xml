@@ -29,7 +29,7 @@
 				android:layout_height="match_parent"
 				android:background="@color/colorPrimary"
 				app:layout_scrollFlags="scroll|enterAlways|snap"
-				app:popupTheme="@style/AppTheme.PopupOverlay"
+				app:popupTheme="@style/menuPopupStyle"
 				app:titleTextAppearance="@style/regular_text_white_20sp_85op"
 				app:title="@string/app_name"/>
 

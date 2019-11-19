@@ -5,6 +5,7 @@
 <!--		<variable-->
 <!--			name="feedItem"-->
 <!--			type="com.mmdev.business.feed.model.FeedItem" />-->
+		<import type="android.view.View"/>
 		<variable
 			name="feedItem"
 			type="com.mmdev.roove.utils.models.FeedItem" />
@@ -72,7 +73,11 @@
 				android:layout_margin="@dimen/card_content_margin_8"
 				android:maxHeight="250dp"
 				android:scaleType="centerCrop"
-				android:src="@drawable/feed_content_driving_a_car"
+
+				android:visibility='@{feedItem.feedContentImageView!="" ? View.VISIBLE : View.GONE}'
+
+				app:photoUrl="@{feedItem.feedContentImageView}"
+
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintBottom_toTopOf="@id/feed_content_description"

@@ -77,7 +77,10 @@ class PairsFragment: Fragment(R.layout.fragment_pairs) {
 			override fun onItemClick(view: View, position: Int) {
 				val pairItem = mPairsAdapter.getPairItem(position)
 
+				mMainActivity.partnerId = pairItem.userId
+				mMainActivity.partnerMainPhotoUrl = pairItem.mainPhotoUrl
 				mMainActivity.partnerName = pairItem.name
+
 				mMainActivity.cardItemClicked = pairItem
 
 				mMainActivity.startProfileFragment(pairItem.userId, true)
