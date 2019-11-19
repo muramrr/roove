@@ -8,7 +8,8 @@ Used libraries/patterns:
 * RxJava 2;
 * Glide;
 * Firebase Auth;
-* Firestore to store userItem data
+* Firestore to store *user, messages* data;
+* Firestorage to store *photos*;
 * Facebook SDK to login.
 
 
