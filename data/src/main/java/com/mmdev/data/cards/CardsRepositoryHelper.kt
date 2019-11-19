@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 03.11.19 23:35
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 18.11.19 20:01
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.data.cards
 
 import android.util.Log
@@ -7,8 +17,6 @@ import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
-
-/* Created by A on 03.11.2019.*/
 
 /**
  * This is the documentation block about the class

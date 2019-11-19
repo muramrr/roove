@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 19.06.19 11:46
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 12.11.19 20:49
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.roove.ui.auth.view
 
 import android.content.Intent
@@ -24,13 +34,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_auth.*
 
-
-/**
- *
- */
 class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
-
-
 
 	//Progress dialog for any authentication action
 	private lateinit var progressDialog: LoadingDialog

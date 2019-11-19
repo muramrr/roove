@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 22.09.19 17:20
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 18.11.19 20:01
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.roove.core.di
 
 import android.app.Application
@@ -7,13 +17,6 @@ import com.mmdev.data.user.UserRepositoryLocal
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
-
-
-/* Created by A on 16.09.2019.*/
-
-/**
- * This is the documentation block about the class
- */
 
 @Module
 class UserModule {

@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 10.11.19 16:34
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 12.11.19 20:49
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.data.user
 
 import com.google.firebase.firestore.FirebaseFirestore
@@ -9,8 +19,6 @@ import io.reactivex.SingleOnSubscribe
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
-
-/* Created by A on 10.11.2019.*/
 
 /**
  * This is the documentation block about the class

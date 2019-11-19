@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 27.10.19 21:06
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 18.11.19 20:01
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.roove.ui.actions.conversations.view
 
 import android.os.Bundle
@@ -16,8 +26,6 @@ import com.mmdev.roove.ui.actions.conversations.viewmodel.ConversationsViewModel
 import com.mmdev.roove.ui.main.view.MainActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-
-/* Created by A on 27.10.2019.*/
 
 /**
  * This is the documentation block about the class

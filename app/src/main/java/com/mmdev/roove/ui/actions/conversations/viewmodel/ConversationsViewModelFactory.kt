@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 26.10.19 14:19
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 14.11.19 17:43
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.roove.ui.actions.conversations.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -7,8 +17,6 @@ import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
 import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
-
-/* Created by A on 26.10.2019.*/
 
 /**
  * This is the documentation block about the class
