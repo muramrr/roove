@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 07.10.19 03:26
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 01.11.19 20:23
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.roove.ui.custom
 
 
@@ -11,8 +21,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mmdev.roove.R
 
-
-/* Created by A on 07.10.2019.*/
 
 /**
  * This is the documentation block about the class

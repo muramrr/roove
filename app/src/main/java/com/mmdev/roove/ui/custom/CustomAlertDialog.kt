@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 07.10.19 03:21
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 24.10.19 18:03
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.roove.ui.custom
 
 import android.app.Dialog
@@ -10,12 +20,6 @@ import android.view.Window
 import android.widget.Button
 import android.widget.TextView
 import com.mmdev.roove.R
-
-
-
-
-
-/* Created by A on 07.10.2019.*/
 
 /**
  * This is the documentation block about the class

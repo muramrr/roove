@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 20.07.19 16:29
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 18.11.19 20:01
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.roove.ui.cards.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -6,9 +16,6 @@ import com.mmdev.business.cards.usecase.AddToSkippedUseCase
 import com.mmdev.business.cards.usecase.GetMatchedUsersUseCase
 import com.mmdev.business.cards.usecase.GetPotentialUsersUseCase
 import com.mmdev.business.cards.usecase.HandlePossibleMatchUseCase
-
-/* Created by A on 20.07.2019.*/
-
 
 class CardsViewModel(private val addToSkippedUC: AddToSkippedUseCase,
                      private val getMatchedUsersUC: GetMatchedUsersUseCase,

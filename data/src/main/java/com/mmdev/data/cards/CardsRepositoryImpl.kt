@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 14.09.19 22:01
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 18.11.19 20:33
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.data.cards
 
 import android.util.Log
@@ -14,12 +24,10 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
-/* Created by A on 14.09.2019.*/
-
 /**
  * This is the documentation block about the class
  */
+
 @Singleton
 class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
                                               private val currentUserItem: UserItem): CardsRepository {

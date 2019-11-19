@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 23.10.19 10:02
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 03.11.19 18:47
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.roove.ui.auth.view
 
 import android.content.Context
@@ -7,8 +17,6 @@ import androidx.fragment.app.Fragment
 import co.ceryle.segmentedbutton.SegmentedButtonGroup
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.custom.ProgressButton
-
-/* Created by A on 23.10.2019.*/
 
 /**
  * This is the documentation block about the class

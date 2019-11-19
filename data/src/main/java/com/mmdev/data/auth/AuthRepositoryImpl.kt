@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 01.07.19 12:11
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 19.11.19 16:36
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.data.auth
 
 import android.util.Log
@@ -16,8 +26,6 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-
-//todo: HANDLE USER PROPERLY BUGGGGGGZZZZZZZ
 
 @Singleton
 class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,

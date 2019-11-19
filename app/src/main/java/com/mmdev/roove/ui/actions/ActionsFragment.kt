@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 13.11.19 15:31
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 18.11.19 20:01
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.roove.ui.actions
 
 import android.os.Bundle
@@ -8,8 +18,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.main.view.MainActivity
-
-/* Created by A on 13.11.2019.*/
 
 /**
  * This is the documentation block about the class

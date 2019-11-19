@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 13.11.19 15:31
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 14.11.19 17:43
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.mmdev.roove.ui.actions
 
 import androidx.fragment.app.FragmentManager
@@ -5,8 +15,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.mmdev.roove.ui.actions.conversations.view.ConversationsFragment
 import com.mmdev.roove.ui.actions.pairs.view.PairsFragment
-
-/* Created by A on 13.11.2019.*/
 
 /**
  * This is the documentation block about the class
@@ -21,7 +29,6 @@ class ActionsPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
 		else PairsFragment()
 
 	override fun getItemCount(): Int = 2
-
 
 
 }
