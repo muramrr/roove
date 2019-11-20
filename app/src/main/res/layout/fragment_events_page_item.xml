@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk on 20.11.19 21:38
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 20.11.19 21:07
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
 <androidx.constraintlayout.widget.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -22,6 +32,6 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		app:spanCount="2"
-		tools:listitem="@layout/fragment_feed_rv_item" />
+		tools:listitem="@layout/fragment_events_rv_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,59 +1,92 @@
-package com.mmdev.roove.ui.feed.tabitem
+/*
+ * Created by Andrii Kovalchuk on 20.11.19 21:38
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 20.11.19 21:34
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
+package com.mmdev.roove.ui.events.view.tabitem
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.roove.R
-import com.mmdev.roove.ui.feed.misc.EndlessRecyclerViewScrollListener
+import com.mmdev.roove.core.injector
+import com.mmdev.roove.ui.events.misc.EndlessRecyclerViewScrollListener
+import com.mmdev.roove.ui.events.viewmodel.EventsViewModel
 import com.mmdev.roove.ui.main.view.MainActivity
 import com.mmdev.roove.utils.models.FeedItem
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 
-class FeedPageFragment: Fragment(R.layout.fragment_feed_page_item) {
+
+class EventsPageFragment: Fragment(R.layout.fragment_events_page_item) {
 
 	private lateinit var mMainActivity: MainActivity
 	private lateinit var rvFeedList: RecyclerView
-	private var mFeedRecyclerAdapter: FeedRecyclerAdapter = FeedRecyclerAdapter(listOf())
-	private val mFeedItems = ArrayList<FeedItem>()
+	private var mEventsRecyclerAdapter: EventsRecyclerAdapter = EventsRecyclerAdapter(listOf())
+
+	private val eventsVMFactory = injector.eventsVMFactory()
+	private lateinit var eventsViewModel: EventsViewModel
+
+	private val disposables = CompositeDisposable()
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		activity?.let { mMainActivity = it as MainActivity }
+		eventsViewModel= ViewModelProvider(this, eventsVMFactory).get(EventsViewModel::class.java)
+
+		disposables.add(eventsViewModel.getEvents()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                           mMainActivity.showToast("${it.results[0]}")
+                           mEventsRecyclerAdapter.updateData(it.results)
+                       },
+                       {
+                           mMainActivity.showToast("$it")
+                       }))
+	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		if (activity != null) mMainActivity = activity as MainActivity
 		rvFeedList = view.findViewById(R.id.content_main_rv_feed)
 		initFeeds()
 
 
-		mFeedRecyclerAdapter.setOnItemClickListener(object: FeedRecyclerAdapter.OnItemClickListener {
+		mEventsRecyclerAdapter.setOnItemClickListener(object: EventsRecyclerAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
-
+				mMainActivity.showToast(mEventsRecyclerAdapter.getEventItem(position).title)
 			}
 		})
 	}
 
 	private fun initFeeds() {
-		mFeedItems.addAll(generateDummyFeeds())
-		mFeedRecyclerAdapter.updateData(mFeedItems)
 		val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 		rvFeedList.apply {
-			adapter = mFeedRecyclerAdapter
+			adapter = mEventsRecyclerAdapter
 			layoutManager = staggeredGridLayoutManager
 			itemAnimator = DefaultItemAnimator()
 		}
 
 		rvFeedList.addOnScrollListener(object: EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
 			override fun onLoadMore(page: Int, totalItemsCount: Int) {
-				loadMoreFeeds()
+				//loadMoreFeeds()
 			}
 		})
 	}
 
-	private fun loadMoreFeeds() {
-		rvFeedList.post {
-			mFeedItems.addAll(generateDummyFeeds())
-			mFeedRecyclerAdapter.notifyItemInserted(mFeedItems.size - 1)
-		}
-	}
+//	private fun loadMoreFeeds() {
+//		rvFeedList.post {
+//			mFeedItems.addAll(generateDummyFeeds())
+//			mEventsRecyclerAdapter.notifyItemInserted(mFeedItems.size - 1)
+//		}
+//	}
 
 	private fun generateDummyFeeds(): List<FeedItem> {
 		val feedItems: ArrayList<FeedItem> = ArrayList()
