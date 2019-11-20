@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 21.09.19 18:33
+ * Created by Andrii Kovalchuk on 20.11.19 21:38
  * Copyright (c) 2019. All rights reserved.
- * Last modified 19.11.19 16:20
+ * Last modified 20.11.19 20:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,12 +14,14 @@ import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.conversations.repository.ConversationsRepository
+import com.mmdev.business.events.repository.EventsRepository
 import com.mmdev.business.feed.repository.FeedRepository
 import com.mmdev.business.user.repository.UserRepository
 import com.mmdev.data.auth.AuthRepositoryImpl
 import com.mmdev.data.cards.CardsRepositoryImpl
 import com.mmdev.data.chat.ChatRepositoryImpl
 import com.mmdev.data.conversations.ConversationsRepositoryImpl
+import com.mmdev.data.events.EventsRepositoryImpl
 import com.mmdev.data.feed.FeedRepositoryImpl
 import com.mmdev.data.user.UserRepositoryLocal
 import com.mmdev.data.user.UserRepositoryRemote
@@ -46,6 +48,10 @@ class RepositoryModule {
 	@Singleton
 	fun conversationsRepository(repository: ConversationsRepositoryImpl): ConversationsRepository
 	{ return repository }
+
+	@Provides
+	@Singleton
+	fun eventsRepository(repository: EventsRepositoryImpl): EventsRepository { return repository }
 
 	@Provides
 	@Singleton

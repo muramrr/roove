@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 20.08.19 13:37
+ * Created by Andrii Kovalchuk on 20.11.19 21:38
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 20.11.19 21:07
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,7 +42,7 @@ import com.mmdev.roove.ui.cards.view.CardsFragment
 import com.mmdev.roove.ui.chat.view.ChatFragment
 import com.mmdev.roove.ui.custom.CustomAlertDialog
 import com.mmdev.roove.ui.custom.LoadingDialog
-import com.mmdev.roove.ui.feed.FeedFragment
+import com.mmdev.roove.ui.events.view.EventsFragment
 import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoVM
 import com.mmdev.roove.ui.profile.view.ProfileFragment
 import com.mmdev.roove.utils.showToastText
@@ -111,11 +111,11 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	// show main feed fragment
 	private fun showFeedFragment(){
-		if (mFragmentManager.findFragmentByTag(FeedFragment::class.java.canonicalName) == null)
+		if (mFragmentManager.findFragmentByTag(EventsFragment::class.java.canonicalName) == null)
 			mFragmentManager.beginTransaction().apply {
 				add(R.id.main_container,
-				    FeedFragment.newInstance(),
-				    FeedFragment::class.java.canonicalName)
+				    EventsFragment.newInstance(),
+				    EventsFragment::class.java.canonicalName)
 				commit()
 			}
 		else mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)

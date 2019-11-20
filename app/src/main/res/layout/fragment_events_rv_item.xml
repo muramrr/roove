@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk on 20.11.19 21:38
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 20.11.19 21:29
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+<layout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<data>
+
+		<import type="android.view.View"/>
+		<variable
+			name="eventItem"
+			type="com.mmdev.business.events.model.EventItem" />
+
+	</data>
+
+	<androidx.cardview.widget.CardView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/card_margin_fix_rview_8"
+		android:layout_marginBottom="@dimen/card_margin_fix_rview_8"
+		app:cardBackgroundColor="@color/colorPrimary"
+		app:cardCornerRadius="10dp"
+		app:cardElevation="1dp">
+
+<!--		<ImageView-->
+<!--			android:layout_width="match_parent"-->
+<!--			android:layout_height="match_parent"-->
+<!--			android:background="@color/colorAccentDark"-->
+<!--			android:contentDescription="@string/description_user_photo"-->
+<!--			android:scaleType="centerCrop"-->
+<!--			app:photoUrl="@{eventItem.mainPhotoUrl}"-->
+<!--			android:visibility='@{feedItem.feedContentImageView!="" ? View.VISIBLE : View.GONE}'/>-->
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center|bottom"
+			android:layout_margin="@dimen/general_margin_8"
+			android:text="@{eventItem.title}"
+			style="@style/regular_text_white_20sp_85op"/>
+
+
+	</androidx.cardview.widget.CardView>
+</layout>
