@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 20.11.19 21:38
+ * Created by Andrii Kovalchuk on 21.11.19 21:02
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.11.19 21:01
+ * Last modified 21.11.19 19:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,8 @@
 
 package com.mmdev.data.events
 
+import android.util.Log
+import com.mmdev.business.events.model.EventItem
 import com.mmdev.business.events.model.EventsResponse
 import com.mmdev.business.events.repository.EventsRepository
 import com.mmdev.data.events.api.EventsApi
@@ -25,7 +27,15 @@ import javax.inject.Singleton
 class EventsRepositoryImpl @Inject constructor(private val eventsApi: EventsApi): EventsRepository{
 
 	override fun getEvents(): Single<EventsResponse> {
-		return eventsApi.getEventsList()
+		val unixTime = System.currentTimeMillis() / 1000L
+		Log.wtf("mylogs", "time = $unixTime")
+		return eventsApi.getEventsList(unixTime)
+
+
+	}
+
+	override fun getEventDetails(id: Int): Single<EventItem> {
+		return eventsApi.getEventDetails(id)
 	}
 
 }

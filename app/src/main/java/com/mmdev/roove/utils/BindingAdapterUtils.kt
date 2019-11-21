@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 10.10.19 16:21
+ * Created by Andrii Kovalchuk on 21.11.19 21:02
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 21.11.19 20:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,7 +43,7 @@ object BindingAdapterUtils {
 	}
 
 	@JvmStatic
-	@BindingAdapter("app:photoUrl")
+	@BindingAdapter("app:imageUrl")
 	fun loadPhotoUrl(imageView: ImageView, url: String?) {
 		if (!url.isNullOrEmpty())
 			Glide.with(imageView.context)
