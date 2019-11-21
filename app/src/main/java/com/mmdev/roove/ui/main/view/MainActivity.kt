@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 20.11.19 21:38
+ * Created by Andrii Kovalchuk on 21.11.19 21:02
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.11.19 21:07
+ * Last modified 21.11.19 20:49
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,6 +31,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.conversations.model.ConversationItem
+import com.mmdev.business.events.model.EventItem
 import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
@@ -43,6 +44,7 @@ import com.mmdev.roove.ui.chat.view.ChatFragment
 import com.mmdev.roove.ui.custom.CustomAlertDialog
 import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.events.view.EventsFragment
+import com.mmdev.roove.ui.events.view.detailed.EventDetailedFragment
 import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoVM
 import com.mmdev.roove.ui.profile.view.ProfileFragment
 import com.mmdev.roove.utils.showToastText
@@ -69,6 +71,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	lateinit var cardItemClicked: CardItem
 	lateinit var conversationItemClicked: ConversationItem
+
+	lateinit var eventItem: EventItem
 
 	lateinit var partnerId: String
 	lateinit var partnerMainPhotoUrl: String
@@ -138,6 +142,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	 */
 	fun startChatFragment(conversationId: String) {
 		replaceFragment(ChatFragment.newInstance(conversationId))
+	}
+
+	fun startEventDetailedFragment(){
+		replaceFragment(EventDetailedFragment.newInstance())
 	}
 
 	fun startProfileFragment(userId: String, fabVisible: Boolean) {
@@ -226,7 +234,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			// Handle navigation view item clicks here.
 			when (item.itemId) {
 				R.id.nav_actions -> startActionsFragment()
-				R.id.nav_feed -> { showFeedFragment() }
+				R.id.nav_events -> { showFeedFragment() }
 				R.id.nav_cards -> onCardsClick()
 				R.id.nav_notifications -> { progressDialog.showDialog()
 					Handler().postDelayed({ progressDialog.dismissDialog() }, 5000) }

@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 10.11.2019 16:22
+ * Created by Andrii Kovalchuk on 21.11.19 21:02
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 21.11.19 20:29
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,6 +23,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
+import com.mmdev.roove.ui.ImagePagerAdapter
 import com.mmdev.roove.ui.main.view.MainActivity
 import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoVM
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -36,7 +37,7 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 
 	private lateinit var mMainActivity: MainActivity
 
-	private val profilePagerAdapter = ProfilePagerAdapter(listOf())
+	private val userPhotosAdapter = ImagePagerAdapter(listOf())
 
 	private lateinit var remoteRepoViewModel: RemoteUserRepoVM
 	private val remoteUserRepoFactory = injector.remoteUserRepoVMFactory()
@@ -80,19 +81,19 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 		val viewPager= view.findViewById<ViewPager2>(R.id.profile_photos_vp)
 		val tbProfile = view.findViewById<Toolbar>(R.id.profile_toolbar)
 		val tbLayout = view.findViewById<CollapsingToolbarLayout>(R.id.profile_collapsing_toolbar)
-		val tabLayout = view.findViewById<TabLayout>(R.id.dots_indicator)
+		val dots = view.findViewById<TabLayout>(R.id.dots_indicator)
 		val fab = view.findViewById<FloatingActionButton>(R.id.fab_send_message)
 
 
 		disposables.add(remoteRepoViewModel.getUserById(userId)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ profilePagerAdapter.updateData(it.photoURLs)
+            .subscribe({ userPhotosAdapter.updateData(it.photoURLs)
 	                    tbLayout.title = it.name},
                        { mMainActivity.showToast("$it") }))
 
-		viewPager.adapter = profilePagerAdapter
+		viewPager.adapter = userPhotosAdapter
 
-		TabLayoutMediator(tabLayout, viewPager){ tab: TabLayout.Tab, position: Int -> }.attach()
+		TabLayoutMediator(dots, viewPager){ tab: TabLayout.Tab, position: Int -> }.attach()
 
 		tbProfile.setNavigationOnClickListener { mMainActivity.onBackPressed() }
 		tbProfile.inflateMenu(R.menu.profile_view_options)

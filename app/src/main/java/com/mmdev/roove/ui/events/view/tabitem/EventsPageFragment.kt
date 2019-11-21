@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 20.11.19 21:38
+ * Created by Andrii Kovalchuk on 21.11.19 21:02
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.11.19 21:34
+ * Last modified 21.11.19 20:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -46,7 +46,7 @@ class EventsPageFragment: Fragment(R.layout.fragment_events_page_item) {
 		disposables.add(eventsViewModel.getEvents()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                           mMainActivity.showToast("${it.results[0]}")
+                           //mMainActivity.showToast("${it.results[0]}")
                            mEventsRecyclerAdapter.updateData(it.results)
                        },
                        {
@@ -61,7 +61,9 @@ class EventsPageFragment: Fragment(R.layout.fragment_events_page_item) {
 
 		mEventsRecyclerAdapter.setOnItemClickListener(object: EventsRecyclerAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
-				mMainActivity.showToast(mEventsRecyclerAdapter.getEventItem(position).title)
+				mMainActivity.eventItem = mEventsRecyclerAdapter.getEventItem(position)
+
+				mMainActivity.startEventDetailedFragment()
 			}
 		})
 	}

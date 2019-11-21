@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk on 21.11.19 21:02
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 21.11.19 20:49
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
@@ -8,9 +18,9 @@
             android:title="Actions" />
 
         <item
-            android:id="@+id/nav_feed"
+            android:id="@+id/nav_events"
             android:icon="@drawable/nav_items_feed_icon"
-            android:title="Feed" />
+            android:title="Events" />
         <item
             android:id="@+id/nav_cards"
             android:icon="@drawable/nav_items_events_icon"
