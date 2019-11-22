@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 30.09.19 16:18
+ * Created by Andrii Kovalchuk on 22.11.19 19:36
  * Copyright (c) 2019. All rights reserved.
- * Last modified 19.11.19 16:15
+ * Last modified 22.11.19 19:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,6 +27,8 @@ import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.conversations.usecase.CreateConversationUseCase
 import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
 import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
+import com.mmdev.business.events.repository.EventsRepository
+import com.mmdev.business.events.usecase.GetEventsUseCase
 import com.mmdev.business.user.repository.UserRepository
 import com.mmdev.business.user.usecase.local.GetSavedUserUseCase
 import com.mmdev.business.user.usecase.local.SaveUserInfoUseCase
@@ -39,6 +41,7 @@ import com.mmdev.roove.ui.cards.viewmodel.CardsViewModelFactory
 import com.mmdev.roove.ui.chat.viewmodel.ChatViewModelFactory
 import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoVMFactory
 import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoVMFactory
+import com.mmdev.roove.ui.places.viewmodel.EventsVMFactory
 import dagger.Module
 import dagger.Provides
 
@@ -74,6 +77,11 @@ class ViewModelModule {
 		ConversationsViewModelFactory(CreateConversationUseCase(repository),
 		                              DeleteConversationUseCase(repository),
 		                              GetConversationsListUseCase(repository))
+
+
+	@Provides
+	fun eventsRepoVMFactory(repository: EventsRepository) =
+		EventsVMFactory(GetEventsUseCase(repository))
 
 
 	@Provides

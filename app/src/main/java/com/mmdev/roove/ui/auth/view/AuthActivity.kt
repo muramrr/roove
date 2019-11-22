@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 19.06.19 11:46
+ * Created by Andrii Kovalchuk on 22.11.19 19:36
  * Copyright (c) 2019. All rights reserved.
- * Last modified 12.11.19 20:49
+ * Last modified 22.11.19 19:09
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,7 +40,7 @@ class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
 	private lateinit var progressDialog: LoadingDialog
 	private lateinit var mCallbackManager: CallbackManager
 
-	lateinit var userItemModel: UserItem
+	var userItemModel: UserItem = UserItem()
 
 	private lateinit var authViewModel: AuthViewModel
 	private val authViewModelFactory = injector.authViewModelFactory()
@@ -72,6 +72,9 @@ class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
 	                .doOnSubscribe { progressDialog.showDialog() }
 	                .doFinally { progressDialog.dismissDialog() }
 	                .subscribe({
+		                           Toast.makeText(this@AuthActivity,
+		                                          "$it",
+		                                          Toast.LENGTH_SHORT).show()
 		                           startMainActivity()
 	                           },
 	                           {
@@ -91,6 +94,9 @@ class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
 	}
 
 	private fun startRegistrationFragment() {
+		Toast.makeText(this@AuthActivity,
+		               "$userItemModel",
+		               Toast.LENGTH_SHORT).show()
 		supportFragmentManager.beginTransaction().apply {
 			setCustomAnimations(R.anim.enter_from_right,
 			                    R.anim.exit_to_left,

@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 20.11.19 21:38
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 20.11.19 19:15
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -104,6 +114,11 @@ dependencies {
 
 	// RxAndroid
 	implementation libs.rxAndroid
+
+	// Retrofit
+	implementation 'com.squareup.retrofit2:retrofit:2.6.2'
+	implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
+	implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.2"
 
 	// ViewModel and LiveData
 	implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"

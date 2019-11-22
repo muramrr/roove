@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 19.08.19 16:11
+ * Created by Andrii Kovalchuk on 22.11.19 19:36
  * Copyright (c) 2019. All rights reserved.
- * Last modified 14.11.19 19:36
+ * Last modified 22.11.19 19:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ package com.mmdev.roove.core
 
 import android.app.Application
 import com.facebook.appevents.AppEventsLogger
+import com.google.firebase.analytics.FirebaseAnalytics
 
 
 class App : Application() {
@@ -22,6 +23,7 @@ class App : Application() {
 		injector = DaggerAppComponent.builder()
 			.application(this)
 			.build()
+		FirebaseAnalytics.getInstance(this)
 	}
 }
 

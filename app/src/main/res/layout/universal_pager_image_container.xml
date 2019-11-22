@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk on 21.11.19 21:02
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 21.11.19 20:04
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<data>
 		<variable
-			name="photoUrl"
+			name="imageUrl"
 			type="String" />
 	</data>
 
@@ -13,16 +23,16 @@
 		android:layout_height="match_parent">
 
 		<ImageView
-			android:id="@+id/profile_user_pic"
+			android:id="@+id/image_container_iv"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:background="@color/colorPrimaryDark"
 			android:scaleType="centerCrop"
-			app:photoUrl="@{photoUrl}"
+			app:imageUrl="@{imageUrl}"
 			android:contentDescription="@string/description_user_photo" />
 
 		<ImageView
-			android:id="@+id/profile_user_gradient"
+			android:id="@+id/pager_container_image_gradient"
 			android:layout_width="match_parent"
 			android:layout_height="100dp"
 			android:layout_gravity="bottom"
