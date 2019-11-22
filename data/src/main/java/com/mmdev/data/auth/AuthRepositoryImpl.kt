@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 01.07.19 12:11
+ * Created by Andrii Kovalchuk on 22.11.19 19:36
  * Copyright (c) 2019. All rights reserved.
- * Last modified 19.11.19 16:36
+ * Last modified 22.11.19 19:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package com.mmdev.data.auth
 
-import android.util.Log
 import com.facebook.login.LoginManager
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -83,7 +82,6 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	 */
 	override fun signInWithFacebook(token: String): Single<UserItem> {
 		val credential = FacebookAuthProvider.getCredential(token)
-		Log.wtf("mylogs", "$credential")
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
 			auth.signInWithCredential(credential).addOnCompleteListener { task: Task<AuthResult> ->
 				if (task.isSuccessful && auth.currentUser != null) {

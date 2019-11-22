@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Created by Andrii Kovalchuk on 21.11.19 21:02
+  ~ Created by Andrii Kovalchuk on 22.11.19 19:36
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 21.11.19 20:04
+  ~ Last modified 21.11.19 21:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,9 +15,10 @@
 
 	<data>
 
+		<import type="android.view.View"/>
 		<variable
-			name="matchedItem"
-			type="com.mmdev.business.cards.model.CardItem" />
+			name="eventItem"
+			type="com.mmdev.business.events.model.EventItem" />
 
 	</data>
 
@@ -36,12 +37,13 @@
 			android:background="@color/colorAccentDark"
 			android:contentDescription="@string/description_user_photo"
 			android:scaleType="centerCrop"
-			app:imageUrl="@{matchedItem.mainPhotoUrl}"/>
+			app:imageUrl="@{eventItem.images[0].image}"
+			android:visibility='@{eventItem.images[0].image!="" ? View.VISIBLE : View.GONE}'/>
 
 		<ImageView
 			android:id="@+id/pager_container_image_gradient"
 			android:layout_width="match_parent"
-			android:layout_height="100dp"
+			android:layout_height="50dp"
 			android:layout_gravity="bottom"
 			android:scaleType="centerCrop"
 			android:src="@drawable/gradient_transparent"
@@ -53,8 +55,8 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center|bottom"
 			android:layout_margin="@dimen/general_margin_8"
-			android:text="@{matchedItem.name, default = @string/default_name}"
-			style="@style/regular_text_white_20sp_85op"/>
+			android:text="@{eventItem.title, default = @string/default_name}"
+			style="@style/regular_text_white_18sp_85op"/>
 
 
 	</androidx.cardview.widget.CardView>

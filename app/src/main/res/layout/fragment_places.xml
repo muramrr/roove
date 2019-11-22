@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk on 22.11.19 19:36
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 22.11.19 17:45
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
 <androidx.constraintlayout.widget.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -23,25 +33,24 @@
 		<com.google.android.material.tabs.TabItem
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Popular" />
+			android:text="Bars" />
 
 		<com.google.android.material.tabs.TabItem
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Latest" />
+			android:text="Restaurants" />
 
 		<com.google.android.material.tabs.TabItem
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Featured" />
+			android:text="Clubs" />
 
 		<com.google.android.material.tabs.TabItem
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Friends" />
+			android:text="Museums" />
 
 	</com.google.android.material.tabs.TabLayout>
-
 
 	<androidx.viewpager2.widget.ViewPager2
 		android:id="@+id/feed_vp"
