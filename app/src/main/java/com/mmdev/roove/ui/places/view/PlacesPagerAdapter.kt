@@ -1,19 +1,19 @@
 /*
- * Created by Andrii Kovalchuk on 20.11.19 21:38
+ * Created by Andrii Kovalchuk on 22.11.19 19:36
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.11.19 21:07
+ * Last modified 22.11.19 16:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.ui.events.view
+package com.mmdev.roove.ui.places.view
 
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.mmdev.roove.ui.events.view.tabitem.EventsPageFragment
+import com.mmdev.roove.ui.places.view.tabitem.PlacesPageFragment
 
 
 /* Created by A on 04.10.2019.*/
@@ -22,11 +22,11 @@ import com.mmdev.roove.ui.events.view.tabitem.EventsPageFragment
  * This is the documentation block about the class
  */
 
-class EventsPagerAdapter (fm: FragmentManager, lifecycle: Lifecycle) :
+class PlacesPagerAdapter (fm: FragmentManager, lifecycle: Lifecycle) :
 		FragmentStateAdapter(fm, lifecycle) {
 
 
-	override fun createFragment(position: Int) = EventsPageFragment()
+	override fun createFragment(position: Int) = PlacesPageFragment()
 
 	override fun getItemCount(): Int = 4
 

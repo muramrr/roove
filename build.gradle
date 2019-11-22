@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk on 22.11.19 19:36
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 22.11.19 19:22
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 apply plugin: 'com.github.ben-manes.versions'
 
 buildscript {
@@ -10,7 +20,7 @@ buildscript {
 		facebook_sdk_version = '5.11.0'
 
 		//firebase
-		firebase_auth_version = '19.1.0'
+		firebase_auth_version = '19.2.0'
 		firebase_core_version = '17.2.1'
 		firebase_firestore_version = '21.3.0'
 		firebase_storage_version = '19.1.0'
