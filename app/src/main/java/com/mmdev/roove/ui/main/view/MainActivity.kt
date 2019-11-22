@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 21.11.19 21:02
+ * Created by Andrii Kovalchuk on 22.11.19 19:36
  * Copyright (c) 2019. All rights reserved.
- * Last modified 21.11.19 20:49
+ * Last modified 22.11.19 19:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,7 +28,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.conversations.model.ConversationItem
 import com.mmdev.business.events.model.EventItem
@@ -43,9 +42,9 @@ import com.mmdev.roove.ui.cards.view.CardsFragment
 import com.mmdev.roove.ui.chat.view.ChatFragment
 import com.mmdev.roove.ui.custom.CustomAlertDialog
 import com.mmdev.roove.ui.custom.LoadingDialog
-import com.mmdev.roove.ui.events.view.EventsFragment
-import com.mmdev.roove.ui.events.view.detailed.EventDetailedFragment
 import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoVM
+import com.mmdev.roove.ui.places.view.PlacesFragment
+import com.mmdev.roove.ui.places.view.detailed.PlaceDetailedFragment
 import com.mmdev.roove.ui.profile.view.ProfileFragment
 import com.mmdev.roove.utils.showToastText
 import io.reactivex.disposables.CompositeDisposable
@@ -88,7 +87,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		FirebaseAnalytics.getInstance(this@MainActivity)
+
+
 		authViewModel = ViewModelProvider(this@MainActivity, authViewModelFactory)
 			.get(AuthViewModel::class.java)
 
@@ -115,11 +115,11 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 
 	// show main feed fragment
 	private fun showFeedFragment(){
-		if (mFragmentManager.findFragmentByTag(EventsFragment::class.java.canonicalName) == null)
+		if (mFragmentManager.findFragmentByTag(PlacesFragment::class.java.canonicalName) == null)
 			mFragmentManager.beginTransaction().apply {
 				add(R.id.main_container,
-				    EventsFragment.newInstance(),
-				    EventsFragment::class.java.canonicalName)
+				    PlacesFragment.newInstance(),
+				    PlacesFragment::class.java.canonicalName)
 				commit()
 			}
 		else mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
@@ -145,7 +145,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	}
 
 	fun startEventDetailedFragment(){
-		replaceFragment(EventDetailedFragment.newInstance())
+		replaceFragment(PlaceDetailedFragment.newInstance())
 	}
 
 	fun startProfileFragment(userId: String, fabVisible: Boolean) {

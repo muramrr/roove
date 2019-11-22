@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 20.11.19 21:38
+ * Created by Andrii Kovalchuk on 22.11.19 19:36
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.11.19 21:07
+ * Last modified 22.11.19 19:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,9 +39,9 @@ import com.mmdev.roove.ui.actions.conversations.viewmodel.ConversationsViewModel
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModelFactory
 import com.mmdev.roove.ui.cards.viewmodel.CardsViewModelFactory
 import com.mmdev.roove.ui.chat.viewmodel.ChatViewModelFactory
-import com.mmdev.roove.ui.events.viewmodel.EventsVMFactory
 import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoVMFactory
 import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoVMFactory
+import com.mmdev.roove.ui.places.viewmodel.EventsVMFactory
 import dagger.Module
 import dagger.Provides
 

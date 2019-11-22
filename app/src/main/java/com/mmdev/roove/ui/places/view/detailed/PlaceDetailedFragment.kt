@@ -1,14 +1,14 @@
 /*
- * Created by Andrii Kovalchuk on 21.11.19 21:02
+ * Created by Andrii Kovalchuk on 22.11.19 19:36
  * Copyright (c) 2019. All rights reserved.
- * Last modified 21.11.19 20:59
+ * Last modified 22.11.19 16:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.ui.events.view.detailed
+package com.mmdev.roove.ui.places.view.detailed
 
 
 import android.os.Bundle
@@ -26,7 +26,7 @@ import com.mmdev.roove.ui.main.view.MainActivity
 /**
  * A simple [Fragment] subclass.
  */
-class EventDetailedFragment: Fragment(R.layout.fragment_event_detailed) {
+class PlaceDetailedFragment: Fragment(R.layout.fragment_place_detailed) {
 
 	private lateinit var mMainActivity: MainActivity
 
@@ -36,7 +36,7 @@ class EventDetailedFragment: Fragment(R.layout.fragment_event_detailed) {
 
 	companion object{
 
-		fun newInstance() = EventDetailedFragment()
+		fun newInstance() = PlaceDetailedFragment()
 
 	}
 

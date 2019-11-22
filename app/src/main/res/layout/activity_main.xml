@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk on 22.11.19 19:36
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 22.11.19 18:08
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
 <androidx.drawerlayout.widget.DrawerLayout
 	android:id="@+id/drawer_layout"
 	android:layout_width="match_parent"
@@ -15,7 +25,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@color/colorPrimaryDark"
-		android:fitsSystemWindows="true">
+		android:paddingTop="24dp">
 
 		<com.google.android.material.appbar.AppBarLayout
 			android:id="@+id/app_bar"
@@ -52,8 +62,6 @@
 		android:background="@color/colorPrimaryDark"
 		android:divider="@android:color/transparent"
 		android:dividerHeight="14dp"
-		android:fitsSystemWindows="true"
-		android:windowFullscreen="true"
 		app:headerLayout="@layout/nav_header"
 		app:itemTextAppearance="@style/regular_text_white_16sp_85op"
 		app:menu="@menu/navigation_items"/>

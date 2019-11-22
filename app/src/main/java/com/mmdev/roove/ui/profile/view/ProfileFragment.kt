@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 21.11.19 21:02
+ * Created by Andrii Kovalchuk on 22.11.19 19:36
  * Copyright (c) 2019. All rights reserved.
- * Last modified 21.11.19 20:29
+ * Last modified 22.11.19 16:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -122,13 +122,11 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 	override fun onStart() {
 		super.onStart()
 		mMainActivity.appbar.visibility = View.GONE
-		mMainActivity.toolbar.visibility = View.GONE
 	}
 
 	override fun onStop() {
 		super.onStop()
 		mMainActivity.appbar.visibility = View.VISIBLE
-		mMainActivity.toolbar.visibility = View.VISIBLE
 	}
 
 	override fun onDestroy() {

@@ -1,14 +1,14 @@
 /*
- * Created by Andrii Kovalchuk on 20.11.19 21:38
+ * Created by Andrii Kovalchuk on 22.11.19 19:36
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.11.19 21:07
+ * Last modified 22.11.19 16:44
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.ui.events.view
+package com.mmdev.roove.ui.places.view
 
 import android.os.Bundle
 import android.view.View
@@ -19,13 +19,13 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.main.view.MainActivity
 
-class EventsFragment: Fragment(R.layout.fragment_events) {
+class PlacesFragment: Fragment(R.layout.fragment_places) {
 
 	private lateinit var mMainActivity: MainActivity
 
 	companion object{
-		fun newInstance(): EventsFragment {
-			return EventsFragment()
+		fun newInstance(): PlacesFragment {
+			return PlacesFragment()
 		}
 	}
 
@@ -36,18 +36,18 @@ class EventsFragment: Fragment(R.layout.fragment_events) {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		val viewPager: ViewPager2 = view.findViewById(R.id.feed_vp)
-		viewPager.adapter = EventsPagerAdapter(
+		viewPager.adapter = PlacesPagerAdapter(
 				childFragmentManager,
 				lifecycle)
 
 		val tabLayout: TabLayout= view.findViewById(R.id.tabLayout)
 
 		TabLayoutMediator(tabLayout, viewPager) { tab: TabLayout.Tab, position: Int ->
-			when(position){
-				0 -> tab.text = "Popular"
-				1 -> tab.text = "Latest"
-				2 -> tab.text = "Featured"
-				3 -> tab.text = "Friends"
+			when (position){
+				0 -> tab.text = "Bars"
+				1 -> tab.text = "Restaurants"
+				2 -> tab.text = "Clubs"
+				3 -> tab.text = "Museums"
 			}
 		}.attach()
 
@@ -56,7 +56,7 @@ class EventsFragment: Fragment(R.layout.fragment_events) {
 	override fun onResume() {
 		super.onResume()
 		mMainActivity.setScrollableToolbar()
-		mMainActivity.toolbar.title = "Feed"
+		mMainActivity.toolbar.title = "Places"
 	}
 
 	override fun onStop() {

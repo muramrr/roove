@@ -1,14 +1,14 @@
 /*
- * Created by Andrii Kovalchuk on 20.11.19 21:38
+ * Created by Andrii Kovalchuk on 22.11.19 19:36
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.11.19 21:29
+ * Last modified 22.11.19 16:40
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.ui.events.view.tabitem
+package com.mmdev.roove.ui.places.view.tabitem
 
 import android.view.LayoutInflater
 import android.view.View
@@ -17,21 +17,21 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mmdev.business.events.model.EventItem
 import com.mmdev.roove.R
-import com.mmdev.roove.databinding.FragmentEventsRvItemBinding
+import com.mmdev.roove.databinding.FragmentPlacesRvItemBinding
 
-class EventsRecyclerAdapter (private var mEventsList: List<EventItem>):
-		RecyclerView.Adapter<EventsRecyclerAdapter.FeedItemHolder>() {
+class PlacesRecyclerAdapter (private var mEventsList: List<EventItem>):
+		RecyclerView.Adapter<PlacesRecyclerAdapter.PlacesItemHolder>() {
 
 	private lateinit var mClickListener: OnItemClickListener
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-		FeedItemHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
-		                                       R.layout.fragment_events_rv_item,
-		                                       parent,
-		                                       false))
+		PlacesItemHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+		                                         R.layout.fragment_places_rv_item,
+		                                         parent,
+		                                         false))
 
 
-	override fun onBindViewHolder(holder: FeedItemHolder, position: Int) =
+	override fun onBindViewHolder(holder: PlacesItemHolder, position: Int) =
 		holder.bind(mEventsList[position])
 
 
@@ -51,7 +51,7 @@ class EventsRecyclerAdapter (private var mEventsList: List<EventItem>):
 	}
 
 
-	inner class FeedItemHolder(private val binding: FragmentEventsRvItemBinding) :
+	inner class PlacesItemHolder(private val binding: FragmentPlacesRvItemBinding) :
 			RecyclerView.ViewHolder(binding.root) {
 
 		init {
