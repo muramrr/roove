@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 22.11.19 19:36
+ * Created by Andrii Kovalchuk on 23.11.19 19:40
  * Copyright (c) 2019. All rights reserved.
- * Last modified 22.11.19 19:36
+ * Last modified 23.11.19 19:04
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.main.view.MainActivity
-import com.mmdev.roove.ui.places.viewmodel.EventsViewModel
+import com.mmdev.roove.ui.places.viewmodel.PlacesViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -32,17 +32,17 @@ class PlacesPageFragment: Fragment(R.layout.fragment_places_page_item) {
 	private lateinit var rvFeedList: RecyclerView
 	private var mPlacesRecyclerAdapter: PlacesRecyclerAdapter = PlacesRecyclerAdapter(listOf())
 
-	private val eventsVMFactory = injector.eventsVMFactory()
-	private lateinit var eventsViewModel: EventsViewModel
+	private lateinit var placesViewModel: PlacesViewModel
+	private val factory = injector.factory()
 
 	private val disposables = CompositeDisposable()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		activity?.let { mMainActivity = it as MainActivity }
-		eventsViewModel= ViewModelProvider(this, eventsVMFactory).get(EventsViewModel::class.java)
+		placesViewModel= ViewModelProvider(this, factory)[PlacesViewModel::class.java]
 
-		disposables.add(eventsViewModel.getEvents()
+		disposables.add(placesViewModel.getEvents()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                            //mMainActivity.showToast("${it.results[0]}")

@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 22.11.19 19:36
+ * Created by Andrii Kovalchuk on 23.11.19 19:40
  * Copyright (c) 2019. All rights reserved.
- * Last modified 22.11.19 16:52
+ * Last modified 23.11.19 18:45
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,12 +22,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
-import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.ImagePagerAdapter
 import com.mmdev.roove.ui.main.view.MainActivity
-import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoVM
+import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
 
 /**
  * This is the documentation block about the class
@@ -39,8 +39,9 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 
 	private val userPhotosAdapter = ImagePagerAdapter(listOf())
 
-	private lateinit var remoteRepoViewModel: RemoteUserRepoVM
-	private val remoteUserRepoFactory = injector.remoteUserRepoVMFactory()
+	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
+	@Inject
+	lateinit var factory: ViewModelProvider.Factory
 
 	private lateinit var userId: String
 	private var fabVisible: Boolean = false
@@ -73,7 +74,7 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 			fabVisible = it.getBoolean(FAB_VISIBLE_KEY)
 		}
 
-		remoteRepoViewModel = ViewModelProvider(mMainActivity, remoteUserRepoFactory).get(RemoteUserRepoVM::class.java)
+		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
 
 	}
 

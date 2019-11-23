@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 10.09.19 12:28
+ * Created by Andrii Kovalchuk on 23.11.19 19:40
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 23.11.19 19:40
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -49,7 +49,7 @@ class CardsFragment: Fragment(R.layout.fragment_cards) {
 	private lateinit var mAppearedCardItem: CardItem
 
 	private lateinit var cardsViewModel: CardsViewModel
-	private val cardsViewModelFactory = injector.cardsViewModelFactory()
+	private val factory = injector.factory()
 
 	private val disposables = CompositeDisposable()
 
@@ -65,7 +65,7 @@ class CardsFragment: Fragment(R.layout.fragment_cards) {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		activity?.let { mMainActivity = it as MainActivity }
-		cardsViewModel = ViewModelProvider(mMainActivity, cardsViewModelFactory).get(CardsViewModel::class.java)
+		cardsViewModel = ViewModelProvider(this, factory).get(CardsViewModel::class.java)
 
 	}
 
