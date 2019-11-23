@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 20.11.19 21:38
+ * Created by Andrii Kovalchuk on 23.11.19 16:19
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.11.19 19:15
+ * Last modified 23.11.19 16:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -77,13 +77,13 @@ dependencies {
 	implementation project(':data')
 
 	//core
-	implementation 'androidx.core:core-ktx:1.2.0-beta02'
+	implementation 'androidx.core:core-ktx:1.2.0-rc01'
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 	implementation 'androidx.appcompat:appcompat:1.1.0'
 	implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
-	implementation 'com.google.android.material:material:1.2.0-alpha01'
-	implementation 'androidx.recyclerview:recyclerview:1.1.0-rc01'
+	implementation 'com.google.android.material:material:1.2.0-alpha02'
+	implementation 'androidx.recyclerview:recyclerview:1.1.0'
 	implementation 'androidx.cardview:cardview:1.0.0'
 
 	//custom UI

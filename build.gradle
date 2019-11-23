@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 22.11.19 19:36
+ * Created by Andrii Kovalchuk on 23.11.19 16:19
  * Copyright (c) 2019. All rights reserved.
- * Last modified 22.11.19 19:22
+ * Last modified 23.11.19 16:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@ buildscript {
 		kotlin_version = '1.3.60'
 
 		// facebook
-		facebook_sdk_version = '5.11.0'
+		facebook_sdk_version = '5.11.2'
 
 		//firebase
 		firebase_auth_version = '19.2.0'
