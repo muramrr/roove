@@ -1,14 +1,14 @@
 /*
- * Created by Andrii Kovalchuk on 22.09.19 17:20
+ * Created by Andrii Kovalchuk on 23.11.19 19:40
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 23.11.19 17:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.core.di
+package com.mmdev.roove.core.di.modules
 
 import android.app.Application
 import com.ironz.binaryprefs.BinaryPreferencesBuilder

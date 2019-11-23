@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 19.06.19 12:01
+ * Created by Andrii Kovalchuk on 23.11.19 19:40
  * Copyright (c) 2019. All rights reserved.
- * Last modified 28.10.19 18:58
+ * Last modified 23.11.19 18:32
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,12 +13,13 @@ package com.mmdev.roove.ui.auth.viewmodel
 import androidx.lifecycle.ViewModel
 import com.mmdev.business.auth.usecase.*
 import com.mmdev.business.user.model.UserItem
+import javax.inject.Inject
 
-class AuthViewModel(private val handleHandleUserExistence: HandleUserExistenceUseCase,
-                    private val isAuthenticated: IsAuthenticatedUseCase,
-                    private val logOut: LogOutUseCase,
-                    private val signInWithFacebook: SignInWithFacebookUseCase,
-                    private val signUp: SignUpUseCase) : ViewModel() {
+class AuthViewModel @Inject constructor(private val handleHandleUserExistence: HandleUserExistenceUseCase,
+                                        private val isAuthenticated: IsAuthenticatedUseCase,
+                                        private val logOut: LogOutUseCase,
+                                        private val signInWithFacebook: SignInWithFacebookUseCase,
+                                        private val signUp: SignUpUseCase) : ViewModel() {
 
 
     fun handleUserExistence(uId: String) = handleHandleUserExistence.execute(uId)

@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 14.11.19 18:05
+ * Created by Andrii Kovalchuk on 23.11.19 19:40
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 23.11.19 19:04
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,8 +44,7 @@ class SplashActivity: AppCompatActivity(R.layout.activity_splash) {
 			.into(logoContainer)
 
 		val authViewModel = ViewModelProvider(this@SplashActivity,
-		                                      injector.authViewModelFactory())
-			.get(AuthViewModel::class.java)
+		                                      injector.factory())[AuthViewModel::class.java]
 
 		disposables.add(authViewModel.isAuthenticated()
             .observeOn(AndroidSchedulers.mainThread())
