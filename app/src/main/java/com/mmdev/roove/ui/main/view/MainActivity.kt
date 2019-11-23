@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 22.11.19 19:36
+ * Created by Andrii Kovalchuk on 23.11.19 19:40
  * Copyright (c) 2019. All rights reserved.
- * Last modified 22.11.19 19:36
+ * Last modified 23.11.19 19:40
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,7 +42,7 @@ import com.mmdev.roove.ui.cards.view.CardsFragment
 import com.mmdev.roove.ui.chat.view.ChatFragment
 import com.mmdev.roove.ui.custom.CustomAlertDialog
 import com.mmdev.roove.ui.custom.LoadingDialog
-import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoVM
+import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoViewModel
 import com.mmdev.roove.ui.places.view.PlacesFragment
 import com.mmdev.roove.ui.places.view.detailed.PlaceDetailedFragment
 import com.mmdev.roove.ui.profile.view.ProfileFragment
@@ -80,8 +80,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	private lateinit var mFragmentManager: FragmentManager
 
 	private lateinit var authViewModel: AuthViewModel
-	private val authViewModelFactory = injector.authViewModelFactory()
-	private val mainViewModelFactory = injector.localUserRepoVMFactory()
+	private val factory = injector.factory()
+
 	private val disposables = CompositeDisposable()
 
 
@@ -89,11 +89,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		super.onCreate(savedInstanceState)
 
 
-		authViewModel = ViewModelProvider(this@MainActivity, authViewModelFactory)
-			.get(AuthViewModel::class.java)
+		authViewModel = ViewModelProvider(this@MainActivity, factory)[AuthViewModel::class.java]
 
-		userItemModel = ViewModelProvider(this@MainActivity, mainViewModelFactory)
-			.get(LocalUserRepoVM::class.java)
+		userItemModel = ViewModelProvider(this@MainActivity, factory)
+			.get(LocalUserRepoViewModel::class.java)
 			.getSavedUser()
 
 		drawerLayout = findViewById(R.id.drawer_layout)

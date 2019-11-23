@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 10.07.19 16:27
+ * Created by Andrii Kovalchuk on 23.11.19 19:40
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 23.11.19 19:40
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -60,13 +60,14 @@ import kotlin.collections.ArrayList
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
+
+
 	private lateinit var  mMainActivity: MainActivity
 
-	private val chatViewModelFactory = injector.chatViewModelFactory()
-	private lateinit var chatViewModel: ChatViewModel
 
+	private lateinit var chatViewModel: ChatViewModel
 	private lateinit var conversationsVM: ConversationsViewModel
-	private val conversationsVMFactory = injector.conversationsViewModelFactory()
+	private val factory = injector.factory()
 
 	// POJO models
 	private lateinit var userItemModel: UserItem
@@ -124,8 +125,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		userItemModel = mMainActivity.userItemModel
 		mChatAdapter = ChatAdapter(userItemModel.userId, listOf())
 
-		chatViewModel = ViewModelProvider(this, chatViewModelFactory).get(ChatViewModel::class.java)
-		conversationsVM = ViewModelProvider(this, conversationsVMFactory).get(ConversationsViewModel::class.java)
+		chatViewModel = ViewModelProvider(this, factory)[ChatViewModel::class.java]
+		conversationsVM = ViewModelProvider(this, factory)[ConversationsViewModel::class.java]
 
 		if (conversationId.isNotEmpty()) {
 			disposables.add(chatViewModel.getMessages(conversationId)

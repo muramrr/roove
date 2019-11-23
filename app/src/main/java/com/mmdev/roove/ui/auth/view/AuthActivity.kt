@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 22.11.19 19:36
+ * Created by Andrii Kovalchuk on 23.11.19 19:40
  * Copyright (c) 2019. All rights reserved.
- * Last modified 22.11.19 19:09
+ * Last modified 23.11.19 19:04
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,7 +43,7 @@ class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
 	var userItemModel: UserItem = UserItem()
 
 	private lateinit var authViewModel: AuthViewModel
-	private val authViewModelFactory = injector.authViewModelFactory()
+	private val factory = injector.factory()
 
 	private val disposables = CompositeDisposable()
 
@@ -54,7 +54,7 @@ class AuthActivity : AppCompatActivity(R.layout.activity_auth)  {
 		mCallbackManager = CallbackManager.Factory.create()
 		setUpFacebookLoginButton()
 		progressDialog = LoadingDialog(this)
-		authViewModel = ViewModelProvider(this, authViewModelFactory).get(AuthViewModel::class.java)
+		authViewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 	}
 
 	private fun setUpFacebookLoginButton() {

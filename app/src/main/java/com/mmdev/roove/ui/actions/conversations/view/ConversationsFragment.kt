@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 27.10.19 21:06
+ * Created by Andrii Kovalchuk on 23.11.19 19:40
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 23.11.19 19:04
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,7 +38,7 @@ class ConversationsFragment: Fragment(R.layout.fragment_conversations){
 	private val mConversationsAdapter: ConversationsAdapter = ConversationsAdapter(listOf())
 
 	private lateinit var conversationsVM: ConversationsViewModel
-	private val conversationsVMFactory = injector.conversationsViewModelFactory()
+	private val factory = injector.factory()
 
 	private val disposables = CompositeDisposable()
 
@@ -58,7 +58,7 @@ class ConversationsFragment: Fragment(R.layout.fragment_conversations){
 		super.onCreate(savedInstanceState)
 		activity?.let { mMainActivity = it as MainActivity }
 
-		conversationsVM = ViewModelProvider(mMainActivity, conversationsVMFactory).get(ConversationsViewModel::class.java)
+		conversationsVM = ViewModelProvider(this, factory)[ConversationsViewModel::class.java]
 
 		//get active conversations list
 		disposables.add(conversationsVM.getConversationsList()
