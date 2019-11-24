@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 13.11.19 17:52
+ * Created by Andrii Kovalchuk on 24.11.19 17:49
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 24.11.19 17:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,7 +38,7 @@ class PairsFragment: Fragment(R.layout.fragment_pairs) {
 
 	//for potential
 	private lateinit var cardsViewModel: CardsViewModel
-	private val cardsViewModelFactory = injector.cardsViewModelFactory()
+	private val factory = injector.factory()
 
 	private val disposables = CompositeDisposable()
 
@@ -50,7 +50,7 @@ class PairsFragment: Fragment(R.layout.fragment_pairs) {
 		super.onCreate(savedInstanceState)
 		activity?.let { mMainActivity = it as MainActivity }
 
-		cardsViewModel = ViewModelProvider(mMainActivity, cardsViewModelFactory).get(CardsViewModel::class.java)
+		cardsViewModel = ViewModelProvider(this, factory).get(CardsViewModel::class.java)
 
 		//get matched users
 		disposables.add(cardsViewModel.getMatchedUserItems()
