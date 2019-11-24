@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 23.11.19 19:40
+ * Created by Andrii Kovalchuk on 24.11.19 17:49
  * Copyright (c) 2019. All rights reserved.
- * Last modified 23.11.19 18:41
+ * Last modified 24.11.19 17:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,56 +12,117 @@ package com.mmdev.roove.core.di.modules
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.mmdev.business.auth.repository.AuthRepository
+import com.mmdev.business.auth.usecase.*
+import com.mmdev.business.cards.repository.CardsRepository
+import com.mmdev.business.cards.usecase.AddToSkippedUseCase
+import com.mmdev.business.cards.usecase.GetMatchedUsersUseCase
+import com.mmdev.business.cards.usecase.GetPotentialUsersUseCase
+import com.mmdev.business.cards.usecase.HandlePossibleMatchUseCase
+import com.mmdev.business.chat.repository.ChatRepository
+import com.mmdev.business.chat.usecase.GetMessagesUseCase
+import com.mmdev.business.chat.usecase.SendMessageUseCase
+import com.mmdev.business.chat.usecase.SendPhotoUseCase
+import com.mmdev.business.chat.usecase.SetConversationUseCase
+import com.mmdev.business.conversations.repository.ConversationsRepository
+import com.mmdev.business.conversations.usecase.CreateConversationUseCase
+import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
+import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
+import com.mmdev.business.events.repository.EventsRepository
+import com.mmdev.business.events.usecase.GetEventsUseCase
+import com.mmdev.business.user.repository.UserRepository
+import com.mmdev.business.user.usecase.local.GetSavedUserUseCase
+import com.mmdev.business.user.usecase.local.SaveUserInfoUseCase
+import com.mmdev.business.user.usecase.remote.CreateUserUseCase
+import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
+import com.mmdev.business.user.usecase.remote.GetUserByIdUseCase
 import com.mmdev.roove.core.di.viewmodel.ViewModelFactory
 import com.mmdev.roove.core.di.viewmodel.ViewModelKey
 import com.mmdev.roove.ui.actions.conversations.viewmodel.ConversationsViewModel
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModel
 import com.mmdev.roove.ui.cards.viewmodel.CardsViewModel
+import com.mmdev.roove.ui.chat.viewmodel.ChatViewModel
 import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoViewModel
 import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.places.viewmodel.PlacesViewModel
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.multibindings.IntoMap
+import javax.inject.Provider
 
 /**
  * add new [ViewModel] down here
  */
 
 @Module
-abstract class ViewModelModule {
+class ViewModelModule {
 
-	@Binds
-	internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
+	@Provides
+	fun provideViewModelFactory(providers: MutableMap<Class<out ViewModel>,
+			@JvmSuppressWildcards Provider<ViewModel>>): ViewModelProvider.Factory =
+		ViewModelFactory(providers)
 
-	@Binds
+
 	@IntoMap
+	@Provides
 	@ViewModelKey(AuthViewModel::class)
-	internal abstract fun authViewModel(viewModel: AuthViewModel): ViewModel
+	fun authViewModel(repository: AuthRepository): ViewModel =
+		AuthViewModel(HandleUserExistenceUseCase(repository),
+			                IsAuthenticatedUseCase(repository),
+			                LogOutUseCase(repository),
+			                SignInWithFacebookUseCase(repository),
+			                SignUpUseCase(repository))
 
-	@Binds
+
 	@IntoMap
+	@Provides
 	@ViewModelKey(CardsViewModel::class)
-	internal abstract fun cardsViewModel(viewModel: CardsViewModel): ViewModel
+	fun cardsViewModel(repository: CardsRepository): ViewModel =
+		CardsViewModel(AddToSkippedUseCase(repository),
+		               GetMatchedUsersUseCase(repository),
+		               GetPotentialUsersUseCase(repository),
+		               HandlePossibleMatchUseCase(repository))
 
-	@Binds
 	@IntoMap
+	@Provides
+	@ViewModelKey(ChatViewModel::class)
+	fun chatViewModel(repository: ChatRepository): ViewModel =
+		ChatViewModel(GetMessagesUseCase(repository),
+		              SendMessageUseCase(repository),
+		              SendPhotoUseCase(repository),
+		              SetConversationUseCase(repository))
+
+
+	@IntoMap
+	@Provides
 	@ViewModelKey(ConversationsViewModel::class)
-	internal abstract fun conversationsViewModel(viewModel: ConversationsViewModel): ViewModel
+	fun conversationsViewModel(repository: ConversationsRepository): ViewModel =
+		ConversationsViewModel(CreateConversationUseCase(repository),
+		                       DeleteConversationUseCase(repository),
+		                       GetConversationsListUseCase(repository))
 
-	@Binds
+
 	@IntoMap
+	@Provides
 	@ViewModelKey(PlacesViewModel::class)
-	internal abstract fun placesViewModel(viewModel: PlacesViewModel): ViewModel
+	fun placesViewModel(repository: EventsRepository): ViewModel =
+		PlacesViewModel(GetEventsUseCase(repository))
 
-	@Binds
+
 	@IntoMap
+	@Provides
 	@ViewModelKey(LocalUserRepoViewModel::class)
-	internal abstract fun localUserRepoViewModel(viewModel: LocalUserRepoViewModel): ViewModel
+	fun localUserRepoViewModel(repository: UserRepository.LocalUserRepository): ViewModel =
+		LocalUserRepoViewModel(GetSavedUserUseCase(repository),
+		                       SaveUserInfoUseCase(repository))
 
-	@Binds
+
 	@IntoMap
+	@Provides
 	@ViewModelKey(RemoteUserRepoViewModel::class)
-	internal abstract fun remoteUserRepoViewModel(viewModel: RemoteUserRepoViewModel): ViewModel
+	fun remoteUserRepoViewModel(repository: UserRepository.RemoteUserRepository): ViewModel =
+		RemoteUserRepoViewModel(CreateUserUseCase(repository),
+		                        DeleteUserUseCase(repository),
+		                        GetUserByIdUseCase(repository))
 
 }

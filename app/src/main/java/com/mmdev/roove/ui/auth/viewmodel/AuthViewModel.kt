@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 23.11.19 19:40
+ * Created by Andrii Kovalchuk on 24.11.19 17:49
  * Copyright (c) 2019. All rights reserved.
- * Last modified 23.11.19 18:32
+ * Last modified 24.11.19 15:28
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,11 +22,11 @@ class AuthViewModel @Inject constructor(private val handleHandleUserExistence: H
                                         private val signUp: SignUpUseCase) : ViewModel() {
 
 
-    fun handleUserExistence(uId: String) = handleHandleUserExistence.execute(uId)
-    fun isAuthenticated() = isAuthenticated.execute()
-    fun logOut() = logOut.execute()
-    fun signInWithFacebook(token: String) = signInWithFacebook.execute(token)
-    fun signUp(userItem: UserItem) = signUp.execute(userItem)
+	fun handleUserExistence(uId: String) = handleHandleUserExistence.execute(uId)
+	fun isAuthenticated() = isAuthenticated.execute()
+	fun logOut() = logOut.execute()
+	fun signInWithFacebook(token: String) = signInWithFacebook.execute(token)
+	fun signUp(userItem: UserItem) = signUp.execute(userItem)
 
 
 

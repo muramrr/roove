@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 23.11.19 19:40
+ * Created by Andrii Kovalchuk on 24.11.19 17:49
  * Copyright (c) 2019. All rights reserved.
- * Last modified 23.11.19 19:00
+ * Last modified 24.11.19 17:45
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@
 package com.mmdev.roove.core
 
 import android.app.Application
-import androidx.lifecycle.ViewModelProvider
 import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.chat.repository.ChatRepository
@@ -19,6 +18,7 @@ import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.events.repository.EventsRepository
 import com.mmdev.business.user.repository.UserRepository
 import com.mmdev.roove.core.di.modules.*
+import com.mmdev.roove.core.di.viewmodel.ViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -43,7 +43,7 @@ interface AppComponent {
 		fun build(): AppComponent
 	}
 
-	fun factory(): ViewModelProvider.Factory
+	fun factory(): ViewModelFactory
 
 	//repos
 	fun authRepository(): AuthRepository
