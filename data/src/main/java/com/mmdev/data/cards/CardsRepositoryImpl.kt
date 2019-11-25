@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 14.09.19 22:01
+ * Created by Andrii Kovalchuk on 25.11.19 20:00
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:33
+ * Last modified 25.11.19 19:59
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -51,12 +51,13 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	//note:debug only
 	//
 	private fun setLikedForBots(){
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("scmxqiwwci").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("vuwtmiegcl").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("qjfarvjwne").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("sqbnmdaiuy").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("nenvmbxeft").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("frtywqocto").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("apzjzpbvdj").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("avzcixhglp").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("dtrfbjseuq").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("eoswtmcpul").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("ryknjtobrx").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("snykckkosz").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		Log.wtf("mylogs", "liked for bots executed")
 	}
 
 	/*
