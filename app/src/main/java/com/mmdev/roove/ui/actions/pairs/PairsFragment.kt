@@ -1,28 +1,26 @@
 /*
- * Created by Andrii Kovalchuk on 24.11.19 17:49
+ * Created by Andrii Kovalchuk on 25.11.19 20:00
  * Copyright (c) 2019. All rights reserved.
- * Last modified 24.11.19 17:46
+ * Last modified 25.11.19 20:00
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.ui.actions.pairs.view
+package com.mmdev.roove.ui.actions.pairs
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
-import com.mmdev.roove.ui.cards.viewmodel.CardsViewModel
 import com.mmdev.roove.ui.main.view.MainActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
 /**
@@ -37,31 +35,20 @@ class PairsFragment: Fragment(R.layout.fragment_pairs) {
 	private val mPairsAdapter: PairsAdapter = PairsAdapter(listOf())
 
 	//for potential
-	private lateinit var cardsViewModel: CardsViewModel
+	private lateinit var pairsViewModel: PairsViewModel
 	private val factory = injector.factory()
 
 	private val disposables = CompositeDisposable()
-
-	companion object {
-		private const val TAG = "mylogs"
-	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		activity?.let { mMainActivity = it as MainActivity }
 
-		cardsViewModel = ViewModelProvider(this, factory).get(CardsViewModel::class.java)
+		pairsViewModel = ViewModelProvider(this, factory).get(PairsViewModel::class.java)
+		pairsViewModel.loadMatchedUsers()
 
 		//get matched users
-		disposables.add(cardsViewModel.getMatchedUserItems()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                           Log.wtf(TAG, "pairs to show: ${it.size}")
-                           mPairsAdapter.updateData(it)
-                       },
-                       {
-                           Log.wtf(TAG, "error + $it")
-                       }))
+		pairsViewModel.getMatchedUsers().observe(this, Observer { mPairsAdapter.updateData(it) })
 	}
 
 

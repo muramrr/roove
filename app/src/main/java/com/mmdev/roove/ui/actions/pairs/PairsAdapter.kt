@@ -1,14 +1,14 @@
 /*
- * Created by Andrii Kovalchuk on 13.11.19 17:43
+ * Created by Andrii Kovalchuk on 25.11.19 20:00
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 25.11.19 18:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.ui.actions.pairs.view
+package com.mmdev.roove.ui.actions.pairs
 
 import android.view.LayoutInflater
 import android.view.View
@@ -45,12 +45,12 @@ class PairsAdapter (private var mPairsList: List<CardItem>):
 
 	override fun getItemCount() = mPairsList.size
 
-	fun updateData(conversations: List<CardItem>) {
-		mPairsList = conversations
+	fun updateData(newPairsList: List<CardItem>) {
+		mPairsList = newPairsList
 		notifyDataSetChanged()
 	}
 
-	fun getPairItem(position: Int): CardItem{ return mPairsList[position] }
+	fun getPairItem(position: Int) = mPairsList[position]
 
 	// allows clicks events to be caught
 	fun setOnItemClickListener(itemClickListener: OnItemClickListener) {
