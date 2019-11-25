@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 24.11.19 17:49
+ * Created by Andrii Kovalchuk on 25.11.19 20:00
  * Copyright (c) 2019. All rights reserved.
- * Last modified 24.11.19 17:39
+ * Last modified 25.11.19 18:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,6 +39,7 @@ import com.mmdev.business.user.usecase.remote.GetUserByIdUseCase
 import com.mmdev.roove.core.di.viewmodel.ViewModelFactory
 import com.mmdev.roove.core.di.viewmodel.ViewModelKey
 import com.mmdev.roove.ui.actions.conversations.viewmodel.ConversationsViewModel
+import com.mmdev.roove.ui.actions.pairs.PairsViewModel
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModel
 import com.mmdev.roove.ui.cards.viewmodel.CardsViewModel
 import com.mmdev.roove.ui.chat.viewmodel.ChatViewModel
@@ -100,6 +101,13 @@ class ViewModelModule {
 		ConversationsViewModel(CreateConversationUseCase(repository),
 		                       DeleteConversationUseCase(repository),
 		                       GetConversationsListUseCase(repository))
+
+
+	@IntoMap
+	@Provides
+	@ViewModelKey(PairsViewModel::class)
+	fun pairsViewModel(repository: CardsRepository): ViewModel =
+		PairsViewModel(GetMatchedUsersUseCase(repository))
 
 
 	@IntoMap

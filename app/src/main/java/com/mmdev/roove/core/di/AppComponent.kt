@@ -1,14 +1,14 @@
 /*
- * Created by Andrii Kovalchuk on 24.11.19 17:49
+ * Created by Andrii Kovalchuk on 25.11.19 20:00
  * Copyright (c) 2019. All rights reserved.
- * Last modified 24.11.19 17:45
+ * Last modified 25.11.19 18:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.core
+package com.mmdev.roove.core.di
 
 import android.app.Application
 import com.mmdev.business.auth.repository.AuthRepository
