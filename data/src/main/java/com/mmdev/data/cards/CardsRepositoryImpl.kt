@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 25.11.19 20:00
+ * Created by Andrii Kovalchuk on 26.11.19 20:29
  * Copyright (c) 2019. All rights reserved.
- * Last modified 25.11.19 19:59
+ * Last modified 26.11.19 19:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,8 +15,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.user.model.UserItem
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.functions.BiFunction
@@ -46,20 +44,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	                                                          currentUserItem.preferedGender,
 	                                                          currentUserId)
 
-
-
-	//note:debug only
-	//
-	private fun setLikedForBots(){
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("apzjzpbvdj").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("avzcixhglp").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("dtrfbjseuq").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("eoswtmcpul").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("ryknjtobrx").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("snykckkosz").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		Log.wtf("mylogs", "liked for bots executed")
-	}
-
 	/*
 	* note: swiped left
 	*/
@@ -69,6 +53,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 			.document(skippedCardItem.userId)
 			.set(skippedCardItem)
+		Log.wtf(TAG, "skipped executed")
 	}
 	/*
 	* note: swiped right
@@ -83,9 +68,9 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				.collection(USER_LIKED_COLLECTION_REFERENCE)
 				.document(currentUserId)
 				.get()
-				.addOnSuccessListener{ documentSnapshot ->
+				.addOnSuccessListener { documentSnapshot ->
 					if (documentSnapshot.exists()) {
-						//add to match collection
+						//add to match collection for liked user
 						firestore.collection(USERS_COLLECTION_REFERENCE)
 							.document(likedUserId)
 							.collection(USER_MATCHED_COLLECTION_REFERENCE)
@@ -93,6 +78,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 							.set(CardItem(currentUserItem.name,
 							              currentUserItem.mainPhotoUrl,
 							              currentUserItem.userId))
+						//add to match collection for current user
 						firestore.collection(USERS_COLLECTION_REFERENCE)
 							.document(currentUserId)
 							.collection(USER_MATCHED_COLLECTION_REFERENCE)
@@ -133,33 +119,8 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		}).subscribeOn(Schedulers.io())
 	}
 
-	/*
-	* GET MATCHED [CardItem] LIST
-	*/
-	override fun getMatchedCardItems(): Observable<List<CardItem>> {
-		//setLikedForBots()
-		return Observable.create(ObservableOnSubscribe<List<CardItem>> { emitter ->
-			val listener = firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUserId)
-				.collection(USER_MATCHED_COLLECTION_REFERENCE)
-				.whereEqualTo("conversationStarted", false)
-				.addSnapshotListener { snapshots, e ->
-					if (e != null) {
-						emitter.onError(e)
-						return@addSnapshotListener
-					}
-					val matchedUsersList = ArrayList<CardItem>()
-					for (doc in snapshots!!) {
-						matchedUsersList.add(doc.toObject(CardItem::class.java))
-					}
-					emitter.onNext(matchedUsersList)
-				}
-			emitter.setCancellable { listener.remove() }
-		}).subscribeOn(Schedulers.io())
-	}
-
 	/* return filtered users list as Single */
-	override fun getPotentialCardItems(): Single<List<CardItem>> {
+	override fun getUsersByPreferences(): Single<List<CardItem>> {
 		return Single.zip(cardsRepositoryHelper.getAllUsersCards(),
 		                  cardsRepositoryHelper.zipLists(),
 		                  BiFunction<List<CardItem>, List<String>, List<CardItem>>
@@ -175,6 +136,19 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			if (!ids.contains(card.userId))
 				filteredUsersList.add(card)
 		return filteredUsersList
+	}
+
+
+	//note:debug only
+	//
+	private fun setLikedForBots(){
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("apzjzpbvdj").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("avzcixhglp").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("dtrfbjseuq").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("eoswtmcpul").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("ryknjtobrx").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("snykckkosz").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		Log.wtf("mylogs", "liked for bots executed")
 	}
 
 }

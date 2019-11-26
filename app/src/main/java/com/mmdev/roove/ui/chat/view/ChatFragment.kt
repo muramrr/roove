@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 23.11.19 19:40
+ * Created by Andrii Kovalchuk on 26.11.19 20:29
  * Copyright (c) 2019. All rights reserved.
- * Last modified 23.11.19 19:40
+ * Last modified 26.11.19 16:48
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,7 +44,7 @@ import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
-import com.mmdev.roove.ui.actions.conversations.viewmodel.ConversationsViewModel
+import com.mmdev.roove.ui.actions.conversations.ConversationsViewModel
 import com.mmdev.roove.ui.chat.viewmodel.ChatViewModel
 import com.mmdev.roove.ui.main.view.MainActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -190,7 +190,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			                          photoAttachementItem = null)
 
 			if (conversationId.isEmpty()) {
-				disposables.add(conversationsVM.createConversation(mMainActivity.cardItemClicked)
+				disposables.add(conversationsVM.createConversationExecution(mMainActivity.cardItemClicked)
 	                .flatMapCompletable {
 		                Log.wtf(TAG, "creating conversation")
 		                conversationId = it.conversationId

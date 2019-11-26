@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 25.11.19 20:00
+ * Created by Andrii Kovalchuk on 26.11.19 20:29
  * Copyright (c) 2019. All rights reserved.
- * Last modified 25.11.19 20:00
+ * Last modified 26.11.19 17:07
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.main.view.MainActivity
-import io.reactivex.disposables.CompositeDisposable
 
 /**
  * This is the documentation block about the class
@@ -32,23 +31,24 @@ class PairsFragment: Fragment(R.layout.fragment_pairs) {
 
 	private lateinit var mMainActivity: MainActivity
 
-	private val mPairsAdapter: PairsAdapter = PairsAdapter(listOf())
+	private val mPairsAdapter = PairsAdapter(listOf())
 
-	//for potential
-	private lateinit var pairsViewModel: PairsViewModel
-	private val factory = injector.factory()
-
-	private val disposables = CompositeDisposable()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		activity?.let { mMainActivity = it as MainActivity }
 
-		pairsViewModel = ViewModelProvider(this, factory).get(PairsViewModel::class.java)
+		val factory = injector.factory()
+
+		val pairsViewModel =
+			ViewModelProvider(this, factory)[PairsViewModel::class.java]
+
 		pairsViewModel.loadMatchedUsers()
 
-		//get matched users
-		pairsViewModel.getMatchedUsers().observe(this, Observer { mPairsAdapter.updateData(it) })
+		pairsViewModel.getMatchedUsersList().observe(this, Observer {
+			mPairsAdapter.updateData(it)
+		})
+
 	}
 
 
@@ -72,17 +72,10 @@ class PairsFragment: Fragment(R.layout.fragment_pairs) {
 
 				mMainActivity.startProfileFragment(pairItem.userId, true)
 
-
 			}
 		})
 	}
 
-
-
-	override fun onDestroy() {
-		super.onDestroy()
-		disposables.clear()
-	}
 
 
 }
