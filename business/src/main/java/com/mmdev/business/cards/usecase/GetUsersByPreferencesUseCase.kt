@@ -8,22 +8,15 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.business.cards.repository
+package com.mmdev.business.cards.usecase
 
-import com.mmdev.business.cards.model.CardItem
-import io.reactivex.Single
+import com.mmdev.business.cards.repository.CardsRepository
 
 /**
  * This is the documentation block about the class
  */
 
-interface CardsRepository {
+class GetUsersByPreferencesUseCase (private val repository: CardsRepository) {
 
-	fun addToSkipped(skippedCardItem: CardItem)
-
-	fun getUsersByPreferences(): Single<List<CardItem>>
-
-	fun handlePossibleMatch(likedCardItem: CardItem): Single<Boolean>
-
-
+	fun execute() = repository.getUsersByPreferences()
 }

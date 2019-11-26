@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 24.11.19 17:49
+ * Created by Andrii Kovalchuk on 26.11.19 20:29
  * Copyright (c) 2019. All rights reserved.
- * Last modified 23.11.19 19:40
+ * Last modified 26.11.19 17:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.events.repository.EventsRepository
 import com.mmdev.business.feed.repository.FeedRepository
+import com.mmdev.business.pairs.PairsRepository
 import com.mmdev.business.user.repository.UserRepository
 import com.mmdev.data.auth.AuthRepositoryImpl
 import com.mmdev.data.cards.CardsRepositoryImpl
@@ -23,6 +24,7 @@ import com.mmdev.data.chat.ChatRepositoryImpl
 import com.mmdev.data.conversations.ConversationsRepositoryImpl
 import com.mmdev.data.events.EventsRepositoryImpl
 import com.mmdev.data.feed.FeedRepositoryImpl
+import com.mmdev.data.pairs.PairsRepositoryImpl
 import com.mmdev.data.user.UserRepositoryLocal
 import com.mmdev.data.user.UserRepositoryRemote
 import dagger.Module
@@ -56,6 +58,10 @@ class RepositoryModule {
 	@Provides
 	@Singleton
 	fun feedRepository(repository: FeedRepositoryImpl): FeedRepository { return repository }
+
+	@Provides
+	@Singleton
+	fun pairsRepository(repository: PairsRepositoryImpl): PairsRepository { return repository }
 
 	@Provides
 	@Singleton

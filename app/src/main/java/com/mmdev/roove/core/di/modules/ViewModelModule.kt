@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 25.11.19 20:00
+ * Created by Andrii Kovalchuk on 26.11.19 20:29
  * Copyright (c) 2019. All rights reserved.
- * Last modified 25.11.19 18:31
+ * Last modified 26.11.19 18:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,8 +16,7 @@ import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.auth.usecase.*
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.cards.usecase.AddToSkippedUseCase
-import com.mmdev.business.cards.usecase.GetMatchedUsersUseCase
-import com.mmdev.business.cards.usecase.GetPotentialUsersUseCase
+import com.mmdev.business.cards.usecase.GetUsersByPreferencesUseCase
 import com.mmdev.business.cards.usecase.HandlePossibleMatchUseCase
 import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.chat.usecase.GetMessagesUseCase
@@ -30,6 +29,8 @@ import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
 import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
 import com.mmdev.business.events.repository.EventsRepository
 import com.mmdev.business.events.usecase.GetEventsUseCase
+import com.mmdev.business.pairs.GetMatchedUsersUseCase
+import com.mmdev.business.pairs.PairsRepository
 import com.mmdev.business.user.repository.UserRepository
 import com.mmdev.business.user.usecase.local.GetSavedUserUseCase
 import com.mmdev.business.user.usecase.local.SaveUserInfoUseCase
@@ -38,7 +39,7 @@ import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
 import com.mmdev.business.user.usecase.remote.GetUserByIdUseCase
 import com.mmdev.roove.core.di.viewmodel.ViewModelFactory
 import com.mmdev.roove.core.di.viewmodel.ViewModelKey
-import com.mmdev.roove.ui.actions.conversations.viewmodel.ConversationsViewModel
+import com.mmdev.roove.ui.actions.conversations.ConversationsViewModel
 import com.mmdev.roove.ui.actions.pairs.PairsViewModel
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModel
 import com.mmdev.roove.ui.cards.viewmodel.CardsViewModel
@@ -80,8 +81,7 @@ class ViewModelModule {
 	@ViewModelKey(CardsViewModel::class)
 	fun cardsViewModel(repository: CardsRepository): ViewModel =
 		CardsViewModel(AddToSkippedUseCase(repository),
-		               GetMatchedUsersUseCase(repository),
-		               GetPotentialUsersUseCase(repository),
+		               GetUsersByPreferencesUseCase(repository),
 		               HandlePossibleMatchUseCase(repository))
 
 	@IntoMap
@@ -98,15 +98,16 @@ class ViewModelModule {
 	@Provides
 	@ViewModelKey(ConversationsViewModel::class)
 	fun conversationsViewModel(repository: ConversationsRepository): ViewModel =
-		ConversationsViewModel(CreateConversationUseCase(repository),
-		                       DeleteConversationUseCase(repository),
-		                       GetConversationsListUseCase(repository))
+		ConversationsViewModel(
+				CreateConversationUseCase(repository),
+				DeleteConversationUseCase(repository),
+				GetConversationsListUseCase(repository))
 
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(PairsViewModel::class)
-	fun pairsViewModel(repository: CardsRepository): ViewModel =
+	fun pairsViewModel(repository: PairsRepository): ViewModel =
 		PairsViewModel(GetMatchedUsersUseCase(repository))
 
 

@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 25.11.19 20:00
+ * Created by Andrii Kovalchuk on 26.11.19 20:29
  * Copyright (c) 2019. All rights reserved.
- * Last modified 25.11.19 20:00
+ * Last modified 26.11.19 18:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mmdev.business.cards.model.CardItem
-import com.mmdev.business.cards.usecase.GetMatchedUsersUseCase
+import com.mmdev.business.pairs.GetMatchedUsersUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -27,7 +27,7 @@ import javax.inject.Inject
 class PairsViewModel @Inject constructor(private val getMatchedUsersUC: GetMatchedUsersUseCase):
 		ViewModel() {
 
-	private val response: MutableLiveData<List<CardItem>> = MutableLiveData()
+	private val matchedUsersList: MutableLiveData<List<CardItem>> = MutableLiveData()
 
 	private val disposables = CompositeDisposable()
 
@@ -36,21 +36,24 @@ class PairsViewModel @Inject constructor(private val getMatchedUsersUC: GetMatch
 	}
 
 	fun loadMatchedUsers() {
-		disposables.add(load()
+		disposables.add(getMatchedUsersExecution()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                            Log.wtf(TAG, "pairs to show: ${it.size}")
-                           response.value = it
+                           matchedUsersList.value = it
                        },
                        {
                            Log.wtf(TAG, "error + $it")
                        }))
 	}
 
-	fun getMatchedUsers() = response
+	fun getMatchedUsersList() = matchedUsersList
 
-	private fun load() = getMatchedUsersUC.execute()
+	private fun getMatchedUsersExecution() = getMatchedUsersUC.execute()
 
-	override fun onCleared() { disposables.clear() }
+	override fun onCleared() {
+		disposables.clear()
+		super.onCleared()
+	}
 
 }

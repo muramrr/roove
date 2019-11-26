@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 25.11.19 20:00
+ * Created by Andrii Kovalchuk on 26.11.19 20:29
  * Copyright (c) 2019. All rights reserved.
- * Last modified 25.11.19 18:31
+ * Last modified 26.11.19 16:32
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ package com.mmdev.roove.ui.actions
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.mmdev.roove.ui.actions.conversations.view.ConversationsFragment
+import com.mmdev.roove.ui.actions.conversations.ConversationsFragment
 import com.mmdev.roove.ui.actions.pairs.PairsFragment
 
 /**

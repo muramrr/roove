@@ -1,23 +1,24 @@
 /*
- * Created by Andrii Kovalchuk on 29.10.19 17:08
+ * Created by Andrii Kovalchuk on 26.11.19 20:29
  * Copyright (c) 2019. All rights reserved.
- * Last modified 01.11.19 20:23
+ * Last modified 26.11.19 17:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.business.cards.usecase
+package com.mmdev.business.pairs
 
-import com.mmdev.business.cards.repository.CardsRepository
+import com.mmdev.business.cards.model.CardItem
+import io.reactivex.Observable
 
 /**
  * This is the documentation block about the class
  */
 
-class GetMatchedUsersUseCase (private val repository: CardsRepository)  {
+interface PairsRepository {
 
-	fun execute() = repository.getMatchedCardItems()
+	fun getMatchedUsersList(): Observable<List<CardItem>>
 
 }
