@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 24.11.19 17:49
+ * Created by Andrii Kovalchuk on 26.11.19 20:29
  * Copyright (c) 2019. All rights reserved.
- * Last modified 24.11.19 17:38
+ * Last modified 26.11.19 17:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,10 +22,10 @@ import javax.inject.Singleton
  * if you want to keep all [ViewModels] in the application throughout your work in the same factory,
  * mark it as a [Singleton],
  * make one module with all the [ViewModels]
- * and add the model binding keys into [ViewModelModule.javaClass]
+ * and add the model binding keys into [ViewModelModule]
  */
 
-
+@Singleton
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory @Inject constructor(private val viewModels: MutableMap<Class<out ViewModel>,
 											Provider<ViewModel>>) :

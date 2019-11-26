@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 13.11.19 15:31
+ * Created by Andrii Kovalchuk on 26.11.19 20:29
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 26.11.19 17:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,9 +28,7 @@ class ActionsFragment : Fragment(R.layout.fragment_actions) {
 	private lateinit var mMainActivity: MainActivity
 
 	companion object{
-		fun newInstance(): ActionsFragment {
-			return ActionsFragment()
-		}
+		fun newInstance() =  ActionsFragment()
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {

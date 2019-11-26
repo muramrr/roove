@@ -1,14 +1,14 @@
 /*
- * Created by Andrii Kovalchuk on 27.10.19 20:47
+ * Created by Andrii Kovalchuk on 26.11.19 20:29
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 26.11.19 16:32
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.ui.actions.conversations.view
+package com.mmdev.roove.ui.actions.conversations
 
 import android.view.LayoutInflater
 import android.view.View
