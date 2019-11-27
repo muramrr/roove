@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 29.10.19 13:22
+ * Created by Andrii Kovalchuk on 27.11.19 19:54
  * Copyright (c) 2019. All rights reserved.
- * Last modified 30.10.19 16:24
+ * Last modified 27.11.19 19:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,14 +10,15 @@
 
 package com.mmdev.business.chat.usecase
 
+import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.chat.repository.ChatRepository
 
 /**
  * This is the documentation block about the class
  */
 
-class SetConversationUseCase (private val repository: ChatRepository) {
+class CreateConversationUseCase (private val repository: ChatRepository) {
 
-	fun execute(t: String) = repository.setConversation(t)
+	fun execute(t: CardItem) = repository.createConversation(t)
 
 }

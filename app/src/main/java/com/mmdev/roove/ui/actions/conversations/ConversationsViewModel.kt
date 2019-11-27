@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 26.11.19 20:29
+ * Created by Andrii Kovalchuk on 27.11.19 19:54
  * Copyright (c) 2019. All rights reserved.
- * Last modified 26.11.19 18:16
+ * Last modified 27.11.19 19:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,9 +13,7 @@ package com.mmdev.roove.ui.actions.conversations
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.conversations.model.ConversationItem
-import com.mmdev.business.conversations.usecase.CreateConversationUseCase
 import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
 import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -26,13 +24,10 @@ import javax.inject.Inject
  * This is the documentation block about the class
  */
 
-class ConversationsViewModel @Inject constructor(private val createUC: CreateConversationUseCase,
-                                                 private val deleteUC: DeleteConversationUseCase,
+class ConversationsViewModel @Inject constructor(private val deleteUC: DeleteConversationUseCase,
                                                  private val getUC: GetConversationsListUseCase):
 		ViewModel(){
 
-
-	private val createdConversationItem: MutableLiveData<ConversationItem> = MutableLiveData()
 
 	private val deleteConversationStatus: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -46,17 +41,6 @@ class ConversationsViewModel @Inject constructor(private val createUC: CreateCon
 		private const val TAG = "mylogs"
 	}
 
-
-	fun createConversation(partnerCardItem: CardItem){
-		disposables.add(createConversationExecution(partnerCardItem)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-
-                       },{
-
-            }))
-
-	}
 
 	fun deleteConversation(conversationItem: ConversationItem){
 		disposables.add(deleteConversationExecution(conversationItem)
@@ -85,11 +69,9 @@ class ConversationsViewModel @Inject constructor(private val createUC: CreateCon
 	}
 
 	fun getConversationsList() = conversationsList
-	fun getDeleteConversationStatus() = deleteConversationStatus
-	fun getCreatedConversationItem() = createdConversationItem
 
-	fun createConversationExecution(partnerCardItem: CardItem) =
-		createUC.execute(partnerCardItem)
+	fun getDeleteConversationStatus() = deleteConversationStatus
+
 
 	private fun deleteConversationExecution(conversationItem: ConversationItem) =
 		deleteUC.execute(conversationItem)

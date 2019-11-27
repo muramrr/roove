@@ -1,14 +1,14 @@
 /*
- * Created by Andrii Kovalchuk on 26.11.19 20:29
+ * Created by Andrii Kovalchuk on 27.11.19 19:54
  * Copyright (c) 2019. All rights reserved.
- * Last modified 26.11.19 17:07
+ * Last modified 27.11.19 19:15
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.ui.actions.pairs
+package com.mmdev.roove.ui.actions.pairs.view
 
 import android.os.Bundle
 import android.view.View
@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
+import com.mmdev.roove.ui.actions.pairs.PairsViewModel
 import com.mmdev.roove.ui.main.view.MainActivity
 
 /**
@@ -31,7 +32,8 @@ class PairsFragment: Fragment(R.layout.fragment_pairs) {
 
 	private lateinit var mMainActivity: MainActivity
 
-	private val mPairsAdapter = PairsAdapter(listOf())
+	private val mPairsAdapter =
+		PairsAdapter(listOf())
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
