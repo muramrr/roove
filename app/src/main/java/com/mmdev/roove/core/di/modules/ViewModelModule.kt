@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 26.11.19 20:29
+ * Created by Andrii Kovalchuk on 27.11.19 19:54
  * Copyright (c) 2019. All rights reserved.
- * Last modified 26.11.19 18:01
+ * Last modified 27.11.19 19:54
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,12 +19,11 @@ import com.mmdev.business.cards.usecase.AddToSkippedUseCase
 import com.mmdev.business.cards.usecase.GetUsersByPreferencesUseCase
 import com.mmdev.business.cards.usecase.HandlePossibleMatchUseCase
 import com.mmdev.business.chat.repository.ChatRepository
+import com.mmdev.business.chat.usecase.CreateConversationUseCase
 import com.mmdev.business.chat.usecase.GetMessagesUseCase
 import com.mmdev.business.chat.usecase.SendMessageUseCase
 import com.mmdev.business.chat.usecase.SendPhotoUseCase
-import com.mmdev.business.chat.usecase.SetConversationUseCase
 import com.mmdev.business.conversations.repository.ConversationsRepository
-import com.mmdev.business.conversations.usecase.CreateConversationUseCase
 import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
 import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
 import com.mmdev.business.events.repository.EventsRepository
@@ -42,8 +41,8 @@ import com.mmdev.roove.core.di.viewmodel.ViewModelKey
 import com.mmdev.roove.ui.actions.conversations.ConversationsViewModel
 import com.mmdev.roove.ui.actions.pairs.PairsViewModel
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModel
-import com.mmdev.roove.ui.cards.viewmodel.CardsViewModel
-import com.mmdev.roove.ui.chat.viewmodel.ChatViewModel
+import com.mmdev.roove.ui.cards.CardsViewModel
+import com.mmdev.roove.ui.chat.ChatViewModel
 import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoViewModel
 import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.places.viewmodel.PlacesViewModel
@@ -81,27 +80,27 @@ class ViewModelModule {
 	@ViewModelKey(CardsViewModel::class)
 	fun cardsViewModel(repository: CardsRepository): ViewModel =
 		CardsViewModel(AddToSkippedUseCase(repository),
-		               GetUsersByPreferencesUseCase(repository),
-		               HandlePossibleMatchUseCase(repository))
+		                                                           GetUsersByPreferencesUseCase(
+				                                                           repository),
+		                                                           HandlePossibleMatchUseCase(
+				                                                           repository))
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(ChatViewModel::class)
 	fun chatViewModel(repository: ChatRepository): ViewModel =
-		ChatViewModel(GetMessagesUseCase(repository),
+		ChatViewModel(CreateConversationUseCase(repository),
+		              GetMessagesUseCase(repository),
 		              SendMessageUseCase(repository),
-		              SendPhotoUseCase(repository),
-		              SetConversationUseCase(repository))
+		              SendPhotoUseCase(repository))
 
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(ConversationsViewModel::class)
 	fun conversationsViewModel(repository: ConversationsRepository): ViewModel =
-		ConversationsViewModel(
-				CreateConversationUseCase(repository),
-				DeleteConversationUseCase(repository),
-				GetConversationsListUseCase(repository))
+		ConversationsViewModel(DeleteConversationUseCase(repository),
+		                       GetConversationsListUseCase(repository))
 
 
 	@IntoMap
