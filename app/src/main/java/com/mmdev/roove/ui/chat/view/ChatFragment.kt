@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 26.11.19 20:29
+ * Created by Andrii Kovalchuk on 27.11.19 19:54
  * Copyright (c) 2019. All rights reserved.
- * Last modified 26.11.19 16:48
+ * Last modified 27.11.19 19:15
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,7 +45,7 @@ import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.actions.conversations.ConversationsViewModel
-import com.mmdev.roove.ui.chat.viewmodel.ChatViewModel
+import com.mmdev.roove.ui.chat.ChatViewModel
 import com.mmdev.roove.ui.main.view.MainActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

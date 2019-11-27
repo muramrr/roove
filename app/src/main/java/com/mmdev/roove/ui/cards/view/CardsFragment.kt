@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 26.11.19 20:29
+ * Created by Andrii Kovalchuk on 27.11.19 19:54
  * Copyright (c) 2019. All rights reserved.
- * Last modified 26.11.19 20:27
+ * Last modified 27.11.19 19:15
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,7 +28,7 @@ import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.FragmentCardsBinding
-import com.mmdev.roove.ui.cards.viewmodel.CardsViewModel
+import com.mmdev.roove.ui.cards.CardsViewModel
 import com.mmdev.roove.ui.main.view.MainActivity
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
@@ -40,7 +40,8 @@ class CardsFragment: Fragment() {
 
 	private lateinit var mMainActivity: MainActivity
 
-	private val mCardsStackAdapter: CardsStackAdapter = CardsStackAdapter(listOf())
+	private val mCardsStackAdapter: CardsStackAdapter =
+		CardsStackAdapter(listOf())
 
 	private lateinit var mAppearedCardItem: CardItem
 
@@ -126,7 +127,7 @@ class CardsFragment: Fragment() {
 			layoutManager = cardStackLayoutManager
 		}
 
-		mCardsStackAdapter.setOnItemClickListener(object: CardsStackAdapter.OnItemClickListener{
+		mCardsStackAdapter.setOnItemClickListener(object: CardsStackAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
 				mMainActivity.startProfileFragment(mCardsStackAdapter.getCardItem(position).userId,
 				                                   false)
