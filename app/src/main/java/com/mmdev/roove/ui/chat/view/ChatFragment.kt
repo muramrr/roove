@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 27.11.19 19:54
+ * Created by Andrii Kovalchuk on 28.11.19 22:07
  * Copyright (c) 2019. All rights reserved.
- * Last modified 27.11.19 19:15
+ * Last modified 28.11.19 22:00
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,11 +20,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.format.DateFormat
-import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.ImageView
@@ -32,6 +28,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,11 +41,9 @@ import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
-import com.mmdev.roove.ui.actions.conversations.ConversationsViewModel
+import com.mmdev.roove.databinding.FragmentChatBinding
 import com.mmdev.roove.ui.chat.ChatViewModel
 import com.mmdev.roove.ui.main.view.MainActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
@@ -61,36 +56,30 @@ import kotlin.collections.ArrayList
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
-
 	private lateinit var  mMainActivity: MainActivity
 
 
-	private lateinit var chatViewModel: ChatViewModel
-	private lateinit var conversationsVM: ConversationsViewModel
 	private val factory = injector.factory()
+	private lateinit var chatViewModel: ChatViewModel
+
 
 	// POJO models
 	private lateinit var userItemModel: UserItem
 
 	// Views UI
 	private lateinit var edMessageWrite: EditText
-	private lateinit var mChatAdapter: ChatAdapter
+	private val mChatAdapter: ChatAdapter = ChatAdapter(listOf())
 
 	// File
 	private lateinit var mFilePathImageCamera: File
 
 	private lateinit var conversationId: String
 
-	private val disposables = CompositeDisposable()
-
-
 
 	//static fields
 	companion object {
 		private const val IMAGE_GALLERY_REQUEST = 1
 		private const val IMAGE_CAMERA_REQUEST = 2
-
-		private const val TAG = "mylogs"
 
 		// Gallery Permissions
 		private const val REQUEST_STORAGE = 1
@@ -123,24 +112,34 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		setHasOptionsMenu(true)
 
 		userItemModel = mMainActivity.userItemModel
-		mChatAdapter = ChatAdapter(userItemModel.userId, listOf())
+		mChatAdapter.setCurrentUserId(userItemModel.userId)
 
 		chatViewModel = ViewModelProvider(this, factory)[ChatViewModel::class.java]
-		conversationsVM = ViewModelProvider(this, factory)[ConversationsViewModel::class.java]
 
 		if (conversationId.isNotEmpty()) {
-			disposables.add(chatViewModel.getMessages(conversationId)
-				.doOnSubscribe { mMainActivity.progressDialog.showDialog() }
-				.doOnNext { mMainActivity.progressDialog.dismissDialog() }
-				.doFinally { mMainActivity.progressDialog.dismissDialog() }
-                .observeOn(AndroidSchedulers.mainThread())
-				.subscribe({ if(it.isNotEmpty()) mChatAdapter.updateData(it)
-				           Log.wtf(TAG, "messages to show: ${it.size}")},
-				           { mMainActivity.showToast("$it") }))
-
+			chatViewModel.loadMessages(conversationId)
+			chatViewModel.getMessagesList().observe(this, Observer {
+				mChatAdapter.updateData(it)
+			})
+		}
+		else {
+			chatViewModel.startListenToEmptyChat(mMainActivity.partnerId)
+			chatViewModel.getMessagesList().observe(this, Observer {
+				mChatAdapter.updateData(it)
+			})
 		}
 
 	}
+
+
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+	                          savedInstanceState: Bundle?) =
+		FragmentChatBinding.inflate(inflater, container, false)
+			.apply {
+				lifecycleOwner = this@ChatFragment
+				viewModel = chatViewModel
+			}
+			.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		edMessageWrite = view.findViewById(R.id.editTextMessage)
@@ -189,32 +188,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			                          edMessageWrite.text.toString().trim(),
 			                          photoAttachementItem = null)
 
-			if (conversationId.isEmpty()) {
-				disposables.add(conversationsVM.createConversationExecution(mMainActivity.cardItemClicked)
-	                .flatMapCompletable {
-		                Log.wtf(TAG, "creating conversation")
-		                conversationId = it.conversationId
-		                mMainActivity.conversationItemClicked = it
-		                chatViewModel.setConversation(conversationId)
-		                chatViewModel.sendMessage(message)
-	                }
-	                .andThen { chatViewModel.getMessages(conversationId)
-                                .subscribe({ if(it.isNotEmpty()) mChatAdapter.updateData(it)
-	                                        Log.wtf(TAG, "messages to show: ${it.size}")},
-                                           { mMainActivity.showToast("$it") }) }
-	                .observeOn(AndroidSchedulers.mainThread())
-	                .subscribe({ Log.wtf(TAG, "Message sent after creating conv") },
-	                           { mMainActivity.showToast("error + $it") }))
-				edMessageWrite.setText("")
-			}
-			else {
-				disposables.add(chatViewModel.sendMessage(message)
-	                .observeOn(AndroidSchedulers.mainThread())
-	                .subscribe({ Log.wtf(TAG, "Message sent fragment_chat") },
-	                           { Log.wtf(TAG, "can't send message fragment_chat") }))
-
-				edMessageWrite.setText("")
-			}
+			chatViewModel.sendMessage(message)
+			edMessageWrite.setText("")
 
 		}
 		else edMessageWrite.startAnimation(AnimationUtils.loadAnimation(mMainActivity,
@@ -272,7 +247,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			action = Intent.ACTION_GET_CONTENT
 			type = "image/*"
 		}
-		startActivityForResult(Intent.createChooser(intent, "Select picture"), IMAGE_GALLERY_REQUEST)
+		startActivityForResult(Intent.createChooser(intent, "Select image"), IMAGE_GALLERY_REQUEST)
 	}
 
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -294,15 +269,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			if (resultCode == RESULT_OK) {
 
 				val selectedUri = data?.data
-				disposables.add(chatViewModel.sendPhoto(selectedUri.toString())
-	                .observeOn(AndroidSchedulers.mainThread())
-	                .flatMapCompletable { chatViewModel.sendMessage(MessageItem(userItemModel, photoAttachementItem = it)) }
-	                .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
-	                .doOnComplete { mMainActivity.progressDialog.dismissDialog() }
-	                .subscribe({ Log.wtf(TAG, "Photo gallery sent") },
-	                           { mMainActivity.showToast("$it") }))
-
-
+				chatViewModel.sendPhoto(selectedUri.toString(), userItemModel)
 
 			}
 		}
@@ -311,14 +278,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			if (resultCode == RESULT_OK) {
 
 				if (mFilePathImageCamera.exists()) {
-					disposables.add(chatViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString())
-		                .observeOn(AndroidSchedulers.mainThread())
-		                .flatMapCompletable { chatViewModel.sendMessage(MessageItem(userItemModel, photoAttachementItem = it)) }
-		                .doOnSubscribe { mMainActivity.progressDialog.showDialog() }
-		                .doOnComplete { mMainActivity.progressDialog.dismissDialog() }
-		                .subscribe( { Log.wtf(TAG, "Photo camera sent") },
-                                    { mMainActivity.showToast("$it") }))
-
+					chatViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString(),
+					                        userItemModel)
 				}
 				else Toast.makeText(mMainActivity,
 						"filePathImageCamera is null or filePathImageCamera isn't exists",
@@ -364,12 +325,5 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		mMainActivity.toolbar.title = mMainActivity.partnerName
 		mMainActivity.setNonScrollableToolbar()
 	}
-
-	override fun onDestroy() {
-		super.onDestroy()
-		disposables.clear()
-	}
-
-
 
 }

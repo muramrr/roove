@@ -1,28 +1,23 @@
 /*
  * Created by Andrii Kovalchuk on 28.11.19 22:07
  * Copyright (c) 2019. All rights reserved.
- * Last modified 28.11.19 19:19
+ * Last modified 28.11.19 21:13
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.business.cards.repository
+package com.mmdev.business.chat.usecase
 
-import com.mmdev.business.cards.model.CardItem
-import io.reactivex.Single
+import com.mmdev.business.chat.repository.ChatRepository
 
 /**
  * This is the documentation block about the class
  */
 
-interface CardsRepository {
+class GetConversationWithPartnerUseCase (private val repository: ChatRepository){
 
-	fun addToSkipped(skippedCardItem: CardItem)
-
-	fun checkMatch(likedCardItem: CardItem): Single<Boolean>
-
-	fun getUsersByPreferences(): Single<List<CardItem>>
+	fun execute(s: String) = repository.getConversationWithPartner(s)
 
 }

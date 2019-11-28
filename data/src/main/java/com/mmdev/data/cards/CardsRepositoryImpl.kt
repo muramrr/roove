@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 26.11.19 20:29
+ * Created by Andrii Kovalchuk on 28.11.19 22:07
  * Copyright (c) 2019. All rights reserved.
- * Last modified 26.11.19 19:41
+ * Last modified 28.11.19 21:49
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.cards.repository.CardsRepository
+import com.mmdev.business.conversations.model.ConversationItem
 import com.mmdev.business.user.model.UserItem
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
@@ -35,14 +36,11 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		private const val USER_LIKED_COLLECTION_REFERENCE = "liked"
 		private const val USER_SKIPPED_COLLECTION_REFERENCE = "skipped"
 		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
+		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 		private const val TAG = "mylogs"
 	}
 
 	private val currentUserId = currentUserItem.userId
-
-	private val cardsRepositoryHelper = CardsRepositoryHelper(firestore,
-	                                                          currentUserItem.preferedGender,
-	                                                          currentUserId)
 
 	/*
 	* note: swiped left
@@ -55,72 +53,116 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.set(skippedCardItem)
 		Log.wtf(TAG, "skipped executed")
 	}
+
 	/*
 	* note: swiped right
  	* check if users liked each other
 	*/
-	override fun handlePossibleMatch(likedCardItem: CardItem): Single<Boolean> {
-		val likedUserId = likedCardItem.userId
+	override fun checkMatch(likedCardItem: CardItem): Single<Boolean> {
+
+		val currentCardItem = convertUserItemToCardItem(currentUserItem)
+
 		return Single.create(SingleOnSubscribe<Boolean> { emitter ->
 
 			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(likedUserId)
+				.document(likedCardItem.userId)
 				.collection(USER_LIKED_COLLECTION_REFERENCE)
 				.document(currentUserId)
 				.get()
 				.addOnSuccessListener { documentSnapshot ->
 					if (documentSnapshot.exists()) {
-						//add to match collection for liked user
-						firestore.collection(USERS_COLLECTION_REFERENCE)
-							.document(likedUserId)
-							.collection(USER_MATCHED_COLLECTION_REFERENCE)
-							.document(currentUserId)
-							.set(CardItem(currentUserItem.name,
-							              currentUserItem.mainPhotoUrl,
-							              currentUserItem.userId))
-						//add to match collection for current user
-						firestore.collection(USERS_COLLECTION_REFERENCE)
-							.document(currentUserId)
-							.collection(USER_MATCHED_COLLECTION_REFERENCE)
-							.document(likedUserId)
-							.set(likedCardItem)
-
-						//remove from like collection
-						//note:uncomment for release
-		//					firestore.collection(USERS_COLLECTION_REFERENCE)
-		//							.document(likedUserId)
-		//							.collection(USER_LIKED_COLLECTION_REFERENCE)
-		//							.document(mCurrentUserId)
-		//							.delete();
-						firestore.collection(USERS_COLLECTION_REFERENCE)
-							.document(currentUserId)
-							.collection(USER_LIKED_COLLECTION_REFERENCE)
-							.document(likedUserId)
-							.delete()
-						Log.wtf(TAG, "match handle executed")
 
 						emitter.onSuccess(true)
+
+						handleMatch(likedCardItem, currentCardItem)
+
+						val conversationId = firestore
+							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+							.document()
+							.id
+
+						//set conversation for another user
+						setupConversationForUser(conversationId, likedCardItem.userId)
+
+						//set conversation for current user
+						firestore.collection(USERS_COLLECTION_REFERENCE)
+							.document(currentUserId)
+							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+							.document(conversationId)
+							.set(ConversationItem(conversationId,
+							                      partnerId = likedCardItem.userId,
+							                      partnerName = likedCardItem.name,
+							                      partnerPhotoUrl = likedCardItem.mainPhotoUrl))
+							.addOnSuccessListener { emitter.onSuccess(true) }
+							.addOnFailureListener { emitter.onError(it) }
+
 					}
 
 					else {
 						firestore.collection(USERS_COLLECTION_REFERENCE)
 							.document(currentUserId)
 							.collection(USER_LIKED_COLLECTION_REFERENCE)
-							.document(likedUserId)
+							.document(likedCardItem.userId)
 							.set(likedCardItem)
 						emitter.onSuccess(false)
 					}
 
 			}.addOnFailureListener {
-				Log.wtf(TAG, "handlePossibleMatch fail")
+				Log.wtf(TAG, "check match fail")
 				emitter.onError(it)
 			}
 
 		}).subscribeOn(Schedulers.io())
 	}
 
+	private fun handleMatch(likedCardItem: CardItem, currentCardItem: CardItem){
+		//add to matches collection for liked user
+		addToMatchCollection(likedCardItem, currentCardItem)
+
+		//add to matches collection for CURRENT user
+		addToMatchCollection(currentCardItem, likedCardItem)
+
+		//remove from likes collection for liked user
+		//note:uncomment for release
+		//deleteFromLikesCollection(likedCardItem, currentCardItem)
+
+		//remove from likes collection for CURRENT user
+		deleteFromLikesCollection(currentCardItem.userId, likedCardItem.userId)
+
+		Log.wtf(TAG, "match handle executed")
+	}
+
+	private fun addToMatchCollection(userForWhichToAdd: CardItem, whomToAdd: CardItem){
+		firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(userForWhichToAdd.userId)
+			.collection(USER_MATCHED_COLLECTION_REFERENCE)
+			.document(whomToAdd.userId)
+			.set(whomToAdd)
+	}
+
+	private fun deleteFromLikesCollection(userIdForWhichDelete: String, whomToDeleteId: String){
+		firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(userIdForWhichDelete)
+			.collection(USER_LIKED_COLLECTION_REFERENCE)
+			.document(whomToDeleteId)
+			.delete()
+	}
+
+	private fun setupConversationForUser(conversationId: String, likedUserId: String){
+		firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(likedUserId)
+			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+			.document(conversationId)
+			.set(ConversationItem(conversationId,
+			                      partnerId = currentUserItem.userId,
+			                      partnerName = currentUserItem.name,
+			                      partnerPhotoUrl = currentUserItem.mainPhotoUrl))
+	}
+
+
 	/* return filtered users list as Single */
 	override fun getUsersByPreferences(): Single<List<CardItem>> {
+		val cardsRepositoryHelper = CardsRepositoryHelper(firestore, currentUserItem)
 		return Single.zip(cardsRepositoryHelper.getAllUsersCards(),
 		                  cardsRepositoryHelper.zipLists(),
 		                  BiFunction<List<CardItem>, List<String>, List<CardItem>>
@@ -138,6 +180,10 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		return filteredUsersList
 	}
 
+
+	private fun convertUserItemToCardItem(userItem: UserItem) = CardItem(userItem.name,
+	                                                                     userItem.mainPhotoUrl,
+	                                                                     userItem.userId)
 
 	//note:debug only
 	//

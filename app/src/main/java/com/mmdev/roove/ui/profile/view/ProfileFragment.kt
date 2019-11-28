@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 25.11.19 20:00
+ * Created by Andrii Kovalchuk on 28.11.19 22:07
  * Copyright (c) 2019. All rights reserved.
- * Last modified 25.11.19 19:38
+ * Last modified 28.11.19 21:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,12 +62,13 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 			}
 		}
 
-
 	}
+
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		activity?.let { mMainActivity = it as MainActivity }
+
 		arguments?.let {
 			userId = it.getString(USER_ID_KEY, "")
 			fabVisible = it.getBoolean(FAB_VISIBLE_KEY)
@@ -93,7 +94,7 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 
 		viewPager.adapter = userPhotosAdapter
 
-		TabLayoutMediator(dots, viewPager){ tab: TabLayout.Tab, position: Int -> }.attach()
+		TabLayoutMediator(dots, viewPager){ _: TabLayout.Tab, _: Int -> }.attach()
 
 		tbProfile.setNavigationOnClickListener { mMainActivity.onBackPressed() }
 		tbProfile.inflateMenu(R.menu.profile_view_options)
