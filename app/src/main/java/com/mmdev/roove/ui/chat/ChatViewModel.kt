@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 27.11.19 19:54
+ * Created by Andrii Kovalchuk on 28.11.19 22:07
  * Copyright (c) 2019. All rights reserved.
- * Last modified 27.11.19 19:53
+ * Last modified 28.11.19 21:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,29 +10,29 @@
 
 package com.mmdev.roove.ui.chat
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.chat.model.MessageItem
-import com.mmdev.business.chat.usecase.CreateConversationUseCase
+import com.mmdev.business.chat.usecase.GetConversationWithPartnerUseCase
 import com.mmdev.business.chat.usecase.GetMessagesUseCase
 import com.mmdev.business.chat.usecase.SendMessageUseCase
 import com.mmdev.business.chat.usecase.SendPhotoUseCase
-import com.mmdev.business.conversations.model.ConversationItem
+import com.mmdev.business.user.model.UserItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
 
-class ChatViewModel(private val createUC: CreateConversationUseCase,
-                    private val getMessagesUC: GetMessagesUseCase,
-                    private val sendMessageUC: SendMessageUseCase,
-                    private val sendPhotoUC: SendPhotoUseCase) : ViewModel() {
+class ChatViewModel @Inject constructor(private val getConversationUC: GetConversationWithPartnerUseCase,
+                                        private val getMessagesUC: GetMessagesUseCase,
+                                        private val sendMessageUC: SendMessageUseCase,
+                                        private val sendPhotoUC: SendPhotoUseCase) : ViewModel() {
 
 
-	private val createdConversationItem: MutableLiveData<ConversationItem> = MutableLiveData()
-
+	private val messagesList: MutableLiveData<List<MessageItem>> = MutableLiveData()
+	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
 
 	private val disposables = CompositeDisposable()
-
 
 
 	companion object {
@@ -40,28 +40,66 @@ class ChatViewModel(private val createUC: CreateConversationUseCase,
 	}
 
 
-	fun createConversation(partnerCardItem: CardItem){
-		disposables.add(createConversationExecution(partnerCardItem)
+	fun startListenToEmptyChat(partnerId: String){
+		disposables.add(getConversationExecution(partnerId)
+            .flatMapObservable { getMessagesExecution(it) }
+            .doOnSubscribe { showLoading.value = true }
+            .doOnNext { showLoading.value = false }
+            .doFinally { showLoading.value = false }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-
-                       },{
-
+	                       if(it.isNotEmpty()) messagesList.value = it
+	                       Log.wtf(TAG, "messages to show: ${it.size}")
+                       },
+                       {
+	                       Log.wtf(TAG, "can't send message fragment_chat")
                        }))
-
 	}
 
+	fun loadMessages(conversationId: String){
+		disposables.add(getMessagesExecution(conversationId)
+            .doOnSubscribe { showLoading.value = true }
+            .doOnNext { showLoading.value = false }
+            .doFinally { showLoading.value = false }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+	                       if(it.isNotEmpty()) messagesList.value = it
+	                       Log.wtf(TAG, "messages to show: ${it.size}")
+                       },
+                       {
+	                       Log.wtf(TAG, "get messages error: $it")
+                       }))
+	}
 
-	fun getCreatedConversationItem() = createdConversationItem
+	fun sendMessage(messageItem: MessageItem){
+		disposables.add(sendMessageExecution(messageItem)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ Log.wtf(TAG, "Message sent fragment_chat") },
+                       { Log.wtf(TAG, "can't send message fragment_chat") }))
+	}
 
-	fun getMessages(conversationId: String) = getMessagesUC.execute(conversationId)
+	fun sendPhoto(photoUri: String, senderUserItem: UserItem){
+		disposables.add(sendPhotoExecution(photoUri)
+            .flatMapCompletable { sendMessageExecution(MessageItem(senderUserItem,
+                                                                   photoAttachementItem = it)) }
+            .doOnSubscribe { showLoading.value = true }
+            .doOnComplete { showLoading.value = false }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ Log.wtf(TAG, "Photo sent") },
+                       { Log.wtf(TAG, "Sending photo error: $it") }))
+	}
 
-	fun sendMessage(messageItem: MessageItem) = sendMessageUC.execute(messageItem)
+	fun getMessagesList() = messagesList
 
-	fun sendPhoto(photoUri: String) = sendPhotoUC.execute(photoUri)
 
-	private fun createConversationExecution(partnerCardItem: CardItem) =
-		createUC.execute(partnerCardItem)
+	private fun getConversationExecution(partnerId: String) = getConversationUC.execute(partnerId)
+
+	private fun getMessagesExecution(conversationId: String) = getMessagesUC.execute(conversationId)
+
+	private fun sendMessageExecution(messageItem: MessageItem) = sendMessageUC.execute(messageItem)
+
+	private fun sendPhotoExecution(photoUri: String) = sendPhotoUC.execute(photoUri)
+
 
 
 	override fun onCleared() {

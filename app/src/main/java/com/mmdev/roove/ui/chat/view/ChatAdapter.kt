@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 06.06.19 13:27
+ * Created by Andrii Kovalchuk on 28.11.19 22:07
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 28.11.19 20:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,11 +26,11 @@ import com.mmdev.roove.core.GlideApp
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatAdapter (private var userId: String,
-                   private var listMessageItems: List<MessageItem>):
+class ChatAdapter (private var listMessageItems: List<MessageItem>):
 	RecyclerView.Adapter<ChatAdapter.ChatViewHolder>(){
 
 	private lateinit var attachedPhotoClickListener: OnItemClickListener
+	private var userId = ""
 
 	companion object {
 		private const val RIGHT_MSG = 0
@@ -65,13 +65,14 @@ class ChatAdapter (private var userId: String,
 
 	override fun getItemCount() = listMessageItems.size
 
+	fun getItem(position: Int) = listMessageItems[position]
+
+	fun setCurrentUserId(id: String){ userId = id }
+
 	fun updateData(chats: List<MessageItem>) {
 		this.listMessageItems = chats
 		notifyDataSetChanged()
 	}
-
-	fun getItem(position: Int) = listMessageItems[position]
-
 
 	/* note: USE FOR -DEBUG ONLY */
 //	fun changeSenderName(name:String){

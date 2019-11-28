@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 27.11.19 19:54
+ * Created by Andrii Kovalchuk on 28.11.19 22:07
  * Copyright (c) 2019. All rights reserved.
- * Last modified 27.11.19 18:43
+ * Last modified 28.11.19 20:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,15 +15,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.cards.usecase.AddToSkippedUseCase
+import com.mmdev.business.cards.usecase.CheckMatchUseCase
 import com.mmdev.business.cards.usecase.GetUsersByPreferencesUseCase
-import com.mmdev.business.cards.usecase.HandlePossibleMatchUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippedUseCase,
-                                         private val getUsersByPreferencesUC: GetUsersByPreferencesUseCase,
-                                         private val handlePossibleMatchUC: HandlePossibleMatchUseCase):
+                                         private val checkMatchUC: CheckMatchUseCase,
+                                         private val getUsersByPreferencesUC: GetUsersByPreferencesUseCase):
 		ViewModel(){
 
 	private val usersCardsList: MutableLiveData<List<CardItem>> = MutableLiveData()
@@ -39,9 +39,23 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
 		private const val TAG = "mylogs"
 	}
 
+
 	fun addToSkipped(skippedCardItem: CardItem) {
 		addToSkippedExecution(skippedCardItem)
 		Log.wtf(TAG, "skipped + ${skippedCardItem.name}")
+	}
+
+
+	fun checkMatch(likedCardItem: CardItem){
+		disposables.add(checkMatchExecution(likedCardItem)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                           showMatchDialog.value = it
+                           Log.wtf(TAG, "its a match! + ${likedCardItem.name}")
+                       },
+                       {
+                           Log.wtf(TAG, "error swiped + $it")
+                       }))
 	}
 
 
@@ -58,30 +72,20 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
 	                       usersCardsList.value = it
                        },
                        {
-	                       Log.wtf(TAG, "get potential users error + $it")
+	                       Log.wtf(TAG, "get potential users error: $it")
                        }))
 	}
 
-	fun handlePossibleMatch(likedCardItem: CardItem){
-		disposables.add(handlePossibleMatchExecution(likedCardItem)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                           showMatchDialog.value = it
-                           Log.wtf(TAG, "its a match! + ${likedCardItem.name}")
-                       },
-                       {
-                           Log.wtf(TAG, "error swiped + $it")
-                       }))
-	}
 
 	fun getUsersCardsList() = usersCardsList
 
+
+
 	private fun addToSkippedExecution(skippedCardItem: CardItem) = addToSkippedUC.execute(skippedCardItem)
 
-	private fun getUsersByPreferencesExecution() = getUsersByPreferencesUC.execute()
+	private fun checkMatchExecution(likedCardItem: CardItem) = checkMatchUC.execute(likedCardItem)
 
-	private fun handlePossibleMatchExecution(likedCardItem: CardItem) =
-		handlePossibleMatchUC.execute(likedCardItem)
+	private fun getUsersByPreferencesExecution() = getUsersByPreferencesUC.execute()
 
 
 

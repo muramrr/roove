@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 27.11.19 19:54
+ * Created by Andrii Kovalchuk on 28.11.19 22:07
  * Copyright (c) 2019. All rights reserved.
- * Last modified 27.11.19 19:08
+ * Last modified 28.11.19 21:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -74,6 +74,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 			val listener = firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(currentUserId)
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.whereEqualTo("conversationStarted", true)
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
 						emitter.onError(e)

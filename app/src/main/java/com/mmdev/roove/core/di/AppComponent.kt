@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 26.11.19 20:29
+ * Created by Andrii Kovalchuk on 28.11.19 22:07
  * Copyright (c) 2019. All rights reserved.
- * Last modified 26.11.19 17:48
+ * Last modified 28.11.19 19:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.roove.core.di
 import android.app.Application
 import com.mmdev.roove.core.di.modules.*
 import com.mmdev.roove.core.di.viewmodel.ViewModelFactory
+import com.mmdev.roove.core.di.viewmodel.ViewModelModule
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
