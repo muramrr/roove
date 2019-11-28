@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 26.10.19 16:49
+ * Created by Andrii Kovalchuk on 28.11.19 22:07
  * Copyright (c) 2019. All rights reserved.
- * Last modified 30.10.19 16:24
+ * Last modified 28.11.19 21:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@ package com.mmdev.business.conversations.model
  */
 
 data class ConversationItem(val conversationId: String = "",
+                            val conversationStarted: Boolean = false,
                             val partnerId: String = "",
                             val partnerName: String = "",
                             val partnerPhotoUrl: String = "",

@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 03.11.19 23:35
+ * Created by Andrii Kovalchuk on 28.11.19 22:07
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 28.11.19 19:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.data.cards
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.cards.model.CardItem
+import com.mmdev.business.user.model.UserItem
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.functions.Function3
@@ -23,8 +24,7 @@ import io.reactivex.schedulers.Schedulers
  */
 
 class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore,
-                                        private val preferedGender: String,
-                                        private val currentUserId: String) {
+                                        private val currentUser: UserItem) {
 
 
 	companion object {
@@ -42,7 +42,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 	*/
 	fun getAllUsersCards(): Single<List<CardItem>> {
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.whereEqualTo(USERS_FILTER, preferedGender)
+			.whereEqualTo(USERS_FILTER, currentUser.preferedGender)
 			//.limit(limit)
 			.get()
 		return Single.create(SingleOnSubscribe<List<CardItem>>{ emitter ->
@@ -92,7 +92,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 	private fun getLikedUsersCards(): Single<List<String>> {
 
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUserId)
+			.document(currentUser.userId)
 			.collection(USER_LIKED_COLLECTION_REFERENCE)
 			.get()
 		return Single.create(SingleOnSubscribe<List<String>>{ emitter ->
@@ -117,7 +117,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 	*/
 	private fun getMatchedUsersCards(): Single<List<String>> {
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUserId)
+			.document(currentUser.userId)
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.get()
 		return Single.create(SingleOnSubscribe<List<String>> { emitter ->
@@ -142,7 +142,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 	*/
 	private fun getSkippedUsersCards(): Single<List<String>> {
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUserId)
+			.document(currentUser.userId)
 			.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 			.get()
 		return Single.create(SingleOnSubscribe<List<String>> { emitter ->

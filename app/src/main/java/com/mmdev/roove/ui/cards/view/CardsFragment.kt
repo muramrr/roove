@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 27.11.19 19:54
+ * Created by Andrii Kovalchuk on 28.11.19 22:07
  * Copyright (c) 2019. All rights reserved.
- * Last modified 27.11.19 19:15
+ * Last modified 28.11.19 22:06
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,8 +21,6 @@ import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
@@ -44,6 +42,7 @@ class CardsFragment: Fragment() {
 		CardsStackAdapter(listOf())
 
 	private lateinit var mAppearedCardItem: CardItem
+	private lateinit var mDisappearedCardItem: CardItem
 
 	private lateinit var cardsViewModel: CardsViewModel
 
@@ -53,8 +52,6 @@ class CardsFragment: Fragment() {
 		fun newInstance() = CardsFragment()
 
 	}
-
-	//TODO: FIX BUG WITH MATCH DIALOG
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -67,7 +64,7 @@ class CardsFragment: Fragment() {
 			mCardsStackAdapter.updateData(it)
 		})
 		cardsViewModel.showMatchDialog.observe(this, Observer {
-			if (it) showMatchDialog(mAppearedCardItem)
+			if (it) showMatchDialog(mDisappearedCardItem)
 		})
 
 	}
@@ -83,8 +80,6 @@ class CardsFragment: Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		val cardStackView = view.findViewById<CardStackView>(R.id.card_stack_view)
-		val loadingImageView = view.findViewById<ImageView>(R.id.card_loading_progress_iv)
-		initLoadingGif(loadingImageView)
 
 		val cardStackLayoutManager = CardStackLayoutManager(mMainActivity, object: CardStackListener {
 
@@ -100,7 +95,7 @@ class CardsFragment: Fragment() {
 				//if right = add to liked
 				//else = add to skipped
 				if (direction == Direction.Right) {
-					cardsViewModel.handlePossibleMatch(mAppearedCardItem)
+					cardsViewModel.checkMatch(mAppearedCardItem)
 				}
 
 				if (direction == Direction.Left) {
@@ -109,11 +104,11 @@ class CardsFragment: Fragment() {
 			}
 
 			override fun onCardRewound() {}
-
 			override fun onCardCanceled() {}
 
 			override fun onCardDisappeared(view: View, position: Int) {
 				//if there is no available user to show - show loading
+				mDisappearedCardItem = mCardsStackAdapter.getCardItem(position)
 				if (position == mCardsStackAdapter.itemCount - 1) {
 					cardsViewModel.showLoading.value = true
 					cardsViewModel.showTextHelper.value = true
@@ -150,16 +145,6 @@ class CardsFragment: Fragment() {
 			.centerInside()
 			.into(backgr)
 		matchDialog.findViewById<View>(R.id.diag_match_tv_keep_swp).setOnClickListener { matchDialog.dismiss() }
-	}
-
-
-	private fun initLoadingGif(loadingImageView: ImageView){
-		Glide.with(loadingImageView.context)
-			.asGif()
-			.load(R.drawable.loading)
-			.centerCrop()
-			.apply(RequestOptions().circleCrop())
-			.into(loadingImageView)
 	}
 
 	override fun onResume() {
