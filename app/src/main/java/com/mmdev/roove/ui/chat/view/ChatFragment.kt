@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 28.11.19 22:07
+ * Created by Andrii Kovalchuk on 29.11.19 21:45
  * Copyright (c) 2019. All rights reserved.
- * Last modified 28.11.19 22:00
+ * Last modified 29.11.19 21:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -161,10 +161,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 		mChatAdapter.setOnAttachedPhotoClickListener(object: ChatAdapter.OnItemClickListener{
 			override fun onItemClick(view: View, position: Int) {
-				val intent = Intent(mMainActivity, FullScreenImageActivity::class.java)
-				intent.putExtra("urlPhotoClick",
-				                mChatAdapter.getItem(position).photoAttachementItem!!.fileUrl)
-				startActivity(intent)
+				val dialog = FullScreenDialogFragment.newInstance(mChatAdapter.getItem(position).photoAttachementItem!!.fileUrl)
+				mMainActivity.showToast(mChatAdapter.getItem(position).photoAttachementItem!!.fileUrl)
+				dialog.show(childFragmentManager,
+				            FullScreenDialogFragment::class.java.canonicalName)
 			}
 		})
 
