@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 21.11.19 21:02
+ * Created by Andrii Kovalchuk on 29.11.19 16:20
  * Copyright (c) 2019. All rights reserved.
- * Last modified 21.11.19 20:03
+ * Last modified 29.11.19 16:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,16 +15,18 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.mmdev.roove.R
 
 
 object BindingAdapterUtils {
 
 	@JvmStatic
-	@BindingAdapter("android:src")
-	fun loadImage(imageView: ImageView, url: Int?) {
-		if (url != null)
+	@BindingAdapter("app:loadingImage")
+	fun loadImage(imageView: ImageView, show: Boolean) {
+		if (show)
 			Glide.with(imageView.context)
-				.load(url)
+				.asGif()
+				.load(R.drawable.loading)
 				.centerCrop()
 				.apply(RequestOptions().circleCrop())
 				.into(imageView)
