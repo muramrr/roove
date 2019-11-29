@@ -1,3 +1,13 @@
+<!--
+  ~ Created by Andrii Kovalchuk on 29.11.19 21:45
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 29.11.19 17:55
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
 <resources>
 
 	<!-- Base application theme. -->
@@ -48,7 +58,23 @@
 		<item name="android:windowExitAnimation">@anim/exit_to_bottom</item>
 	</style>
 
+	<style name="FullScreenDialog" parent="Theme.AppCompat.Dialog">
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorPrimary">@color/colorPrimary</item>
 
+		<!-- Set this to true if you want Full Screen without status bar -->
+		<item name="android:windowFullscreen">true</item>
+
+		<item name="android:windowIsFloating">false</item>
+
+		<item name="android:windowNoTitle">true</item>
+		<!-- This is important! Don't forget to set window background -->
+		<item name="android:windowBackground">@color/colorPrimaryDark</item>
+
+		<!-- Additionally if you want animations when dialog opening -->
+<!--		<item name="android:windowEnterAnimation">@anim/enter_from_bottom</item>-->
+<!--		<item name="android:windowExitAnimation">@anim/exit_to_bottom</item>-->
+	</style>
 
 
 
