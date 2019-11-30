@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 06.06.19 17:23
+ * Created by Andrii Kovalchuk on 30.11.19 21:17
  * Copyright (c) 2019. All rights reserved.
- * Last modified 28.10.19 18:58
+ * Last modified 30.11.19 20:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,6 @@ import com.mmdev.business.chat.repository.ChatRepository
 
 class SendMessageUseCase(private val repository: ChatRepository) {
 
-    fun execute(t: MessageItem) = repository.sendMessage(t)
+    fun execute(t: MessageItem, b: Boolean? = false) = repository.sendMessage(t, b)
 
 }
