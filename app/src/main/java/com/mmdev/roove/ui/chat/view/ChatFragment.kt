@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 30.11.19 21:17
+ * Created by Andrii Kovalchuk on 30.11.19 22:00
  * Copyright (c) 2019. All rights reserved.
- * Last modified 30.11.19 21:11
+ * Last modified 30.11.19 21:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,6 +37,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.mmdev.business.chat.model.MessageItem
+import com.mmdev.business.conversations.model.ConversationItem
 import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
@@ -109,7 +110,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		arguments?.let {
 			conversationId = it.getString(CONVERSATION_KEY, "")
 		}
-		val conversation = mMainActivity.conversationItemClicked
+		val conversation: ConversationItem? = mMainActivity.conversationItemClicked
 
 		setHasOptionsMenu(true)
 
@@ -119,7 +120,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		chatViewModel = ViewModelProvider(this, factory)[ChatViewModel::class.java]
 
 		if (conversationId.isNotEmpty()) {
-			chatViewModel.loadMessages(conversation)
+			chatViewModel.loadMessages(conversation!!)
 			chatViewModel.getMessagesList().observe(this, Observer {
 				mChatAdapter.updateData(it)
 			})

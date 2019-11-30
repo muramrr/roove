@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 28.11.19 22:07
+ * Created by Andrii Kovalchuk on 30.11.19 22:00
  * Copyright (c) 2019. All rights reserved.
- * Last modified 28.11.19 21:31
+ * Last modified 30.11.19 21:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,6 +9,8 @@
  */
 
 package com.mmdev.business.conversations.model
+
+import java.util.*
 
 /**
  * This is the documentation block about the class
@@ -19,4 +21,5 @@ data class ConversationItem(val conversationId: String = "",
                             val partnerId: String = "",
                             val partnerName: String = "",
                             val partnerPhotoUrl: String = "",
-                            val lastMessageText: String = "")
+                            val lastMessageText: String = "",
+                            val lastMessageTimestamp: Date? = Date())

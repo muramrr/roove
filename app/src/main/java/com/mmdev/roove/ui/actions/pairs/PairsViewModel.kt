@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 26.11.19 20:29
+ * Created by Andrii Kovalchuk on 30.11.19 22:00
  * Copyright (c) 2019. All rights reserved.
- * Last modified 26.11.19 18:16
+ * Last modified 30.11.19 21:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,8 +39,8 @@ class PairsViewModel @Inject constructor(private val getMatchedUsersUC: GetMatch
 		disposables.add(getMatchedUsersExecution()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                           Log.wtf(TAG, "pairs to show: ${it.size}")
-                           matchedUsersList.value = it
+	                       if (it.isNotEmpty()) matchedUsersList.value = it
+	                       Log.wtf(TAG, "pairs to show: ${it.size}")
                        },
                        {
                            Log.wtf(TAG, "error + $it")

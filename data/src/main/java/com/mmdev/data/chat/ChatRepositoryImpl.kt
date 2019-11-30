@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 30.11.19 21:17
+ * Created by Andrii Kovalchuk on 30.11.19 22:00
  * Copyright (c) 2019. All rights reserved.
- * Last modified 30.11.19 21:11
+ * Last modified 30.11.19 21:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -99,7 +99,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUserItem: UserIt
 
 
 	override fun sendMessage(messageItem: MessageItem, emptyChat: Boolean?): Completable {
-		Log.wtf("mylogs", "is empty? + $emptyChat")
+		Log.wtf("mylogs", "is empty recieved? + $emptyChat")
 		val conversation = firestore
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversationId)
@@ -184,34 +184,29 @@ class ChatRepositoryImpl @Inject constructor(private val currentUserItem: UserIt
 	}
 
 	private fun updateLastMessage(messageItem: MessageItem) {
-
+		val cur = firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(currentUserId)
+			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+			.document(conversationId)
+		val par = firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(partnerId)
+			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+			.document(conversationId)
 		if (messageItem.photoAttachementItem != null) {
 			// for current
-			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUserId)
-				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.document(conversationId)
-				.update("lastMessageText", "Photo")
+			cur.update("lastMessageText", "Photo")
+			cur.update("lastMessageTimestamp", messageItem.timestamp)
 			// for partner
-			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(partnerId)
-				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.document(conversationId)
-				.update("lastMessageText", "Photo")
+			par.update("lastMessageText", "Photo")
+			par.update("lastMessageTimestamp", messageItem.timestamp)
 		}
 		else {
 			// for current
-			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUserId)
-				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.document(conversationId)
-				.update("lastMessageText", messageItem.text)
+			cur.update("lastMessageText", messageItem.text)
+			cur.update("lastMessageTimestamp", messageItem.timestamp)
 			// for partner
-			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(partnerId)
-				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.document(conversationId)
-				.update("lastMessageText", messageItem.text)
+			par.update("lastMessageText", messageItem.text)
+			par.update("lastMessageTimestamp", messageItem.timestamp)
 		}
 		Log.wtf("mylogs", "last message updated")
 	}
