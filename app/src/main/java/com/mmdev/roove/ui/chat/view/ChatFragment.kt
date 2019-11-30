@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 30.11.19 19:25
+ * Created by Andrii Kovalchuk on 30.11.19 21:17
  * Copyright (c) 2019. All rights reserved.
- * Last modified 30.11.19 19:16
+ * Last modified 30.11.19 21:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -109,6 +109,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		arguments?.let {
 			conversationId = it.getString(CONVERSATION_KEY, "")
 		}
+		val conversation = mMainActivity.conversationItemClicked
 
 		setHasOptionsMenu(true)
 
@@ -118,7 +119,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		chatViewModel = ViewModelProvider(this, factory)[ChatViewModel::class.java]
 
 		if (conversationId.isNotEmpty()) {
-			chatViewModel.loadMessages(conversationId)
+			chatViewModel.loadMessages(conversation)
 			chatViewModel.getMessagesList().observe(this, Observer {
 				mChatAdapter.updateData(it)
 			})

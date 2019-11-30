@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 28.11.19 22:07
+ * Created by Andrii Kovalchuk on 30.11.19 21:17
  * Copyright (c) 2019. All rights reserved.
- * Last modified 28.11.19 21:25
+ * Last modified 30.11.19 21:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,7 @@ import com.google.firebase.storage.StorageReference
 import com.mmdev.business.chat.model.MessageItem
 import com.mmdev.business.chat.model.PhotoAttachementItem
 import com.mmdev.business.chat.repository.ChatRepository
+import com.mmdev.business.conversations.model.ConversationItem
 import com.mmdev.business.user.model.UserItem
 import io.reactivex.*
 import io.reactivex.Observable
@@ -47,25 +48,13 @@ class ChatRepositoryImpl @Inject constructor(private val currentUserItem: UserIt
 	private val currentUserId = currentUserItem.userId
 
 	private var conversationId = ""
+	private var partnerId = ""
 
 
-			//set "started" status to conversations for both users
-			//note: uncomment for release
-//			firestore.collection(USERS_COLLECTION_REFERENCE)
-//				.document(currentUserId)
-//				.collection(USER_MATCHED_COLLECTION_REFERENCE)
-//				.document(partnerCardItem.userId)
-//				.update("conversationStarted", true)
-//
-//			firestore.collection(USERS_COLLECTION_REFERENCE)
-//				.document(partnerCardItem.userId)
-//				.collection(USER_MATCHED_COLLECTION_REFERENCE)
-//				.document(currentUserId)
-//				.update("conversationStarted", true)
 
-	override fun getConversationWithPartner(partnerId: String): Single<String> {
-
-		return Single.create(SingleOnSubscribe<String> { emitter ->
+	override fun getConversationWithPartner(partnerId: String): Single<ConversationItem> {
+		this.partnerId = partnerId
+		return Single.create(SingleOnSubscribe<ConversationItem> { emitter ->
 			firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(currentUserId)
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -73,9 +62,9 @@ class ChatRepositoryImpl @Inject constructor(private val currentUserItem: UserIt
 				.get()
 				.addOnSuccessListener {
 					if (!it.isEmpty) {
-						val conversationId =
-							it.documents[0].get("conversationId").toString()
-						emitter.onSuccess(conversationId)
+						val conversation =
+							it.documents[0].toObject(ConversationItem::class.java)!!
+						emitter.onSuccess(conversation)
 					}
 					else emitter.onError(Exception("can't retrive such conversation"))
 				}
@@ -84,8 +73,9 @@ class ChatRepositoryImpl @Inject constructor(private val currentUserItem: UserIt
 		}).subscribeOn(Schedulers.io())
 	}
 
-	override fun getMessagesList(conversationId: String): Observable<List<MessageItem>> {
-		this.conversationId = conversationId
+	override fun getMessagesList(conversation: ConversationItem): Observable<List<MessageItem>> {
+		this.conversationId = conversation.conversationId
+		this.partnerId = conversation.partnerId
 		Log.wtf("mylogs", "conversation set, id = $conversationId")
 		return Observable.create(ObservableOnSubscribe<List<MessageItem>> { emitter ->
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -108,15 +98,41 @@ class ChatRepositoryImpl @Inject constructor(private val currentUserItem: UserIt
 	}
 
 
-	override fun sendMessage(messageItem: MessageItem): Completable {
+	override fun sendMessage(messageItem: MessageItem, emptyChat: Boolean?): Completable {
+		Log.wtf("mylogs", "is empty? + $emptyChat")
+		val conversation = firestore
+			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+			.document(conversationId)
 		return Completable.create { emitter ->
-			firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.document(conversationId)
-				.collection(SECONDARY_COLLECTION_REFERENCE)
-				.document()
-				.set(messageItem)
-				.addOnSuccessListener { emitter.onComplete() }
-				.addOnFailureListener { emitter.onError(it) }
+			if (emptyChat != null && emptyChat == false)
+				conversation.collection(SECONDARY_COLLECTION_REFERENCE)
+					.document()
+					.set(messageItem)
+					.addOnSuccessListener {
+						updateLastMessage(messageItem)
+						emitter.onComplete()
+					}
+					.addOnFailureListener { emitter.onError(it) }
+			else {
+				conversation.get().addOnSuccessListener { documentSnapshot ->
+					if (documentSnapshot.exists()) {
+						conversation.collection(SECONDARY_COLLECTION_REFERENCE).document()
+							.set(messageItem).addOnSuccessListener {
+								updateLastMessage(messageItem)
+								emitter.onComplete()
+							}
+					}
+					else {
+						updateStartedStatus()
+						conversation.collection(SECONDARY_COLLECTION_REFERENCE).document()
+							.set(messageItem).addOnSuccessListener {
+								updateLastMessage(messageItem)
+								emitter.onComplete()
+							}
+					}
+
+				}.addOnFailureListener { emitter.onError(it) }
+			}
 
 		}.subscribeOn(Schedulers.io())
 	}
@@ -141,5 +157,63 @@ class ChatRepositoryImpl @Inject constructor(private val currentUserItem: UserIt
 	}
 
 
+	private fun updateStartedStatus() {
+		// for current
+		firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(currentUserId)
+			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+			.document(conversationId)
+			.update("conversationStarted", true)
+		firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(currentUserId)
+			.collection(USER_MATCHED_COLLECTION_REFERENCE)
+			.document(partnerId)
+			.update("conversationStarted", true)
+		// for partner
+		firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(partnerId)
+			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+			.document(conversationId)
+			.update("conversationStarted", true)
+		firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(partnerId)
+			.collection(USER_MATCHED_COLLECTION_REFERENCE)
+			.document(currentUserId)
+			.update("conversationStarted", true)
+		Log.wtf("mylogs", "convers status updated")
+	}
+
+	private fun updateLastMessage(messageItem: MessageItem) {
+
+		if (messageItem.photoAttachementItem != null) {
+			// for current
+			firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(conversationId)
+				.update("lastMessageText", "Photo")
+			// for partner
+			firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(partnerId)
+				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(conversationId)
+				.update("lastMessageText", "Photo")
+		}
+		else {
+			// for current
+			firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(conversationId)
+				.update("lastMessageText", messageItem.text)
+			// for partner
+			firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(partnerId)
+				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(conversationId)
+				.update("lastMessageText", messageItem.text)
+		}
+		Log.wtf("mylogs", "last message updated")
+	}
 
 }

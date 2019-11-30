@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 21.11.19 21:02
+ * Created by Andrii Kovalchuk on 30.11.19 21:17
  * Copyright (c) 2019. All rights reserved.
- * Last modified 21.11.19 19:18
+ * Last modified 30.11.19 21:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package com.mmdev.data.events
 
-import android.util.Log
 import com.mmdev.business.events.model.EventItem
 import com.mmdev.business.events.model.EventsResponse
 import com.mmdev.business.events.repository.EventsRepository
@@ -28,7 +27,7 @@ class EventsRepositoryImpl @Inject constructor(private val eventsApi: EventsApi)
 
 	override fun getEvents(): Single<EventsResponse> {
 		val unixTime = System.currentTimeMillis() / 1000L
-		Log.wtf("mylogs", "time = $unixTime")
+		//Log.wtf("mylogs", "time = $unixTime")
 		return eventsApi.getEventsList(unixTime)
 
 

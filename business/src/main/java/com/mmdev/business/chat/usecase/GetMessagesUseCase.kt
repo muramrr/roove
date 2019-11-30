@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 06.06.19 17:19
+ * Created by Andrii Kovalchuk on 30.11.19 21:17
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.11.19 20:01
+ * Last modified 30.11.19 21:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,9 +11,10 @@
 package com.mmdev.business.chat.usecase
 
 import com.mmdev.business.chat.repository.ChatRepository
+import com.mmdev.business.conversations.model.ConversationItem
 
 class GetMessagesUseCase (private val repository: ChatRepository) {
 
-    fun execute(s: String) = repository.getMessagesList(s)
+    fun execute(c: ConversationItem) = repository.getMessagesList(c)
 
 }
