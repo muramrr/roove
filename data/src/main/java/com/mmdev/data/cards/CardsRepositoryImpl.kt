@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 28.11.19 22:07
+ * Created by Andrii Kovalchuk on 30.11.19 22:00
  * Copyright (c) 2019. All rights reserved.
- * Last modified 28.11.19 21:49
+ * Last modified 30.11.19 21:50
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -92,7 +92,9 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 							.set(ConversationItem(conversationId,
 							                      partnerId = likedCardItem.userId,
 							                      partnerName = likedCardItem.name,
-							                      partnerPhotoUrl = likedCardItem.mainPhotoUrl))
+							                      partnerPhotoUrl = likedCardItem.mainPhotoUrl,
+							                      lastMessageTimestamp = null))
+
 							.addOnSuccessListener { emitter.onSuccess(true) }
 							.addOnFailureListener { emitter.onError(it) }
 
@@ -156,7 +158,8 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.set(ConversationItem(conversationId,
 			                      partnerId = currentUserItem.userId,
 			                      partnerName = currentUserItem.name,
-			                      partnerPhotoUrl = currentUserItem.mainPhotoUrl))
+			                      partnerPhotoUrl = currentUserItem.mainPhotoUrl,
+			                      lastMessageTimestamp = null))
 	}
 
 

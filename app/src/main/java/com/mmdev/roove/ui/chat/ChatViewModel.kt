@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 30.11.19 21:17
+ * Created by Andrii Kovalchuk on 30.11.19 22:00
  * Copyright (c) 2019. All rights reserved.
- * Last modified 30.11.19 21:11
+ * Last modified 30.11.19 21:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -51,9 +51,13 @@ class ChatViewModel @Inject constructor(private val getConversationUC: GetConver
             .doFinally { showLoading.value = false }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       if(it.isNotEmpty()) messagesList.value = it
+	                       if(it.isNotEmpty()) {
+		                       messagesList.value = it
+		                       emptyChat = false
+	                       }
 	                       else emptyChat = true
-	                       Log.wtf(TAG, "messages to show: ${it.size}")
+	                       Log.wtf(TAG, "empty chat messages to show: ${it.size}")
+	                       Log.wtf("mylogs", "is empty sent? + $emptyChat")
                        },
                        {
 	                       Log.wtf(TAG, "get messages empty chat error: $it")
@@ -67,9 +71,13 @@ class ChatViewModel @Inject constructor(private val getConversationUC: GetConver
             .doFinally { showLoading.value = false }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       if(it.isNotEmpty()) messagesList.value = it
+	                       if(it.isNotEmpty()) {
+		                       messagesList.value = it
+		                       emptyChat = false
+	                       }
 	                       else emptyChat = true
 	                       Log.wtf(TAG, "messages to show: ${it.size}")
+	                       Log.wtf("mylogs", "is empty sent? + $emptyChat")
                        },
                        {
 	                       Log.wtf(TAG, "get messages error: $it")
