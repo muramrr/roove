@@ -1,67 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-	android:layout_height="match_parent"
-	android:layout_width="match_parent"
-	android:background="@color/black"
+
+<!--
+  ~ Created by Andrii Kovalchuk on 30.11.19 20:07
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 30.11.19 20:07
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+<layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
-	<ImageView
-		android:id="@+id/diag_match_iv_backgr_profile_img"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-		android:contentDescription="@string/description_user_photo"
-		android:src="@drawable/default_avatar"/>
+	<data>
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true"
-		android:layout_gravity="bottom"
-		android:layout_margin="@dimen/general_margin_16"
-		android:orientation="vertical">
+		<variable
+			name="photoUrl"
+			type="String" />
 
-		<RelativeLayout
-			android:id="@+id/content_message"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:background="@color/white"
-			android:padding="5dp">
+		<variable
+			name="name"
+			type="String" />
 
-			<EditText
-				android:id="@+id/editTextMessage"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_toStartOf="@+id/buttonMessage"
-				android:inputType="text"
-				android:hint="@string/dialog_match_ed_hint"
-				tools:ignore="Autofill"/>
+	</data>
 
-			<ImageView
-				android:id="@+id/buttonMessage"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignParentEnd="true"
-				android:layout_centerVertical="true"
-				android:contentDescription="@string/fragment_chat_send_img_description"
-				android:src="@drawable/fragment_chat_ic_send_black_24dp"/>
-		</RelativeLayout>
-
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:background="@color/colorPrimaryDark"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent" >
 
 		<TextView
-			android:id="@+id/diag_match_tv_keep_swp"
+			android:id="@+id/its_a_match_tv"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:layout_marginTop="50dp"
-			android:layout_marginBottom="50dp"
-			android:text="KEEP SWIPING..."
-			android:textColor="@color/white"/>
+			android:text="ITS A MATCH!"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintVertical_bias="0.1"
+			style="@style/regular_text_white_24sp_85op"/>
+
+		<ImageView
+			android:id="@+id/matched_photo"
+			android:layout_width="300dp"
+			android:layout_height="300dp"
+			android:adjustViewBounds="true"
+			android:scaleType="centerCrop"
+			android:src="@drawable/default_avatar"
+			app:circleImage="@{photoUrl}"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintVertical_bias="0.3"
+			tools:ignore="ContentDescription" />
+
+		<TextView
+			android:id="@+id/matched_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@{name, default = @string/default_name}"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintVertical_bias="0.7"
+			style="@style/medium_text_white_28sp_85op"/>
+
+		<TextView
+			android:id="@+id/back_to_swiping_tv"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:fontFamily="@font/rubik_bold"
+			android:text="Back to swiping"
+			android:textSize="28sp"
+			android:textColor="@color/gradient1"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintVertical_bias="0.9" />
 
 
-	</LinearLayout>
-
-
-</RelativeLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
