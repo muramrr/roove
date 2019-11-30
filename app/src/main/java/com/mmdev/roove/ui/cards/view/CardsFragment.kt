@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 28.11.19 22:07
+ * Created by Andrii Kovalchuk on 30.11.19 20:07
  * Copyright (c) 2019. All rights reserved.
- * Last modified 28.11.19 22:06
+ * Last modified 30.11.19 19:59
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,19 +11,15 @@
 package com.mmdev.roove.ui.cards.view
 
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.roove.R
-import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.FragmentCardsBinding
 import com.mmdev.roove.ui.cards.CardsViewModel
@@ -133,18 +129,9 @@ class CardsFragment: Fragment() {
 
 
 	private fun showMatchDialog(matchCardItem: CardItem) {
-		val matchDialog = Dialog(mMainActivity)
-		matchDialog.setContentView(R.layout.dialog_match)
-		//matchDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-		//matchDialog.getWindow().setDimAmount(0.87f);
-		matchDialog.show()
-		matchDialog.window!!.setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
-		val backgr = matchDialog.findViewById<ImageView>(R.id.diag_match_iv_backgr_profile_img)
-		GlideApp.with(backgr.context)
-			.load(matchCardItem.mainPhotoUrl)
-			.centerInside()
-			.into(backgr)
-		matchDialog.findViewById<View>(R.id.diag_match_tv_keep_swp).setOnClickListener { matchDialog.dismiss() }
+		val dialog = MatchDialogFragment.newInstance(matchCardItem.name,
+		                                             matchCardItem.mainPhotoUrl)
+		dialog.show(childFragmentManager, MatchDialogFragment::class.java.canonicalName)
 	}
 
 	override fun onResume() {
