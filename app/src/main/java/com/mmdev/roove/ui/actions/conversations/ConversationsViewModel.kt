@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 27.11.19 19:54
+ * Created by Andrii Kovalchuk on 30.11.19 22:00
  * Copyright (c) 2019. All rights reserved.
- * Last modified 27.11.19 19:08
+ * Last modified 30.11.19 21:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -60,11 +60,11 @@ class ConversationsViewModel @Inject constructor(private val deleteUC: DeleteCon
 		disposables.add(getConversationsListExecution()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+	                       if (it.isNotEmpty()) conversationsList.value = it
                            Log.wtf(TAG, "conversations to show: ${it.size}")
-                           conversationsList.value = it
                        },
                        {
-                           Log.wtf(TAG, "loadConversList error + $it")
+                           Log.wtf(TAG, "loadConvers viewmodel error + $it")
                        }))
 	}
 

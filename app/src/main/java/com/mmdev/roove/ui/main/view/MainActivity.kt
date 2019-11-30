@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 23.11.19 19:40
+ * Created by Andrii Kovalchuk on 30.11.19 22:00
  * Copyright (c) 2019. All rights reserved.
- * Last modified 23.11.19 19:40
+ * Last modified 30.11.19 21:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,7 +69,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 	lateinit var userItemModel: UserItem
 
 	lateinit var cardItemClicked: CardItem
-	lateinit var conversationItemClicked: ConversationItem
+	var conversationItemClicked: ConversationItem? = null
 
 	lateinit var eventItem: EventItem
 
