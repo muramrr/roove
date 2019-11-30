@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 27.11.19 19:54
+ * Created by Andrii Kovalchuk on 30.11.19 18:12
  * Copyright (c) 2019. All rights reserved.
- * Last modified 27.11.19 19:15
+ * Last modified 30.11.19 17:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -65,7 +65,6 @@ class ConversationsAdapter (private var conversationsList: List<ConversationItem
 
 		fun bind(conversationItem: ConversationItem){
 			binding.conversationItem = conversationItem
-			binding.executePendingBindings()
 		}
 
 	}
