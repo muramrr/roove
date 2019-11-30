@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 30.11.19 18:12
+ * Created by Andrii Kovalchuk on 30.11.19 19:25
  * Copyright (c) 2019. All rights reserved.
- * Last modified 30.11.19 17:54
+ * Last modified 30.11.19 19:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,6 +25,7 @@ import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -63,7 +64,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	private lateinit var chatViewModel: ChatViewModel
 
 
-	// POJO models
+	// P O J O models
 	private lateinit var userItemModel: UserItem
 
 	// Views UI
@@ -149,7 +150,18 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		val linearLayoutManager = LinearLayoutManager(mMainActivity)
 		linearLayoutManager.stackFromEnd = true
 		ivSendMessage.setOnClickListener { sendMessageClick() }
-		ivAttachments.setOnClickListener { photoGalleryClick() }
+		ivAttachments.setOnClickListener {
+			val builder = AlertDialog.Builder(mMainActivity)
+				.setItems(arrayOf("Camera", "Gallery")) {
+					_, which ->
+					if (which == 0) { photoCameraClick() }
+					else { photoGalleryClick() }
+				}
+			val alertDialog = builder.create()
+			val params = alertDialog.window?.attributes
+			params?.gravity = Gravity.BOTTOM
+			alertDialog.show()
+		}
 
 		mChatAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
 			override fun onChanged() {
@@ -176,7 +188,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	}
 
 	/*
-	* Send plain text msg to chat if edittext is not empty
+	* Send plain text msg to chat if editText is not empty
 	* else shake animation
 	* rx chain: create conversation -> set conversation id -> send message -> observe new messages
 	*/
@@ -203,10 +215,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	 */
 	private fun photoCameraClick() {
 		// Check if we have needed permissions
-		var result: Int
 		val listPermissionsNeeded = ArrayList<String>()
 		for (permission in PERMISSIONS_CAMERA) {
-			result = ActivityCompat.checkSelfPermission(mMainActivity, permission)
+			val result = ActivityCompat.checkSelfPermission(mMainActivity, permission)
 			if (result != PackageManager.PERMISSION_GRANTED) listPermissionsNeeded.add(permission)
 		}
 		if (listPermissionsNeeded.isNotEmpty()) requestPermissions(PERMISSIONS_CAMERA, REQUEST_CAMERA)
@@ -250,6 +261,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		startActivityForResult(Intent.createChooser(intent, "Select image"), IMAGE_GALLERY_REQUEST)
 	}
 
+	// start after permissions was granted
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 		// If request is cancelled, the result arrays are empty.
 		if (requestCode == REQUEST_CAMERA)
