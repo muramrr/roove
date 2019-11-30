@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Created by Andrii Kovalchuk on 29.11.19 16:20
+  ~ Created by Andrii Kovalchuk on 30.11.19 19:25
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 29.11.19 16:18
+  ~ Last modified 30.11.19 19:24
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,6 +31,7 @@
 			android:id="@+id/chat_loading_progress_iv"
 			android:layout_width="120dp"
 			android:layout_height="120dp"
+			android:src="@drawable/loading"
 			android:visibility='@{viewModel.showLoading ? View.VISIBLE : View.GONE, default = "visible"}'
 			app:loadingImage="@{true}"
 			app:layout_constraintBottom_toBottomOf="parent"
@@ -60,11 +61,11 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:background="@color/colorAccentDark"
-			android:visibility='@{viewModel.showLoading ? View.GONE : View.VISIBLE, default = "gone"}'
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/chat_messages_rv">
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_bias="1.0">
 
 			<ImageView
 				android:id="@+id/buttonAttachments"
@@ -75,7 +76,7 @@
 				android:focusable="true"
 				android:layout_alignParentStart="true"
 				android:layout_centerVertical="true"
-				android:layout_margin="@dimen/general_margin_16"
+				android:padding="@dimen/general_margin_16"
 				android:contentDescription="@string/fragment_chat_attach_img_description"
 				android:src="@drawable/fragment_chat_ic_attachment_24dp"/>
 
@@ -90,9 +91,10 @@
 				android:imeOptions="actionSend"
 				android:inputType="text|textMultiLine"
 				android:hint="@string/fragment_chat_ed_hint"
+				android:padding="@dimen/general_margin_16"
 				android:textColorHint="@color/white_50"
 				tools:ignore="Autofill"
-				style="@style/regular_text_white_16sp_85op"/>
+				style="@style/regular_text_white_18sp_85op"/>
 
 			<ImageView
 				android:id="@+id/buttonMessage"
@@ -103,7 +105,7 @@
 				android:focusable="true"
 				android:layout_alignParentEnd="true"
 				android:layout_centerVertical="true"
-				android:layout_margin="@dimen/general_margin_16"
+				android:padding="@dimen/general_margin_16"
 				android:contentDescription="@string/fragment_chat_send_img_description"
 				android:src="@drawable/fragment_chat_ic_send_black_24dp"
 				 />
