@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 07.10.19 03:21
+ * Created by Andrii Kovalchuk on 01.12.19 22:42
  * Copyright (c) 2019. All rights reserved.
- * Last modified 24.10.19 18:03
+ * Last modified 01.12.19 21:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,7 @@ class CustomAlertDialog {
 
 	class Builder(private val context: Context) {
 
-		private var title: String = ""
+		private var title: String = "Do you really want to Sign Out ?"
 		private var message: String = ""
 		private var positiveBtnText: String = ""
 		private var negativeBtnText: String = ""
@@ -76,13 +76,13 @@ class CustomAlertDialog {
 		}
 
 		//set Positive listener
-		fun OnPositiveClicked(posListener: View.OnClickListener): Builder {
+		fun onPositiveClicked(posListener: View.OnClickListener): Builder {
 			this.posListener = posListener
 			return this
 		}
 
 		//set Negative listener
-		fun OnNegativeClicked(nListener: View.OnClickListener): Builder {
+		fun onNegativeClicked(nListener: View.OnClickListener): Builder {
 			this.negListener = nListener
 			return this
 		}

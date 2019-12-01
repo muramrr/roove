@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Created by Andrii Kovalchuk on 21.11.19 21:02
+  ~ Created by Andrii Kovalchuk on 01.12.19 22:42
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 21.11.19 20:04
+  ~ Last modified 01.12.19 19:09
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -70,7 +70,7 @@
 				android:layout_height="wrap_content"
 				android:layout_gravity="center"
 				android:contentDescription="@string/fragment_card_skip_img_description"
-				android:src="@drawable/fragment_card_item_skip_white_120dp" />
+				android:src="@drawable/fragment_card_skip_120dp" />
 
 		</FrameLayout>
 
@@ -85,7 +85,7 @@
 				android:layout_height="wrap_content"
 				android:layout_gravity="center"
 				android:contentDescription="@string/fragment_card_like_img_description"
-				android:src="@drawable/fragment_card_item_like_white_120dp" />
+				android:src="@drawable/fragment_card_like_120dp" />
 
 		</FrameLayout>
 

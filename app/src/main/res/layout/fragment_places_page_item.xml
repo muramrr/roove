@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Created by Andrii Kovalchuk on 22.11.19 19:36
+  ~ Created by Andrii Kovalchuk on 01.12.19 22:42
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 22.11.19 16:39
+  ~ Last modified 01.12.19 22:09
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,9 +22,9 @@
 		android:layout_width="0dp"
 		android:layout_height="0dp"
 		android:background="@color/colorPrimaryDark"
+		android:clipToPadding="false"
 		android:layout_marginStart="@dimen/card_margin_fix_rview_8"
 		android:layout_marginEnd="@dimen/general_margin_16"
-		android:layout_marginBottom="@dimen/card_margin_fix_rview_8"
 		android:overScrollMode="never"
 		app:layoutManager="GridLayoutManager"
 		app:layout_constraintBottom_toBottomOf="parent"

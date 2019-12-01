@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Created by Andrii Kovalchuk on 21.11.19 21:02
+  ~ Created by Andrii Kovalchuk on 01.12.19 22:42
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 21.11.19 20:49
+  ~ Last modified 01.12.19 20:16
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,38 +11,38 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_actions"
-            android:icon="@drawable/nav_items_post_icon"
-            android:title="Actions" />
+	<group android:checkableBehavior="single">
+		<item
+			android:id="@+id/nav_actions"
+			android:icon="@drawable/ic_nav_inbox_24dp"
+			android:title="Inbox" />
 
-        <item
-            android:id="@+id/nav_events"
-            android:icon="@drawable/nav_items_feed_icon"
-            android:title="Events" />
-        <item
-            android:id="@+id/nav_cards"
-            android:icon="@drawable/nav_items_events_icon"
-            android:title="Cards" />
+		<item
+			android:id="@+id/nav_cards"
+			android:icon="@drawable/ic_nav_cards_24dp"
+			android:title="Find your love" />
 
-        <item
-            android:id="@+id/nav_notifications"
-            android:icon="@drawable/nav_items_notifications_icon"
-            android:title="Notifications" />
-    </group>
+		<item
+			android:id="@+id/nav_places"
+			android:icon="@drawable/ic_nav_places_24dp"
+			android:title="Places" />
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_account"
-                android:icon="@drawable/default_avatar"
-                android:title="Account" />
-            <item
-                android:id="@+id/nav_log_out"
-                android:icon="@drawable/nav_items_log_out_icon"
-                android:title="Log Out" />
-        </menu>
-    </item>
+		<item
+			android:id="@+id/nav_notifications"
+			android:title="Notifications" />
+	</group>
+
+	<item android:title="Communicate">
+		<menu>
+			<item
+				android:id="@+id/nav_account"
+				android:icon="@drawable/ic_nav_account_24dp"
+				android:title="Account" />
+			<item
+				android:id="@+id/nav_log_out"
+				android:icon="@drawable/ic_nav_logout_24dp"
+				android:title="Log Out" />
+		</menu>
+	</item>
 
 </menu>

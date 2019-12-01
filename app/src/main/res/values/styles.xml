@@ -1,7 +1,7 @@
 <!--
-  ~ Created by Andrii Kovalchuk on 29.11.19 21:45
+  ~ Created by Andrii Kovalchuk on 01.12.19 22:42
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 29.11.19 17:55
+  ~ Last modified 01.12.19 22:41
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,15 +30,12 @@
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
 		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
-		<item name="android:windowTranslucentStatus">true</item>
+<!--		<item name="android:windowTranslucentStatus">true</item>-->
 
 	</style>
 
 	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 	<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
-	<style name="AppTheme.NavigationView" parent="Widget.Design.NavigationView">
-		<item name="textAppearanceListItem">@style/regular_text_white_16sp_85op</item>
-	</style>
 
 	<style name="menuPopupStyle" parent="Widget.AppCompat.PopupMenu">
 		<item name="android:itemBackground">@color/colorAccentDark</item>
@@ -193,7 +190,11 @@
 		<item name="android:textSize">12sp</item>
 	</style>
 
-
+	<style name="navigation_item" parent="Widget.AppCompat.TextView">
+		<item name="android:fontFamily">@font/rubik_regular</item>
+		<item name="android:textColor">@drawable/nav_clicked_text</item>
+		<item name="android:textSize">16sp</item>
+	</style>
 
 
 </resources>

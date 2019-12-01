@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Created by Andrii Kovalchuk on 22.11.19 19:36
+  ~ Created by Andrii Kovalchuk on 01.12.19 22:42
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 22.11.19 18:08
+  ~ Last modified 01.12.19 22:41
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +25,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@color/colorPrimaryDark"
-		android:paddingTop="24dp">
+		android:paddingTop="@dimen/notifbar_size_24">
 
 		<com.google.android.material.appbar.AppBarLayout
 			android:id="@+id/app_bar"
@@ -62,7 +62,11 @@
 		android:background="@color/colorPrimaryDark"
 		android:divider="@android:color/transparent"
 		android:dividerHeight="14dp"
+		android:fitsSystemWindows="false"
 		app:headerLayout="@layout/nav_header"
+		app:itemBackground="@drawable/nav_clicked"
+		app:itemIconTint="@drawable/nav_clicked_text"
+		app:itemTextColor="@drawable/nav_clicked_text"
 		app:itemTextAppearance="@style/regular_text_white_16sp_85op"
 		app:menu="@menu/navigation_items"/>
 
