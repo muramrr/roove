@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 07.10.19 03:26
+ * Created by Andrii Kovalchuk on 01.12.19 22:42
  * Copyright (c) 2019. All rights reserved.
- * Last modified 01.11.19 20:23
+ * Last modified 01.12.19 19:00
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,9 +17,9 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Window
 import android.widget.ImageView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mmdev.roove.R
+import com.mmdev.roove.core.GlideApp
 
 
 /**
@@ -38,7 +38,7 @@ class LoadingDialog(private var context: Context) {
 
 		val gifImageView: ImageView = dialog.findViewById(R.id.iv_loading)
 
-		Glide.with(context)
+		GlideApp.with(context)
 			.asGif()
 			.load(R.drawable.loading)
 			.centerCrop()

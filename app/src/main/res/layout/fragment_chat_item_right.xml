@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk on 01.12.19 22:42
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 01.12.19 19:06
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -34,7 +44,7 @@
 		    android:layout_margin="10dp"
 	        android:background="@color/colorAccent"
 		    android:contentDescription="@string/chat_message_my_attach_img_description"
-		    android:src="@drawable/feed_content_man_in_suit"
+		    android:src="@drawable/default_avatar"
 		    android:visibility="visible"/>
 
 		<TextView

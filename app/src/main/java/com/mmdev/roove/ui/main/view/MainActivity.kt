@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 30.11.19 22:00
+ * Created by Andrii Kovalchuk on 01.12.19 22:42
  * Copyright (c) 2019. All rights reserved.
- * Last modified 30.11.19 21:33
+ * Last modified 01.12.19 22:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -193,7 +193,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		builder.setMessage("Do you wish to sign out?")
 		builder.setPositiveBtnText("Yes")
 		builder.setNegativeBtnText("NO")
-		builder.OnPositiveClicked(View.OnClickListener {
+		builder.onPositiveClicked(View.OnClickListener {
 			Log.wtf(TAG, "USER PROMT TO LOG OUT")
 			authViewModel.logOut()
 			startAuthActivity()
@@ -225,6 +225,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 		val navView: NavigationView = findViewById(R.id.nav_view)
 		navView.getChildAt(navView.childCount - 1).overScrollMode = View.OVER_SCROLL_NEVER
 		val headerView = navView.getHeaderView(0)
+
 		tvSignedInUserName = headerView.findViewById(R.id.signed_in_username_tv)
 		ivSignedInUserAvatar = headerView.findViewById(R.id.signed_in_user_image_view)
 		setUpUser()
@@ -233,7 +234,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main),
 			// Handle navigation view item clicks here.
 			when (item.itemId) {
 				R.id.nav_actions -> startActionsFragment()
-				R.id.nav_events -> { showFeedFragment() }
+				R.id.nav_places -> { showFeedFragment() }
 				R.id.nav_cards -> onCardsClick()
 				R.id.nav_notifications -> { progressDialog.showDialog()
 					Handler().postDelayed({ progressDialog.dismissDialog() }, 5000) }

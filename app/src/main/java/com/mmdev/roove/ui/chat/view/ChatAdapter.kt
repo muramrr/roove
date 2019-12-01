@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 28.11.19 22:07
+ * Created by Andrii Kovalchuk on 01.12.19 22:42
  * Copyright (c) 2019. All rights reserved.
- * Last modified 28.11.19 20:03
+ * Last modified 01.12.19 18:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.mmdev.business.chat.model.MessageItem
@@ -117,7 +116,7 @@ class ChatAdapter (private var listMessageItems: List<MessageItem>):
 
 		/* sets user profile pic in ImgView binded layout */
 		private fun setIvUserAvatar(urlPhotoUser: String) {
-			Glide.with(ivUserAvatar.context)
+			GlideApp.with(ivUserAvatar.context)
 				.load(urlPhotoUser)
 				.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
 				.centerCrop()
