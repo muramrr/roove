@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 20.11.19 21:38
+ * Created by Andrii Kovalchuk on 01.12.19 17:59
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.11.19 19:12
+ * Last modified 01.12.19 17:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -59,14 +59,14 @@ dependencies {
 	implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
 	//facebook auth
-	implementation "com.facebook.android:facebook-android-sdk:$facebook_sdk_version"
-	implementation "com.facebook.android:facebook-login:$facebook_sdk_version"
+	//implementation "com.facebook.android:facebook-android-sdk:$facebook_sdk_version"
+	implementation libs.facebookLogin
 
 	// Firebase
-	implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
-	implementation "com.google.firebase:firebase-core:$firebase_core_version"
-	implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
-	implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
+	implementation libs.firebaseAuth
+	implementation libs.firebaseCore
+	implementation libs.firestorage
+	implementation libs.firestore
 
 	// RxJava
 	implementation libs.rxJava
@@ -77,8 +77,8 @@ dependencies {
 	implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.2"
 
 	// Dagger
-	implementation "com.google.dagger:dagger:$dagger_version"
-	kapt "com.google.dagger:dagger-compiler:$dagger_version"
+	implementation libs.dagger
+	kapt libs.daggerCompiler
 
 	//binary prefs
 	implementation "com.github.yandextaxitech:binaryprefs:1.0.1"

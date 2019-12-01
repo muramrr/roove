@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 23.11.19 16:19
+ * Created by Andrii Kovalchuk on 01.12.19 17:59
  * Copyright (c) 2019. All rights reserved.
- * Last modified 23.11.19 16:18
+ * Last modified 01.12.19 17:44
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ buildscript {
 
 	ext {
 
-		kotlin_version = '1.3.60'
+		kotlin_version = '1.3.61'
 
 		// facebook
 		facebook_sdk_version = '5.11.2'
@@ -29,7 +29,7 @@ buildscript {
 		dagger_version = '2.25.2'
 
 		// RxJava
-		rxjava_version = '2.2.14'
+		rxjava_version = '2.2.15'
 
 		// RxAndroid
 		rxandroid_version = '2.1.1'
@@ -41,6 +41,13 @@ buildscript {
 		junitVersion = "4.12"
 
 		libs = [
+			dagger          : ('com.google.dagger:dagger:' + dagger_version),
+			daggerCompiler  : ('com.google.dagger:dagger-compiler:' + dagger_version),
+			facebookLogin   : ('com.facebook.android:facebook-login:' + facebook_sdk_version),
+			firebaseAuth    : ('com.google.firebase:firebase-auth:' + firebase_auth_version),
+			firebaseCore    : ('com.google.firebase:firebase-core:' + firebase_core_version),
+			firestorage     : ('com.google.firebase:firebase-storage:' + firebase_storage_version),
+			firestore       : ('com.google.firebase:firebase-firestore:' + firebase_firestore_version),
 			rxJava          : ('io.reactivex.rxjava2:rxjava:' + rxjava_version),
 			rxAndroid       : ('io.reactivex.rxjava2:rxandroid:' + rxandroid_version),
 			junit           : ('junit:junit:' + junitVersion),
