@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk on 01.12.19 22:42
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 01.12.19 19:06
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
 <androidx.constraintlayout.widget.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,7 +27,7 @@
 		android:background="?attr/selectableItemBackground"
 		android:clickable="true"
 		android:focusable="true"
-		android:src="@drawable/ic_nav_header_settings_white_24dp"
+		android:src="@drawable/ic_nav_header_settings_24dp"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		tools:ignore="ContentDescription" />
@@ -51,7 +61,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="16dp"
-		android:src="@drawable/ic_nav_header_arrow_down_white_24dp"
+		android:src="@drawable/ic_nav_header_arrow_down_24dp"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintBottom_toBottomOf="@id/signed_in_username_tv"
 		app:layout_constraintTop_toTopOf="@+id/signed_in_username_tv"

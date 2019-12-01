@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk on 01.12.19 22:42
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 01.12.19 20:45
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
 <resources>
 	<color name="colorPrimary">#1A1A25</color>
 	<color name="colorPrimaryDark">#12121A</color>
@@ -16,7 +26,9 @@
 	<color name="transparent">#00FFFFFF</color>
 
 	<color name="lolite">#6236FF</color>
+	<color name="lolite_15">#266236FF</color>
 	<color name="amethyst">#B620E0</color>
+	<color name="amethyst_15">#26B620E0</color>
 
 	<color name="gradient1">#FEAC5E</color>
 	<color name="gradient2">#C779D0</color>
