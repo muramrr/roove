@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 23.11.19 16:19
+ * Created by Andrii Kovalchuk on 01.12.19 17:59
  * Copyright (c) 2019. All rights reserved.
- * Last modified 23.11.19 16:18
+ * Last modified 01.12.19 17:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,7 +79,6 @@ dependencies {
 	//core
 	implementation 'androidx.core:core-ktx:1.2.0-rc01'
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 	implementation 'androidx.appcompat:appcompat:1.1.0'
 	implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
 	implementation 'com.google.android.material:material:1.2.0-alpha02'
@@ -90,25 +89,26 @@ dependencies {
 	implementation 'com.yuyakaido.android:card-stack-view:2.3.4'
 	implementation 'com.github.ceryle:SegmentedButton:2.0.2'
 
-	//firebase
-	implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
-	implementation "com.google.firebase:firebase-core:$firebase_core_version"
-	implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
-	implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
+	// Firebase
+	implementation libs.firebaseAuth
+	implementation libs.firebaseCore
+	implementation libs.firestorage
+	implementation libs.firestore
 	implementation 'com.google.firebase:firebase-analytics:17.2.1'
 
 	//facebook auth
-	implementation "com.facebook.android:facebook-android-sdk:$facebook_sdk_version"
-	implementation "com.facebook.android:facebook-login:$facebook_sdk_version"
+	//implementation "com.facebook.android:facebook-android-sdk:$facebook_sdk_version"
+	implementation libs.facebookLogin
 
 	//glide
 	implementation 'com.github.bumptech.glide:glide:4.10.0'
 	kapt 'com.github.bumptech.glide:compiler:4.10.0'
 
 	// Dagger
-	implementation "com.google.dagger:dagger:$dagger_version"
-	kapt "com.google.dagger:dagger-compiler:$dagger_version"
+	implementation libs.dagger
+	kapt libs.daggerCompiler
 
+	implementation libs.rxJava
 	// RxJava
 	implementation libs.rxJava
 
@@ -127,6 +127,5 @@ dependencies {
 	//binary prefs
 	implementation "com.github.yandextaxitech:binaryprefs:1.0.1"
 
-	compileOnly 'javax.annotation:jsr250-api:1.0'
 
 }
