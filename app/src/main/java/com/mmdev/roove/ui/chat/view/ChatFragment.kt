@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 30.11.19 22:00
+ * Created by Andrii Kovalchuk on 02.12.19 20:57
  * Copyright (c) 2019. All rights reserved.
- * Last modified 30.11.19 21:33
+ * Last modified 02.12.19 20:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,8 +44,8 @@ import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.FragmentChatBinding
+import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.chat.ChatViewModel
-import com.mmdev.roove.ui.main.view.MainActivity
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
@@ -334,10 +334,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		return true
 	}
 
-	override fun onResume() {
-		super.onResume()
-		mMainActivity.toolbar.title = mMainActivity.partnerName
-		mMainActivity.setNonScrollableToolbar()
-	}
+//	override fun onResume() {
+//		super.onResume()
+//		mMainActivity.toolbar.title = mMainActivity.partnerName
+//		mMainActivity.setNonScrollableToolbar()
+//	}
 
 }

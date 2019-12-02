@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 30.11.19 20:07
+ * Created by Andrii Kovalchuk on 02.12.19 20:57
  * Copyright (c) 2019. All rights reserved.
- * Last modified 30.11.19 19:59
+ * Last modified 02.12.19 20:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,22 +15,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.FragmentCardsBinding
+import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.cards.CardsViewModel
-import com.mmdev.roove.ui.main.view.MainActivity
+import com.mmdev.roove.ui.core.BaseFragment
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.CardStackView
 import com.yuyakaido.android.cardstackview.Direction
 
 
-class CardsFragment: Fragment() {
+class CardsFragment: BaseFragment() {
 
 	private lateinit var mMainActivity: MainActivity
 
@@ -132,12 +132,6 @@ class CardsFragment: Fragment() {
 		val dialog = MatchDialogFragment.newInstance(matchCardItem.name,
 		                                             matchCardItem.mainPhotoUrl)
 		dialog.show(childFragmentManager, MatchDialogFragment::class.java.canonicalName)
-	}
-
-	override fun onResume() {
-		super.onResume()
-		mMainActivity.toolbar.title = "Cards"
-		mMainActivity.setNonScrollableToolbar()
 	}
 
 
