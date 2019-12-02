@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 22.11.19 19:36
+ * Created by Andrii Kovalchuk on 02.12.19 20:57
  * Copyright (c) 2019. All rights reserved.
- * Last modified 22.11.19 16:44
+ * Last modified 02.12.19 20:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,11 +13,12 @@ package com.mmdev.roove.ui.places.view
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
-import com.mmdev.roove.ui.main.view.MainActivity
+import com.mmdev.roove.ui.MainActivity
 
 class PlacesFragment: Fragment(R.layout.fragment_places) {
 
@@ -36,9 +37,10 @@ class PlacesFragment: Fragment(R.layout.fragment_places) {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		val viewPager: ViewPager2 = view.findViewById(R.id.feed_vp)
-		viewPager.adapter = PlacesPagerAdapter(
-				childFragmentManager,
-				lifecycle)
+		viewPager.apply {
+			(getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+			adapter = PlacesPagerAdapter(childFragmentManager, lifecycle)
+		}
 
 		val tabLayout: TabLayout= view.findViewById(R.id.tabLayout)
 
@@ -53,14 +55,14 @@ class PlacesFragment: Fragment(R.layout.fragment_places) {
 
 	}
 
-	override fun onResume() {
-		super.onResume()
-		mMainActivity.setScrollableToolbar()
-		mMainActivity.toolbar.title = "Places"
-	}
-
-	override fun onStop() {
-		super.onStop()
-		mMainActivity.setNonScrollableToolbar()
-	}
+//	override fun onResume() {
+//		super.onResume()
+//		mMainActivity.setScrollableToolbar()
+//		mMainActivity.toolbar.title = "Places"
+//	}
+//
+//	override fun onStop() {
+//		super.onStop()
+//		mMainActivity.setNonScrollableToolbar()
+//	}
 }

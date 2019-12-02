@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 26.11.19 20:29
+ * Created by Andrii Kovalchuk on 02.12.19 20:57
  * Copyright (c) 2019. All rights reserved.
- * Last modified 26.11.19 17:31
+ * Last modified 02.12.19 20:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,18 +12,18 @@ package com.mmdev.roove.ui.actions
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
-import com.mmdev.roove.ui.main.view.MainActivity
+import com.mmdev.roove.ui.MainActivity
+import com.mmdev.roove.ui.core.BaseFragment
 
 /**
  * This is the documentation block about the class
  */
 
-class ActionsFragment : Fragment(R.layout.fragment_actions) {
+class ActionsFragment : BaseFragment(R.layout.fragment_actions) {
 
 	private lateinit var mMainActivity: MainActivity
 
@@ -33,7 +33,7 @@ class ActionsFragment : Fragment(R.layout.fragment_actions) {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		if (activity != null) mMainActivity = activity as MainActivity
+		activity?.let { mMainActivity = activity as MainActivity }
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,12 +50,6 @@ class ActionsFragment : Fragment(R.layout.fragment_actions) {
 			}
 		}.attach()
 
-	}
-
-	override fun onResume() {
-		super.onResume()
-		mMainActivity.setScrollableToolbar()
-		mMainActivity.toolbar.title = "Actions"
 	}
 
 }

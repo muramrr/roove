@@ -1,7 +1,7 @@
 <!--
-  ~ Created by Andrii Kovalchuk on 01.12.19 22:42
+  ~ Created by Andrii Kovalchuk on 02.12.19 20:57
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 01.12.19 22:41
+  ~ Last modified 02.12.19 19:45
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,11 +11,7 @@
 <resources>
 
 	<!-- Base application theme. -->
-	<style name="AppTheme" parent="Theme.AppCompat.DayNight">
-
-		<item name="actionOverflowMenuStyle">@style/overFlowMenuStyle</item>
-
-		<item name="android:windowBackground">@color/colorPrimaryDark</item>
+	<style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
 		<!-- Customize your theme here. -->
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -23,14 +19,9 @@
 		<item name="colorError">@color/colorError</item>
 		<item name="colorOnSurface">@color/colorSurface</item>
 
-	</style>
-
-	<style name="AppTheme.NoActionBar">
-
-		<item name="windowActionBar">false</item>
-		<item name="windowNoTitle">true</item>
+		<item name="actionOverflowMenuStyle">@style/overFlowMenuStyle</item>
+		<item name="android:windowBackground">@color/colorPrimaryDark</item>
 		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
-<!--		<item name="android:windowTranslucentStatus">true</item>-->
 
 	</style>
 

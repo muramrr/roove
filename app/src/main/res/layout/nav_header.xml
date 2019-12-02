@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Created by Andrii Kovalchuk on 01.12.19 22:42
+  ~ Created by Andrii Kovalchuk on 02.12.19 20:57
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 01.12.19 19:06
+  ~ Last modified 02.12.19 20:50
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,17 +10,16 @@
   -->
 
 <androidx.constraintlayout.widget.ConstraintLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:background="@color/colorPrimary"
-	android:paddingTop="@dimen/notifbar_size_24">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
 
 
 	<ImageView
-		android:id="@+id/settings_button"
+		android:id="@+id/btnSettings"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_margin="@dimen/general_margin_16"
@@ -33,19 +32,19 @@
 		tools:ignore="ContentDescription" />
 
 	<ImageView
-		android:id="@+id/signed_in_user_image_view"
+		android:id="@+id/ivSignedInUserAvatar"
 		android:layout_width="64dp"
 		android:layout_height="64dp"
 		android:layout_margin="@dimen/general_margin_16"
 		android:src="@color/white"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintBottom_toTopOf="@id/signed_in_username_tv"
+		app:layout_constraintBottom_toTopOf="@id/tvSignedInUserName"
 		tools:ignore="ContentDescription" />
 
 
 	<TextView
-		android:id="@+id/signed_in_username_tv"
+		android:id="@+id/tvSignedInUserName"
 		style="@style/regular_text_white_20sp_85op"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
@@ -54,7 +53,7 @@
 		app:layout_constraintEnd_toStartOf="@+id/arrow_down"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/signed_in_user_image_view" />
+		app:layout_constraintTop_toBottomOf="@+id/ivSignedInUserAvatar" />
 
 	<ImageView
 		android:id="@+id/arrow_down"
@@ -63,8 +62,8 @@
 		android:layout_marginEnd="16dp"
 		android:src="@drawable/ic_nav_header_arrow_down_24dp"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintBottom_toBottomOf="@id/signed_in_username_tv"
-		app:layout_constraintTop_toTopOf="@+id/signed_in_username_tv"
+		app:layout_constraintBottom_toBottomOf="@id/tvSignedInUserName"
+		app:layout_constraintTop_toTopOf="@+id/tvSignedInUserName"
 		tools:ignore="ContentDescription" />
 
 
