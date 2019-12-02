@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 28.11.19 22:07
+ * Created by Andrii Kovalchuk on 02.12.19 20:57
  * Copyright (c) 2019. All rights reserved.
- * Last modified 28.11.19 21:25
+ * Last modified 02.12.19 20:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.ImagePagerAdapter
-import com.mmdev.roove.ui.main.view.MainActivity
+import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -120,15 +120,15 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 	}
 
 
-	override fun onStart() {
-		super.onStart()
-		mMainActivity.appbar.visibility = View.GONE
-	}
-
-	override fun onStop() {
-		super.onStop()
-		mMainActivity.appbar.visibility = View.VISIBLE
-	}
+//	override fun onStart() {
+//		super.onStart()
+//		mMainActivity.appbar.visibility = View.GONE
+//	}
+//
+//	override fun onStop() {
+//		super.onStop()
+//		mMainActivity.appbar.visibility = View.VISIBLE
+//	}
 
 	override fun onDestroy() {
 		super.onDestroy()

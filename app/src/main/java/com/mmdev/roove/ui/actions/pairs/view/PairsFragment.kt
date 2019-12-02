@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 27.11.19 19:54
+ * Created by Andrii Kovalchuk on 02.12.19 20:57
  * Copyright (c) 2019. All rights reserved.
- * Last modified 27.11.19 19:15
+ * Last modified 02.12.19 20:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
+import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.actions.pairs.PairsViewModel
-import com.mmdev.roove.ui.main.view.MainActivity
 
 /**
  * This is the documentation block about the class

@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 22.11.19 19:36
+ * Created by Andrii Kovalchuk on 02.12.19 20:57
  * Copyright (c) 2019. All rights reserved.
- * Last modified 22.11.19 16:39
+ * Last modified 02.12.19 20:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.business.events.model.EventItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.ImagePagerAdapter
-import com.mmdev.roove.ui.main.view.MainActivity
+import com.mmdev.roove.ui.MainActivity
 
 /**
  * A simple [Fragment] subclass.

@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 23.11.19 19:40
+ * Created by Andrii Kovalchuk on 02.12.19 20:57
  * Copyright (c) 2019. All rights reserved.
- * Last modified 23.11.19 19:04
+ * Last modified 02.12.19 20:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
-import com.mmdev.roove.ui.main.view.MainActivity
+import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.places.viewmodel.PlacesViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import io.reactivex.android.schedulers.AndroidSchedulers

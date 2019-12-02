@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 01.12.19 22:42
+ * Created by Andrii Kovalchuk on 02.12.19 20:57
  * Copyright (c) 2019. All rights reserved.
- * Last modified 01.12.19 21:44
+ * Last modified 02.12.19 20:50
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,24 +17,41 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import com.mmdev.roove.R
 
-fun AppCompatActivity.showToastText(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG)
-	.show()
+fun AppCompatActivity.showToastText(text: String) =
+	Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+
+
+fun FragmentManager.replaceFragmentInDrawer(fragment: Fragment) {
+	val fragmentName = fragment.javaClass.name
+	val fragmentPopped = popBackStackImmediate(fragmentName, 0)
+
+	if (!fragmentPopped){ //fragment not in back stack, create it.
+		beginTransaction().apply {
+			setCustomAnimations(R.anim.enter_from_right,
+			                    R.anim.exit_to_left,
+			                    R.anim.enter_from_left,
+			                    R.anim.exit_to_right)
+			replace(R.id.drawerContainer, fragment, fragmentName)
+			addToBackStack(fragmentName)
+			commit()
+		}
+	}
+}
 
 fun View.addSystemTopPadding(targetView: View = this, isConsumed: Boolean = false) {
 	doOnApplyWindowInsets { _, insets, initialPadding ->
-		targetView.updatePadding(
-				top = initialPadding.top + insets.systemWindowInsetTop
-		)
+		targetView.updatePadding(top = initialPadding.top + insets.systemWindowInsetTop)
+
 		if (isConsumed) {
-			insets.replaceSystemWindowInsets(
-					Rect(
-							insets.systemWindowInsetLeft,
-							0,
-							insets.systemWindowInsetRight,
-							insets.systemWindowInsetBottom
-					)
-			)
+			insets
+				.replaceSystemWindowInsets(Rect(insets.systemWindowInsetLeft,
+				                                0,
+				                                insets.systemWindowInsetRight,
+				                                insets.systemWindowInsetBottom))
 		} else {
 			insets
 		}
@@ -43,18 +60,14 @@ fun View.addSystemTopPadding(targetView: View = this, isConsumed: Boolean = fals
 
 fun View.addSystemBottomPadding(targetView: View = this, isConsumed: Boolean = false) {
 	doOnApplyWindowInsets { _, insets, initialPadding ->
-		targetView.updatePadding(
-				bottom = initialPadding.bottom + insets.systemWindowInsetBottom
-		)
+		targetView.updatePadding(bottom = initialPadding.bottom + insets.systemWindowInsetBottom)
+
 		if (isConsumed) {
-			insets.replaceSystemWindowInsets(
-					Rect(
-							insets.systemWindowInsetLeft,
-							insets.systemWindowInsetTop,
-							insets.systemWindowInsetRight,
-							0
-					)
-			)
+			insets
+				.replaceSystemWindowInsets(Rect(insets.systemWindowInsetLeft,
+				                                insets.systemWindowInsetTop,
+				                                insets.systemWindowInsetRight,
+				                                0))
 		} else {
 			insets
 		}
@@ -88,42 +101,3 @@ private fun View.requestApplyInsetsWhenAttached() {
 		})
 	}
 }
-
-
-
-/*
-	 * generate random users to firestore
-	 */
-//	private fun onGenerateUsers() {
-//		usersCards.clear()
-//		val usersCollection = mFirestore!!.collection("users")
-//		usersCards.addAll(FeedManager.generateUsers())
-//		for (i in usersCards) usersCollection.document(i.userId).set(i)
-//
-//
-//		/*
-//            generate likes/matches/skips lists
-//             */
-//		        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
-//		                .collection("likes")
-//		                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(1).getName())
-//		                .set(usersCards.get(1));
-//		        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
-//		                .collection("matches")
-//		                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(2).getName())
-//		                .set(usersCards.get(2));
-//		        profiles.document(mFirebaseAuth.getCurrentUser().getUid())
-//		                .collection("skips")
-//		                .document(mFirebaseAuth.getCurrentUser().getUid() + usersCards.get(3).getName())
-//		                .set(usersCards.get(3));
-//
-//		        profiles.get().addOnCompleteListener(task -> {
-//		            String a;
-//		            if (task.isSuccessful())
-//		            {
-//		                a = task.getResult().getDocuments().get(0).get("Name").toString();
-//		                new Handler().postDelayed(() -> Toast.makeText(getApplicationContext(), "Name : " + String.valueOf(a), Toast.LENGTH_SHORT).show(), 1000);
-//		            }
-//		        });
-//
-//	}
