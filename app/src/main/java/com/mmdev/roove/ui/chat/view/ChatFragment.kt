@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 02.12.19 20:57
+ * Created by Andrii Kovalchuk on 03.12.19 20:34
  * Copyright (c) 2019. All rights reserved.
- * Last modified 02.12.19 20:57
+ * Last modified 03.12.19 20:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,8 +22,6 @@ import android.provider.MediaStore
 import android.text.format.DateFormat
 import android.view.*
 import android.view.animation.AnimationUtils
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -46,6 +44,7 @@ import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.FragmentChatBinding
 import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.chat.ChatViewModel
+import kotlinx.android.synthetic.main.fragment_chat.*
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
@@ -68,8 +67,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	// P O J O models
 	private lateinit var userItemModel: UserItem
 
-	// Views UI
-	private lateinit var edMessageWrite: EditText
 	private val mChatAdapter: ChatAdapter = ChatAdapter(listOf())
 
 	// File
@@ -145,14 +142,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		edMessageWrite = view.findViewById(R.id.editTextMessage)
-		val rvMessagesList = view.findViewById<RecyclerView>(R.id.chat_messages_rv)
-		val ivAttachments = view.findViewById<ImageView>(R.id.buttonAttachments)
-		val ivSendMessage = view.findViewById<ImageView>(R.id.buttonMessage)
-		val linearLayoutManager = LinearLayoutManager(mMainActivity)
-		linearLayoutManager.stackFromEnd = true
-		ivSendMessage.setOnClickListener { sendMessageClick() }
-		ivAttachments.setOnClickListener {
+
+		buttonMessage.setOnClickListener { sendMessageClick() }
+		buttonAttachments.setOnClickListener {
 			val builder = AlertDialog.Builder(mMainActivity)
 				.setItems(arrayOf("Camera", "Gallery")) {
 					_, which ->
@@ -169,7 +161,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			override fun onChanged() {
 				super.onChanged()
 				val friendlyMessageCount = mChatAdapter.itemCount
-				rvMessagesList.scrollToPosition(friendlyMessageCount-1)
+				chat_messages_rv.scrollToPosition(friendlyMessageCount-1)
 			}
 		})
 
@@ -182,9 +174,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			}
 		})
 
-		rvMessagesList.apply {
+		chat_messages_rv.apply {
 			adapter = mChatAdapter
-			layoutManager = linearLayoutManager
+			layoutManager = LinearLayoutManager(this.context).apply {
+				stackFromEnd = true
+			}
 		}
 
 	}
@@ -195,18 +189,18 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	* rx chain: create conversation -> set conversation id -> send message -> observe new messages
 	*/
 	private fun sendMessageClick() {
-		if (edMessageWrite.text.isNotEmpty() &&
-		    edMessageWrite.text.toString().trim().isNotEmpty()) {
+		if (textMessageInput.text.isNotEmpty() &&
+		    textMessageInput.text.toString().trim().isNotEmpty()) {
 
 			val message = MessageItem(userItemModel,
-			                          edMessageWrite.text.toString().trim(),
+			                          textMessageInput.text.toString().trim(),
 			                          photoAttachementItem = null)
 
 			chatViewModel.sendMessage(message)
-			edMessageWrite.setText("")
+			textMessageInput.setText("")
 
 		}
-		else edMessageWrite.startAnimation(AnimationUtils.loadAnimation(mMainActivity,
+		else textMessageInput.startAnimation(AnimationUtils.loadAnimation(mMainActivity,
 		                                                                R.anim.horizontal_shake))
 
 	}
