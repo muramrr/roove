@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 02.12.19 20:57
+ * Created by Andrii Kovalchuk on 03.12.19 20:34
  * Copyright (c) 2019. All rights reserved.
- * Last modified 02.12.19 20:54
+ * Last modified 03.12.19 20:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,6 +24,7 @@ import com.mmdev.roove.ui.cards.view.CardsFragment
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.custom.CustomAlertDialog
 import com.mmdev.roove.ui.places.view.PlacesFragment
+import com.mmdev.roove.utils.addSystemTopPadding
 import com.mmdev.roove.utils.replaceFragmentInDrawer
 import kotlinx.android.synthetic.main.drawer_flow_fragment.*
 import kotlinx.android.synthetic.main.nav_header.*
@@ -45,13 +46,17 @@ class DrawerFlowFragment: BaseFragment(R.layout.drawer_flow_fragment) {
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		mMainActivity.setSupportActionBar(toolbar)
+
 		params = toolbar.layoutParams as AppBarLayout.LayoutParams
 		setToolbarNavigation()
 		setNavigationView()
 
 		childFragmentManager.replaceFragmentInDrawer(PlacesFragment.newInstance())
-		super.onViewCreated(view, savedInstanceState)
+
+
+		main_core_container.addSystemTopPadding()
+		navigationView.addSystemTopPadding()
+
 	}
 
 	private fun setToolbarNavigation(){
