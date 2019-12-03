@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Created by Andrii Kovalchuk on 01.12.19 22:42
+  ~ Created by Andrii Kovalchuk on 03.12.19 20:34
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 01.12.19 20:45
+  ~ Last modified 03.12.19 20:34
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,12 +10,27 @@
   -->
 
 <resources>
+
 	<color name="colorPrimary">#1A1A25</color>
+	<color name="colorPrimaryLight">#41404d</color>
 	<color name="colorPrimaryDark">#12121A</color>
+	<color name="colorOnPrimary">#ffffff</color>
+
+	<color name="colorSecondary">#b620e0</color>
+	<color name="colorSecondaryLight">#ec5eff</color>
+	<color name="colorSecondaryDark">#8100ad</color>
+	<color name="colorOnSecondary">#ffffff</color>
+
 	<color name="colorAccent">#6b6b99</color>
 	<color name="colorAccentDark">#323248</color>
+
 	<color name="colorError">#F50057</color>
+	<color name="colorOnError">#ffffff</color>
+
+
 	<color name="colorSurface">#1A1A25</color>
+	<color name="colorOnSurface">#d8ffffff</color>
+
 
 	<color name="black">#000000</color>
 	<color name="white">#ffffff</color>
@@ -23,6 +38,7 @@
 	<color name="white_50">#80FFFFFF</color>
 	<color name="white_25">#40FFFFFF</color>
 	<color name="white_10">#1AFFFFFF</color>
+	<color name="black_1">#031A1A25</color>
 	<color name="transparent">#00FFFFFF</color>
 
 	<color name="lolite">#6236FF</color>
@@ -37,6 +53,5 @@
 	<color name="material_orange_600">#FB8C00</color>
 	<color name="material_blue_400">#42A5F5</color>
 	<color name="material_blue_a700">#2962FF</color>
-	<color name="conversations_indicator">#39ff14</color>
 
 </resources>

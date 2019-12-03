@@ -1,7 +1,7 @@
 <!--
-  ~ Created by Andrii Kovalchuk on 02.12.19 20:57
+  ~ Created by Andrii Kovalchuk on 03.12.19 20:34
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 02.12.19 19:45
+  ~ Last modified 03.12.19 20:30
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,17 +11,40 @@
 <resources>
 
 	<!-- Base application theme. -->
-	<style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-		<!-- Customize your theme here. -->
+	<style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+		<!-- BASE THEME COLOR your theme here. -->
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorAccent">@color/colorAccent</item>
+		<item name="colorPrimaryVariant">@color/colorPrimaryLight</item>
+		<item name="colorOnPrimary">@color/colorOnPrimary</item>
+
+		<item name="colorSecondary">@color/colorSecondary</item>
+		<item name="colorSecondaryVariant">@color/colorSecondaryLight</item>
+		<item name="colorOnSecondary">@color/colorOnSecondary</item>
+
 		<item name="colorError">@color/colorError</item>
-		<item name="colorOnSurface">@color/colorSurface</item>
+		<item name="colorOnError">@color/colorOnError</item>
+
+		<item name="colorSurface">@color/colorSurface</item>
+		<item name="colorOnSurface">@color/colorOnSurface</item>
+
+<!--		<item name="colorAccent">@color/colorAccent</item>-->
+
+		<item name="android:colorBackground">@color/black</item>
+		<item name="colorOnBackground">@color/white</item>
 
 		<item name="actionOverflowMenuStyle">@style/overFlowMenuStyle</item>
 		<item name="android:windowBackground">@color/colorPrimaryDark</item>
-		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+<!--		<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+<!--		<item name="android:windowTranslucentStatus">true</item>-->
+<!--		<item name="android:windowTranslucentNavigation">true</item>-->
+		<item name="android:statusBarColor">@color/black</item>
+		<item name="android:navigationBarColor">@color/black_1</item>
+
+		<item name="shapeAppearanceSmallComponent">@style/AppShapeAppearance.SmallComponent</item>
+		<item name="shapeAppearanceMediumComponent">@style/AppShapeAppearance.MediumComponent</item>
+		<item name="shapeAppearanceLargeComponent">@style/AppShapeAppearance.LargeComponent</item>
 
 	</style>
 
@@ -37,7 +60,7 @@
 	<!-- display menu popup under toolbar -->
 	<style name="overFlowMenuStyle" parent="Widget.AppCompat.PopupMenu.Overflow">
 		<item name="android:overlapAnchor">false</item>
-		<!--<item name="android:dropDownVerticalOffset">5dp</item>-->
+		<item name="android:dropDownVerticalOffset">5dp</item>
 	</style>
 
 
@@ -64,7 +87,20 @@
 <!--		<item name="android:windowExitAnimation">@anim/exit_to_bottom</item>-->
 	</style>
 
+	<style name="AppShapeAppearance.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
 
+		<item name="cornerSize">8dp</item>
+	</style>
+
+	<style name="AppShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+
+		<item name="cornerSize">8dp</item>
+	</style>
+
+	<style name="AppShapeAppearance.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+
+		<item name="cornerSize">8dp</item>
+	</style>
 
 	<!-- auth tv 1 -->
 	<style name="auth_slogan1" parent="Widget.AppCompat.TextView">
@@ -183,7 +219,7 @@
 
 	<style name="navigation_item" parent="Widget.AppCompat.TextView">
 		<item name="android:fontFamily">@font/rubik_regular</item>
-		<item name="android:textColor">@drawable/nav_clicked_text</item>
+		<item name="android:textColor">@color/white_85</item>
 		<item name="android:textSize">16sp</item>
 	</style>
 

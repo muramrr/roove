@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 02.12.19 20:57
+ * Created by Andrii Kovalchuk on 03.12.19 20:34
  * Copyright (c) 2019. All rights reserved.
- * Last modified 02.12.19 20:50
+ * Last modified 03.12.19 20:13
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -68,6 +68,38 @@ fun View.addSystemBottomPadding(targetView: View = this, isConsumed: Boolean = f
 				                                insets.systemWindowInsetTop,
 				                                insets.systemWindowInsetRight,
 				                                0))
+		} else {
+			insets
+		}
+	}
+}
+
+fun View.addSystemRightPadding(targetView: View = this, isConsumed: Boolean = false) {
+	doOnApplyWindowInsets { _, insets, initialPadding ->
+		targetView.updatePadding(right = initialPadding.right + insets.systemWindowInsetRight)
+
+		if (isConsumed) {
+			insets
+				.replaceSystemWindowInsets(Rect(insets.systemWindowInsetLeft,
+				                                insets.systemWindowInsetTop,
+				                                0,
+				                                insets.systemWindowInsetBottom))
+		} else {
+			insets
+		}
+	}
+}
+
+fun View.addSystemLeftPadding(targetView: View = this, isConsumed: Boolean = false) {
+	doOnApplyWindowInsets { _, insets, initialPadding ->
+		targetView.updatePadding(left = initialPadding.left + insets.systemWindowInsetLeft)
+
+		if (isConsumed) {
+			insets
+				.replaceSystemWindowInsets(Rect(0,
+				                                insets.systemWindowInsetTop,
+				                                insets.systemWindowInsetRight,
+				                                insets.systemWindowInsetBottom))
 		} else {
 			insets
 		}

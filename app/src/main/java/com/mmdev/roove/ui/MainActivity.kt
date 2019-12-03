@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 02.12.19 20:57
+ * Created by Andrii Kovalchuk on 03.12.19 20:34
  * Copyright (c) 2019. All rights reserved.
- * Last modified 02.12.19 20:50
+ * Last modified 03.12.19 20:17
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -68,12 +68,12 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 	override fun onCreate(savedInstanceState: Bundle?) {
 
 		window.apply {
+			clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+			addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 			decorView.systemUiVisibility =
-				View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
 						View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-			setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-			         WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
+			//status bar and navigation bar colors assigned in theme
 		}
 
 		super.onCreate(savedInstanceState)
@@ -86,12 +86,9 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 			.get(LocalUserRepoViewModel::class.java)
 			.getSavedUser()
 
-
 		main_activity_container.doOnApplyWindowInsets { view, insets, initialPadding ->
-
 			view.updatePadding(left = initialPadding.left + insets.systemWindowInsetLeft,
 			                   right = initialPadding.right + insets.systemWindowInsetRight)
-
 			insets.replaceSystemWindowInsets(Rect(0,
 			                                      insets.systemWindowInsetTop,
 			                                      0,
