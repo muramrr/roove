@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 04.12.19 21:44
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,24 +12,27 @@ package com.mmdev.roove.ui
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.conversations.model.ConversationItem
 import com.mmdev.business.events.model.EventItem
 import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
+import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
-import com.mmdev.roove.ui.auth.viewmodel.AuthViewModel
+import com.mmdev.roove.ui.auth.AuthViewModel
+import com.mmdev.roove.ui.auth.view.AuthFlowFragment
 import com.mmdev.roove.ui.chat.view.ChatFragment
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.main.view.DrawerFlowFragment
 import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoViewModel
-import com.mmdev.roove.ui.places.view.PlacesFragment
 import com.mmdev.roove.ui.places.view.detailed.PlaceDetailedFragment
 import com.mmdev.roove.ui.profile.view.ProfileFragment
 import com.mmdev.roove.utils.doOnApplyWindowInsets
@@ -57,7 +60,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 	lateinit var partnerMainPhotoUrl: String
 	lateinit var partnerName: String
 
-	private lateinit var authViewModel: AuthViewModel
+	internal lateinit var authViewModel: AuthViewModel
 	private val factory = injector.factory()
 
 	private val currentFragment: BaseFragment?
@@ -78,14 +81,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 
 		super.onCreate(savedInstanceState)
 
-		progressDialog = LoadingDialog(this@MainActivity)
-
-		authViewModel = ViewModelProvider(this@MainActivity, factory)[AuthViewModel::class.java]
-
-		userItemModel = ViewModelProvider(this@MainActivity, factory)
-			.get(LocalUserRepoViewModel::class.java)
-			.getSavedUser()
-
 		main_activity_container.doOnApplyWindowInsets { view, insets, initialPadding ->
 			view.updatePadding(left = initialPadding.left + insets.systemWindowInsetLeft,
 			                   right = initialPadding.right + insets.systemWindowInsetRight)
@@ -95,19 +90,52 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 			                                      insets.systemWindowInsetBottom))
 		}
 
-		showDrawerFlowFragment()
+		GlideApp.with(splashLogoContainer.context)
+			.asGif()
+			.load(R.drawable.logo_loading)
+			.into(splashLogoContainer)
+
+
+		progressDialog = LoadingDialog(this@MainActivity)
+
+		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
+		Handler().postDelayed({ authViewModel.checkIsAuthenticated () }, 1000)
+		authViewModel.getAuthStatus().observe(this, Observer {
+			if (it == false) showAuthFlowFragment()
+			else showDrawerFlowFragment()
+		})
+		authViewModel.showProgress.observe(this, Observer {
+			if (it == true) progressDialog.showDialog()
+			else progressDialog.dismissDialog()
+		})
+		userItemModel = ViewModelProvider(this, factory)
+			.get(LocalUserRepoViewModel::class.java)
+			.getSavedUser()
 
 
 	}
 
+	// show auth fragment
+	internal fun showAuthFlowFragment() {
+		supportFragmentManager.beginTransaction().remove(DrawerFlowFragment())
+		supportFragmentManager.beginTransaction().apply {
+			add(R.id.main_activity_container,
+			    AuthFlowFragment(),
+			    AuthFlowFragment::class.java.canonicalName)
+			commit()
+		}
+	}
+
 	// show main feed fragment
-	private fun showDrawerFlowFragment(){
+	internal fun showDrawerFlowFragment() {
+		supportFragmentManager.beginTransaction().remove(AuthFlowFragment())
 		supportFragmentManager.beginTransaction().apply {
 				add(R.id.main_activity_container,
 				    DrawerFlowFragment(),
-				    PlacesFragment::class.java.canonicalName)
+				    DrawerFlowFragment::class.java.canonicalName)
 				commit()
 			}
+		splashLogoContainer.visibility = View.GONE
 
 	}
 

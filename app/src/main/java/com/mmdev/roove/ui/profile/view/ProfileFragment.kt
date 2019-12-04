@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 04.12.19 21:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,8 +23,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
-import com.mmdev.roove.ui.ImagePagerAdapter
 import com.mmdev.roove.ui.MainActivity
+import com.mmdev.roove.ui.core.ImagePagerAdapter
 import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -37,7 +37,8 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 
 	private lateinit var mMainActivity: MainActivity
 
-	private val userPhotosAdapter = ImagePagerAdapter(listOf())
+	private val userPhotosAdapter =
+		ImagePagerAdapter(listOf())
 
 	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
 	private val factory = injector.factory()
