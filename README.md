@@ -17,6 +17,23 @@ Used libraries/patterns:
 
 ![Logo](https://github.com/muramrr/roove/blob/master/media/roove_logo_256.png)
 
+
+### Explanations
+
+**So many developers, so many minds.**
+
+Also, keep in mind, that *business* module should not contain android-based plugins. It is a pure kotlin module.
+
+*Data* module is an android library.
+
+*ViewModel* shoudn't contain any android imports, except androidx.lifecycle. 
+
+*Log* classes in ViewModels for debug purposes only. I'll remove them in the release version.
+
+MVVM pattern implementation in this project:
+
+![MVVM](https://github.com/muramrr/roove/blob/master/media/arch_diagram.png)
+
 ## License
 
 [GitHub license](https://github.com/muramrr/roove/blob/master/LICENSE)
