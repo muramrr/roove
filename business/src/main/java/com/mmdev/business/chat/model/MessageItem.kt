@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 06.06.19 15:21
+ * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 31.10.19 20:25
+ * Last modified 04.12.19 19:13
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this

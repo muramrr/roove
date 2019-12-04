@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 02.12.19 20:57
+ * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 02.12.19 20:08
+ * Last modified 04.12.19 19:13
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.mmdev.roove.R
@@ -24,6 +23,7 @@ import com.mmdev.roove.ui.auth.view.AuthActivity
 import com.mmdev.roove.ui.auth.viewmodel.AuthViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity: AppCompatActivity(R.layout.activity_splash) {
 
@@ -37,12 +37,12 @@ class SplashActivity: AppCompatActivity(R.layout.activity_splash) {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		val logoContainer = findViewById<ImageView>(R.id.splash_logo)
-		GlideApp.with(this)
+		GlideApp.with(splashLogoContainer.context)
+			.asGif()
 			.load(R.drawable.logo_loading)
-			.into(logoContainer)
+			.into(splashLogoContainer)
 
-		val authViewModel = ViewModelProvider(this@SplashActivity,
+		val authViewModel = ViewModelProvider(this,
 		                                      injector.factory())[AuthViewModel::class.java]
 
 		disposables.add(authViewModel.isAuthenticated()
