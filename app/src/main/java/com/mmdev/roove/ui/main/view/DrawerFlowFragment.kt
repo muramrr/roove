@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 03.12.19 20:34
+ * Created by Andrii Kovalchuk on
  * Copyright (c) 2019. All rights reserved.
- * Last modified 03.12.19 20:16
+ * Last modified 04.12.19 18:49
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,13 +16,13 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.actions.ActionsFragment
 import com.mmdev.roove.ui.cards.view.CardsFragment
 import com.mmdev.roove.ui.core.BaseFragment
-import com.mmdev.roove.ui.custom.CustomAlertDialog
 import com.mmdev.roove.ui.places.view.PlacesFragment
 import com.mmdev.roove.utils.addSystemTopPadding
 import com.mmdev.roove.utils.replaceFragmentInDrawer
@@ -95,16 +95,18 @@ class DrawerFlowFragment: BaseFragment(R.layout.drawer_flow_fragment) {
 	* log out pop up
 	*/
 	private fun showSignOutPrompt() {
-		val builder = CustomAlertDialog.Builder(mMainActivity)
-		builder.setMessage("Do you wish to sign out?")
-		builder.setPositiveBtnText("Yes")
-		builder.setNegativeBtnText("NO")
-		builder.onPositiveClicked(View.OnClickListener {
-//			authViewModel.logOut()
-//			startAuthActivity()
-		})
-
-		builder.build()
+		MaterialAlertDialogBuilder(context)
+			.setTitle("Do you wish to log out?")
+			.setMessage("This will permanently log you out.")
+			.setPositiveButton("Log out") { dialog, which ->
+				dialog.dismiss()
+//				authViewModel.logOut()
+//				startAuthActivity()
+			}
+			.setNegativeButton("Cancel") { dialog, which ->
+				dialog.dismiss()
+			}
+			.show()
 
 	}
 

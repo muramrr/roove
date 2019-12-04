@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Created by Andrii Kovalchuk on 22.11.19 19:36
+  ~ Created by Andrii Kovalchuk on
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 21.11.19 21:02
+  ~ Last modified 04.12.19 17:48
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,6 +39,7 @@
 
 			<com.google.android.material.tabs.TabLayout
 				android:id="@+id/dots_indicator"
+				android:background="@color/transparent"
 				android:layout_width="match_parent"
 				android:layout_height="10dp"
 				android:layout_gravity="bottom"

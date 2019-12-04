@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Created by Andrii Kovalchuk on 03.12.19 20:34
+  ~ Created by Andrii Kovalchuk on
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 03.12.19 14:12
+  ~ Last modified 04.12.19 17:50
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,6 +45,7 @@
 				android:layout_height="10dp"
 				android:layout_gravity="bottom"
 				android:layout_marginBottom="8dp"
+				android:background="@color/transparent"
 				app:tabBackground="@drawable/dot_unselected_state"
 				app:tabIndicator="@drawable/dot_selection_indicator"
 				app:tabIndicatorColor="@color/gradient1"
