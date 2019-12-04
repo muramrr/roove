@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 03.12.19 20:34
+ * Created by Andrii Kovalchuk on
  * Copyright (c) 2019. All rights reserved.
- * Last modified 03.12.19 20:30
+ * Last modified 04.12.19 17:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,6 +44,7 @@ import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.FragmentChatBinding
 import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.chat.ChatViewModel
+import com.mmdev.roove.utils.addSystemBottomPadding
 import kotlinx.android.synthetic.main.fragment_chat.*
 import java.io.File
 import java.util.*
@@ -142,7 +143,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+		messageInputContainer.addSystemBottomPadding()
 		buttonMessage.setOnClickListener { sendMessageClick() }
 		buttonAttachments.setOnClickListener {
 			val builder = AlertDialog.Builder(mMainActivity)

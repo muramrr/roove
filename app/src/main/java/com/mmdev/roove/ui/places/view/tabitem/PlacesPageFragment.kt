@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 02.12.19 20:57
+ * Created by Andrii Kovalchuk on
  * Copyright (c) 2019. All rights reserved.
- * Last modified 02.12.19 20:08
+ * Last modified 04.12.19 17:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,6 +22,7 @@ import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.places.viewmodel.PlacesViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
+import com.mmdev.roove.utils.addSystemBottomPadding
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
@@ -55,6 +56,7 @@ class PlacesPageFragment: Fragment(R.layout.fragment_places_page_item) {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		rvFeedList = view.findViewById(R.id.content_main_rv_feed)
+		rvFeedList.addSystemBottomPadding()
 		initFeeds()
 
 

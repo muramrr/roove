@@ -1,7 +1,7 @@
 /*
- * Created by Andrii Kovalchuk on 02.12.19 20:57
+ * Created by Andrii Kovalchuk on
  * Copyright (c) 2019. All rights reserved.
- * Last modified 02.12.19 20:51
+ * Last modified 04.12.19 17:13
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,7 +36,7 @@ class PlacesFragment: Fragment(R.layout.fragment_places) {
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		val viewPager: ViewPager2 = view.findViewById(R.id.feed_vp)
+		val viewPager: ViewPager2 = view.findViewById(R.id.placesViewPager)
 		viewPager.apply {
 			(getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
 			adapter = PlacesPagerAdapter(childFragmentManager, lifecycle)
