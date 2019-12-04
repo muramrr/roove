@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 04.12.19 21:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,8 +20,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.business.events.model.EventItem
 import com.mmdev.roove.R
-import com.mmdev.roove.ui.ImagePagerAdapter
 import com.mmdev.roove.ui.MainActivity
+import com.mmdev.roove.ui.core.ImagePagerAdapter
 
 /**
  * A simple [Fragment] subclass.
@@ -32,7 +32,8 @@ class PlaceDetailedFragment: Fragment(R.layout.fragment_place_detailed) {
 
 	private lateinit var eventItem: EventItem
 
-	private val eventPhotosAdapter = ImagePagerAdapter(listOf())
+	private val eventPhotosAdapter =
+		ImagePagerAdapter(listOf())
 
 	companion object{
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 04.12.19 21:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,14 +26,14 @@ import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.places.view.PlacesFragment
 import com.mmdev.roove.utils.addSystemTopPadding
 import com.mmdev.roove.utils.replaceFragmentInDrawer
-import kotlinx.android.synthetic.main.drawer_flow_fragment.*
-import kotlinx.android.synthetic.main.nav_header.*
+import kotlinx.android.synthetic.main.fragment_flow_drawer.*
+import kotlinx.android.synthetic.main.nav_header.view.*
 
 /**
  * This is the documentation block about the class
  */
 
-class DrawerFlowFragment: BaseFragment(R.layout.drawer_flow_fragment) {
+class DrawerFlowFragment: BaseFragment(R.layout.fragment_flow_drawer) {
 
 
 	private lateinit var mMainActivity: MainActivity
@@ -70,7 +70,7 @@ class DrawerFlowFragment: BaseFragment(R.layout.drawer_flow_fragment) {
 
 	private fun setNavigationView() {
 		navigationView.getChildAt(navigationView.childCount - 1).overScrollMode = View.OVER_SCROLL_NEVER
-		//setUpUser()
+		setUpUser()
 		navigationView.setNavigationItemSelectedListener { item ->
 			drawerLayout.closeDrawer(GravityCompat.START)
 			// Handle navigation view item clicks here.
@@ -99,9 +99,8 @@ class DrawerFlowFragment: BaseFragment(R.layout.drawer_flow_fragment) {
 			.setTitle("Do you wish to log out?")
 			.setMessage("This will permanently log you out.")
 			.setPositiveButton("Log out") { dialog, which ->
-				dialog.dismiss()
-//				authViewModel.logOut()
-//				startAuthActivity()
+				mMainActivity.authViewModel.logOut()
+				mMainActivity.showAuthFlowFragment()
 			}
 			.setNegativeButton("Cancel") { dialog, which ->
 				dialog.dismiss()
@@ -111,11 +110,12 @@ class DrawerFlowFragment: BaseFragment(R.layout.drawer_flow_fragment) {
 	}
 
 	private fun setUpUser() {
-		tvSignedInUserName.text = mMainActivity.userItemModel.name
-		GlideApp.with(this)
+		val navHeader = navigationView.getHeaderView(0)
+		navHeader.tvSignedInUserName.text = mMainActivity.userItemModel.name
+		GlideApp.with(navHeader.ivSignedInUserAvatar.context)
 			.load(mMainActivity.userItemModel.mainPhotoUrl)
 			.apply(RequestOptions().circleCrop())
-			.into(ivSignedInUserAvatar)
+			.into(navHeader.ivSignedInUserAvatar)
 
 	}
 
