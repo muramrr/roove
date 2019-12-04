@@ -1,0 +1,19 @@
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 04.12.19 21:03
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+  <path
+      android:fillColor="@color/white"
+      android:pathData="M355.6 330l11.4 -74h-71v-48c0 -20.2 9.9 -40 41.7 -40H370v-63s-29.3 -5 -57.3 -5c-58.5 0 -96.7 35.4 -96.7 99.6V256h-65v74h65v182h80V330h59.6z" />
+</vector>

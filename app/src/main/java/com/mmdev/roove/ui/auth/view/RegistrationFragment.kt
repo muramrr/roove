@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 04.12.19 21:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,13 +24,12 @@ import com.mmdev.roove.ui.custom.ProgressButton
 
 class RegistrationFragment: Fragment(R.layout.activity_auth_fragment_reg){
 
-	private lateinit var mAuthActivity: AuthActivity
+	private lateinit var mAuthFlowFragment: AuthFlowFragment
 	private var isRegistrationCompleted = false
 
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
-		activity?.let { mAuthActivity = it as AuthActivity }
-		mAuthActivity.hideFacebookButton()
+		mAuthFlowFragment.hideFacebookButton()
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,15 +53,15 @@ class RegistrationFragment: Fragment(R.layout.activity_auth_fragment_reg){
 		progressButton.setOnClickListener {
 			isRegistrationCompleted = true
 			progressButton.startAnim()
-			mAuthActivity.fragmentRegistrationCallback(progressButton, gender, preferedGender)
+			mAuthFlowFragment.fragmentRegistrationCallback(progressButton, gender, preferedGender)
 		}
 	}
 
 	override fun onStop() {
 		super.onStop()
 		if (!isRegistrationCompleted) {
-			mAuthActivity.fragmentNotSuccessfulRegistrationCallback()
-			mAuthActivity.showFacebookButton()
+			mAuthFlowFragment.fragmentNotSuccessfulRegistrationCallback()
+			mAuthFlowFragment.showFacebookButton()
 		}
 	}
 }
