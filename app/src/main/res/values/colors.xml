@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Created by Andrii Kovalchuk on 03.12.19 20:34
+  ~ Created by Andrii Kovalchuk on
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 03.12.19 20:34
+  ~ Last modified 04.12.19 18:52
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,6 +33,7 @@
 
 
 	<color name="black">#000000</color>
+	<color name="black_50">#80000000</color>
 	<color name="white">#ffffff</color>
 	<color name="white_85">#d8ffffff</color>
 	<color name="white_50">#80FFFFFF</color>
@@ -49,6 +50,9 @@
 	<color name="gradient1">#FEAC5E</color>
 	<color name="gradient2">#C779D0</color>
 	<color name="gradient3">#4BC0C8</color>
+
+
+	<color name="material_red_a700">#D50000</color>
 
 	<color name="material_orange_600">#FB8C00</color>
 	<color name="material_blue_400">#42A5F5</color>

@@ -1,7 +1,7 @@
 <!--
-  ~ Created by Andrii Kovalchuk on 03.12.19 20:34
+  ~ Created by Andrii Kovalchuk on
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 03.12.19 20:30
+  ~ Last modified 04.12.19 18:53
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,8 +39,10 @@
 <!--		<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
 <!--		<item name="android:windowTranslucentStatus">true</item>-->
 <!--		<item name="android:windowTranslucentNavigation">true</item>-->
-		<item name="android:statusBarColor">@color/black</item>
+		<item name="android:statusBarColor">@color/black_1</item>
 		<item name="android:navigationBarColor">@color/black_1</item>
+
+		<item name="materialAlertDialogTheme">@style/MyMaterialAlertDialog</item>
 
 		<item name="shapeAppearanceSmallComponent">@style/AppShapeAppearance.SmallComponent</item>
 		<item name="shapeAppearanceMediumComponent">@style/AppShapeAppearance.MediumComponent</item>
@@ -64,9 +66,41 @@
 	</style>
 
 
-	<style name="AlertDialogAnimation">
-		<item name="android:windowEnterAnimation">@anim/enter_from_bottom</item>
-		<item name="android:windowExitAnimation">@anim/exit_to_bottom</item>
+	<!-- Alert dialog style	-->
+	<style name="MyMaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+		<item name="materialAlertDialogTitleTextStyle">@style/MyMaterialAlertDialog.Title</item>
+		<item name="materialAlertDialogBodyTextStyle">@style/MyMaterialAlertDialog.Body</item>
+		<item name="buttonBarPositiveButtonStyle">@style/MyMaterialAlertDialog.ButtonPositive</item>
+		<item name="buttonBarNegativeButtonStyle">@style/MyMaterialAlertDialog.ButtonNegative</item>
+	</style>
+
+	<style name="MyMaterialAlertDialog.Title" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+		<item name="android:fontFamily">@font/rubik_bold</item>
+		<item name="android:textColor">@color/white</item>
+		<item name="android:textSize">20sp</item>
+	</style>
+
+	<style name="MyMaterialAlertDialog.Body">
+		<item name="android:fontFamily">@font/rubik_light</item>
+		<item name="android:textColor">@color/white</item>
+		<item name="android:textSize">14sp</item>
+	</style>
+
+	<style name="MyMaterialAlertDialog.ButtonPositive" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+		<item name="backgroundTint">@color/material_red_a700</item>
+		<item name="android:textColor">@color/white</item>
+		<item name="android:textAllCaps">false</item>
+		<item name="android:textSize">14sp</item>
+		<item name="rippleColor">@color/black_50</item>
+	</style>
+
+	<style name="MyMaterialAlertDialog.ButtonNegative" parent="Widget.MaterialComponents.Button.OutlinedButton">
+		<item name="android:layout_marginEnd">8dp</item>
+		<item name="strokeColor">@color/material_blue_a700</item>
+		<item name="android:textColor">@color/white</item>
+		<item name="android:textAllCaps">false</item>
+		<item name="android:textSize">14sp</item>
+		<item name="rippleColor">@color/lolite</item>
 	</style>
 
 	<style name="FullScreenDialog" parent="Theme.AppCompat.Dialog">
@@ -82,9 +116,6 @@
 		<!-- This is important! Don't forget to set window background -->
 		<item name="android:windowBackground">@color/colorPrimaryDark</item>
 
-		<!-- Additionally if you want animations when dialog opening -->
-<!--		<item name="android:windowEnterAnimation">@anim/enter_from_bottom</item>-->
-<!--		<item name="android:windowExitAnimation">@anim/exit_to_bottom</item>-->
 	</style>
 
 	<style name="AppShapeAppearance.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
@@ -101,6 +132,23 @@
 
 		<item name="cornerSize">8dp</item>
 	</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	<!-- auth tv 1 -->
 	<style name="auth_slogan1" parent="Widget.AppCompat.TextView">
