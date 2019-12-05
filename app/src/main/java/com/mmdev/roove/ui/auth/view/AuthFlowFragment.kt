@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 21:44
+ * Last modified 05.12.19 19:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,7 +43,10 @@ class AuthFlowFragment : Fragment(R.layout.fragment_flow_auth)  {
 		super.onCreate(savedInstanceState)
 
 		mCallbackManager = CallbackManager.Factory.create()
-		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
+		authViewModel = activity?.run {
+			ViewModelProvider(this, factory)[AuthViewModel::class.java]
+		} ?: throw Exception("Invalid Activity")
+
 		authViewModel.continueRegistration.observe(this, Observer {
 			if (it == true) startRegistrationFragment()
 		})

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 21:44
+ * Last modified 05.12.19 18:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,8 +44,16 @@ class ImagePagerAdapter (private var imagesUrlList: List<String>):
 	inner class ImagePagerHolder(private val binding: UniversalPagerImageContainerBinding) :
 			RecyclerView.ViewHolder(binding.root) {
 
+
+		/*
+		*   executePendingBindings()
+		*   Evaluates the pending bindings,
+		*   updating any Views that have expressions bound to modified variables.
+		*   This must be run on the UI thread.
+		*/
 		fun bind(eventImageUrl: String){
 			binding.imageUrl = eventImageUrl
+			binding.executePendingBindings()
 		}
 
 	}

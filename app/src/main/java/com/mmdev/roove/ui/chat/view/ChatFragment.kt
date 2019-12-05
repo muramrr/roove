@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 05.12.19 19:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,17 +34,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.chat.model.MessageItem
-import com.mmdev.business.conversations.model.ConversationItem
 import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.FragmentChatBinding
-import com.mmdev.roove.ui.MainActivity
+import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.chat.ChatViewModel
+import com.mmdev.roove.ui.profile.view.ProfileFragment
 import com.mmdev.roove.utils.addSystemBottomPadding
+import com.mmdev.roove.utils.replaceRootFragment
 import kotlinx.android.synthetic.main.fragment_chat.*
 import java.io.File
 import java.util.*
@@ -58,14 +60,8 @@ import kotlin.collections.ArrayList
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
-	private lateinit var  mMainActivity: MainActivity
-
-
-	private val factory = injector.factory()
-	private lateinit var chatViewModel: ChatViewModel
-
-
 	// P O J O models
+	private lateinit var partnerItem: CardItem
 	private lateinit var userItemModel: UserItem
 
 	private val mChatAdapter: ChatAdapter = ChatAdapter(listOf())
@@ -73,7 +69,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	// File
 	private lateinit var mFilePathImageCamera: File
 
-	private lateinit var conversationId: String
+	private lateinit var sharedViewModel: SharedViewModel
+	private lateinit var chatViewModel: ChatViewModel
+	private val factory = injector.factory()
 
 
 	//static fields
@@ -90,45 +88,50 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		private const val REQUEST_CAMERA = 2
 		private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
 
-		//todo: remove data transfer between fragments, need to make it more abstract
-		private const val CONVERSATION_KEY = "CONVERSATION_ID"
 		@JvmStatic
-		fun newInstance(conversationId: String) = ChatFragment().apply {
-			arguments = Bundle().apply {
-				putString(CONVERSATION_KEY, conversationId)
-			}
-		}
+		fun newInstance() = ChatFragment()
 
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		activity?.let { mMainActivity = it as MainActivity }
-
-		arguments?.let {
-			conversationId = it.getString(CONVERSATION_KEY, "")
-		}
-		val conversation: ConversationItem? = mMainActivity.conversationItemClicked
 
 		setHasOptionsMenu(true)
 
-		userItemModel = mMainActivity.userItemModel
-		mChatAdapter.setCurrentUserId(userItemModel.userId)
-
 		chatViewModel = ViewModelProvider(this, factory)[ChatViewModel::class.java]
 
-		if (conversationId.isNotEmpty()) {
-			chatViewModel.loadMessages(conversation!!)
-			chatViewModel.getMessagesList().observe(this, Observer {
-				mChatAdapter.updateData(it)
-			})
-		}
-		else {
-			chatViewModel.startListenToEmptyChat(mMainActivity.partnerId)
-			chatViewModel.getMessagesList().observe(this, Observer {
-				mChatAdapter.updateData(it)
-			})
-		}
+
+		sharedViewModel = activity?.run {
+			ViewModelProvider(this, factory)[SharedViewModel::class.java]
+		} ?: throw Exception("Invalid Activity")
+
+		sharedViewModel.currentUser.observe(this, Observer {
+			userItemModel = it
+			mChatAdapter.setCurrentUserId(it.userId)
+		})
+
+		sharedViewModel.cardSelected.observe(this, Observer {
+			partnerItem = it
+		})
+
+
+
+
+		sharedViewModel.conversationSelected.observe(this, Observer {
+			if (it.conversationId.isNotEmpty()) {
+				chatViewModel.loadMessages(it)
+				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
+					mChatAdapter.updateData(messageList)
+				})
+			}
+			else {
+				chatViewModel.startListenToEmptyChat(it.partnerId)
+				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
+					mChatAdapter.updateData(messageList)
+				})
+			}
+		})
+
 
 	}
 
@@ -139,6 +142,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			.apply {
 				lifecycleOwner = this@ChatFragment
 				viewModel = chatViewModel
+				executePendingBindings()
 			}
 			.root
 
@@ -146,7 +150,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		messageInputContainer.addSystemBottomPadding()
 		buttonMessage.setOnClickListener { sendMessageClick() }
 		buttonAttachments.setOnClickListener {
-			val builder = AlertDialog.Builder(mMainActivity)
+			val builder = AlertDialog.Builder(context!!)
 				.setItems(arrayOf("Camera", "Gallery")) {
 					_, which ->
 					if (which == 0) { photoCameraClick() }
@@ -162,24 +166,24 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			override fun onChanged() {
 				super.onChanged()
 				val friendlyMessageCount = mChatAdapter.itemCount
-				chat_messages_rv.scrollToPosition(friendlyMessageCount-1)
+				rvMessageList.scrollToPosition(friendlyMessageCount - 1)
 			}
 		})
 
 		mChatAdapter.setOnAttachedPhotoClickListener(object: ChatAdapter.OnItemClickListener{
 			override fun onItemClick(view: View, position: Int) {
+
 				val photoUrl = mChatAdapter.getItem(position).photoAttachementItem!!.fileUrl
 				val dialog = FullScreenDialogFragment.newInstance(photoUrl)
 				dialog.show(childFragmentManager,
 				            FullScreenDialogFragment::class.java.canonicalName)
+
 			}
 		})
 
-		chat_messages_rv.apply {
+		rvMessageList.apply {
 			adapter = mChatAdapter
-			layoutManager = LinearLayoutManager(this.context).apply {
-				stackFromEnd = true
-			}
+			layoutManager = LinearLayoutManager(context).apply { stackFromEnd = true }
 		}
 
 	}
@@ -201,8 +205,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			textMessageInput.setText("")
 
 		}
-		else textMessageInput.startAnimation(AnimationUtils.loadAnimation(mMainActivity,
-		                                                                R.anim.horizontal_shake))
+		else textMessageInput.startAnimation(
+				AnimationUtils.loadAnimation(context, R.anim.horizontal_shake))
 
 	}
 
@@ -214,7 +218,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		// Check if we have needed permissions
 		val listPermissionsNeeded = ArrayList<String>()
 		for (permission in PERMISSIONS_CAMERA) {
-			val result = ActivityCompat.checkSelfPermission(mMainActivity, permission)
+			val result = ActivityCompat.checkSelfPermission(context!!, permission)
 			if (result != PackageManager.PERMISSION_GRANTED) listPermissionsNeeded.add(permission)
 		}
 		if (listPermissionsNeeded.isNotEmpty()) requestPermissions(PERMISSIONS_CAMERA, REQUEST_CAMERA)
@@ -226,9 +230,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	 */
 	private fun startCameraIntent() {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()
-		mFilePathImageCamera = File(mMainActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+		mFilePathImageCamera = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
 		                            namePhoto + "camera.jpg")
-		val photoURI = FileProvider.getUriForFile(mMainActivity,
+		val photoURI = FileProvider.getUriForFile(context!!,
 		                                          BuildConfig.APPLICATION_ID + ".provider",
 		                                          mFilePathImageCamera)
 		val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
@@ -242,7 +246,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	 * If the app does not has permission then the user will be prompted to grant permissions
 	 */
 	private fun photoGalleryClick() {
-		if (ActivityCompat.checkSelfPermission(mMainActivity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+		if (ActivityCompat.checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE)
+				!= PackageManager.PERMISSION_GRANTED)
 			requestPermissions(PERMISSIONS_STORAGE, REQUEST_STORAGE)
 		else startGalleryIntent()
 	}
@@ -290,7 +295,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 					chatViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString(),
 					                        userItemModel)
 				}
-				else Toast.makeText(mMainActivity,
+				else Toast.makeText(context,
 						"filePathImageCamera is null or filePathImageCamera isn't exists",
 						Toast.LENGTH_LONG)
 						.show()
@@ -306,7 +311,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	override fun onPrepareOptionsMenu(menu: Menu) {
 		val partnerIcon = menu.findItem(R.id.action_user)
 		GlideApp.with(this)
-			.load(mMainActivity.partnerMainPhotoUrl)
+			.load(partnerItem.mainPhotoUrl)
 			.centerCrop()
 			.apply(RequestOptions().circleCrop())
 			.into(object : CustomTarget<Drawable>(){
@@ -322,9 +327,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		when (item.itemId) {
 			R.id.action_user -> {
-				mMainActivity.startProfileFragment(mMainActivity.partnerId, false)
+				childFragmentManager
+					.replaceRootFragment(ProfileFragment.newInstance(false))
 			}
-			R.id.action_report -> { mMainActivity.showToast("report clicked") }
+			R.id.action_report -> { Toast.makeText(context,
+			                                       "report click",
+			                                       Toast.LENGTH_SHORT).show() }
 		}
 		return true
 	}

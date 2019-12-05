@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 05.12.19 20:07
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -122,12 +122,17 @@ dependencies {
 	implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
 	implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.2"
 
+	// Navigation controller
+	implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
+	implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
+
 	// ViewModel and LiveData
 	implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-	implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
 	//binary prefs
 	implementation "com.github.yandextaxitech:binaryprefs:1.0.1"
+
+
 
 
 }

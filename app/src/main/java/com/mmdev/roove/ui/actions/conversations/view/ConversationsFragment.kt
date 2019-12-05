@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 05.12.19 19:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,11 +18,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
-import androidx.recyclerview.widget.RecyclerView
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
-import com.mmdev.roove.ui.MainActivity
+import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.actions.conversations.ConversationsViewModel
+import com.mmdev.roove.ui.chat.view.ChatFragment
+import com.mmdev.roove.utils.replaceFragmentInDrawer
+import kotlinx.android.synthetic.main.fragment_conversations.*
 
 /**
  * This is the documentation block about the class
@@ -30,54 +32,45 @@ import com.mmdev.roove.ui.actions.conversations.ConversationsViewModel
 
 class ConversationsFragment: Fragment(R.layout.fragment_conversations){
 
+	private val mConversationsAdapter = ConversationsAdapter(listOf())
 
-	private lateinit var mMainActivity: MainActivity
-
-	private val mConversAdapter =
-		ConversationsAdapter(listOf())
+	private lateinit var sharedViewModel: SharedViewModel
+	private lateinit var conversationsViewModel: ConversationsViewModel
+	private val factory = injector.factory()
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		activity?.let { mMainActivity = it as MainActivity }
 
-		val factory = injector.factory()
+		sharedViewModel = activity?.run {
+			ViewModelProvider(this, factory)[SharedViewModel::class.java]
+		} ?: throw Exception("Invalid Activity")
 
-		val conversViewModel =
-			ViewModelProvider(this, factory)[ConversationsViewModel::class.java]
 
-		conversViewModel.loadConversationsList()
+		conversationsViewModel = ViewModelProvider(this, factory)[ConversationsViewModel::class.java]
 
-		conversViewModel.getConversationsList().observe(this, Observer {
-			mConversAdapter.updateData(it)
+		conversationsViewModel.loadConversationsList()
+
+		conversationsViewModel.getConversationsList().observe(this, Observer {
+			mConversationsAdapter.updateData(it)
 		})
 
 	}
 
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		val rvConversationsList = view.findViewById<RecyclerView>(R.id.active_conversations_rv)
-		rvConversationsList.apply {
-			adapter = mConversAdapter
+		rvConversationList.apply {
+			adapter = mConversationsAdapter
 			layoutManager = LinearLayoutManager(context, VERTICAL, false)
 			itemAnimator = DefaultItemAnimator()
 		}
 
-		mConversAdapter.setOnItemClickListener(object: ConversationsAdapter.OnItemClickListener {
+		mConversationsAdapter.setOnItemClickListener(object: ConversationsAdapter.OnItemClickListener {
 
 			override fun onItemClick(view: View, position: Int) {
-				val conversationItem = mConversAdapter.getConversationItem(position)
+				sharedViewModel.setConversationSelected(mConversationsAdapter.getConversationItem(position))
 
-				mMainActivity.conversationItemClicked = conversationItem
-
-				mMainActivity.partnerId = conversationItem.partnerId
-				mMainActivity.partnerMainPhotoUrl = conversationItem.partnerPhotoUrl
-				mMainActivity.partnerName = conversationItem.partnerName
-
-				// if conversation is stored in conversations container
-				// seems conversation was started and valid id is given
-				mMainActivity.startChatFragment(conversationItem.conversationId)
-
+				childFragmentManager.replaceFragmentInDrawer(ChatFragment.newInstance())
 			}
 
 		})

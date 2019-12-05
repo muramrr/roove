@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 05.12.19 19:00
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,6 +27,8 @@ import javax.inject.Inject
 class ConversationsViewModel @Inject constructor(private val deleteUC: DeleteConversationUseCase,
                                                  private val getUC: GetConversationsListUseCase):
 		ViewModel(){
+
+
 
 
 	private val deleteConversationStatus: MutableLiveData<Boolean> = MutableLiveData()

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 21:34
+ * Last modified 05.12.19 16:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -100,12 +100,17 @@ class AuthViewModel @Inject constructor(private val handleHandleUserExistence: H
                        }))
 	}
 
+	fun logOut() {
+		logOutExecution()
+		isAuthenticatedStatus.value = false
+	}
+
 	fun getAuthStatus() = isAuthenticatedStatus
 	fun getSignUpStatus() = signUpStatus
 
 	private fun handleUserExistenceExecution(uId: String) = handleHandleUserExistence.execute(uId)
 	private fun isAuthenticatedExecution() = isAuthenticated.execute()
-	fun logOut() = logOut.execute()
+	private fun logOutExecution() = logOut.execute()
 	private fun signInWithFacebookExecution(token: String) = signInWithFacebook.execute(token)
 	private fun signUpExecution(userItem: UserItem) = signUp.execute(userItem)
 

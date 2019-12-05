@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:13
+  ~ Last modified 05.12.19 15:34
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,13 +17,13 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<com.google.android.material.appbar.AppBarLayout
-		android:id="@+id/profile_app_bar"
+		android:id="@+id/appBarProfile"
 		android:layout_width="match_parent"
 		android:layout_height="300dp"
 		android:theme="@style/AppTheme.AppBarOverlay" >
 
 		<com.google.android.material.appbar.CollapsingToolbarLayout
-			android:id="@+id/profile_collapsing_toolbar"
+			android:id="@+id/collapseBarProfile"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			app:collapsedTitleTextAppearance="@style/regular_text_white_20sp_85op"
@@ -34,13 +34,13 @@
 
 
 			<androidx.viewpager2.widget.ViewPager2
-				android:id="@+id/profile_photos_vp"
+				android:id="@+id/viewPagerProfilePhotos"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:background="@color/colorPrimary" />
 
 			<com.google.android.material.tabs.TabLayout
-				android:id="@+id/dots_indicator"
+				android:id="@+id/tlDotsIndicatorProfile"
 				android:layout_width="match_parent"
 				android:layout_height="10dp"
 				android:layout_gravity="bottom"
@@ -54,7 +54,7 @@
 				app:tabMaxWidth="12dp" />
 
 			<androidx.appcompat.widget.Toolbar
-				android:id="@+id/profile_toolbar"
+				android:id="@+id/toolbarProfile"
 				android:layout_width="match_parent"
 				android:layout_height="?attr/actionBarSize"
 				app:layout_collapseMode="pin"
@@ -77,7 +77,7 @@
 			android:layout_height="match_parent" >
 
 			<TextView
-				android:id="@+id/profile_about_header_tv"
+				android:id="@+id/tvProfileAboutHeader"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:padding="@dimen/general_margin_16"
@@ -88,7 +88,7 @@
 				style="@style/medium_text_white_22sp_85op" />
 
 			<TextView
-				android:id="@+id/profile_about_content_tv"
+				android:id="@+id/tvProfileAboutText"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:lineSpacingExtra="10sp"
@@ -97,18 +97,18 @@
 				android:text="TEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\n"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/profile_about_header_tv"
+				app:layout_constraintTop_toBottomOf="@id/tvProfileAboutHeader"
 				style="@style/regular_text_white_16sp_85op" />
 
 			<TextView
-				android:id="@+id/profile_want_togo_header_tv"
+				android:id="@+id/tvProfileWantToGoHeader"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:padding="@dimen/general_margin_16"
 				android:text="Хочу сходить"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/profile_about_content_tv"
+				app:layout_constraintTop_toBottomOf="@id/tvProfileAboutText"
 				style="@style/medium_text_white_22sp_85op" />
 
 <!--			<androidx.recyclerview.widget.RecyclerView-->
@@ -125,12 +125,12 @@
 	</androidx.core.widget.NestedScrollView>
 
 	<com.google.android.material.floatingactionbutton.FloatingActionButton
-		android:id="@+id/fab_send_message"
+		android:id="@+id/fabProfileSendMessage"
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"
 		android:layout_margin="@dimen/general_margin_16"
 		android:src="@drawable/ic_profile_send_message_24dp"
-		app:layout_anchor="@id/profile_app_bar"
+		app:layout_anchor="@id/appBarProfile"
 		app:layout_anchorGravity="bottom|right|end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

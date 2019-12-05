@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:13
+  ~ Last modified 05.12.19 19:42
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,7 +28,7 @@
 		android:background="@color/colorPrimaryDark">
 
 		<ImageView
-			android:id="@+id/chat_loading_progress_iv"
+			android:id="@+id/ivChatLoading"
 			android:layout_width="120dp"
 			android:layout_height="120dp"
 			android:src="@drawable/loading"
@@ -41,7 +41,7 @@
 			tools:ignore="ContentDescription" />
 
 		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/chat_messages_rv"
+			android:id="@+id/rvMessageList"
 			android:layout_height="0dp"
 			android:layout_width="0dp"
 			android:background="@color/colorPrimaryDark"

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 21:22
+ * Last modified 05.12.19 19:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,15 +14,20 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
-import com.mmdev.roove.ui.MainActivity
+import com.mmdev.roove.core.injector
+import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.actions.ActionsFragment
+import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.cards.view.CardsFragment
 import com.mmdev.roove.ui.core.BaseFragment
+import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoViewModel
 import com.mmdev.roove.ui.places.view.PlacesFragment
 import com.mmdev.roove.utils.addSystemTopPadding
 import com.mmdev.roove.utils.replaceFragmentInDrawer
@@ -35,13 +40,28 @@ import kotlinx.android.synthetic.main.nav_header.view.*
 
 class DrawerFlowFragment: BaseFragment(R.layout.fragment_flow_drawer) {
 
+	private lateinit var userItemModel: UserItem
 
-	private lateinit var mMainActivity: MainActivity
 	private lateinit var params: AppBarLayout.LayoutParams
+
+	private lateinit var sharedViewModel: SharedViewModel
+	private lateinit var authViewModel: AuthViewModel
+	private val factory = injector.factory()
+
+
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		activity?.let { mMainActivity = it as MainActivity }
+		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
+		userItemModel = ViewModelProvider(this, factory)
+			.get(LocalUserRepoViewModel::class.java)
+			.getSavedUser()
+
+		sharedViewModel = activity?.run {
+			ViewModelProvider(this, factory)[SharedViewModel::class.java]
+		} ?: throw Exception("Invalid Activity")
+
+		sharedViewModel.setCurrentUser(userItemModel)
 
 	}
 
@@ -54,7 +74,7 @@ class DrawerFlowFragment: BaseFragment(R.layout.fragment_flow_drawer) {
 		childFragmentManager.replaceFragmentInDrawer(PlacesFragment.newInstance())
 
 
-		main_core_container.addSystemTopPadding()
+		drawer_core_container.addSystemTopPadding()
 		navigationView.addSystemTopPadding()
 
 	}
@@ -98,11 +118,11 @@ class DrawerFlowFragment: BaseFragment(R.layout.fragment_flow_drawer) {
 		MaterialAlertDialogBuilder(context)
 			.setTitle("Do you wish to log out?")
 			.setMessage("This will permanently log you out.")
-			.setPositiveButton("Log out") { dialog, which ->
-				mMainActivity.authViewModel.logOut()
-				mMainActivity.showAuthFlowFragment()
+			.setPositiveButton("Log out") { dialog, _ ->
+				authViewModel.logOut()
+				dialog.dismiss()
 			}
-			.setNegativeButton("Cancel") { dialog, which ->
+			.setNegativeButton("Cancel") { dialog, _ ->
 				dialog.dismiss()
 			}
 			.show()
@@ -111,9 +131,9 @@ class DrawerFlowFragment: BaseFragment(R.layout.fragment_flow_drawer) {
 
 	private fun setUpUser() {
 		val navHeader = navigationView.getHeaderView(0)
-		navHeader.tvSignedInUserName.text = mMainActivity.userItemModel.name
+		navHeader.tvSignedInUserName.text = userItemModel.name
 		GlideApp.with(navHeader.ivSignedInUserAvatar.context)
-			.load(mMainActivity.userItemModel.mainPhotoUrl)
+			.load(userItemModel.mainPhotoUrl)
 			.apply(RequestOptions().circleCrop())
 			.into(navHeader.ivSignedInUserAvatar)
 

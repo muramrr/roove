@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:13
+  ~ Last modified 05.12.19 16:17
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,12 +18,12 @@
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/pairs_container_rv"
+		android:id="@+id/rvPairList"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
 		android:background="@color/colorPrimaryDark"
 		android:overScrollMode="never"
-		app:layoutManager="GridLayoutManager"
+		app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
 		android:layout_marginStart="@dimen/card_margin_fix_rview_8"
 		android:layout_marginEnd="@dimen/general_margin_16"
 		android:layout_marginBottom="@dimen/card_margin_fix_rview_8"

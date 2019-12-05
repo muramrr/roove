@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:13
+  ~ Last modified 05.12.19 16:17
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@
 	android:layout_height="match_parent">
 
 	<com.google.android.material.tabs.TabLayout
-		android:id="@+id/fragment_activities_tabs"
+		android:id="@+id/tabsActivities"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:background="@color/colorPrimaryDark"
@@ -45,11 +45,11 @@
 
 
 	<androidx.viewpager2.widget.ViewPager2
-		android:id="@+id/fragment_activities_vp"
+		android:id="@+id/viewPagerActivities"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
 		android:background="@color/colorPrimaryDark"
-		app:layout_constraintTop_toBottomOf="@+id/fragment_activities_tabs"
+		app:layout_constraintTop_toBottomOf="@+id/tabsActivities"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"/>

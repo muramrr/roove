@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 05.12.19 15:34
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,8 @@ import javax.inject.Inject
 
 class RemoteUserRepoViewModel @Inject constructor(private val createUserUC: CreateUserUseCase,
                                                   private val deleteUserUC: DeleteUserUseCase,
-                                                  private val getUserUC: GetUserByIdUseCase) : ViewModel() {
+                                                  private val getUserUC: GetUserByIdUseCase) :
+		ViewModel() {
 
 	fun createUser() = createUserUC.execute()
 

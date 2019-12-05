@@ -3,7 +3,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:13
+  ~ Last modified 05.12.19 19:35
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -72,7 +72,7 @@
 			style="@style/medium_text_white_28sp_85op"/>
 
 		<TextView
-			android:id="@+id/back_to_swiping_tv"
+			android:id="@+id/tvMatchDialogBack"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:fontFamily="@font/rubik_bold"
