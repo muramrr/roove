@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 05.12.19 20:11
+  ~ Last modified 05.12.19 20:14
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,25 +10,7 @@
   -->
 
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/navigation"
-	app:startDestination="@id/fragment1">
 
-	<fragment
-		android:id="@+id/fragment1"
-		android:name="com.mmdev.roove.ui.main.view.DrawerFlowFragment"
-		android:label="DrawerFlowFragment"
-		tools:layout="@layout/fragment_flow_drawer">
-
-		<action android:id="@+id/action_fragment1_to_fragment2" app:destination="@id/fragment2"/>
-
-	</fragment>
-
-	<fragment
-		android:id="@+id/fragment2"
-		android:name="com.stavro_xhardha.pockettreasure.Fragment2"
-		android:label="fragment_fragment2"
-		tools:layout="@layout/fragment_fragment2"/>
 
 </navigation>
