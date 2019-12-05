@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 05.12.19 19:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,35 +12,37 @@ package com.mmdev.roove.ui.actions.pairs.view
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
-import com.mmdev.roove.ui.MainActivity
+import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.actions.pairs.PairsViewModel
+import com.mmdev.roove.ui.core.BaseFragment
+import com.mmdev.roove.ui.profile.view.ProfileFragment
+import com.mmdev.roove.utils.replaceRootFragment
+import kotlinx.android.synthetic.main.fragment_pairs.*
 
 /**
  * This is the documentation block about the class
  */
 
-class PairsFragment: Fragment(R.layout.fragment_pairs) {
+class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
+
+	private val mPairsAdapter = PairsAdapter(listOf())
 
 
-	private lateinit var mMainActivity: MainActivity
-
-	private val mPairsAdapter =
-		PairsAdapter(listOf())
-
+	private lateinit var sharedViewModel: SharedViewModel
+	private val factory = injector.factory()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		activity?.let { mMainActivity = it as MainActivity }
 
-		val factory = injector.factory()
+		sharedViewModel = activity?.run {
+			ViewModelProvider(this, factory)[SharedViewModel::class.java]
+		} ?: throw Exception("Invalid Activity")
 
 		val pairsViewModel =
 			ViewModelProvider(this, factory)[PairsViewModel::class.java]
@@ -53,10 +55,8 @@ class PairsFragment: Fragment(R.layout.fragment_pairs) {
 
 	}
 
-
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		val rvPairsList = view.findViewById<RecyclerView>(R.id.pairs_container_rv)
-		rvPairsList.apply {
+		rvPairList.apply {
 			adapter = mPairsAdapter
 			layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 			itemAnimator = DefaultItemAnimator()
@@ -64,15 +64,10 @@ class PairsFragment: Fragment(R.layout.fragment_pairs) {
 
 		mPairsAdapter.setOnItemClickListener(object: PairsAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
-				val pairItem = mPairsAdapter.getPairItem(position)
 
-				mMainActivity.partnerId = pairItem.userId
-				mMainActivity.partnerMainPhotoUrl = pairItem.mainPhotoUrl
-				mMainActivity.partnerName = pairItem.name
+				sharedViewModel.setCardSelected(mPairsAdapter.getPairItem(position))
 
-				mMainActivity.cardItemClicked = pairItem
-
-				mMainActivity.startProfileFragment(pairItem.userId, true)
+				childFragmentManager.replaceRootFragment(ProfileFragment.newInstance(true))
 
 			}
 		})

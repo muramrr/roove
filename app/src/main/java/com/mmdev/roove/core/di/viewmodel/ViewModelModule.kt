@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:40
+ * Last modified 05.12.19 19:54
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,6 +36,7 @@ import com.mmdev.business.user.usecase.local.SaveUserInfoUseCase
 import com.mmdev.business.user.usecase.remote.CreateUserUseCase
 import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
 import com.mmdev.business.user.usecase.remote.GetUserByIdUseCase
+import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.actions.conversations.ConversationsViewModel
 import com.mmdev.roove.ui.actions.pairs.PairsViewModel
 import com.mmdev.roove.ui.auth.AuthViewModel
@@ -43,7 +44,7 @@ import com.mmdev.roove.ui.cards.CardsViewModel
 import com.mmdev.roove.ui.chat.ChatViewModel
 import com.mmdev.roove.ui.main.viewmodel.local.LocalUserRepoViewModel
 import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoViewModel
-import com.mmdev.roove.ui.places.viewmodel.PlacesViewModel
+import com.mmdev.roove.ui.places.PlacesViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
@@ -66,13 +67,11 @@ class ViewModelModule {
 	@Provides
 	@ViewModelKey(AuthViewModel::class)
 	fun authViewModel(repository: AuthRepository): ViewModel =
-		AuthViewModel(HandleUserExistenceUseCase(
-				repository),
-		                                                         IsAuthenticatedUseCase(repository),
-		                                                         LogOutUseCase(repository),
-		                                                         SignInWithFacebookUseCase(
-				                                                         repository),
-		                                                         SignUpUseCase(repository))
+		AuthViewModel(HandleUserExistenceUseCase(repository),
+		              IsAuthenticatedUseCase(repository),
+		              LogOutUseCase(repository),
+		              SignInWithFacebookUseCase(repository),
+		              SignUpUseCase(repository))
 
 
 	@IntoMap
@@ -130,5 +129,10 @@ class ViewModelModule {
 		RemoteUserRepoViewModel(CreateUserUseCase(repository),
 		                        DeleteUserUseCase(repository),
 		                        GetUserByIdUseCase(repository))
+
+	@IntoMap
+	@Provides
+	@ViewModelKey(SharedViewModel::class)
+	fun sharedViewModel(): ViewModel = SharedViewModel()
 
 }

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 05.12.19 19:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,29 +18,29 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mmdev.business.cards.model.CardItem
-import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.FragmentCardsBinding
-import com.mmdev.roove.ui.MainActivity
+import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.cards.CardsViewModel
 import com.mmdev.roove.ui.core.BaseFragment
+import com.mmdev.roove.ui.profile.view.ProfileFragment
+import com.mmdev.roove.utils.replaceRootFragment
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
-import com.yuyakaido.android.cardstackview.CardStackView
 import com.yuyakaido.android.cardstackview.Direction
+import kotlinx.android.synthetic.main.fragment_cards.*
 
 
 class CardsFragment: BaseFragment() {
 
-	private lateinit var mMainActivity: MainActivity
-
-	private val mCardsStackAdapter: CardsStackAdapter =
-		CardsStackAdapter(listOf())
+	private val mCardsStackAdapter = CardsStackAdapter(listOf())
 
 	private lateinit var mAppearedCardItem: CardItem
 	private lateinit var mDisappearedCardItem: CardItem
 
+	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var cardsViewModel: CardsViewModel
+	private val factory = injector.factory()
 
 
 	companion object{
@@ -51,9 +51,11 @@ class CardsFragment: BaseFragment() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		activity?.let { mMainActivity = it as MainActivity }
 
-		val factory = injector.factory()
+		sharedViewModel = activity?.run {
+			ViewModelProvider(this, factory)[SharedViewModel::class.java]
+		} ?: throw Exception("Invalid Activity")
+
 		cardsViewModel = ViewModelProvider(this, factory)[CardsViewModel::class.java]
 		cardsViewModel.loadUsersByPreferences()
 		cardsViewModel.getUsersCardsList().observe(this, Observer {
@@ -71,13 +73,14 @@ class CardsFragment: BaseFragment() {
 			.apply {
 				lifecycleOwner = this@CardsFragment
 				viewModel = cardsViewModel
+				executePendingBindings()
 			}
 			.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		val cardStackView = view.findViewById<CardStackView>(R.id.card_stack_view)
 
-		val cardStackLayoutManager = CardStackLayoutManager(mMainActivity, object: CardStackListener {
+		val cardStackLayoutManager = CardStackLayoutManager(cardStackView.context,
+		                                                    object: CardStackListener {
 
 			override fun onCardAppeared(view: View, position: Int) {
 				//get current displayed on card profile
@@ -120,8 +123,11 @@ class CardsFragment: BaseFragment() {
 
 		mCardsStackAdapter.setOnItemClickListener(object: CardsStackAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
-				mMainActivity.startProfileFragment(mCardsStackAdapter.getCardItem(position).userId,
-				                                   false)
+
+				sharedViewModel.setCardSelected(mCardsStackAdapter.getCardItem(position))
+
+				childFragmentManager
+					.replaceRootFragment(ProfileFragment.newInstance(false))
 			}
 		})
 

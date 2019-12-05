@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:14
+  ~ Last modified 05.12.19 16:25
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
-		android:id="@+id/main_core_container"
+		android:id="@+id/drawer_core_container"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@color/colorPrimaryDark">

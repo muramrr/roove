@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 05.12.19 18:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -60,6 +60,12 @@ class CardsStackAdapter (private var cardsList: List<CardItem>):
 			}
 		}
 
+		/*
+		*   executePendingBindings()
+		*   Evaluates the pending bindings,
+		*   updating any Views that have expressions bound to modified variables.
+		*   This must be run on the UI thread.
+		*/
 		fun bind(cardItem: CardItem){
 			binding.cardItem = cardItem
 			binding.executePendingBindings()

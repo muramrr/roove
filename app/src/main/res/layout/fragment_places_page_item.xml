@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:13
+  ~ Last modified 05.12.19 16:27
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,15 +10,15 @@
   -->
 
 <androidx.constraintlayout.widget.ConstraintLayout
+	android:id="@+id/containerPlaces"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	tools:context=".ui.MainActivity">
+	android:layout_height="match_parent">
 
 	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/content_main_rv_feed"
+		android:id="@+id/rvPlacesList"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
 		android:background="@color/colorPrimaryDark"
@@ -26,7 +26,7 @@
 		android:layout_marginStart="@dimen/card_margin_fix_rview_8"
 		android:layout_marginEnd="@dimen/general_margin_16"
 		android:overScrollMode="never"
-		app:layoutManager="GridLayoutManager"
+		app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"

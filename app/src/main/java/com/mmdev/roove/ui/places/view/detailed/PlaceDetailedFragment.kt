@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 21:52
+ * Last modified 05.12.19 19:00
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,27 +13,27 @@ package com.mmdev.roove.ui.places.view.detailed
 
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.viewpager2.widget.ViewPager2
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mmdev.business.events.model.EventItem
 import com.mmdev.roove.R
-import com.mmdev.roove.ui.MainActivity
+import com.mmdev.roove.core.injector
+import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.core.ImagePagerAdapter
+import kotlinx.android.synthetic.main.fragment_place_detailed.*
 
 /**
  * A simple [Fragment] subclass.
  */
 class PlaceDetailedFragment: Fragment(R.layout.fragment_place_detailed) {
 
-	private lateinit var mMainActivity: MainActivity
+	private val placePhotosAdapter = ImagePagerAdapter(listOf())
 
-	private lateinit var eventItem: EventItem
-
-	private val eventPhotosAdapter =
-		ImagePagerAdapter(listOf())
+	private lateinit var sharedViewModel: SharedViewModel
+	private val factory = injector.factory()
 
 	companion object{
 
@@ -44,31 +44,41 @@ class PlaceDetailedFragment: Fragment(R.layout.fragment_place_detailed) {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		activity?.let { mMainActivity = it as MainActivity }
+		sharedViewModel = activity?.run {
+			ViewModelProvider(this, factory)[SharedViewModel::class.java]
+		} ?: throw Exception("Invalid Activity")
 
-		eventItem = mMainActivity.eventItem
-		val eventPhotos = ArrayList<String>()
-		for (imageItem in eventItem.images)
-			eventPhotos.add(imageItem.image)
+		sharedViewModel.placeSelected.observe(this, Observer {
+			val placePhotos = ArrayList<String>()
+			for (imageItem in it.images)
+				placePhotos.add(imageItem.image)
 
-		eventPhotosAdapter.updateData(eventPhotos)
+			placePhotosAdapter.updateData(placePhotos)
+
+			tvPlaceTitle.text = it.short_title
+
+			tvPlaceAboutText.text = it.description
+				.replace("<p>", "")
+				.replace("</p>","")
+
+		})
+
+
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		val dots = view.findViewById<TabLayout>(R.id.dots_indicator)
-		val viewPager= view.findViewById<ViewPager2>(R.id.event_photos_vp)
-		val eventTitle = view.findViewById<TextView>(R.id.event_title)
-		val eventDescription = view.findViewById<TextView>(R.id.event_about_content_tv)
 
-		viewPager.adapter = eventPhotosAdapter
+		viewPagerPlacePhotos.apply {
+			(getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+			adapter = placePhotosAdapter
+		}
 
-		TabLayoutMediator(dots, viewPager){ _: TabLayout.Tab, _: Int -> }.attach()
+		TabLayoutMediator(tlDotsIndicatorPlace, viewPagerPlacePhotos){
+			_: TabLayout.Tab, _: Int ->
+			//do nothing
+		}.attach()
 
-		eventTitle.text = eventItem.short_title
 
-		eventDescription.text = eventItem.description
-			.replace("<p>", "")
-			.replace("</p>","")
 	}
 
 

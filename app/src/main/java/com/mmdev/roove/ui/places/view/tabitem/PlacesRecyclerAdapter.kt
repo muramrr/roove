@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 05.12.19 18:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@ import com.mmdev.business.events.model.EventItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentPlacesRvItemBinding
 
-class PlacesRecyclerAdapter (private var mEventsList: List<EventItem>):
+class PlacesRecyclerAdapter (private var mPlaceList: List<EventItem>):
 		RecyclerView.Adapter<PlacesRecyclerAdapter.PlacesItemHolder>() {
 
 	private lateinit var mClickListener: OnItemClickListener
@@ -32,17 +32,17 @@ class PlacesRecyclerAdapter (private var mEventsList: List<EventItem>):
 
 
 	override fun onBindViewHolder(holder: PlacesItemHolder, position: Int) =
-		holder.bind(mEventsList[position])
+		holder.bind(mPlaceList[position])
 
 
-	override fun getItemCount() = mEventsList.size
+	override fun getItemCount() = mPlaceList.size
 
-	fun updateData(newEvents: List<EventItem>) {
-		mEventsList = newEvents
+	fun updateData(newPlaces: List<EventItem>) {
+		mPlaceList = newPlaces
 		notifyDataSetChanged()
 	}
 
-	fun getEventItem(position: Int) = mEventsList[position]
+	fun getPlaceItem(position: Int) = mPlaceList[position]
 
 
 	// allows clicks events to be caught
@@ -60,6 +60,12 @@ class PlacesRecyclerAdapter (private var mEventsList: List<EventItem>):
 			}
 		}
 
+		/*
+		*   executePendingBindings()
+		*   Evaluates the pending bindings,
+		*   updating any Views that have expressions bound to modified variables.
+		*   This must be run on the UI thread.
+		*/
 		fun bind(eventItem: EventItem) {
 			binding.eventItem = eventItem
 			binding.executePendingBindings()
