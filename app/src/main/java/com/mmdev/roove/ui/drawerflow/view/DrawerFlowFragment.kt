@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 06.12.19 21:27
+ * Last modified 06.12.19 21:40
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -92,7 +92,21 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_flow_drawer) {
 	private fun setNavigationView() {
 		navigationView.getChildAt(navigationView.childCount - 1).overScrollMode = View.OVER_SCROLL_NEVER
 		setUpUser()
+		navController.addOnDestinationChangedListener { _, destination, _ ->  //3
+			if (destination.id in arrayOf(
+							R.id.nav_cards,
+							R.id.nav_actions)) {
+				//fab.hide()
+			} else {
+				//fab.show()
+			}
 
+			if (destination.id == R.id.nav_cards) {
+				setNonScrollableToolbar()
+			} else {
+				setScrollableToolbar()
+			}
+		}
 
 		navigationView.setNavigationItemSelectedListener { item ->
 			drawerLayout.closeDrawer(GravityCompat.START)
