@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 05.12.19 19:35
+ * Last modified 06.12.19 17:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,6 +24,7 @@ import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.cards.CardsViewModel
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.profile.view.ProfileFragment
+import com.mmdev.roove.utils.addSystemBottomPadding
 import com.mmdev.roove.utils.replaceRootFragment
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
@@ -78,6 +79,7 @@ class CardsFragment: BaseFragment() {
 			.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		cardStackView.addSystemBottomPadding()
 
 		val cardStackLayoutManager = CardStackLayoutManager(cardStackView.context,
 		                                                    object: CardStackListener {

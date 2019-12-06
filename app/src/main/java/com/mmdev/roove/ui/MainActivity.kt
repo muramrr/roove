@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 05.12.19 19:52
+ * Last modified 06.12.19 21:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,11 +24,10 @@ import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.auth.view.AuthFlowFragment
-import com.mmdev.roove.ui.core.BaseFragment
+import com.mmdev.roove.ui.core.FlowFragment
 import com.mmdev.roove.ui.custom.LoadingDialog
-import com.mmdev.roove.ui.main.view.DrawerFlowFragment
+import com.mmdev.roove.ui.drawerflow.view.DrawerFlowFragment
 import com.mmdev.roove.utils.doOnApplyWindowInsets
-import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity: AppCompatActivity(R.layout.activity_main) {
@@ -38,8 +37,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 	private lateinit var authViewModel: AuthViewModel
 	private val factory = injector.factory()
 
-	private val currentFragment: BaseFragment?
-		get() = supportFragmentManager.findFragmentById(R.id.container) as? BaseFragment
+	private val currentFlowFragment: FlowFragment?
+		get() = supportFragmentManager.findFragmentById(R.id.main_activity_container) as? FlowFragment
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,10 +110,9 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 
 	}
 
-	fun showToast(text: String) = showToastText(text)
-
 	override fun onBackPressed() {
-		currentFragment?.onBackPressed() ?: super.onBackPressed()
+		currentFlowFragment?.onBackPressed() ?: super.onBackPressed()
+
 	}
 
 

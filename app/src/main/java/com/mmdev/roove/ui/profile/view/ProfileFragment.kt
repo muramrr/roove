@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 05.12.19 19:52
+ * Last modified 06.12.19 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,7 @@ import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.chat.view.ChatFragment
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.ImagePagerAdapter
-import com.mmdev.roove.ui.main.viewmodel.remote.RemoteUserRepoViewModel
+import com.mmdev.roove.ui.drawerflow.viewmodel.remote.RemoteUserRepoViewModel
 import com.mmdev.roove.utils.replaceFragmentInDrawer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
