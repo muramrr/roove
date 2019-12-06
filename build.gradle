@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 06.12.19 14:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -57,7 +57,7 @@ buildscript {
 
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.5.2'
+		classpath 'com.android.tools.build:gradle:3.5.3'
 		classpath 'com.google.gms:google-services:4.3.3'
 		classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.27.0'

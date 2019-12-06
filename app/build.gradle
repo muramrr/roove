@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 05.12.19 20:07
+ * Last modified 06.12.19 16:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -125,6 +125,8 @@ dependencies {
 	// Navigation controller
 	implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
 	implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
+	implementation 'androidx.navigation:navigation-fragment:2.1.0'
+	implementation 'androidx.navigation:navigation-ui:2.1.0'
 
 	// ViewModel and LiveData
 	implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
