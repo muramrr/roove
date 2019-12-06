@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 05.12.19 16:25
+  ~ Last modified 06.12.19 20:05
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -49,7 +49,16 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:background="@color/colorPrimaryDark"
-			app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+			app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+			<fragment
+				android:id="@+id/drawerHostFragment"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:name="androidx.navigation.fragment.NavHostFragment"
+				app:navGraph="@navigation/drawer_navigation"
+				app:defaultNavHost="true" />
+		</FrameLayout>
 
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
 

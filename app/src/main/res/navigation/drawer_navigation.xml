@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 06.12.19 21:06
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/drawerNavigationController"
+	app:startDestination="@+id/nav_places">
+
+	<fragment
+		android:id="@+id/nav_places"
+		android:name="com.mmdev.roove.ui.places.view.PlacesFragment"
+		android:label="Places"
+		tools:layout="@layout/fragment_places" />
+
+	<fragment
+		android:id="@+id/nav_actions"
+		android:name="com.mmdev.roove.ui.actions.ActionsFragment"
+		android:label="Actions"
+		tools:layout="@layout/fragment_actions" />
+
+	<fragment
+		android:id="@+id/nav_cards"
+		android:name="com.mmdev.roove.ui.cards.view.CardsFragment"
+		android:label="Cards"
+		tools:layout="@layout/fragment_cards" />
+
+
+	<action
+		android:id="@+id/action_open_inboxFragment"
+		app:destination="@id/nav_actions"
+		app:enterAnim="@anim/nav_default_enter_anim"
+		app:exitAnim="@anim/nav_default_exit_anim"
+		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+	<action
+		android:id="@+id/action_open_cardsFragment"
+		app:destination="@id/nav_cards"
+		app:enterAnim="@anim/nav_default_enter_anim"
+		app:exitAnim="@anim/nav_default_exit_anim"
+		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+
+	<action android:id="@+id/action_open_placesFragment"
+		app:destination="@id/nav_places"
+		app:enterAnim="@anim/nav_default_enter_anim"
+		app:exitAnim="@anim/nav_default_exit_anim"
+		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+
+</navigation>
