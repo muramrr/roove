@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 07.12.19 18:34
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,16 +14,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
 import com.mmdev.roove.R
-import com.mmdev.roove.databinding.DialogFullScreenImageBinding
+import com.mmdev.roove.databinding.DialogChatFullScreenImageBinding
+import kotlinx.android.synthetic.main.dialog_chat_full_screen_image.*
 
 
 class FullScreenDialogFragment: DialogFragment() {
 
 	private var isHide = false
-	private var recievedPhotoUrl = ""
+	private var receivedPhotoUrl = ""
 
 	companion object {
 		private const val PHOTO_KEY = "PHOTO_URL"
@@ -38,26 +38,25 @@ class FullScreenDialogFragment: DialogFragment() {
 		super.onCreate(savedInstanceState)
 		setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
 		arguments?.let {
-			recievedPhotoUrl = it.getString(PHOTO_KEY, "")
+			receivedPhotoUrl = it.getString(PHOTO_KEY, "")
 		}
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?) =
-		DialogFullScreenImageBinding.inflate(inflater,container,false)
-			.apply {this.photoUrl = recievedPhotoUrl}
+		DialogChatFullScreenImageBinding.inflate(inflater, container, false)
+			.apply {this.photoUrl = receivedPhotoUrl}
 			.root
 
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		val fullScreenImageView = view.findViewById<ImageView>(R.id.fullscreen_imageView)
 		// Set the content to appear under the system bars so that the
 		// content doesn't resize when the system bars hide and show.
-		fullScreenImageView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+		ivDialogFullScreen.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
 				View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
 				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
-		fullScreenImageView.setOnClickListener { fullScreenCall() }
+		ivDialogFullScreen.setOnClickListener { fullScreenCall() }
 	}
 
 	//hide bottom navigation to see fullscreen image

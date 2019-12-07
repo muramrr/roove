@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 05.12.19 16:17
+  ~ Last modified 07.12.19 17:10
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,16 +22,18 @@
 		android:layout_width="0dp"
 		android:layout_height="0dp"
 		android:background="@color/colorPrimaryDark"
+		android:clipToPadding="false"
 		android:overScrollMode="never"
+
+		android:layout_marginEnd="@dimen/general_margin_8"
+
 		app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-		android:layout_marginStart="@dimen/card_margin_fix_rview_8"
-		android:layout_marginEnd="@dimen/general_margin_16"
-		android:layout_marginBottom="@dimen/card_margin_fix_rview_8"
+		app:spanCount="2"
+		tools:listitem="@layout/fragment_pairs_item"
+
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:spanCount="2"
-		tools:listitem="@layout/fragment_pairs_item" />
+		app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
