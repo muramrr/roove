@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 05.12.19 19:00
+ * Last modified 07.12.19 18:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,16 +14,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.places.PlacesViewModel
-import com.mmdev.roove.ui.places.view.detailed.PlaceDetailedFragment
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import com.mmdev.roove.utils.addSystemBottomPadding
-import com.mmdev.roove.utils.replaceRootFragment
 import kotlinx.android.synthetic.main.fragment_places_page_item.*
 
 
@@ -70,8 +69,8 @@ class PlacesPageFragment: BaseFragment(R.layout.fragment_places_page_item) {
 			override fun onItemClick(view: View, position: Int) {
 
 				sharedViewModel.setPlaceSelected(mPlacesRecyclerAdapter.getPlaceItem(position))
-				childFragmentManager.replaceRootFragment(PlaceDetailedFragment.newInstance())
 
+				findNavController().navigate(R.id.action_nav_places_to_placeDetailedFragment)
 
 			}
 		})

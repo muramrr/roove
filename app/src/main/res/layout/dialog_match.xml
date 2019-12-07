@@ -3,7 +3,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 05.12.19 19:35
+  ~ Last modified 07.12.19 18:12
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,6 +28,7 @@
 	</data>
 
 	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/dialogMatchContainer"
 		android:background="@color/colorPrimaryDark"
 		android:layout_height="match_parent"
 		android:layout_width="match_parent" >

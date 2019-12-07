@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 05.12.19 19:52
+ * Last modified 07.12.19 19:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,9 +44,7 @@ import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.FragmentChatBinding
 import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.chat.ChatViewModel
-import com.mmdev.roove.ui.profile.view.ProfileFragment
 import com.mmdev.roove.utils.addSystemBottomPadding
-import com.mmdev.roove.utils.replaceRootFragment
 import kotlinx.android.synthetic.main.fragment_chat.*
 import java.io.File
 import java.util.*
@@ -100,10 +98,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 		chatViewModel = ViewModelProvider(this, factory)[ChatViewModel::class.java]
 
-
 		sharedViewModel = activity?.run {
 			ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
+
+
 
 		sharedViewModel.currentUser.observe(this, Observer {
 			userItemModel = it
@@ -112,10 +111,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 		sharedViewModel.cardSelected.observe(this, Observer {
 			partnerItem = it
+			chatViewModel.startListenToEmptyChat(partnerItem.userId)
+			chatViewModel.getMessagesList().observe(this, Observer { messageList ->
+				mChatAdapter.updateData(messageList)
+			})
 		})
-
-
-
 
 		sharedViewModel.conversationSelected.observe(this, Observer {
 			if (it.conversationId.isNotEmpty()) {
@@ -124,13 +124,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 					mChatAdapter.updateData(messageList)
 				})
 			}
-			else {
-				chatViewModel.startListenToEmptyChat(it.partnerId)
-				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
-					mChatAdapter.updateData(messageList)
-				})
-			}
 		})
+
 
 
 	}
@@ -147,7 +142,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		messageInputContainer.addSystemBottomPadding()
+		chatContainer.addSystemBottomPadding()
 		buttonMessage.setOnClickListener { sendMessageClick() }
 		buttonAttachments.setOnClickListener {
 			val builder = AlertDialog.Builder(context!!)
@@ -326,10 +321,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		when (item.itemId) {
-			R.id.action_user -> {
-				childFragmentManager
-					.replaceRootFragment(ProfileFragment.newInstance(false))
-			}
+			R.id.action_user ->{}  //ProfileFragment.newInstance(false)
+
 			R.id.action_report -> { Toast.makeText(context,
 			                                       "report click",
 			                                       Toast.LENGTH_SHORT).show() }
@@ -337,10 +330,5 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		return true
 	}
 
-//	override fun onResume() {
-//		super.onResume()
-//		mMainActivity.toolbar.title = mMainActivity.partnerName
-//		mMainActivity.setNonScrollableToolbar()
-//	}
 
 }

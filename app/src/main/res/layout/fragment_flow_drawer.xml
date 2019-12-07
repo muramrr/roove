@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 06.12.19 20:05
+  ~ Last modified 07.12.19 18:20
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,11 +14,9 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@color/colorPrimaryDark"
-	tools:context=".ui.MainActivity"
-	tools:openDrawer="start"
+
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools">
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:id="@+id/drawer_core_container"
@@ -30,13 +28,13 @@
 			android:id="@+id/app_bar"
 			android:layout_width="match_parent"
 			android:layout_height="?actionBarSize"
+			android:background="@color/transparent"
 			android:theme="@style/AppTheme.AppBarOverlay">
 
 			<androidx.appcompat.widget.Toolbar
 				android:id="@+id/toolbar"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:background="@color/colorPrimary"
 				app:layout_scrollFlags="scroll|enterAlways|snap"
 				app:popupTheme="@style/menuPopupStyle"
 				app:titleTextAppearance="@style/regular_text_white_20sp_85op"
