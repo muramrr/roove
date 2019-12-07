@@ -28,7 +28,7 @@ Also, keep in mind, that *business* module should not contain android-based plug
 
 *ViewModel* shoudn't contain any android imports, except androidx.lifecycle. 
 
-*Log* classes in ViewModels for debug purposes only. I'll remove them in the release version.
+*Log* classes in ViewModels for debug purposes only. They will be deleted after release.
 
 MVVM pattern implementation in this project:
 
