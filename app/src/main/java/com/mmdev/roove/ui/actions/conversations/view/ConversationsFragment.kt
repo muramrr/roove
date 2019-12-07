@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 05.12.19 19:52
+ * Last modified 07.12.19 18:32
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
@@ -22,8 +23,7 @@ import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.actions.conversations.ConversationsViewModel
-import com.mmdev.roove.ui.chat.view.ChatFragment
-import com.mmdev.roove.utils.replaceFragmentInDrawer
+import com.mmdev.roove.utils.addSystemBottomPadding
 import kotlinx.android.synthetic.main.fragment_conversations.*
 
 /**
@@ -59,6 +59,9 @@ class ConversationsFragment: Fragment(R.layout.fragment_conversations){
 
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+		rvConversationList.addSystemBottomPadding()
+
 		rvConversationList.apply {
 			adapter = mConversationsAdapter
 			layoutManager = LinearLayoutManager(context, VERTICAL, false)
@@ -68,9 +71,11 @@ class ConversationsFragment: Fragment(R.layout.fragment_conversations){
 		mConversationsAdapter.setOnItemClickListener(object: ConversationsAdapter.OnItemClickListener {
 
 			override fun onItemClick(view: View, position: Int) {
+
 				sharedViewModel.setConversationSelected(mConversationsAdapter.getConversationItem(position))
 
-				childFragmentManager.replaceFragmentInDrawer(ChatFragment.newInstance())
+				findNavController().navigate(R.id.action_nav_actions_conversations_to_chatFragment)
+
 			}
 
 		})

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 06.12.19 21:40
+ * Last modified 07.12.19 19:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,11 +12,12 @@ package com.mmdev.roove.ui.drawerflow.view
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -31,6 +32,7 @@ import com.mmdev.roove.ui.drawerflow.viewmodel.local.LocalUserRepoViewModel
 import com.mmdev.roove.utils.addSystemTopPadding
 import kotlinx.android.synthetic.main.fragment_flow_drawer.*
 import kotlinx.android.synthetic.main.nav_header.view.*
+
 
 /**
  * This is the documentation block about the class
@@ -67,26 +69,18 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_flow_drawer) {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		//NavigationUI.setupWithNavController(navigationView, drawerHostFragment
 		// .findNavController())
-		navController = activity?.findNavController(R.id.drawerHostFragment)?:return
+		val navHost = childFragmentManager.findFragmentById(R.id.drawerHostFragment) as NavHostFragment
+		navController = navHost.findNavController()
 		params = toolbar.layoutParams as AppBarLayout.LayoutParams
-		setToolbarNavigation()
+
 		setNavigationView()
 
-		//childFragmentManager.replaceFragmentInDrawer(PlacesFragment.newInstance())
 
+		toolbar.setupWithNavController(navController, drawerLayout)
 
 		drawer_core_container.addSystemTopPadding()
 		navigationView.addSystemTopPadding()
 
-	}
-
-	private fun setToolbarNavigation(){
-		val toggle = ActionBarDrawerToggle(activity, drawerLayout, toolbar,
-		                                   R.string.navigation_drawer_open,
-		                                   R.string.navigation_drawer_close)
-
-		drawerLayout.addDrawerListener(toggle)
-		toggle.syncState()
 	}
 
 	private fun setNavigationView() {
@@ -94,14 +88,25 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_flow_drawer) {
 		setUpUser()
 		navController.addOnDestinationChangedListener { _, destination, _ ->  //3
 			if (destination.id in arrayOf(
-							R.id.nav_cards,
-							R.id.nav_actions)) {
-				//fab.hide()
+							R.id.profileFragment
+					)) {
+
+				appBarGone()
+
 			} else {
-				//fab.show()
+				appBarShow()
+
 			}
 
-			if (destination.id == R.id.nav_cards) {
+			if (destination.id == R.id.chatFragment){
+
+				//toolbar.inflateMenu(R.menu.chat_menu)
+			}
+
+			if (destination.id in arrayOf(
+							R.id.nav_cards,
+							R.id.chatFragment
+					)) {
 				setNonScrollableToolbar()
 			} else {
 				setScrollableToolbar()
@@ -153,26 +158,42 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_flow_drawer) {
 
 	}
 
-	fun setNonScrollableToolbar(){
+	private fun appBarGone(){
+		setScrollableToolbar()
+		app_bar.setExpanded(false,true)
+	}
+
+	private fun appBarShow(){
+		setScrollableToolbar()
+		app_bar.setExpanded(true, false)
+
+	}
+
+	private fun setNonScrollableToolbar(){
 		params.scrollFlags = 0
 		toolbar.layoutParams = params
 
 	}
 
-	fun setScrollableToolbar(){
+	private fun setScrollableToolbar(){
 		params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or
 				AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS or
 				AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
 		toolbar.layoutParams = params
+
 	}
 
 
 	override fun onBackPressed() {
 		when {
 			drawerLayout.isDrawerOpen(GravityCompat.START) -> drawerLayout.closeDrawer(GravityCompat.START)
+
 			else -> navController.navigateUp()
 		}
 	}
+
+
+
 
 
 }

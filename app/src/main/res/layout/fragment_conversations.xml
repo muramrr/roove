@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 05.12.19 16:17
+  ~ Last modified 07.12.19 17:05
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,6 +22,7 @@
 		android:id="@+id/rvConversationList"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
+		android:clipToPadding="false"
 		android:overScrollMode="never"
 		android:scrollbars="vertical"
 

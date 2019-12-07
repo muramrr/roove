@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 06.12.19 21:06
+  ~ Last modified 07.12.19 20:08
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,25 +15,6 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/drawerNavigationController"
 	app:startDestination="@+id/nav_places">
-
-	<fragment
-		android:id="@+id/nav_places"
-		android:name="com.mmdev.roove.ui.places.view.PlacesFragment"
-		android:label="Places"
-		tools:layout="@layout/fragment_places" />
-
-	<fragment
-		android:id="@+id/nav_actions"
-		android:name="com.mmdev.roove.ui.actions.ActionsFragment"
-		android:label="Actions"
-		tools:layout="@layout/fragment_actions" />
-
-	<fragment
-		android:id="@+id/nav_cards"
-		android:name="com.mmdev.roove.ui.cards.view.CardsFragment"
-		android:label="Cards"
-		tools:layout="@layout/fragment_cards" />
-
 
 	<action
 		android:id="@+id/action_open_inboxFragment"
@@ -57,6 +38,111 @@
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
 		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+
+	<fragment
+		android:id="@+id/nav_places"
+		android:name="com.mmdev.roove.ui.places.view.PlacesFragment"
+		android:label="Places"
+		tools:layout="@layout/fragment_places" >
+
+
+		<action
+			android:id="@+id/action_nav_places_to_placeDetailedFragment"
+			app:destination="@id/placeDetailedFragment"
+			app:enterAnim="@anim/enter_from_top"
+			app:exitAnim="@anim/exit_to_bottom"
+			app:popEnterAnim="@anim/enter_from_bottom"
+			app:popExitAnim="@anim/exit_to_top" />
+
+
+	</fragment>
+
+	<fragment
+		android:id="@+id/nav_actions"
+		android:name="com.mmdev.roove.ui.actions.ActionsFragment"
+		android:label="Actions"
+		tools:layout="@layout/fragment_actions" >
+
+		<action
+			android:id="@+id/action_nav_actions_conversations_to_chatFragment"
+			app:destination="@id/chatFragment"
+			app:enterAnim="@anim/nav_default_enter_anim"
+			app:exitAnim="@anim/nav_default_exit_anim"
+			app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+			app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+		<!-- @argument from match screen set fab visible -->
+		<action
+			android:id="@+id/action_nav_actions_pairs_to_profileFragment"
+			app:destination="@id/profileFragment"
+			app:enterAnim="@anim/enter_from_top"
+			app:exitAnim="@anim/exit_to_bottom"
+			app:popEnterAnim="@anim/enter_from_bottom"
+			app:popExitAnim="@anim/exit_to_top" >
+
+			<argument
+				android:defaultValue="true"
+				android:name="FAB_VISIBLE" />
+
+		</action>
+
+
+	</fragment>
+
+	<fragment
+		android:id="@+id/nav_cards"
+		android:name="com.mmdev.roove.ui.cards.view.CardsFragment"
+		android:label="Cards"
+		tools:layout="@layout/fragment_cards" >
+
+		<action
+			android:id="@+id/action_nav_cards_to_profileFragment"
+			app:destination="@id/profileFragment"
+			app:enterAnim="@anim/enter_from_top"
+			app:exitAnim="@anim/exit_to_bottom"
+			app:popEnterAnim="@anim/enter_from_bottom"
+			app:popExitAnim="@anim/exit_to_top" >
+
+			<argument
+				android:defaultValue="false"
+				android:name="FAB_VISIBLE" />
+
+		</action>
+
+	</fragment>
+
+	<fragment
+		android:id="@+id/chatFragment"
+		android:name="com.mmdev.roove.ui.chat.view.ChatFragment"
+		tools:layout="@layout/fragment_chat"/>
+
+	<!-- @argument to show is fab enabled to open chat? -->
+	<fragment
+		android:id="@+id/profileFragment"
+		android:name="com.mmdev.roove.ui.profile.view.ProfileFragment"
+		tools:layout="@layout/fragment_profile">
+
+		<argument
+			android:name="FAB_VISIBLE"
+			app:argType="boolean"
+			android:defaultValue="false" />
+		<action
+			android:id="@+id/action_profileFragment_to_chatFragment"
+			app:destination="@id/chatFragment"
+			app:enterAnim="@anim/enter_from_top"
+			app:exitAnim="@anim/exit_to_bottom"
+			app:popEnterAnim="@anim/enter_from_bottom"
+			app:popExitAnim="@anim/exit_to_top" />
+
+	</fragment>
+
+	<fragment
+		android:id="@+id/placeDetailedFragment"
+		android:name="com.mmdev.roove.ui.places.view.detailed.PlaceDetailedFragment"
+		tools:layout="@layout/fragment_place_detailed" />
+
+
 
 
 </navigation>

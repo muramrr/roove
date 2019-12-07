@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 05.12.19 19:35
+ * Last modified 07.12.19 18:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.DialogMatchBinding
+import com.mmdev.roove.utils.addSystemBottomPadding
 import kotlinx.android.synthetic.main.dialog_match.*
 
 /**
@@ -64,5 +65,8 @@ class MatchDialogFragment: DialogFragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		tvMatchDialogBack.setOnClickListener { dialog?.dismiss() }
+		dialogMatchContainer.addSystemBottomPadding()
+		dialogMatchContainer.addSystemBottomPadding()
+
 	}
 }

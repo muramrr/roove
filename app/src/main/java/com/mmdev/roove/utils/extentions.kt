@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 05.12.19 16:27
+ * Last modified 07.12.19 20:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,47 +17,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import com.mmdev.roove.R
 
 fun AppCompatActivity.showToastText(text: String) =
 	Toast.makeText(this, text, Toast.LENGTH_LONG).show()
 
-
-fun FragmentManager.replaceRootFragment(fragment: Fragment) {
-	val fragmentName = fragment.javaClass.name
-	val fragmentPopped = popBackStackImmediate(fragmentName, 0)
-
-	if (!fragmentPopped){ //fragment not in back stack, create it.
-		beginTransaction().apply {
-			setCustomAnimations(R.anim.enter_from_right,
-			                    R.anim.exit_to_left,
-			                    R.anim.enter_from_left,
-			                    R.anim.exit_to_right)
-			replace(R.id.containerPlaces, fragment, fragmentName)
-			addToBackStack(fragmentName)
-			commit()
-		}
-	}
-}
-
-fun FragmentManager.replaceFragmentInDrawer(fragment: Fragment) {
-	val fragmentName = fragment.javaClass.name
-	val fragmentPopped = popBackStackImmediate(fragmentName, 0)
-
-	if (!fragmentPopped){ //fragment not in back stack, create it.
-		beginTransaction().apply {
-			setCustomAnimations(R.anim.enter_from_right,
-			                    R.anim.exit_to_left,
-			                    R.anim.enter_from_left,
-			                    R.anim.exit_to_right)
-			replace(R.id.drawerContainer, fragment, fragmentName)
-			addToBackStack(fragmentName)
-			commit()
-		}
-	}
-}
 
 fun View.addSystemTopPadding(targetView: View = this, isConsumed: Boolean = false) {
 	doOnApplyWindowInsets { _, insets, initialPadding ->
