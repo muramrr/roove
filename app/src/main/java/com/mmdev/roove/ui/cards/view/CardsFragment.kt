@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 08.12.19 21:09
+ * Last modified 08.12.19 21:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,12 +41,6 @@ class CardsFragment: BaseFragment() {
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var cardsViewModel: CardsViewModel
 
-
-	companion object{
-
-		fun newInstance() = CardsFragment()
-
-	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 08.12.19 21:08
+ * Last modified 08.12.19 21:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,7 +37,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.chat.model.MessageItem
+import com.mmdev.business.conversations.model.ConversationItem
 import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
@@ -61,12 +63,15 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 	private lateinit var userItemModel: UserItem
 
+
+	//saving state
 	private var partnerName = ""
 	private var partnerMainPhotoUrl = ""
+	private lateinit var currentConversation: ConversationItem
+	private var isOnCreateCalled: Boolean = false
+
 
 	private val mChatAdapter: ChatAdapter = ChatAdapter(listOf())
-
-	private var isOnCreateCalled: Boolean = false
 
 	// File
 	private lateinit var mFilePathImageCamera: File
@@ -89,9 +94,6 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		private const val REQUEST_CAMERA = 2
 		private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
 
-		@JvmStatic
-		fun newInstance() = ChatFragment()
-
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,21 +112,24 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		})
 
 		sharedViewModel.conversationSelected.observe(this, Observer {
-			partnerName = it.partnerName
-			partnerMainPhotoUrl = it.partnerPhotoUrl
-			setupContentToolbar()
-			isOnCreateCalled = true
-			if (it.conversationId.isNotEmpty()) {
-				chatViewModel.loadMessages(it)
-				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
-					mChatAdapter.updateData(messageList)
-				})
-			}
-			else {
-				chatViewModel.startListenToEmptyChat(it.partnerId)
-				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
-					mChatAdapter.updateData(messageList)
-				})
+			if (!isOnCreateCalled && !this::currentConversation.isInitialized) {
+				currentConversation = it
+				partnerName = it.partnerName
+				partnerMainPhotoUrl = it.partnerPhotoUrl
+				setupContentToolbar()
+				isOnCreateCalled = true
+				if (it.conversationId.isNotEmpty()) {
+					chatViewModel.loadMessages(it)
+					chatViewModel.getMessagesList().observe(this, Observer { messageList ->
+						mChatAdapter.updateData(messageList)
+					})
+				}
+				else {
+					chatViewModel.startListenToEmptyChat(it.partnerId)
+					chatViewModel.getMessagesList().observe(this, Observer { messageList ->
+						mChatAdapter.updateData(messageList)
+					})
+				}
 			}
 		})
 
@@ -189,6 +194,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			when (item.itemId) {
 				R.id.chat_action_user ->{
 					findNavController().navigate(R.id.action_chatFragment_to_profileFragment)
+					sharedViewModel.setCardSelected(CardItem(userId = currentConversation.partnerId))
 				}
 
 				R.id.chat_action_report -> { Toast.makeText(context,
@@ -201,11 +207,28 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	}
 
 	override fun onResume() {
-		// returns to fragment from profile view
+		// returns to fragment from onStop
 		// onCreate is no longer being called in this scenario
 		super.onResume()
-		if (isOnCreateCalled) {
+
+		if (isOnCreateCalled && this::currentConversation.isInitialized) {
+			partnerName = currentConversation.partnerName
+			partnerMainPhotoUrl = currentConversation.partnerPhotoUrl
+
+			if (currentConversation.conversationId.isNotEmpty()) {
+				chatViewModel.loadMessages(currentConversation)
+				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
+					mChatAdapter.updateData(messageList)
+				})
+			}
+			else {
+				chatViewModel.startListenToEmptyChat(currentConversation.partnerId)
+				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
+					mChatAdapter.updateData(messageList)
+				})
+			}
 			setupContentToolbar()
+
 		}
 	}
 

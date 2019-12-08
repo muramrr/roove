@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 07.12.19 18:34
+ * Last modified 08.12.19 21:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,19 +12,14 @@ package com.mmdev.roove.ui.places.view
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
-import com.mmdev.roove.ui.core.BaseFragment
 import kotlinx.android.synthetic.main.fragment_places.*
 
-class PlacesFragment: BaseFragment(R.layout.fragment_places) {
-
-
-	companion object{
-		fun newInstance() = PlacesFragment()
-	}
+class PlacesFragment: Fragment(R.layout.fragment_places) {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 

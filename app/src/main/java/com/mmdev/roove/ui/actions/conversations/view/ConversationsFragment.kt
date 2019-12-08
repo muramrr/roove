@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 08.12.19 20:26
+ * Last modified 08.12.19 21:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@ package com.mmdev.roove.ui.actions.conversations.view
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -20,8 +19,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.mmdev.roove.R
-import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.actions.conversations.ConversationsViewModel
+import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.utils.addSystemBottomPadding
 import kotlinx.android.synthetic.main.fragment_conversations.*
@@ -30,14 +29,12 @@ import kotlinx.android.synthetic.main.fragment_conversations.*
  * This is the documentation block about the class
  */
 
-class ConversationsFragment: Fragment(R.layout.fragment_conversations){
+class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 
 	private val mConversationsAdapter = ConversationsAdapter(listOf())
 
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var conversationsViewModel: ConversationsViewModel
-	private val factory = injector.factory()
-
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
