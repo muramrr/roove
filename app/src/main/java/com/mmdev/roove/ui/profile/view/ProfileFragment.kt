@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 08.12.19 21:04
+ * Last modified 08.12.19 21:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,9 +37,10 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 	private val userPhotosAdapter = ImagePagerAdapter(listOf())
 
-	private lateinit var selectedUser: UserItem
-
 	private var fabVisible: Boolean = false
+
+	//saving state
+	private lateinit var selectedUser: UserItem
 	private var isOnCreateCalled: Boolean = false
 
 	private lateinit var sharedViewModel: SharedViewModel
@@ -49,9 +50,6 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 	companion object{
 
 		private const val FAB_VISIBLE_KEY = "FAB_VISIBLE"
-
-		@JvmStatic
-		fun newInstance() = ProfileFragment()
 
 	}
 
@@ -131,10 +129,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 	override fun onResume() {
 		super.onResume()
-		Toast.makeText(context, "oncreate in profile $isOnCreateCalled", Toast.LENGTH_SHORT).show()
-
 		if (isOnCreateCalled) {
-			Toast.makeText(context, selectedUser.name, Toast.LENGTH_SHORT).show()
 			collapseBarProfile.title = selectedUser.name
 			userPhotosAdapter.updateData(selectedUser.photoURLs)
 		}

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 08.12.19 21:09
+ * Last modified 08.12.19 21:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
-import com.mmdev.roove.core.injector
+import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.ImagePagerAdapter
 import com.mmdev.roove.ui.core.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_place_detailed.*
@@ -28,18 +28,12 @@ import kotlinx.android.synthetic.main.fragment_place_detailed.*
 /**
  * A simple [Fragment] subclass.
  */
-class PlaceDetailedFragment: Fragment(R.layout.fragment_place_detailed) {
+class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 
 	private val placePhotosAdapter = ImagePagerAdapter(listOf())
 
 	private lateinit var sharedViewModel: SharedViewModel
-	private val factory = injector.factory()
 
-	companion object{
-
-		fun newInstance() = PlaceDetailedFragment()
-
-	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
