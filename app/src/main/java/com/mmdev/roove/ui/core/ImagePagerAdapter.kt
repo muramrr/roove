@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 05.12.19 18:19
+ * Last modified 08.12.19 20:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,8 +36,8 @@ class ImagePagerAdapter (private var imagesUrlList: List<String>):
 
 	override fun getItemCount() = imagesUrlList.size
 
-	fun updateData(newEventImagesList: List<String>) {
-		imagesUrlList = newEventImagesList
+	fun updateData(newImagesList: List<String>) {
+		imagesUrlList = newImagesList
 		notifyDataSetChanged()
 	}
 
@@ -51,9 +51,11 @@ class ImagePagerAdapter (private var imagesUrlList: List<String>):
 		*   updating any Views that have expressions bound to modified variables.
 		*   This must be run on the UI thread.
 		*/
-		fun bind(eventImageUrl: String){
-			binding.imageUrl = eventImageUrl
-			binding.executePendingBindings()
+		fun bind(imageUrl: String){
+			if (imageUrl.isNotEmpty()) {
+				binding.imageUrl = imageUrl
+				binding.executePendingBindings()
+			}
 		}
 
 	}

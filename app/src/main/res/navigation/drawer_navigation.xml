@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 07.12.19 20:08
+  ~ Last modified 08.12.19 16:45
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -67,10 +67,10 @@
 		<action
 			android:id="@+id/action_nav_actions_conversations_to_chatFragment"
 			app:destination="@id/chatFragment"
-			app:enterAnim="@anim/nav_default_enter_anim"
-			app:exitAnim="@anim/nav_default_exit_anim"
-			app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-			app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+			app:enterAnim="@anim/enter_from_top"
+			app:exitAnim="@anim/exit_to_bottom"
+			app:popEnterAnim="@anim/enter_from_bottom"
+			app:popExitAnim="@anim/exit_to_top"/>
 
 		<!-- @argument from match screen set fab visible -->
 		<action
@@ -115,7 +115,22 @@
 	<fragment
 		android:id="@+id/chatFragment"
 		android:name="com.mmdev.roove.ui.chat.view.ChatFragment"
-		tools:layout="@layout/fragment_chat"/>
+		tools:layout="@layout/fragment_chat">
+
+		<action
+			android:id="@+id/action_chatFragment_to_profileFragment"
+			app:destination="@id/profileFragment"
+			app:enterAnim="@anim/enter_from_top"
+			app:exitAnim="@anim/exit_to_bottom"
+			app:popEnterAnim="@anim/enter_from_bottom"
+			app:popExitAnim="@anim/exit_to_top" >
+
+			<argument
+				android:defaultValue="false"
+				android:name="FAB_VISIBLE" />
+
+		</action>
+	</fragment>
 
 	<!-- @argument to show is fab enabled to open chat? -->
 	<fragment
@@ -123,10 +138,6 @@
 		android:name="com.mmdev.roove.ui.profile.view.ProfileFragment"
 		tools:layout="@layout/fragment_profile">
 
-		<argument
-			android:name="FAB_VISIBLE"
-			app:argType="boolean"
-			android:defaultValue="false" />
 		<action
 			android:id="@+id/action_profileFragment_to_chatFragment"
 			app:destination="@id/chatFragment"
@@ -134,6 +145,11 @@
 			app:exitAnim="@anim/exit_to_bottom"
 			app:popEnterAnim="@anim/enter_from_bottom"
 			app:popExitAnim="@anim/exit_to_top" />
+
+		<argument
+			android:name="FAB_VISIBLE"
+			app:argType="boolean"
+			android:defaultValue="false" />
 
 	</fragment>
 

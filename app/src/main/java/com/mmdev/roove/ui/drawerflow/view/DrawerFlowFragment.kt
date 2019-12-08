@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 07.12.19 19:42
+ * Last modified 08.12.19 21:09
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ package com.mmdev.roove.ui.drawerflow.view
 
 import android.os.Bundle
 import android.view.View
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -24,10 +25,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
-import com.mmdev.roove.core.injector
-import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.core.FlowFragment
+import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.drawerflow.viewmodel.local.LocalUserRepoViewModel
 import com.mmdev.roove.utils.addSystemTopPadding
 import kotlinx.android.synthetic.main.fragment_flow_drawer.*
@@ -42,11 +42,13 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_flow_drawer) {
 
 	private lateinit var userItemModel: UserItem
 
-	private lateinit var params: AppBarLayout.LayoutParams
+	private lateinit var toolbarParams: AppBarLayout.LayoutParams
+	private lateinit var appBarParams: CoordinatorLayout.LayoutParams
+	private var appBarParamHeight = 0
 
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var authViewModel: AuthViewModel
-	private val factory = injector.factory()
+
 
 	private lateinit var navController: NavController
 
@@ -67,14 +69,16 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_flow_drawer) {
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		//NavigationUI.setupWithNavController(navigationView, drawerHostFragment
-		// .findNavController())
+
+		appBarParams = app_bar.layoutParams as CoordinatorLayout.LayoutParams
+		//remember appbar height
+		appBarParamHeight = appBarParams.height
+		toolbarParams = toolbar.layoutParams as AppBarLayout.LayoutParams
+
 		val navHost = childFragmentManager.findFragmentById(R.id.drawerHostFragment) as NavHostFragment
 		navController = navHost.findNavController()
-		params = toolbar.layoutParams as AppBarLayout.LayoutParams
 
 		setNavigationView()
-
 
 		toolbar.setupWithNavController(navController, drawerLayout)
 
@@ -85,32 +89,25 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_flow_drawer) {
 
 	private fun setNavigationView() {
 		navigationView.getChildAt(navigationView.childCount - 1).overScrollMode = View.OVER_SCROLL_NEVER
-		setUpUser()
+
 		navController.addOnDestinationChangedListener { _, destination, _ ->  //3
 			if (destination.id in arrayOf(
-							R.id.profileFragment
+							R.id.profileFragment,
+							R.id.chatFragment
 					)) {
 
 				appBarGone()
 
-			} else {
-				appBarShow()
-
 			}
-
-			if (destination.id == R.id.chatFragment){
-
-				//toolbar.inflateMenu(R.menu.chat_menu)
-			}
+			else appBarShow()
 
 			if (destination.id in arrayOf(
 							R.id.nav_cards,
 							R.id.chatFragment
 					)) {
 				setNonScrollableToolbar()
-			} else {
-				setScrollableToolbar()
 			}
+			else setScrollableToolbar()
 		}
 
 		navigationView.setNavigationItemSelectedListener { item ->
@@ -127,6 +124,13 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_flow_drawer) {
 			}
 			return@setNavigationItemSelectedListener true
 		}
+
+		val navHeader = navigationView.getHeaderView(0)
+		navHeader.tvSignedInUserName.text = userItemModel.name
+		GlideApp.with(navHeader.ivSignedInUserAvatar.context)
+			.load(userItemModel.mainPhotoUrl)
+			.apply(RequestOptions().circleCrop())
+			.into(navHeader.ivSignedInUserAvatar)
 
 	}
 
@@ -148,38 +152,30 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_flow_drawer) {
 
 	}
 
-	private fun setUpUser() {
-		val navHeader = navigationView.getHeaderView(0)
-		navHeader.tvSignedInUserName.text = userItemModel.name
-		GlideApp.with(navHeader.ivSignedInUserAvatar.context)
-			.load(userItemModel.mainPhotoUrl)
-			.apply(RequestOptions().circleCrop())
-			.into(navHeader.ivSignedInUserAvatar)
-
-	}
-
 	private fun appBarGone(){
-		setScrollableToolbar()
-		app_bar.setExpanded(false,true)
+		appBarParams.height = 0
+		app_bar.layoutParams = appBarParams
+		app_bar.setExpanded(false, true)
+
 	}
 
 	private fun appBarShow(){
-		setScrollableToolbar()
+		appBarParams.height = appBarParamHeight
+		app_bar.layoutParams = appBarParams
 		app_bar.setExpanded(true, false)
 
 	}
 
 	private fun setNonScrollableToolbar(){
-		params.scrollFlags = 0
-		toolbar.layoutParams = params
-
+		toolbarParams.scrollFlags = 0
+		toolbar.layoutParams = toolbarParams
 	}
 
 	private fun setScrollableToolbar(){
-		params.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or
+		toolbarParams.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or
 				AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS or
 				AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
-		toolbar.layoutParams = params
+		toolbar.layoutParams = toolbarParams
 
 	}
 

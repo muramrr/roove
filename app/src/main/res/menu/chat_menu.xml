@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:13
+  ~ Last modified 08.12.19 16:50
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,18 +10,17 @@
   -->
 <menu
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	tools:context=".MainActivity">
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<item
-		android:id="@+id/action_report"
+		android:id="@+id/chat_action_report"
 		android:orderInCategory="100"
 		android:title="Жалоба"
 		app:showAsAction="never" />
 
 	<item
-		android:id="@+id/action_user"
+		android:id="@+id/chat_action_user"
+		android:icon="@drawable/default_avatar"
 		android:orderInCategory="200"
 		android:title=""
 		app:showAsAction="ifRoom" />
