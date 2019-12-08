@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 07.12.19 18:12
+ * Last modified 08.12.19 21:09
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,11 +20,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mmdev.business.cards.model.CardItem
 import com.mmdev.roove.R
-import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.FragmentCardsBinding
-import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.cards.CardsViewModel
 import com.mmdev.roove.ui.core.BaseFragment
+import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.utils.addSystemBottomPadding
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
@@ -41,7 +40,6 @@ class CardsFragment: BaseFragment() {
 
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var cardsViewModel: CardsViewModel
-	private val factory = injector.factory()
 
 
 	companion object{

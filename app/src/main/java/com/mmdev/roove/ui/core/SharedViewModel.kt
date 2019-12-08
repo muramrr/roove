@@ -1,15 +1,16 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 07.12.19 17:32
+ * Last modified 08.12.19 20:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.ui
+package com.mmdev.roove.ui.core
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mmdev.business.cards.model.CardItem
@@ -50,6 +51,13 @@ class SharedViewModel: ViewModel() {
 
 	fun setConversationSelected(conversationItem: ConversationItem){
 		conversationSelected.value = conversationItem
+		//if we moved to user profile from conversation
+		if (cardSelected.value?.userId != conversationItem.partnerId)
+			Log.wtf("mylogs", "card updated")
+			cardSelected.value = CardItem(name = conversationItem.partnerName,
+			                              mainPhotoUrl = conversationItem.partnerPhotoUrl,
+			                              userId = conversationItem.partnerId,
+			                              conversationStarted = conversationItem.conversationStarted)
 	}
 
 	fun setPlaceSelected(placeItem: EventItem){

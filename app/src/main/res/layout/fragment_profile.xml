@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 05.12.19 15:34
+  ~ Last modified 08.12.19 16:26
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,7 +26,7 @@
 			android:id="@+id/collapseBarProfile"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			app:collapsedTitleTextAppearance="@style/regular_text_white_20sp_85op"
+			app:collapsedTitleTextAppearance="@style/toolbar_title"
 			app:contentScrim="@color/colorPrimary"
 			app:expandedTitleTextAppearance="@style/medium_text_white_28sp_85op"
 			app:layout_scrollFlags="scroll|exitUntilCollapsed"

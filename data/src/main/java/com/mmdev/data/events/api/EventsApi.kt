@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 08.12.19 21:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,7 @@ import retrofit2.http.Query
 
 interface EventsApi {
 
-	@GET("events/?location=kev&fields=id,description,short_title,title,images")
+	@GET("events/?location=msk&fields=id,description,short_title,title,images")
 	fun getEventsList(@Query("actual_since") timestamp: Long): Single<EventsResponse>
 
 	@GET("events/{id}")

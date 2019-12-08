@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 07.12.19 18:32
+  ~ Last modified 08.12.19 16:45
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,10 +23,32 @@
 	</data>
 
 	<androidx.constraintlayout.widget.ConstraintLayout
-		android:id="@+id/chatContainer"
+		android:id="@+id/containerChat"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@color/colorPrimaryDark">
+
+		<com.google.android.material.appbar.AppBarLayout
+			android:id="@+id/appBarChat"
+			android:layout_width="match_parent"
+			android:layout_height="?actionBarSize"
+			android:background="@color/colorPrimary"
+			android:theme="@style/AppTheme.AppBarOverlay"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent">
+
+			<androidx.appcompat.widget.Toolbar
+				android:id="@+id/toolbarChat"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				app:menu="@menu/chat_menu"
+				app:navigationIcon="@drawable/ic_arrow_back_24dp"
+				app:popupTheme="@style/menuPopupStyle"
+				app:titleTextAppearance="@style/toolbar_title"
+				app:title="@string/default_name"/>
+
+		</com.google.android.material.appbar.AppBarLayout>
 
 		<ImageView
 			android:id="@+id/ivChatLoading"
@@ -52,7 +74,7 @@
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/appBarChat"
 			app:layout_constraintBottom_toTopOf="@id/messageInputContainer"
 			tools:itemCount="3"
 			tools:listitem="@layout/fragment_chat_item_left"/>
