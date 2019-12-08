@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 08.12.19 21:45
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -116,12 +116,14 @@ class ChatAdapter (private var listMessageItems: List<MessageItem>):
 
 		/* sets user profile pic in ImgView binded layout */
 		private fun setIvUserAvatar(urlPhotoUser: String) {
-			GlideApp.with(ivUserAvatar.context)
-				.load(urlPhotoUser)
-				.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-				.centerCrop()
-				.apply(RequestOptions().circleCrop())
-				.into(ivUserAvatar)
+			if (urlPhotoUser.isNotEmpty()) {
+				GlideApp.with(ivUserAvatar.context)
+					.load(urlPhotoUser)
+					.centerCrop()
+					.apply(RequestOptions().circleCrop())
+					.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+					.into(ivUserAvatar)
+			}
 		}
 
 		/* sets text message in TxtView binded layout */
@@ -131,11 +133,13 @@ class ChatAdapter (private var listMessageItems: List<MessageItem>):
 		private fun setTvTimestamp(timestamp: String) { tvTimestamp.text = timestamp }
 
 		/* set photo that user sends in chat */
-		private fun setIvChatPhoto(url: String?) {
-			GlideApp.with(ivChatPhoto.context)
-				.load(url)
-				.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-				.into(ivChatPhoto)
+		private fun setIvChatPhoto(url: String) {
+			if (url.isNotEmpty()) {
+				GlideApp.with(ivChatPhoto.context)
+					.load(url)
+					.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+					.into(ivChatPhoto)
+			}
 		}
 
 	}

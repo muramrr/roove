@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 05.12.19 16:17
+ * Last modified 08.12.19 21:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,21 +12,17 @@ package com.mmdev.roove.ui.actions
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
-import com.mmdev.roove.ui.core.BaseFragment
 import kotlinx.android.synthetic.main.fragment_actions.*
 
 /**
  * This is the documentation block about the class
  */
 
-class ActionsFragment : BaseFragment(R.layout.fragment_actions) {
-
-	companion object{
-		fun newInstance() =  ActionsFragment()
-	}
+class ActionsFragment : Fragment(R.layout.fragment_actions) {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
