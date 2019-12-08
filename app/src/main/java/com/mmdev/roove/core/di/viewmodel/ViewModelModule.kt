@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 06.12.19 17:52
+ * Last modified 08.12.19 21:09
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,12 +36,12 @@ import com.mmdev.business.user.usecase.local.SaveUserInfoUseCase
 import com.mmdev.business.user.usecase.remote.CreateUserUseCase
 import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
 import com.mmdev.business.user.usecase.remote.GetUserByIdUseCase
-import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.actions.conversations.ConversationsViewModel
 import com.mmdev.roove.ui.actions.pairs.PairsViewModel
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.cards.CardsViewModel
 import com.mmdev.roove.ui.chat.ChatViewModel
+import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.drawerflow.viewmodel.local.LocalUserRepoViewModel
 import com.mmdev.roove.ui.drawerflow.viewmodel.remote.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.places.PlacesViewModel

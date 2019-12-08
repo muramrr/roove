@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:13
+  ~ Last modified 08.12.19 16:26
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -255,6 +255,12 @@
 		<item name="android:textSize">12sp</item>
 	</style>
 
+	<!-- toolbar title -->
+	<style name="toolbar_title" parent="Widget.AppCompat.TextView">
+		<item name="android:fontFamily">@font/rubik_regular</item>
+		<item name="android:textColor">@color/white</item>
+		<item name="android:textSize">20sp</item>
+	</style>
 
 
 

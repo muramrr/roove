@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 07.12.19 19:16
+ * Last modified 08.12.19 21:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,30 +20,32 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.format.DateFormat
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.mmdev.business.cards.model.CardItem
 import com.mmdev.business.chat.model.MessageItem
 import com.mmdev.business.user.model.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
-import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.FragmentChatBinding
-import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.chat.ChatViewModel
+import com.mmdev.roove.ui.core.BaseFragment
+import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.utils.addSystemBottomPadding
 import kotlinx.android.synthetic.main.fragment_chat.*
 import java.io.File
@@ -55,21 +57,22 @@ import kotlin.collections.ArrayList
  * This is the documentation block about the class
  */
 
-class ChatFragment : Fragment(R.layout.fragment_chat) {
+class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
-
-	// P O J O models
-	private lateinit var partnerItem: CardItem
 	private lateinit var userItemModel: UserItem
 
+	private var partnerName = ""
+	private var partnerMainPhotoUrl = ""
+
 	private val mChatAdapter: ChatAdapter = ChatAdapter(listOf())
+
+	private var isOnCreateCalled: Boolean = false
 
 	// File
 	private lateinit var mFilePathImageCamera: File
 
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var chatViewModel: ChatViewModel
-	private val factory = injector.factory()
 
 
 	//static fields
@@ -94,8 +97,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		setHasOptionsMenu(true)
-
 		chatViewModel = ViewModelProvider(this, factory)[ChatViewModel::class.java]
 
 		sharedViewModel = activity?.run {
@@ -103,23 +104,24 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		} ?: throw Exception("Invalid Activity")
 
 
-
 		sharedViewModel.currentUser.observe(this, Observer {
 			userItemModel = it
 			mChatAdapter.setCurrentUserId(it.userId)
 		})
 
-		sharedViewModel.cardSelected.observe(this, Observer {
-			partnerItem = it
-			chatViewModel.startListenToEmptyChat(partnerItem.userId)
-			chatViewModel.getMessagesList().observe(this, Observer { messageList ->
-				mChatAdapter.updateData(messageList)
-			})
-		})
-
 		sharedViewModel.conversationSelected.observe(this, Observer {
+			partnerName = it.partnerName
+			partnerMainPhotoUrl = it.partnerPhotoUrl
+			setupContentToolbar()
+			isOnCreateCalled = true
 			if (it.conversationId.isNotEmpty()) {
 				chatViewModel.loadMessages(it)
+				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
+					mChatAdapter.updateData(messageList)
+				})
+			}
+			else {
+				chatViewModel.startListenToEmptyChat(it.partnerId)
 				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
 					mChatAdapter.updateData(messageList)
 				})
@@ -142,7 +144,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		chatContainer.addSystemBottomPadding()
+
+		containerChat.addSystemBottomPadding()
 		buttonMessage.setOnClickListener { sendMessageClick() }
 		buttonAttachments.setOnClickListener {
 			val builder = AlertDialog.Builder(context!!)
@@ -181,6 +184,51 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 			layoutManager = LinearLayoutManager(context).apply { stackFromEnd = true }
 		}
 
+		toolbarChat.setNavigationOnClickListener { findNavController().navigateUp() }
+		toolbarChat.setOnMenuItemClickListener { item ->
+			when (item.itemId) {
+				R.id.chat_action_user ->{
+					findNavController().navigate(R.id.action_chatFragment_to_profileFragment)
+				}
+
+				R.id.chat_action_report -> { Toast.makeText(context,
+				                                            "chat report click",
+				                                            Toast.LENGTH_SHORT).show()
+				}
+			}
+			return@setOnMenuItemClickListener true
+		}
+	}
+
+	override fun onResume() {
+		// returns to fragment from profile view
+		// onCreate is no longer being called in this scenario
+		super.onResume()
+		if (isOnCreateCalled) {
+			setupContentToolbar()
+		}
+	}
+
+	private fun setupContentToolbar(){
+		toolbarChat.apply {
+			//menu declared directly in xml
+			//no need to inflate menu manually
+			//set only title, actions and icon
+
+			val partnerIcon = menu.findItem(R.id.chat_action_user)
+			GlideApp.with(this)
+				.load(partnerMainPhotoUrl)
+				.centerCrop()
+				.apply(RequestOptions().circleCrop())
+				.into(object : CustomTarget<Drawable>(){
+					override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+						partnerIcon.icon = resource
+					}
+					override fun onLoadCleared(placeholder: Drawable?) {}
+				})
+
+			title = partnerName
+		}
 	}
 
 	/*
@@ -298,37 +346,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 		}
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-		inflater.inflate(R.menu.chat_menu, menu)
-		super.onCreateOptionsMenu(menu, inflater)
-	}
 
-	override fun onPrepareOptionsMenu(menu: Menu) {
-		val partnerIcon = menu.findItem(R.id.action_user)
-		GlideApp.with(this)
-			.load(partnerItem.mainPhotoUrl)
-			.centerCrop()
-			.apply(RequestOptions().circleCrop())
-			.into(object : CustomTarget<Drawable>(){
-				override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-					partnerIcon.icon = resource
-				}
 
-				override fun onLoadCleared(placeholder: Drawable?) {}
-			})
-		super.onPrepareOptionsMenu(menu)
-	}
-
-	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		when (item.itemId) {
-			R.id.action_user ->{}  //ProfileFragment.newInstance(false)
-
-			R.id.action_report -> { Toast.makeText(context,
-			                                       "report click",
-			                                       Toast.LENGTH_SHORT).show() }
-		}
-		return true
-	}
 
 
 }
