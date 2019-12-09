@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 05.12.19 19:35
+  ~ Last modified 09.12.19 16:48
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,6 +29,17 @@
 	    android:gravity="center"
 	    android:padding="20dp" >
 
+		<com.yuyakaido.android.cardstackview.CardStackView
+			android:id="@+id/cardStackView"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:visibility='@{viewModel.showLoading ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
+			tools:listitem="@layout/fragment_cards_item"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent" />
+
 
 	    <ImageView
 	        android:id="@+id/ivCardLoading"
@@ -48,7 +59,7 @@
 	        android:layout_height="wrap_content"
 		    android:gravity="center"
 	        android:text="There is no available users matching your preferences"
-		    android:visibility='@{viewModel.showTextHelper ? View.VISIBLE : View.GONE, default = "gone"}'
+		    android:visibility='@{viewModel.showTextHelper ? View.VISIBLE : View.INVISIBLE, default = "invisible"}'
 	        app:layout_constraintBottom_toBottomOf="parent"
 	        app:layout_constraintEnd_toEndOf="parent"
 	        app:layout_constraintStart_toStartOf="parent"
@@ -56,16 +67,7 @@
 		    app:layout_constraintVertical_bias="0.3"
 		    style="@style/regular_text_white_18sp_85op" />
 
-	    <com.yuyakaido.android.cardstackview.CardStackView
-	        android:id="@+id/cardStackView"
-	        android:layout_width="0dp"
-	        android:layout_height="0dp"
-		    android:visibility='@{viewModel.showLoading ? View.GONE : View.VISIBLE, default = "gone"}'
-	        tools:listitem="@layout/fragment_cards_item"
-	        app:layout_constraintStart_toStartOf="parent"
-	        app:layout_constraintEnd_toEndOf="parent"
-	        app:layout_constraintTop_toTopOf="parent"
-	        app:layout_constraintBottom_toBottomOf="parent" />
+
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

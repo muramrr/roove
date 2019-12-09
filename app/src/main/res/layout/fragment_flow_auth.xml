@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 20:55
+  ~ Last modified 09.12.19 16:48
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,7 @@
 
 
 	<TextView
-		android:id="@+id/sloganTv_1"
+		android:id="@+id/tvAuthSlogan_1"
 		android:text="@string/auth_slogan1"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
 
 
 	<TextView
-		android:id="@+id/sloganTv_2"
+		android:id="@+id/tvAuthSlogan_2"
 		android:text="@string/auth_slogan2"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,6 @@
 		style="@style/auth_slogan2"/>
 
 	<com.google.android.material.button.MaterialButton
-		app:backgroundTint="@color/myFacebookColor"
 		android:id="@+id/btnFacebookLoginDelegate"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -57,9 +56,12 @@
 		android:text="Log in with Facebook"
 		android:textAllCaps="false"
 		android:textSize="18sp"
+
+		app:backgroundTint="@color/myFacebookColor"
 		app:icon="@drawable/ic_facebook_logo"
 		app:cornerRadius="8dp"
 		app:rippleColor="@color/black_50"
+
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
