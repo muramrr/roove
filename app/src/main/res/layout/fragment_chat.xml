@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 08.12.19 16:45
+  ~ Last modified 09.12.19 17:09
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -70,7 +70,7 @@
 			android:background="@color/colorPrimaryDark"
 			android:overScrollMode="never"
 			android:scrollbars="none"
-			android:visibility='@{viewModel.showLoading ? View.GONE : View.VISIBLE, default = "gone"}'
+			android:visibility='@{viewModel.showLoading ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +101,7 @@
 				android:layout_centerVertical="true"
 				android:padding="@dimen/general_margin_16"
 				android:contentDescription="@string/fragment_chat_attach_img_description"
-				android:src="@drawable/fragment_chat_ic_attachment_24dp"/>
+				android:src="@drawable/ic_chat_attachment_24dp"/>
 
 			<EditText
 				android:id="@+id/textMessageInput"
@@ -130,7 +130,7 @@
 				android:layout_centerVertical="true"
 				android:padding="@dimen/general_margin_16"
 				android:contentDescription="@string/fragment_chat_send_img_description"
-				android:src="@drawable/fragment_chat_ic_send_black_24dp"
+				android:src="@drawable/ic_chat_send_24dp"
 				 />
 		</RelativeLayout>
 
