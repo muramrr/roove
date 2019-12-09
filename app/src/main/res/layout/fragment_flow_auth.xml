@@ -2,78 +2,26 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 09.12.19 16:48
+  ~ Last modified 09.12.19 17:25
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
-	android:id="@+id/authContainer"
-	android:layout_width="match_parent"
+<FrameLayout
+	android:id="@+id/authFlowContainer"
 	android:layout_height="match_parent"
+	android:layout_width="match_parent"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools">
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-	<ImageView
+	<fragment
+		android:id="@+id/authHostFragment"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:scaleType="centerCrop"
-		android:src="@drawable/background"
-		tools:ignore="ContentDescription" />
+		android:name="androidx.navigation.fragment.NavHostFragment"
+		app:navGraph="@navigation/auth_navigation"
+		app:defaultNavHost="true" />
 
-
-	<TextView
-		android:id="@+id/tvAuthSlogan_1"
-		android:text="@string/auth_slogan1"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintVertical_bias="0.1"
-		style="@style/auth_slogan1"/>
-
-
-	<TextView
-		android:id="@+id/tvAuthSlogan_2"
-		android:text="@string/auth_slogan2"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintVertical_bias="0.6"
-		style="@style/auth_slogan2"/>
-
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/btnFacebookLoginDelegate"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:padding="@dimen/general_margin_16"
-		android:fontFamily="@font/rubik_medium"
-		android:text="Log in with Facebook"
-		android:textAllCaps="false"
-		android:textSize="18sp"
-
-		app:backgroundTint="@color/myFacebookColor"
-		app:icon="@drawable/ic_facebook_logo"
-		app:cornerRadius="8dp"
-		app:rippleColor="@color/black_50"
-
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintVertical_bias="0.85"/>
-
-	<com.facebook.login.widget.LoginButton
-		android:id="@+id/btnFacebookLogin"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:visibility="gone"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

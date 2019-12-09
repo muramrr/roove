@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 09.12.19 20:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@
 package com.mmdev.data.feed
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mmdev.business.feed.model.FeedItem
+import com.mmdev.business.feed.entity.FeedItem
 import com.mmdev.business.feed.repository.FeedRepository
 import io.reactivex.Completable
 import io.reactivex.Observable

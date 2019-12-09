@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 09.12.19 20:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ package com.mmdev.data.user
 
 import android.util.Log
 import com.ironz.binaryprefs.Preferences
-import com.mmdev.business.user.model.UserItem
+import com.mmdev.business.user.entity.UserItem
 import com.mmdev.business.user.repository.UserRepository
 import javax.inject.Inject
 import javax.inject.Singleton

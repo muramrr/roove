@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 05.12.19 16:08
+ * Last modified 09.12.19 21:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mmdev.business.auth.usecase.*
-import com.mmdev.business.user.model.UserItem
+import com.mmdev.business.user.entity.UserItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -80,9 +80,10 @@ class AuthViewModel @Inject constructor(private val handleHandleUserExistence: H
 	                       isAuthenticatedStatus.value = true
 	                       continueRegistration.value = false
                            userItemModel.value = it
+	                       Log.wtf("mylogs", "continue registration? -${continueRegistration.value}")
                        },
                        {
-	                       Log.wtf("mylogs", it)
+	                       Log.wtf("mylogs", "$it")
 	                       continueRegistration.value = true
                        }
             ))

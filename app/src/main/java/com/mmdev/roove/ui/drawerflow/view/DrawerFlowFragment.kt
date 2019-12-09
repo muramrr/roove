@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 08.12.19 21:09
+ * Last modified 09.12.19 20:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mmdev.business.user.model.UserItem
+import com.mmdev.business.user.entity.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.ui.auth.AuthViewModel
