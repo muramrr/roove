@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 09.12.19 20:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,9 +10,9 @@
 
 package com.mmdev.business.chat.repository
 
-import com.mmdev.business.chat.model.MessageItem
-import com.mmdev.business.chat.model.PhotoAttachementItem
-import com.mmdev.business.conversations.model.ConversationItem
+import com.mmdev.business.chat.entity.MessageItem
+import com.mmdev.business.chat.entity.PhotoAttachementItem
+import com.mmdev.business.conversations.entity.ConversationItem
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single

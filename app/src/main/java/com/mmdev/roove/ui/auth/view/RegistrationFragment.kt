@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 21:19
+ * Last modified 09.12.19 21:32
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,58 +10,77 @@
 
 package com.mmdev.roove.ui.auth.view
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
-import co.ceryle.segmentedbutton.SegmentedButtonGroup
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.mmdev.business.user.entity.UserItem
 import com.mmdev.roove.R
-import com.mmdev.roove.ui.custom.ProgressButton
+import com.mmdev.roove.ui.auth.AuthViewModel
+import com.mmdev.roove.ui.core.BaseFragment
+import kotlinx.android.synthetic.main.fragment_auth_registration.*
+
 
 /**
  * This is the documentation block about the class
  */
 
-class RegistrationFragment: Fragment(R.layout.activity_auth_fragment_reg){
+class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
-	private lateinit var mAuthFlowFragment: AuthFlowFragment
 	private var isRegistrationCompleted = false
 
-	override fun onAttach(context: Context) {
-		super.onAttach(context)
-		mAuthFlowFragment.hideFacebookButton()
+	private lateinit var authViewModel: AuthViewModel
+
+	private lateinit var userItem: UserItem
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+
+		authViewModel = activity?.run {
+			ViewModelProvider(this, factory)[AuthViewModel::class.java]
+		} ?: throw Exception("Invalid Activity")
+
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		var gender = "male"
-		var preferedGender = "male"
-		val sbgGender = view.findViewById(R.id.dialog_registr_sbg_gender) as SegmentedButtonGroup
-		val sbgPrefgender = view.findViewById(R.id.dialog_registr_sbg_preferedgender) as SegmentedButtonGroup
+		var preferredGender = "male"
 
-		sbgGender.setOnClickedButtonListener {
-			position -> gender = if (position == 0) "male" else "female"
-		}
-
-		sbgPrefgender.setOnClickedButtonListener { position ->
-			when (position) {
-				0 -> preferedGender = "male"
-				1 -> preferedGender = "female"
-				2 -> preferedGender = "both"
+		tlRegistrationYourGender.addOnTabSelectedListener(object: OnTabSelectedListener {
+			override fun onTabSelected(tab: TabLayout.Tab) {
+				gender = tab.text.toString()
+				Toast.makeText(context, gender, Toast.LENGTH_SHORT).show()
 			}
-		}
-		val progressButton = view.findViewById(R.id.reg_btn_done) as ProgressButton
-		progressButton.setOnClickListener {
+
+			override fun onTabUnselected(tab: TabLayout.Tab) {}
+			override fun onTabReselected(tab: TabLayout.Tab) {}
+		})
+
+		tlRegistrationPreferredGender.addOnTabSelectedListener(object: OnTabSelectedListener {
+			override fun onTabSelected(tab: TabLayout.Tab) {
+				preferredGender = tab.text.toString()
+				Toast.makeText(context, preferredGender, Toast.LENGTH_SHORT).show()
+			}
+
+			override fun onTabUnselected(tab: TabLayout.Tab) {}
+			override fun onTabReselected(tab: TabLayout.Tab) {}
+		})
+
+
+		btnRegistrationDone.setOnClickListener {
+			//authViewModel.signUp(userItemModel)
 			isRegistrationCompleted = true
-			progressButton.startAnim()
-			mAuthFlowFragment.fragmentRegistrationCallback(progressButton, gender, preferedGender)
+
 		}
 	}
 
 	override fun onStop() {
-		super.onStop()
 		if (!isRegistrationCompleted) {
-			mAuthFlowFragment.fragmentNotSuccessfulRegistrationCallback()
-			mAuthFlowFragment.showFacebookButton()
+			authViewModel.logOut()
 		}
+		super.onStop()
 	}
+
 }

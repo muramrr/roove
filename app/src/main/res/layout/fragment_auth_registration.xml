@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 09.12.19 21:38
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+<androidx.cardview.widget.CardView
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	app:contentPadding="20dp"
+	app:cardBackgroundColor="@color/colorPrimary"
+	app:cardCornerRadius="20dp"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<TextView
+			android:id="@+id/tv_reg_1"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="I'm a..."
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/cardContainerRegistrationYourGender"
+
+			style="@style/regular_text_white_24sp_85op" />
+
+		<com.google.android.material.card.MaterialCardView
+			android:id="@+id/cardContainerRegistrationYourGender"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+
+			app:cardCornerRadius="8dp"
+			app:cardBackgroundColor="@color/white"
+			app:contentPadding="3dp"
+
+			app:strokeWidth="3dp"
+			app:strokeColor="@color/material_blue_400"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tv_reg_1"
+			app:layout_constraintBottom_toTopOf="@id/tv_reg_2">
+
+				<com.google.android.material.tabs.TabLayout
+					android:id="@+id/tlRegistrationYourGender"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:background="@color/white"
+					android:overScrollMode="never"
+
+					app:tabIconTint="@null"
+					app:tabIndicatorColor="@color/material_blue_400"
+					app:tabIndicatorGravity="stretch"
+					app:tabInlineLabel="true"
+
+					app:tabMode="fixed"
+
+					app:tabRippleColor="@color/material_blue_400"
+					app:tabSelectedTextColor="@color/black"
+					app:tabTextColor="@color/black_50"
+					app:tabTextAppearance="@style/registration_tab_text_24sp">
+
+					<com.google.android.material.tabs.TabItem
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Male" />
+
+					<com.google.android.material.tabs.TabItem
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Female" />
+
+				</com.google.android.material.tabs.TabLayout>
+
+		</com.google.android.material.card.MaterialCardView>
+
+		<TextView
+			android:id="@+id/tv_reg_2"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="Interested in meeting with..."
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/cardContainerRegistrationYourGender"
+			app:layout_constraintBottom_toTopOf="@id/cardContainerRegistrationPreferredGender"
+
+			style="@style/regular_text_white_24sp_85op" />
+
+		<com.google.android.material.card.MaterialCardView
+			android:id="@+id/cardContainerRegistrationPreferredGender"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+
+			app:cardCornerRadius="8dp"
+			app:cardBackgroundColor="@color/white"
+			app:contentPadding="3dp"
+
+			app:strokeWidth="3dp"
+			app:strokeColor="@color/material_orange_600"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tv_reg_2"
+			app:layout_constraintBottom_toTopOf="@id/btnRegistrationDone">
+
+			<com.google.android.material.tabs.TabLayout
+				android:id="@+id/tlRegistrationPreferredGender"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:background="@color/white"
+				android:overScrollMode="never"
+
+				app:tabIconTint="@null"
+				app:tabIndicatorColor="@color/material_orange_600"
+				app:tabIndicatorGravity="stretch"
+				app:tabInlineLabel="true"
+				app:tabMode="fixed"
+
+				app:tabRippleColor="@color/material_orange_600"
+				app:tabSelectedTextColor="@color/black"
+				app:tabTextColor="@color/black_50"
+				app:tabTextAppearance="@style/registration_tab_text_24sp">
+
+				<com.google.android.material.tabs.TabItem
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Male" />
+
+				<com.google.android.material.tabs.TabItem
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Female" />
+
+				<com.google.android.material.tabs.TabItem
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Both" />
+
+			</com.google.android.material.tabs.TabLayout>
+
+		</com.google.android.material.card.MaterialCardView>
+
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btnRegistrationDone"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:paddingStart="32dp"
+			android:paddingEnd="32dp"
+
+			android:fontFamily="@font/rubik_medium"
+			android:textAllCaps="false"
+			android:textSize="18sp"
+
+			android:text="DONE!"
+
+			app:backgroundTint="@color/material_blue_a700"
+			app:cornerRadius="8dp"
+			app:rippleColor="@color/black_50"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/cardContainerRegistrationPreferredGender"
+			/>
+
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

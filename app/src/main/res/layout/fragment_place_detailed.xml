@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 05.12.19 16:08
+  ~ Last modified 09.12.19 19:05
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,16 +44,18 @@
 				android:layout_height="10dp"
 				android:layout_gravity="bottom"
 				android:layout_marginBottom="8dp"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toTopOf="parent"
-				app:layout_constraintBottom_toBottomOf="@id/viewPagerPlacePhotos"
-				app:layout_constraintVertical_bias="1.0"
+
 				app:tabBackground="@drawable/dot_unselected_state"
 				app:tabIndicator="@drawable/dot_selection_indicator"
 				app:tabIndicatorColor="@color/gradient1"
 				app:tabIndicatorGravity="center"
 				app:tabGravity="center"
-				app:tabMaxWidth="12dp" />
+				app:tabMaxWidth="12dp"
+
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintBottom_toBottomOf="@id/viewPagerPlacePhotos"
+				app:layout_constraintVertical_bias="1.0"/>
 
 			<TextView
 				android:id="@+id/tvPlaceTitle"
