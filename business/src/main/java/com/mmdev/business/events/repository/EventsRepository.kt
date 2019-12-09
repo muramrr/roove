@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 09.12.19 20:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,8 +10,8 @@
 
 package com.mmdev.business.events.repository
 
-import com.mmdev.business.events.model.EventItem
-import com.mmdev.business.events.model.EventsResponse
+import com.mmdev.business.events.entity.EventItem
+import com.mmdev.business.events.entity.EventsResponse
 import io.reactivex.Single
 
 /**

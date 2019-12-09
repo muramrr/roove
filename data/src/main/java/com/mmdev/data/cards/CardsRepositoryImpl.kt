@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 09.12.19 20:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,10 +12,10 @@ package com.mmdev.data.cards
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mmdev.business.cards.model.CardItem
+import com.mmdev.business.cards.entity.CardItem
 import com.mmdev.business.cards.repository.CardsRepository
-import com.mmdev.business.conversations.model.ConversationItem
-import com.mmdev.business.user.model.UserItem
+import com.mmdev.business.conversations.entity.ConversationItem
+import com.mmdev.business.user.entity.UserItem
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.functions.BiFunction

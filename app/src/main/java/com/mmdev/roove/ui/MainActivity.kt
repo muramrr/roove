@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 06.12.19 21:26
+ * Last modified 09.12.19 21:29
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,9 +22,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
+import com.mmdev.roove.ui.auth.AuthFlowFragment
 import com.mmdev.roove.ui.auth.AuthViewModel
-import com.mmdev.roove.ui.auth.view.AuthFlowFragment
-import com.mmdev.roove.ui.core.FlowFragment
+import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.drawerflow.view.DrawerFlowFragment
 import com.mmdev.roove.utils.doOnApplyWindowInsets
@@ -37,8 +37,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 	private lateinit var authViewModel: AuthViewModel
 	private val factory = injector.factory()
 
-	private val currentFlowFragment: FlowFragment?
-		get() = supportFragmentManager.findFragmentById(R.id.main_activity_container) as? FlowFragment
+	private val currentFragment: BaseFragment?
+		get() = supportFragmentManager.findFragmentById(R.id.main_activity_container) as? BaseFragment
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,7 +111,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 	}
 
 	override fun onBackPressed() {
-		currentFlowFragment?.onBackPressed() ?: super.onBackPressed()
+		currentFragment?.onBackPressed() ?: super.onBackPressed()
 
 	}
 

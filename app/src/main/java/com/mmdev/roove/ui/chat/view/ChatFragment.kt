@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 08.12.19 21:47
+ * Last modified 09.12.19 20:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,10 +37,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.mmdev.business.cards.model.CardItem
-import com.mmdev.business.chat.model.MessageItem
-import com.mmdev.business.conversations.model.ConversationItem
-import com.mmdev.business.user.model.UserItem
+import com.mmdev.business.cards.entity.CardItem
+import com.mmdev.business.chat.entity.MessageItem
+import com.mmdev.business.conversations.entity.ConversationItem
+import com.mmdev.business.user.entity.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
