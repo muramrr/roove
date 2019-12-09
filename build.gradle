@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 06.12.19 14:11
+ * Last modified 09.12.19 21:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,7 +35,7 @@ buildscript {
 		rxandroid_version = '2.1.1'
 
 		// ViewModel and LiveData
-		lifecycle_version = '2.2.0-rc02'
+		lifecycle_version = '2.2.0-rc03'
 
 		//tests
 		junitVersion = "4.12"
