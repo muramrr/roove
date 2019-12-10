@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:40
+  ~ Last modified 10.12.19 18:51
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,8 +18,8 @@
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<ImageView
+		android:id="@+id/ivMainSplashLogo"
 		android:background="@color/black"
-		android:id="@+id/splashLogoContainer"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:src="@drawable/logo_loading"

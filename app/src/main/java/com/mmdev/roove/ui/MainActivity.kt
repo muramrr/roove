@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 21:29
+ * Last modified 10.12.19 18:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -63,10 +63,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 			                                      insets.systemWindowInsetBottom))
 		}
 
-		GlideApp.with(splashLogoContainer.context)
+		GlideApp.with(ivMainSplashLogo.context)
 			.asGif()
 			.load(R.drawable.logo_loading)
-			.into(splashLogoContainer)
+			.into(ivMainSplashLogo)
 
 
 		progressDialog = LoadingDialog(this@MainActivity)
@@ -95,6 +95,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 			    AuthFlowFragment::class.java.canonicalName)
 			commit()
 		}
+		ivMainSplashLogo.visibility = View.GONE
 	}
 
 	// show main feed fragment
@@ -106,7 +107,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 				    DrawerFlowFragment::class.java.canonicalName)
 				commit()
 			}
-		splashLogoContainer.visibility = View.GONE
+		ivMainSplashLogo.visibility = View.GONE
 
 	}
 
