@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 10.12.19 22:06
+ * Last modified 11.12.19 22:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,8 +12,10 @@ package com.mmdev.roove.ui.auth.view
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.mmdev.business.user.entity.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
@@ -35,6 +37,8 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
 	private lateinit var userItem: UserItem
 
+	private var registrationStep = 1
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
@@ -51,6 +55,8 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
 		containerRegistration.addSystemBottomPadding()
 
+		disableFab()
+
 		var gender = ""
 		var preferredGender = ""
 
@@ -60,79 +66,102 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		val unpressedTintColor = ContextCompat.getColorStateList(context!!,
 		                                                         R.color.colorPrimary)
 
-		val pressedFabTintColor = ContextCompat.getColorStateList(context!!,
-		                                                       R.color.gradient3)
-
-		val unpressedFabTintColor = ContextCompat.getColorStateList(context!!,
-		                                                         R.color.black_50)
 
 		btnGenderMale.setOnClickListener {
-			gender = btnGenderMale.text.toString()
-			btnRegistrationNext.backgroundTintList = pressedFabTintColor
-			btnRegistrationNext.isEnabled = true
+
+			when(registrationStep){
+				1 -> gender = btnGenderMale.text.toString()
+				2 -> preferredGender = btnGenderMale.text.toString()
+			}
+
+			enableFab()
 
 			btnGenderMale.backgroundTintList = pressedTintColor
 			btnGenderFemale.backgroundTintList = unpressedTintColor
+			btnGenderEveryone.backgroundTintList = unpressedTintColor
+
 		}
 
 		btnGenderFemale.setOnClickListener {
-			gender = btnGenderFemale.text.toString()
-			btnRegistrationNext.backgroundTintList = pressedFabTintColor
-			btnRegistrationNext.isEnabled = true
+
+			when(registrationStep){
+				1 -> gender = btnGenderFemale.text.toString()
+				2 -> preferredGender = btnGenderFemale.text.toString()
+			}
+
+			enableFab()
 
 			btnGenderFemale.backgroundTintList = pressedTintColor
 			btnGenderMale.backgroundTintList = unpressedTintColor
+			btnGenderEveryone.backgroundTintList = unpressedTintColor
+
 		}
 
-		btnPrefGenderMale.setOnClickListener {
-			preferredGender = btnPrefGenderMale.text.toString()
-			btnRegistrationNext.backgroundTintList = pressedFabTintColor
-			btnRegistrationNext.isEnabled = true
 
-			btnPrefGenderMale.backgroundTintList = pressedTintColor
-			btnPrefGenderFemale.backgroundTintList = unpressedTintColor
-			btnPrefGenderEveryone.backgroundTintList = unpressedTintColor
-		}
+		btnGenderEveryone.setOnClickListener {
 
-		btnPrefGenderFemale.setOnClickListener {
-			preferredGender = btnPrefGenderFemale.text.toString()
-			btnRegistrationNext.backgroundTintList = pressedFabTintColor
-			btnRegistrationNext.isEnabled = true
+			preferredGender = btnGenderEveryone.text.toString()
+			enableFab()
 
-			btnPrefGenderFemale.backgroundTintList = pressedTintColor
-			btnPrefGenderMale.backgroundTintList = unpressedTintColor
-			btnPrefGenderEveryone.backgroundTintList = unpressedTintColor
-		}
+			btnGenderEveryone.backgroundTintList = pressedTintColor
+			btnGenderFemale.backgroundTintList = unpressedTintColor
+			btnGenderMale.backgroundTintList = unpressedTintColor
 
-		btnPrefGenderEveryone.setOnClickListener {
-			preferredGender = btnPrefGenderEveryone.text.toString()
-			btnRegistrationNext.backgroundTintList = pressedFabTintColor
-			btnRegistrationNext.isEnabled = true
-
-			btnPrefGenderEveryone.backgroundTintList = pressedTintColor
-			btnPrefGenderFemale.backgroundTintList = unpressedTintColor
-			btnPrefGenderMale.backgroundTintList = unpressedTintColor
 
 		}
 
 		btnRegistrationBack.setOnClickListener {
-			//authViewModel.signUp(userItemModel)
-			isRegistrationCompleted = true
-			containerRegistration.transitionToStart()
-			btnRegistrationNext.isEnabled = true
-			btnRegistrationNext.backgroundTintList = pressedFabTintColor
+			if (registrationStep == 1) findNavController().navigateUp()
+			else {
+				btnRegistrationBack.isEnabled = registrationStep > 1
+				registrationStep -= 1
+				//authViewModel.signUp(userItemModel)
+				isRegistrationCompleted = true
+				containerRegistration.transitionToStart()
+				enableFab()
+			}
+			Toast.makeText(context,
+			               "registration step = $registrationStep",
+			               Toast.LENGTH_SHORT).show()
+
 		}
 
 		btnRegistrationNext.setOnClickListener {
 			//authViewModel.signUp(userItemModel)
+			registrationStep += 1
 			isRegistrationCompleted = true
 			containerRegistration.transitionToEnd()
-			btnRegistrationNext.isEnabled = false
-			btnRegistrationNext.backgroundTintList = unpressedFabTintColor
+			disableFab()
+			Toast.makeText(context,
+			               "registration step = $registrationStep",
+			               Toast.LENGTH_SHORT).show()
 		}
 
 
 	}
+
+
+	private fun enableFab(){
+		if (!btnRegistrationNext.isEnabled) {
+			val pressedFabTintColor =
+				ContextCompat.getColorStateList(context!!, R.color.gradient3)
+			btnRegistrationNext.isEnabled = true
+			btnRegistrationNext.backgroundTintList = pressedFabTintColor
+
+		}
+	}
+
+	private fun disableFab(){
+		if (btnRegistrationNext.isEnabled) {
+			val unpressedFabTintColor =
+				ContextCompat.getColorStateList(context!!, R.color.disabled_color)
+			btnRegistrationNext.isEnabled = false
+			btnRegistrationNext.backgroundTintList = unpressedFabTintColor
+
+
+		}
+	}
+
 
 	override fun onStop() {
 		if (!isRegistrationCompleted) {

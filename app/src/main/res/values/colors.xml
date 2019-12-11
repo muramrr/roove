@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 10.12.19 16:26
+  ~ Last modified 11.12.19 19:40
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -53,6 +53,8 @@
 	<color name="gradient3">#4BC0C8</color>
 
 
+
+	<color name="disabled_color">#424242</color>
 
 	<color name="material_green_a700">#00C853</color>
 	<color name="material_red_a700">#D50000</color>
