@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 10.12.19 22:02
+  ~ Last modified 11.12.19 22:17
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@
 	<Transition
 		app:constraintSetStart="@layout/fragment_auth_registration"
 		app:constraintSetEnd="@id/step_2"
-		app:duration="500"
+		app:duration="300"
 		app:motionInterpolator="linear">
 
 
@@ -26,69 +26,19 @@
 
 		<Constraint
 			android:id="@+id/tv_reg_1"
-			style="@style/medium_text_white_28sp_85op"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-
 			android:layout_marginBottom="24dp"
-			android:scaleY="0"
-			android:scaleX="0"
 
-			app:layout_constraintBottom_toTopOf="@id/btnPrefGenderMale"
+			android:rotationX="90"
+			android:alpha="0"
+
+			app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintHorizontal_bias="0.1"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent" />
 
-		<Constraint
-			android:id="@+id/btnGenderMale"
-			android:layout_width="0dp"
-			android:layout_height="180dp"
-
-			android:layout_marginEnd="@dimen/general_margin_8"
-
-			android:fontFamily="@font/rubik_medium"
-			android:text="male"
-			android:textSize="12sp"
-
-			android:scaleY="0"
-			android:scaleX="0"
-
-			android:rotationX="90"
-
-			app:backgroundTint="@color/colorPrimary"
-			app:icon="@drawable/ic_registration_male_64dp"
-			app:iconGravity="textStart"
-			app:rippleColor="@color/black_50"
-
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toStartOf="@id/btnGenderFemale"
-			app:layout_constraintTop_toBottomOf="@id/tv_reg_1"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintVertical_bias="0.3" />
-
-		<Constraint
-			android:id="@+id/btnGenderFemale"
-			android:layout_width="0dp"
-			android:layout_height="180dp"
-
-			android:fontFamily="@font/rubik_medium"
-			android:text="female"
-			android:textSize="12sp"
-
-			android:scaleY="0"
-			android:scaleX="0"
-			android:rotationY="90"
-
-			app:icon="@drawable/ic_registration_female_64dp"
-			app:iconGravity="textStart"
-			app:rippleColor="@color/black_50"
-
-			app:layout_constraintStart_toEndOf="@id/btnGenderMale"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/tv_reg_1"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintVertical_bias="0.3" />
 
 		<Constraint
 			android:id="@+id/tv_reg_2"
@@ -97,13 +47,9 @@
 			android:layout_marginBottom="24dp"
 			android:layout_marginTop="50dp"
 
-			android:text="Interested in"
-			android:textSize="40sp"
-			style="@style/medium_text_white_28sp_85op"
-
 			android:alpha="1"
 
-			app:layout_constraintBottom_toTopOf="@id/btnPrefGenderMale"
+			app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintHorizontal_bias="0.1"
 			app:layout_constraintStart_toStartOf="parent"
@@ -111,60 +57,56 @@
 
 
 		<Constraint
-			android:id="@+id/btnPrefGenderMale"
+			android:id="@+id/btnGenderMale"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 
-			android:fontFamily="@font/rubik_medium"
-			android:text="male"
-			android:textSize="20sp"
-
-			app:backgroundTint="@color/colorPrimary"
-			app:icon="@drawable/ic_registration_male_64dp"
-			app:iconGravity="textStart"
-			app:layout_constraintBottom_toTopOf="@id/btnPrefGenderFemale"
-
+			app:layout_constraintBottom_toTopOf="@id/btnGenderFemale"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/tv_reg_2"
-			app:rippleColor="@color/black_50" />
+			app:layout_constraintTop_toBottomOf="@id/tv_reg_2" >
+
+
+		</Constraint>
+
 
 		<Constraint
-			android:id="@+id/btnPrefGenderFemale"
+			android:id="@+id/btnGenderFemale"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 
-			android:fontFamily="@font/rubik_medium"
-			android:text="female"
-			android:textSize="20sp"
-
-			app:icon="@drawable/ic_registration_female_64dp"
-			app:iconGravity="textStart"
-			app:layout_constraintBottom_toTopOf="@id/btnPrefGenderEveryone"
-
+			app:layout_constraintBottom_toTopOf="@id/btnGenderEveryone"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/btnPrefGenderMale"
-			app:rippleColor="@color/black_50" />
+			app:layout_constraintTop_toBottomOf="@id/btnGenderMale"
+			/>
 
 		<Constraint
-			android:id="@+id/btnPrefGenderEveryone"
+			android:id="@+id/btnGenderEveryone"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:layout_marginBottom="24dp"
 
-			android:fontFamily="@font/rubik_medium"
-			android:text="Everyone"
-			android:textSize="20sp"
-
-			app:icon="@drawable/ic_registration_heart_64"
-			app:iconGravity="textStart"
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
-
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/btnPrefGenderFemale"
-			app:rippleColor="@color/black_50" />
+			app:layout_constraintTop_toBottomOf="@id/btnGenderFemale" />
+
+
+		<!-- fab -->
+		<Constraint
+			android:id="@+id/btnRegistrationNext"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/general_margin_16"
+
+			android:rotationY="360"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintHorizontal_bias="0.8" />
+
 
 	</ConstraintSet>
 
