@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 13.12.19 19:20
+ * Last modified 13.12.19 21:29
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,10 +13,10 @@ package com.mmdev.roove.ui.auth.view
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.slider.Slider
 import com.mmdev.business.user.entity.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
@@ -40,6 +40,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
 	private var registrationStep = 1
 
+	private var age = 0
 	private var gender = ""
 	private var preferredGender = ""
 
@@ -95,10 +96,8 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
 		btnGenderEveryone.setOnClickListener {
 			setPressedEveryone()
-
 			preferredGender = btnGenderEveryone.text.toString()
 			enableFab()
-
 		}
 
 		btnRegistrationBack.setOnClickListener {
@@ -128,7 +127,8 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 				}
 
 				2 -> {
-
+					containerRegistration.transitionToState(R.id.step_3)
+					restoreStep3State()
 				}
 
 				3 -> {
@@ -137,8 +137,16 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 			}
 			registrationStep += 1
 
-
 			//Toast.makeText(context, "reg step = $registrationStep", Toast.LENGTH_SHORT).show()
+		}
+
+
+		sliderAge.setLabelFormatter(Slider.BasicLabelFormatter())
+		sliderAge.setOnChangeListener{ slider, value ->
+
+			age = value.toInt()
+			enableFab()
+
 		}
 
 
@@ -161,7 +169,6 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 	}
 
 	private fun restoreStep2State() {
-		Toast.makeText(context, "pref = $preferredGender", Toast.LENGTH_SHORT).show()
 		clearAllButtonsState()
 		if (preferredGender.isNotEmpty()){
 			enableFab()
@@ -176,6 +183,14 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 					setPressedEveryone()
 				}
 			}
+		}
+		else disableFab()
+	}
+
+	private fun restoreStep3State(){
+		if (age != 0) {
+			enableFab()
+			sliderAge.value = age.toFloat()
 		}
 		else disableFab()
 	}

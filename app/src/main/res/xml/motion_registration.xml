@@ -2,23 +2,27 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 13.12.19 17:09
+  ~ Last modified 13.12.19 21:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+<MotionScene
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<Transition
 		app:constraintSetStart="@id/step_1"
 		app:constraintSetEnd="@id/step_2"
-		app:duration="500">
+		app:duration="500"/>
 
+	<Transition
+		app:constraintSetStart="@id/step_2"
+		app:constraintSetEnd="@id/step_3"
+		app:duration="500"/>
 
-	</Transition>
 
 	<ConstraintSet android:id="@+id/step_1">
 
@@ -26,6 +30,8 @@
 			android:id="@+id/tv_reg_1"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+
+			android:alpha="1"
 
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -72,7 +78,6 @@
 			app:layout_constraintTop_toBottomOf="@id/tv_reg_1"
 			app:layout_constraintVertical_bias="0.3" />
 
-
 		<Constraint
 			android:id="@+id/btnGenderEveryone"
 			android:layout_width="0dp"
@@ -84,28 +89,6 @@
 			app:layout_constraintStart_toStartOf="parent" />
 
 
-		<Constraint
-			android:id="@+id/btnRegistrationBack"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/general_margin_16"
-
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintHorizontal_bias="0.1"
-			app:layout_constraintStart_toStartOf="parent" />
-
-		<Constraint
-			android:id="@+id/btnRegistrationNext"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/general_margin_16"
-
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintHorizontal_bias="0.8"
-			app:layout_constraintStart_toStartOf="parent" />
-
 	</ConstraintSet>
 
 	<ConstraintSet android:id="@+id/step_2">
@@ -116,14 +99,15 @@
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="24dp"
 
-			android:rotationX="90"
 			android:alpha="0"
+			android:rotationX="90"
 
 			app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintHorizontal_bias="0.1"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintHorizontal_bias="0.1"
+			app:layout_constraintVertical_bias="0.2"/>
 
 		<Constraint
 			android:id="@+id/tv_reg_2"
@@ -185,6 +169,93 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintHorizontal_bias="0.8" />
+
+	</ConstraintSet>
+
+	<ConstraintSet android:id="@+id/step_3">
+
+		<Constraint
+			android:id="@+id/tv_reg_2"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="24dp"
+
+			android:alpha="0"
+			android:rotationX="-90"
+
+			app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.1"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<Constraint
+			android:id="@+id/tv_reg_3"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="24dp"
+
+			android:alpha="1"
+
+			app:layout_constraintBottom_toTopOf="@id/sliderAge"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<Constraint
+			android:id="@+id/btnGenderMale"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+
+			android:alpha="0"
+			android:rotationX="-90"
+
+			app:layout_constraintBottom_toTopOf="@id/btnGenderFemale"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tv_reg_2" />
+
+		<Constraint
+			android:id="@+id/btnGenderFemale"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+
+			android:alpha="0"
+			android:rotationX="-90"
+
+			app:layout_constraintBottom_toTopOf="@id/btnGenderEveryone"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/btnGenderMale"
+			/>
+
+		<Constraint
+			android:id="@+id/btnGenderEveryone"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:layout_marginBottom="24dp"
+
+			android:alpha="0"
+			android:rotationX="-90"
+
+			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/btnGenderFemale" />
+
+		<Constraint
+			android:id="@+id/sliderAge"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+
+			android:alpha="1"
+
+			app:layout_constraintBottom_toTopOf="@id/btnGenderEveryone"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/btnGenderMale"
+			app:layout_constraintVertical_bias="0.75"
+			/>
 
 	</ConstraintSet>
 

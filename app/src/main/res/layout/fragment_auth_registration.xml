@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 13.12.19 19:20
+  ~ Last modified 13.12.19 21:25
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,6 +30,9 @@
 		android:textSize="40sp"
 		style="@style/medium_text_white_28sp_85op"
 
+		android:alpha="0"
+		android:rotationX="90"
+
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintHorizontal_bias="0.1"
@@ -53,6 +56,24 @@
 		app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintHorizontal_bias="0.1"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<TextView
+		android:id="@+id/tv_reg_3"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="24dp"
+
+		android:alpha="0"
+		android:rotationX="90"
+
+		android:text="Specify your age"
+		android:textSize="40sp"
+		style="@style/medium_text_white_28sp_85op"
+
+		app:layout_constraintBottom_toTopOf="@id/sliderAge"
+		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
 
@@ -97,7 +118,6 @@
 		app:layout_constraintTop_toBottomOf="@id/tv_reg_1"
 		app:layout_constraintVertical_bias="0.3" />
 
-
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/btnGenderEveryone"
 		android:layout_width="0dp"
@@ -116,6 +136,31 @@
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent" />
+
+
+	<com.google.android.material.slider.Slider
+		android:id="@+id/sliderAge"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+
+		android:value="18"
+		android:valueFrom="18"
+		android:valueTo="60"
+
+		app:activeTrackColor="@color/lolite"
+		app:floatingLabel="false"
+		app:labelColor="@color/lolite"
+		app:inactiveTrackColor="@color/lolite_15"
+		app:thumbColor="@color/white_85"
+
+		android:alpha="0"
+
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		/>
+
 
 
 	<com.google.android.material.button.MaterialButton
