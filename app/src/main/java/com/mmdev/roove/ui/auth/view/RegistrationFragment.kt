@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 13.12.19 19:15
+ * Last modified 13.12.19 19:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.roove.ui.auth.view
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -159,7 +160,8 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		else disableFab()
 	}
 
-	private fun restoreStep2State(){
+	private fun restoreStep2State() {
+		Toast.makeText(context, "pref = $preferredGender", Toast.LENGTH_SHORT).show()
 		clearAllButtonsState()
 		if (preferredGender.isNotEmpty()){
 			enableFab()
