@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 11.12.19 22:16
+  ~ Last modified 13.12.19 19:00
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,13 +22,13 @@
 
 	<TextView
 		android:id="@+id/tv_reg_1"
-		style="@style/medium_text_white_28sp_85op"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 
 		android:lines="2"
 		android:text="Select your\ngender"
 		android:textSize="40sp"
+		style="@style/medium_text_white_28sp_85op"
 
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -39,19 +39,19 @@
 
 	<TextView
 		android:id="@+id/tv_reg_2"
-		style="@style/medium_text_white_28sp_85op"
 		android:layout_width="0dp"
-
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="24dp"
+
 		android:alpha="0"
-		android:rotation="90"
+		android:rotationX="-90"
 
 		android:text="Interested in"
 		android:textSize="40sp"
+		style="@style/medium_text_white_28sp_85op"
 
 		app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
-		app:layout_constraintEnd_toEndOf="@id/guidelineReg2"
+		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintHorizontal_bias="0.1"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
@@ -61,7 +61,6 @@
 		android:id="@+id/btnGenderMale"
 		android:layout_width="0dp"
 		android:layout_height="180dp"
-
 		android:layout_marginEnd="@dimen/general_margin_8"
 
 		android:fontFamily="@font/rubik_medium"
@@ -71,13 +70,13 @@
 		app:backgroundTint="@color/colorPrimary"
 		app:icon="@drawable/ic_registration_male_64dp"
 		app:iconGravity="textStart"
-		app:layout_constraintBottom_toBottomOf="parent"
+		app:rippleColor="@color/black_50"
 
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toStartOf="@id/btnGenderFemale"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/tv_reg_1"
-		app:layout_constraintVertical_bias="0.3"
-		app:rippleColor="@color/black_50" />
+		app:layout_constraintVertical_bias="0.3" />
 
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/btnGenderFemale"
@@ -90,13 +89,13 @@
 
 		app:icon="@drawable/ic_registration_female_64dp"
 		app:iconGravity="textStart"
-		app:layout_constraintBottom_toBottomOf="parent"
+		app:rippleColor="@color/black_50"
 
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toEndOf="@id/btnGenderMale"
 		app:layout_constraintTop_toBottomOf="@id/tv_reg_1"
-		app:layout_constraintVertical_bias="0.3"
-		app:rippleColor="@color/black_50" />
+		app:layout_constraintVertical_bias="0.3" />
 
 
 	<com.google.android.material.button.MaterialButton
@@ -109,43 +108,39 @@
 		android:text="Everyone"
 		android:textSize="12sp"
 
-
 		app:icon="@drawable/ic_registration_heart_64"
 		app:iconGravity="textStart"
 		app:iconTint="@color/material_red_a700"
-		app:layout_constraintBottom_toBottomOf="parent"
-
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
 		app:rippleColor="@color/black_50"
 
-		/>
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
 
 
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/btnRegistrationBack"
-		style="@style/Widget.MaterialComponents.Button.TextButton"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-
 		android:layout_marginBottom="@dimen/general_margin_16"
+
 		android:fontFamily="@font/rubik_medium"
 		android:text="Back"
 		android:textAllCaps="false"
 		android:textColor="@color/white_50"
-
 		android:textSize="18sp"
+		style="@style/Widget.MaterialComponents.Button.TextButton"
 
 		app:cornerRadius="10dp"
 		app:icon="@drawable/ic_arrow_back_24dp"
 		app:iconPadding="@dimen/general_margin_16"
 		app:iconTint="@color/white_50"
-		app:layout_constraintBottom_toBottomOf="parent"
+		app:rippleColor="@color/black"
 
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintHorizontal_bias="0.1"
-		app:layout_constraintStart_toStartOf="parent"
-		app:rippleColor="@color/black" />
+		app:layout_constraintStart_toStartOf="parent" />
 
 	<com.google.android.material.floatingactionbutton.FloatingActionButton
 		android:id="@+id/btnRegistrationNext"
@@ -154,20 +149,13 @@
 		android:layout_marginBottom="@dimen/general_margin_16"
 		android:src="@drawable/ic_arrow_forward_24dp"
 
-
 		app:backgroundTint="@color/gradient3"
-		app:layout_constraintBottom_toBottomOf="parent"
+		app:rippleColor="@color/black_50"
 
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintHorizontal_bias="0.8"
-		app:layout_constraintStart_toStartOf="parent"
-		app:rippleColor="@color/black_50" />
+		app:layout_constraintStart_toStartOf="parent" />
 
-	<androidx.constraintlayout.widget.Guideline
-		android:id="@+id/guidelineReg2"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		app:layout_constraintGuide_begin="5dp" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

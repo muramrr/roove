@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 11.12.19 22:17
+  ~ Last modified 13.12.19 17:09
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,14 +13,100 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<Transition
-		app:constraintSetStart="@layout/fragment_auth_registration"
+		app:constraintSetStart="@id/step_1"
 		app:constraintSetEnd="@id/step_2"
-		app:duration="300"
-		app:motionInterpolator="linear">
+		app:duration="500">
 
 
 	</Transition>
 
+	<ConstraintSet android:id="@+id/step_1">
+
+		<Constraint
+			android:id="@+id/tv_reg_1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.1"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_bias="0.2" />
+
+		<Constraint
+			android:id="@+id/tv_reg_2"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="24dp"
+
+			android:alpha="0"
+			android:rotationX="-90"
+
+			app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.1"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<Constraint
+			android:id="@+id/btnGenderMale"
+			android:layout_width="0dp"
+			android:layout_height="180dp"
+			android:layout_marginEnd="@dimen/general_margin_8"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@id/btnGenderFemale"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tv_reg_1"
+			app:layout_constraintVertical_bias="0.3" />
+
+		<Constraint
+			android:id="@+id/btnGenderFemale"
+			android:layout_width="0dp"
+			android:layout_height="180dp"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@id/btnGenderMale"
+			app:layout_constraintTop_toBottomOf="@id/tv_reg_1"
+			app:layout_constraintVertical_bias="0.3" />
+
+
+		<Constraint
+			android:id="@+id/btnGenderEveryone"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:layout_marginBottom="24dp"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent" />
+
+
+		<Constraint
+			android:id="@+id/btnRegistrationBack"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/general_margin_16"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.1"
+			app:layout_constraintStart_toStartOf="parent" />
+
+		<Constraint
+			android:id="@+id/btnRegistrationNext"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/general_margin_16"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.8"
+			app:layout_constraintStart_toStartOf="parent" />
+
+	</ConstraintSet>
 
 	<ConstraintSet android:id="@+id/step_2">
 
@@ -39,7 +125,6 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent" />
 
-
 		<Constraint
 			android:id="@+id/tv_reg_2"
 			android:layout_width="wrap_content"
@@ -55,7 +140,6 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent" />
 
-
 		<Constraint
 			android:id="@+id/btnGenderMale"
 			android:layout_width="0dp"
@@ -64,11 +148,7 @@
 			app:layout_constraintBottom_toTopOf="@id/btnGenderFemale"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/tv_reg_2" >
-
-
-		</Constraint>
-
+			app:layout_constraintTop_toBottomOf="@id/tv_reg_2" />
 
 		<Constraint
 			android:id="@+id/btnGenderFemale"
@@ -92,7 +172,6 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/btnGenderFemale" />
 
-
 		<!-- fab -->
 		<Constraint
 			android:id="@+id/btnRegistrationNext"
@@ -106,7 +185,6 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintHorizontal_bias="0.8" />
-
 
 	</ConstraintSet>
 
