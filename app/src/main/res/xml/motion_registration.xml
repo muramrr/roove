@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 13.12.19 21:22
+  ~ Last modified 14.12.19 19:47
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,12 +16,22 @@
 	<Transition
 		app:constraintSetStart="@id/step_1"
 		app:constraintSetEnd="@id/step_2"
-		app:duration="500"/>
+		app:duration="500"
+		app:motionInterpolator="easeInOut"/>
 
 	<Transition
 		app:constraintSetStart="@id/step_2"
 		app:constraintSetEnd="@id/step_3"
-		app:duration="500"/>
+		app:duration="500"
+		app:motionInterpolator="easeIn"/>
+
+
+	<!-- if not specify this transition it won't change states with transition while moving back -->
+	<Transition
+		app:constraintSetStart="@id/step_2"
+		app:constraintSetEnd="@id/step_1"
+		app:duration="500"
+		app:motionInterpolator="easeIn"/>
 
 
 	<ConstraintSet android:id="@+id/step_1">
@@ -247,6 +257,8 @@
 			android:id="@+id/sliderAge"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/general_margin_8"
+			android:layout_marginEnd="@dimen/general_margin_8"
 
 			android:alpha="1"
 

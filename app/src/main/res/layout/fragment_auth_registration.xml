@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 13.12.19 21:25
+  ~ Last modified 14.12.19 19:53
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -142,16 +142,22 @@
 		android:id="@+id/sliderAge"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/general_margin_8"
+		android:layout_marginEnd="@dimen/general_margin_8"
+
+		android:hapticFeedbackEnabled="true"
 
 		android:value="18"
 		android:valueFrom="18"
-		android:valueTo="60"
+		android:valueTo="70"
 
 		app:activeTrackColor="@color/lolite"
+		app:haloColor="@color/lolite"
+		app:inactiveTrackColor="@color/lolite_25"
 		app:floatingLabel="false"
 		app:labelColor="@color/lolite"
-		app:inactiveTrackColor="@color/lolite_15"
 		app:thumbColor="@color/white_85"
+		app:thumbRadius="16dp"
 
 		android:alpha="0"
 
