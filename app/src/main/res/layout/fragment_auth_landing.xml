@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 09.12.19 17:25
+  ~ Last modified 14.12.19 19:39
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,6 +28,7 @@
 
 	<TextView
 		android:id="@+id/tvAuthSlogan_1"
+		android:maxLines="2"
 		android:text="@string/auth_slogan1"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"

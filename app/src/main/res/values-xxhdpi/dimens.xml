@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:13
+  ~ Last modified 14.12.19 19:39
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,6 @@
 
 <resources>
 
-	<dimen name="auth_tv_slogan1">52sp</dimen>
+	<dimen name="auth_tv_slogan1">50sp</dimen>
 	<dimen name="auth_tv_slogan2">26sp</dimen>
 </resources>

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 11.12.19 19:40
+  ~ Last modified 14.12.19 19:52
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,6 +44,7 @@
 	<color name="transparent">#00FFFFFF</color>
 
 	<color name="lolite">#6236FF</color>
+	<color name="lolite_25">#406236FF</color>
 	<color name="lolite_15">#266236FF</color>
 	<color name="amethyst">#B620E0</color>
 	<color name="amethyst_15">#26B620E0</color>
