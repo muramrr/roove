@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 09.12.19 19:05
+  ~ Last modified 15.12.19 16:06
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,8 +62,11 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/general_margin_16"
+
 				android:text="TEST TEST"
-				style="@style/medium_text_white_28sp_85op"
+				android:textSize="28sp"
+				style="@style/CollapsingToolbarExpandedTitleWhite"
+
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
 				app:layout_constraintBottom_toBottomOf="@id/viewPagerPlacePhotos"
@@ -74,12 +77,16 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:padding="@dimen/general_margin_16"
+
 				android:text="About"
+				android:textSize="22sp"
+				style="@style/medium_text_white85op"
+
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/viewPagerPlacePhotos"
 				app:layout_constraintBottom_toTopOf="@id/tvPlaceAboutText"
-				style="@style/medium_text_white_22sp_85op" />
+				/>
 
 			<TextView
 				android:id="@+id/tvPlaceAboutText"
@@ -88,11 +95,15 @@
 				android:lineSpacingExtra="10sp"
 				android:paddingStart="@dimen/general_margin_16"
 				android:paddingEnd="@dimen/general_margin_16"
+
 				android:text="TEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\n"
+				android:textSize="16sp"
+				style="@style/regular_text_white85op"
+
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/tvPlaceAboutHeader"
-				style="@style/regular_text_white_16sp_85op" />
+				/>
 
 
 		</androidx.constraintlayout.widget.ConstraintLayout>

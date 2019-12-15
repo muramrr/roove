@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 20:46
+ * Last modified 15.12.19 15:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,7 +42,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 	*/
 	fun getAllUsersCards(): Single<List<CardItem>> {
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.whereEqualTo(USERS_FILTER, currentUser.preferedGender)
+			.whereEqualTo(USERS_FILTER, currentUser.preferredGender)
 			//.limit(limit)
 			.get()
 		return Single.create(SingleOnSubscribe<List<CardItem>>{ emitter ->

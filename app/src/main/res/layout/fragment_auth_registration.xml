@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 14.12.19 19:53
+  ~ Last modified 15.12.19 19:58
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,63 +20,26 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+	<!-- step 1 -->
 	<TextView
-		android:id="@+id/tv_reg_1"
+		android:id="@+id/tvSelectGender"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 
 		android:lines="2"
 		android:text="Select your\ngender"
 		android:textSize="40sp"
-		style="@style/medium_text_white_28sp_85op"
+		style="@style/medium_text_white85op"
 
 		android:alpha="0"
 		android:rotationX="90"
 
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintHorizontal_bias="0.1"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintVertical_bias="0.2" />
-
-	<TextView
-		android:id="@+id/tv_reg_2"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="24dp"
-
-		android:alpha="0"
-		android:rotationX="-90"
-
-		android:text="Interested in"
-		android:textSize="40sp"
-		style="@style/medium_text_white_28sp_85op"
-
-		app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintHorizontal_bias="0.1"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
-
-	<TextView
-		android:id="@+id/tv_reg_3"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="24dp"
-
-		android:alpha="0"
-		android:rotationX="90"
-
-		android:text="Specify your age"
-		android:textSize="40sp"
-		style="@style/medium_text_white_28sp_85op"
-
-		app:layout_constraintBottom_toTopOf="@id/sliderAge"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
-
 
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/btnGenderMale"
@@ -93,10 +56,14 @@
 		app:iconGravity="textStart"
 		app:rippleColor="@color/black_50"
 
+		android:alpha="0"
+		android:rotationX="-90"
+		android:rotationY="90"
+
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toStartOf="@id/btnGenderFemale"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/tv_reg_1"
+		app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
 		app:layout_constraintVertical_bias="0.3" />
 
 	<com.google.android.material.button.MaterialButton
@@ -112,11 +79,36 @@
 		app:iconGravity="textStart"
 		app:rippleColor="@color/black_50"
 
+		android:alpha="0"
+		android:rotationX="-90"
+		android:rotationY="90"
+
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toEndOf="@id/btnGenderMale"
-		app:layout_constraintTop_toBottomOf="@id/tv_reg_1"
+		app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
 		app:layout_constraintVertical_bias="0.3" />
+
+
+	<!-- step 2 -->
+	<TextView
+		android:id="@+id/tvInterested"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="24dp"
+
+		android:alpha="0"
+		android:rotationX="-90"
+
+		android:text="Interested in"
+		android:textSize="40sp"
+		style="@style/medium_text_white85op"
+
+		app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintHorizontal_bias="0.1"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/btnGenderEveryone"
@@ -133,10 +125,35 @@
 		app:iconTint="@color/material_red_a700"
 		app:rippleColor="@color/black_50"
 
-		app:layout_constraintBottom_toBottomOf="parent"
+		android:alpha="0"
+		android:rotationX="90"
+
+		app:layout_constraintTop_toBottomOf="@id/btnGenderFemale"
+		app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent" />
 
+
+	<!-- step 3 -->
+	<TextView
+		android:id="@+id/tvSpecifyAge"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="24dp"
+
+		android:alpha="0"
+		android:rotationX="90"
+
+		android:text="Specify your age"
+		android:textSize="40sp"
+		style="@style/medium_text_white85op"
+
+		app:layout_constraintBottom_toTopOf="@id/sliderAge"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.7"
+		/>
 
 	<com.google.android.material.slider.Slider
 		android:id="@+id/sliderAge"
@@ -151,21 +168,85 @@
 		android:valueFrom="18"
 		android:valueTo="70"
 
-		app:activeTrackColor="@color/lolite"
-		app:haloColor="@color/lolite"
+		app:activeTrackColor="?colorSecondary"
+		app:haloColor="?colorSecondary"
 		app:inactiveTrackColor="@color/lolite_25"
 		app:floatingLabel="false"
-		app:labelColor="@color/lolite"
+		app:labelColor="?colorSecondary"
 		app:thumbColor="@color/white_85"
-		app:thumbRadius="16dp"
+		app:thumbRadius="14dp"
 
 		android:alpha="0"
+		android:rotationX="-90"
 
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintVertical_bias="0.6"
 		/>
+
+
+	<!-- step 4 -->
+	<TextView
+		android:id="@+id/tvChangeName"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+
+		android:text="Do you want to change your name?"
+		android:maxLines="2"
+		android:textSize="36sp"
+		style="@style/medium_text_white85op"
+
+		android:alpha="0"
+		android:rotationX="-90"
+
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.3" />
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/layoutInputChangeName"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+
+		app:counterMaxLength="30"
+		app:counterEnabled="true"
+
+		app:boxStrokeColor="@color/lolite"
+		app:errorEnabled="true"
+
+		android:alpha="0"
+		android:rotationX="90"
+
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/tvChangeName"
+		app:layout_constraintVertical_bias="0.3" >
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/edInputChangeName"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@null"
+
+			android:gravity="center"
+
+			android:imeOptions="actionDone"
+			android:inputType="textPersonName"
+			android:maxLines="1"
+
+			android:text="@string/default_name"
+			android:textSize="20sp"
+			style="@style/regular_text_white85op" />
+
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+
 
 
 
