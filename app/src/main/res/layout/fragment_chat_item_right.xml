@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:13
+  ~ Last modified 15.12.19 16:06
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,7 +54,8 @@
 			android:layout_margin="10dp"
 			android:text="@string/default_message_text"
 			android:textIsSelectable="true"
-			style="@style/regular_text_white_16sp_85op"/>
+			android:textSize="16sp"
+			style="@style/regular_text_white85op"/>
 
 	</LinearLayout>
 
@@ -64,8 +65,11 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@id/contentMessageChat"
         android:layout_below="@id/contentMessageChat"
-	    android:layout_marginTop="3dp"
+	    android:layout_marginTop="2dp"
+
         android:text="@string/default_message_date"
-        style="@style/regular_text_white_8sp_25op" />
+	    android:textColor="@color/white_25"
+	    android:textSize="12sp"
+        style="@style/regular_text_white85op" />
 
 </RelativeLayout>

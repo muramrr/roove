@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 08.12.19 16:26
+  ~ Last modified 15.12.19 16:06
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,7 +37,7 @@
 				android:layout_height="match_parent"
 				app:layout_scrollFlags="scroll|enterAlways|snap"
 				app:popupTheme="@style/menuPopupStyle"
-				app:titleTextAppearance="@style/toolbar_title"
+				app:titleTextAppearance="@style/ToolbarTitle"
 				app:title="@string/app_name"/>
 
 		</com.google.android.material.appbar.AppBarLayout>
@@ -73,7 +73,7 @@
 		app:itemBackground="@drawable/nav_clicked_background"
 		app:itemIconTint="@drawable/nav_clicked_item"
 		app:itemTextColor="@drawable/nav_clicked_item"
-		app:itemTextAppearance="@style/navigation_item"
+		app:itemTextAppearance="@style/NavigationItemText"
 		app:menu="@menu/navigation_items"/>
 
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 13.12.19 21:29
+ * Last modified 15.12.19 20:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,11 @@ package com.mmdev.roove.ui.auth.view
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -36,10 +40,11 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
 	private lateinit var authViewModel: AuthViewModel
 
-	private lateinit var userItem: UserItem
+	private var userItem: UserItem? = UserItem()
 
 	private var registrationStep = 1
 
+	private var name = "no name"
 	private var age = 0
 	private var gender = ""
 	private var preferredGender = ""
@@ -53,16 +58,19 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		authViewModel = activity?.run {
 			ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
+		authViewModel.getUserItem().value?.let { userItem = it }
 
 
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-		tv_reg_1.addSystemTopPadding()
-		tv_reg_2.addSystemTopPadding()
+		tvSelectGender.addSystemTopPadding()
+		tvInterested.addSystemTopPadding()
 
 		containerRegistration.addSystemBottomPadding()
+
+		containerRegistration.transitionToState(R.id.step_1)
 
 		disableFab()
 
@@ -100,6 +108,38 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 			enableFab()
 		}
 
+		sliderAge.setLabelFormatter(Slider.BasicLabelFormatter())
+
+		sliderAge.setOnChangeListener{ slider, value ->
+
+			age = value.toInt()
+			enableFab()
+
+		}
+
+		edInputChangeName.addTextChangedListener(object: TextWatcher {
+			override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+			override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+
+			override fun afterTextChanged(s: Editable) {
+				if (s.length > layoutInputChangeName.counterMaxLength)
+					layoutInputChangeName.error =
+						"Max character length is " + layoutInputChangeName.counterMaxLength
+				else {
+					layoutInputChangeName.error = null
+					name = s.toString()
+				}
+			}
+		})
+
+		edInputChangeName.setOnEditorActionListener { _, actionId, _ ->
+			if (actionId == IME_ACTION_DONE)
+				edInputChangeName.clearFocus()
+			return@setOnEditorActionListener false
+		}
+
+
 		btnRegistrationBack.setOnClickListener {
 			when (registrationStep) {
 				1 -> findNavController().navigateUp()
@@ -111,6 +151,11 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 				3 -> {
 					containerRegistration.transitionToState(R.id.step_2)
 					restoreStep2State()
+
+				}
+				4 -> {
+					containerRegistration.transitionToState(R.id.step_3)
+					restoreStep3State()
 
 				}
 			}
@@ -132,7 +177,8 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 				}
 
 				3 -> {
-
+					containerRegistration.transitionToState(R.id.step_4)
+					restoreStep4State()
 				}
 			}
 			registrationStep += 1
@@ -141,14 +187,24 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		}
 
 
-		sliderAge.setLabelFormatter(Slider.BasicLabelFormatter())
-		sliderAge.setOnChangeListener{ slider, value ->
+		// don't allow to break transitions
+		containerRegistration.setTransitionListener(
+			object : MotionLayout.TransitionListener {
 
-			age = value.toInt()
-			enableFab()
+				override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean,
+				                                 p3: Float) {}
 
-		}
+				override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+					btnRegistrationBack.isEnabled = false
+				}
 
+				override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {}
+
+				override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
+					btnRegistrationBack.isEnabled = true
+				}
+			}
+		)
 
 	}
 
@@ -193,6 +249,14 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 			sliderAge.value = age.toFloat()
 		}
 		else disableFab()
+	}
+
+	private fun restoreStep4State(){
+		if (name.isNotEmpty() && name != "no name") {
+			edInputChangeName.setText(name)
+		}
+		else edInputChangeName.setText(userItem?.name)
+
 	}
 
 

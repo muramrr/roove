@@ -3,7 +3,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 07.12.19 21:02
+  ~ Last modified 15.12.19 16:06
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,13 +37,17 @@
 			android:id="@+id/its_a_match_tv"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+
 			android:text="ITS A MATCH!"
+			android:textSize="24sp"
+			style="@style/regular_text_white85op"
+
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintVertical_bias="0.1"
-			style="@style/regular_text_white_24sp_85op"/>
+			/>
 
 		<ImageView
 			android:id="@+id/matched_photo"
@@ -65,21 +69,24 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@{name, default = @string/default_name}"
+			android:textSize="28sp"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintVertical_bias="0.7"
-			style="@style/medium_text_white_28sp_85op"/>
+			style="@style/medium_text_white85op"/>
 
 		<TextView
 			android:id="@+id/tvMatchDialogBack"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+
 			android:fontFamily="@font/rubik_bold"
 			android:text="Back to swiping"
-			android:textSize="28sp"
 			android:textColor="@color/gradient1"
+			android:textSize="28sp"
+
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"

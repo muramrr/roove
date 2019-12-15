@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 08.12.19 16:26
+  ~ Last modified 15.12.19 16:06
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,9 +26,10 @@
 			android:id="@+id/collapseBarProfile"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			app:collapsedTitleTextAppearance="@style/toolbar_title"
+			app:collapsedTitleTextAppearance="@style/ToolbarTitle"
 			app:contentScrim="@color/colorPrimary"
-			app:expandedTitleTextAppearance="@style/medium_text_white_28sp_85op"
+			app:expandedTitleTextAppearance="@style/CollapsingToolbarExpandedTitleWhite"
+
 			app:layout_scrollFlags="scroll|exitUntilCollapsed"
 			app:title="@string/default_name">
 
@@ -81,11 +82,15 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:padding="@dimen/general_margin_16"
+
 				android:text="About"
+				android:textSize="22sp"
+				style="@style/medium_text_white85op"
+
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
-				style="@style/medium_text_white_22sp_85op" />
+				/>
 
 			<TextView
 				android:id="@+id/tvProfileAboutText"
@@ -94,22 +99,30 @@
 				android:lineSpacingExtra="10sp"
 				android:paddingStart="@dimen/general_margin_16"
 				android:paddingEnd="@dimen/general_margin_16"
+
 				android:text="TEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\n"
+				android:textSize="16sp"
+				style="@style/regular_text_white85op"
+
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/tvProfileAboutHeader"
-				style="@style/regular_text_white_16sp_85op" />
+				/>
 
 			<TextView
 				android:id="@+id/tvProfileWantToGoHeader"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:padding="@dimen/general_margin_16"
+
 				android:text="Хочу сходить"
+				android:textSize="22sp"
+				style="@style/medium_text_white85op"
+
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/tvProfileAboutText"
-				style="@style/medium_text_white_22sp_85op" />
+				/>
 
 <!--			<androidx.recyclerview.widget.RecyclerView-->
 <!--				android:id="@+id/profile_want_togo_container_rv"-->

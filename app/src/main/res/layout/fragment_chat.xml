@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 09.12.19 17:09
+  ~ Last modified 15.12.19 16:06
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,7 +45,7 @@
 				app:menu="@menu/chat_menu"
 				app:navigationIcon="@drawable/ic_arrow_back_24dp"
 				app:popupTheme="@style/menuPopupStyle"
-				app:titleTextAppearance="@style/toolbar_title"
+				app:titleTextAppearance="@style/ToolbarTitle"
 				app:title="@string/default_name"/>
 
 		</com.google.android.material.appbar.AppBarLayout>
@@ -108,16 +108,21 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:background="@null"
+
 				android:layout_toStartOf="@+id/buttonMessage"
 				android:layout_toEndOf="@+id/buttonAttachments"
 				android:layout_centerVertical="true"
+
 				android:imeOptions="actionSend"
 				android:inputType="text|textMultiLine"
 				android:hint="@string/fragment_chat_ed_hint"
 				android:padding="@dimen/general_margin_16"
+
 				android:textColorHint="@color/white_50"
-				tools:ignore="Autofill"
-				style="@style/regular_text_white_18sp_85op"/>
+				android:textSize="18sp"
+				style="@style/regular_text_white85op"
+
+				tools:ignore="Autofill"/>
 
 			<ImageView
 				android:id="@+id/buttonMessage"

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 15.12.19 16:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,9 @@ package com.mmdev.roove.core.di.modules
 import android.app.Application
 import com.ironz.binaryprefs.BinaryPreferencesBuilder
 import com.ironz.binaryprefs.Preferences
+import com.ironz.binaryprefs.encryption.AesValueEncryption
+import com.ironz.binaryprefs.encryption.XorKeyEncryption
+import com.mmdev.data.BuildConfig
 import com.mmdev.data.user.UserRepositoryLocal
 import dagger.Module
 import dagger.Provides
@@ -30,9 +33,9 @@ class UserModule {
 	@Singleton
 	fun binaryPrefs(context: Application): Preferences =
 		BinaryPreferencesBuilder(context).apply {
-//			keyEncryption(XorKeyEncryption("JaNdRgUkXp2s5v8y/B?E(H+KbPeShVmY".toByteArray()))
-//			valueEncryption(AesValueEncryption("16 bytes secret key".toByteArray(),
-//			                                   "16 bytes initial vector".toByteArray()))
+			keyEncryption(XorKeyEncryption(BuildConfig.KEY_ENCRYPTION_KEY.toByteArray()))
+			valueEncryption(AesValueEncryption(BuildConfig.VALUE_ENCRYPTION_KEY.toByteArray(),
+			                                   BuildConfig.VALUE_ENCRYPTION_VECTOR_KEY.toByteArray()))
 		}.build()
 
 }

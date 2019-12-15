@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 09.12.19 16:48
+  ~ Last modified 15.12.19 16:06
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -58,14 +58,18 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 		    android:gravity="center"
+
 	        android:text="There is no available users matching your preferences"
+		    android:textSize="18sp"
+		    style="@style/regular_text_white85op"
+
 		    android:visibility='@{viewModel.showTextHelper ? View.VISIBLE : View.INVISIBLE, default = "invisible"}'
 	        app:layout_constraintBottom_toBottomOf="parent"
 	        app:layout_constraintEnd_toEndOf="parent"
 	        app:layout_constraintStart_toStartOf="parent"
 		    app:layout_constraintTop_toBottomOf="@id/ivCardLoading"
 		    app:layout_constraintVertical_bias="0.3"
-		    style="@style/regular_text_white_18sp_85op" />
+		    />
 
 
 

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 14.12.19 19:52
+  ~ Last modified 15.12.19 19:07
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,9 +16,9 @@
 	<color name="colorPrimaryDark">#12121A</color>
 	<color name="colorOnPrimary">#ffffff</color>
 
-	<color name="colorSecondary">#b620e0</color>
-	<color name="colorSecondaryLight">#ec5eff</color>
-	<color name="colorSecondaryDark">#8100ad</color>
+	<color name="colorSecondary">#6236ff</color>
+	<color name="colorSecondaryLight">#884eff</color>
+	<color name="colorSecondaryDark">#0000ca</color>
 	<color name="colorOnSecondary">#ffffff</color>
 
 	<color name="colorAccent">#6b6b99</color>

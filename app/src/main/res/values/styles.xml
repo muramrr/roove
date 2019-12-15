@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 09.12.19 19:17
+  ~ Last modified 15.12.19 16:06
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,13 +34,14 @@
 		<item name="colorOnBackground">@color/white</item>
 
 		<item name="actionOverflowMenuStyle">@style/overFlowMenuStyle</item>
-		<item name="android:windowBackground">@color/colorPrimaryDark</item>
 
 <!--		<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
 <!--		<item name="android:windowTranslucentStatus">true</item>-->
 <!--		<item name="android:windowTranslucentNavigation">true</item>-->
-		<item name="android:statusBarColor">@color/black_1</item>
+
 		<item name="android:navigationBarColor">@color/black_1</item>
+		<item name="android:statusBarColor">@color/black_1</item>
+		<item name="android:windowBackground">@color/colorPrimaryDark</item>
 
 		<item name="materialAlertDialogTheme">@style/MyMaterialAlertDialog</item>
 
@@ -55,7 +56,7 @@
 
 	<style name="menuPopupStyle" parent="Widget.AppCompat.PopupMenu">
 		<item name="android:itemBackground">@color/colorAccentDark</item>
-		<item name="android:itemTextAppearance">@style/regular_text_white_16sp_85op</item>
+		<item name="android:itemTextAppearance">@style/MenuItemTextStyle</item>
 		<item name="android:overlapAnchor">false</item>
 	</style>
 
@@ -119,17 +120,14 @@
 	</style>
 
 	<style name="AppShapeAppearance.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
-
 		<item name="cornerSize">8dp</item>
 	</style>
 
 	<style name="AppShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
-
 		<item name="cornerSize">8dp</item>
 	</style>
 
 	<style name="AppShapeAppearance.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
-
 		<item name="cornerSize">8dp</item>
 	</style>
 
@@ -137,18 +135,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+	<!-- SPECIFIC STYLES -->
 
 	<!-- auth tv 1 -->
 	<style name="auth_slogan1" parent="Widget.AppCompat.TextView">
@@ -168,13 +155,6 @@
 		<item name="android:textSize">@dimen/auth_tv_slogan2</item>
 	</style>
 
-	<!-- registration gender tabs text -->
-	<style name="registration_tab_text_24sp" parent="TextAppearance.Design.Tab">
-		<item name="android:fontFamily">@font/rubik_light</item>
-		<item name="textAllCaps">false</item>
-		<item name="android:textColor">@color/white_10</item>
-		<item name="android:textSize">24sp</item>
-	</style>
 
 	<!-- unfocused tabs text -->
 	<style name="tab_text_36sp" parent="TextAppearance.Design.Tab">
@@ -184,105 +164,55 @@
 		<item name="android:textSize">36sp</item>
 	</style>
 
-	<!-- conversations sender name-->
-	<style name="bold_text_white_16sp_85op" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_bold</item>
-		<item name="android:textColor">@color/white_85</item>
-		<item name="android:textSize">16sp</item>
-	</style>
-
 	<!-- uncollapsed toolbar profile title -->
-	<style name="medium_text_white_28sp_85op" parent="Widget.AppCompat.TextView">
+	<style name="CollapsingToolbarExpandedTitleWhite" parent="Widget.AppCompat.TextView">
 		<item name="android:fontFamily">@font/rubik_medium</item>
 		<item name="android:textColor">@color/white_85</item>
 		<item name="android:textSize">28sp</item>
 	</style>
 
-	<!-- medium profile blocks headers -->
-	<style name="medium_text_white_22sp_85op" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_medium</item>
-		<item name="android:textColor">@color/white_85</item>
-		<item name="android:textSize">22sp</item>
-	</style>
-
-	<!-- regular header 2 -->
-	<style name="regular_text_white_24sp_85op" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_regular</item>
-		<item name="android:textColor">@color/white_85</item>
-		<item name="android:textSize">24sp</item>
-	</style>
-
-	<!-- regular header 3 -->
-	<style name="regular_text_white_20sp_85op" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_regular</item>
-		<item name="android:textColor">@color/white_85</item>
-		<item name="android:textSize">20sp</item>
-	</style>
-
-	<!-- cards container loading description helper -->
-	<style name="regular_text_white_18sp_85op" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_regular</item>
-		<item name="android:textColor">@color/white_85</item>
-		<item name="android:textSize">18sp</item>
-	</style>
-
-	<!-- basic tv -->
-	<style name="regular_text_white_16sp_85op" parent="Widget.AppCompat.TextView">
+	<style name="MenuItemTextStyle" parent="Widget.AppCompat.TextView">
 		<item name="android:fontFamily">@font/rubik_regular</item>
 		<item name="android:textColor">@color/white_85</item>
 		<item name="android:textSize">16sp</item>
-	</style>
-
-
-	<style name="regular_text_white_14sp_85op" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_regular</item>
-		<item name="android:textColor">@color/white_85</item>
-		<item name="android:textSize">14sp</item>
-	</style>
-
-	<!-- feed content author name -->
-	<style name="regular_text_white_12sp_85op" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_regular</item>
-		<item name="android:textColor">@color/white_85</item>
-		<item name="android:textSize">12sp</item>
-	</style>
-
-
-	<!-- conversations content message text -->
-	<style name="light_text_white_16sp_85op" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_light</item>
-		<item name="android:textColor">@color/white_85</item>
-		<item name="android:textSize">16sp</item>
-
-	</style>
-
-	<!-- feed content text-->
-	<style name="light_text_white_12sp_85op" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_light</item>
-		<item name="android:textColor">@color/white_85</item>
-		<item name="android:textSize">12sp</item>
 	</style>
 
 	<!-- toolbar title -->
-	<style name="toolbar_title" parent="Widget.AppCompat.TextView">
+	<style name="ToolbarTitle" parent="Widget.AppCompat.TextView">
 		<item name="android:fontFamily">@font/rubik_regular</item>
 		<item name="android:textColor">@color/white</item>
 		<item name="android:textSize">20sp</item>
 	</style>
 
-
-
-	<!-- chat timestamp textview	-->
-	<style name="regular_text_white_8sp_25op" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_regular</item>
-		<item name="android:textColor">@color/white_25</item>
-		<item name="android:textSize">12sp</item>
-	</style>
-
-	<style name="navigation_item" parent="Widget.AppCompat.TextView">
+	<style name="NavigationItemText" parent="Widget.AppCompat.TextView">
 		<item name="android:fontFamily">@font/rubik_regular</item>
 		<item name="android:textColor">@color/white_85</item>
 		<item name="android:textSize">16sp</item>
+	</style>
+
+
+
+	<!-- general text styles -->
+
+
+	<style name="bold_text_white85op" parent="Widget.AppCompat.TextView">
+		<item name="android:fontFamily">@font/rubik_bold</item>
+		<item name="android:textColor">@color/white_85</item>
+	</style>
+
+	<style name="medium_text_white85op" parent="Widget.AppCompat.TextView">
+		<item name="android:fontFamily">@font/rubik_medium</item>
+		<item name="android:textColor">@color/white_85</item>
+	</style>
+
+	<style name="regular_text_white85op" parent="Widget.AppCompat.TextView">
+		<item name="android:fontFamily">@font/rubik_regular</item>
+		<item name="android:textColor">@color/white_85</item>
+	</style>
+
+	<style name="light_text_white85op" parent="Widget.AppCompat.TextView">
+		<item name="android:fontFamily">@font/rubik_light</item>
+		<item name="android:textColor">@color/white_85</item>
 	</style>
 
 
