@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 20:46
+ * Last modified 15.12.19 16:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,18 +10,18 @@
 
 package com.mmdev.business.user.entity
 
-data class UserItem (val name: String = "",
-                     //var age: Int = 0,
+data class UserItem (var name: String = "",
+                     var age: Int = 0,
                      var city: String = "",
                      var gender: String = "",
-                     var preferedGender: String = "",
+                     var preferredGender: String = "",
                      val mainPhotoUrl: String = "",
                      var photoURLs: List<String> = listOf(),
                      val userId: String = ""){
 
-    override fun toString(): String {
-        return "UserItem{\n\tname=$name,\n\tid=$userId,\n\tPhotoUrl='$mainPhotoUrl\n}"
-    }
+	override fun toString(): String {
+		return "UserItem{\n\tname=$name,\n\tid=$userId,\n\tPhotoUrl='$mainPhotoUrl\n}"
+	}
 
 }
 

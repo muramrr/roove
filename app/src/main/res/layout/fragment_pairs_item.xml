@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 09.12.19 20:46
+  ~ Last modified 15.12.19 16:06
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -53,8 +53,10 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center|bottom"
 			android:layout_margin="@dimen/general_margin_8"
+
 			android:text="@{matchedItem.name, default = @string/default_name}"
-			style="@style/regular_text_white_20sp_85op"/>
+			android:textSize="20sp"
+			style="@style/regular_text_white85op"/>
 
 
 	</androidx.cardview.widget.CardView>

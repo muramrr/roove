@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 09.12.19 20:46
+  ~ Last modified 15.12.19 16:06
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,12 +47,13 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="8dp"
 			android:text="@{conversationItem.partnerName, default = @string/default_name}"
+			android:textSize="16sp"
 
 			app:layout_constraintStart_toEndOf="@id/conversation_active_item_userpic_iv"
 			app:layout_constraintTop_toTopOf="@id/conversation_active_item_userpic_iv"
 			app:layout_constraintBottom_toTopOf="@id/conversation_item_message_tv"
 
-			style="@style/bold_text_white_16sp_85op" />
+			style="@style/bold_text_white85op" />
 
 		<TextView
 			android:id="@+id/conversation_item_message_tv"
@@ -64,14 +65,16 @@
 			android:lines="1"
 			android:maxLines="1"
 			android:singleLine="true"
+
 			android:text="@{conversationItem.lastMessageText, default = `Some text from last message that can only rest of text`}"
+			android:textSize="16sp"
+			style="@style/light_text_white85op"
 
 			app:layout_constraintBottom_toBottomOf="@id/conversation_active_item_userpic_iv"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toEndOf="@id/conversation_active_item_userpic_iv"
 			app:layout_constraintTop_toBottomOf="@id/conversation_item_username_tv"
-
-			style="@style/light_text_white_16sp_85op"/>
+			/>
 
 
 	</androidx.constraintlayout.widget.ConstraintLayout>

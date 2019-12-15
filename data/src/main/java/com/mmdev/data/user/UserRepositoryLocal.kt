@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 20:46
+ * Last modified 15.12.19 16:09
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,6 +29,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 	companion object{
 		private const val PREF_KEY_GENERAL_IF_SAVED = "saved"
 		private const val PREF_KEY_CURRENT_USER_NAME = "name"
+		private const val PREF_KEY_CURRENT_USER_AGE = "age"
 		private const val PREF_KEY_CURRENT_USER_CITY = "city"
 		private const val PREF_KEY_CURRENT_USER_GENDER = "gender"
 		private const val PREF_KEY_CURRENT_USER_P_GENDER = "preferedGender"
@@ -42,14 +43,22 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 		return if (prefs.getBoolean(PREF_KEY_GENERAL_IF_SAVED, false)) {
 			try {
 				val name = prefs.getString(PREF_KEY_CURRENT_USER_NAME , "")!!
+				val age = prefs.getInt(PREF_KEY_CURRENT_USER_AGE, 18)
 				val city = prefs.getString(PREF_KEY_CURRENT_USER_CITY, "")!!
 				val gender = prefs.getString(PREF_KEY_CURRENT_USER_GENDER, "")!!
-				val preferedGender = prefs.getString(PREF_KEY_CURRENT_USER_P_GENDER, "")!!
+				val preferredGender = prefs.getString(PREF_KEY_CURRENT_USER_P_GENDER, "")!!
 				val mainPhotoUrl = prefs.getString(PREF_KEY_CURRENT_USER_MAIN_PIC_URL, "")!!
 				val photoUrls = prefs.getStringSet(PREF_KEY_CURRENT_USER_PHOTO_URLS, setOf(""))!!
 				val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")!!
 				Log.wtf("mylogs", "retrieved user info from sharedpref successfully")
-				UserItem(name, city, gender, preferedGender, mainPhotoUrl, photoUrls.toList(), uid)
+				UserItem(name,
+				         age,
+				         city,
+				         gender,
+				         preferredGender,
+				         mainPhotoUrl,
+				         photoUrls.toList(),
+				         uid)
 			}finally {
 				UserItem(name = "local internal error")
 			}
@@ -67,7 +76,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 		editor.putString(PREF_KEY_CURRENT_USER_NAME, currentUserItem.name)
 		editor.putString(PREF_KEY_CURRENT_USER_CITY, currentUserItem.city)
 		editor.putString(PREF_KEY_CURRENT_USER_GENDER, currentUserItem.gender)
-		editor.putString(PREF_KEY_CURRENT_USER_P_GENDER, currentUserItem.preferedGender)
+		editor.putString(PREF_KEY_CURRENT_USER_P_GENDER, currentUserItem.preferredGender)
 		editor.putString(PREF_KEY_CURRENT_USER_MAIN_PIC_URL, currentUserItem.mainPhotoUrl)
 		editor.putStringSet(PREF_KEY_CURRENT_USER_PHOTO_URLS, currentUserItem.photoURLs.toSet())
 		editor.putString(PREF_KEY_CURRENT_USER_ID, currentUserItem.userId)
