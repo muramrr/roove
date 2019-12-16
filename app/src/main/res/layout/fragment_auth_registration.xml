@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 15.12.19 19:58
+  ~ Last modified 16.12.19 20:42
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@color/colorPrimaryDark"
-	android:padding="@dimen/general_margin_8"
+	android:padding="@dimen/general_margin_16"
 	app:layoutDescription="@xml/motion_registration"
 
 	xmlns:android="http://schemas.android.com/apk/res/android"
@@ -44,7 +44,7 @@
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/btnGenderMale"
 		android:layout_width="0dp"
-		android:layout_height="180dp"
+		android:layout_height="220dp"
 		android:layout_marginEnd="@dimen/general_margin_8"
 
 		android:fontFamily="@font/rubik_medium"
@@ -60,7 +60,7 @@
 		android:rotationX="-90"
 		android:rotationY="90"
 
-		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
 		app:layout_constraintEnd_toStartOf="@id/btnGenderFemale"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
@@ -69,7 +69,7 @@
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/btnGenderFemale"
 		android:layout_width="0dp"
-		android:layout_height="180dp"
+		android:layout_height="220dp"
 
 		android:fontFamily="@font/rubik_medium"
 		android:text="female"
@@ -83,7 +83,7 @@
 		android:rotationX="-90"
 		android:rotationY="90"
 
-		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toEndOf="@id/btnGenderMale"
 		app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
@@ -205,18 +205,23 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintVertical_bias="0.3" />
+		app:layout_constraintVertical_bias="0.4" />
 
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/layoutInputChangeName"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 
-		app:counterMaxLength="30"
+		app:boxStrokeColor="@color/text_input_layout"
+		app:boxStrokeWidth="2dp"
+		app:boxStrokeErrorColor="@color/colorError"
+
+		app:counterMaxLength="20"
 		app:counterEnabled="true"
 
-		app:boxStrokeColor="@color/lolite"
 		app:errorEnabled="true"
+		app:errorTextColor="@color/colorError"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
 		android:alpha="0"
 		android:rotationX="90"
@@ -226,6 +231,7 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/tvChangeName"
 		app:layout_constraintVertical_bias="0.3" >
+
 
 		<com.google.android.material.textfield.TextInputEditText
 			android:id="@+id/edInputChangeName"
@@ -240,9 +246,72 @@
 			android:maxLines="1"
 
 			android:text="@string/default_name"
+			android:textCursorDrawable="@color/lolite"
 			android:textSize="20sp"
 			style="@style/regular_text_white85op" />
 
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+
+
+	<!-- step 5-->
+	<TextView
+		android:id="@+id/tvChooseYourCity"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+
+		android:text="Choose your city"
+		android:maxLines="2"
+		android:textSize="36sp"
+		style="@style/medium_text_white85op"
+
+		android:alpha="0"
+		android:rotationX="90"
+
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.4" />
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/dropdownCityChooserContainer"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+
+		app:boxStrokeColor="@color/text_input_layout"
+		app:boxStrokeWidth="2dp"
+
+		app:hintEnabled="true"
+		app:hintTextColor="@color/white"
+		android:hint="Your city"
+
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+
+		android:alpha="0"
+		android:rotationX="-90"
+
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/tvChooseYourCity"
+		app:layout_constraintVertical_bias="0.3" >
+
+
+		<com.google.android.material.textview.MaterialAutoCompleteTextView
+			android:id="@+id/dropdownCityChooser"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@null"
+
+			android:imeOptions="actionDone"
+			android:inputType="text"
+			android:maxLines="1"
+
+			android:textSize="20sp"
+			style="@style/regular_text_white85op"
+			/>
 
 	</com.google.android.material.textfield.TextInputLayout>
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 15.12.19 20:05
+ * Last modified 16.12.19 20:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
+import android.widget.ArrayAdapter
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -36,18 +37,22 @@ import kotlinx.android.synthetic.main.fragment_auth_registration.*
 
 class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
-	private var isRegistrationCompleted = false
-
 	private lateinit var authViewModel: AuthViewModel
+
+	private var registrationStep = 1
+	private var isRegistrationCompleted = false
 
 	private var userItem: UserItem? = UserItem()
 
-	private var registrationStep = 1
-
 	private var name = "no name"
 	private var age = 0
+	private var city = ""
 	private var gender = ""
 	private var preferredGender = ""
+
+	private val cityList = arrayOf("Екатеринбург", "Красноярск", "Краснодар",
+	                               "Казань", "Москва", "Нижний Новгород",
+	                               "Новосибирск", "Сочи", "Санкт-Петербург")
 
 	private var pressedTintColor: ColorStateList? = null
 	private var unpressedTintColor: ColorStateList? = null
@@ -67,7 +72,6 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
 		tvSelectGender.addSystemTopPadding()
 		tvInterested.addSystemTopPadding()
-
 		containerRegistration.addSystemBottomPadding()
 
 		containerRegistration.transitionToState(R.id.step_1)
@@ -77,6 +81,31 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		pressedTintColor = ContextCompat.getColorStateList(context!!, R.color.lolite)
 		unpressedTintColor = ContextCompat.getColorStateList(context!!, R.color.colorPrimary)
 
+		// don't allow to break transitions
+		containerRegistration.setTransitionListener(
+				object : MotionLayout.TransitionListener {
+
+					override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean,
+					                                 p3: Float) {}
+
+					override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+						btnRegistrationBack.isClickable = false
+						btnRegistrationNext.isClickable = false
+					}
+
+					override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {}
+
+					override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
+						btnRegistrationBack.isClickable = true
+						btnRegistrationNext.isClickable = true
+					}
+				}
+		)
+
+
+
+
+		//step 1
 
 		btnGenderMale.setOnClickListener {
 			setPressedMale()
@@ -102,12 +131,16 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
 		}
 
+
+		//step 2
 		btnGenderEveryone.setOnClickListener {
 			setPressedEveryone()
 			preferredGender = btnGenderEveryone.text.toString()
 			enableFab()
 		}
 
+
+		//step 3
 		sliderAge.setLabelFormatter(Slider.BasicLabelFormatter())
 
 		sliderAge.setOnChangeListener{ slider, value ->
@@ -117,6 +150,8 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
 		}
 
+
+		//step 4
 		edInputChangeName.addTextChangedListener(object: TextWatcher {
 			override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
@@ -140,6 +175,12 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		}
 
 
+		//step 5
+		val cityAdapter = ArrayAdapter<String>(context!!,
+		                                       R.layout.fragment_auth_drop_item,
+		                                       cityList)
+		dropdownCityChooser.setAdapter(cityAdapter)
+
 		btnRegistrationBack.setOnClickListener {
 			when (registrationStep) {
 				1 -> findNavController().navigateUp()
@@ -157,6 +198,10 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 					containerRegistration.transitionToState(R.id.step_3)
 					restoreStep3State()
 
+				}
+				5 -> {
+					containerRegistration.transitionToState(R.id.step_4)
+					restoreStep4State()
 				}
 			}
 			registrationStep -= 1
@@ -180,6 +225,10 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 					containerRegistration.transitionToState(R.id.step_4)
 					restoreStep4State()
 				}
+				4 -> {
+					containerRegistration.transitionToState(R.id.step_5)
+					restoreStep5State()
+				}
 			}
 			registrationStep += 1
 
@@ -187,24 +236,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		}
 
 
-		// don't allow to break transitions
-		containerRegistration.setTransitionListener(
-			object : MotionLayout.TransitionListener {
 
-				override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean,
-				                                 p3: Float) {}
-
-				override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
-					btnRegistrationBack.isEnabled = false
-				}
-
-				override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {}
-
-				override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
-					btnRegistrationBack.isEnabled = true
-				}
-			}
-		)
 
 	}
 
@@ -257,6 +289,10 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		}
 		else edInputChangeName.setText(userItem?.name)
 
+	}
+
+	private fun restoreStep5State(){
+		if (city.isNotEmpty()) dropdownCityChooser.setText(city)
 	}
 
 
