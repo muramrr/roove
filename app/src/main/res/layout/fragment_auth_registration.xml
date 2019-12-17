@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 17.12.19 19:43
+  ~ Last modified 17.12.19 22:01
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -310,7 +310,7 @@
 			android:gravity="center"
 			android:imeOptions="actionDone"
 			android:inputType="text"
-			android:maxLines="1"
+
 
 			android:textSize="20sp"
 			style="@style/regular_text_white85op"
@@ -319,6 +319,286 @@
 	</com.google.android.material.textfield.TextInputLayout>
 
 
+	<!-- final step -->
+	<TextView
+		android:id="@+id/tvAllCorrect"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+
+		android:text="Check if everything is correct"
+		android:textAlignment="center"
+		android:maxLines="2"
+		android:textSize="36sp"
+		style="@style/medium_text_white85op"
+
+		android:rotationX="90"
+		android:alpha="0"
+
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias="0.15" />
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/layoutFinalChangeName"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/general_margin_16"
+
+		app:boxStrokeColor="@color/text_input_layout"
+		app:boxStrokeWidth="2dp"
+
+		android:hint="Your name"
+		app:hintEnabled="true"
+		app:hintTextColor="@color/white"
+
+		app:errorEnabled="true"
+		app:errorTextColor="@color/colorError"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+		android:rotationX="90"
+		android:alpha="0"
+
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/tvAllCorrect"
+		app:layout_constraintVertical_bias="0.3" >
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/edFinalName"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@null"
+			android:cursorVisible="false"
+			android:focusable="false"
+			android:gravity="center"
+			android:imeOptions="actionDone"
+			android:inputType="textPersonName"
+
+			android:text="@string/default_name"
+			android:textSize="20sp"
+			style="@style/regular_text_white85op" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/layoutFinalGender"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+
+		app:boxStrokeColor="@color/text_input_layout"
+		app:boxStrokeWidth="2dp"
+
+		android:hint="Your gender"
+		app:hintEnabled="true"
+		app:hintTextColor="@color/white"
+
+		app:errorEnabled="true"
+		app:errorTextColor="@color/colorError"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+		android:rotationX="90"
+		android:alpha="0"
+
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/layoutFinalChangeName"
+		>
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/edFinalGender"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@null"
+			android:cursorVisible="false"
+			android:focusable="false"
+			android:gravity="center"
+			android:imeOptions="actionDone"
+			android:inputType="text"
+
+			android:text="male"
+			android:textSize="20sp"
+			style="@style/regular_text_white85op" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/layoutFinalPreferredGender"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+
+		app:boxStrokeColor="@color/text_input_layout"
+		app:boxStrokeWidth="2dp"
+
+		android:hint="Interested in"
+		app:hintEnabled="true"
+		app:hintTextColor="@color/white"
+
+		app:errorEnabled="true"
+		app:errorTextColor="@color/colorError"
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+		android:rotationX="90"
+		android:alpha="0"
+
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/layoutFinalGender"
+		>
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/edFinalPreferredGender"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@null"
+			android:cursorVisible="false"
+			android:focusable="false"
+			android:gravity="center"
+			android:imeOptions="actionDone"
+			android:inputType="text"
+
+			android:text="everyone"
+			android:textSize="20sp"
+			style="@style/regular_text_white85op" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/layoutFinalAge"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/general_margin_16"
+
+		app:boxStrokeColor="@color/text_input_layout"
+		app:boxStrokeWidth="2dp"
+
+		android:hint="Age"
+		app:hintEnabled="true"
+		app:hintTextColor="@color/white"
+
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+		android:rotationY="90"
+		android:alpha="0"
+
+		app:layout_constraintEnd_toStartOf="@id/layoutFinalCity"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/layoutFinalPreferredGender"
+		>
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/edFinalAge"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@null"
+			android:cursorVisible="false"
+			android:focusable="false"
+			android:gravity="center"
+			android:imeOptions="actionDone"
+			android:inputType="number"
+
+			android:text="12"
+			android:textSize="20sp"
+			style="@style/regular_text_white85op" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/layoutFinalCity"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+
+		app:boxStrokeColor="@color/text_input_layout"
+		app:boxStrokeWidth="2dp"
+
+		android:hint="City choosed"
+		app:hintEnabled="true"
+		app:hintTextColor="@color/white"
+
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+		android:rotationY="-90"
+		android:alpha="0"
+
+		app:layout_constraintStart_toEndOf="@id/layoutFinalAge"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/layoutFinalPreferredGender"
+		>
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/edFinalCity"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@null"
+			android:cursorVisible="false"
+			android:focusable="false"
+			android:gravity="center"
+			android:inputType="text"
+			android:maxLines="1"
+
+			android:text="Krasnoyarsk"
+			android:textSize="20sp"
+			style="@style/regular_text_white85op" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/btnRegistrationDone"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/general_margin_16"
+
+		android:fontFamily="@font/rubik_medium"
+		android:text="Done"
+		android:textColor="@color/white"
+		android:textSize="26sp"
+		android:textAllCaps="false"
+
+		app:strokeColor="@color/lolite"
+		app:strokeWidth="2dp"
+
+		android:scaleX="0"
+		android:scaleY="0"
+		android:rotationX="90"
+		android:alpha="0"
+
+		style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+
+		app:layout_constraintTop_toBottomOf="@id/layoutFinalAge"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintBottom_toBottomOf="parent"
+		/>
+
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/btnFinalBack"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/general_margin_16"
+		android:layout_marginTop="@dimen/general_margin_16"
+
+		android:fontFamily="@font/rubik_medium"
+		android:text="Back"
+		android:textColor="@color/gradient1"
+		android:textSize="20sp"
+		android:textAllCaps="false"
+
+		app:strokeColor="@color/gradient1"
+		app:strokeWidth="2dp"
+
+		android:scaleX="0"
+		android:scaleY="0"
+		android:rotationX="90"
+		android:alpha="0"
+
+		style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+
+		app:layout_constraintTop_toBottomOf="@id/btnRegistrationDone"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintBottom_toBottomOf="parent"
+		/>
 
 
 
