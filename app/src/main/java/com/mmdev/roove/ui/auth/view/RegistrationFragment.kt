@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 17.12.19 20:30
+ * Last modified 17.12.19 22:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,6 +50,8 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 	private var gender = ""
 	private var preferredGender = ""
 
+	private var cityToDisplay = ""
+
 	private val cityList = mapOf("Екатеринбург" to "ekb",
 	                             "Красноярск" to "krasnoyarsk",
 	                             "Краснодар" to "krd",
@@ -62,6 +64,10 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
 	private var pressedTintColor: ColorStateList? = null
 	private var unpressedTintColor: ColorStateList? = null
+
+	companion object{
+		private const val TAG_LOG = "mylogs"
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -149,11 +155,9 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		//step 3
 		sliderAge.setLabelFormatter(Slider.BasicLabelFormatter())
 
-		sliderAge.setOnChangeListener{ slider, value ->
-
+		sliderAge.setOnChangeListener{ _, value ->
 			age = value.toInt()
 			enableFab()
-
 		}
 
 
@@ -199,13 +203,19 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		                                       cityList.map { it.key })
 		dropdownCityChooser.setAdapter(cityAdapter)
 
-		dropdownCityChooser.setOnItemClickListener { _, v, position, _ ->
+		dropdownCityChooser.setOnItemClickListener { _, _, position, _ ->
 			city = cityList.map { it.value }[position]
+			cityToDisplay = cityList.map { it.key }[position]
 			enableFab()
 		}
 
 
 
+		btnFinalBack.setOnClickListener {
+			containerRegistration.transitionToState(R.id.step_5)
+			restoreStep5State()
+			registrationStep -= 1
+		}
 
 
 
@@ -232,6 +242,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 					containerRegistration.transitionToState(R.id.step_4)
 					restoreStep4State()
 				}
+
 			}
 			registrationStep -= 1
 
@@ -258,6 +269,11 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 				4 -> {
 					containerRegistration.transitionToState(R.id.step_5)
 					restoreStep5State()
+				}
+
+				5 -> {
+					containerRegistration.transitionToState(R.id.step_final)
+					setupFinalForm()
 				}
 			}
 			registrationStep += 1
@@ -332,6 +348,14 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 			enableFab()
 		}
 		else disableFab()
+	}
+
+	private fun setupFinalForm(){
+		edFinalName.setText(name)
+		edFinalGender.setText(gender)
+		edFinalPreferredGender.setText(preferredGender)
+		edFinalAge.setText(age.toString())
+		edFinalCity.setText(cityToDisplay)
 	}
 
 
