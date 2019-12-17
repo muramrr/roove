@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 17.12.19 18:40
+ * Last modified 17.12.19 20:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,9 +50,15 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 	private var gender = ""
 	private var preferredGender = ""
 
-	private val cityList = arrayOf("Екатеринбург", "Красноярск", "Краснодар",
-	                               "Казань", "Москва", "Нижний Новгород",
-	                               "Новосибирск", "Сочи", "Санкт-Петербург")
+	private val cityList = mapOf("Екатеринбург" to "ekb",
+	                             "Красноярск" to "krasnoyarsk",
+	                             "Краснодар" to "krd",
+	                             "Казань" to "kzn",
+	                             "Москва" to "msk",
+	                             "Нижний Новгород" to "nnv",
+	                             "Новосибирск" to "nsk",
+	                             "Сочи" to "sochi",
+	                             "Санкт-Петербург" to "spb")
 
 	private var pressedTintColor: ColorStateList? = null
 	private var unpressedTintColor: ColorStateList? = null
@@ -178,7 +184,6 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 			}
 		})
 
-
 		edInputChangeName.setOnEditorActionListener { v, actionId, _ ->
 			if (actionId == IME_ACTION_DONE) {
 				v.text = v.text.toString().trim()
@@ -191,8 +196,18 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		//step 5
 		val cityAdapter = ArrayAdapter<String>(context!!,
 		                                       R.layout.fragment_auth_drop_item,
-		                                       cityList)
+		                                       cityList.map { it.key })
 		dropdownCityChooser.setAdapter(cityAdapter)
+
+		dropdownCityChooser.setOnItemClickListener { _, v, position, _ ->
+			city = cityList.map { it.value }[position]
+			enableFab()
+		}
+
+
+
+
+
 
 		btnRegistrationBack.setOnClickListener {
 			when (registrationStep) {
@@ -313,7 +328,10 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 	}
 
 	private fun restoreStep5State(){
-		if (city.isNotEmpty()) dropdownCityChooser.setText(city)
+		if (city.isNotEmpty()) {
+			enableFab()
+		}
+		else disableFab()
 	}
 
 
@@ -366,7 +384,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		btnGenderMale.backgroundTintList = unpressedTintColor
 	}
 
-	override fun onStop() {
+	override fun onStop(){
 		if (!isRegistrationCompleted) {
 			authViewModel.logOut()
 		}
