@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 17.12.19 18:00
+  ~ Last modified 17.12.19 19:43
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -302,8 +302,12 @@
 			android:id="@+id/dropdownCityChooser"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:background="@null"
 
+			android:background="@null"
+			android:cursorVisible="false"
+			android:drawablePadding="-24dp"
+			android:focusable="false"
+			android:gravity="center"
 			android:imeOptions="actionDone"
 			android:inputType="text"
 			android:maxLines="1"
