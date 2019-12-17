@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 16.12.19 20:26
+ * Last modified 17.12.19 18:40
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,7 +42,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 	private var registrationStep = 1
 	private var isRegistrationCompleted = false
 
-	private var userItem: UserItem? = UserItem()
+	private var userItem: UserItem? = UserItem(name = "Andrii")
 
 	private var name = "no name"
 	private var age = 0
@@ -155,22 +155,35 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		edInputChangeName.addTextChangedListener(object: TextWatcher {
 			override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
-			override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+			override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+				layoutInputChangeName.isCounterEnabled = true
+			}
 
 			override fun afterTextChanged(s: Editable) {
-				if (s.length > layoutInputChangeName.counterMaxLength)
-					layoutInputChangeName.error =
-						"Max character length is " + layoutInputChangeName.counterMaxLength
-				else {
-					layoutInputChangeName.error = null
-					name = s.toString()
+				when {
+					s.length > layoutInputChangeName.counterMaxLength -> {
+						layoutInputChangeName.error = "Max length reached"
+						disableFab()
+					}
+					s.isEmpty() -> {
+						layoutInputChangeName.error = "Name must not be empty"
+						disableFab()
+					}
+					else -> {
+						enableFab()
+						layoutInputChangeName.error = ""
+						name = s.toString().trim()
+					}
 				}
 			}
 		})
 
-		edInputChangeName.setOnEditorActionListener { _, actionId, _ ->
-			if (actionId == IME_ACTION_DONE)
-				edInputChangeName.clearFocus()
+
+		edInputChangeName.setOnEditorActionListener { v, actionId, _ ->
+			if (actionId == IME_ACTION_DONE) {
+				v.text = v.text.toString().trim()
+				v.clearFocus()
+			}
 			return@setOnEditorActionListener false
 		}
 
@@ -189,16 +202,17 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 					containerRegistration.transitionToState(R.id.step_1)
 					restoreStep1State()
 				}
+
 				3 -> {
 					containerRegistration.transitionToState(R.id.step_2)
 					restoreStep2State()
-
 				}
+
 				4 -> {
 					containerRegistration.transitionToState(R.id.step_3)
 					restoreStep3State()
-
 				}
+
 				5 -> {
 					containerRegistration.transitionToState(R.id.step_4)
 					restoreStep4State()
@@ -225,6 +239,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 					containerRegistration.transitionToState(R.id.step_4)
 					restoreStep4State()
 				}
+
 				4 -> {
 					containerRegistration.transitionToState(R.id.step_5)
 					restoreStep5State()
@@ -256,7 +271,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		else disableFab()
 	}
 
-	private fun restoreStep2State() {
+	private fun restoreStep2State(){
 		clearAllButtonsState()
 		if (preferredGender.isNotEmpty()){
 			enableFab()
@@ -287,8 +302,14 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		if (name.isNotEmpty() && name != "no name") {
 			edInputChangeName.setText(name)
 		}
-		else edInputChangeName.setText(userItem?.name)
-
+		else if (!userItem?.name.isNullOrEmpty()) {
+			edInputChangeName.setText(userItem?.name)
+		}
+		else if (edInputChangeName.text.isNullOrEmpty()) {
+			layoutInputChangeName.error = "Name must not be empty"
+			disableFab()
+		}
+		layoutInputChangeName.isCounterEnabled = false
 	}
 
 	private fun restoreStep5State(){
