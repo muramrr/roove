@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:13
+  ~ Last modified 18.12.19 19:25
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,8 +39,17 @@
 	<string name="chat_message_my_attach_img_description">my image</string>
 	<string name="description_user_photo">user photo</string>
 	<string name="dialog_match_ed_hint">Write first message…</string>
+
+
+
 	<string name="auth_slogan1">Find new\nfriends nearby</string>
 	<string name="auth_slogan2">With milions of users\nall around the world</string>
+	<string name="reg_step_1_tv_select_your_gender">Select your gender</string>
+	<string name="reg_step_2_tv_interested_in">Interested in</string>
+	<string name="reg_step_3_tv_specify_your_age">Specify your age</string>
+	<string name="reg_step_4_tv_change_name">Do you want to change your name?</string>
+	<string name="reg_step_5_tv_choose_city">Choose your city</string>
+	<string name="reg_step_final_tv_check_is_correct">Check if everything is correct</string>
 
 
 </resources>

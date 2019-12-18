@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 18.12.19 18:21
+  ~ Last modified 18.12.19 19:48
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -75,7 +75,6 @@
 		app:constraintSetEnd="@id/step_4"
 		app:duration="500"
 		app:motionInterpolator="easeOut"/>
-
 
 
 
@@ -279,13 +278,22 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="24dp"
-			android:layout_marginStart="@dimen/general_margin_8"
-			android:layout_marginEnd="@dimen/general_margin_8"
 			android:padding="@dimen/general_margin_16"
 
 			app:layout_constraintTop_toBottomOf="@id/tvSpecifyAge"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
+			/>
+
+		<Constraint
+			android:id="@+id/tvAgeDisplay"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/general_margin_16"
+
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/sliderAge"
 			/>
 
 	</ConstraintSet>
