@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.12.19 18:08
+ * Last modified 18.12.19 19:48
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,6 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.slider.Slider
 import com.mmdev.business.user.entity.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
@@ -116,9 +115,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
 
 
-
 		//step 1
-
 		btnGenderMale.setOnClickListener {
 			setPressedMale()
 
@@ -153,10 +150,9 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
 
 		//step 3
-		sliderAge.setLabelFormatter(Slider.BasicLabelFormatter())
-
 		sliderAge.setOnChangeListener{ _, value ->
 			age = value.toInt()
+			tvAgeDisplay.text = age.toString()
 			enableFab()
 		}
 
@@ -328,6 +324,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		if (age != 0) {
 			enableFab()
 			sliderAge.value = age.toFloat()
+			tvAgeDisplay.text = age.toString()
 		}
 		else disableFab()
 	}

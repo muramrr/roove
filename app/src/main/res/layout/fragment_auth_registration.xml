@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 18.12.19 18:21
+  ~ Last modified 18.12.19 19:51
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,7 +28,7 @@
 		android:layout_height="wrap_content"
 
 		android:lines="2"
-		android:text="Select your gender"
+		android:text="@string/reg_step_1_tv_select_your_gender"
 		android:textSize="40sp"
 		style="@style/medium_text_white85op"
 
@@ -100,7 +100,7 @@
 		android:alpha="0"
 		android:rotationX="-90"
 
-		android:text="Interested in"
+		android:text="@string/reg_step_2_tv_interested_in"
 		android:textSize="40sp"
 		style="@style/medium_text_white85op"
 
@@ -142,7 +142,7 @@
 		android:alpha="0"
 		android:rotationX="90"
 
-		android:text="Specify your age"
+		android:text="@string/reg_step_3_tv_specify_your_age"
 		android:textSize="36sp"
 		style="@style/medium_text_white85op"
 
@@ -158,8 +158,6 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="24dp"
-		android:layout_marginStart="@dimen/general_margin_8"
-		android:layout_marginEnd="@dimen/general_margin_8"
 		android:padding="@dimen/general_margin_16"
 
 		android:hapticFeedbackEnabled="true"
@@ -171,8 +169,7 @@
 		app:activeTrackColor="?colorSecondary"
 		app:haloColor="?colorSecondary"
 		app:inactiveTrackColor="@color/lolite_25"
-		app:floatingLabel="false"
-		app:labelColor="?colorSecondary"
+
 		app:thumbColor="@color/white_85"
 		app:thumbRadius="14dp"
 
@@ -184,6 +181,26 @@
 		app:layout_constraintStart_toStartOf="parent"
 		/>
 
+	<TextView
+		android:id="@+id/tvAgeDisplay"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/general_margin_16"
+
+		android:gravity="center"
+
+		android:textSize="30sp"
+		style="@style/light_text_white85op"
+
+		android:alpha="0"
+		android:rotationX="90"
+
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/sliderAge"
+		/>
+
+
 
 	<!-- step 4 -->
 	<TextView
@@ -191,7 +208,7 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 
-		android:text="Do you want to change your name?"
+		android:text="@string/reg_step_4_tv_change_name"
 		android:maxLines="2"
 		android:textSize="32sp"
 		style="@style/medium_text_white85op"
@@ -256,7 +273,7 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 
-		android:text="Choose your city"
+		android:text="@string/reg_step_5_tv_choose_city"
 		android:maxLines="2"
 		android:textSize="32sp"
 		style="@style/medium_text_white85op"
@@ -320,7 +337,7 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 
-		android:text="Check if everything is correct"
+		android:text="@string/reg_step_final_tv_check_is_correct"
 		android:textAlignment="center"
 		android:maxLines="2"
 		android:textSize="32sp"
