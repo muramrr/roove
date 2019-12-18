@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 17.12.19 22:01
+  ~ Last modified 18.12.19 18:21
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@color/colorPrimaryDark"
-	android:padding="@dimen/general_margin_16"
+	android:padding="@dimen/general_margin_8"
 	app:layoutDescription="@xml/motion_registration"
 
 	xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,11 +24,11 @@
 	<!-- step 1 -->
 	<TextView
 		android:id="@+id/tvSelectGender"
-		android:layout_width="wrap_content"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 
 		android:lines="2"
-		android:text="Select your\ngender"
+		android:text="Select your gender"
 		android:textSize="40sp"
 		style="@style/medium_text_white85op"
 
@@ -106,7 +106,6 @@
 
 		app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintHorizontal_bias="0.1"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
 
@@ -139,34 +138,35 @@
 		android:id="@+id/tvSpecifyAge"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="24dp"
 
 		android:alpha="0"
 		android:rotationX="90"
 
 		android:text="Specify your age"
-		android:textSize="40sp"
+		android:textSize="36sp"
 		style="@style/medium_text_white85op"
 
-		app:layout_constraintBottom_toTopOf="@id/sliderAge"
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintVertical_bias="0.7"
+		app:layout_constraintVertical_bias="0.3"
 		/>
 
 	<com.google.android.material.slider.Slider
 		android:id="@+id/sliderAge"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
+		android:layout_marginTop="24dp"
 		android:layout_marginStart="@dimen/general_margin_8"
 		android:layout_marginEnd="@dimen/general_margin_8"
+		android:padding="@dimen/general_margin_16"
 
 		android:hapticFeedbackEnabled="true"
 
 		android:value="18"
 		android:valueFrom="18"
-		android:valueTo="70"
+		android:valueTo="50"
 
 		app:activeTrackColor="?colorSecondary"
 		app:haloColor="?colorSecondary"
@@ -179,11 +179,9 @@
 		android:alpha="0"
 		android:rotationX="-90"
 
-		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/tvSpecifyAge"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintVertical_bias="0.6"
 		/>
 
 
@@ -195,7 +193,7 @@
 
 		android:text="Do you want to change your name?"
 		android:maxLines="2"
-		android:textSize="36sp"
+		android:textSize="32sp"
 		style="@style/medium_text_white85op"
 
 		android:alpha="0"
@@ -205,19 +203,19 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintVertical_bias="0.4" />
+		app:layout_constraintVertical_bias="0.3" />
 
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/layoutInputChangeName"
-		android:layout_width="match_parent"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
+		android:layout_marginTop="24dp"
 
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
 		app:boxStrokeErrorColor="@color/colorError"
 
 		app:counterMaxLength="20"
-
 
 		app:errorEnabled="true"
 		app:errorTextColor="@color/colorError"
@@ -226,11 +224,10 @@
 		android:alpha="0"
 		android:rotationX="90"
 
-		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/tvChangeName"
-		app:layout_constraintVertical_bias="0.3" >
+		>
 
 
 		<com.google.android.material.textfield.TextInputEditText
@@ -253,7 +250,6 @@
 	</com.google.android.material.textfield.TextInputLayout>
 
 
-
 	<!-- step 5-->
 	<TextView
 		android:id="@+id/tvChooseYourCity"
@@ -262,7 +258,7 @@
 
 		android:text="Choose your city"
 		android:maxLines="2"
-		android:textSize="36sp"
+		android:textSize="32sp"
 		style="@style/medium_text_white85op"
 
 		android:alpha="0"
@@ -272,12 +268,13 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintVertical_bias="0.4" />
+		app:layout_constraintVertical_bias="0.3" />
 
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/dropdownCityChooserContainer"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
+		android:layout_marginTop="24dp"
 
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
@@ -291,11 +288,9 @@
 		android:alpha="0"
 		android:rotationX="-90"
 
-		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/tvChooseYourCity"
-		app:layout_constraintVertical_bias="0.3" >
+		app:layout_constraintTop_toBottomOf="@id/tvChooseYourCity">
 
 
 		<com.google.android.material.textview.MaterialAutoCompleteTextView
@@ -328,21 +323,21 @@
 		android:text="Check if everything is correct"
 		android:textAlignment="center"
 		android:maxLines="2"
-		android:textSize="36sp"
+		android:textSize="32sp"
 		style="@style/medium_text_white85op"
 
 		android:rotationX="90"
 		android:alpha="0"
 
-		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintVertical_bias="0.15" />
+		app:layout_constraintBottom_toTopOf="@id/layoutFinalChangeName"
+		/>
 
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/layoutFinalChangeName"
-		android:layout_width="match_parent"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/general_margin_16"
 
@@ -357,13 +352,13 @@
 		app:errorTextColor="@color/colorError"
 		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
-		android:rotationX="90"
+		android:rotationX="-90"
 		android:alpha="0"
 
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/tvAllCorrect"
-		app:layout_constraintVertical_bias="0.3" >
+		>
 
 		<com.google.android.material.textfield.TextInputEditText
 			android:id="@+id/edFinalName"
@@ -384,8 +379,9 @@
 
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/layoutFinalGender"
-		android:layout_width="match_parent"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/general_margin_16"
 
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
@@ -398,12 +394,13 @@
 		app:errorTextColor="@color/colorError"
 		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
-		android:rotationX="90"
+		android:rotationY="90"
 		android:alpha="0"
 
-		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintEnd_toStartOf="@id/layoutFinalPreferredGender"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/layoutFinalChangeName"
+		app:layout_constraintBottom_toTopOf="@id/layoutFinalAge"
 		>
 
 		<com.google.android.material.textfield.TextInputEditText
@@ -425,7 +422,7 @@
 
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/layoutFinalPreferredGender"
-		android:layout_width="match_parent"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 
 		app:boxStrokeColor="@color/text_input_layout"
@@ -439,12 +436,13 @@
 		app:errorTextColor="@color/colorError"
 		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
-		android:rotationX="90"
+		android:rotationY="90"
 		android:alpha="0"
 
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/layoutFinalGender"
+		app:layout_constraintStart_toEndOf="@id/layoutFinalGender"
+		app:layout_constraintTop_toBottomOf="@id/layoutFinalChangeName"
+		app:layout_constraintBottom_toTopOf="@id/layoutFinalCity"
 		>
 
 		<com.google.android.material.textfield.TextInputEditText
@@ -469,6 +467,7 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="@dimen/general_margin_16"
+		android:layout_marginBottom="@dimen/general_margin_16"
 
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
@@ -484,7 +483,8 @@
 
 		app:layout_constraintEnd_toStartOf="@id/layoutFinalCity"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/layoutFinalPreferredGender"
+		app:layout_constraintTop_toBottomOf="@id/layoutFinalGender"
+		app:layout_constraintBottom_toTopOf="@id/btnFinalBack"
 		>
 
 		<com.google.android.material.textfield.TextInputEditText
@@ -508,6 +508,7 @@
 		android:id="@+id/layoutFinalCity"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/general_margin_16"
 
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
@@ -524,6 +525,7 @@
 		app:layout_constraintStart_toEndOf="@id/layoutFinalAge"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/layoutFinalPreferredGender"
+		app:layout_constraintBottom_toTopOf="@id/btnFinalBack"
 		>
 
 		<com.google.android.material.textfield.TextInputEditText
@@ -544,9 +546,36 @@
 	</com.google.android.material.textfield.TextInputLayout>
 
 	<com.google.android.material.button.MaterialButton
+		android:id="@+id/btnFinalBack"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/general_margin_16"
+
+		android:fontFamily="@font/rubik_medium"
+		android:text="Back"
+		android:textColor="@color/material_red_a700"
+		android:textSize="20sp"
+		android:textAllCaps="false"
+
+		app:rippleColor="@color/material_red_a700"
+		app:strokeColor="@color/material_red_a700"
+		app:strokeWidth="2dp"
+
+		android:rotationX="90"
+		android:alpha="0"
+
+		style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+
+		app:layout_constraintBottom_toTopOf="@id/btnRegistrationDone"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		/>
+
+	<com.google.android.material.button.MaterialButton
 		android:id="@+id/btnRegistrationDone"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/general_margin_16"
 		android:padding="@dimen/general_margin_16"
 
 		android:fontFamily="@font/rubik_medium"
@@ -555,50 +584,21 @@
 		android:textSize="26sp"
 		android:textAllCaps="false"
 
+		app:rippleColor="@color/lolite"
 		app:strokeColor="@color/lolite"
 		app:strokeWidth="2dp"
 
-		android:scaleX="0"
-		android:scaleY="0"
 		android:rotationX="90"
 		android:alpha="0"
 
 		style="@style/Widget.MaterialComponents.Button.OutlinedButton"
 
-		app:layout_constraintTop_toBottomOf="@id/layoutFinalAge"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/btnFinalBack"
 		/>
 
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/btnFinalBack"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:padding="@dimen/general_margin_16"
-		android:layout_marginTop="@dimen/general_margin_16"
 
-		android:fontFamily="@font/rubik_medium"
-		android:text="Back"
-		android:textColor="@color/gradient1"
-		android:textSize="20sp"
-		android:textAllCaps="false"
-
-		app:strokeColor="@color/gradient1"
-		app:strokeWidth="2dp"
-
-		android:scaleX="0"
-		android:scaleY="0"
-		android:rotationX="90"
-		android:alpha="0"
-
-		style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-
-		app:layout_constraintTop_toBottomOf="@id/btnRegistrationDone"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintBottom_toBottomOf="parent"
-		/>
 
 
 

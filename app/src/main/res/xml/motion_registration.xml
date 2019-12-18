@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 17.12.19 22:01
+  ~ Last modified 18.12.19 18:21
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -133,14 +133,13 @@
 
 		<Constraint
 			android:id="@+id/tvSelectGender"
-			android:layout_width="wrap_content"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 
 			android:alpha="1"
 
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintHorizontal_bias="0.1"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintVertical_bias="0.2" />
@@ -181,7 +180,6 @@
 
 			app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintHorizontal_bias="0.1"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent" />
 
@@ -268,27 +266,26 @@
 			android:id="@+id/tvSpecifyAge"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="24dp"
 
-			app:layout_constraintBottom_toTopOf="@id/sliderAge"
+			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_bias="0.7"
+			app:layout_constraintVertical_bias="0.3"
 			/>
 
 		<Constraint
 			android:id="@+id/sliderAge"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="24dp"
 			android:layout_marginStart="@dimen/general_margin_8"
 			android:layout_marginEnd="@dimen/general_margin_8"
+			android:padding="@dimen/general_margin_16"
 
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tvSpecifyAge"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintVertical_bias="0.6"
 			/>
 
 	</ConstraintSet>
@@ -305,21 +302,20 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_bias="0.4" />
+			app:layout_constraintVertical_bias="0.3" />
 
 		<Constraint
 			android:id="@+id/layoutInputChangeName"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="24dp"
 			android:padding="8dp"
 
 			android:gravity="center"
 
-			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/tvChangeName"
-			app:layout_constraintVertical_bias="0.3" />
+			app:layout_constraintTop_toBottomOf="@id/tvChangeName"/>
 
 		<!-- fab -->
 		<Constraint
@@ -348,21 +344,17 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_bias="0.4" />
-
+			app:layout_constraintVertical_bias="0.3" />
 
 		<Constraint
 			android:id="@+id/dropdownCityChooserContainer"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="24dp"
 
-			style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/tvChooseYourCity"
-			app:layout_constraintVertical_bias="0.3" />
-
+			app:layout_constraintTop_toBottomOf="@id/tvChooseYourCity" />
 
 	</ConstraintSet>
 
@@ -373,41 +365,44 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 
-			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_bias="0.15" />
+			app:layout_constraintBottom_toTopOf="@id/layoutFinalChangeName"
+			/>
 
 		<Constraint
 			android:id="@+id/layoutFinalChangeName"
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/general_margin_16"
 
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/tvAllCorrect"
-			app:layout_constraintVertical_bias="0.3" />
+			 />
 
 		<Constraint
 			android:id="@+id/layoutFinalGender"
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/general_margin_16"
 
-			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintEnd_toStartOf="@id/layoutFinalPreferredGender"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/layoutFinalChangeName"
+			app:layout_constraintBottom_toTopOf="@id/layoutFinalAge"
 			/>
 
 		<Constraint
 			android:id="@+id/layoutFinalPreferredGender"
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/layoutFinalGender"
+			app:layout_constraintStart_toEndOf="@id/layoutFinalGender"
+			app:layout_constraintTop_toBottomOf="@id/layoutFinalChangeName"
+			app:layout_constraintBottom_toTopOf="@id/layoutFinalCity"
 			/>
 
 		<Constraint
@@ -415,32 +410,24 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="@dimen/general_margin_16"
+			android:layout_marginBottom="@dimen/general_margin_16"
 
 			app:layout_constraintEnd_toStartOf="@id/layoutFinalCity"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/layoutFinalPreferredGender"
+			app:layout_constraintTop_toBottomOf="@id/layoutFinalGender"
+			app:layout_constraintBottom_toTopOf="@id/btnFinalBack"
 			/>
 
 		<Constraint
 			android:id="@+id/layoutFinalCity"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/general_margin_16"
 
 			app:layout_constraintStart_toEndOf="@id/layoutFinalAge"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/layoutFinalPreferredGender"
-			/>
-
-		<Constraint
-			android:id="@+id/btnRegistrationDone"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/general_margin_16"
-
-			app:layout_constraintTop_toBottomOf="@id/layoutFinalAge"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/btnFinalBack"
 			/>
 
 		<Constraint
@@ -448,13 +435,27 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:padding="@dimen/general_margin_16"
-			android:layout_marginTop="@dimen/general_margin_16"
 
-			app:layout_constraintTop_toBottomOf="@id/btnRegistrationDone"
+			app:layout_constraintBottom_toTopOf="@id/btnRegistrationDone"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
 			/>
+
+		<Constraint
+			android:id="@+id/btnRegistrationDone"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/general_margin_16"
+			android:padding="@dimen/general_margin_16"
+
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/btnFinalBack"
+			/>
+
+
+
+
 
 		<Constraint
 			android:id="@+id/btnRegistrationBack"
@@ -475,6 +476,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="@dimen/general_margin_16"
 
+			android:rotationY="360"
 			android:translationY="100dp"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 17.12.19 22:01
+ * Last modified 18.12.19 18:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
 import android.widget.ArrayAdapter
@@ -81,10 +82,9 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-		tvSelectGender.addSystemTopPadding()
-		tvInterested.addSystemTopPadding()
 		containerRegistration.addSystemBottomPadding()
+		tvAllCorrect.addSystemTopPadding()
+		tvInterested.addSystemTopPadding()
 
 		containerRegistration.transitionToState(R.id.step_1)
 
@@ -210,13 +210,16 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 		}
 
 
-
+		//final step
 		btnFinalBack.setOnClickListener {
 			containerRegistration.transitionToState(R.id.step_5)
 			restoreStep5State()
 			registrationStep -= 1
+			Log.wtf(TAG_LOG, "btn reg back clicked")
 		}
-
+		btnRegistrationDone.setOnClickListener {
+			Log.wtf(TAG_LOG, "btn reg done clicked")
+		}
 
 
 		btnRegistrationBack.setOnClickListener {
