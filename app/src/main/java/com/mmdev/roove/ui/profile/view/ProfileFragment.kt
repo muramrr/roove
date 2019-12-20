@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 20:46
+ * Last modified 19.12.19 21:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,8 +19,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mmdev.business.conversations.entity.ConversationItem
-import com.mmdev.business.user.entity.UserItem
+import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.ImagePagerAdapter
@@ -116,10 +116,10 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 				findNavController().navigate(R.id.action_profileFragment_to_chatFragment)
 
-				sharedViewModel.setConversationSelected(
-						ConversationItem(partnerId = selectedUser.userId,
-						                 partnerName = selectedUser.name,
-						                 partnerPhotoUrl = selectedUser.mainPhotoUrl)
+				sharedViewModel.setConversationSelected(ConversationItem(
+						partnerId = selectedUser.userId,
+						partnerName = selectedUser.name,
+						partnerPhotoUrl = selectedUser.mainPhotoUrl)
 				)
 			}
 

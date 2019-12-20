@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 08.12.19 21:09
+ * Last modified 20.12.19 17:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,10 @@ package com.mmdev.roove.core.di.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mmdev.business.auth.repository.AuthRepository
-import com.mmdev.business.auth.usecase.*
+import com.mmdev.business.auth.usecase.IsAuthenticatedListenerUseCase
+import com.mmdev.business.auth.usecase.LogOutUseCase
+import com.mmdev.business.auth.usecase.SignInWithFacebookUseCase
+import com.mmdev.business.auth.usecase.SignUpUseCase
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.cards.usecase.AddToSkippedUseCase
 import com.mmdev.business.cards.usecase.CheckMatchUseCase
@@ -30,12 +33,12 @@ import com.mmdev.business.events.repository.EventsRepository
 import com.mmdev.business.events.usecase.GetEventsUseCase
 import com.mmdev.business.pairs.GetMatchedUsersUseCase
 import com.mmdev.business.pairs.PairsRepository
-import com.mmdev.business.user.repository.UserRepository
+import com.mmdev.business.user.repository.LocalUserRepository
+import com.mmdev.business.user.repository.RemoteUserRepository
 import com.mmdev.business.user.usecase.local.GetSavedUserUseCase
 import com.mmdev.business.user.usecase.local.SaveUserInfoUseCase
-import com.mmdev.business.user.usecase.remote.CreateUserUseCase
 import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
-import com.mmdev.business.user.usecase.remote.GetUserByIdUseCase
+import com.mmdev.business.user.usecase.remote.FetchUserInfoUseCase
 import com.mmdev.roove.ui.actions.conversations.ConversationsViewModel
 import com.mmdev.roove.ui.actions.pairs.PairsViewModel
 import com.mmdev.roove.ui.auth.AuthViewModel
@@ -67,8 +70,7 @@ class ViewModelModule {
 	@Provides
 	@ViewModelKey(AuthViewModel::class)
 	fun authViewModel(repository: AuthRepository): ViewModel =
-		AuthViewModel(HandleUserExistenceUseCase(repository),
-		              IsAuthenticatedUseCase(repository),
+		AuthViewModel(IsAuthenticatedListenerUseCase(repository),
 		              LogOutUseCase(repository),
 		              SignInWithFacebookUseCase(repository),
 		              SignUpUseCase(repository))
@@ -117,7 +119,7 @@ class ViewModelModule {
 	@IntoMap
 	@Provides
 	@ViewModelKey(LocalUserRepoViewModel::class)
-	fun localUserRepoViewModel(repository: UserRepository.LocalUserRepository): ViewModel =
+	fun localUserRepoViewModel(repository: LocalUserRepository): ViewModel =
 		LocalUserRepoViewModel(GetSavedUserUseCase(repository),
 		                       SaveUserInfoUseCase(repository))
 
@@ -125,10 +127,9 @@ class ViewModelModule {
 	@IntoMap
 	@Provides
 	@ViewModelKey(RemoteUserRepoViewModel::class)
-	fun remoteUserRepoViewModel(repository: UserRepository.RemoteUserRepository): ViewModel =
-		RemoteUserRepoViewModel(CreateUserUseCase(repository),
-		                        DeleteUserUseCase(repository),
-		                        GetUserByIdUseCase(repository))
+	fun remoteUserRepoViewModel(repository: RemoteUserRepository): ViewModel =
+		RemoteUserRepoViewModel(DeleteUserUseCase(repository),
+		                        FetchUserInfoUseCase(repository))
 
 	@IntoMap
 	@Provides

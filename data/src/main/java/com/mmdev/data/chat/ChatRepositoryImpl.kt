@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 20:46
+ * Last modified 19.12.19 21:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,8 +18,8 @@ import com.google.firebase.storage.StorageReference
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.chat.entity.PhotoAttachementItem
 import com.mmdev.business.chat.repository.ChatRepository
-import com.mmdev.business.conversations.entity.ConversationItem
-import com.mmdev.business.user.entity.UserItem
+import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.user.UserItem
 import io.reactivex.*
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers

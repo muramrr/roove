@@ -1,20 +1,21 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:21
+ * Last modified 20.12.19 18:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.business.auth.usecase
+package com.mmdev.business.user
 
-import com.mmdev.business.auth.repository.AuthRepository
-import com.mmdev.business.user.UserItem
+import com.mmdev.business.base.BaseUserInfo
 
-class SignUpUseCase(private val repository: AuthRepository) {
+data class UserItem(val baseUserInfo: BaseUserInfo = BaseUserInfo(),
+                    var preferredGender: String = "",
+                    val photoURLs: List<String> = listOf())
 
-    fun execute(t: UserItem) = repository.registerUser(t)
 
-}
+
+

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 20:46
+ * Last modified 19.12.19 21:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mmdev.business.user.entity.UserItem
+import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.ui.auth.AuthViewModel
@@ -30,7 +30,7 @@ import com.mmdev.roove.ui.core.FlowFragment
 import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.drawerflow.viewmodel.local.LocalUserRepoViewModel
 import com.mmdev.roove.utils.addSystemTopPadding
-import kotlinx.android.synthetic.main.fragment_flow_drawer.*
+import kotlinx.android.synthetic.main.fragment_drawer_flow.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 
 
@@ -38,7 +38,7 @@ import kotlinx.android.synthetic.main.nav_header.view.*
  * This is the documentation block about the class
  */
 
-class DrawerFlowFragment: FlowFragment(R.layout.fragment_flow_drawer) {
+class DrawerFlowFragment: FlowFragment(R.layout.fragment_drawer_flow) {
 
 	private lateinit var userItemModel: UserItem
 

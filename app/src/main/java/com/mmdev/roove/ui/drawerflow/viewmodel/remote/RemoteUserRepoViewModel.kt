@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 20:46
+ * Last modified 19.12.19 21:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,10 +13,9 @@ package com.mmdev.roove.ui.drawerflow.viewmodel.remote
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mmdev.business.user.entity.UserItem
-import com.mmdev.business.user.usecase.remote.CreateUserUseCase
+import com.mmdev.business.user.UserItem
 import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
-import com.mmdev.business.user.usecase.remote.GetUserByIdUseCase
+import com.mmdev.business.user.usecase.remote.FetchUserInfoUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -25,9 +24,8 @@ import javax.inject.Inject
  * This is the documentation block about the class
  */
 
-class RemoteUserRepoViewModel @Inject constructor(private val createUserUC: CreateUserUseCase,
-                                                  private val deleteUserUC: DeleteUserUseCase,
-                                                  private val getUserUC: GetUserByIdUseCase) :
+class RemoteUserRepoViewModel @Inject constructor(private val deleteUserUC: DeleteUserUseCase,
+                                                  private val fetchUserUC: FetchUserInfoUseCase) :
 		ViewModel() {
 
 
@@ -37,7 +35,7 @@ class RemoteUserRepoViewModel @Inject constructor(private val createUserUC: Crea
 
 
 	fun getUserById(userId: String){
-		disposables.add(getUserByIdExecution(userId)
+		disposables.add(fetchUserInfoExecution(userId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       receivedUserItem.value = it
@@ -49,11 +47,9 @@ class RemoteUserRepoViewModel @Inject constructor(private val createUserUC: Crea
 
 	fun getUser() = receivedUserItem
 
-	fun createUser() = createUserUC.execute()
+	fun deleteUser(userItem: UserItem) = deleteUserUC.execute(userItem)
 
-	fun deleteUser(userId: String) = deleteUserUC.execute(userId)
-
-	private fun getUserByIdExecution(userId: String) = getUserUC.execute(userId)
+	private fun fetchUserInfoExecution(userItem: UserItem) = fetchUserUC.execute(userItem)
 
 
 	override fun onCleared() {
