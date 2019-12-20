@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 18.12.19 19:48
+ * Last modified 19.12.19 21:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,27 +22,28 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.mmdev.business.user.entity.UserItem
+import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.utils.addSystemBottomPadding
 import com.mmdev.roove.utils.addSystemTopPadding
-import kotlinx.android.synthetic.main.fragment_auth_registration.*
+import kotlinx.android.synthetic.main.fragment_registration.*
 
 
 /**
  * This is the documentation block about the class
  */
 
-class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
+class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 	private lateinit var authViewModel: AuthViewModel
 
 	private var registrationStep = 1
 	private var isRegistrationCompleted = false
 
-	private var userItem: UserItem? = UserItem(name = "Andrii")
+	private var userItem: UserItem? =
+		UserItem(name = "Andrii")
 
 	private var name = "no name"
 	private var age = 0
@@ -52,15 +53,15 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
 	private var cityToDisplay = ""
 
-	private val cityList = mapOf("Екатеринбург" to "ekb",
-	                             "Красноярск" to "krasnoyarsk",
-	                             "Краснодар" to "krd",
-	                             "Казань" to "kzn",
-	                             "Москва" to "msk",
-	                             "Нижний Новгород" to "nnv",
-	                             "Новосибирск" to "nsk",
-	                             "Сочи" to "sochi",
-	                             "Санкт-Петербург" to "spb")
+	private val cityList = mapOf(getString(R.string.russia_ekb) to "ekb",
+	                             getString(R.string.russia_krasnoyarsk) to "krasnoyarsk",
+	                             getString(R.string.russia_krd) to "krd",
+	                             getString(R.string.russia_kzn) to "kzn",
+	                             getString(R.string.russia_msk) to "msk",
+	                             getString(R.string.russia_nnv) to "nnv",
+	                             getString(R.string.russia_nsk) to "nsk",
+	                             getString(R.string.russia_sochi) to "sochi",
+	                             getString(R.string.russia_spb) to "spb")
 
 	private var pressedTintColor: ColorStateList? = null
 	private var unpressedTintColor: ColorStateList? = null
@@ -195,7 +196,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_auth_registration){
 
 		//step 5
 		val cityAdapter = ArrayAdapter<String>(context!!,
-		                                       R.layout.fragment_auth_drop_item,
+		                                       R.layout.fragment_reg_drop_item,
 		                                       cityList.map { it.key })
 		dropdownCityChooser.setAdapter(cityAdapter)
 

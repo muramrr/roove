@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 20:46
+ * Last modified 20.12.19 18:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,10 +12,12 @@ package com.mmdev.data.cards
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mmdev.business.cards.entity.CardItem
+import com.mmdev.business.base.BaseUserInfo
+import com.mmdev.business.cards.CardItem
 import com.mmdev.business.cards.repository.CardsRepository
-import com.mmdev.business.conversations.entity.ConversationItem
-import com.mmdev.business.user.entity.UserItem
+import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.user.UserItem
+import com.mmdev.business.user.repository.RemoteUserRepository
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.functions.BiFunction
@@ -29,7 +31,9 @@ import javax.inject.Singleton
 
 @Singleton
 class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
-                                              private val currentUserItem: UserItem): CardsRepository {
+                                              private val currentUserItem: UserItem,
+                                              private val remoteRepo: RemoteUserRepository):
+		CardsRepository {
 
 	companion object {
 		private const val USERS_COLLECTION_REFERENCE = "users"
@@ -40,16 +44,18 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		private const val TAG = "mylogs"
 	}
 
-	private val currentUserId = currentUserItem.userId
+	private val currentUserInfo = currentUserItem.baseUserInfo
 
 	/*
 	* note: swiped left
 	*/
 	override fun addToSkipped(skippedCardItem: CardItem) {
 		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUserId)
+			.document(currentUserInfo.city)
+			.collection(currentUserInfo.gender)
+			.document(currentUserInfo.userId)
 			.collection(USER_SKIPPED_COLLECTION_REFERENCE)
-			.document(skippedCardItem.userId)
+			.document(skippedCardItem.baseUserInfo.userId)
 			.set(skippedCardItem)
 		Log.wtf(TAG, "skipped executed")
 	}
@@ -59,22 +65,20 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
  	* check if users liked each other
 	*/
 	override fun checkMatch(likedCardItem: CardItem): Single<Boolean> {
-
-		val currentCardItem = convertUserItemToCardItem(currentUserItem)
-
 		return Single.create(SingleOnSubscribe<Boolean> { emitter ->
-
 			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(likedCardItem.userId)
+				.document(likedCardItem.baseUserInfo.city)
+				.collection(likedCardItem.baseUserInfo.gender)
+				.document(likedCardItem.baseUserInfo.userId)
 				.collection(USER_LIKED_COLLECTION_REFERENCE)
-				.document(currentUserId)
+				.document(currentUserInfo.userId)
 				.get()
-				.addOnSuccessListener { documentSnapshot ->
-					if (documentSnapshot.exists()) {
+				.addOnSuccessListener { userDoc ->
+					if (userDoc.exists()) {
 
 						emitter.onSuccess(true)
 
-						handleMatch(likedCardItem, currentCardItem)
+						handleMatch(likedCardItem, CardItem(currentUserInfo))
 
 						val conversationId = firestore
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -82,17 +86,18 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 							.id
 
 						//set conversation for another user
-						setupConversationForUser(conversationId, likedCardItem.userId)
+						setupConversationForLikedUser(conversationId,
+						                              likedCardItem.baseUserInfo)
 
 						//set conversation for current user
 						firestore.collection(USERS_COLLECTION_REFERENCE)
-							.document(currentUserId)
+							.document(likedCardItem.baseUserInfo.city)
+							.collection(likedCardItem.baseUserInfo.gender)
+							.document(currentUserInfo.userId)
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 							.document(conversationId)
-							.set(ConversationItem(conversationId,
-							                      partnerId = likedCardItem.userId,
-							                      partnerName = likedCardItem.name,
-							                      partnerPhotoUrl = likedCardItem.mainPhotoUrl,
+							.set(ConversationItem(partner = likedCardItem.baseUserInfo,
+							                      conversationId = conversationId,
 							                      lastMessageTimestamp = null))
 
 							.addOnSuccessListener { emitter.onSuccess(true) }
@@ -102,9 +107,11 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 					else {
 						firestore.collection(USERS_COLLECTION_REFERENCE)
-							.document(currentUserId)
+							.document(currentUserInfo.city)
+							.collection(currentUserInfo.gender)
+							.document(currentUserInfo.userId)
 							.collection(USER_LIKED_COLLECTION_REFERENCE)
-							.document(likedCardItem.userId)
+							.document(likedCardItem.baseUserInfo.userId)
 							.set(likedCardItem)
 						emitter.onSuccess(false)
 					}
@@ -117,51 +124,61 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		}).subscribeOn(Schedulers.io())
 	}
 
+	override fun getFullUserInfo(baseUserInfo: BaseUserInfo) =
+		remoteRepo.getFullUserInfo(baseUserInfo)
+
+
+	/**
+	 * 1. add to matches collection for liked user
+	 * 2. add to matches collection for CURRENT user
+	 * 3. remove from likes collection for liked user
+	 * 4. remove from likes collection for CURRENT user
+	 */
 	private fun handleMatch(likedCardItem: CardItem, currentCardItem: CardItem){
-		//add to matches collection for liked user
-		addToMatchCollection(likedCardItem, currentCardItem)
+		addToMatchCollection(likedCardItem.baseUserInfo, currentCardItem)
 
-		//add to matches collection for CURRENT user
-		addToMatchCollection(currentCardItem, likedCardItem)
+		addToMatchCollection(currentCardItem.baseUserInfo, likedCardItem)
 
-		//remove from likes collection for liked user
 		//note:uncomment for release
-		//deleteFromLikesCollection(likedCardItem, currentCardItem)
+		//deleteFromLikesCollection(likedCardItem.baseUserInfo, currentCardItem)
 
-		//remove from likes collection for CURRENT user
-		deleteFromLikesCollection(currentCardItem.userId, likedCardItem.userId)
+		deleteFromLikesCollection(currentCardItem.baseUserInfo,
+		                          likedCardItem.baseUserInfo.userId)
 
 		Log.wtf(TAG, "match handle executed")
 	}
 
-	private fun addToMatchCollection(userForWhichToAdd: CardItem, whomToAdd: CardItem){
+	private fun addToMatchCollection(userForWhichToAdd: BaseUserInfo, whomToAdd: CardItem){
 		firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(userForWhichToAdd.city)
+			.collection(userForWhichToAdd.gender)
 			.document(userForWhichToAdd.userId)
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
-			.document(whomToAdd.userId)
+			.document(whomToAdd.baseUserInfo.userId)
 			.set(whomToAdd)
 	}
 
-	private fun deleteFromLikesCollection(userIdForWhichDelete: String, whomToDeleteId: String){
+	private fun deleteFromLikesCollection(userForWhichDelete: BaseUserInfo, whomToDeleteId: String){
 		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(userIdForWhichDelete)
+			.document(userForWhichDelete.city)
+			.collection(userForWhichDelete.gender)
+			.document(userForWhichDelete.userId)
 			.collection(USER_LIKED_COLLECTION_REFERENCE)
 			.document(whomToDeleteId)
 			.delete()
 	}
 
-	private fun setupConversationForUser(conversationId: String, likedUserId: String){
+	private fun setupConversationForLikedUser(conversationId: String, likedUser: BaseUserInfo){
 		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(likedUserId)
+			.document(likedUser.city)
+			.collection(likedUser.gender)
+			.document(likedUser.userId)
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversationId)
-			.set(ConversationItem(conversationId,
-			                      partnerId = currentUserItem.userId,
-			                      partnerName = currentUserItem.name,
-			                      partnerPhotoUrl = currentUserItem.mainPhotoUrl,
+			.set(ConversationItem(partner = currentUserItem.baseUserInfo,
+			                      conversationId = conversationId,
 			                      lastMessageTimestamp = null))
 	}
-
 
 	/* return filtered users list as Single */
 	override fun getUsersByPreferences(): Single<List<CardItem>> {
@@ -178,25 +195,21 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	private fun filterUsers(cardItemList: List<CardItem>, ids: List<String>): List<CardItem>{
 		val filteredUsersList = ArrayList<CardItem>()
 		for (card in cardItemList)
-			if (!ids.contains(card.userId))
+			if (!ids.contains(card.baseUserInfo.userId))
 				filteredUsersList.add(card)
 		return filteredUsersList
 	}
 
 
-	private fun convertUserItemToCardItem(userItem: UserItem) = CardItem(userItem.name,
-	                                                                     userItem.mainPhotoUrl,
-	                                                                     userItem.userId)
-
 	//note:debug only
 	//
 	private fun setLikedForBots(){
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("apzjzpbvdj").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("avzcixhglp").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("dtrfbjseuq").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("eoswtmcpul").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("ryknjtobrx").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("snykckkosz").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("apzjzpbvdj").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("avzcixhglp").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("dtrfbjseuq").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("eoswtmcpul").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("ryknjtobrx").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
+		firestore.collection(USERS_COLLECTION_REFERENCE).document("snykckkosz").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
 		Log.wtf("mylogs", "liked for bots executed")
 	}
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 20:46
+ * Last modified 19.12.19 21:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,10 +37,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.mmdev.business.cards.entity.CardItem
+import com.mmdev.business.cards.CardItem
 import com.mmdev.business.chat.entity.MessageItem
-import com.mmdev.business.conversations.entity.ConversationItem
-import com.mmdev.business.user.entity.UserItem
+import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.user.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
@@ -194,7 +194,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			when (item.itemId) {
 				R.id.chat_action_user ->{
 					findNavController().navigate(R.id.action_chatFragment_to_profileFragment)
-					sharedViewModel.setCardSelected(CardItem(userId = currentConversation.partnerId))
+					sharedViewModel.setCardSelected(CardItem(
+							userId = currentConversation.partnerId))
 				}
 
 				R.id.chat_action_report -> { Toast.makeText(context,

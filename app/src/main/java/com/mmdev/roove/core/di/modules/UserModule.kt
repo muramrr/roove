@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 15.12.19 16:35
+ * Last modified 19.12.19 21:09
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,7 @@ import javax.inject.Singleton
 @Module
 class UserModule {
 
-	/* get user info from sharedPrefs */
+	/* get user info from Prefs */
 	@Provides
 	@Singleton
 	fun provideSavedUser(repository: UserRepositoryLocal) = repository.getSavedUser()

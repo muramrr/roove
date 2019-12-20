@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 20:46
+ * Last modified 19.12.19 21:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@
 package com.mmdev.business.feed.entity
 
 import com.mmdev.business.chat.entity.PhotoAttachementItem
-import com.mmdev.business.user.entity.UserItem
+import com.mmdev.business.user.UserItem
 import java.util.*
 
 /**

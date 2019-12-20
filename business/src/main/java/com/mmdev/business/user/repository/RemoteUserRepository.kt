@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 20:46
+ * Last modified 20.12.19 18:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,31 +10,23 @@
 
 package com.mmdev.business.user.repository
 
-import com.mmdev.business.user.entity.UserItem
+import com.mmdev.business.base.BaseUserInfo
+import com.mmdev.business.user.UserItem
 import io.reactivex.Completable
 import io.reactivex.Single
 
 /**
  * This is the documentation block about the class
  */
-class UserRepository {
 
-	interface LocalUserRepository {
+interface RemoteUserRepository {
 
-		fun getSavedUser(): UserItem
+	fun createUserOnRemote(userItem: UserItem): Completable
 
-		fun saveUserInfo(currentUserItem: UserItem)
-	}
+	fun deleteUser(userItem: UserItem): Completable
 
-	interface RemoteUserRepository {
+	fun fetchUserInfo(userItem: UserItem): Single<UserItem>
 
-		fun createUserOnRemote(): Completable
-
-		fun deleteUser(userId: String): Completable
-
-		fun getUserById(userId: String): Single<UserItem>
-
-	}
-
+	fun getFullUserInfo(baseUserInfo: BaseUserInfo): Single<UserItem>
 
 }
