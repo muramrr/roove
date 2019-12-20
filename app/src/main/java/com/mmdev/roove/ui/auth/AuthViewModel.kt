@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 15.12.19 19:05
+ * Last modified 20.12.19 18:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,14 +13,16 @@ package com.mmdev.roove.ui.auth
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mmdev.business.auth.usecase.*
-import com.mmdev.business.user.entity.UserItem
+import com.mmdev.business.auth.usecase.IsAuthenticatedListenerUseCase
+import com.mmdev.business.auth.usecase.LogOutUseCase
+import com.mmdev.business.auth.usecase.SignInWithFacebookUseCase
+import com.mmdev.business.auth.usecase.SignUpUseCase
+import com.mmdev.business.user.UserItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class AuthViewModel @Inject constructor(private val handleHandleUserExistence: HandleUserExistenceUseCase,
-                                        private val isAuthenticated: IsAuthenticatedUseCase,
+class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsAuthenticatedListenerUseCase,
                                         private val logOut: LogOutUseCase,
                                         private val signInWithFacebook: SignInWithFacebookUseCase,
                                         private val signUp: SignUpUseCase) :
@@ -52,12 +54,9 @@ class AuthViewModel @Inject constructor(private val handleHandleUserExistence: H
             .subscribe({
                            if (it == false) {
 	                           isAuthenticatedStatus.value = it
-	                           Log.wtf(TAG, "USER IS NOT LOGGED IN")
-
                            }
                            else {
 	                           isAuthenticatedStatus.value = it
-	                           Log.wtf(TAG, "USER IS LOGGED IN")
                            }
                        },
                        {
@@ -68,18 +67,15 @@ class AuthViewModel @Inject constructor(private val handleHandleUserExistence: H
 
 	fun signInWithFacebook(loginToken: String) {
 		disposables.add(signInWithFacebookExecution(loginToken)
-            .flatMap {
-                userItemModel.value = it
-                handleUserExistenceExecution(it.userId)
-            }
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showProgress.value = true}
             .doFinally { showProgress.value = false }
             .subscribe({
-	                       Log.wtf("mylogs", "successfully signed in")
+	                       Log.wtf("mylogs", "successfully retrieved user")
 	                       isAuthenticatedStatus.value = true
 	                       continueRegistration.value = false
-                           userItemModel.value = it
+                           userItemModel.value = UserItem(baseUserInfo = it,
+                                                          photoURLs = listOf(it.mainPhotoUrl))
 	                       Log.wtf("mylogs", "continue registration? -${continueRegistration.value}")
                        },
                        {
@@ -111,8 +107,7 @@ class AuthViewModel @Inject constructor(private val handleHandleUserExistence: H
 
 	fun getUserItem() = userItemModel
 
-	private fun handleUserExistenceExecution(uId: String) = handleHandleUserExistence.execute(uId)
-	private fun isAuthenticatedExecution() = isAuthenticated.execute()
+	private fun isAuthenticatedExecution() = isAuthenticatedListener.execute()
 	private fun logOutExecution() = logOut.execute()
 	private fun signInWithFacebookExecution(token: String) = signInWithFacebook.execute(token)
 	private fun signUpExecution(userItem: UserItem) = signUp.execute(userItem)

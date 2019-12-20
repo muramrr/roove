@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 19.12.19 21:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,8 @@ import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.events.repository.EventsRepository
 import com.mmdev.business.feed.repository.FeedRepository
 import com.mmdev.business.pairs.PairsRepository
-import com.mmdev.business.user.repository.UserRepository
+import com.mmdev.business.user.repository.LocalUserRepository
+import com.mmdev.business.user.repository.RemoteUserRepository
 import com.mmdev.data.auth.AuthRepositoryImpl
 import com.mmdev.data.cards.CardsRepositoryImpl
 import com.mmdev.data.chat.ChatRepositoryImpl
@@ -26,7 +27,7 @@ import com.mmdev.data.events.EventsRepositoryImpl
 import com.mmdev.data.feed.FeedRepositoryImpl
 import com.mmdev.data.pairs.PairsRepositoryImpl
 import com.mmdev.data.user.UserRepositoryLocal
-import com.mmdev.data.user.UserRepositoryRemote
+import com.mmdev.data.user.UserRepositoryRemoteImpl
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -65,12 +66,12 @@ class RepositoryModule {
 
 	@Provides
 	@Singleton
-	fun localUserRepository(repository: UserRepositoryLocal): UserRepository.LocalUserRepository
+	fun localUserRepository(repository: UserRepositoryLocal): LocalUserRepository
 	{ return repository }
 
 	@Provides
 	@Singleton
-	fun remoteUserRepository(repository: UserRepositoryRemote): UserRepository.RemoteUserRepository
+	fun remoteUserRepository(repository: UserRepositoryRemoteImpl): RemoteUserRepository
 	{ return repository }
 
 }

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 20:46
+ * Last modified 20.12.19 18:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,18 +11,19 @@
 package com.mmdev.data.auth
 
 import com.facebook.login.LoginManager
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.auth.repository.AuthRepository
-import com.mmdev.business.user.entity.UserItem
+import com.mmdev.business.base.BaseUserInfo
+import com.mmdev.business.user.UserItem
 import com.mmdev.data.user.UserRepositoryLocal
-import io.reactivex.*
+import com.mmdev.data.user.UserRepositoryRemoteImpl
 import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.Single
+import io.reactivex.SingleOnSubscribe
 import io.reactivex.schedulers.Schedulers
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,7 +31,8 @@ import javax.inject.Singleton
 class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
                                              private val db: FirebaseFirestore,
                                              private val fbLogin: LoginManager,
-                                             private val userRepositoryLocal: UserRepositoryLocal): AuthRepository {
+                                             private val localRepo: UserRepositoryLocal,
+                                             private val remoteRepo: UserRepositoryRemoteImpl): AuthRepository {
 
 	companion object {
 		private const val GENERAL_COLLECTION_REFERENCE = "users"
@@ -41,7 +43,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	 *
 	 * @return an [Observable] which emits every time that the [FirebaseAuth] state change.
 	 */
-	override fun isAuthenticated(): Observable<Boolean> {
+	override fun isAuthenticatedListener(): Observable<Boolean> {
 		return Observable.create(ObservableOnSubscribe<Boolean>{ emitter ->
 			val authStateListener = FirebaseAuth.AuthStateListener {
 				auth -> if (auth.currentUser == null) emitter.onNext(false)
@@ -54,78 +56,53 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 
 
 	/**
-	 * check is user id already stored in db
-	 * @return [UserItem] object which is stored in db and store it locally
-	 */
-	override fun handleUserExistence(userId: String): Single<UserItem> {
-		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
-			val ref = db.collection(GENERAL_COLLECTION_REFERENCE).document(userId)
-			ref.get().addOnCompleteListener { task ->
-				if (task.isSuccessful) {
-					val document = task.result
-					if (document!!.exists()) {
-						val user = document.toObject(UserItem::class.java)
-						userRepositoryLocal.saveUserInfo(user!!)
-						emitter.onSuccess(user)
-					}
-					else emitter.onError(Exception("User do not exist"))
-				}
-				else emitter.onError(Exception("task is not successful"))
-			}
-		}).subscribeOn(Schedulers.io())
-	}
-
-
-	/**
 	 * this fun is called first when user is trying to sign in via facebook
-	 * creates a basic [UserItem] object based on public facebook profile
+	 * checks by UID if [BaseUserInfo] exists in general collection and retrieve it
+	 * elsewhere create a basic [BaseUserInfo] object based on public facebook profile
 	 */
-	override fun signInWithFacebook(token: String): Single<UserItem> {
-		val credential = FacebookAuthProvider.getCredential(token)
-		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
-			auth.signInWithCredential(credential).addOnCompleteListener { task: Task<AuthResult> ->
-				if (task.isSuccessful && auth.currentUser != null) {
-					val firebaseUser = auth.currentUser!!
-					val photoUrl = firebaseUser.photoUrl.toString() + "?height=500"
-					val urls = ArrayList<String>()
-					urls.add(photoUrl)
-					val user = UserItem(name = firebaseUser.displayName!!,
-					                    city = "Kyiv",
-					                    mainPhotoUrl = photoUrl,
-					                    photoURLs = urls,
-					                    userId = firebaseUser.uid)
+	override fun signInWithFacebook(token: String): Single<BaseUserInfo> {
+		return Single.create(SingleOnSubscribe<BaseUserInfo> { emitter ->
+			val credential = FacebookAuthProvider.getCredential(token)
+			val ref = db.collection(GENERAL_COLLECTION_REFERENCE)
+			auth.signInWithCredential(credential)
+				.addOnSuccessListener {
+					if (it.user != null) {
+						val firebaseUser = it.user!!
+						ref.document(firebaseUser.uid).get()
+							.addOnSuccessListener { userDoc ->
+								if (userDoc.exists()) {
+									val user = userDoc.toObject(BaseUserInfo::class.java)!!
+									emitter.onSuccess(user)
+								}
+							}
+							.addOnFailureListener {
+								val photoUrl = firebaseUser.photoUrl.toString() + "?height=500"
+								val baseUser = BaseUserInfo(name = firebaseUser.displayName!!,
+								                            mainPhotoUrl = photoUrl,
+								                            userId = firebaseUser.uid)
 
-					emitter.onSuccess(user)
+								emitter.onSuccess(baseUser)
+							}
+					}
+					else emitter.onError(Exception("User is null"))
 				}
-				else emitter.onError(task.exception!!)
-
-			}
+				.addOnFailureListener { emitter.onError(Exception("Failed to sign in: $it")) }
 
 		}).subscribeOn(Schedulers.io())
 	}
 
-
 	/**
-	 * if [UserItem] is not stored in db -> create new document + save locally
+	 * create new [UserItem] document on remote
 	 */
-	override fun registerUser(userItem: UserItem): Completable {
-		return Completable.create { emitter ->
-			val ref = db.collection(GENERAL_COLLECTION_REFERENCE).document(userItem.userId)
-			ref.set(userItem)
-				.addOnSuccessListener {
-					userRepositoryLocal.saveUserInfo(userItem)
-					emitter.onComplete()
-				}
-				.addOnFailureListener { task -> emitter.onError(task) }
-		}.subscribeOn(Schedulers.io())
-	}
+	override fun registerUser(userItem: UserItem) = remoteRepo.createUserOnRemote(userItem)
+
+
+
 
 	override fun logOut(){
 		auth.signOut()
 		fbLogin.logOut()
 	}
-
-
 
 
 }

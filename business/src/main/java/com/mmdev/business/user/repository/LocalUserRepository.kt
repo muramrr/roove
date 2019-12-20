@@ -1,23 +1,25 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 19.12.19 21:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.business.auth.usecase
+package com.mmdev.business.user.repository
 
-import com.mmdev.business.auth.repository.AuthRepository
+import com.mmdev.business.user.UserItem
 
 /**
  * This is the documentation block about the class
  */
 
-class HandleUserExistenceUseCase(private val repository: AuthRepository) {
+interface LocalUserRepository {
 
-	fun execute(t: String) = repository.handleUserExistence(t)
+	fun getSavedUser(): UserItem?
+
+	fun saveUserInfo(currentUserItem: UserItem)
 
 }

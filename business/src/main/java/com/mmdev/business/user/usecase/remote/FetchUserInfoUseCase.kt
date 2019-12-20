@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 19.12.19 21:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,14 +10,16 @@
 
 package com.mmdev.business.user.usecase.remote
 
-import com.mmdev.business.user.repository.UserRepository
+import com.mmdev.business.user.UserItem
+import com.mmdev.business.user.repository.RemoteUserRepository
+
 
 /**
  * This is the documentation block about the class
  */
 
-class CreateUserUseCase (private val repository: UserRepository.RemoteUserRepository) {
+class FetchUserInfoUseCase (private val repository: RemoteUserRepository) {
 
-	fun execute() = repository.createUserOnRemote()
+	fun execute(u: UserItem) = repository.fetchUserInfo(u)
 
 }

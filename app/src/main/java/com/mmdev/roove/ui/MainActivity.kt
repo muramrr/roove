@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 10.12.19 18:51
+ * Last modified 20.12.19 19:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.roove.ui
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -22,8 +23,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.mmdev.roove.R
 import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
-import com.mmdev.roove.ui.auth.AuthFlowFragment
 import com.mmdev.roove.ui.auth.AuthViewModel
+import com.mmdev.roove.ui.auth.view.AuthFlowFragment
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.drawerflow.view.DrawerFlowFragment
@@ -40,6 +41,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 	private val currentFragment: BaseFragment?
 		get() = supportFragmentManager.findFragmentById(R.id.main_activity_container) as? BaseFragment
 
+
+	companion object{
+		private const val TAG_LOG = "mylogs"
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -74,8 +79,14 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		Handler().postDelayed({ authViewModel.checkIsAuthenticated () }, 1000)
 		authViewModel.getAuthStatus().observe(this, Observer {
-			if (it == false) showAuthFlowFragment()
-			else showDrawerFlowFragment()
+			if (it == false) {
+				showAuthFlowFragment()
+				Log.wtf(TAG_LOG, "USER IS NOT LOGGED IN")
+			}
+			else {
+				showDrawerFlowFragment()
+				Log.wtf(TAG_LOG, "USER IS LOGGED IN")
+			}
 		})
 		authViewModel.showProgress.observe(this, Observer {
 			if (it == true) progressDialog.showDialog()
