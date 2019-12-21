@@ -17,6 +17,7 @@ import com.mmdev.business.auth.usecase.IsAuthenticatedListenerUseCase
 import com.mmdev.business.auth.usecase.LogOutUseCase
 import com.mmdev.business.auth.usecase.SignInWithFacebookUseCase
 import com.mmdev.business.auth.usecase.SignUpUseCase
+import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -38,9 +39,9 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 
 	private val userItemModel: MutableLiveData<UserItem> = MutableLiveData()
 
-	private val isAuthenticatedStatus: MutableLiveData<Boolean> = MutableLiveData()
+	private val baseUserInfo: MutableLiveData<BaseUserInfo> = MutableLiveData()
 
-	private val signUpStatus: MutableLiveData<Boolean> = MutableLiveData()
+	private val isAuthenticatedStatus: MutableLiveData<Boolean> = MutableLiveData()
 
 	private val disposables = CompositeDisposable()
 
@@ -52,12 +53,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 		disposables.add(isAuthenticatedExecution()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                           if (it == false) {
-	                           isAuthenticatedStatus.value = it
-                           }
-                           else {
-	                           isAuthenticatedStatus.value = it
-                           }
+                           isAuthenticatedStatus.value = it
                        },
                        {
 	                       error.value = it
@@ -74,8 +70,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 	                       Log.wtf("mylogs", "successfully retrieved user")
 	                       isAuthenticatedStatus.value = true
 	                       continueRegistration.value = false
-                           userItemModel.value = UserItem(baseUserInfo = it,
-                                                          photoURLs = listOf(it.mainPhotoUrl))
+	                       baseUserInfo.value = it
 	                       Log.wtf("mylogs", "continue registration? -${continueRegistration.value}")
                        },
                        {
@@ -91,6 +86,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
             .subscribe({
 	                       isAuthenticatedStatus.value = true
 	                       continueRegistration.value = false
+	                       userItemModel.value = userItem
                        },
                        {
                            Log.wtf("mylogs", it)
@@ -103,9 +99,17 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 	}
 
 	fun getAuthStatus() = isAuthenticatedStatus
-	fun getSignUpStatus() = signUpStatus
+
+	fun getBaseUserInfo() = baseUserInfo
 
 	fun getUserItem() = userItemModel
+
+
+
+
+
+
+
 
 	private fun isAuthenticatedExecution() = isAuthenticatedListener.execute()
 	private fun logOutExecution() = logOut.execute()
