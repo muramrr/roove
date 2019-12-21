@@ -27,7 +27,7 @@ class UserModule {
 	/* get user info from Prefs */
 	@Provides
 	@Singleton
-	fun provideSavedUser(repository: UserRepositoryLocal) = repository.getSavedUser()
+	fun provideSavedUser(repository: UserRepositoryLocal) = repository.getSavedUser()!!
 
 	@Provides
 	@Singleton

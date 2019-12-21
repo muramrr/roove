@@ -58,7 +58,7 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_drawer_flow) {
 		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		userItemModel = ViewModelProvider(this, factory)
 			.get(LocalUserRepoViewModel::class.java)
-			.getSavedUser()
+			.getSavedUser()!!
 
 		sharedViewModel = activity?.run {
 			ViewModelProvider(this, factory)[SharedViewModel::class.java]
@@ -126,9 +126,9 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_drawer_flow) {
 		}
 
 		val navHeader = navigationView.getHeaderView(0)
-		navHeader.tvSignedInUserName.text = userItemModel.name
+		navHeader.tvSignedInUserName.text = userItemModel.baseUserInfo.name
 		GlideApp.with(navHeader.ivSignedInUserAvatar.context)
-			.load(userItemModel.mainPhotoUrl)
+			.load(userItemModel.baseUserInfo.mainPhotoUrl)
 			.apply(RequestOptions().circleCrop())
 			.into(navHeader.ivSignedInUserAvatar)
 

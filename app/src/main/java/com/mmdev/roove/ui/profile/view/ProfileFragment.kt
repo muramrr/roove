@@ -66,10 +66,10 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 		sharedViewModel.cardSelected.observe(this, Observer { carditem ->
 			//block to sharedviewmodel update card clicked on another screen
 			if (!isOnCreateCalled) {
-				remoteRepoViewModel.getUserById(carditem.userId)
+				remoteRepoViewModel.getUserById(carditem.baseUserInfo.userId)
 				remoteRepoViewModel.getUser().observe(this, Observer {
 					selectedUser = it
-					collapseBarProfile.title = selectedUser.name
+					collapseBarProfile.title = selectedUser.baseUserInfo.name
 					userPhotosAdapter.updateData(selectedUser.photoURLs)
 					isOnCreateCalled = true
 				})
@@ -116,11 +116,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 				findNavController().navigate(R.id.action_profileFragment_to_chatFragment)
 
-				sharedViewModel.setConversationSelected(ConversationItem(
-						partnerId = selectedUser.userId,
-						partnerName = selectedUser.name,
-						partnerPhotoUrl = selectedUser.mainPhotoUrl)
-				)
+				sharedViewModel.setConversationSelected(ConversationItem(selectedUser.baseUserInfo))
 			}
 
 		}
@@ -130,7 +126,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 	override fun onResume() {
 		super.onResume()
 		if (isOnCreateCalled) {
-			collapseBarProfile.title = selectedUser.name
+			collapseBarProfile.title = selectedUser.baseUserInfo.name
 			userPhotosAdapter.updateData(selectedUser.photoURLs)
 		}
 	}

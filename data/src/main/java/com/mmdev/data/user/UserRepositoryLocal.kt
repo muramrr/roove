@@ -12,6 +12,7 @@ package com.mmdev.data.user
 
 import android.util.Log
 import com.ironz.binaryprefs.Preferences
+import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mmdev.business.user.repository.LocalUserRepository
 import javax.inject.Inject
@@ -50,14 +51,13 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 				val photoUrls = prefs.getStringSet(PREF_KEY_CURRENT_USER_PHOTO_URLS, setOf(""))!!
 				val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")!!
 				Log.wtf("mylogs", "retrieved user info from sharedpref successfully")
-				UserItem(name,
-				                                                    age,
-				                                                    city,
-				                                                    gender,
-				                                                    preferredGender,
-				                                                    mainPhotoUrl,
-				                                                    photoUrls.toList(),
-				                                                    uid)
+				UserItem(BaseUserInfo(name,
+				                      age,
+				                      city,
+				                      gender,
+				                      mainPhotoUrl,uid),
+				         preferredGender,
+				         photoUrls.toList())
 			}catch (e: Exception) {
 				Log.wtf("mylogs", "read exception, but user is saved")
 				null
@@ -72,14 +72,14 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 
 	override fun saveUserInfo(currentUserItem: UserItem) {
 		val editor = prefs.edit()
-		editor.putString(PREF_KEY_CURRENT_USER_NAME, currentUserItem.name)
-		editor.putInt(PREF_KEY_CURRENT_USER_AGE, currentUserItem.age)
-		editor.putString(PREF_KEY_CURRENT_USER_CITY, currentUserItem.city)
-		editor.putString(PREF_KEY_CURRENT_USER_GENDER, currentUserItem.gender)
+		editor.putString(PREF_KEY_CURRENT_USER_NAME, currentUserItem.baseUserInfo.name)
+		editor.putInt(PREF_KEY_CURRENT_USER_AGE, currentUserItem.baseUserInfo.age)
+		editor.putString(PREF_KEY_CURRENT_USER_CITY, currentUserItem.baseUserInfo.city)
+		editor.putString(PREF_KEY_CURRENT_USER_GENDER, currentUserItem.baseUserInfo.gender)
 		editor.putString(PREF_KEY_CURRENT_USER_P_GENDER, currentUserItem.preferredGender)
-		editor.putString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, currentUserItem.mainPhotoUrl)
+		editor.putString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, currentUserItem.baseUserInfo.mainPhotoUrl)
 		editor.putStringSet(PREF_KEY_CURRENT_USER_PHOTO_URLS, currentUserItem.photoURLs.toSet())
-		editor.putString(PREF_KEY_CURRENT_USER_ID, currentUserItem.userId)
+		editor.putString(PREF_KEY_CURRENT_USER_ID, currentUserItem.baseUserInfo.userId)
 		editor.putBoolean(PREF_KEY_GENERAL_IF_SAVED, true)
 		editor.commit()
 		Log.wtf("mylogs", "User successfully saved")

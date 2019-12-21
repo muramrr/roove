@@ -24,11 +24,11 @@ import javax.inject.Inject
  */
 
 class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
-                                              currentUserItem: UserItem):
+                                              currentUser: UserItem):
 		PairsRepository {
 
 
-	private val currentUserId = currentUserItem.userId
+	private val currentUserInfo = currentUser.baseUserInfo
 
 	companion object {
 		private const val USERS_COLLECTION_REFERENCE = "users"
@@ -39,7 +39,9 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 		return Observable.create(ObservableOnSubscribe<List<CardItem>> { emitter ->
 			val listener = firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUserId)
+				.document(currentUserInfo.city)
+				.collection(currentUserInfo.gender)
+				.document(currentUserInfo.userId)
 				.collection(USER_MATCHED_COLLECTION_REFERENCE)
 				.whereEqualTo("conversationStarted", false)
 				.addSnapshotListener { snapshots, e ->

@@ -131,7 +131,7 @@ class CardsFragment: BaseFragment() {
 	private fun showMatchDialog(matchCardItem: CardItem) {
 
 		val dialog = MatchDialogFragment.newInstance(
-				matchCardItem.name, matchCardItem.mainPhotoUrl
+				matchCardItem.baseUserInfo.name, matchCardItem.baseUserInfo.mainPhotoUrl
 		)
 
 		dialog.show(childFragmentManager, MatchDialogFragment::class.java.canonicalName)

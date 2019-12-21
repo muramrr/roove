@@ -29,7 +29,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 
 	companion object {
 		private const val USERS_COLLECTION_REFERENCE = "users"
-		private const val USERS_FILTER = "gender"
+		private const val USERS_FILTER_AGE = "age"
 		private const val USER_LIKED_COLLECTION_REFERENCE = "liked"
 		private const val USER_SKIPPED_COLLECTION_REFERENCE = "skipped"
 		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
@@ -42,7 +42,9 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 	*/
 	fun getAllUsersCards(): Single<List<CardItem>> {
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.whereEqualTo(USERS_FILTER, currentUser.preferredGender)
+			.document(currentUser.baseUserInfo.city)
+			.collection(currentUser.preferredGender)
+			.whereEqualTo(USERS_FILTER_AGE, 18)
 			//.limit(limit)
 			.get()
 		return Single.create(SingleOnSubscribe<List<CardItem>>{ emitter ->
@@ -50,9 +52,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 				if (it.result != null) {
 					val allUsersCards = ArrayList<CardItem>()
 					for (doc in it.result!!.documents)
-						allUsersCards.add(CardItem(doc.getString("name")!!,
-						                           doc.getString("mainPhotoUrl")!!,
-						                           doc.getString("userId")!!))
+						allUsersCards.add(doc.toObject(CardItem::class.java)!!)
 					Log.wtf(TAG, "all on complete, size = " + allUsersCards.size)
 					emitter.onSuccess(allUsersCards)
 				}
@@ -92,7 +92,9 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 	private fun getLikedUsersCards(): Single<List<String>> {
 
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUser.userId)
+			.document(currentUser.baseUserInfo.city)
+			.collection(currentUser.baseUserInfo.gender)
+			.document(currentUser.baseUserInfo.userId)
 			.collection(USER_LIKED_COLLECTION_REFERENCE)
 			.get()
 		return Single.create(SingleOnSubscribe<List<String>>{ emitter ->
@@ -117,7 +119,9 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 	*/
 	private fun getMatchedUsersCards(): Single<List<String>> {
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUser.userId)
+			.document(currentUser.baseUserInfo.city)
+			.collection(currentUser.baseUserInfo.gender)
+			.document(currentUser.baseUserInfo.userId)
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.get()
 		return Single.create(SingleOnSubscribe<List<String>> { emitter ->
@@ -142,7 +146,9 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 	*/
 	private fun getSkippedUsersCards(): Single<List<String>> {
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUser.userId)
+			.document(currentUser.baseUserInfo.city)
+			.collection(currentUser.baseUserInfo.gender)
+			.document(currentUser.baseUserInfo.userId)
 			.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 			.get()
 		return Single.create(SingleOnSubscribe<List<String>> { emitter ->

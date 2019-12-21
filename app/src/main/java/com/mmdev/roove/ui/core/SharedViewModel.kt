@@ -52,13 +52,11 @@ class SharedViewModel: ViewModel() {
 	fun setConversationSelected(conversationItem: ConversationItem){
 		conversationSelected.value = conversationItem
 		//if we moved to user profile from conversation
-		if (cardSelected.value?.userId != conversationItem.partnerId)
+		if (cardSelected.value?.baseUserInfo?.userId != conversationItem.partner.userId) {
 			Log.wtf("mylogs", "card updated")
-			cardSelected.value =
-				CardItem(name = conversationItem.partnerName,
-				                                                     mainPhotoUrl = conversationItem.partnerPhotoUrl,
-				                                                     userId = conversationItem.partnerId,
-				                                                     conversationStarted = conversationItem.conversationStarted)
+			cardSelected.value = CardItem(conversationItem.partner,
+			                              conversationStarted = conversationItem.conversationStarted)
+		}
 	}
 
 	fun setPlaceSelected(placeItem: EventItem){
