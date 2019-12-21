@@ -34,7 +34,7 @@
 			android:layout_height="64dp"
 			android:layout_marginEnd="8dp"
 
-			app:circleImage="@{conversationItem.partnerPhotoUrl}"
+			app:circleImage="@{conversationItem.partner.mainPhotoUrl}"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
@@ -46,7 +46,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="8dp"
-			android:text="@{conversationItem.partnerName, default = @string/default_name}"
+			android:text="@{conversationItem.partner.name, default = @string/default_name}"
 			android:textSize="16sp"
 
 			app:layout_constraintStart_toEndOf="@id/conversation_active_item_userpic_iv"

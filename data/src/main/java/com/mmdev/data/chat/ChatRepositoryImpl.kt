@@ -15,6 +15,7 @@ import android.text.format.DateFormat
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
+import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.chat.entity.PhotoAttachementItem
 import com.mmdev.business.chat.repository.ChatRepository
@@ -29,7 +30,7 @@ import javax.inject.Singleton
 import kotlin.collections.ArrayList
 
 @Singleton
-class ChatRepositoryImpl @Inject constructor(private val currentUserItem: UserItem,
+class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
                                              private val firestore: FirebaseFirestore,
                                              private val storage: StorageReference): ChatRepository{
 
@@ -45,18 +46,17 @@ class ChatRepositoryImpl @Inject constructor(private val currentUserItem: UserIt
 	}
 
 
-	private val currentUserId = currentUserItem.userId
-
-	private var conversationId = ""
-	private var partnerId = ""
+	private var conversation = ConversationItem()
+	private var partner = BaseUserInfo()
 
 
 
 	override fun getConversationWithPartner(partnerId: String): Single<ConversationItem> {
-		this.partnerId = partnerId
 		return Single.create(SingleOnSubscribe<ConversationItem> { emitter ->
 			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUserId)
+				.document(currentUser.baseUserInfo.city)
+				.collection(currentUser.baseUserInfo.gender)
+				.document(currentUser.baseUserInfo.userId)
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.whereEqualTo("partnerId", partnerId)
 				.get()
@@ -74,12 +74,12 @@ class ChatRepositoryImpl @Inject constructor(private val currentUserItem: UserIt
 	}
 
 	override fun getMessagesList(conversation: ConversationItem): Observable<List<MessageItem>> {
-		this.conversationId = conversation.conversationId
-		this.partnerId = conversation.partnerId
-		Log.wtf("mylogs", "conversation set, id = $conversationId")
+		this.conversation = conversation
+		this.partner = conversation.partner
+		Log.wtf("mylogs", "conversation set, id = ${conversation.conversationId}")
 		return Observable.create(ObservableOnSubscribe<List<MessageItem>> { emitter ->
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.document(conversationId)
+				.document(conversation.conversationId)
 				.collection(SECONDARY_COLLECTION_REFERENCE)
 				.orderBy("timestamp")
 				.addSnapshotListener { snapshots, e ->
@@ -102,7 +102,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUserItem: UserIt
 		Log.wtf("mylogs", "is empty recieved? + $emptyChat")
 		val conversation = firestore
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(conversationId)
+			.document(conversation.conversationId)
 		return Completable.create { emitter ->
 			if (emptyChat != null && emptyChat == false)
 				conversation.collection(SECONDARY_COLLECTION_REFERENCE)
@@ -141,7 +141,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUserItem: UserIt
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()+".jpg"
 		val storageRef = storage
 			.child(GENERAL_FOLDER_STORAGE_IMG)
-			.child(conversationId)
+			.child(conversation.conversationId)
 			.child(namePhoto)
 		return Observable.create(ObservableOnSubscribe<PhotoAttachementItem>{ emitter ->
 			val uploadTask = storageRef.putFile(Uri.parse(photoUri))
@@ -160,38 +160,52 @@ class ChatRepositoryImpl @Inject constructor(private val currentUserItem: UserIt
 	private fun updateStartedStatus() {
 		// for current
 		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUserId)
+			.document(currentUser.baseUserInfo.city)
+			.collection(currentUser.baseUserInfo.gender)
+			.document(currentUser.baseUserInfo.userId)
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(conversationId)
+			.document(conversation.conversationId)
 			.update("conversationStarted", true)
 		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUserId)
+			.document(currentUser.baseUserInfo.city)
+			.collection(currentUser.baseUserInfo.gender)
+			.document(currentUser.baseUserInfo.userId)
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
-			.document(partnerId)
+			.document(partner.userId)
 			.update("conversationStarted", true)
+
+
 		// for partner
 		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(partnerId)
+			.document(partner.city)
+			.collection(partner.gender)
+			.document(partner.userId)
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(conversationId)
+			.document(conversation.conversationId)
 			.update("conversationStarted", true)
 		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(partnerId)
+			.document(partner.city)
+			.collection(partner.gender)
+			.document(partner.userId)
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
-			.document(currentUserId)
+			.document(currentUser.baseUserInfo.userId)
 			.update("conversationStarted", true)
 		Log.wtf("mylogs", "convers status updated")
 	}
 
 	private fun updateLastMessage(messageItem: MessageItem) {
 		val cur = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUserId)
+			.document(currentUser.baseUserInfo.city)
+			.collection(currentUser.baseUserInfo.gender)
+			.document(currentUser.baseUserInfo.userId)
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(conversationId)
+			.document(conversation.conversationId)
 		val par = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(partnerId)
+			.document(partner.city)
+			.collection(partner.gender)
+			.document(partner.userId)
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(conversationId)
+			.document(conversation.conversationId)
 		if (messageItem.photoAttachementItem != null) {
 			// for current
 			cur.update("lastMessageText", "Photo")
