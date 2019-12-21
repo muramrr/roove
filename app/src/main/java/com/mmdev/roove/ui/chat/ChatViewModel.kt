@@ -13,13 +13,13 @@ package com.mmdev.roove.ui.chat
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.chat.usecase.GetConversationWithPartnerUseCase
 import com.mmdev.business.chat.usecase.GetMessagesUseCase
 import com.mmdev.business.chat.usecase.SendMessageUseCase
 import com.mmdev.business.chat.usecase.SendPhotoUseCase
 import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.user.UserItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -91,11 +91,10 @@ class ChatViewModel @Inject constructor(private val getConversationUC: GetConver
                        { Log.wtf(TAG, "can't send message fragment_chat, $emptyChat") }))
 	}
 
-	fun sendPhoto(photoUri: String, senderUserItem: UserItem){
+	fun sendPhoto(photoUri: String, sender: BaseUserInfo){
 		disposables.add(sendPhotoExecution(photoUri)
             .flatMapCompletable {
-	            sendMessageExecution(MessageItem(senderUserItem, photoAttachementItem = it),
-	                                 emptyChat)
+	            sendMessageExecution(MessageItem(sender, photoAttachementItem = it), emptyChat)
             }
             .doOnSubscribe { showLoading.value = true }
             .doOnComplete { showLoading.value = false }

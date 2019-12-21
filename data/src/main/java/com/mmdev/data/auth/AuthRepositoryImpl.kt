@@ -19,10 +19,7 @@ import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mmdev.data.user.UserRepositoryLocal
 import com.mmdev.data.user.UserRepositoryRemoteImpl
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
-import io.reactivex.Single
-import io.reactivex.SingleOnSubscribe
+import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -94,10 +91,20 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	/**
 	 * create new [UserItem] document on remote
 	 */
-	override fun registerUser(userItem: UserItem) = remoteRepo.createUserOnRemote(userItem)
+	override fun registerUser(userItem: UserItem):Completable =
+		remoteRepo.createUserOnRemote(userItem).doOnComplete { localRepo.saveUserInfo(userItem) }
 
 
+	fun checkUserInfoOnRemote(uid:String): Single<UserItem> {
+		return Single.create(SingleOnSubscribe<BaseUserInfo> { emitter ->
 
+
+		}).subscribeOn(Schedulers.io())
+			.flatMap {
+				remoteRepo.getFullUserInfo(it)
+			}
+			.subscribeOn(Schedulers.computation())
+	}
 
 	override fun logOut(){
 		auth.signOut()

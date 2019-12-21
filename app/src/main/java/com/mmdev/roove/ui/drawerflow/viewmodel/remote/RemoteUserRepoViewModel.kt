@@ -34,8 +34,10 @@ class RemoteUserRepoViewModel @Inject constructor(private val deleteUserUC: Dele
 	private val disposables = CompositeDisposable()
 
 
+
+
 	fun getUserById(userId: String){
-		disposables.add(fetchUserInfoExecution(userId)
+		disposables.add(fetchUserInfoExecution(UserItem())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       receivedUserItem.value = it

@@ -42,7 +42,7 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
 
 	fun addToSkipped(skippedCardItem: CardItem) {
 		addToSkippedExecution(skippedCardItem)
-		Log.wtf(TAG, "skipped + ${skippedCardItem.name}")
+		Log.wtf(TAG, "skipped + ${skippedCardItem.baseUserInfo.name}")
 	}
 
 
@@ -51,7 +51,7 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                            showMatchDialog.value = it
-                           Log.wtf(TAG, "its a match! + ${likedCardItem.name}")
+                           Log.wtf(TAG, "its a match! + ${likedCardItem.baseUserInfo.name}")
                        },
                        {
                            Log.wtf(TAG, "error swiped + $it")

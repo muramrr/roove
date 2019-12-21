@@ -27,7 +27,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ConversationsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
-                                                      currentUserItem: UserItem):
+                                                      currentUser: UserItem):
 		ConversationsRepository {
 
 	companion object{
@@ -38,7 +38,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 	}
 
-	private val currentUserId = currentUserItem.userId
+	private val currentUserInfo = currentUser.baseUserInfo
 
 
 	override fun deleteConversation(conversationItem: ConversationItem): Completable {
@@ -51,14 +51,18 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 
 			//delete in current user section
 			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUserId)
+				.document(currentUserInfo.city)
+				.collection(currentUserInfo.gender)
+				.document(currentUserInfo.userId)
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversationItem.conversationId)
 				.delete()
 
 			//delete in partner section
 			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(conversationItem.partnerId)
+				.document(conversationItem.partner.city)
+				.collection(conversationItem.partner.gender)
+				.document(conversationItem.partner.userId)
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversationItem.conversationId)
 				.delete()
@@ -72,7 +76,9 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 	override fun getConversationsList(): Observable<List<ConversationItem>> {
 		return Observable.create(ObservableOnSubscribe<List<ConversationItem>> { emitter ->
 			val listener = firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUserId)
+				.document(currentUserInfo.city)
+				.collection(currentUserInfo.gender)
+				.document(currentUserInfo.userId)
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.whereEqualTo("conversationStarted", true)
 				.orderBy("lastMessageTimestamp")

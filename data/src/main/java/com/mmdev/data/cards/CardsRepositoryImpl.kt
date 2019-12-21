@@ -127,6 +127,17 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	override fun getFullUserInfo(baseUserInfo: BaseUserInfo) =
 		remoteRepo.getFullUserInfo(baseUserInfo)
 
+	/* return filtered users list as Single */
+	override fun getUsersByPreferences(): Single<List<CardItem>> {
+		val cardsRepositoryHelper = CardsRepositoryHelper(firestore, currentUserItem)
+		return Single.zip(cardsRepositoryHelper.getAllUsersCards(),
+		                  cardsRepositoryHelper.zipLists(),
+		                  BiFunction<List<CardItem>, List<String>, List<CardItem>>
+		                  { userList, ids  -> filterUsers(userList, ids) })
+			.observeOn(Schedulers.io())
+
+	}
+
 
 	/**
 	 * 1. add to matches collection for liked user
@@ -178,17 +189,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.set(ConversationItem(partner = currentUserItem.baseUserInfo,
 			                      conversationId = conversationId,
 			                      lastMessageTimestamp = null))
-	}
-
-	/* return filtered users list as Single */
-	override fun getUsersByPreferences(): Single<List<CardItem>> {
-		val cardsRepositoryHelper = CardsRepositoryHelper(firestore, currentUserItem)
-		return Single.zip(cardsRepositoryHelper.getAllUsersCards(),
-		                  cardsRepositoryHelper.zipLists(),
-		                  BiFunction<List<CardItem>, List<String>, List<CardItem>>
-		                  { userList, ids  -> filterUsers(userList, ids) })
-			.observeOn(Schedulers.io())
-
 	}
 
 	/* return filtered all users list from already written ids as List<UserItem> */

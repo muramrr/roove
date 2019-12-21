@@ -108,14 +108,14 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 		sharedViewModel.currentUser.observe(this, Observer {
 			userItemModel = it
-			mChatAdapter.setCurrentUserId(it.userId)
+			mChatAdapter.setCurrentUserId(it.baseUserInfo.userId)
 		})
 
 		sharedViewModel.conversationSelected.observe(this, Observer {
 			if (!isOnCreateCalled && !this::currentConversation.isInitialized) {
 				currentConversation = it
-				partnerName = it.partnerName
-				partnerMainPhotoUrl = it.partnerPhotoUrl
+				partnerName = it.partner.name
+				partnerMainPhotoUrl = it.partner.mainPhotoUrl
 				setupContentToolbar()
 				isOnCreateCalled = true
 				if (it.conversationId.isNotEmpty()) {
@@ -125,7 +125,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 					})
 				}
 				else {
-					chatViewModel.startListenToEmptyChat(it.partnerId)
+					chatViewModel.startListenToEmptyChat(it.partner.userId)
 					chatViewModel.getMessagesList().observe(this, Observer { messageList ->
 						mChatAdapter.updateData(messageList)
 					})
@@ -194,8 +194,10 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			when (item.itemId) {
 				R.id.chat_action_user ->{
 					findNavController().navigate(R.id.action_chatFragment_to_profileFragment)
-					sharedViewModel.setCardSelected(CardItem(
-							userId = currentConversation.partnerId))
+					sharedViewModel.setCardSelected(
+							CardItem(currentConversation.partner,
+							         currentConversation.conversationStarted)
+					)
 				}
 
 				R.id.chat_action_report -> { Toast.makeText(context,
@@ -213,8 +215,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		super.onResume()
 
 		if (isOnCreateCalled && this::currentConversation.isInitialized) {
-			partnerName = currentConversation.partnerName
-			partnerMainPhotoUrl = currentConversation.partnerPhotoUrl
+			partnerName = currentConversation.partner.name
+			partnerMainPhotoUrl = currentConversation.partner.mainPhotoUrl
 
 			if (currentConversation.conversationId.isNotEmpty()) {
 				chatViewModel.loadMessages(currentConversation)
@@ -223,7 +225,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 				})
 			}
 			else {
-				chatViewModel.startListenToEmptyChat(currentConversation.partnerId)
+				chatViewModel.startListenToEmptyChat(currentConversation.partner.userId)
 				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
 					mChatAdapter.updateData(messageList)
 				})
@@ -264,7 +266,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		if (textMessageInput.text.isNotEmpty() &&
 		    textMessageInput.text.toString().trim().isNotEmpty()) {
 
-			val message = MessageItem(userItemModel,
+			val message = MessageItem(userItemModel.baseUserInfo,
 			                          textMessageInput.text.toString().trim(),
 			                          photoAttachementItem = null)
 
@@ -350,7 +352,9 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			if (resultCode == RESULT_OK) {
 
 				val selectedUri = data?.data
-				chatViewModel.sendPhoto(selectedUri.toString(), userItemModel)
+				chatViewModel.sendPhoto(selectedUri.toString(),
+				                        sender = userItemModel.baseUserInfo)
+
 
 			}
 		}
@@ -360,7 +364,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 				if (mFilePathImageCamera.exists()) {
 					chatViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString(),
-					                        userItemModel)
+					                        sender = userItemModel.baseUserInfo)
 				}
 				else Toast.makeText(context,
 						"filePathImageCamera is null or filePathImageCamera isn't exists",
