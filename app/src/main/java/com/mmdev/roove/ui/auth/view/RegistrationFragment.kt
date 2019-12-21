@@ -22,6 +22,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
@@ -42,9 +43,10 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 	private var registrationStep = 1
 	private var isRegistrationCompleted = false
 
-	private var userItem: UserItem? =
-		UserItem(name = "Andrii")
+	private lateinit var userItem: UserItem
 
+
+	private var baseUserInfo = BaseUserInfo()
 	private var name = "no name"
 	private var age = 0
 	private var city = ""
@@ -76,7 +78,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 		authViewModel = activity?.run {
 			ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
-		authViewModel.getUserItem().value?.let { userItem = it }
+		authViewModel.getBaseUserInfo().value?.let { baseUserInfo = it }
 
 
 	}
@@ -214,9 +216,21 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 			registrationStep -= 1
 			Log.wtf(TAG_LOG, "btn reg back clicked")
 		}
+
 		btnRegistrationDone.setOnClickListener {
+			val finalUserModel = BaseUserInfo(name, age, city, gender,
+			                                  baseUserInfo.mainPhotoUrl,
+			                                  baseUserInfo.userId)
+
+			authViewModel.signUp(UserItem(finalUserModel,
+			                              preferredGender,
+			                              listOf(finalUserModel.mainPhotoUrl)))
+
 			Log.wtf(TAG_LOG, "btn reg done clicked")
 		}
+
+
+
 
 
 		btnRegistrationBack.setOnClickListener {
@@ -281,9 +295,6 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 			//Toast.makeText(context, "reg step = $registrationStep", Toast.LENGTH_SHORT).show()
 		}
 
-
-
-
 	}
 
 	private fun restoreStep1State(){
@@ -334,8 +345,8 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 		if (name.isNotEmpty() && name != "no name") {
 			edInputChangeName.setText(name)
 		}
-		else if (!userItem?.name.isNullOrEmpty()) {
-			edInputChangeName.setText(userItem?.name)
+		else if (baseUserInfo.name.isNotEmpty()) {
+			edInputChangeName.setText(baseUserInfo.name)
 		}
 		else if (edInputChangeName.text.isNullOrEmpty()) {
 			layoutInputChangeName.error = "Name must not be empty"
