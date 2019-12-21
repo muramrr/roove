@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 18.12.19 19:51
+  ~ Last modified 21.12.19 17:50
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -188,7 +188,7 @@
 		android:layout_marginTop="@dimen/general_margin_16"
 
 		android:gravity="center"
-
+		android:text="18"
 		android:textSize="30sp"
 		style="@style/light_text_white85op"
 
