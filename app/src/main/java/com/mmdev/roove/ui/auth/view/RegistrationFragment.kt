@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:21
+ * Last modified 21.12.19 20:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,16 +10,17 @@
 
 package com.mmdev.roove.ui.auth.view
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mmdev.business.base.BaseUserInfo
@@ -43,9 +44,6 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 	private var registrationStep = 1
 	private var isRegistrationCompleted = false
 
-	private lateinit var userItem: UserItem
-
-
 	private var baseUserInfo = BaseUserInfo()
 	private var name = "no name"
 	private var age = 0
@@ -55,15 +53,9 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 	private var cityToDisplay = ""
 
-	private val cityList = mapOf(getString(R.string.russia_ekb) to "ekb",
-	                             getString(R.string.russia_krasnoyarsk) to "krasnoyarsk",
-	                             getString(R.string.russia_krd) to "krd",
-	                             getString(R.string.russia_kzn) to "kzn",
-	                             getString(R.string.russia_msk) to "msk",
-	                             getString(R.string.russia_nnv) to "nnv",
-	                             getString(R.string.russia_nsk) to "nsk",
-	                             getString(R.string.russia_sochi) to "sochi",
-	                             getString(R.string.russia_spb) to "spb")
+
+	private lateinit var cityList: Map<String, String>
+
 
 	private var pressedTintColor: ColorStateList? = null
 	private var unpressedTintColor: ColorStateList? = null
@@ -72,13 +64,29 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 		private const val TAG_LOG = "mylogs"
 	}
 
+
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		cityList = mapOf(context.getString(R.string.russia_ekb) to "ekb",
+		                 context.getString(R.string.russia_krasnoyarsk) to "krasnoyarsk",
+		                 context.getString(R.string.russia_krd) to "krd",
+		                 context.getString(R.string.russia_kzn) to "kzn",
+		                 context.getString(R.string.russia_msk) to "msk",
+		                 context.getString(R.string.russia_nnv) to "nnv",
+		                 context.getString(R.string.russia_nsk) to "nsk",
+		                 context.getString(R.string.russia_sochi) to "sochi",
+		                 context.getString(R.string.russia_spb) to "spb")
+	}
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		authViewModel = activity?.run {
 			ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
-		authViewModel.getBaseUserInfo().value?.let { baseUserInfo = it }
+		authViewModel.getBaseUserInfo().observe(this, Observer {
+			baseUserInfo = it
+		})
 
 
 	}
@@ -214,7 +222,6 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 			containerRegistration.transitionToState(R.id.step_5)
 			restoreStep5State()
 			registrationStep -= 1
-			Log.wtf(TAG_LOG, "btn reg back clicked")
 		}
 
 		btnRegistrationDone.setOnClickListener {
@@ -225,8 +232,6 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 			authViewModel.signUp(UserItem(finalUserModel,
 			                              preferredGender,
 			                              listOf(finalUserModel.mainPhotoUrl)))
-
-			Log.wtf(TAG_LOG, "btn reg done clicked")
 		}
 
 

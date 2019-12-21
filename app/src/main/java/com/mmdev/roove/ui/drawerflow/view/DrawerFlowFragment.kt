@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:21
+ * Last modified 21.12.19 18:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,7 +40,7 @@ import kotlinx.android.synthetic.main.nav_header.view.*
 
 class DrawerFlowFragment: FlowFragment(R.layout.fragment_drawer_flow) {
 
-	private lateinit var userItemModel: UserItem
+	private var userItemModel: UserItem? = null
 
 	private lateinit var toolbarParams: AppBarLayout.LayoutParams
 	private lateinit var appBarParams: CoordinatorLayout.LayoutParams
@@ -58,13 +58,13 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_drawer_flow) {
 		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		userItemModel = ViewModelProvider(this, factory)
 			.get(LocalUserRepoViewModel::class.java)
-			.getSavedUser()!!
+			.getSavedUser()
 
 		sharedViewModel = activity?.run {
 			ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
-		sharedViewModel.setCurrentUser(userItemModel)
+		userItemModel?.let { sharedViewModel.setCurrentUser(it) }
 
 	}
 
@@ -126,9 +126,9 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_drawer_flow) {
 		}
 
 		val navHeader = navigationView.getHeaderView(0)
-		navHeader.tvSignedInUserName.text = userItemModel.baseUserInfo.name
+		navHeader.tvSignedInUserName.text = userItemModel?.baseUserInfo?.name
 		GlideApp.with(navHeader.ivSignedInUserAvatar.context)
-			.load(userItemModel.baseUserInfo.mainPhotoUrl)
+			.load(userItemModel?.baseUserInfo?.mainPhotoUrl)
 			.apply(RequestOptions().circleCrop())
 			.into(navHeader.ivSignedInUserAvatar)
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.12.19 17:55
+ * Last modified 21.12.19 18:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.auth.usecase.IsAuthenticatedListenerUseCase
 import com.mmdev.business.auth.usecase.LogOutUseCase
-import com.mmdev.business.auth.usecase.SignInWithFacebookUseCase
+import com.mmdev.business.auth.usecase.SignInUseCase
 import com.mmdev.business.auth.usecase.SignUpUseCase
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.cards.usecase.AddToSkippedUseCase
@@ -72,7 +72,7 @@ class ViewModelModule {
 	fun authViewModel(repository: AuthRepository): ViewModel =
 		AuthViewModel(IsAuthenticatedListenerUseCase(repository),
 		              LogOutUseCase(repository),
-		              SignInWithFacebookUseCase(repository),
+		              SignInUseCase(repository),
 		              SignUpUseCase(repository))
 
 

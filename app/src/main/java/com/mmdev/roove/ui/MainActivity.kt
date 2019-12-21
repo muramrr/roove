@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.12.19 19:26
+ * Last modified 21.12.19 20:00
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,6 +36,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 	private lateinit var progressDialog: LoadingDialog
 
 	private lateinit var authViewModel: AuthViewModel
+
 	private val factory = injector.factory()
 
 	private val currentFragment: BaseFragment?
@@ -99,7 +100,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 
 	// show auth fragment
 	private fun showAuthFlowFragment() {
-		supportFragmentManager.beginTransaction().remove(DrawerFlowFragment())
+		supportFragmentManager.beginTransaction().remove(DrawerFlowFragment()).commit()
 		supportFragmentManager.beginTransaction().apply {
 			add(R.id.main_activity_container,
 			    AuthFlowFragment(),
@@ -111,7 +112,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 
 	// show main feed fragment
 	private fun showDrawerFlowFragment() {
-		supportFragmentManager.beginTransaction().remove(AuthFlowFragment())
+		supportFragmentManager.beginTransaction().remove(AuthFlowFragment()).commit()
 		supportFragmentManager.beginTransaction().apply {
 				add(R.id.main_activity_container,
 				    DrawerFlowFragment(),

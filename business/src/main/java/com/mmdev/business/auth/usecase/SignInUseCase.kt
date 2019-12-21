@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Last modified 21.12.19 18:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,8 +16,8 @@ import com.mmdev.business.auth.repository.AuthRepository
  * This is the documentation block about the class
  */
 
-class SignInWithFacebookUseCase (private val repository: AuthRepository) {
+class SignInUseCase (private val repository: AuthRepository) {
 
-	fun execute(s: String) = repository.signInWithFacebook(s)
+	fun execute(s: String) = repository.signIn(s)
 
 }
