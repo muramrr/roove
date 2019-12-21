@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 09.12.19 21:25
+ * Last modified 21.12.19 20:07
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,6 +47,7 @@ class AuthLandingFragment: BaseFragment(R.layout.fragment_auth_landing)  {
 		authViewModel.continueRegistration.observe(this, Observer {
 			if (it == true) findNavController().navigate(R.id.action_auth_landing_to_registrationFragment)
 		})
+
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,7 +55,7 @@ class AuthLandingFragment: BaseFragment(R.layout.fragment_auth_landing)  {
 		btnFacebookLogin.registerCallback(mCallbackManager, object: FacebookCallback<LoginResult> {
 
 			override fun onSuccess(loginResult: LoginResult) {
-				authViewModel.signInWithFacebook(loginResult.accessToken.token)
+				authViewModel.signIn(loginResult.accessToken.token)
 			}
 
 			override fun onCancel() { authViewModel.logOut() }
@@ -63,7 +64,7 @@ class AuthLandingFragment: BaseFragment(R.layout.fragment_auth_landing)  {
 				Toast.makeText(context, "$error", Toast.LENGTH_SHORT).show()
 			}
 		})
-		btnFacebookLoginDelegate.setOnClickListener { findNavController().navigate(R.id.action_auth_landing_to_registrationFragment) }
+		btnFacebookLoginDelegate.setOnClickListener { btnFacebookLogin.performClick() }
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

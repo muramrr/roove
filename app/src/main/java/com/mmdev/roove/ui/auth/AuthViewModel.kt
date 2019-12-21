@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.12.19 18:08
+ * Last modified 21.12.19 20:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mmdev.business.auth.usecase.IsAuthenticatedListenerUseCase
 import com.mmdev.business.auth.usecase.LogOutUseCase
-import com.mmdev.business.auth.usecase.SignInWithFacebookUseCase
+import com.mmdev.business.auth.usecase.SignInUseCase
 import com.mmdev.business.auth.usecase.SignUpUseCase
 import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.user.UserItem
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsAuthenticatedListenerUseCase,
                                         private val logOut: LogOutUseCase,
-                                        private val signInWithFacebook: SignInWithFacebookUseCase,
+                                        private val signIn: SignInUseCase,
                                         private val signUp: SignUpUseCase) :
 		ViewModel() {
 
@@ -37,7 +37,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 
 	val showProgress: MutableLiveData<Boolean> = MutableLiveData()
 
-	private val userItemModel: MutableLiveData<UserItem> = MutableLiveData()
+	private val userItem: MutableLiveData<UserItem> = MutableLiveData()
 
 	private val baseUserInfo: MutableLiveData<BaseUserInfo> = MutableLiveData()
 
@@ -53,7 +53,11 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 		disposables.add(isAuthenticatedExecution()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                           isAuthenticatedStatus.value = it
+	                       if (it && continueRegistration.value == null){
+		                       isAuthenticatedStatus.value = it
+	                       }
+	                       else isAuthenticatedStatus.value = false
+	                       Log.wtf(TAG, "is user logged in? = ${isAuthenticatedStatus.value}")
                        },
                        {
 	                       error.value = it
@@ -61,21 +65,28 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
                        }))
 	}
 
-	fun signInWithFacebook(loginToken: String) {
-		disposables.add(signInWithFacebookExecution(loginToken)
+	fun signIn(loginToken: String) {
+		continueRegistration.value = true
+		disposables.add(signInExecution(loginToken)
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { showProgress.value = true}
+            .doOnSubscribe { showProgress.value = true }
             .doFinally { showProgress.value = false }
             .subscribe({
-	                       Log.wtf("mylogs", "successfully retrieved user")
-	                       isAuthenticatedStatus.value = true
-	                       continueRegistration.value = false
-	                       baseUserInfo.value = it
+	                       if (it.preferredGender.isNotEmpty()) {
+		                       Log.wtf("mylogs", "successfully retrieved user")
+		                       continueRegistration.value = false
+		                       userItem.value = it
+		                       isAuthenticatedStatus.value = true
+	                       }
+	                       else {
+		                       continueRegistration.value = true
+		                       baseUserInfo.value = it.baseUserInfo
+		                       Log.wtf("mylogs", "received user: =${baseUserInfo.value}")
+	                       }
 	                       Log.wtf("mylogs", "continue registration? -${continueRegistration.value}")
                        },
                        {
 	                       Log.wtf("mylogs", "$it")
-	                       continueRegistration.value = true
                        }
             ))
 	}
@@ -84,9 +95,9 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 		disposables.add(signUpExecution(userItem)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       isAuthenticatedStatus.value = true
 	                       continueRegistration.value = false
-	                       userItemModel.value = userItem
+	                       this.userItem.value = userItem
+	                       isAuthenticatedStatus.value = true
                        },
                        {
                            Log.wtf("mylogs", it)
@@ -102,8 +113,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 
 	fun getBaseUserInfo() = baseUserInfo
 
-	fun getUserItem() = userItemModel
-
+	fun getUserItem() = userItem
 
 
 
@@ -113,8 +123,9 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 
 	private fun isAuthenticatedExecution() = isAuthenticatedListener.execute()
 	private fun logOutExecution() = logOut.execute()
-	private fun signInWithFacebookExecution(token: String) = signInWithFacebook.execute(token)
+	private fun signInExecution(token: String) = signIn.execute(token)
 	private fun signUpExecution(userItem: UserItem) = signUp.execute(userItem)
+
 
 
 	override fun onCleared() {
@@ -122,4 +133,10 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 		super.onCleared()
 	}
 
+
+	enum class AuthStatus {
+		REGISTRATION_PENDING,
+		REGISTRATION_FINISHED,
+		USER_AUTHENTICATED
+	}
 }

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.12.19 18:53
+ * Last modified 21.12.19 20:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,6 +33,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val db: FirebaseFires
 
 	companion object {
 		private const val GENERAL_COLLECTION_REFERENCE = "users"
+		private const val BASE_COLLECTION_REFERENCE = "usersBase"
 	}
 
 	override fun createUserOnRemote(userItem: UserItem): Completable {
@@ -42,8 +43,13 @@ class UserRepositoryRemoteImpl @Inject constructor(private val db: FirebaseFires
 				.collection(userItem.baseUserInfo.gender)
 				.document(userItem.baseUserInfo.userId)
 			ref.set(userItem)
-				.addOnSuccessListener { emitter.onComplete() }
-				.addOnFailureListener { task -> emitter.onError(task) }
+				.addOnSuccessListener {
+					db.collection(BASE_COLLECTION_REFERENCE)
+						.document(userItem.baseUserInfo.userId)
+						.set(userItem.baseUserInfo)
+					emitter.onComplete()
+				}
+				.addOnFailureListener { emitter.onError(it) }
 		}.subscribeOn(Schedulers.io())
 	}
 
@@ -54,7 +60,12 @@ class UserRepositoryRemoteImpl @Inject constructor(private val db: FirebaseFires
 				.collection(userItem.baseUserInfo.gender)
 				.document(userItem.baseUserInfo.userId)
 			ref.delete()
-				.addOnSuccessListener { emitter.onComplete() }
+				.addOnSuccessListener {
+					db.collection(BASE_COLLECTION_REFERENCE)
+						.document(userItem.baseUserInfo.userId)
+						.delete()
+					emitter.onComplete()
+				}
 				.addOnFailureListener { emitter.onError(it) }
 		}.subscribeOn(Schedulers.io())
 	}
