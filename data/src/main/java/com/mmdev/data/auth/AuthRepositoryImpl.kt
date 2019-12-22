@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 21.12.19 20:21
+ * Last modified 22.12.19 16:13
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,13 +43,13 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	 */
 	override fun isAuthenticatedListener(): Observable<Boolean> {
 		return Observable.create(ObservableOnSubscribe<Boolean>{ emitter ->
-			val authStateListener = FirebaseAuth.AuthStateListener {
-				auth -> if (auth.currentUser == null) emitter.onNext(false)
+			val authStateListener = FirebaseAuth.AuthStateListener { auth ->
+				if (auth.currentUser == null) emitter.onNext(false)
 				else emitter.onNext(true)
 			}
 			auth.addAuthStateListener(authStateListener)
 			emitter.setCancellable { auth.removeAuthStateListener(authStateListener) }
-		}).subscribeOn(Schedulers.io())
+		}).observeOn(Schedulers.newThread())
 	}
 
 	override fun signIn(token: String): Single<UserItem>{
@@ -99,7 +99,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 				}
 				.addOnFailureListener { emitter.onError(Exception("Failed to sign in: $it")) }
 
-		}).subscribeOn(Schedulers.io())
+		}).observeOn(Schedulers.io())
 	}
 
 
@@ -120,14 +120,18 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 							.document(userInBase.userId)
 							.get()
 							.addOnSuccessListener {
-								if (it.exists()) emitter.onSuccess(it.toObject(UserItem::class.java)!!)
+								if (it.exists()) {
+									val retrievedUser = it.toObject(UserItem::class.java)!!
+									localRepo.saveUserInfo(retrievedUser)
+									emitter.onSuccess(retrievedUser)
+								}
 								else emitter.onSuccess(UserItem(userInBase))
 							}
 							.addOnFailureListener { emitter.onError(it) }
 					} else emitter.onSuccess(UserItem(baseUserInfo))
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
+		}).observeOn(Schedulers.io())
 	}
 
 
