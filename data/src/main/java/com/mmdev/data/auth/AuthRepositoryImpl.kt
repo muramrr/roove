@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 22.12.19 16:13
+ * Last modified 22.12.19 16:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -49,7 +49,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 			}
 			auth.addAuthStateListener(authStateListener)
 			emitter.setCancellable { auth.removeAuthStateListener(authStateListener) }
-		}).observeOn(Schedulers.newThread())
+		}).subscribeOn(Schedulers.io())
 	}
 
 	override fun signIn(token: String): Single<UserItem>{
@@ -81,13 +81,13 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	 * creates a basic [BaseUserInfo] object based on public facebook profile
 	 */
 	private fun signInWithFacebook(token: String): Single<BaseUserInfo> {
+		val credential = FacebookAuthProvider.getCredential(token)
 		return Single.create(SingleOnSubscribe<BaseUserInfo> { emitter ->
-			val credential = FacebookAuthProvider.getCredential(token)
 
 			auth.signInWithCredential(credential)
-				.addOnSuccessListener {
-					if (it.user != null) {
-						val firebaseUser = it.user!!
+				.addOnCompleteListener{
+					if (it.isSuccessful && auth.currentUser != null) {
+						val firebaseUser = auth.currentUser!!
 						val photoUrl = firebaseUser.photoUrl.toString() + "?height=500"
 						val baseUser = BaseUserInfo(name = firebaseUser.displayName!!,
 						                            mainPhotoUrl = photoUrl,
