@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 21.12.19 20:12
+ * Last modified 22.12.19 16:07
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -53,11 +53,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 		disposables.add(isAuthenticatedExecution()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       if (it && continueRegistration.value == null){
-		                       isAuthenticatedStatus.value = it
-	                       }
-	                       else isAuthenticatedStatus.value = false
-	                       Log.wtf(TAG, "is user logged in? = ${isAuthenticatedStatus.value}")
+	                       isAuthenticatedStatus.value = it
                        },
                        {
 	                       error.value = it
@@ -76,10 +72,8 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 		                       Log.wtf("mylogs", "successfully retrieved user")
 		                       continueRegistration.value = false
 		                       userItem.value = it
-		                       isAuthenticatedStatus.value = true
 	                       }
 	                       else {
-		                       continueRegistration.value = true
 		                       baseUserInfo.value = it.baseUserInfo
 		                       Log.wtf("mylogs", "received user: =${baseUserInfo.value}")
 	                       }
@@ -97,7 +91,6 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
             .subscribe({
 	                       continueRegistration.value = false
 	                       this.userItem.value = userItem
-	                       isAuthenticatedStatus.value = true
                        },
                        {
                            Log.wtf("mylogs", it)
@@ -106,7 +99,6 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 
 	fun logOut() {
 		logOutExecution()
-		isAuthenticatedStatus.value = false
 	}
 
 	fun getAuthStatus() = isAuthenticatedStatus

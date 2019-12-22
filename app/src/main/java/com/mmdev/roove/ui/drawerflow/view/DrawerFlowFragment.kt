@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 21.12.19 18:55
+ * Last modified 22.12.19 16:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,13 +55,13 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_drawer_flow) {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		userItemModel = ViewModelProvider(this, factory)
 			.get(LocalUserRepoViewModel::class.java)
 			.getSavedUser()
 
-		sharedViewModel = activity?.run {
-			ViewModelProvider(this, factory)[SharedViewModel::class.java]
+		activity?.run {
+			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
+			authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
 		userItemModel?.let { sharedViewModel.setCurrentUser(it) }
