@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 22.12.19 16:07
+ * Last modified 22.12.19 17:00
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,13 +56,12 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 	                       isAuthenticatedStatus.value = it
                        },
                        {
-	                       error.value = it
+                           error.value = it
                            Log.wtf(TAG, it)
                        }))
 	}
 
 	fun signIn(loginToken: String) {
-		continueRegistration.value = true
 		disposables.add(signInExecution(loginToken)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showProgress.value = true }
@@ -74,6 +73,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 		                       userItem.value = it
 	                       }
 	                       else {
+		                       continueRegistration.value = true
 		                       baseUserInfo.value = it.baseUserInfo
 		                       Log.wtf("mylogs", "received user: =${baseUserInfo.value}")
 	                       }
