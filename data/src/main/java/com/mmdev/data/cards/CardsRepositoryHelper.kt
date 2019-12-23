@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 20.12.19 18:53
+ * Last modified 23.12.19 18:56
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,7 +44,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.city)
 			.collection(currentUser.preferredGender)
-			.whereEqualTo(USERS_FILTER_AGE, 18)
+			.whereGreaterThan(USERS_FILTER_AGE, 18)
 			//.limit(limit)
 			.get()
 		return Single.create(SingleOnSubscribe<List<CardItem>>{ emitter ->
