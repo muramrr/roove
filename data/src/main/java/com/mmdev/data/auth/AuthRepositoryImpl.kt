@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2019. All rights reserved.
- * Last modified 22.12.19 16:39
+ * Last modified 23.12.19 19:17
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,7 +45,14 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		return Observable.create(ObservableOnSubscribe<Boolean>{ emitter ->
 			val authStateListener = FirebaseAuth.AuthStateListener { auth ->
 				if (auth.currentUser == null) emitter.onNext(false)
-				else emitter.onNext(true)
+				else {
+					val ref = db.collection(BASE_COLLECTION_REFERENCE)
+					ref.document(auth.currentUser!!.uid).get()
+						.addOnSuccessListener { userDoc ->
+							emitter.onNext(userDoc.exists())
+						}
+				}
+
 			}
 			auth.addAuthStateListener(authStateListener)
 			emitter.setCancellable { auth.removeAuthStateListener(authStateListener) }
@@ -54,7 +61,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 
 	override fun signIn(token: String): Single<UserItem>{
 		return signInWithFacebook(token)
-			.flatMap { checkIfRegistered(it) }
+			.flatMap { retrieveFullUser(it) }
 			.subscribeOn(Schedulers.io())
 	}
 
@@ -72,9 +79,6 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		auth.signOut()
 		fbLogin.logOut()
 	}
-
-
-
 
 	/**
 	 * this fun is called first when user is trying to sign in via facebook
@@ -105,9 +109,21 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 
 	/**
 	 * checks if there is already store such user with this uId
-	 * @return [UserItem]
+	 * @return [Boolean]
 	 */
-	private fun checkIfRegistered(baseUserInfo: BaseUserInfo): Single<UserItem> {
+	private fun checkIfRegistered(uId: String): Single<Boolean> {
+		return Single.create(SingleOnSubscribe<Boolean> { emitter ->
+			val ref = db.collection(BASE_COLLECTION_REFERENCE)
+			ref.document(uId).get()
+				.addOnSuccessListener { userDoc ->
+					emitter.onSuccess(userDoc.exists())
+				}
+				.addOnFailureListener { emitter.onError(it) }
+		}).subscribeOn(Schedulers.io())
+	}
+
+
+	private fun retrieveFullUser(baseUserInfo: BaseUserInfo): Single<UserItem>{
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
 			val ref = db.collection(BASE_COLLECTION_REFERENCE)
 			ref.document(baseUserInfo.userId).get()
@@ -133,7 +149,6 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 				.addOnFailureListener { emitter.onError(it) }
 		}).observeOn(Schedulers.io())
 	}
-
 
 }
 
