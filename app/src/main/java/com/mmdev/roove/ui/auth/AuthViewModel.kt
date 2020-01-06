@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 22.12.19 17:00
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 06.01.20 18:56
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -125,10 +125,4 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 		super.onCleared()
 	}
 
-
-	enum class AuthStatus {
-		REGISTRATION_PENDING,
-		REGISTRATION_FINISHED,
-		USER_AUTHENTICATED
-	}
 }
