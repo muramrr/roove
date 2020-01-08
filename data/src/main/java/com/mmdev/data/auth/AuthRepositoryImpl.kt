@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 23.12.19 19:17
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 08.01.20 17:07
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,12 +47,10 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 				if (auth.currentUser == null) emitter.onNext(false)
 				else {
 					val ref = db.collection(BASE_COLLECTION_REFERENCE)
-					ref.document(auth.currentUser!!.uid).get()
-						.addOnSuccessListener { userDoc ->
-							emitter.onNext(userDoc.exists())
-						}
+					ref.document(auth.currentUser!!.uid).get().addOnSuccessListener {
+						userDoc -> emitter.onNext(userDoc.exists())
+					}
 				}
-
 			}
 			auth.addAuthStateListener(authStateListener)
 			emitter.setCancellable { auth.removeAuthStateListener(authStateListener) }

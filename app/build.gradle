@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 17.12.19 17:42
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 08.01.20 18:49
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -82,10 +82,10 @@ dependencies {
 	//core
 	implementation 'androidx.core:core-ktx:1.2.0-rc01'
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-	implementation 'androidx.appcompat:appcompat:1.1.0'
+	implementation 'androidx.appcompat:appcompat:1.2.0-alpha01'
 	implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
 	implementation 'androidx.drawerlayout:drawerlayout:1.1.0-alpha03'
-	implementation 'com.google.android.material:material:1.2.0-alpha02'
+	implementation 'com.google.android.material:material:1.2.0-alpha03'
 
 	//custom UI
 	implementation 'com.yuyakaido.android:card-stack-view:2.3.4'
@@ -117,13 +117,13 @@ dependencies {
 	implementation libs.rxAndroid
 
 	// Retrofit
-	implementation 'com.squareup.retrofit2:retrofit:2.6.2'
-	implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
-	implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.2"
+	implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+	implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
+	implementation "com.squareup.retrofit2:adapter-rxjava2:2.7.1"
 
 	// Navigation controller
-	implementation 'androidx.navigation:navigation-fragment-ktx:2.2.0-rc03'
-	implementation 'androidx.navigation:navigation-ui-ktx:2.2.0-rc03'
+	implementation 'androidx.navigation:navigation-fragment-ktx:2.2.0-rc04'
+	implementation 'androidx.navigation:navigation-ui-ktx:2.2.0-rc04'
 
 
 	// ViewModel and LiveData

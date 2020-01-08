@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 10.12.19 18:51
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 08.01.20 18:25
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,8 +10,7 @@
   -->
 
 
-<FrameLayout
-	android:id="@+id/main_activity_container"
+<FrameLayout android:id="@+id/main_activity_container"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,6 +22,6 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:src="@drawable/logo_loading"
-		tools:ignore="ContentDescription" />
+		tools:ignore="ContentDescription"/>
 
 </FrameLayout>
