@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 21.12.19 17:50
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 08.01.20 18:04
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -166,9 +166,9 @@
 		android:valueFrom="18"
 		android:valueTo="50"
 
-		app:activeTrackColor="?colorSecondary"
+		app:trackColorActive="?colorSecondary"
+		app:trackColorInactive="@color/lolite_25"
 		app:haloColor="?colorSecondary"
-		app:inactiveTrackColor="@color/lolite_25"
 
 		app:thumbColor="@color/white_85"
 		app:thumbRadius="14dp"

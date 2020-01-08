@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 09.12.19 17:25
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 08.01.20 18:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation android:id="@+id/drawerNavigation"
+	app:startDestination="@+id/nav_places"
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/drawerNavigation"
-	app:startDestination="@+id/nav_places">
+	xmlns:tools="http://schemas.android.com/tools">
 
 	<action
 		android:id="@+id/action_open_inboxFragment"
@@ -23,6 +22,7 @@
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
 		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
 	<action
 		android:id="@+id/action_open_cardsFragment"
 		app:destination="@id/nav_cards"
@@ -31,14 +31,13 @@
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
 		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
 
-
-	<action android:id="@+id/action_open_placesFragment"
+	<action
+		android:id="@+id/action_open_placesFragment"
 		app:destination="@id/nav_places"
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
 		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
-
 
 	<fragment
 		android:id="@+id/nav_places"
@@ -157,8 +156,5 @@
 		android:id="@+id/placeDetailedFragment"
 		android:name="com.mmdev.roove.ui.places.view.detailed.PlaceDetailedFragment"
 		tools:layout="@layout/fragment_place_detailed" />
-
-
-
 
 </navigation>

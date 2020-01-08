@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 19.12.19 17:54
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 08.01.20 18:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,12 +10,11 @@
   -->
 
 <navigation
+	android:id="@+id/authNavigation"
+	app:startDestination="@id/auth_landing"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/authNavigation"
-	app:startDestination="@id/auth_landing">
-
+	xmlns:tools="http://schemas.android.com/tools">
 
 	<fragment
 		android:id="@+id/auth_landing"
@@ -26,14 +25,11 @@
 			android:id="@+id/action_auth_landing_to_registrationFragment"
 			app:destination="@id/registrationFragment" />
 
-
 	</fragment>
-
 
 	<fragment
 		android:id="@+id/registrationFragment"
 		android:name="com.mmdev.roove.ui.auth.view.RegistrationFragment"
 		tools:layout="@layout/fragment_registration" />
-
 
 </navigation>

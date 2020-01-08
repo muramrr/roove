@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 07.12.19 20:12
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 08.01.20 19:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,9 +17,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 
 fun AppCompatActivity.showToastText(text: String) =
 	Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+
+fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
+	observe(lifecycleOwner, object : Observer<T> {
+		override fun onChanged(t: T?) {
+			observer.onChanged(t)
+			removeObserver(this)
+		}
+	})
+}
 
 
 fun View.addSystemTopPadding(targetView: View = this, isConsumed: Boolean = false) {
