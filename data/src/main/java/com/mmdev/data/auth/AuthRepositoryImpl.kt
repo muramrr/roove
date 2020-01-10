@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.01.20 17:07
+ * Last modified 10.01.20 16:48
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,7 +69,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	override fun registerUser(userItem: UserItem): Completable =
 		remoteRepo.createUserOnRemote(userItem)
 			.doOnComplete { localRepo.saveUserInfo(userItem) }
-			.observeOn(Schedulers.io())
+			.subscribeOn(Schedulers.io())
 
 
 
@@ -103,23 +103,6 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 
 		}).observeOn(Schedulers.io())
 	}
-
-
-	/**
-	 * checks if there is already store such user with this uId
-	 * @return [Boolean]
-	 */
-	private fun checkIfRegistered(uId: String): Single<Boolean> {
-		return Single.create(SingleOnSubscribe<Boolean> { emitter ->
-			val ref = db.collection(BASE_COLLECTION_REFERENCE)
-			ref.document(uId).get()
-				.addOnSuccessListener { userDoc ->
-					emitter.onSuccess(userDoc.exists())
-				}
-				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
-	}
-
 
 	private fun retrieveFullUser(baseUserInfo: BaseUserInfo): Single<UserItem>{
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
