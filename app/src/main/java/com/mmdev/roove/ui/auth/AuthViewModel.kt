@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.01.20 18:56
+ * Last modified 10.01.20 17:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -90,6 +90,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       continueRegistration.value = false
+	                       isAuthenticatedStatus.value = true
 	                       this.userItem.value = userItem
                        },
                        {
@@ -97,9 +98,8 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
                        }))
 	}
 
-	fun logOut() {
-		logOutExecution()
-	}
+
+	fun logOut() = logOutExecution()
 
 	fun getAuthStatus() = isAuthenticatedStatus
 
