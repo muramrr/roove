@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:21
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 13.01.20 18:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,10 +39,18 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 		private const val SECONDARY_COLLECTION_REFERENCE = "messages"
 
+		//firestore conversation fields for updating
+		private const val CONVERSATION_PARTNER_FIELD = "partner.userId"
+		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
+		private const val CONVERSATION_LASTMESSAGETEXT_FIELD = "lastMessageText"
+		private const val CONVERSATION_LASTMESSAGETIMESTAMP_FIELD = "lastMessageTimestamp"
+
 		private const val USERS_COLLECTION_REFERENCE = "users"
 		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
 		// Firebase Storage references
 		private const val GENERAL_FOLDER_STORAGE_IMG = "images"
+
+		private const val TAG = "mylogs_ChatRepoImpl"
 	}
 
 
@@ -58,7 +66,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 				.collection(currentUser.baseUserInfo.gender)
 				.document(currentUser.baseUserInfo.userId)
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.whereEqualTo("partnerId", partnerId)
+				.whereEqualTo(CONVERSATION_PARTNER_FIELD, partnerId)
 				.get()
 				.addOnSuccessListener {
 					if (!it.isEmpty) {
@@ -66,7 +74,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 							it.documents[0].toObject(ConversationItem::class.java)!!
 						emitter.onSuccess(conversation)
 					}
-					else emitter.onError(Exception("can't retrive such conversation"))
+					else emitter.onError(Exception("chatRepository: can't retrive such conversation"))
 				}
 				.addOnFailureListener { emitter.onError(it) }
 
@@ -76,7 +84,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	override fun getMessagesList(conversation: ConversationItem): Observable<List<MessageItem>> {
 		this.conversation = conversation
 		this.partner = conversation.partner
-		Log.wtf("mylogs", "conversation set, id = ${conversation.conversationId}")
+		Log.wtf(TAG, "conversation set, id = ${conversation.conversationId}")
 		return Observable.create(ObservableOnSubscribe<List<MessageItem>> { emitter ->
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversation.conversationId)
@@ -99,7 +107,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 
 	override fun sendMessage(messageItem: MessageItem, emptyChat: Boolean?): Completable {
-		Log.wtf("mylogs", "is empty recieved? + $emptyChat")
+		//Log.wtf("TAG", "is empty recieved? + $emptyChat")
 		val conversation = firestore
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversation.conversationId)
@@ -165,14 +173,14 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			.document(currentUser.baseUserInfo.userId)
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversation.conversationId)
-			.update("conversationStarted", true)
+			.update(CONVERSATION_STARTED_FIELD, true)
 		firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.city)
 			.collection(currentUser.baseUserInfo.gender)
 			.document(currentUser.baseUserInfo.userId)
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.document(partner.userId)
-			.update("conversationStarted", true)
+			.update(CONVERSATION_STARTED_FIELD, true)
 
 
 		// for partner
@@ -182,15 +190,15 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			.document(partner.userId)
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversation.conversationId)
-			.update("conversationStarted", true)
+			.update(CONVERSATION_STARTED_FIELD, true)
 		firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(partner.city)
 			.collection(partner.gender)
 			.document(partner.userId)
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.userId)
-			.update("conversationStarted", true)
-		Log.wtf("mylogs", "convers status updated")
+			.update(CONVERSATION_STARTED_FIELD, true)
+		Log.wtf(TAG, "convers status updated")
 	}
 
 	private fun updateLastMessage(messageItem: MessageItem) {
@@ -208,21 +216,21 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			.document(conversation.conversationId)
 		if (messageItem.photoAttachementItem != null) {
 			// for current
-			cur.update("lastMessageText", "Photo")
-			cur.update("lastMessageTimestamp", messageItem.timestamp)
+			cur.update(CONVERSATION_LASTMESSAGETEXT_FIELD, "Photo")
+			cur.update(CONVERSATION_LASTMESSAGETIMESTAMP_FIELD, messageItem.timestamp)
 			// for partner
-			par.update("lastMessageText", "Photo")
-			par.update("lastMessageTimestamp", messageItem.timestamp)
+			par.update(CONVERSATION_LASTMESSAGETEXT_FIELD, "Photo")
+			par.update(CONVERSATION_LASTMESSAGETIMESTAMP_FIELD, messageItem.timestamp)
 		}
 		else {
 			// for current
-			cur.update("lastMessageText", messageItem.text)
-			cur.update("lastMessageTimestamp", messageItem.timestamp)
+			cur.update(CONVERSATION_LASTMESSAGETEXT_FIELD, messageItem.text)
+			cur.update(CONVERSATION_LASTMESSAGETIMESTAMP_FIELD, messageItem.timestamp)
 			// for partner
-			par.update("lastMessageText", messageItem.text)
-			par.update("lastMessageTimestamp", messageItem.timestamp)
+			par.update(CONVERSATION_LASTMESSAGETEXT_FIELD, messageItem.text)
+			par.update(CONVERSATION_LASTMESSAGETIMESTAMP_FIELD, messageItem.timestamp)
 		}
-		Log.wtf("mylogs", "last message updated")
+		Log.wtf(TAG, "last message updated")
 	}
 
 }

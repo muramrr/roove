@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 22.12.19 16:05
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 13.01.20 18:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,7 +28,7 @@ import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.core.FlowFragment
 import com.mmdev.roove.ui.core.SharedViewModel
-import com.mmdev.roove.ui.drawerflow.viewmodel.local.LocalUserRepoViewModel
+import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
 import com.mmdev.roove.utils.addSystemTopPadding
 import kotlinx.android.synthetic.main.fragment_drawer_flow.*
 import kotlinx.android.synthetic.main.nav_header.view.*

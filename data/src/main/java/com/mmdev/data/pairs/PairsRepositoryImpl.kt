@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:21
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 13.01.20 18:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,6 +33,8 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	companion object {
 		private const val USERS_COLLECTION_REFERENCE = "users"
 		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
+
+		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
 	}
 
 	override fun getMatchedUsersList(): Observable<List<CardItem>> {
@@ -43,7 +45,7 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				.collection(currentUserInfo.gender)
 				.document(currentUserInfo.userId)
 				.collection(USER_MATCHED_COLLECTION_REFERENCE)
-				.whereEqualTo("conversationStarted", false)
+				.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
 						emitter.onError(e)

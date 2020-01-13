@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:21
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 13.01.20 18:54
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,16 +39,13 @@ class ChatViewModel @Inject constructor(private val getConversationUC: GetConver
 
 
 	companion object {
-		private const val TAG = "mylogs"
+		private const val TAG = "mylogs_ChatViewModel"
 	}
 
 
 	fun startListenToEmptyChat(partnerId: String){
 		disposables.add(getConversationExecution(partnerId)
             .flatMapObservable { getMessagesExecution(it) }
-            .doOnSubscribe { showLoading.value = true }
-            .doOnNext { showLoading.value = false }
-            .doFinally { showLoading.value = false }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       if(it.isNotEmpty()) {
@@ -57,7 +54,7 @@ class ChatViewModel @Inject constructor(private val getConversationUC: GetConver
 	                       }
 	                       else emptyChat = true
 	                       Log.wtf(TAG, "empty chat messages to show: ${it.size}")
-	                       Log.wtf("mylogs", "is empty sent? + $emptyChat")
+	                       Log.wtf(TAG, "is empty chat? + $emptyChat")
                        },
                        {
 	                       Log.wtf(TAG, "get messages empty chat error: $it")
@@ -77,7 +74,6 @@ class ChatViewModel @Inject constructor(private val getConversationUC: GetConver
 	                       }
 	                       else emptyChat = true
 	                       Log.wtf(TAG, "messages to show: ${it.size}")
-	                       Log.wtf("mylogs", "is empty sent? + $emptyChat")
                        },
                        {
 	                       Log.wtf(TAG, "get messages error: $it")

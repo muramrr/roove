@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:21
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 13.01.20 18:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,6 +37,8 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 		private const val PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL = "mainphotourl"
 		private const val PREF_KEY_CURRENT_USER_PHOTO_URLS = "photourls"
 		private const val PREF_KEY_CURRENT_USER_ID = "uid"
+
+		private const val TAG = "mylogs_UserRepoImpl"
 	}
 
 	override fun getSavedUser(): UserItem? {
@@ -50,7 +52,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 				val mainPhotoUrl = prefs.getString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, "")!!
 				val photoUrls = prefs.getStringSet(PREF_KEY_CURRENT_USER_PHOTO_URLS, setOf(""))!!
 				val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")!!
-				Log.wtf("mylogs", "retrieved user info from sharedpref successfully")
+				Log.wtf(TAG, "retrieved user info from sharedpref successfully")
 				UserItem(BaseUserInfo(name,
 				                      age,
 				                      city,
@@ -59,12 +61,12 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 				         preferredGender,
 				         photoUrls.toList())
 			}catch (e: Exception) {
-				Log.wtf("mylogs", "read exception, but user is saved")
+				Log.wtf(TAG, "read exception, but user is saved")
 				null
 			}
 		}
 		else {
-			Log.wtf("mylogs", "User is not saved")
+			Log.wtf(TAG, "User is not saved")
 			null
 		}
 	}
@@ -82,7 +84,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 		editor.putString(PREF_KEY_CURRENT_USER_ID, currentUserItem.baseUserInfo.userId)
 		editor.putBoolean(PREF_KEY_GENERAL_IF_SAVED, true)
 		editor.commit()
-		Log.wtf("mylogs", "User successfully saved")
+		Log.wtf(TAG, "User successfully saved")
 	}
 
 }

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:21
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 13.01.20 18:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +25,7 @@ import com.mmdev.roove.R
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.ImagePagerAdapter
 import com.mmdev.roove.ui.core.SharedViewModel
-import com.mmdev.roove.ui.drawerflow.viewmodel.remote.RemoteUserRepoViewModel
+import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 /**
@@ -66,7 +66,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 		sharedViewModel.cardSelected.observe(this, Observer { carditem ->
 			//block to sharedviewmodel update card clicked on another screen
 			if (!isOnCreateCalled) {
-				remoteRepoViewModel.getUserById(carditem.baseUserInfo.userId)
+				remoteRepoViewModel.getFullUserItem(carditem.baseUserInfo)
 				remoteRepoViewModel.getUser().observe(this, Observer {
 					selectedUser = it
 					collapseBarProfile.title = selectedUser.baseUserInfo.name
