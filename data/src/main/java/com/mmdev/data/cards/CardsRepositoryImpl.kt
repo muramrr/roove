@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 20.12.19 18:53
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 13.01.20 18:38
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,6 @@ import com.mmdev.business.cards.CardItem
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.user.UserItem
-import com.mmdev.business.user.repository.RemoteUserRepository
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.functions.BiFunction
@@ -31,8 +30,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
-                                              private val currentUserItem: UserItem,
-                                              private val remoteRepo: RemoteUserRepository):
+                                              private val currentUserItem: UserItem):
 		CardsRepository {
 
 	companion object {
@@ -41,7 +39,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		private const val USER_SKIPPED_COLLECTION_REFERENCE = "skipped"
 		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
 		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
-		private const val TAG = "mylogs"
+		private const val TAG = "mylogs_CardsRepoImpl"
 	}
 
 	private val currentUserInfo = currentUserItem.baseUserInfo
@@ -91,8 +89,8 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 						//set conversation for current user
 						firestore.collection(USERS_COLLECTION_REFERENCE)
-							.document(likedCardItem.baseUserInfo.city)
-							.collection(likedCardItem.baseUserInfo.gender)
+							.document(currentUserInfo.city)
+							.collection(currentUserInfo.gender)
 							.document(currentUserInfo.userId)
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 							.document(conversationId)
@@ -124,9 +122,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		}).subscribeOn(Schedulers.io())
 	}
 
-	override fun getFullUserInfo(baseUserInfo: BaseUserInfo) =
-		remoteRepo.getFullUserInfo(baseUserInfo)
-
 	/* return filtered users list as Single */
 	override fun getUsersByPreferences(): Single<List<CardItem>> {
 		val cardsRepositoryHelper = CardsRepositoryHelper(firestore, currentUserItem)
@@ -151,7 +146,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		addToMatchCollection(currentCardItem.baseUserInfo, likedCardItem)
 
 		//note:uncomment for release
-		//deleteFromLikesCollection(likedCardItem.baseUserInfo, currentCardItem)
+		deleteFromLikesCollection(likedCardItem.baseUserInfo, currentUserInfo.userId)
 
 		deleteFromLikesCollection(currentCardItem.baseUserInfo,
 		                          likedCardItem.baseUserInfo.userId)
@@ -210,7 +205,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		firestore.collection(USERS_COLLECTION_REFERENCE).document("eoswtmcpul").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
 		firestore.collection(USERS_COLLECTION_REFERENCE).document("ryknjtobrx").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
 		firestore.collection(USERS_COLLECTION_REFERENCE).document("snykckkosz").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
-		Log.wtf("mylogs", "liked for bots executed")
+		Log.wtf(TAG, "liked for bots executed")
 	}
 
 }

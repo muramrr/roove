@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:21
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 13.01.20 17:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import com.mmdev.business.cards.CardItem
 import com.mmdev.business.cards.usecase.AddToSkippedUseCase
 import com.mmdev.business.cards.usecase.CheckMatchUseCase
 import com.mmdev.business.cards.usecase.GetUsersByPreferencesUseCase
+import com.mmdev.business.user.UserItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -27,6 +28,7 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
 		ViewModel(){
 
 	private val usersCardsList: MutableLiveData<List<CardItem>> = MutableLiveData()
+	private val fullUserItem: MutableLiveData<UserItem> = MutableLiveData()
 
 	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
 	val showMatchDialog: MutableLiveData<Boolean> = MutableLiveData()
@@ -57,7 +59,6 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
                            Log.wtf(TAG, "error swiped + $it")
                        }))
 	}
-
 
 	fun loadUsersByPreferences(){
 		disposables.add(getUsersByPreferencesExecution()

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 21.12.19 20:21
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 13.01.20 18:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,6 +34,8 @@ class UserRepositoryRemoteImpl @Inject constructor(private val db: FirebaseFires
 	companion object {
 		private const val GENERAL_COLLECTION_REFERENCE = "users"
 		private const val BASE_COLLECTION_REFERENCE = "usersBase"
+
+		private const val TAG = "mylogs_UserRepoRemoteImpl"
 	}
 
 	override fun createUserOnRemote(userItem: UserItem): Completable {
@@ -64,7 +66,8 @@ class UserRepositoryRemoteImpl @Inject constructor(private val db: FirebaseFires
 					db.collection(BASE_COLLECTION_REFERENCE)
 						.document(userItem.baseUserInfo.userId)
 						.delete()
-					emitter.onComplete()
+						.addOnCompleteListener { emitter.onComplete() }
+						.addOnFailureListener { emitter.onError(it)  }
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}.subscribeOn(Schedulers.io())
@@ -86,7 +89,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val db: FirebaseFires
 		}).subscribeOn(Schedulers.io())
 	}
 
-	override fun getFullUserInfo(baseUserInfo: BaseUserInfo): Single<UserItem> {
+	override fun getFullUserItem(baseUserInfo: BaseUserInfo): Single<UserItem> {
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
 			val ref = db.collection(GENERAL_COLLECTION_REFERENCE)
 				.document(baseUserInfo.city)

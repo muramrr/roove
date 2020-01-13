@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:21
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 13.01.20 19:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -118,18 +118,20 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 				partnerMainPhotoUrl = it.partner.mainPhotoUrl
 				setupContentToolbar()
 				isOnCreateCalled = true
-				if (it.conversationId.isNotEmpty()) {
-					chatViewModel.loadMessages(it)
-					chatViewModel.getMessagesList().observe(this, Observer { messageList ->
-						mChatAdapter.updateData(messageList)
-					})
-				}
-				else {
-					chatViewModel.startListenToEmptyChat(it.partner.userId)
-					chatViewModel.getMessagesList().observe(this, Observer { messageList ->
-						mChatAdapter.updateData(messageList)
-					})
-				}
+//				if (it.conversationId.isNotEmpty()) {
+//					Log.wtf("mylogs_ChatFragment", "not empty")
+//					chatViewModel.loadMessages(it)
+//					chatViewModel.getMessagesList().observe(this, Observer { messageList ->
+//						mChatAdapter.updateData(messageList)
+//					})
+//				}
+//				else {
+//					Log.wtf("mylogs_ChatFragment", "start listen to empty chat")
+//					chatViewModel.startListenToEmptyChat(it.partner.userId)
+//					chatViewModel.getMessagesList().observe(this, Observer { messageList ->
+//						mChatAdapter.updateData(messageList)
+//					})
+//				}
 			}
 		})
 

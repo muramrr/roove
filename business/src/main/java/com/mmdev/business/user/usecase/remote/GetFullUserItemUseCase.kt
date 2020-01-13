@@ -8,25 +8,17 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.business.user.repository
+package com.mmdev.business.user.usecase.remote
 
 import com.mmdev.business.base.BaseUserInfo
-import com.mmdev.business.user.UserItem
-import io.reactivex.Completable
-import io.reactivex.Single
+import com.mmdev.business.user.repository.RemoteUserRepository
 
 /**
  * This is the documentation block about the class
  */
 
-interface RemoteUserRepository {
+class GetFullUserItemUseCase (private val repository: RemoteUserRepository) {
 
-	fun createUserOnRemote(userItem: UserItem): Completable
-
-	fun deleteUser(userItem: UserItem): Completable
-
-	fun fetchUserInfo(userItem: UserItem): Single<UserItem>
-
-	fun getFullUserItem(baseUserInfo: BaseUserInfo): Single<UserItem>
+	fun execute(b: BaseUserInfo) = repository.getFullUserItem(b)
 
 }

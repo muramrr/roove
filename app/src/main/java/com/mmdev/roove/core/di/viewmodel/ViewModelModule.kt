@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 21.12.19 18:52
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 13.01.20 18:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,14 +39,15 @@ import com.mmdev.business.user.usecase.local.GetSavedUserUseCase
 import com.mmdev.business.user.usecase.local.SaveUserInfoUseCase
 import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
 import com.mmdev.business.user.usecase.remote.FetchUserInfoUseCase
+import com.mmdev.business.user.usecase.remote.GetFullUserItemUseCase
 import com.mmdev.roove.ui.actions.conversations.ConversationsViewModel
 import com.mmdev.roove.ui.actions.pairs.PairsViewModel
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.cards.CardsViewModel
 import com.mmdev.roove.ui.chat.ChatViewModel
 import com.mmdev.roove.ui.core.SharedViewModel
-import com.mmdev.roove.ui.drawerflow.viewmodel.local.LocalUserRepoViewModel
-import com.mmdev.roove.ui.drawerflow.viewmodel.remote.RemoteUserRepoViewModel
+import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
+import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.places.PlacesViewModel
 import dagger.Module
 import dagger.Provides
@@ -120,16 +121,19 @@ class ViewModelModule {
 	@Provides
 	@ViewModelKey(LocalUserRepoViewModel::class)
 	fun localUserRepoViewModel(repository: LocalUserRepository): ViewModel =
-		LocalUserRepoViewModel(GetSavedUserUseCase(repository),
-		                       SaveUserInfoUseCase(repository))
+		LocalUserRepoViewModel(
+				GetSavedUserUseCase(repository),
+				SaveUserInfoUseCase(repository))
 
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(RemoteUserRepoViewModel::class)
 	fun remoteUserRepoViewModel(repository: RemoteUserRepository): ViewModel =
-		RemoteUserRepoViewModel(DeleteUserUseCase(repository),
-		                        FetchUserInfoUseCase(repository))
+		RemoteUserRepoViewModel(
+				DeleteUserUseCase(repository),
+				FetchUserInfoUseCase(repository),
+				GetFullUserItemUseCase(repository))
 
 	@IntoMap
 	@Provides

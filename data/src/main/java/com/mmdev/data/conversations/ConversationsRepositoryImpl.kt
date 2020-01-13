@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:21
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 13.01.20 18:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,13 +19,11 @@ import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This is the documentation block about the class
  */
 
-@Singleton
 class ConversationsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
                                                       currentUser: UserItem):
 		ConversationsRepository {
@@ -36,6 +34,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 
 		// firestore conversations reference
 		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
+		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
 	}
 
 	private val currentUserInfo = currentUser.baseUserInfo
@@ -80,7 +79,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				.collection(currentUserInfo.gender)
 				.document(currentUserInfo.userId)
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.whereEqualTo("conversationStarted", true)
+				.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
 				.orderBy("lastMessageTimestamp")
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
