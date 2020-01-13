@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 23.12.19 18:56
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 13.01.20 17:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 
 	companion object {
 		private const val USERS_COLLECTION_REFERENCE = "users"
-		private const val USERS_FILTER_AGE = "age"
+		private const val USERS_FILTER_AGE = "baseUserInfo.age"
 		private const val USER_LIKED_COLLECTION_REFERENCE = "liked"
 		private const val USER_SKIPPED_COLLECTION_REFERENCE = "skipped"
 		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
@@ -44,7 +44,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 		val query = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.city)
 			.collection(currentUser.preferredGender)
-			.whereGreaterThan(USERS_FILTER_AGE, 18)
+			.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.baseUserInfo.age)
 			//.limit(limit)
 			.get()
 		return Single.create(SingleOnSubscribe<List<CardItem>>{ emitter ->
