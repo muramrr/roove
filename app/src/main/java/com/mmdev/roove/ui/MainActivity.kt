@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.01.20 19:06
+ * Last modified 14.01.20 18:02
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@ package com.mmdev.roove.ui
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -78,7 +77,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 		progressDialog = LoadingDialog(this@MainActivity)
 
 		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
-		Handler().postDelayed({ authViewModel.checkIsAuthenticated () }, 1000)
+		authViewModel.checkIsAuthenticated()
 //		authViewModel.getAuthStatus().observeOnce(this, Observer {
 //			if (it == false) {
 //				showAuthFlowFragment()
