@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.01.20 18:49
+ * Last modified 14.01.20 18:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -102,8 +102,8 @@ dependencies {
 	implementation libs.facebookLogin
 
 	//glide
-	implementation 'com.github.bumptech.glide:glide:4.10.0'
-	kapt 'com.github.bumptech.glide:compiler:4.10.0'
+	implementation 'com.github.bumptech.glide:glide:4.11.0'
+	kapt 'com.github.bumptech.glide:compiler:4.11.0'
 
 	// Dagger
 	implementation libs.dagger
