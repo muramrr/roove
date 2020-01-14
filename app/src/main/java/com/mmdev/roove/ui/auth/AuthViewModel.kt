@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.01.20 17:05
+ * Last modified 14.01.20 18:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,6 +21,7 @@ import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsAuthenticatedListenerUseCase,
@@ -46,11 +47,12 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 	private val disposables = CompositeDisposable()
 
 	companion object {
-		private const val TAG = "mylogs"
+		private const val TAG = "mylogs_AuthViewModel"
 	}
 
 	fun checkIsAuthenticated() {
 		disposables.add(isAuthenticatedExecution()
+            .debounce(1000, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       isAuthenticatedStatus.value = it
@@ -68,19 +70,19 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
             .doFinally { showProgress.value = false }
             .subscribe({
 	                       if (it.preferredGender.isNotEmpty()) {
-		                       Log.wtf("mylogs", "successfully retrieved user")
+		                       Log.wtf(TAG, "successfully retrieved user")
 		                       continueRegistration.value = false
 		                       userItem.value = it
 	                       }
 	                       else {
 		                       continueRegistration.value = true
 		                       baseUserInfo.value = it.baseUserInfo
-		                       Log.wtf("mylogs", "received user: =${baseUserInfo.value}")
+		                       Log.wtf(TAG, "received user: =${baseUserInfo.value}")
 	                       }
-	                       Log.wtf("mylogs", "continue registration? -${continueRegistration.value}")
+	                       Log.wtf(TAG, "continue registration? -${continueRegistration.value}")
                        },
                        {
-	                       Log.wtf("mylogs", "$it")
+	                       Log.wtf(TAG, "$it")
                        }
             ))
 	}
@@ -94,7 +96,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 	                       this.userItem.value = userItem
                        },
                        {
-                           Log.wtf("mylogs", it)
+                           Log.wtf(TAG, it)
                        }))
 	}
 

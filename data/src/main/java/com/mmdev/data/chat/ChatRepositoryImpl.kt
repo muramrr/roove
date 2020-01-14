@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.01.20 18:37
+ * Last modified 14.01.20 17:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -123,20 +123,24 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 					.addOnFailureListener { emitter.onError(it) }
 			else {
 				conversation.get().addOnSuccessListener { documentSnapshot ->
-					if (documentSnapshot.exists()) {
+					if (documentSnapshot.exists())
 						conversation.collection(SECONDARY_COLLECTION_REFERENCE).document()
-							.set(messageItem).addOnSuccessListener {
+							.set(messageItem)
+							.addOnSuccessListener {
 								updateLastMessage(messageItem)
 								emitter.onComplete()
 							}
-					}
+							.addOnFailureListener { emitter.onError(it) }
+
 					else {
 						updateStartedStatus()
 						conversation.collection(SECONDARY_COLLECTION_REFERENCE).document()
-							.set(messageItem).addOnSuccessListener {
+							.set(messageItem)
+							.addOnSuccessListener {
 								updateLastMessage(messageItem)
 								emitter.onComplete()
 							}
+							.addOnFailureListener { emitter.onError(it) }
 					}
 
 				}.addOnFailureListener { emitter.onError(it) }
