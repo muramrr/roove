@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 21.12.19 20:14
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 14.01.20 19:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -61,7 +61,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 	private var unpressedTintColor: ColorStateList? = null
 
 	companion object{
-		private const val TAG_LOG = "mylogs"
+		private const val TAG = "mylogs_RegistrFragment"
 	}
 
 
