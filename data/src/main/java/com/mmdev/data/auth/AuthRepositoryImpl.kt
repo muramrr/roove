@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.01.20 16:48
+ * Last modified 14.01.20 18:06
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -74,8 +74,10 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 
 
 	override fun logOut(){
-		auth.signOut()
-		fbLogin.logOut()
+		if (auth.currentUser != null) {
+			auth.signOut()
+			fbLogin.logOut()
+		}
 	}
 
 	/**
