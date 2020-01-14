@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.01.20 18:48
+ * Last modified 14.01.20 18:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,7 @@ buildscript {
 		dagger_version = '2.25.4'
 
 		// RxJava
-		rxjava_version = '2.2.16'
+		rxjava_version = '2.2.17'
 
 		// RxAndroid
 		rxandroid_version = '2.1.1'
