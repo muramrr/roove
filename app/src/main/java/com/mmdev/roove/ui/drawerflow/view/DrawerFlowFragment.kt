@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.01.20 18:03
+ * Last modified 14.01.20 18:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -119,7 +119,7 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_drawer_flow) {
 				R.id.nav_cards -> navController.navigate(R.id.action_open_cardsFragment)
 //				R.id.nav_notifications -> { progressDialog.showDialog()
 //					Handler().postDelayed({ progressDialog.dismissDialog() }, 5000) }
-				R.id.nav_account -> { }
+				R.id.nav_account -> navController.navigate(R.id.action_open_settingsAccountFragment)
 				R.id.nav_log_out -> showSignOutPrompt()
 			}
 			return@setNavigationItemSelectedListener true

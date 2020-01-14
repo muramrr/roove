@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 08.01.20 18:02
+  ~ Last modified 14.01.20 18:30
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
   -->
 
 <navigation android:id="@+id/drawerNavigation"
-	app:startDestination="@+id/nav_places"
+	app:startDestination="@+id/nav_cards"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
@@ -34,6 +34,14 @@
 	<action
 		android:id="@+id/action_open_placesFragment"
 		app:destination="@id/nav_places"
+		app:enterAnim="@anim/nav_default_enter_anim"
+		app:exitAnim="@anim/nav_default_exit_anim"
+		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+	<action
+		android:id="@+id/action_open_settingsAccountFragment"
+		app:destination="@id/settingsAccountFragment"
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -130,6 +138,11 @@
 
 		</action>
 	</fragment>
+
+	<fragment
+		android:id="@+id/settingsAccountFragment"
+		android:name="com.mmdev.roove.ui.settings.SettingsAccountFragment"
+		tools:layout="@layout/fragment_settings_account" />
 
 	<!-- @argument to show is fab enabled to open chat? -->
 	<fragment
