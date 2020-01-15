@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 14.01.20 19:33
+  ~ Last modified 15.01.20 19:28
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,21 +13,27 @@
 
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
+	android:padding="@dimen/general_margin_8"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
+	<!--name-->
 	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/layoutInputChangeName"
+		android:id="@+id/layoutSettingsChangeName"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="24dp"
+		android:layout_marginTop="@dimen/general_margin_16"
 
+		app:counterMaxLength="30"
+
+		app:boxStrokeErrorColor="@color/colorError"
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
-		app:boxStrokeErrorColor="@color/colorError"
 
-		app:counterMaxLength="20"
+		android:hint="Your name"
+		app:hintEnabled="true"
+		app:hintTextColor="@color/white"
 
 		app:errorEnabled="true"
 		app:errorTextColor="@color/colorError"
@@ -39,45 +45,172 @@
 		>
 
 		<com.google.android.material.textfield.TextInputEditText
-			android:id="@+id/edInputChangeName"
+			android:id="@+id/edSettingsName"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:background="@null"
 
 			android:gravity="center"
-
+			android:maxLines="1"
 			android:imeOptions="actionDone"
 			android:inputType="textPersonName"
-			android:maxLines="1"
 
+			android:text="@string/default_name"
 			android:textCursorDrawable="@color/lolite"
 			android:textSize="20sp"
 			style="@style/regular_text_white85op" />
 
 	</com.google.android.material.textfield.TextInputLayout>
 
+	<!--gender-->
 	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/dropdownCityChooserContainer"
+		android:id="@+id/layoutSettingsGender"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="24dp"
+		android:layout_marginEnd="@dimen/general_margin_16"
+		android:layout_marginBottom="@dimen/general_margin_16"
 
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
 
+		android:hint="Your gender"
 		app:hintEnabled="true"
 		app:hintTextColor="@color/white"
-		android:hint="Your city"
+
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toStartOf="@id/layoutSettingsPreferredGender"
+		app:layout_constraintTop_toBottomOf="@id/layoutSettingsChangeName"
+		app:layout_constraintBottom_toTopOf="@id/sliderSettingsAge"
+		>
+
+		<com.google.android.material.textview.MaterialAutoCompleteTextView
+			android:id="@+id/dropSettingsGender"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@null"
+			android:cursorVisible="false"
+			android:drawablePadding="-24dp"
+			android:focusable="false"
+			android:gravity="center"
+			android:imeOptions="actionDone"
+			android:inputType="text"
+
+			android:text="male"
+			android:textSize="20sp"
+			style="@style/regular_text_white85op" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<!--PreferredGender-->
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/layoutSettingsPreferredGender"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/general_margin_16"
+
+		app:boxStrokeColor="@color/text_input_layout"
+		app:boxStrokeWidth="2dp"
+
+		android:hint="Interested in"
+		app:hintEnabled="true"
+		app:hintTextColor="@color/white"
 
 		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
 
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/layoutInputChangeName">
-
+		app:layout_constraintStart_toEndOf="@id/layoutSettingsGender"
+		app:layout_constraintTop_toBottomOf="@id/layoutSettingsChangeName"
+		app:layout_constraintBottom_toTopOf="@id/sliderSettingsAge"
+		>
 
 		<com.google.android.material.textview.MaterialAutoCompleteTextView
-			android:id="@+id/dropdownCityChooser"
+			android:id="@+id/dropSettingsPreferredGender"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@null"
+			android:cursorVisible="false"
+			android:drawablePadding="-24dp"
+			android:focusable="false"
+			android:gravity="center"
+			android:imeOptions="actionDone"
+			android:inputType="text"
+
+			android:text="male"
+			android:textSize="20sp"
+			style="@style/regular_text_white85op"
+			/>
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<!--age-->
+	<com.google.android.material.slider.Slider
+		android:id="@+id/sliderSettingsAge"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+
+		android:hapticFeedbackEnabled="true"
+
+		app:floatingLabel="false"
+		app:haloColor="?colorSecondary"
+
+		app:thumbColor="@color/white_85"
+		app:thumbRadius="14dp"
+
+		app:trackColorActive="?colorSecondary"
+		app:trackColorInactive="@color/lolite_25"
+
+		android:value="18"
+		android:valueFrom="18"
+		android:valueTo="50"
+
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/layoutSettingsGender"
+		app:layout_constraintBottom_toTopOf="@id/tvSettingsAgeDisplay"
+		/>
+
+	<TextView
+		android:id="@+id/tvSettingsAgeDisplay"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+
+		android:gravity="center"
+		android:text="18"
+		android:textSize="30sp"
+		style="@style/light_text_white85op"
+
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/sliderSettingsAge"
+		app:layout_constraintBottom_toTopOf="@id/layoutSettingsCity"
+		/>
+
+	<!--city-->
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/layoutSettingsCity"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/general_margin_16"
+
+		app:boxStrokeColor="@color/text_input_layout"
+		app:boxStrokeWidth="2dp"
+
+		android:hint="Your city"
+		app:hintEnabled="true"
+		app:hintTextColor="@color/white"
+
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/tvSettingsAgeDisplay"
+		app:layout_constraintBottom_toTopOf="@id/btnSettingsSave"
+		>
+
+		<com.google.android.material.textview.MaterialAutoCompleteTextView
+			android:id="@+id/dropSettingsCity"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 
@@ -89,11 +222,36 @@
 			android:imeOptions="actionDone"
 			android:inputType="text"
 
-
+			android:text="city"
 			android:textSize="20sp"
 			style="@style/regular_text_white85op"
 			/>
 
 	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/btnSettingsSave"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="24dp"
+
+		android:padding="@dimen/general_margin_16"
+
+		android:fontFamily="@font/rubik_medium"
+		android:text="Save"
+		android:textColor="@color/white"
+		android:textSize="20sp"
+		android:textAllCaps="false"
+
+		app:rippleColor="@color/lolite"
+		app:strokeColor="@color/lolite"
+		app:strokeWidth="2dp"
+
+		style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/layoutSettingsCity"
+		/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
