@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 15.01.20 19:31
+ * Last modified 15.01.20 19:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -95,7 +95,9 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 		dropSettingsPreferredGender.setText(userItemModel.preferredGender)
 		tvSettingsAgeDisplay.text = "Age: ${userItemModel.baseUserInfo.age}"
 		sliderSettingsAge.value = userItemModel.baseUserInfo.age.toFloat()
-		dropSettingsCity.setText(userItemModel.baseUserInfo.city)
+
+		cityToDisplay = cityList.filterValues { it == userItemModel.baseUserInfo.city }.keys.first()
+		dropSettingsCity.setText(cityToDisplay)
 	}
 
 	private fun changerNameSetup(){
@@ -139,7 +141,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 		                                         genderList)
 		dropSettingsGender.setAdapter(genderAdapter)
 
-		dropSettingsGender.setOnItemClickListener { parent, view, position, id ->
+		dropSettingsGender.setOnItemClickListener { _, _, position, _ ->
 			gender = genderList[position]
 		}
 	}
@@ -151,7 +153,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 
 		dropSettingsPreferredGender.setAdapter(preferredGenderAdapter )
 
-		dropSettingsPreferredGender.setOnItemClickListener { parent, view, position, id ->
+		dropSettingsPreferredGender.setOnItemClickListener { _, _, position, _ ->
 			preferredGender = preferredGenderList[position]
 		}
 	}
