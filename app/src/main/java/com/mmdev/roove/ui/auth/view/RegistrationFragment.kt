@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 14.01.20 19:41
+ * Last modified 15.01.20 18:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -206,7 +206,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 		//step 5
 		val cityAdapter = ArrayAdapter<String>(context!!,
-		                                       R.layout.fragment_reg_drop_item,
+		                                       R.layout.drop_text_item,
 		                                       cityList.map { it.key })
 		dropdownCityChooser.setAdapter(cityAdapter)
 
