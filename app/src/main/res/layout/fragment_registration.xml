@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 15.01.20 18:30
+  ~ Last modified 17.01.20 19:37
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -166,8 +166,8 @@
 		android:valueFrom="18"
 		android:valueTo="50"
 
-		app:trackColorActive="?colorSecondary"
-		app:trackColorInactive="@color/lolite_25"
+		app:activeTrackColor="?colorSecondary"
+		app:inactiveTrackColor="@color/lolite_25"
 		app:haloColor="?colorSecondary"
 
 		app:thumbColor="@color/white_85"

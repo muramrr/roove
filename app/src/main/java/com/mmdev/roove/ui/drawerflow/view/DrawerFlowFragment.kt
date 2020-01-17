@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 14.01.20 18:30
+ * Last modified 17.01.20 20:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -90,7 +90,7 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_drawer_flow) {
 	private fun setNavigationView() {
 		navigationView.getChildAt(navigationView.childCount - 1).overScrollMode = View.OVER_SCROLL_NEVER
 
-		navController.addOnDestinationChangedListener { _, destination, _ ->  //3
+		navController.addOnDestinationChangedListener { _, destination, _ ->
 			if (destination.id in arrayOf(
 							R.id.profileFragment,
 							R.id.chatFragment
