@@ -2,15 +2,14 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 15.01.20 19:28
+  ~ Last modified 17.01.20 20:15
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
-
+<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/containerSettingsAcc"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:padding="@dimen/general_margin_8"
@@ -158,8 +157,8 @@
 		app:thumbColor="@color/white_85"
 		app:thumbRadius="14dp"
 
-		app:trackColorActive="?colorSecondary"
-		app:trackColorInactive="@color/lolite_25"
+		app:activeTrackColor="?colorSecondary"
+		app:inactiveTrackColor="@color/lolite_25"
 
 		android:value="18"
 		android:valueFrom="18"
@@ -206,7 +205,6 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/tvSettingsAgeDisplay"
-		app:layout_constraintBottom_toTopOf="@id/btnSettingsSave"
 		>
 
 		<com.google.android.material.textview.MaterialAutoCompleteTextView
@@ -233,7 +231,6 @@
 		android:id="@+id/btnSettingsSave"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="24dp"
 
 		android:padding="@dimen/general_margin_16"
 
@@ -243,15 +240,13 @@
 		android:textSize="20sp"
 		android:textAllCaps="false"
 
-		app:rippleColor="@color/lolite"
-		app:strokeColor="@color/lolite"
-		app:strokeWidth="2dp"
+		android:backgroundTint="@color/lolite"
+		app:rippleColor="@color/black_50"
 
-		style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-
+		style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/layoutSettingsCity"
+		app:layout_constraintBottom_toBottomOf="parent"
 		/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

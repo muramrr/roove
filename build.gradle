@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 14.01.20 18:20
+ * Last modified 17.01.20 19:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@ buildscript {
 
 		//firebase
 		firebase_auth_version = '19.2.0'
-		firebase_core_version = '17.2.1'
+		firebase_core_version = '17.2.2'
 		firebase_firestore_version = '21.3.1'
 		firebase_storage_version = '19.1.0'
 

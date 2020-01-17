@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 14.01.20 18:20
+ * Last modified 17.01.20 19:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -85,7 +85,7 @@ dependencies {
 	implementation 'androidx.appcompat:appcompat:1.2.0-alpha01'
 	implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
 	implementation 'androidx.drawerlayout:drawerlayout:1.1.0-alpha03'
-	implementation 'com.google.android.material:material:1.2.0-alpha03'
+	implementation 'com.google.android.material:material:1.2.0-alpha02'
 
 	//custom UI
 	implementation 'com.yuyakaido.android:card-stack-view:2.3.4'
@@ -95,7 +95,7 @@ dependencies {
 	implementation libs.firebaseCore
 	implementation libs.firestorage
 	implementation libs.firestore
-	implementation 'com.google.firebase:firebase-analytics:17.2.1'
+	implementation 'com.google.firebase:firebase-analytics:17.2.2'
 
 	//facebook auth
 	//implementation "com.facebook.android:facebook-android-sdk:$facebook_sdk_version"

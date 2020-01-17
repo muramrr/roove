@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 15.01.20 19:41
+ * Last modified 17.01.20 20:00
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,6 +22,7 @@ import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.SharedViewModel
+import com.mmdev.roove.utils.addSystemBottomPadding
 import kotlinx.android.synthetic.main.fragment_settings_account.*
 
 
@@ -79,6 +80,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		containerSettingsAcc.addSystemBottomPadding()
 		initProfile()
 
 		changerNameSetup()
