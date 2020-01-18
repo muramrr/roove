@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.01.20 18:37
+ * Last modified 18.01.20 18:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -99,6 +99,23 @@ class UserRepositoryRemoteImpl @Inject constructor(private val db: FirebaseFires
 				.addOnSuccessListener { emitter.onSuccess(it.toObject(UserItem::class.java)!!) }
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
+	}
+
+	override fun updateUserItem(userItem: UserItem): Completable {
+		return Completable.create { emitter ->
+			val ref = db.collection(GENERAL_COLLECTION_REFERENCE)
+				.document(userItem.baseUserInfo.city)
+				.collection(userItem.baseUserInfo.gender)
+				.document(userItem.baseUserInfo.userId)
+			ref.set(userItem)
+				.addOnSuccessListener {
+					db.collection(BASE_COLLECTION_REFERENCE)
+						.document(userItem.baseUserInfo.userId)
+						.set(userItem.baseUserInfo)
+					emitter.onComplete()
+				}
+				.addOnFailureListener { emitter.onError(it) }
+		}.subscribeOn(Schedulers.io())
 	}
 
 }
