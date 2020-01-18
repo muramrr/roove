@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 17.01.20 20:15
+  ~ Last modified 18.01.20 16:59
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -67,7 +67,7 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="@dimen/general_margin_16"
-		android:layout_marginBottom="@dimen/general_margin_16"
+		android:layout_marginBottom="24dp"
 
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
@@ -107,7 +107,7 @@
 		android:id="@+id/layoutSettingsPreferredGender"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/general_margin_16"
+		android:layout_marginBottom="24dp"
 
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
@@ -149,9 +149,7 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 
-		android:hapticFeedbackEnabled="true"
-
-		app:floatingLabel="false"
+		app:floatingLabel="true"
 		app:haloColor="?colorSecondary"
 
 		app:thumbColor="@color/white_85"
@@ -159,6 +157,7 @@
 
 		app:activeTrackColor="?colorSecondary"
 		app:inactiveTrackColor="@color/lolite_25"
+		android:labelFor="@id/tvSettingsAgeDisplay"
 
 		android:value="18"
 		android:valueFrom="18"
@@ -176,7 +175,7 @@
 		android:layout_height="wrap_content"
 
 		android:gravity="center"
-		android:text="18"
+		android:text="Age: 18"
 		android:textSize="30sp"
 		style="@style/light_text_white85op"
 
