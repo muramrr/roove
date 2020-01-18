@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.01.20 18:03
+ * Last modified 18.01.20 18:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,7 @@ import com.mmdev.business.user.UserItem
 import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
 import com.mmdev.business.user.usecase.remote.FetchUserInfoUseCase
 import com.mmdev.business.user.usecase.remote.GetFullUserItemUseCase
+import com.mmdev.business.user.usecase.remote.UpdateUserItemUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -26,18 +27,21 @@ import javax.inject.Inject
  * This is the documentation block about the class
  */
 
-class RemoteUserRepoViewModel @Inject constructor(private val deleteUserUC: DeleteUserUseCase,
-                                                  private val fetchUserUC: FetchUserInfoUseCase,
-                                                  private val getFullUserItemUC: GetFullUserItemUseCase) :
-		ViewModel() {
+class RemoteUserRepoViewModel @Inject constructor(
+	private val deleteUserUC: DeleteUserUseCase,
+	private val fetchUserUC: FetchUserInfoUseCase,
+	private val getFullUserItemUC: GetFullUserItemUseCase,
+	private val updateUserItemUC: UpdateUserItemUseCase) : ViewModel() {
 
 
+
+	private val isUserUpdated: MutableLiveData<Boolean> = MutableLiveData()
 	private val receivedUserItem: MutableLiveData<UserItem> = MutableLiveData()
 
 	private val disposables = CompositeDisposable()
 
 	companion object{
-		private const val TAG = "mylogs"
+		private const val TAG = "mylogs_RemoteRepoViewModel"
 	}
 
 
@@ -52,13 +56,34 @@ class RemoteUserRepoViewModel @Inject constructor(private val deleteUserUC: Dele
                        }))
 	}
 
+	fun updateUserItem(userItem: UserItem){
+		disposables.add(updateUserItemExecution(userItem)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+	                       isUserUpdated.value = true
+	                       Log.wtf(TAG, "update user successful")
+                       },
+                       {
+	                       isUserUpdated.value = false
+	                       Log.wtf(TAG, "updating user fail: $it")
+                       }))
+	}
+
 	fun getUser() = receivedUserItem
 
-	fun deleteUser(userItem: UserItem) = deleteUserUC.execute(userItem)
+	fun getUserUpdateStatus() = isUserUpdated
+
+
+
+	private fun deleteUserExecution(userItem: UserItem) = deleteUserUC.execute(userItem)
 
 	private fun fetchUserInfoExecution(userItem: UserItem) = fetchUserUC.execute(userItem)
 
 	private fun getFullUserItemExecution(baseUserInfo: BaseUserInfo) = getFullUserItemUC.execute(baseUserInfo)
+
+	private fun updateUserItemExecution(userItem: UserItem) = updateUserItemUC.execute(userItem)
+
+
 
 
 	override fun onCleared() {

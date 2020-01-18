@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.01.20 18:37
+ * Last modified 18.01.20 18:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,13 +16,12 @@ import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mmdev.business.user.repository.LocalUserRepository
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This is the documentation block about the class
  */
 
-@Singleton
+
 class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 		LocalUserRepository {
 
@@ -72,16 +71,16 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 	}
 
 
-	override fun saveUserInfo(currentUserItem: UserItem) {
+	override fun saveUserInfo(userItem: UserItem) {
 		val editor = prefs.edit()
-		editor.putString(PREF_KEY_CURRENT_USER_NAME, currentUserItem.baseUserInfo.name)
-		editor.putInt(PREF_KEY_CURRENT_USER_AGE, currentUserItem.baseUserInfo.age)
-		editor.putString(PREF_KEY_CURRENT_USER_CITY, currentUserItem.baseUserInfo.city)
-		editor.putString(PREF_KEY_CURRENT_USER_GENDER, currentUserItem.baseUserInfo.gender)
-		editor.putString(PREF_KEY_CURRENT_USER_P_GENDER, currentUserItem.preferredGender)
-		editor.putString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, currentUserItem.baseUserInfo.mainPhotoUrl)
-		editor.putStringSet(PREF_KEY_CURRENT_USER_PHOTO_URLS, currentUserItem.photoURLs.toSet())
-		editor.putString(PREF_KEY_CURRENT_USER_ID, currentUserItem.baseUserInfo.userId)
+		editor.putString(PREF_KEY_CURRENT_USER_NAME, userItem.baseUserInfo.name)
+		editor.putInt(PREF_KEY_CURRENT_USER_AGE, userItem.baseUserInfo.age)
+		editor.putString(PREF_KEY_CURRENT_USER_CITY, userItem.baseUserInfo.city)
+		editor.putString(PREF_KEY_CURRENT_USER_GENDER, userItem.baseUserInfo.gender)
+		editor.putString(PREF_KEY_CURRENT_USER_P_GENDER, userItem.preferredGender)
+		editor.putString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, userItem.baseUserInfo.mainPhotoUrl)
+		editor.putStringSet(PREF_KEY_CURRENT_USER_PHOTO_URLS, userItem.photoURLs.toSet())
+		editor.putString(PREF_KEY_CURRENT_USER_ID, userItem.baseUserInfo.userId)
 		editor.putBoolean(PREF_KEY_GENERAL_IF_SAVED, true)
 		editor.commit()
 		Log.wtf(TAG, "User successfully saved")
