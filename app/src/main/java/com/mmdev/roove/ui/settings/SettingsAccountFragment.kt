@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 17.01.20 20:00
+ * Last modified 18.01.20 18:27
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,12 +17,16 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.SharedViewModel
+import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
+import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.utils.addSystemBottomPadding
+import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_settings_account.*
 
 
@@ -46,6 +50,8 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 	private lateinit var genderList: List<String>
 	private lateinit var preferredGenderList: List<String>
 
+	private lateinit var localRepoViewModel: LocalUserRepoViewModel
+	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
 
 	companion object{
@@ -73,6 +79,8 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 		super.onCreate(savedInstanceState)
 
 		activity?.run {
+			localRepoViewModel = ViewModelProvider(this, factory)[LocalUserRepoViewModel::class.java]
+			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
 			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
@@ -88,10 +96,17 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 		changerPreferredGenderSetup()
 		changerAgeSetup()
 		changerCitySetup()
+
+		btnSettingsSave.setOnClickListener {
+			remoteRepoViewModel.updateUserItem(userItemModel)
+			remoteRepoViewModel.getUserUpdateStatus().observeOnce(this, Observer {
+				if (it) localRepoViewModel.saveUserInfo(userItemModel)
+			})
+		}
 	}
 
 
-	private fun initProfile(){
+	private fun initProfile() {
 		edSettingsName.setText(userItemModel.baseUserInfo.name)
 		dropSettingsGender.setText(userItemModel.baseUserInfo.gender)
 		dropSettingsPreferredGender.setText(userItemModel.preferredGender)
@@ -102,7 +117,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 		dropSettingsCity.setText(cityToDisplay)
 	}
 
-	private fun changerNameSetup(){
+	private fun changerNameSetup() {
 		edSettingsName.addTextChangedListener(object: TextWatcher {
 			override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
@@ -122,6 +137,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 					else -> {
 						layoutSettingsChangeName.error = ""
 						name = s.toString().trim()
+						userItemModel.baseUserInfo.name = name
 					}
 				}
 			}
@@ -137,7 +153,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 
 	}
 
-	private fun changerGenderSetup(){
+	private fun changerGenderSetup() {
 		val genderAdapter = ArrayAdapter<String>(context!!,
 		                                         R.layout.drop_text_item,
 		                                         genderList)
@@ -145,10 +161,11 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 
 		dropSettingsGender.setOnItemClickListener { _, _, position, _ ->
 			gender = genderList[position]
+			userItemModel.baseUserInfo.gender = gender
 		}
 	}
 
-	private fun changerPreferredGenderSetup(){
+	private fun changerPreferredGenderSetup() {
 		val preferredGenderAdapter = ArrayAdapter<String>(context!!,
 		                                                  R.layout.drop_text_item,
 		                                                  preferredGenderList)
@@ -157,10 +174,11 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 
 		dropSettingsPreferredGender.setOnItemClickListener { _, _, position, _ ->
 			preferredGender = preferredGenderList[position]
+			userItemModel.preferredGender = preferredGender
 		}
 	}
 
-	private fun changerCitySetup(){
+	private fun changerCitySetup() {
 		val cityAdapter = ArrayAdapter<String>(context!!,
 		                                       R.layout.drop_text_item,
 		                                       cityList.map { it.key })
@@ -169,16 +187,17 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 		dropSettingsCity.setOnItemClickListener { _, _, position, _ ->
 			city = cityList.map { it.value }[position]
 			cityToDisplay = cityList.map { it.key }[position]
+			userItemModel.baseUserInfo.city = city
 		}
 	}
 
-	private fun changerAgeSetup(){
+	private fun changerAgeSetup() {
 		sliderSettingsAge.setOnChangeListener{ _, value ->
 			age = value.toInt()
+			userItemModel.baseUserInfo.age = age
 			tvSettingsAgeDisplay.text = "Age: $age"
 		}
 	}
-
 
 
 }
