@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 15.12.19 16:06
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 19.01.20 17:01
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,21 +25,21 @@
 	<androidx.constraintlayout.widget.ConstraintLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:background="@color/colorPrimaryDark"
-	    android:gravity="center"
-	    android:padding="20dp" >
+	    android:background="@color/colorPrimaryDark">
 
 		<com.yuyakaido.android.cardstackview.CardStackView
 			android:id="@+id/cardStackView"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
+			android:clipToPadding="false"
+			android:padding="@dimen/general_margin_16"
 			android:visibility='@{viewModel.showLoading ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
 			tools:listitem="@layout/fragment_cards_item"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent" />
-
+			app:layout_constraintBottom_toBottomOf="parent"
+			/>
 
 	    <ImageView
 	        android:id="@+id/ivCardLoading"
@@ -70,8 +70,6 @@
 		    app:layout_constraintTop_toBottomOf="@id/ivCardLoading"
 		    app:layout_constraintVertical_bias="0.3"
 		    />
-
-
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
