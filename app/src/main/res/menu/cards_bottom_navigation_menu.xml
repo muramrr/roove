@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 19.01.20 18:10
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+<menu
+
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item
+		android:id="@+id/item1"
+		android:icon="@drawable/ic_nav_inbox_24dp"
+		android:title="Item 1" />
+
+	<item
+		android:id="@+id/bottomPairs"
+		android:icon="@drawable/ic_nav_places_24dp"
+		android:title="Pairs" />
+
+	<item
+		android:id="@+id/bottomCards"
+		android:icon="@drawable/ic_nav_cards_24dp"
+		android:title="Cards"
+		/>
+
+	<item
+		android:id="@+id/bottomConversations"
+		android:icon="@drawable/ic_nav_cards_24dp"
+		android:title="Conversations" />
+
+	<item
+		android:id="@+id/bottomSettings"
+		android:icon="@drawable/ic_nav_account_24dp"
+		android:title="Settings" />
+
+</menu>

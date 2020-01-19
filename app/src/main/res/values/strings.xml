@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 19.12.19 17:54
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 19.01.20 17:03
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,6 +54,9 @@
 	<string name="russia_nsk">Новосибирск</string>
 	<string name="russia_sochi">Сочи</string>
 	<string name="russia_spb">Санкт-Петербург</string>
+
+	<!-- TODO: Remove or change this placeholder text -->
+	<string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

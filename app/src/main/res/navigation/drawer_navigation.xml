@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 17.01.20 20:23
+  ~ Last modified 19.01.20 17:45
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
   -->
 
 <navigation android:id="@+id/drawerNavigation"
-	app:startDestination="@+id/nav_cards"
+	app:startDestination="@+id/datingInteractionsFragment"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
@@ -26,6 +26,14 @@
 	<action
 		android:id="@+id/action_open_cardsFragment"
 		app:destination="@id/nav_cards"
+		app:enterAnim="@anim/nav_default_enter_anim"
+		app:exitAnim="@anim/nav_default_exit_anim"
+		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+	<action
+		android:id="@+id/action_open_datingFragment"
+		app:destination="@id/datingInteractionsFragment"
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -170,5 +178,11 @@
 		android:id="@+id/placeDetailedFragment"
 		android:name="com.mmdev.roove.ui.places.view.detailed.PlaceDetailedFragment"
 		tools:layout="@layout/fragment_place_detailed" />
+
+	<fragment
+		android:id="@+id/datingInteractionsFragment"
+		android:name="com.mmdev.roove.ui.dating.DatingInteractionsFragment"
+		android:label="DatingInteractionsFragment"
+		tools:layout="@layout/fragment_dating_interactions"/>
 
 </navigation>
