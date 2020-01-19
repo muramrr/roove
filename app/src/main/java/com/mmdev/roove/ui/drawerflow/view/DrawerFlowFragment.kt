@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.01.20 17:59
+ * Last modified 19.01.20 18:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -89,7 +89,8 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_drawer_flow) {
 		navController.addOnDestinationChangedListener { _, destination, _ ->
 			if (destination.id in arrayOf(
 							R.id.profileFragment,
-							R.id.chatFragment
+							R.id.chatFragment,
+							R.id.datingInteractionsFragment
 					)) {
 
 				appBarGone()
@@ -114,8 +115,7 @@ class DrawerFlowFragment: FlowFragment(R.layout.fragment_drawer_flow) {
 				R.id.nav_actions -> navController.navigate(R.id.action_open_inboxFragment)
 				R.id.nav_places -> navController.navigate(R.id.action_open_placesFragment)
 				R.id.nav_cards -> navController.navigate(R.id.action_open_cardsFragment)
-//				R.id.nav_notifications -> { progressDialog.showDialog()
-//					Handler().postDelayed({ progressDialog.dismissDialog() }, 5000) }
+				R.id.nav_notifications -> navController.navigate(R.id.action_open_datingFragment)
 				R.id.nav_account -> navController.navigate(R.id.action_open_settingsAccountFragment)
 				R.id.nav_log_out -> showSignOutPrompt()
 			}
