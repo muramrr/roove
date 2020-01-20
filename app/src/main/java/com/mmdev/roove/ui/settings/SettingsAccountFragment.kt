@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.01.20 18:27
+ * Last modified 20.01.20 21:17
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,22 +19,24 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
+import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.utils.addSystemBottomPadding
 import com.mmdev.roove.utils.observeOnce
-import kotlinx.android.synthetic.main.fragment_settings_account.*
+import kotlinx.android.synthetic.main.fragment_settings.*
 
 
 /**
  * This is the documentation block about the class
  */
 
-class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) {
+class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 
 	private lateinit var userItemModel: UserItem
 
@@ -50,6 +52,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 	private lateinit var genderList: List<String>
 	private lateinit var preferredGenderList: List<String>
 
+	private lateinit var authViewModel: AuthViewModel
 	private lateinit var localRepoViewModel: LocalUserRepoViewModel
 	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
@@ -79,6 +82,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 		super.onCreate(savedInstanceState)
 
 		activity?.run {
+			authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 			localRepoViewModel = ViewModelProvider(this, factory)[LocalUserRepoViewModel::class.java]
 			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
 			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
@@ -96,6 +100,8 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 		changerPreferredGenderSetup()
 		changerAgeSetup()
 		changerCitySetup()
+
+		btnSettingsLogOut.setOnClickListener { showSignOutPrompt() }
 
 		btnSettingsSave.setOnClickListener {
 			remoteRepoViewModel.updateUserItem(userItemModel)
@@ -197,6 +203,24 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings_account) 
 			userItemModel.baseUserInfo.age = age
 			tvSettingsAgeDisplay.text = "Age: $age"
 		}
+	}
+
+	/*
+	* log out pop up
+	*/
+	private fun showSignOutPrompt() {
+		MaterialAlertDialogBuilder(context)
+			.setTitle("Do you wish to log out?")
+			.setMessage("This will permanently log you out.")
+			.setPositiveButton("Log out") { dialog, _ ->
+				authViewModel.logOut()
+				dialog.dismiss()
+			}
+			.setNegativeButton("Cancel") { dialog, _ ->
+				dialog.dismiss()
+			}
+			.show()
+
 	}
 
 

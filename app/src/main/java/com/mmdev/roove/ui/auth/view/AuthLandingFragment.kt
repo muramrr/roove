@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 14.01.20 18:06
+ * Last modified 20.01.20 21:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,7 +44,7 @@ class AuthLandingFragment: BaseFragment(R.layout.fragment_auth_landing)  {
 			ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
-		authViewModel.logOut()
+		//authViewModel.logOut()
 
 		authViewModel.continueRegistration.observe(this, Observer {
 			if (it == true) findNavController().navigate(R.id.action_auth_landing_to_registrationFragment)

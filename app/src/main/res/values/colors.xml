@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 15.12.19 19:07
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 20.01.20 19:26
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,6 +37,7 @@
 	<color name="black_50">#80000000</color>
 	<color name="white">#ffffff</color>
 	<color name="white_85">#d8ffffff</color>
+	<color name="white_75">#BFFFFFFF</color>
 	<color name="white_50">#80FFFFFF</color>
 	<color name="white_25">#40FFFFFF</color>
 	<color name="white_10">#1AFFFFFF</color>

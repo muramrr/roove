@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 19.01.20 17:01
+  ~ Last modified 20.01.20 17:46
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,10 +19,11 @@
 
 		<variable
 			name="viewModel"
-			type="com.mmdev.roove.ui.cards.CardsViewModel" />
+			type="com.mmdev.roove.ui.dating.cards.CardsViewModel" />
 	</data>
 
 	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/containerCards"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:background="@color/colorPrimaryDark">

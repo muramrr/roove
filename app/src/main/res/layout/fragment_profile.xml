@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 15.12.19 16:06
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 20.01.20 19:19
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -59,7 +59,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="?attr/actionBarSize"
 				app:layout_collapseMode="pin"
-				app:menu="@menu/profile_view_options"
+				app:menu="@menu/profile_view_menu"
 				app:navigationIcon="@drawable/ic_arrow_back_24dp"
 				app:popupTheme="@style/menuPopupStyle" />
 

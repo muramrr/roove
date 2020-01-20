@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 08.12.19 21:09
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 20.01.20 21:04
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,6 @@ import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.places.PlacesViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
-import com.mmdev.roove.utils.addSystemBottomPadding
 import kotlinx.android.synthetic.main.fragment_places_page_item.*
 
 
@@ -49,7 +48,6 @@ class PlacesPageFragment: BaseFragment(R.layout.fragment_places_page_item) {
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		rvPlacesList.addSystemBottomPadding()
 
 		val staggeredLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 		rvPlacesList.apply {
@@ -67,7 +65,7 @@ class PlacesPageFragment: BaseFragment(R.layout.fragment_places_page_item) {
 
 				sharedViewModel.setPlaceSelected(mPlacesRecyclerAdapter.getPlaceItem(position))
 
-				findNavController().navigate(R.id.action_nav_places_to_placeDetailedFragment)
+				findNavController().navigate(R.id.action_places_to_placeDetailedFragment)
 
 			}
 		})
