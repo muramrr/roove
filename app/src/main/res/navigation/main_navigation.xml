@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 20.01.20 21:17
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+<navigation android:id="@+id/mainNavigation"
+	app:startDestination="@id/cardsFragmentNav"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<action
+		android:id="@+id/action_open_placesFragment"
+		app:destination="@id/placesFragmentNav"
+		app:enterAnim="@anim/nav_default_enter_anim"
+		app:exitAnim="@anim/nav_default_exit_anim"
+		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+	<action
+		android:id="@+id/action_open_pairsFragment"
+		app:destination="@id/pairsFragmentNav"
+		app:enterAnim="@anim/nav_default_enter_anim"
+		app:exitAnim="@anim/nav_default_exit_anim"
+		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+	<action
+		android:id="@+id/action_open_cardsFragment"
+		app:destination="@id/cardsFragmentNav"
+		app:enterAnim="@anim/nav_default_enter_anim"
+		app:exitAnim="@anim/nav_default_exit_anim"
+		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+	<action
+		android:id="@+id/action_open_conversationsFragment"
+		app:destination="@id/conversationsFragmentNav"
+		app:enterAnim="@anim/nav_default_enter_anim"
+		app:exitAnim="@anim/nav_default_exit_anim"
+		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+	<action
+		android:id="@+id/action_open_settingsFragment"
+		app:destination="@id/settingsFragmentNav"
+		app:enterAnim="@anim/nav_default_enter_anim"
+		app:exitAnim="@anim/nav_default_exit_anim"
+		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+
+	<!-- main places fragment-->
+	<fragment
+		android:id="@+id/placesFragmentNav"
+		android:name="com.mmdev.roove.ui.places.view.PlacesFragment"
+		tools:layout="@layout/fragment_places" >
+
+		<action
+			android:id="@+id/action_places_to_placeDetailedFragment"
+			app:destination="@id/placeDetailedFragmentNav"
+			app:enterAnim="@anim/enter_from_top"
+			app:exitAnim="@anim/exit_to_bottom"
+			app:popEnterAnim="@anim/enter_from_bottom"
+			app:popExitAnim="@anim/exit_to_top" />
+
+	</fragment>
+
+	<!-- main pairs fragment-->
+	<fragment
+		android:id="@+id/pairsFragmentNav"
+		android:name="com.mmdev.roove.ui.dating.pairs.view.PairsFragment"
+		tools:layout="@layout/fragment_pairs" >
+
+		<action
+			android:id="@+id/action_pairs_to_profileFragment"
+			app:destination="@id/profileFragmentNav"
+			app:enterAnim="@anim/enter_from_top"
+			app:exitAnim="@anim/exit_to_bottom"
+			app:popEnterAnim="@anim/enter_from_bottom"
+			app:popExitAnim="@anim/exit_to_top" >
+
+			<argument
+				android:defaultValue="true"
+				android:name="FAB_VISIBLE" />
+
+		</action>
+
+	</fragment>
+
+	<!-- main cards fragment-->
+	<fragment
+		android:id="@+id/cardsFragmentNav"
+		android:name="com.mmdev.roove.ui.dating.cards.view.CardsFragment"
+		android:label="Cards"
+		tools:layout="@layout/fragment_cards" >
+
+		<action
+			android:id="@+id/action_cards_to_profileFragment"
+			app:destination="@id/profileFragmentNav"
+			app:enterAnim="@anim/enter_from_top"
+			app:exitAnim="@anim/exit_to_bottom"
+			app:popEnterAnim="@anim/enter_from_bottom"
+			app:popExitAnim="@anim/exit_to_top" >
+
+			<!-- @argument to show is fab enabled to open chat? -->
+			<argument
+				android:defaultValue="false"
+				android:name="FAB_VISIBLE" />
+
+		</action>
+
+	</fragment>
+
+	<!-- main conversations fragment-->
+	<fragment
+		android:id="@+id/conversationsFragmentNav"
+		android:name="com.mmdev.roove.ui.dating.conversations.view.ConversationsFragment"
+		tools:layout="@layout/fragment_conversations" >
+
+		<action
+			android:id="@+id/action_conversations_to_chatFragment"
+			app:destination="@id/chatFragmentNav"
+			app:enterAnim="@anim/enter_from_top"
+			app:exitAnim="@anim/exit_to_bottom"
+			app:popEnterAnim="@anim/enter_from_bottom"
+			app:popExitAnim="@anim/exit_to_top"/>
+
+	</fragment>
+
+	<!-- main settings fragment-->
+	<fragment
+		android:id="@+id/settingsFragmentNav"
+		android:label="Settings"
+		android:name="com.mmdev.roove.ui.settings.SettingsAccountFragment"
+		tools:layout="@layout/fragment_settings" />
+
+
+
+
+	<!-- secondary places detailed fragment-->
+	<fragment
+		android:id="@+id/placeDetailedFragmentNav"
+		android:name="com.mmdev.roove.ui.places.view.detailed.PlaceDetailedFragment"
+		tools:layout="@layout/fragment_place_detailed" />
+
+	<!-- secondary profile view fragment-->
+	<fragment
+		android:id="@+id/profileFragmentNav"
+		android:name="com.mmdev.roove.ui.profile.view.ProfileFragment"
+		tools:layout="@layout/fragment_profile">
+
+		<action
+			android:id="@+id/action_profileFragment_to_chatFragment"
+			app:destination="@id/chatFragmentNav"
+			app:enterAnim="@anim/enter_from_top"
+			app:exitAnim="@anim/exit_to_bottom"
+			app:popEnterAnim="@anim/enter_from_bottom"
+			app:popExitAnim="@anim/exit_to_top" />
+
+		<argument
+			android:name="FAB_VISIBLE"
+			app:argType="boolean"
+			android:defaultValue="false" />
+
+	</fragment>
+
+	<!-- secondary conversations chat fragment-->
+	<fragment
+		android:id="@+id/chatFragmentNav"
+		android:name="com.mmdev.roove.ui.dating.chat.view.ChatFragment"
+		tools:layout="@layout/fragment_chat">
+
+		<action
+			android:id="@+id/action_chatFragment_to_profileFragment"
+			app:destination="@id/profileFragmentNav"
+			app:enterAnim="@anim/enter_from_top"
+			app:exitAnim="@anim/exit_to_bottom"
+			app:popEnterAnim="@anim/enter_from_bottom"
+			app:popExitAnim="@anim/exit_to_top" >
+
+			<argument
+				android:defaultValue="false"
+				android:name="FAB_VISIBLE" />
+
+		</action>
+	</fragment>
+
+</navigation>

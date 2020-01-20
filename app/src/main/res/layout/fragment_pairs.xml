@@ -1,39 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 07.12.19 17:10
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 20.01.20 20:31
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="@color/colorPrimaryDark"
+
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
-	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/rvPairList"
-		android:layout_width="0dp"
-		android:layout_height="0dp"
-		android:background="@color/colorPrimaryDark"
-		android:clipToPadding="false"
-		android:overScrollMode="never"
+	<data>
 
-		android:layout_marginEnd="@dimen/general_margin_8"
+		<import type="android.view.View"/>
 
-		app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-		app:spanCount="2"
-		tools:listitem="@layout/fragment_pairs_item"
+		<variable
+			name="viewModel"
+			type="com.mmdev.roove.ui.dating.pairs.PairsViewModel" />
+	</data>
 
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/containerPairs"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/colorPrimaryDark">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/rvPairList"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:layout_marginEnd="@dimen/general_margin_8"
+
+			android:background="@color/colorPrimaryDark"
+			android:clipToPadding="false"
+			android:overScrollMode="never"
+
+			android:visibility='@{viewModel.showTextHelper ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
+
+			app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+			app:spanCount="2"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+
+			tools:listitem="@layout/fragment_pairs_item"/>
+
+		<TextView
+			android:id="@+id/tvPairsHelperText"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+
+			android:text="There is no matches...\n\nKeep swiping!"
+			android:textSize="24sp"
+			style="@style/regular_text_white85op"
+
+			android:visibility='@{viewModel.showTextHelper ? View.VISIBLE : View.INVISIBLE, default = "invisible"}'
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			/>
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
