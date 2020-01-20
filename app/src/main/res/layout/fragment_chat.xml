@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 15.12.19 16:06
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 20.01.20 17:58
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@
 
 		<variable
 			name="viewModel"
-			type="com.mmdev.roove.ui.chat.ChatViewModel" />
+			type="com.mmdev.roove.ui.dating.chat.ChatViewModel" />
 	</data>
 
 	<androidx.constraintlayout.widget.ConstraintLayout

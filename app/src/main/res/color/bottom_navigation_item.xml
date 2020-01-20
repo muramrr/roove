@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 20.01.20 19:40
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item android:alpha="1.0" android:color="@color/white" android:state_checked="true"/>
+	<item android:alpha="0.6" android:color="@color/white"/>
+
+</selector>
+

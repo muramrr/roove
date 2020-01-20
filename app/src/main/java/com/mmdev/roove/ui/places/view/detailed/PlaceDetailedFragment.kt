@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 08.12.19 21:42
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 20.01.20 20:59
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -49,7 +50,7 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 
 			placePhotosAdapter.updateData(placePhotos)
 
-			tvPlaceTitle.text = it.short_title
+			collapseBarPlaceDetailed.title = it.short_title
 
 			tvPlaceAboutText.text = it.description
 				.replace("<p>", "")
@@ -57,10 +58,11 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 
 		})
 
-
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+		toolbarPlaceDetailed.setNavigationOnClickListener { findNavController().navigateUp() }
 
 		viewPagerPlacePhotos.apply {
 			(getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
@@ -72,7 +74,10 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 			//do nothing
 		}.attach()
 
+	}
 
+	override fun onBackPressed() {
+		findNavController().navigateUp()
 	}
 
 

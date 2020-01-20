@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.01.20 17:59
+ * Last modified 20.01.20 21:27
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,11 +24,10 @@ import com.mmdev.roove.core.GlideApp
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.auth.view.AuthFlowFragment
-import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
 import com.mmdev.roove.ui.custom.LoadingDialog
-import com.mmdev.roove.ui.drawerflow.view.DrawerFlowFragment
+import com.mmdev.roove.ui.main.MainFlowFragment
 import com.mmdev.roove.utils.doOnApplyWindowInsets
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -42,12 +41,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 
 	private val factory = injector.factory()
 
-	private val currentFragment: BaseFragment?
-		get() = supportFragmentManager.findFragmentById(R.id.main_activity_container) as? BaseFragment
-
-
 	companion object{
-		private const val TAG_LOG = "mylogs"
+		private const val TAG_LOG = "mylogs_MainActivity"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,7 +95,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 				Log.wtf(TAG_LOG, "USER IS NOT LOGGED IN")
 			}
 			else {
-				showDrawerFlowFragment()
+				showMainFlowFragment()
 				localRepoViewModel.getSavedUser()?.let {
 					savedUser -> sharedViewModel.setCurrentUser(savedUser)
 				}
@@ -118,9 +113,9 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 
 	// show auth fragment
 	private fun showAuthFlowFragment() {
-		supportFragmentManager.beginTransaction().remove(DrawerFlowFragment()).commit()
+		supportFragmentManager.beginTransaction().remove(MainFlowFragment()).commitNow()
 		supportFragmentManager.beginTransaction().apply {
-			add(R.id.main_activity_container,
+			replace(R.id.main_activity_container,
 			    AuthFlowFragment(),
 			    AuthFlowFragment::class.java.canonicalName)
 			commit()
@@ -128,23 +123,19 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 		ivMainSplashLogo.visibility = View.GONE
 	}
 
-	// show main feed fragment
-	private fun showDrawerFlowFragment() {
-		supportFragmentManager.beginTransaction().remove(AuthFlowFragment()).commit()
+	// show main fragment
+	private fun showMainFlowFragment() {
+		supportFragmentManager.beginTransaction().remove(AuthFlowFragment()).commitNow()
 		supportFragmentManager.beginTransaction().apply {
-				add(R.id.main_activity_container,
-				    DrawerFlowFragment(),
-				    DrawerFlowFragment::class.java.canonicalName)
+				replace(R.id.main_activity_container,
+				    MainFlowFragment(),
+				    MainFlowFragment::class.java.canonicalName)
 				commit()
 			}
 		ivMainSplashLogo.visibility = View.GONE
 
 	}
 
-	override fun onBackPressed() {
-		currentFragment?.onBackPressed() ?: super.onBackPressed()
-
-	}
 
 
 
