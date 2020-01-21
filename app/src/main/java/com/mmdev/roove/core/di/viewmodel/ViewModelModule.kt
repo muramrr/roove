@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 21:41
+ * Last modified 21.01.20 19:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -82,31 +82,26 @@ class ViewModelModule {
 	@Provides
 	@ViewModelKey(CardsViewModel::class)
 	fun cardsViewModel(repository: CardsRepository): ViewModel =
-		CardsViewModel(AddToSkippedUseCase(
-				repository),
-		                                                                  CheckMatchUseCase(
-				                                                                  repository),
-		                                                                  GetUsersByPreferencesUseCase(
-				                                                                  repository))
+		CardsViewModel(AddToSkippedUseCase(repository),
+		               CheckMatchUseCase(repository),
+		               GetUsersByPreferencesUseCase(repository))
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(ChatViewModel::class)
 	fun chatViewModel(repository: ChatRepository): ViewModel =
-		ChatViewModel(
-				GetConversationWithPartnerUseCase(repository),
-				GetMessagesUseCase(repository),
-				SendMessageUseCase(repository),
-				SendPhotoUseCase(repository))
+		ChatViewModel(GetConversationWithPartnerUseCase(repository),
+		              GetMessagesUseCase(repository),
+		              SendMessageUseCase(repository),
+		              SendPhotoUseCase(repository))
 
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(ConversationsViewModel::class)
 	fun conversationsViewModel(repository: ConversationsRepository): ViewModel =
-		ConversationsViewModel(
-				DeleteConversationUseCase(repository),
-				GetConversationsListUseCase(repository))
+		ConversationsViewModel(DeleteConversationUseCase(repository),
+		                       GetConversationsListUseCase(repository))
 
 
 	@IntoMap
@@ -128,20 +123,18 @@ class ViewModelModule {
 	@Provides
 	@ViewModelKey(LocalUserRepoViewModel::class)
 	fun localUserRepoViewModel(repository: LocalUserRepository): ViewModel =
-		LocalUserRepoViewModel(
-				GetSavedUserUseCase(repository),
-				SaveUserInfoUseCase(repository))
+		LocalUserRepoViewModel(GetSavedUserUseCase(repository),
+		                       SaveUserInfoUseCase(repository))
 
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(RemoteUserRepoViewModel::class)
 	fun remoteUserRepoViewModel(repository: RemoteUserRepository): ViewModel =
-		RemoteUserRepoViewModel(
-				DeleteUserUseCase(repository),
-				FetchUserInfoUseCase(repository),
-				GetFullUserItemUseCase(repository),
-				UpdateUserItemUseCase(repository))
+		RemoteUserRepoViewModel(DeleteUserUseCase(repository),
+								FetchUserInfoUseCase(repository),
+								GetFullUserItemUseCase(repository),
+								UpdateUserItemUseCase(repository))
 
 	@IntoMap
 	@Provides

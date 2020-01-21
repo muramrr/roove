@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 18:47
+ * Last modified 21.01.20 19:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
@@ -38,7 +37,7 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 
 class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 
-	private lateinit var userItemModel: UserItem
+	private lateinit var userItem: UserItem
 
 	private var name = ""
 	private var age = 0
@@ -88,7 +87,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
-		sharedViewModel.getCurrentUser()?.let { userItemModel = it }
+		sharedViewModel.getCurrentUser().value?.let { userItem = it }
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -104,22 +103,28 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 		btnSettingsLogOut.setOnClickListener { showSignOutPrompt() }
 
 		btnSettingsSave.setOnClickListener {
-			remoteRepoViewModel.updateUserItem(userItemModel)
+			userItem.baseUserInfo.name = name
+			userItem.baseUserInfo.age = age
+			userItem.baseUserInfo.gender = gender
+			userItem.preferredGender = preferredGender
+			userItem.baseUserInfo.city = city
+
+			remoteRepoViewModel.updateUserItem(userItem)
 			remoteRepoViewModel.getUserUpdateStatus().observeOnce(this, Observer {
-				if (it) localRepoViewModel.saveUserInfo(userItemModel)
+				if (it) localRepoViewModel.saveUserInfo(userItem)
 			})
 		}
 	}
 
 
 	private fun initProfile() {
-		edSettingsName.setText(userItemModel.baseUserInfo.name)
-		dropSettingsGender.setText(userItemModel.baseUserInfo.gender)
-		dropSettingsPreferredGender.setText(userItemModel.preferredGender)
-		tvSettingsAgeDisplay.text = "Age: ${userItemModel.baseUserInfo.age}"
-		sliderSettingsAge.value = userItemModel.baseUserInfo.age.toFloat()
+		edSettingsName.setText(userItem.baseUserInfo.name)
+		dropSettingsGender.setText(userItem.baseUserInfo.gender)
+		dropSettingsPreferredGender.setText(userItem.preferredGender)
+		tvSettingsAgeDisplay.text = "Age: ${userItem.baseUserInfo.age}"
+		sliderSettingsAge.value = userItem.baseUserInfo.age.toFloat()
 
-		cityToDisplay = cityList.filterValues { it == userItemModel.baseUserInfo.city }.keys.first()
+		cityToDisplay = cityList.filterValues { it == userItem.baseUserInfo.city }.keys.first()
 		dropSettingsCity.setText(cityToDisplay)
 	}
 
@@ -135,17 +140,17 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 				when {
 					s.length > layoutSettingsChangeName.counterMaxLength -> {
 						layoutSettingsChangeName.error = "Max length reached"
+						btnSettingsSave.isEnabled = false
 					}
 					s.isEmpty() -> {
 						layoutSettingsChangeName.error = "Name must not be empty"
+						btnSettingsSave.isEnabled = false
 
 					}
 					else -> {
 						layoutSettingsChangeName.error = ""
 						name = s.toString().trim()
-						Log.wtf(TAG, "${sharedViewModel.currentUser.value}")
-						userItemModel.baseUserInfo.name = name
-
+						btnSettingsSave.isEnabled = true
 					}
 				}
 			}
@@ -169,7 +174,6 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 
 		dropSettingsGender.setOnItemClickListener { _, _, position, _ ->
 			gender = genderList[position]
-			userItemModel.baseUserInfo.gender = gender
 		}
 	}
 
@@ -182,7 +186,6 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 
 		dropSettingsPreferredGender.setOnItemClickListener { _, _, position, _ ->
 			preferredGender = preferredGenderList[position]
-			userItemModel.preferredGender = preferredGender
 		}
 	}
 
@@ -195,14 +198,12 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 		dropSettingsCity.setOnItemClickListener { _, _, position, _ ->
 			city = cityList.map { it.value }[position]
 			cityToDisplay = cityList.map { it.key }[position]
-			userItemModel.baseUserInfo.city = city
 		}
 	}
 
 	private fun changerAgeSetup() {
 		sliderSettingsAge.setOnChangeListener{ _, value ->
 			age = value.toInt()
-			userItemModel.baseUserInfo.age = age
 			tvSettingsAgeDisplay.text = "Age: $age"
 		}
 	}
