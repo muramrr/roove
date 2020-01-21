@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 19:18
+ * Last modified 21.01.20 19:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,6 @@ import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.core.BaseFragment
-import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.utils.observeOnce
@@ -54,7 +53,6 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 	private lateinit var authViewModel: AuthViewModel
 	private lateinit var localRepoViewModel: LocalUserRepoViewModel
 	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
-	private lateinit var sharedViewModel: SharedViewModel
 
 	companion object{
 		private const val TAG = "mylogs_SettingsAccFragment"
@@ -84,10 +82,10 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 			authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 			localRepoViewModel = ViewModelProvider(this, factory)[LocalUserRepoViewModel::class.java]
 			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
-			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
-		sharedViewModel.getCurrentUser().value?.let { userItem = it }
+		localRepoViewModel.getSavedUser()?.let { userItem = it }
+
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -103,12 +101,6 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 		btnSettingsLogOut.setOnClickListener { showSignOutPrompt() }
 
 		btnSettingsSave.setOnClickListener {
-			userItem.baseUserInfo.name = name
-			userItem.baseUserInfo.age = age
-			userItem.baseUserInfo.gender = gender
-			userItem.preferredGender = preferredGender
-			userItem.baseUserInfo.city = city
-
 			remoteRepoViewModel.updateUserItem(userItem)
 			remoteRepoViewModel.getUserUpdateStatus().observeOnce(this, Observer {
 				if (it) localRepoViewModel.saveUserInfo(userItem)
@@ -150,6 +142,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 					else -> {
 						layoutSettingsChangeName.error = ""
 						name = s.toString().trim()
+						userItem.baseUserInfo.name = name
 						btnSettingsSave.isEnabled = true
 					}
 				}
@@ -174,6 +167,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 
 		dropSettingsGender.setOnItemClickListener { _, _, position, _ ->
 			gender = genderList[position]
+			userItem.baseUserInfo.gender = gender
 		}
 	}
 
@@ -186,6 +180,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 
 		dropSettingsPreferredGender.setOnItemClickListener { _, _, position, _ ->
 			preferredGender = preferredGenderList[position]
+			userItem.preferredGender = preferredGender
 		}
 	}
 
@@ -198,12 +193,14 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 		dropSettingsCity.setOnItemClickListener { _, _, position, _ ->
 			city = cityList.map { it.value }[position]
 			cityToDisplay = cityList.map { it.key }[position]
+			userItem.baseUserInfo.city = city
 		}
 	}
 
 	private fun changerAgeSetup() {
 		sliderSettingsAge.setOnChangeListener{ _, value ->
 			age = value.toInt()
+			userItem.baseUserInfo.age = age
 			tvSettingsAgeDisplay.text = "Age: $age"
 		}
 	}

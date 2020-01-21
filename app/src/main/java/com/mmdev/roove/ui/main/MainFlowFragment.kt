@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 18:42
+ * Last modified 21.01.20 19:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -83,6 +83,7 @@ class MainFlowFragment: FlowFragment(R.layout.fragment_main_flow) {
 		fabCards.setOnClickListener {
 			if (navControllerMain.currentDestination?.id != R.id.cardsFragmentNav) {
 				bottomNavigationView.selectedItemId = R.id.bottomCards
+				navControllerMain.popBackStack()
 				navControllerMain.navigate(R.id.cardsFragmentNav)
 			}
 		}

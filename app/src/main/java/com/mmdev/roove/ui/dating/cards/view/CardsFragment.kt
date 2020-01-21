@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 21:20
+ * Last modified 21.01.20 19:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -49,7 +49,7 @@ class CardsFragment: BaseFragment() {
 			ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
-		cardsViewModel = ViewModelProvider(this, factory)[CardsViewModel::class.java]
+		cardsViewModel = ViewModelProvider(this@CardsFragment, factory)[CardsViewModel::class.java]
 		cardsViewModel.loadUsersByPreferences()
 		cardsViewModel.getUsersCardsList().observe(this, Observer {
 			mCardsStackAdapter.updateData(it)
