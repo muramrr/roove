@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 18:52
+ * Last modified 21.01.20 18:09
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,6 +19,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.text.format.DateFormat
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -153,8 +155,19 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		containerChat.addSystemBottomPadding()
 
-		buttonMessage.setOnClickListener { sendMessageClick() }
-		buttonAttachments.setOnClickListener {
+		edTextMessageInput.addTextChangedListener(object: TextWatcher{
+			override fun afterTextChanged(s: Editable?) {}
+
+			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+				btnSendMessage.isActivated = edTextMessageInput.text.isNotEmpty() &&
+				                             edTextMessageInput.text.toString().trim().isNotEmpty()
+			}
+		})
+
+		btnSendMessage.setOnClickListener { sendMessageClick() }
+		btnSendAttachment.setOnClickListener {
 			val builder = AlertDialog.Builder(context!!)
 				.setItems(arrayOf("Camera", "Gallery")) {
 					_, which ->
@@ -267,18 +280,18 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	* rx chain: create conversation -> set conversation id -> send message -> observe new messages
 	*/
 	private fun sendMessageClick() {
-		if (textMessageInput.text.isNotEmpty() &&
-		    textMessageInput.text.toString().trim().isNotEmpty()) {
+		if (edTextMessageInput.text.isNotEmpty() &&
+		    edTextMessageInput.text.toString().trim().isNotEmpty()) {
 
 			val message = MessageItem(userItemModel.baseUserInfo,
-			                          textMessageInput.text.toString().trim(),
+			                          edTextMessageInput.text.toString().trim(),
 			                          photoAttachementItem = null)
 
 			chatViewModel.sendMessage(message)
-			textMessageInput.setText("")
+			edTextMessageInput.setText("")
 
 		}
-		else textMessageInput.startAnimation(
+		else edTextMessageInput.startAnimation(
 				AnimationUtils.loadAnimation(context, R.anim.horizontal_shake))
 
 	}

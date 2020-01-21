@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 21:27
+ * Last modified 21.01.20 17:43
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,11 +10,14 @@
 
 package com.mmdev.roove.ui
 
+import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
@@ -136,6 +139,17 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 
 	}
 
+
+	//hide keyboard by clicking outside
+	override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+		currentFocus?.let {
+			val imm: InputMethodManager = getSystemService(
+					Context.INPUT_METHOD_SERVICE
+			) as (InputMethodManager)
+			imm.hideSoftInputFromWindow(it.windowToken, 0)
+		}
+		return super.dispatchTouchEvent(ev)
+	}
 
 
 
