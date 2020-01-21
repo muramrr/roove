@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 21:17
+ * Last modified 21.01.20 18:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
@@ -27,7 +28,6 @@ import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
-import com.mmdev.roove.utils.addSystemBottomPadding
 import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_settings.*
 
@@ -88,11 +88,11 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
-		userItemModel = sharedViewModel.currentUser.value!!
+		sharedViewModel.getCurrentUser()?.let { userItemModel = it }
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		containerSettingsAcc.addSystemBottomPadding()
+
 		initProfile()
 
 		changerNameSetup()
@@ -143,7 +143,9 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 					else -> {
 						layoutSettingsChangeName.error = ""
 						name = s.toString().trim()
+						Log.wtf(TAG, "${sharedViewModel.currentUser.value}")
 						userItemModel.baseUserInfo.name = name
+
 					}
 				}
 			}

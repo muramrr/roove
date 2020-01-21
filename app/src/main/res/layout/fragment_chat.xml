@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.01.20 17:58
+  ~ Last modified 21.01.20 16:53
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -87,11 +87,10 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_bias="1.0">
+			app:layout_constraintTop_toBottomOf="@id/rvMessageList">
 
 			<ImageView
-				android:id="@+id/buttonAttachments"
+				android:id="@+id/btnSendAttachment"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:background="?attr/selectableItemBackgroundBorderless"
@@ -104,13 +103,13 @@
 				android:src="@drawable/ic_chat_attachment_24dp"/>
 
 			<EditText
-				android:id="@+id/textMessageInput"
+				android:id="@+id/edTextMessageInput"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:background="@null"
 
-				android:layout_toStartOf="@+id/buttonMessage"
-				android:layout_toEndOf="@+id/buttonAttachments"
+				android:layout_toStartOf="@+id/btnSendMessage"
+				android:layout_toEndOf="@+id/btnSendAttachment"
 				android:layout_centerVertical="true"
 
 				android:imeOptions="actionSend"
@@ -124,19 +123,23 @@
 
 				tools:ignore="Autofill"/>
 
-			<ImageView
-				android:id="@+id/buttonMessage"
+
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/btnSendMessage"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:background="?attr/selectableItemBackgroundBorderless"
-				android:clickable="true"
-				android:focusable="true"
 				android:layout_alignParentEnd="true"
 				android:layout_centerVertical="true"
 				android:padding="@dimen/general_margin_16"
 				android:contentDescription="@string/fragment_chat_send_img_description"
-				android:src="@drawable/ic_chat_send_24dp"
-				 />
+
+				app:cornerRadius="24dp"
+				app:icon="@drawable/ic_chat_send_24dp"
+				app:iconTint="@color/material_chat_button"
+				app:rippleColor="@color/black_50"
+				style="@style/MyMaterialIconButton"
+				/>
+
 		</RelativeLayout>
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
