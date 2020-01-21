@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 21:35
+ * Last modified 21.01.20 16:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 
 package com.mmdev.data.auth
 
+import android.util.Log
 import com.facebook.login.LoginManager
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -52,8 +53,9 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 						.addOnSuccessListener {
 							userDoc -> emitter.onNext(userDoc.exists())
 						}
-						.addOnFailureListener { emitter.onNext(false) }
+
 				}
+				Log.wtf("mylogs_AuthRepoImpl", "${auth.currentUser}")
 			}
 			auth.addAuthStateListener(authStateListener)
 			emitter.setCancellable { auth.removeAuthStateListener(authStateListener) }
