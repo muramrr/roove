@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 16:42
+ * Last modified 21.01.20 17:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,7 +40,6 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 	private lateinit var authViewModel: AuthViewModel
 
 	private var registrationStep = 1
-	private var isRegistrationCompleted = false
 
 	private var baseUserInfo = BaseUserInfo()
 	private var name = "no name"
@@ -392,13 +391,6 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 		btnGenderEveryone.isSelected = true
 		btnGenderFemale.isSelected = false
 		btnGenderMale.isSelected = false
-	}
-
-	override fun onStop(){
-		if (!isRegistrationCompleted) {
-			authViewModel.logOut()
-		}
-		super.onStop()
 	}
 
 }

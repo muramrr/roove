@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 21:33
+ * Last modified 21.01.20 17:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,8 +44,6 @@ class AuthLandingFragment: BaseFragment(R.layout.fragment_auth_landing)  {
 			ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
-		//authViewModel.logOut()
-
 		authViewModel.continueRegistration.observe(this, Observer {
 			if (it == true) findNavController().navigate(R.id.action_auth_landing_to_registrationFragment)
 		})
@@ -60,13 +58,16 @@ class AuthLandingFragment: BaseFragment(R.layout.fragment_auth_landing)  {
 				authViewModel.signIn(loginResult.accessToken.token)
 			}
 
-			override fun onCancel() { authViewModel.logOut() }
+			override fun onCancel() {}
 
 			override fun onError(error: FacebookException) {
 				Toast.makeText(context, "$error", Toast.LENGTH_SHORT).show()
 			}
 		})
-		btnFacebookLoginDelegate.setOnClickListener { btnFacebookLogin.performClick() }
+		btnFacebookLoginDelegate.setOnClickListener {
+			authViewModel.logOut()
+			btnFacebookLogin.performClick()
+		}
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
