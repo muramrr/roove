@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 17.01.20 19:37
+  ~ Last modified 21.01.20 16:27
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -51,7 +51,7 @@
 		android:text="male"
 		android:textSize="12sp"
 
-		app:backgroundTint="@color/colorPrimary"
+		app:backgroundTint="@color/material_registration_buttons"
 		app:icon="@drawable/ic_registration_male_64dp"
 		app:iconGravity="textStart"
 		app:rippleColor="@color/black_50"
@@ -75,6 +75,7 @@
 		android:text="female"
 		android:textSize="12sp"
 
+		app:backgroundTint="@color/material_registration_buttons"
 		app:icon="@drawable/ic_registration_female_64dp"
 		app:iconGravity="textStart"
 		app:rippleColor="@color/black_50"
@@ -119,6 +120,7 @@
 		android:text="everyone"
 		android:textSize="12sp"
 
+		app:backgroundTint="@color/material_registration_buttons"
 		app:icon="@drawable/ic_registration_heart_64"
 		app:iconGravity="textStart"
 		app:iconTint="@color/material_red_a700"
@@ -650,7 +652,7 @@
 		android:layout_marginBottom="@dimen/general_margin_16"
 		android:src="@drawable/ic_arrow_forward_24dp"
 
-		app:backgroundTint="@color/gradient3"
+		app:backgroundTint="@color/material_registration_fab"
 		app:rippleColor="@color/black_50"
 
 		app:layout_constraintBottom_toBottomOf="parent"

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 15.01.20 18:03
+ * Last modified 21.01.20 16:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@
 package com.mmdev.roove.ui.auth.view
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,7 +18,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -56,9 +54,6 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 	private lateinit var cityList: Map<String, String>
 
-
-	private var pressedTintColor: ColorStateList? = null
-	private var unpressedTintColor: ColorStateList? = null
 
 	companion object{
 		private const val TAG = "mylogs_RegistrFragment"
@@ -100,9 +95,6 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 		disableFab()
 
-		pressedTintColor = ContextCompat.getColorStateList(context!!, R.color.lolite)
-		unpressedTintColor = ContextCompat.getColorStateList(context!!, R.color.colorPrimary)
-
 		// don't allow to break transitions
 		containerRegistration.setTransitionListener(
 				object : MotionLayout.TransitionListener {
@@ -128,7 +120,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 		//step 1
 		btnGenderMale.setOnClickListener {
-			setPressedMale()
+			setSelectedMale()
 
 			when (registrationStep){
 				1 -> gender = btnGenderMale.text.toString()
@@ -140,7 +132,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 		}
 
 		btnGenderFemale.setOnClickListener {
-			setPressedFemale()
+			setSelectedFemale()
 
 			when (registrationStep){
 				1 -> gender = btnGenderFemale.text.toString()
@@ -154,7 +146,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 		//step 2
 		btnGenderEveryone.setOnClickListener {
-			setPressedEveryone()
+			setSelectedEveryone()
 			preferredGender = btnGenderEveryone.text.toString()
 			enableFab()
 		}
@@ -303,35 +295,25 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 	}
 
 	private fun restoreStep1State(){
-		clearAllButtonsState()
+		setUnselectedAllButtons()
 		if (gender.isNotEmpty()){
 			enableFab()
 			when (gender){
-				"male" -> {
-					setPressedMale()
-				}
-				"female" -> {
-					setPressedFemale()
-				}
+				"male" -> setSelectedMale()
+				"female" -> setSelectedFemale()
 			}
 		}
 		else disableFab()
 	}
 
 	private fun restoreStep2State(){
-		clearAllButtonsState()
+		setUnselectedAllButtons()
 		if (preferredGender.isNotEmpty()){
 			enableFab()
 			when (preferredGender){
-				"male" -> {
-					setPressedMale()
-				}
-				"female" -> {
-					setPressedFemale()
-				}
-				"everyone" ->{
-					setPressedEveryone()
-				}
+				"male" -> setSelectedMale()
+				"female" -> setSelectedFemale()
+				"everyone" -> setSelectedEveryone()
 			}
 		}
 		else disableFab()
@@ -376,53 +358,40 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 	}
 
 
-
 	private fun enableFab(){
-		if (!btnRegistrationNext.isEnabled) {
-
-			val pressedFabTintColor =
-				ContextCompat.getColorStateList(context!!, R.color.gradient3)
+		if (!btnRegistrationNext.isEnabled)
 			btnRegistrationNext.isEnabled = true
-			btnRegistrationNext.backgroundTintList = pressedFabTintColor
-
-		}
 	}
 
 	private fun disableFab(){
-		if (btnRegistrationNext.isEnabled) {
-
-			val unpressedFabTintColor =
-				ContextCompat.getColorStateList(context!!, R.color.disabled_color)
+		if (btnRegistrationNext.isEnabled)
 			btnRegistrationNext.isEnabled = false
-			btnRegistrationNext.backgroundTintList = unpressedFabTintColor
-
-		}
 	}
 
 
-
-	private fun clearAllButtonsState(){
-		btnGenderMale.backgroundTintList = unpressedTintColor
-		btnGenderFemale.backgroundTintList = unpressedTintColor
-		btnGenderEveryone.backgroundTintList = unpressedTintColor
+	private fun setUnselectedAllButtons(){
+		btnGenderEveryone.isSelected = false
+		btnGenderFemale.isSelected = false
+		btnGenderMale.isSelected = false
 	}
 
-	private fun setPressedMale(){
-		btnGenderMale.backgroundTintList = pressedTintColor
-		btnGenderFemale.backgroundTintList = unpressedTintColor
-		btnGenderEveryone.backgroundTintList = unpressedTintColor
+	private fun setSelectedMale(){
+		btnGenderEveryone.isSelected = false
+		btnGenderFemale.isSelected = false
+		btnGenderMale.isSelected = true
 	}
 
-	private fun setPressedFemale(){
-		btnGenderMale.backgroundTintList = unpressedTintColor
-		btnGenderFemale.backgroundTintList = pressedTintColor
-		btnGenderEveryone.backgroundTintList = unpressedTintColor
+	private fun setSelectedFemale(){
+		btnGenderEveryone.isSelected = false
+		btnGenderFemale.isSelected = true
+		btnGenderMale.isSelected = false
+
 	}
 
-	private fun setPressedEveryone(){
-		btnGenderEveryone.backgroundTintList = pressedTintColor
-		btnGenderFemale.backgroundTintList = unpressedTintColor
-		btnGenderMale.backgroundTintList = unpressedTintColor
+	private fun setSelectedEveryone(){
+		btnGenderEveryone.isSelected = true
+		btnGenderFemale.isSelected = false
+		btnGenderMale.isSelected = false
 	}
 
 	override fun onStop(){
