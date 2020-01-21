@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 16.12.19 19:03
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 21.01.20 16:03
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -133,7 +133,17 @@
 
 
 
-
+	<style name="MyMaterialIconButton" parent="Widget.MaterialComponents.Button.TextButton">
+		<item name="android:minWidth">0dp</item>
+		<item name="android:insetLeft">0dp</item>
+		<item name="android:insetTop">0dp</item>
+		<item name="android:insetRight">0dp</item>
+		<item name="android:insetBottom">0dp</item>
+		<item name="iconGravity">textStart</item>
+		<item name="iconPadding">0dp</item>
+		<item name="iconTint">@color/mtrl_btn_text_color_selector</item>
+		<item name="rippleColor">?colorOnPrimary</item>
+	</style>
 
 	<!-- SPECIFIC STYLES -->
 

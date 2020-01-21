@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.01.20 21:17
+  ~ Last modified 21.01.20 18:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,8 @@
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"
+		/>
 
 	<action
 		android:id="@+id/action_open_pairsFragment"
@@ -29,7 +30,7 @@
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+		/>
 
 	<action
 		android:id="@+id/action_open_cardsFragment"
@@ -37,7 +38,8 @@
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"
+		/>
 
 	<action
 		android:id="@+id/action_open_conversationsFragment"
@@ -45,7 +47,8 @@
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"
+		/>
 
 	<action
 		android:id="@+id/action_open_settingsFragment"
@@ -53,7 +56,8 @@
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-		app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"
+		/>
 
 	<!-- main places fragment-->
 	<fragment
