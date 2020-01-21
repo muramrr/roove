@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.01.20 20:39
+  ~ Last modified 21.01.20 17:50
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,9 +14,9 @@
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<item
-		android:id="@+id/bottomHome"
+		android:id="@+id/bottomPlaces"
 		android:icon="@drawable/ic_places_24dp"
-		android:title="Home" />
+		android:title="Places" />
 
 	<item
 		android:id="@+id/bottomPairs"
@@ -25,8 +25,7 @@
 
 	<item
 		android:id="@+id/bottomCards"
-		android:icon="@drawable/ic_cards_24dp"
-		android:title="Cards"
+		android:title=""
 		android:enabled="false"
 		/>
 
