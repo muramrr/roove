@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:59
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 21.01.20 19:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,9 +37,9 @@ class SharedViewModel: ViewModel() {
 
 	val placeSelected: MutableLiveData<EventItem> = MutableLiveData()
 
-	val currentUser: MutableLiveData<UserItem> = MutableLiveData()
+	private val currentUser: MutableLiveData<UserItem> = MutableLiveData()
 
-
+	fun getCurrentUser() = currentUser
 
 	fun setCurrentUser(userItem: UserItem){
 		currentUser.value = userItem
@@ -53,14 +53,14 @@ class SharedViewModel: ViewModel() {
 		conversationSelected.value = conversationItem
 		//if we moved to user profile from conversation
 		if (cardSelected.value?.baseUserInfo?.userId != conversationItem.partner.userId) {
-			Log.wtf("mylogs", "card updated")
+			Log.wtf("mylogs_SharedViewModel", "card updated")
 			cardSelected.value = CardItem(conversationItem.partner,
 			                              conversationStarted = conversationItem.conversationStarted)
 		}
 	}
 
 	fun setPlaceSelected(placeItem: EventItem){
-		this.placeSelected.value = placeItem
+		placeSelected.value = placeItem
 	}
 
 

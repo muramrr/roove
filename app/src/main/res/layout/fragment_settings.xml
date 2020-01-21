@@ -2,278 +2,310 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.01.20 21:17
+  ~ Last modified 21.01.20 15:37
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
-	android:id="@+id/containerSettingsAcc"
-	android:layout_height="match_parent"
+<androidx.core.widget.NestedScrollView
 	android:layout_width="match_parent"
-	android:padding="@dimen/general_margin_8"
+	android:layout_height="match_parent"
+	android:clipToPadding="false"
+	android:overScrollMode="never"
+	android:fillViewport="true"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/containerSettingsAcc"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:padding="@dimen/general_margin_8"
+		android:animateLayoutChanges="true">
 
-	<!--name-->
-	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/layoutSettingsChangeName"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/general_margin_16"
 
-		app:counterMaxLength="30"
-
-		app:boxStrokeErrorColor="@color/colorError"
-		app:boxStrokeColor="@color/text_input_layout"
-		app:boxStrokeWidth="2dp"
-
-		android:hint="Your name"
-		app:hintEnabled="true"
-		app:hintTextColor="@color/white"
-
-		app:errorEnabled="true"
-		app:errorTextColor="@color/colorError"
-		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		>
-
-		<com.google.android.material.textfield.TextInputEditText
-			android:id="@+id/edSettingsName"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:background="@null"
-
-			android:gravity="center"
-			android:maxLines="1"
-			android:imeOptions="actionDone"
-			android:inputType="textPersonName"
-
-			android:text="@string/default_name"
-			android:textCursorDrawable="@color/lolite"
-			android:textSize="20sp"
-			style="@style/regular_text_white85op" />
-
-	</com.google.android.material.textfield.TextInputLayout>
-
-	<!--gender-->
-	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/layoutSettingsGender"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_marginEnd="@dimen/general_margin_16"
-		android:layout_marginBottom="24dp"
-
-		app:boxStrokeColor="@color/text_input_layout"
-		app:boxStrokeWidth="2dp"
-
-		android:hint="Your gender"
-		app:hintEnabled="true"
-		app:hintTextColor="@color/white"
-
-		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toStartOf="@id/layoutSettingsPreferredGender"
-		app:layout_constraintTop_toBottomOf="@id/layoutSettingsChangeName"
-		app:layout_constraintBottom_toTopOf="@id/sliderSettingsAge"
-		>
-
-		<com.google.android.material.textview.MaterialAutoCompleteTextView
-			android:id="@+id/dropSettingsGender"
-			android:layout_width="match_parent"
+		<!--name-->
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/layoutSettingsChangeName"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:background="@null"
-			android:cursorVisible="false"
-			android:drawablePadding="-24dp"
-			android:focusable="false"
-			android:gravity="center"
-			android:imeOptions="actionDone"
-			android:inputType="text"
+			android:layout_marginTop="@dimen/general_margin_16"
 
-			android:text="male"
-			android:textSize="20sp"
-			style="@style/regular_text_white85op" />
+			app:counterMaxLength="30"
 
-	</com.google.android.material.textfield.TextInputLayout>
+			app:boxStrokeErrorColor="@color/colorError"
+			app:boxStrokeColor="@color/text_input_layout"
+			app:boxStrokeWidth="2dp"
 
-	<!--PreferredGender-->
-	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/layoutSettingsPreferredGender"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="24dp"
+			android:hint="Your name"
+			app:hintEnabled="true"
+			app:hintTextColor="@color/white"
 
-		app:boxStrokeColor="@color/text_input_layout"
-		app:boxStrokeWidth="2dp"
+			app:errorEnabled="true"
+			app:errorTextColor="@color/colorError"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
-		android:hint="Interested in"
-		app:hintEnabled="true"
-		app:hintTextColor="@color/white"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			>
 
-		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/edSettingsName"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:background="@null"
 
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toEndOf="@id/layoutSettingsGender"
-		app:layout_constraintTop_toBottomOf="@id/layoutSettingsChangeName"
-		app:layout_constraintBottom_toTopOf="@id/sliderSettingsAge"
-		>
+				android:gravity="center"
+				android:maxLines="1"
+				android:imeOptions="actionDone"
+				android:inputType="textPersonName"
 
-		<com.google.android.material.textview.MaterialAutoCompleteTextView
-			android:id="@+id/dropSettingsPreferredGender"
-			android:layout_width="match_parent"
+				android:text="@string/default_name"
+				android:textCursorDrawable="@color/lolite"
+				android:textSize="20sp"
+				style="@style/regular_text_white85op" />
+
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<!--gender-->
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/layoutSettingsGender"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:background="@null"
-			android:cursorVisible="false"
-			android:drawablePadding="-24dp"
-			android:focusable="false"
-			android:gravity="center"
-			android:imeOptions="actionDone"
-			android:inputType="text"
+			android:layout_marginEnd="@dimen/general_margin_16"
+			android:layout_marginBottom="24dp"
 
-			android:text="male"
-			android:textSize="20sp"
-			style="@style/regular_text_white85op"
+			app:boxStrokeColor="@color/text_input_layout"
+			app:boxStrokeWidth="2dp"
+
+			android:hint="Your gender"
+			app:hintEnabled="true"
+			app:hintTextColor="@color/white"
+
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toStartOf="@id/layoutSettingsPreferredGender"
+			app:layout_constraintTop_toBottomOf="@id/layoutSettingsChangeName"
+			app:layout_constraintBottom_toTopOf="@id/sliderSettingsAge"
+			>
+
+			<com.google.android.material.textview.MaterialAutoCompleteTextView
+				android:id="@+id/dropSettingsGender"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@null"
+				android:cursorVisible="false"
+				android:drawablePadding="-24dp"
+				android:focusable="false"
+				android:gravity="center"
+				android:imeOptions="actionDone"
+				android:inputType="text"
+
+				android:text="male"
+				android:textSize="20sp"
+				style="@style/regular_text_white85op" />
+
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<!--PreferredGender-->
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/layoutSettingsPreferredGender"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="24dp"
+
+			app:boxStrokeColor="@color/text_input_layout"
+			app:boxStrokeWidth="2dp"
+
+			android:hint="Interested in"
+			app:hintEnabled="true"
+			app:hintTextColor="@color/white"
+
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@id/layoutSettingsGender"
+			app:layout_constraintTop_toBottomOf="@id/layoutSettingsChangeName"
+			app:layout_constraintBottom_toTopOf="@id/sliderSettingsAge"
+			>
+
+			<com.google.android.material.textview.MaterialAutoCompleteTextView
+				android:id="@+id/dropSettingsPreferredGender"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@null"
+				android:cursorVisible="false"
+				android:drawablePadding="-24dp"
+				android:focusable="false"
+				android:gravity="center"
+				android:imeOptions="actionDone"
+				android:inputType="text"
+
+				android:text="male"
+				android:textSize="20sp"
+				style="@style/regular_text_white85op"
+				/>
+
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<!--age-->
+		<com.google.android.material.slider.Slider
+			android:id="@+id/sliderSettingsAge"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+
+			app:floatingLabel="true"
+			app:haloColor="?colorSecondary"
+
+			app:thumbColor="@color/white_85"
+			app:thumbRadius="14dp"
+
+			app:activeTrackColor="?colorSecondary"
+			app:inactiveTrackColor="@color/lolite_25"
+			android:labelFor="@id/tvSettingsAgeDisplay"
+
+			android:value="18"
+			android:valueFrom="18"
+			android:valueTo="50"
+
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/layoutSettingsGender"
+			app:layout_constraintBottom_toTopOf="@id/tvSettingsAgeDisplay"
 			/>
 
-	</com.google.android.material.textfield.TextInputLayout>
-
-	<!--age-->
-	<com.google.android.material.slider.Slider
-		android:id="@+id/sliderSettingsAge"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-
-		app:floatingLabel="true"
-		app:haloColor="?colorSecondary"
-
-		app:thumbColor="@color/white_85"
-		app:thumbRadius="14dp"
-
-		app:activeTrackColor="?colorSecondary"
-		app:inactiveTrackColor="@color/lolite_25"
-		android:labelFor="@id/tvSettingsAgeDisplay"
-
-		android:value="18"
-		android:valueFrom="18"
-		android:valueTo="50"
-
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/layoutSettingsGender"
-		app:layout_constraintBottom_toTopOf="@id/tvSettingsAgeDisplay"
-		/>
-
-	<TextView
-		android:id="@+id/tvSettingsAgeDisplay"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-
-		android:gravity="center"
-		android:text="Age: 18"
-		android:textSize="30sp"
-		style="@style/light_text_white85op"
-
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/sliderSettingsAge"
-		app:layout_constraintBottom_toTopOf="@id/layoutSettingsCity"
-		/>
-
-	<!--city-->
-	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/layoutSettingsCity"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/general_margin_16"
-
-		app:boxStrokeColor="@color/text_input_layout"
-		app:boxStrokeWidth="2dp"
-
-		android:hint="Your city"
-		app:hintEnabled="true"
-		app:hintTextColor="@color/white"
-
-		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/tvSettingsAgeDisplay"
-		>
-
-		<com.google.android.material.textview.MaterialAutoCompleteTextView
-			android:id="@+id/dropSettingsCity"
-			android:layout_width="match_parent"
+		<TextView
+			android:id="@+id/tvSettingsAgeDisplay"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 
-			android:background="@null"
-			android:cursorVisible="false"
-			android:drawablePadding="-24dp"
-			android:focusable="false"
 			android:gravity="center"
-			android:imeOptions="actionDone"
-			android:inputType="text"
+			android:text="Age: 18"
+			android:textSize="30sp"
+			style="@style/light_text_white85op"
 
-			android:text="city"
-			android:textSize="20sp"
-			style="@style/regular_text_white85op"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/sliderSettingsAge"
+			app:layout_constraintBottom_toTopOf="@id/layoutSettingsCity"
 			/>
 
-	</com.google.android.material.textfield.TextInputLayout>
+		<!--city-->
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/layoutSettingsCity"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/general_margin_16"
 
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/btnSettingsLogOut"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/general_margin_16"
+			app:boxStrokeColor="@color/text_input_layout"
+			app:boxStrokeWidth="2dp"
 
-		android:padding="@dimen/general_margin_16"
+			android:hint="Your city"
+			app:hintEnabled="true"
+			app:hintTextColor="@color/white"
 
-		android:fontFamily="@font/rubik_medium"
-		android:text="Log out"
-		android:textColor="@color/white"
-		android:textSize="20sp"
-		android:textAllCaps="false"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
 
-		app:rippleColor="@color/material_red_a700"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tvSettingsAgeDisplay"
+			>
 
-		app:strokeColor="@color/material_red_a700"
-		app:strokeWidth="2dp"
+			<com.google.android.material.textview.MaterialAutoCompleteTextView
+				android:id="@+id/dropSettingsCity"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
 
-		style="@style/Widget.MaterialComponents.Button.TextButton"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintBottom_toTopOf="@id/btnSettingsSave"
-		/>
+				android:background="@null"
+				android:cursorVisible="false"
+				android:drawablePadding="-24dp"
+				android:focusable="false"
+				android:gravity="center"
+				android:imeOptions="actionDone"
+				android:inputType="text"
 
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/btnSettingsSave"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
+				android:text="city"
+				android:textSize="20sp"
+				style="@style/regular_text_white85op"
+				/>
 
-		android:padding="@dimen/general_margin_16"
-
-		android:fontFamily="@font/rubik_medium"
-		android:text="Save"
-		android:textColor="@color/white"
-		android:textSize="20sp"
-		android:textAllCaps="false"
-
-		android:backgroundTint="@color/lolite"
-		app:rippleColor="@color/black_50"
-
-		style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintBottom_toBottomOf="parent"
-		/>
+		</com.google.android.material.textfield.TextInputLayout>
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+		<!--log out-->
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btnSettingsLogOut"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/general_margin_16"
+
+			android:padding="@dimen/general_margin_16"
+
+			android:fontFamily="@font/rubik_medium"
+			android:text="Log out"
+			android:textColor="@color/white"
+			android:textSize="20sp"
+			android:textAllCaps="false"
+
+			app:rippleColor="@color/material_red_a700"
+
+			app:strokeColor="@color/material_red_a700"
+			app:strokeWidth="2dp"
+
+			style="@style/Widget.MaterialComponents.Button.TextButton"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/btnSettingsSave"
+			app:layout_constraintTop_toBottomOf="@id/tvPlaceAboutText"
+			/>
+
+		<!--save-->
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btnSettingsSave"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+
+			android:padding="@dimen/general_margin_16"
+
+			android:fontFamily="@font/rubik_medium"
+			android:text="Save"
+			android:textColor="@color/white"
+			android:textSize="20sp"
+			android:textAllCaps="false"
+
+			android:backgroundTint="@color/lolite"
+			app:rippleColor="@color/black_50"
+
+			style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			/>
+
+		<TextView
+			android:id="@+id/tvPlaceAboutText"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:lineSpacingExtra="10sp"
+			android:paddingStart="@dimen/general_margin_16"
+			android:paddingEnd="@dimen/general_margin_16"
+
+			android:text="TEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\n"
+			android:textSize="16sp"
+			style="@style/regular_text_white85op"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/layoutSettingsCity"
+			/>
+
+
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

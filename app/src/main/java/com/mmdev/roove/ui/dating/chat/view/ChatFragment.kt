@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 18:09
+ * Last modified 21.01.20 19:07
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -108,7 +108,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		} ?: throw Exception("Invalid Activity")
 
 
-		sharedViewModel.currentUser.observe(this, Observer {
+		sharedViewModel.getCurrentUser().observe(this, Observer {
 			userItemModel = it
 			mChatAdapter.setCurrentUserId(it.baseUserInfo.userId)
 		})
