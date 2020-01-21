@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 20:26
+ * Last modified 21.01.20 17:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,6 @@ import com.mmdev.business.cards.CardItem
 import com.mmdev.business.cards.usecase.AddToSkippedUseCase
 import com.mmdev.business.cards.usecase.CheckMatchUseCase
 import com.mmdev.business.cards.usecase.GetUsersByPreferencesUseCase
-import com.mmdev.business.user.UserItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -28,7 +27,6 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
 		ViewModel(){
 
 	private val usersCardsList: MutableLiveData<List<CardItem>> = MutableLiveData()
-	private val fullUserItem: MutableLiveData<UserItem> = MutableLiveData()
 
 	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
 	val showMatchDialog: MutableLiveData<Boolean> = MutableLiveData()
@@ -44,7 +42,7 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
 
 	fun addToSkipped(skippedCardItem: CardItem) {
 		addToSkippedExecution(skippedCardItem)
-		Log.wtf(TAG, "skipped + ${skippedCardItem.baseUserInfo.name}")
+		Log.wtf(TAG, "skipped card: ${skippedCardItem.baseUserInfo.name}")
 	}
 
 
@@ -53,10 +51,11 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                            showMatchDialog.value = it
-                           Log.wtf(TAG, "its a match! + ${likedCardItem.baseUserInfo.name}")
+                           Log.wtf(TAG, "liked card: ${likedCardItem.baseUserInfo.name}")
+	                       Log.wtf(TAG, "match? + ${showMatchDialog.value}")
                        },
                        {
-                           Log.wtf(TAG, "error swiped + $it")
+                           Log.wtf(TAG, "error match check: $it")
                        }))
 	}
 

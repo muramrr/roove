@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.01.20 21:17
+  ~ Last modified 21.01.20 15:15
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,6 +23,7 @@
 		android:name="androidx.navigation.fragment.NavHostFragment"
 		app:navGraph="@navigation/main_navigation"
 		app:defaultNavHost="true"
+
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintBottom_toTopOf="@id/containerBottomNavigation"
 		app:layout_constraintStart_toStartOf="parent"
@@ -33,22 +34,20 @@
 		android:id="@+id/containerBottomNavigation"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
+
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintBottom_toBottomOf="parent">
-
 
 		<com.google.android.material.bottomnavigation.BottomNavigationView
 			android:id="@+id/bottomNavigationView"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-
 			app:itemIconTint="@color/bottom_navigation_item"
 			app:itemTextColor="@color/bottom_navigation_item"
 
 			app:labelVisibilityMode="labeled"
 			app:menu="@menu/bottom_navigation_menu"
-
 			/>
 
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -57,12 +56,13 @@
 		android:id="@+id/fabCards"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-
 		android:scaleType="center"
 		android:src="@drawable/ic_cards_24dp"
 
-		app:layout_anchorGravity="top|center"
 		app:elevation="2dp"
+		app:fabSize="auto"
+
+		app:layout_anchorGravity="top|center"
 
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"

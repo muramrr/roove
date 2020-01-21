@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.01.20 20:55
+  ~ Last modified 21.01.20 15:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,7 +30,7 @@
 			app:contentScrim="@color/colorPrimary"
 			app:expandedTitleTextAppearance="@style/CollapsingToolbarExpandedTitleWhite"
 			app:layout_scrollFlags="scroll|exitUntilCollapsed"
-			app:title="Test place title">
+			app:title="Test place titleosakdjopsaodpkodsa">
 
 			<androidx.viewpager2.widget.ViewPager2
 				android:id="@+id/viewPagerPlacePhotos"
@@ -77,7 +77,7 @@
 
 			<TextView
 				android:id="@+id/tvPlaceAboutHeader"
-				android:layout_width="match_parent"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:padding="@dimen/general_margin_16"
 
