@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 20:31
+ * Last modified 21.01.20 18:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -86,7 +86,6 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 			}
 
 		})
-
 
 	}
 
