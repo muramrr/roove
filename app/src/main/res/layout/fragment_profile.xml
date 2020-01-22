@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.01.20 19:19
+  ~ Last modified 22.01.20 19:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@
 	<com.google.android.material.appbar.AppBarLayout
 		android:id="@+id/appBarProfile"
 		android:layout_width="match_parent"
-		android:layout_height="300dp"
+		android:layout_height="@dimen/collapseBarHeight"
 		android:theme="@style/AppTheme.AppBarOverlay" >
 
 		<com.google.android.material.appbar.CollapsingToolbarLayout

@@ -1,23 +1,23 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 16:37
+ * Last modified 22.01.20 17:24
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.business.events.usecase
+package com.mmdev.business.places.usecase
 
-import com.mmdev.business.events.repository.EventsRepository
+import com.mmdev.business.places.repository.PlacesRepository
 
 /**
  * This is the documentation block about the class
  */
 
-class GetEventsUseCase (private val repository: EventsRepository) {
+class GetPlacesUseCase (private val repository: PlacesRepository) {
 
-	fun execute() = repository.getEvents()
+	fun execute(s: String) = repository.getPlacesList(s)
 
 }

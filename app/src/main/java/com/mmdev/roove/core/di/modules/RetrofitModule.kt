@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 22.01.20 16:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,8 @@
 
 package com.mmdev.roove.core.di.modules
 
-import com.mmdev.data.events.api.EventsApi
+import com.mmdev.data.events.EventsApi
+import com.mmdev.data.places.PlacesApi
 import dagger.Module
 import dagger.Provides
 import io.reactivex.schedulers.Schedulers
@@ -20,11 +21,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 /**
- * Module which provides all required dependencies about network
+ * Module which provides all required dependencies about network requests
  */
 @Module
-class NetworkModule {
+class RetrofitModule {
 
+
+	companion object{
+		private const val KUDAGO_BASE_URL = "https://kudago.com/public-api/v1.4/"
+	}
 	/**
 	 * Provides the Post service implementation.
 	 * @param retrofit the Retrofit object used to instantiate the service
@@ -34,6 +39,10 @@ class NetworkModule {
 	@Singleton
 	fun eventsApi(retrofit: Retrofit): EventsApi = retrofit.create(EventsApi::class.java)
 
+	@Provides
+	@Singleton
+	fun placesApi(retrofit: Retrofit): PlacesApi = retrofit.create(PlacesApi::class.java)
+
 	/**
 	 * Provides the Retrofit object.
 	 * @return the Retrofit object
@@ -41,8 +50,8 @@ class NetworkModule {
 	@Provides
 	@Singleton
 	fun retrofitInterface(): Retrofit = Retrofit.Builder()
-			.baseUrl("https://kudago.com/public-api/v1.4/")
-			.addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
-			.addConverterFactory(GsonConverterFactory.create())
-			.build()
+		.baseUrl(KUDAGO_BASE_URL)
+		.addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+		.addConverterFactory(GsonConverterFactory.create())
+		.build()
 }

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 17:18
+ * Last modified 22.01.20 17:00
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,19 +12,18 @@ package com.mmdev.roove.ui.dating.cards
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.mmdev.business.cards.CardItem
 import com.mmdev.business.cards.usecase.AddToSkippedUseCase
 import com.mmdev.business.cards.usecase.CheckMatchUseCase
 import com.mmdev.business.cards.usecase.GetUsersByPreferencesUseCase
+import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippedUseCase,
                                          private val checkMatchUC: CheckMatchUseCase,
                                          private val getUsersByPreferencesUC: GetUsersByPreferencesUseCase):
-		ViewModel(){
+		BaseViewModel(){
 
 	private val usersCardsList: MutableLiveData<List<CardItem>> = MutableLiveData()
 
@@ -32,12 +31,6 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
 	val showMatchDialog: MutableLiveData<Boolean> = MutableLiveData()
 	val showTextHelper: MutableLiveData<Boolean> = MutableLiveData()
 
-
-	private val disposables = CompositeDisposable()
-
-	companion object {
-		private const val TAG = "mylogs_CardsViewModel"
-	}
 
 
 	fun addToSkipped(skippedCardItem: CardItem) {
@@ -86,12 +79,5 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
 	private fun checkMatchExecution(likedCardItem: CardItem) = checkMatchUC.execute(likedCardItem)
 
 	private fun getUsersByPreferencesExecution() = getUsersByPreferencesUC.execute()
-
-
-
-	override fun onCleared() {
-		disposables.clear()
-		super.onCleared()
-	}
 }
 

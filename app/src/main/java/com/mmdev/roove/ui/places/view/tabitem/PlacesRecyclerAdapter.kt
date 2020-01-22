@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:59
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 22.01.20 16:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,11 +15,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.business.events.EventItem
+import com.mmdev.business.places.entity.PlaceItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentPlacesRvItemBinding
 
-class PlacesRecyclerAdapter (private var mPlaceList: List<EventItem>):
+class PlacesRecyclerAdapter (private var mPlaceList: List<PlaceItem>):
 		RecyclerView.Adapter<PlacesRecyclerAdapter.PlacesItemHolder>() {
 
 	private lateinit var mClickListener: OnItemClickListener
@@ -37,7 +37,7 @@ class PlacesRecyclerAdapter (private var mPlaceList: List<EventItem>):
 
 	override fun getItemCount() = mPlaceList.size
 
-	fun updateData(newPlaces: List<EventItem>) {
+	fun updateData(newPlaces: List<PlaceItem>) {
 		mPlaceList = newPlaces
 		notifyDataSetChanged()
 	}
@@ -66,8 +66,8 @@ class PlacesRecyclerAdapter (private var mPlaceList: List<EventItem>):
 		*   updating any Views that have expressions bound to modified variables.
 		*   This must be run on the UI thread.
 		*/
-		fun bind(eventItem: EventItem) {
-			binding.eventItem = eventItem
+		fun bind(placeItem: PlaceItem) {
+			binding.placeItem = placeItem
 			binding.executePendingBindings()
 		}
 

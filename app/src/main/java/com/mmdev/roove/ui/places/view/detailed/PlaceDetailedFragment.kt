@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 20:59
+ * Last modified 22.01.20 19:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.ImagePagerAdapter
-import com.mmdev.roove.ui.core.SharedViewModel
+import com.mmdev.roove.ui.places.PlacesViewModel
 import kotlinx.android.synthetic.main.fragment_place_detailed.*
 
 /**
@@ -33,29 +33,37 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 
 	private val placePhotosAdapter = ImagePagerAdapter(listOf())
 
-	private lateinit var sharedViewModel: SharedViewModel
+	private var receivedPlaceId = 0
 
+	private lateinit var placesViewModel: PlacesViewModel
+
+
+	companion object{
+		private const val PLACE_ID_KEY = "PLACE_ID"
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		sharedViewModel = activity?.run {
-			ViewModelProvider(this, factory)[SharedViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
+		arguments?.let {
+			receivedPlaceId = it.getInt(PLACE_ID_KEY)
+		}
 
-		sharedViewModel.placeSelected.observe(this, Observer {
+		placesViewModel = ViewModelProvider(this, factory)[PlacesViewModel::class.java]
+
+		placesViewModel.loadPlaceDetails(receivedPlaceId)
+
+		placesViewModel.getPlaceDetailed().observe(this, Observer {
 			val placePhotos = ArrayList<String>()
 			for (imageItem in it.images)
 				placePhotos.add(imageItem.image)
+
 
 			placePhotosAdapter.updateData(placePhotos)
 
 			collapseBarPlaceDetailed.title = it.short_title
 
 			tvPlaceAboutText.text = it.description
-				.replace("<p>", "")
-				.replace("</p>","")
-
 		})
 
 	}

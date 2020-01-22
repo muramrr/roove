@@ -8,16 +8,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.business.events.usecase
-
-import com.mmdev.business.events.repository.EventsRepository
+package com.mmdev.business
 
 /**
  * This is the documentation block about the class
  */
 
-class GetEventsUseCase (private val repository: EventsRepository) {
-
-	fun execute() = repository.getEvents()
-
-}
+//image url
+data class ImageItem (val image: String = "")

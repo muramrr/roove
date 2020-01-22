@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 19.12.19 21:59
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 22.01.20 19:08
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,8 +17,8 @@
 
 		<import type="android.view.View"/>
 		<variable
-			name="eventItem"
-			type="com.mmdev.business.events.EventItem" />
+			name="placeItem"
+			type="com.mmdev.business.places.entity.PlaceItem" />
 
 	</data>
 
@@ -37,8 +37,8 @@
 			android:background="@color/colorAccentDark"
 			android:contentDescription="@string/description_user_photo"
 			android:scaleType="centerCrop"
-			app:imageUrl="@{eventItem.images[0].image}"
-			android:visibility='@{eventItem.images[0].image!="" ? View.VISIBLE : View.GONE}'/>
+			app:imageUrl="@{placeItem.images[0].image}"
+			android:visibility='@{placeItem.images[0].image!="" ? View.VISIBLE : View.GONE}'/>
 
 		<ImageView
 			android:id="@+id/pager_container_image_gradient"
@@ -56,7 +56,7 @@
 			android:layout_gravity="center|bottom"
 			android:layout_margin="@dimen/general_margin_8"
 
-			android:text="@{eventItem.title, default = @string/default_name}"
+			android:text="@{placeItem.short_title, default = @string/default_name}"
 			android:textSize="18sp"
 			style="@style/regular_text_white85op"
 			/>

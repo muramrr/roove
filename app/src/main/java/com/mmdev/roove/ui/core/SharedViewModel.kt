@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 19:19
+ * Last modified 22.01.20 18:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mmdev.business.cards.CardItem
 import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.events.EventItem
 import com.mmdev.business.user.UserItem
 
 /**
@@ -35,7 +34,6 @@ class SharedViewModel: ViewModel() {
 
 	val conversationSelected: MutableLiveData<ConversationItem> = MutableLiveData()
 
-	val placeSelected: MutableLiveData<EventItem> = MutableLiveData()
 
 	private val currentUser: MutableLiveData<UserItem> = MutableLiveData()
 
@@ -57,10 +55,6 @@ class SharedViewModel: ViewModel() {
 			cardSelected.value = CardItem(conversationItem.partner,
 			                              conversationStarted = conversationItem.conversationStarted)
 		}
-	}
-
-	fun setPlaceSelected(placeItem: EventItem){
-		placeSelected.value = placeItem
 	}
 
 

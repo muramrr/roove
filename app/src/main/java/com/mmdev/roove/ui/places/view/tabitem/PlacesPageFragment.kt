@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 21:04
+ * Last modified 22.01.20 18:50
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,13 +12,13 @@ package com.mmdev.roove.ui.places.view.tabitem
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.core.BaseFragment
-import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.places.PlacesViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import kotlinx.android.synthetic.main.fragment_places_page_item.*
@@ -28,21 +28,32 @@ class PlacesPageFragment: BaseFragment(R.layout.fragment_places_page_item) {
 
 	private var mPlacesRecyclerAdapter = PlacesRecyclerAdapter(listOf())
 
+	private var receivedCategory = ""
 
-	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var placesViewModel: PlacesViewModel
+
+
+	companion object {
+
+		private const val CATEGORY_KEY = "CATEGORY"
+
+		fun newInstance(category: String) = PlacesPageFragment().apply {
+			arguments = Bundle().apply {
+				putString(CATEGORY_KEY, category)
+			}
+		}
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		sharedViewModel = activity?.run {
-			ViewModelProvider(this, factory)[SharedViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
-
+		arguments?.let {
+			receivedCategory = it.getString(CATEGORY_KEY, "")
+		}
 
 		placesViewModel = ViewModelProvider(this, factory)[PlacesViewModel::class.java]
-		placesViewModel.loadPlaces()
-		placesViewModel.getEventsList().observe(this, Observer {
+		placesViewModel.loadPlaces(receivedCategory)
+		placesViewModel.getPlacesList().observe(this, Observer {
 			mPlacesRecyclerAdapter.updateData(it)
 		})
 	}
@@ -63,9 +74,10 @@ class PlacesPageFragment: BaseFragment(R.layout.fragment_places_page_item) {
 		mPlacesRecyclerAdapter.setOnItemClickListener(object: PlacesRecyclerAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
 
-				sharedViewModel.setPlaceSelected(mPlacesRecyclerAdapter.getPlaceItem(position))
+				val placeId = bundleOf("PLACE_ID" to
+						                      mPlacesRecyclerAdapter.getPlaceItem(position).id)
 
-				findNavController().navigate(R.id.action_places_to_placeDetailedFragment)
+				findNavController().navigate(R.id.action_places_to_placeDetailedFragment, placeId)
 
 			}
 		})
