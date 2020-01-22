@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 14.01.20 17:30
+ * Last modified 22.01.20 18:02
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,10 +26,8 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.collections.ArrayList
 
-@Singleton
 class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
                                              private val firestore: FirebaseFirestore,
                                              private val storage: StorageReference): ChatRepository{

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 19:05
+ * Last modified 22.01.20 18:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,6 +33,9 @@ import com.mmdev.business.events.repository.EventsRepository
 import com.mmdev.business.events.usecase.GetEventsUseCase
 import com.mmdev.business.pairs.GetMatchedUsersUseCase
 import com.mmdev.business.pairs.PairsRepository
+import com.mmdev.business.places.repository.PlacesRepository
+import com.mmdev.business.places.usecase.GetPlaceDetailsUseCase
+import com.mmdev.business.places.usecase.GetPlacesUseCase
 import com.mmdev.business.user.repository.LocalUserRepository
 import com.mmdev.business.user.repository.RemoteUserRepository
 import com.mmdev.business.user.usecase.local.GetSavedUserUseCase
@@ -49,6 +52,7 @@ import com.mmdev.roove.ui.dating.cards.CardsViewModel
 import com.mmdev.roove.ui.dating.chat.ChatViewModel
 import com.mmdev.roove.ui.dating.conversations.ConversationsViewModel
 import com.mmdev.roove.ui.dating.pairs.PairsViewModel
+import com.mmdev.roove.ui.events.EventsViewModel
 import com.mmdev.roove.ui.places.PlacesViewModel
 import dagger.Module
 import dagger.Provides
@@ -64,77 +68,84 @@ class ViewModelModule {
 
 	@Provides
 	fun provideViewModelFactory(providers: MutableMap<Class<out ViewModel>,
-			@JvmSuppressWildcards Provider<ViewModel>>): ViewModelProvider.Factory =
-		ViewModelFactory(providers)
+			@JvmSuppressWildcards
+			Provider<ViewModel>>): ViewModelProvider.Factory = ViewModelFactory(providers)
 
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(AuthViewModel::class)
-	fun authViewModel(repository: AuthRepository): ViewModel =
-		AuthViewModel(IsAuthenticatedListenerUseCase(repository),
-		              LogOutUseCase(repository),
-		              SignInUseCase(repository),
-		              SignUpUseCase(repository))
+	fun authViewModel(repo: AuthRepository): ViewModel =
+		AuthViewModel(IsAuthenticatedListenerUseCase(repo),
+		              LogOutUseCase(repo),
+		              SignInUseCase(repo),
+		              SignUpUseCase(repo))
 
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(CardsViewModel::class)
-	fun cardsViewModel(repository: CardsRepository): ViewModel =
-		CardsViewModel(AddToSkippedUseCase(repository),
-		               CheckMatchUseCase(repository),
-		               GetUsersByPreferencesUseCase(repository))
+	fun cardsViewModel(repo: CardsRepository): ViewModel =
+		CardsViewModel(AddToSkippedUseCase(repo),
+		               CheckMatchUseCase(repo),
+		               GetUsersByPreferencesUseCase(repo))
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(ChatViewModel::class)
-	fun chatViewModel(repository: ChatRepository): ViewModel =
-		ChatViewModel(GetConversationWithPartnerUseCase(repository),
-		              GetMessagesUseCase(repository),
-		              SendMessageUseCase(repository),
-		              SendPhotoUseCase(repository))
+	fun chatViewModel(repo: ChatRepository): ViewModel =
+		ChatViewModel(GetConversationWithPartnerUseCase(repo),
+		              GetMessagesUseCase(repo),
+		              SendMessageUseCase(repo),
+		              SendPhotoUseCase(repo))
 
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(ConversationsViewModel::class)
-	fun conversationsViewModel(repository: ConversationsRepository): ViewModel =
-		ConversationsViewModel(DeleteConversationUseCase(repository),
-		                       GetConversationsListUseCase(repository))
+	fun conversationsViewModel(repo: ConversationsRepository): ViewModel =
+		ConversationsViewModel(DeleteConversationUseCase(repo),
+		                       GetConversationsListUseCase(repo))
+
+
+	@IntoMap
+	@Provides
+	@ViewModelKey(EventsViewModel::class)
+	fun eventsViewModel(repo: EventsRepository): ViewModel =
+		EventsViewModel(GetEventsUseCase(repo))
 
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(PairsViewModel::class)
-	fun pairsViewModel(repository: PairsRepository): ViewModel =
-		PairsViewModel(GetMatchedUsersUseCase(
-				repository))
+	fun pairsViewModel(repo: PairsRepository): ViewModel =
+		PairsViewModel(GetMatchedUsersUseCase(repo))
 
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(PlacesViewModel::class)
-	fun placesViewModel(repository: EventsRepository): ViewModel =
-		PlacesViewModel(GetEventsUseCase(repository))
+	fun placesViewModel(repo: PlacesRepository): ViewModel =
+		PlacesViewModel(GetPlacesUseCase(repo),
+		                GetPlaceDetailsUseCase(repo))
 
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(LocalUserRepoViewModel::class)
-	fun localUserRepoViewModel(repository: LocalUserRepository): ViewModel =
-		LocalUserRepoViewModel(GetSavedUserUseCase(repository),
-		                       SaveUserInfoUseCase(repository))
+	fun localUserRepoViewModel(repo: LocalUserRepository): ViewModel =
+		LocalUserRepoViewModel(GetSavedUserUseCase(repo),
+		                       SaveUserInfoUseCase(repo))
 
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(RemoteUserRepoViewModel::class)
-	fun remoteUserRepoViewModel(repository: RemoteUserRepository): ViewModel =
-		RemoteUserRepoViewModel(DeleteUserUseCase(repository),
-								FetchUserInfoUseCase(repository),
-								GetFullUserItemUseCase(repository),
-								UpdateUserItemUseCase(repository))
+	fun remoteUserRepoViewModel(repo: RemoteUserRepository): ViewModel =
+		RemoteUserRepoViewModel(DeleteUserUseCase(repo),
+		                        FetchUserInfoUseCase(repo),
+		                        GetFullUserItemUseCase(repo),
+		                        UpdateUserItemUseCase(repo))
 
 	@IntoMap
 	@Provides

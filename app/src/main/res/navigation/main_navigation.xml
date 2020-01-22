@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 21.01.20 18:02
+  ~ Last modified 22.01.20 18:48
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -71,7 +71,11 @@
 			app:enterAnim="@anim/enter_from_top"
 			app:exitAnim="@anim/exit_to_bottom"
 			app:popEnterAnim="@anim/enter_from_bottom"
-			app:popExitAnim="@anim/exit_to_top" />
+			app:popExitAnim="@anim/exit_to_top" >
+
+			<argument android:name="PLACE_ID" />
+
+		</action>
 
 	</fragment>
 
@@ -151,7 +155,14 @@
 	<fragment
 		android:id="@+id/placeDetailedFragmentNav"
 		android:name="com.mmdev.roove.ui.places.view.detailed.PlaceDetailedFragment"
-		tools:layout="@layout/fragment_place_detailed" />
+		tools:layout="@layout/fragment_place_detailed" >
+
+		<argument
+			android:name="PLACE_ID"
+			app:argType="integer"
+			android:defaultValue="0" />
+
+	</fragment>
 
 	<!-- secondary profile view fragment-->
 	<fragment

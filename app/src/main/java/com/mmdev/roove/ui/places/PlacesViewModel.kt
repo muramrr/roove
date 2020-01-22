@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:59
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 22.01.20 19:02
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,47 +12,61 @@ package com.mmdev.roove.ui.places
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.mmdev.business.events.EventItem
-import com.mmdev.business.events.usecase.GetEventsUseCase
+import com.mmdev.business.places.entity.PlaceDetailedItem
+import com.mmdev.business.places.entity.PlaceItem
+import com.mmdev.business.places.usecase.GetPlaceDetailsUseCase
+import com.mmdev.business.places.usecase.GetPlacesUseCase
+import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 /**
  * This is the documentation block about the class
  */
 
-class PlacesViewModel @Inject constructor(private val getEventsUC: GetEventsUseCase):
-		ViewModel() {
+class PlacesViewModel @Inject constructor(private val getPlacesUC: GetPlacesUseCase,
+                                          private val getPlaceDetailsUC: GetPlaceDetailsUseCase):
+		BaseViewModel() {
 
 
-	private val placesList: MutableLiveData<List<EventItem>> = MutableLiveData()
+	private val placesList: MutableLiveData<List<PlaceItem>> = MutableLiveData()
+	private val placeDetailed: MutableLiveData<PlaceDetailedItem> = MutableLiveData()
 
-	private val disposables = CompositeDisposable()
-
-
-	fun loadPlaces(){
-		disposables.add(getEventsExecution()
+	fun loadPlaces(category: String){
+		disposables.add(getPlacesExecution(category)
+            .retry(5)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       placesList.value = it.results
+	                       Log.wtf(TAG, "$category to display: ${it.results.size}")
                        },
                        {
-                           Log.wtf("mylogs", "$it")
+                           Log.wtf(TAG, "$it")
+                       }))
+	}
+
+	fun loadPlaceDetails(id: Int){
+		disposables.add(getPlaceDetailsExecution(id)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                           placeDetailed.value = it
+                           //Log.wtf(TAG, "$id place details = {$it}")
+                       },
+                       {
+                           Log.wtf(TAG, "$it")
                        }))
 	}
 
 
-	fun getEventsList() = placesList
+
+
+	fun getPlaceDetailed() = placeDetailed
+	fun getPlacesList() = placesList
 
 
 
-	private fun getEventsExecution() = getEventsUC.execute()
 
 
-	override fun onCleared() {
-		disposables.clear()
-		super.onCleared()
-	}
+	private fun getPlacesExecution(category: String) = getPlacesUC.execute(category)
+	private fun getPlaceDetailsExecution(id: Int) = getPlaceDetailsUC.execute(id)
 }

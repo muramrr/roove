@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 08.12.19 21:42
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 22.01.20 17:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,10 +30,10 @@ class PlacesFragment: Fragment(R.layout.fragment_places) {
 
 		TabLayoutMediator(tabLayoutPlaces, viewPagerPlaces) { tab: TabLayout.Tab, position: Int ->
 			when (position){
-				0 -> tab.text = "Bars"
-				1 -> tab.text = "Restaurants"
-				2 -> tab.text = "Clubs"
-				3 -> tab.text = "Museums"
+				0 -> tab.text = "Рестораны"
+				1 -> tab.text = "Бары"
+				2 -> tab.text = "Кафе"
+				3 -> tab.text = "Кинотеатры"
 			}
 		}.attach()
 
