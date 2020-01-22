@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 17:58
+ * Last modified 22.01.20 17:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@ package com.mmdev.roove.ui.dating.chat
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.chat.usecase.GetConversationWithPartnerUseCase
@@ -20,27 +19,20 @@ import com.mmdev.business.chat.usecase.GetMessagesUseCase
 import com.mmdev.business.chat.usecase.SendMessageUseCase
 import com.mmdev.business.chat.usecase.SendPhotoUseCase
 import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(private val getConversationUC: GetConversationWithPartnerUseCase,
                                         private val getMessagesUC: GetMessagesUseCase,
                                         private val sendMessageUC: SendMessageUseCase,
-                                        private val sendPhotoUC: SendPhotoUseCase) : ViewModel() {
+                                        private val sendPhotoUC: SendPhotoUseCase) : BaseViewModel() {
 
 
 
 	private var emptyChat = false
 	private val messagesList: MutableLiveData<List<MessageItem>> = MutableLiveData()
 	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
-
-	private val disposables = CompositeDisposable()
-
-
-	companion object {
-		private const val TAG = "mylogs_ChatViewModel"
-	}
 
 
 	fun startListenToEmptyChat(partnerId: String){
@@ -109,12 +101,4 @@ class ChatViewModel @Inject constructor(private val getConversationUC: GetConver
 	private fun sendMessageExecution(messageItem: MessageItem, emptyChat: Boolean? = false) = sendMessageUC.execute(messageItem, emptyChat)
 
 	private fun sendPhotoExecution(photoUri: String) = sendPhotoUC.execute(photoUri)
-
-
-
-	override fun onCleared() {
-		disposables.clear()
-		super.onCleared()
-	}
-
 }

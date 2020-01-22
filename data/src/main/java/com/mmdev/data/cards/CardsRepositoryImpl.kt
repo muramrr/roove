@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.01.20 18:38
+ * Last modified 22.01.20 17:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,13 +22,11 @@ import io.reactivex.SingleOnSubscribe
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This is the documentation block about the class
  */
 
-@Singleton
 class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
                                               private val currentUserItem: UserItem):
 		CardsRepository {

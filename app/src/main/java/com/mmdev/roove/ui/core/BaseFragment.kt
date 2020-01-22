@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 19:07
+ * Last modified 22.01.20 16:44
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,8 +45,7 @@ abstract class BaseFragment (layoutRes: Int = 0) : Fragment(layoutRes) {
 	/**
 	 * Override this method into your fragment to handleBackButton
 	 */
-	open fun onBackPressed() {
-	}
+	open fun onBackPressed() {}
 
 
 

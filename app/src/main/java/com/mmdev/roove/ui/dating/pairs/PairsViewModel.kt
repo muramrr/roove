@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 20:31
+ * Last modified 22.01.20 17:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,11 +12,10 @@ package com.mmdev.roove.ui.dating.pairs
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.mmdev.business.cards.CardItem
 import com.mmdev.business.pairs.GetMatchedUsersUseCase
+import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 
@@ -25,17 +24,12 @@ import javax.inject.Inject
  */
 
 class PairsViewModel @Inject constructor(private val getMatchedUsersUC: GetMatchedUsersUseCase):
-		ViewModel() {
+		BaseViewModel() {
 
 	private val matchedUsersList: MutableLiveData<List<CardItem>> = MutableLiveData()
 
 	val showTextHelper: MutableLiveData<Boolean> = MutableLiveData()
 
-	private val disposables = CompositeDisposable()
-
-	companion object {
-		private const val TAG = "mylogs_PairsViewModel"
-	}
 
 	fun loadMatchedUsers() {
 		disposables.add(getMatchedUsersExecution()
@@ -56,10 +50,4 @@ class PairsViewModel @Inject constructor(private val getMatchedUsersUC: GetMatch
 	fun getMatchedUsersList() = matchedUsersList
 
 	private fun getMatchedUsersExecution() = getMatchedUsersUC.execute()
-
-	override fun onCleared() {
-		disposables.clear()
-		super.onCleared()
-	}
-
 }

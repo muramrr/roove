@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 18:30
+ * Last modified 22.01.20 17:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,8 +27,8 @@ import kotlinx.android.synthetic.main.dialog_cards_match.*
 class MatchDialogFragment: DialogFragment() {
 
 
-	private var recievedName = ""
-	private var recievedPhotoUrl = ""
+	private var receivedName = ""
+	private var receivedPhotoUrl = ""
 
 
 	companion object {
@@ -48,8 +48,8 @@ class MatchDialogFragment: DialogFragment() {
 		super.onCreate(savedInstanceState)
 		setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
 		arguments?.let {
-			recievedName = it.getString(NAME_KEY, "")
-			recievedPhotoUrl = it.getString(PHOTO_KEY, "")
+			receivedName = it.getString(NAME_KEY, "")
+			receivedPhotoUrl = it.getString(PHOTO_KEY, "")
 		}
 	}
 
@@ -57,8 +57,8 @@ class MatchDialogFragment: DialogFragment() {
 	                          savedInstanceState: Bundle?) =
 		DialogCardsMatchBinding.inflate(inflater, container, false)
 			.apply {
-				this.name = recievedName
-				this.photoUrl = recievedPhotoUrl
+				this.name = receivedName
+				this.photoUrl = receivedPhotoUrl
 				executePendingBindings()
 			}.root
 

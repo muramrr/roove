@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 21.01.20 15:22
+  ~ Last modified 22.01.20 19:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@
 	<com.google.android.material.appbar.AppBarLayout
 		android:id="@+id/appBarPlaceDetailed"
 		android:layout_width="match_parent"
-		android:layout_height="300dp"
+		android:layout_height="@dimen/collapseBarHeight"
 		android:theme="@style/AppTheme.AppBarOverlay" >
 
 		<com.google.android.material.appbar.CollapsingToolbarLayout
@@ -30,7 +30,7 @@
 			app:contentScrim="@color/colorPrimary"
 			app:expandedTitleTextAppearance="@style/CollapsingToolbarExpandedTitleWhite"
 			app:layout_scrollFlags="scroll|exitUntilCollapsed"
-			app:title="Test place titleosakdjopsaodpkodsa">
+			app:title="No place title">
 
 			<androidx.viewpager2.widget.ViewPager2
 				android:id="@+id/viewPagerPlacePhotos"
@@ -81,7 +81,7 @@
 				android:layout_height="wrap_content"
 				android:padding="@dimen/general_margin_16"
 
-				android:text="About"
+				android:text="Описание"
 				android:textSize="22sp"
 				style="@style/medium_text_white85op"
 
@@ -98,7 +98,7 @@
 				android:paddingStart="@dimen/general_margin_16"
 				android:paddingEnd="@dimen/general_margin_16"
 
-				android:text="TEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\n"
+				android:text="NO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION"
 				android:textSize="16sp"
 				style="@style/regular_text_white85op"
 

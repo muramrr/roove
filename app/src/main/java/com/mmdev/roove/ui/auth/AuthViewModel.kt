@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 18:58
+ * Last modified 22.01.20 17:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,15 +12,14 @@ package com.mmdev.roove.ui.auth
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.mmdev.business.auth.usecase.IsAuthenticatedListenerUseCase
 import com.mmdev.business.auth.usecase.LogOutUseCase
 import com.mmdev.business.auth.usecase.SignInUseCase
 import com.mmdev.business.auth.usecase.SignUpUseCase
 import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.user.UserItem
+import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -28,7 +27,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
                                         private val logOut: LogOutUseCase,
                                         private val signIn: SignInUseCase,
                                         private val signUp: SignUpUseCase) :
-		ViewModel() {
+		BaseViewModel() {
 
 
 	val continueRegistration: MutableLiveData<Boolean> = MutableLiveData()
@@ -44,11 +43,6 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 
 	private val isAuthenticatedStatus: MutableLiveData<Boolean> = MutableLiveData()
 
-	private val disposables = CompositeDisposable()
-
-	companion object {
-		private const val TAG = "mylogs_AuthViewModel"
-	}
 
 	fun checkIsAuthenticated() {
 		disposables.add(isAuthenticatedExecution()
@@ -119,12 +113,4 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 	private fun logOutExecution() = logOut.execute()
 	private fun signInExecution(token: String) = signIn.execute(token)
 	private fun signUpExecution(userItem: UserItem) = signUp.execute(userItem)
-
-
-
-	override fun onCleared() {
-		disposables.clear()
-		super.onCleared()
-	}
-
 }
