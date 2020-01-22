@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 22.01.20 19:22
+  ~ Last modified 22.01.20 20:04
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,6 +29,7 @@
 			app:collapsedTitleTextAppearance="@style/ToolbarTitle"
 			app:contentScrim="@color/colorPrimary"
 			app:expandedTitleTextAppearance="@style/CollapsingToolbarExpandedTitleWhite"
+
 			app:layout_scrollFlags="scroll|exitUntilCollapsed"
 			app:title="No place title">
 
@@ -40,11 +41,11 @@
 
 			<com.google.android.material.tabs.TabLayout
 				android:id="@+id/tlDotsIndicatorPlace"
-				android:background="@color/transparent"
 				android:layout_width="match_parent"
 				android:layout_height="10dp"
 				android:layout_gravity="bottom"
 				android:layout_marginBottom="8dp"
+				android:background="@color/transparent"
 
 				app:tabBackground="@drawable/dot_unselected_state"
 				app:tabIndicator="@drawable/dot_selection_indicator"
@@ -111,5 +112,25 @@
 		</androidx.constraintlayout.widget.ConstraintLayout>
 
 	</androidx.core.widget.NestedScrollView>
+
+	<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+		android:id="@+id/fabPlaceDetailed"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_marginEnd="@dimen/general_margin_16"
+
+		android:text="Хочу"
+		android:textAlignment="center"
+		android:textAllCaps="false"
+		android:textAppearance="@style/bold_text_white85op"
+		android:textSize="22sp"
+
+		app:backgroundTint="@color/amethyst"
+		app:rippleColor="@color/black"
+
+		style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+
+		app:layout_anchor="@id/appBarPlaceDetailed"
+		app:layout_anchorGravity="bottom|end|right" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
