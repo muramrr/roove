@@ -1,48 +1,52 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.01.20 18:31
+ * Last modified 23.01.20 21:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.ui.places.view.tabitem
+package com.mmdev.roove.ui.profile.view
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.business.places.PlaceItem
+import com.mmdev.business.base.BasePlaceInfo
 import com.mmdev.roove.R
-import com.mmdev.roove.databinding.FragmentPlacesRvItemBinding
+import com.mmdev.roove.databinding.FragmentProfilePlacesRvItemBinding
 
-class PlacesRecyclerAdapter (private var mPlaceList: List<PlaceItem>):
-		RecyclerView.Adapter<PlacesRecyclerAdapter.PlacesItemHolder>() {
+/**
+ * This is the documentation block about the class
+ */
+
+class ProfilePlacesToGoAdapter (private var mPlacesToGoList: List<BasePlaceInfo>):
+		RecyclerView.Adapter<ProfilePlacesToGoAdapter.PlacesToGoItemHolder>() {
 
 	private lateinit var mClickListener: OnItemClickListener
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-		PlacesItemHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
-		                                         R.layout.fragment_places_rv_item,
-		                                         parent,
-		                                         false))
+		PlacesToGoItemHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+		                                             R.layout.fragment_profile_places_rv_item,
+		                                             parent,
+		                                             false))
 
 
-	override fun onBindViewHolder(holder: PlacesItemHolder, position: Int) =
-		holder.bind(mPlaceList[position])
+	override fun onBindViewHolder(holder: PlacesToGoItemHolder, position: Int) =
+		holder.bind(mPlacesToGoList[position])
 
 
-	override fun getItemCount() = mPlaceList.size
+	override fun getItemCount() = mPlacesToGoList.size
 
-	fun updateData(newPlaces: List<PlaceItem>) {
-		mPlaceList = newPlaces
+	fun updateData(newPlacesToGoList: List<BasePlaceInfo>) {
+		mPlacesToGoList = newPlacesToGoList
 		notifyDataSetChanged()
 	}
 
-	fun getPlaceItem(position: Int) = mPlaceList[position]
+	fun getPlaceToGoItem(position: Int) = mPlacesToGoList[position]
 
 
 	// allows clicks events to be caught
@@ -50,8 +54,7 @@ class PlacesRecyclerAdapter (private var mPlaceList: List<PlaceItem>):
 		mClickListener = itemClickListener
 	}
 
-
-	inner class PlacesItemHolder(private val binding: FragmentPlacesRvItemBinding) :
+	inner class PlacesToGoItemHolder(private val binding: FragmentProfilePlacesRvItemBinding) :
 			RecyclerView.ViewHolder(binding.root) {
 
 		init {
@@ -66,8 +69,8 @@ class PlacesRecyclerAdapter (private var mPlaceList: List<PlaceItem>):
 		*   updating any Views that have expressions bound to modified variables.
 		*   This must be run on the UI thread.
 		*/
-		fun bind(placeItem: PlaceItem) {
-			binding.placeItem = placeItem
+		fun bind(basePlaceInfo: BasePlaceInfo) {
+			binding.basePlaceInfo = basePlaceInfo
 			binding.executePendingBindings()
 		}
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 17:15
+ * Last modified 23.01.20 18:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ package com.mmdev.roove.ui.events
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.business.events.entity.EventItem
+import com.mmdev.business.events.EventItem
 import com.mmdev.business.events.usecase.GetEventsUseCase
 import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers

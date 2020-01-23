@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 18:55
+ * Last modified 23.01.20 18:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,8 +10,8 @@
 
 package com.mmdev.business.places.repository
 
-import com.mmdev.business.places.entity.PlaceDetailedItem
-import com.mmdev.business.places.entity.PlacesResponse
+import com.mmdev.business.places.PlaceDetailedItem
+import com.mmdev.business.places.PlacesResponse
 import io.reactivex.Single
 
 /**

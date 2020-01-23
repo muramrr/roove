@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 22.01.20 20:04
+  ~ Last modified 23.01.20 19:42
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,7 +34,7 @@
 			app:title="No place title">
 
 			<androidx.viewpager2.widget.ViewPager2
-				android:id="@+id/viewPagerPlacePhotos"
+				android:id="@+id/viewPagerPlaceDetailedPhotos"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:background="@color/colorPrimary" />
@@ -67,6 +67,7 @@
 	</com.google.android.material.appbar.AppBarLayout>
 
 	<androidx.core.widget.NestedScrollView
+		android:id="@+id/scrollContainerPlaceDetailed"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:overScrollMode="never"
@@ -74,10 +75,11 @@
 
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
-			android:layout_height="match_parent" >
+			android:layout_height="match_parent"
+			android:paddingBottom="@dimen/general_margin_16">
 
 			<TextView
-				android:id="@+id/tvPlaceAboutHeader"
+				android:id="@+id/tvPlaceDetailedAboutHeader"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:padding="@dimen/general_margin_16"
@@ -92,20 +94,58 @@
 				/>
 
 			<TextView
-				android:id="@+id/tvPlaceAboutText"
+				android:id="@+id/tvPlaceDetailedDescription"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
+
 				android:lineSpacingExtra="10sp"
+
 				android:paddingStart="@dimen/general_margin_16"
 				android:paddingEnd="@dimen/general_margin_16"
 
-				android:text="NO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION\nNO DESCRIPTION"
 				android:textSize="16sp"
 				style="@style/regular_text_white85op"
 
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/tvPlaceAboutHeader"
+				app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedAboutHeader"
+				app:layout_constraintBottom_toTopOf="@id/tvPlaceDetailedFullDescription"
+
+				/>
+
+			<TextView
+				android:id="@+id/tvPlaceDetailedFullDescription"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+
+				android:lineSpacingExtra="10sp"
+				android:maxLines="1"
+
+				android:paddingStart="@dimen/general_margin_16"
+				android:paddingEnd="@dimen/general_margin_16"
+
+				android:textSize="16sp"
+				style="@style/regular_text_white85op"
+
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedDescription"
+				app:layout_constraintBottom_toTopOf="@id/ibExpandDescriptionPlaceDetailed"
+
+				/>
+
+			<ImageButton
+				android:id="@+id/ibExpandDescriptionPlaceDetailed"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:background="@color/transparent"
+
+				android:scaleType="centerInside"
+				android:src="@drawable/ic_arrow_drop_down_24dp"
+
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedFullDescription"
 				/>
 
 
@@ -117,20 +157,20 @@
 		android:id="@+id/fabPlaceDetailed"
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"
-		android:layout_marginEnd="@dimen/general_margin_16"
+		android:layout_margin="@dimen/general_margin_16"
 
-		android:text="Хочу"
+		android:text="Хочу посетить"
 		android:textAlignment="center"
 		android:textAllCaps="false"
 		android:textAppearance="@style/bold_text_white85op"
-		android:textSize="22sp"
+		android:textSize="14sp"
 
 		app:backgroundTint="@color/amethyst"
-		app:rippleColor="@color/black"
+		app:rippleColor="@color/black_50"
 
 		style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
 
-		app:layout_anchor="@id/appBarPlaceDetailed"
+		app:layout_anchor="@id/scrollContainerPlaceDetailed"
 		app:layout_anchorGravity="bottom|end|right" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
