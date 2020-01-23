@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 19:02
+ * Last modified 23.01.20 18:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,8 +12,8 @@ package com.mmdev.roove.ui.places
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.business.places.entity.PlaceDetailedItem
-import com.mmdev.business.places.entity.PlaceItem
+import com.mmdev.business.places.PlaceDetailedItem
+import com.mmdev.business.places.PlaceItem
 import com.mmdev.business.places.usecase.GetPlaceDetailsUseCase
 import com.mmdev.business.places.usecase.GetPlacesUseCase
 import com.mmdev.roove.ui.core.BaseViewModel

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 17:43
+ * Last modified 23.01.20 21:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -222,7 +222,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 			authViewModel.signUp(UserItem(finalUserModel,
 			                              preferredGender,
-			                              listOf(finalUserModel.mainPhotoUrl)))
+			                              hashSetOf(finalUserModel.mainPhotoUrl)))
 		}
 
 

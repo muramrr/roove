@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 21.01.20 15:37
+  ~ Last modified 23.01.20 18:46
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -262,7 +262,7 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintBottom_toTopOf="@id/btnSettingsSave"
-			app:layout_constraintTop_toBottomOf="@id/tvPlaceAboutText"
+			app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedDescription"
 			/>
 
 		<!--save-->
@@ -289,7 +289,7 @@
 			/>
 
 		<TextView
-			android:id="@+id/tvPlaceAboutText"
+			android:id="@+id/tvPlaceDetailedDescription"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:lineSpacingExtra="10sp"

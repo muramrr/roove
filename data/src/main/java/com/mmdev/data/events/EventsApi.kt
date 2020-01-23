@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 16:58
+ * Last modified 23.01.20 18:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,8 +10,8 @@
 
 package com.mmdev.data.events
 
-import com.mmdev.business.events.entity.EventItem
-import com.mmdev.business.events.entity.EventsResponse
+import com.mmdev.business.events.EventItem
+import com.mmdev.business.events.EventsResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 18:07
+ * Last modified 23.01.20 20:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +25,7 @@ abstract class BaseViewModel: ViewModel() {
 
 	override fun onCleared() {
 		disposables.clear()
-		Log.wtf(TAG, "on cleared called")
+		Log.wtf(TAG, "${javaClass.simpleName} on cleared called")
 		super.onCleared()
 	}
 }
