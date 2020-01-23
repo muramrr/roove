@@ -1,27 +1,19 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.01.20 18:31
+ * Last modified 23.01.20 21:27
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.business.events.repository
-
-import com.mmdev.business.events.EventItem
-import com.mmdev.business.events.EventsResponse
-import io.reactivex.Single
+package com.mmdev.business.base
 
 /**
  * This is the documentation block about the class
  */
 
-interface EventsRepository {
-
-	fun getEvents(): Single<EventsResponse>
-
-	fun getEventDetails(id: Int): Single<EventItem>
-
-}
+data class BasePlaceInfo(val id: Int = 0,
+                         val short_title: String = "",
+                         val imageUrl: String = "")

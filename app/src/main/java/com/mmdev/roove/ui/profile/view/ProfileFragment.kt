@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 19:11
+ * Last modified 23.01.20 21:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.roove.ui.profile.view
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -36,6 +37,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 
 	private val userPhotosAdapter = ImagePagerAdapter(listOf())
+	private val mUserPlacesToGoAdapter = ProfilePlacesToGoAdapter(listOf())
 
 	private var fabVisible: Boolean = false
 
@@ -57,6 +59,10 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
+		arguments?.let {
+			fabVisible = it.getBoolean(FAB_VISIBLE_KEY)
+		}
+
 		sharedViewModel = activity?.run {
 			ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
@@ -70,7 +76,8 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 				remoteRepoViewModel.getUser().observe(this, Observer {
 					selectedUser = it
 					collapseBarProfile.title = selectedUser.baseUserInfo.name
-					userPhotosAdapter.updateData(selectedUser.photoURLs)
+					userPhotosAdapter.updateData(selectedUser.photoURLs.toList())
+					mUserPlacesToGoAdapter.updateData(selectedUser.placesToGo.toList())
 					isOnCreateCalled = true
 				})
 			}
@@ -79,10 +86,6 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		arguments?.let {
-			fabVisible = it.getBoolean(FAB_VISIBLE_KEY)
-		}
-
 
 		viewPagerProfilePhotos.apply {
 			(getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
@@ -111,23 +114,40 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 		}
 
 
+		mUserPlacesToGoAdapter.setOnItemClickListener(object: ProfilePlacesToGoAdapter.OnItemClickListener {
+
+			override fun onItemClick(view: View, position: Int) {
+
+				val placeId = bundleOf("PLACE_ID" to
+						                       mUserPlacesToGoAdapter.getPlaceToGoItem(position).id)
+
+				findNavController().navigate(R.id.action_profile_to_placeDetailedFragment, placeId)
+
+			}
+
+		})
+
+
 		if (fabVisible) {
 			fabProfileSendMessage.setOnClickListener {
 
-				findNavController().navigate(R.id.action_profileFragment_to_chatFragment)
+				findNavController().navigate(R.id.action_profile_to_chatFragment)
 
 				sharedViewModel.setConversationSelected(ConversationItem(selectedUser.baseUserInfo))
 			}
 
 		}
 		else fabProfileSendMessage.visibility = View.GONE
+
+
+
 	}
 
 	override fun onResume() {
 		super.onResume()
 		if (isOnCreateCalled) {
 			collapseBarProfile.title = selectedUser.baseUserInfo.name
-			userPhotosAdapter.updateData(selectedUser.photoURLs)
+			userPhotosAdapter.updateData(selectedUser.photoURLs.toList())
 		}
 	}
 

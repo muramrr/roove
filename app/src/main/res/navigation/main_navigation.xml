@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 22.01.20 18:48
+  ~ Last modified 23.01.20 21:27
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -170,18 +170,30 @@
 		android:name="com.mmdev.roove.ui.profile.view.ProfileFragment"
 		tools:layout="@layout/fragment_profile">
 
+		<argument
+			android:name="FAB_VISIBLE"
+			app:argType="boolean"
+			android:defaultValue="false" />
+
 		<action
-			android:id="@+id/action_profileFragment_to_chatFragment"
+			android:id="@+id/action_profile_to_chatFragment"
 			app:destination="@id/chatFragmentNav"
 			app:enterAnim="@anim/enter_from_top"
 			app:exitAnim="@anim/exit_to_bottom"
 			app:popEnterAnim="@anim/enter_from_bottom"
 			app:popExitAnim="@anim/exit_to_top" />
 
-		<argument
-			android:name="FAB_VISIBLE"
-			app:argType="boolean"
-			android:defaultValue="false" />
+		<action
+			android:id="@+id/action_profile_to_placeDetailedFragment"
+			app:destination="@id/placeDetailedFragmentNav"
+			app:enterAnim="@anim/enter_from_bottom"
+			app:exitAnim="@anim/exit_to_top"
+			app:popEnterAnim="@anim/enter_from_top"
+			app:popExitAnim="@anim/exit_to_bottom"  >
+
+			<argument android:name="PLACE_ID" />
+
+		</action>
 
 	</fragment>
 
@@ -192,7 +204,7 @@
 		tools:layout="@layout/fragment_chat">
 
 		<action
-			android:id="@+id/action_chatFragment_to_profileFragment"
+			android:id="@+id/action_chat_to_profileFragment"
 			app:destination="@id/profileFragmentNav"
 			app:enterAnim="@anim/enter_from_top"
 			app:exitAnim="@anim/exit_to_bottom"

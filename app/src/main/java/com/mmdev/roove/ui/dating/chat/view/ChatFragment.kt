@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 19:25
+ * Last modified 23.01.20 21:27
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -210,7 +210,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		toolbarChat.setOnMenuItemClickListener { item ->
 			when (item.itemId) {
 				R.id.chat_action_user ->{
-					findNavController().navigate(R.id.action_chatFragment_to_profileFragment)
+					findNavController().navigate(R.id.action_chat_to_profileFragment)
 					sharedViewModel.setCardSelected(
 							CardItem(currentConversation.partner,
 							         currentConversation.conversationStarted)

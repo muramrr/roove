@@ -2,16 +2,16 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 22.01.20 19:59
+  ~ Last modified 23.01.20 21:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-	android:layout_width="match_parent"
+<androidx.coordinatorlayout.widget.CoordinatorLayout android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:background="@color/colorPrimaryDark"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -80,7 +80,7 @@
 
 			<TextView
 				android:id="@+id/tvProfileAboutHeader"
-				android:layout_width="match_parent"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:padding="@dimen/general_margin_16"
 
@@ -112,7 +112,7 @@
 
 			<TextView
 				android:id="@+id/tvProfileWantToGoHeader"
-				android:layout_width="match_parent"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:padding="@dimen/general_margin_16"
 
@@ -123,16 +123,24 @@
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/tvProfileAboutText"
+				app:layout_constraintBottom_toTopOf="@id/rvProfileWantToGoList"
 				/>
 
-<!--			<androidx.recyclerview.widget.RecyclerView-->
-<!--				android:id="@+id/profile_want_togo_container_rv"-->
-<!--				android:layout_width="wrap_content"-->
-<!--				android:layout_height="wrap_content"-->
-<!--				android:visibility="gone"-->
-<!--				app:layout_constraintStart_toStartOf="parent"-->
-<!--				app:layout_constraintEnd_toEndOf="parent"-->
-<!--				app:layout_constraintTop_toBottomOf="@id/profile_want_togo_header_tv"/>-->
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/rvProfileWantToGoList"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/general_margin_8"
+				android:orientation="horizontal"
+				android:visibility="visible"
+				app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/tvProfileWantToGoHeader"
+
+				tools:listitem="@layout/fragment_profile_places_rv_item"/>
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 
