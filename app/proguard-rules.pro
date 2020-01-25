@@ -19,8 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source fileModel Name.
 #-renamesourcefileattribute SourceFile
--keepattributes Signature
--keepattributes *Annotation*
+-keepattributes *Annotation*, Signature
 -keepclassmembers class com.mmdev.business.** {
       *;
     }

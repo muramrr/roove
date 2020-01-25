@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.01.20 21:42
+ * Last modified 25.01.20 19:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,6 @@ package com.mmdev.roove.ui.places.view.detailed
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -25,11 +24,15 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.business.base.BasePlaceInfo
 import com.mmdev.business.places.PlaceDetailedItem
+import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.ImagePagerAdapter
 import com.mmdev.roove.ui.core.SharedViewModel
+import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
+import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.places.PlacesViewModel
+import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_place_detailed.*
 
 
@@ -37,6 +40,8 @@ import kotlinx.android.synthetic.main.fragment_place_detailed.*
  * A simple [Fragment] subclass.
  */
 class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
+
+	private lateinit var userItem: UserItem
 
 	private val placePhotosAdapter = ImagePagerAdapter(listOf())
 
@@ -46,6 +51,8 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 
 	private lateinit var placesViewModel: PlacesViewModel
 	private lateinit var sharedViewModel: SharedViewModel
+	private lateinit var localRepoViewModel: LocalUserRepoViewModel
+	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
 
 	companion object{
 		private const val PLACE_ID_KEY = "PLACE_ID"
@@ -58,8 +65,10 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 			receivedPlaceId = it.getInt(PLACE_ID_KEY)
 		}
 
-		sharedViewModel = activity?.run {
-			ViewModelProvider(this, factory)[SharedViewModel::class.java]
+		activity?.run {
+			localRepoViewModel = ViewModelProvider(this, factory)[LocalUserRepoViewModel::class.java]
+			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
+			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
 		placesViewModel = ViewModelProvider(this, factory)[PlacesViewModel::class.java]
@@ -80,7 +89,7 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 			tvPlaceDetailedDescription.text = it.description
 			tvPlaceDetailedFullDescription.text = it.body_text
 		})
-
+		localRepoViewModel.getSavedUser()?.let { userItem = it }
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -102,12 +111,18 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 			cycleTextViewExpansion(tvPlaceDetailedFullDescription)
 		}
 
+		tvPlaceDetailedFullDescription.setOnClickListener {
+			cycleTextViewExpansion(tvPlaceDetailedFullDescription)
+		}
+
 		fabPlaceDetailed.setOnClickListener {
-			sharedViewModel.getCurrentUser().value?.placesToGo?.add(
-					BasePlaceInfo(id = placeDetailedItem.id,
-					              short_title = placeDetailedItem.short_title,
-					              imageUrl = placeDetailedItem.images[0].image))
-			Log.wtf("mylogs", "${sharedViewModel.getCurrentUser().value!!}")
+			userItem.placesToGo.add(BasePlaceInfo(placeDetailedItem.id,
+			                                      placeDetailedItem.short_title,
+			                                      placeDetailedItem.images[0].image))
+			remoteRepoViewModel.updateUserItem(userItem)
+			remoteRepoViewModel.getUserUpdateStatus().observeOnce(this, Observer {
+				if (it) localRepoViewModel.saveUserInfo(userItem)
+			})
 		}
 	}
 
