@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.01.20 21:19
+ * Last modified 25.01.20 19:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,8 +15,8 @@ import com.mmdev.business.base.BaseUserInfo
 
 data class UserItem(val baseUserInfo: BaseUserInfo = BaseUserInfo(),
                     var preferredGender: String = "",
-                    val photoURLs: HashSet<String> = hashSetOf(),
-                    val placesToGo: HashSet<BasePlaceInfo> = hashSetOf())
+                    val photoURLs: MutableList<String> = mutableListOf(),
+                    val placesToGo: MutableList<BasePlaceInfo> = mutableListOf())
 
 
 
