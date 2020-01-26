@@ -2,16 +2,17 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.01.20 21:41
+  ~ Last modified 26.01.20 17:59
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<layout
+<layout xmlns:tools="http://schemas.android.com/tools"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:bind="http://schemas.android.com/apk/res-auto">
 
 	<data>
 
@@ -32,22 +33,34 @@
 		app:cardElevation="1dp">
 
 		<ImageView
+			android:id="@+id/ivImageHolder"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:background="@color/colorAccentDark"
-			android:contentDescription="@string/description_user_photo"
 			android:scaleType="centerCrop"
-			app:imageUrl="@{placeItem.images[0].image}"
-			android:visibility='@{placeItem.images[0].image!="" ? View.VISIBLE : View.GONE}'/>
+			android:visibility='@{placeItem.images[0].image!="" ? View.VISIBLE : View.GONE}'
+
+			bind:imageUrl="@{placeItem.images[0].image}"
+
+			tools:ignore="ContentDescription" />
+
+		<ProgressBar
+			android:id="@+id/pbImageLoading"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:progress="100"
+
+			style="@style/Widget.AppCompat.ProgressBar" />
 
 		<ImageView
+			android:id="@+id/ivImageBottomGradient"
 			android:layout_width="match_parent"
 			android:layout_height="50dp"
 			android:layout_gravity="bottom"
 			android:scaleType="centerCrop"
 			android:src="@drawable/gradient_transparent"
-			android:contentDescription="@string/description_user_photo"
-			/>
+			tools:ignore="ContentDescription" />
 
 		<TextView
 			android:layout_width="wrap_content"

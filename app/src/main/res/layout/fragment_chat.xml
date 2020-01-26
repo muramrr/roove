@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 21.01.20 16:53
+  ~ Last modified 26.01.20 17:59
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:bind="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<data>
@@ -34,6 +35,7 @@
 			android:layout_height="?actionBarSize"
 			android:background="@color/colorPrimary"
 			android:theme="@style/AppTheme.AppBarOverlay"
+
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent">
@@ -56,7 +58,9 @@
 			android:layout_height="120dp"
 			android:src="@drawable/loading"
 			android:visibility='@{viewModel.showLoading ? View.VISIBLE : View.GONE, default = "visible"}'
-			app:loadingImage="@{true}"
+
+			bind:loadingImage="@{true}"
+
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
@@ -71,6 +75,7 @@
 			android:overScrollMode="never"
 			android:scrollbars="none"
 			android:visibility='@{viewModel.showLoading ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
+
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -84,6 +89,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:background="@color/colorAccentDark"
+
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"

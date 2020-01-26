@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.01.20 14:12
+ * Last modified 26.01.20 14:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -75,7 +75,7 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 
 		placesViewModel.loadPlaceDetails(receivedPlaceId)
 
-		placesViewModel.getPlaceDetailed().observe(this, Observer {
+		placesViewModel.getPlaceDetailed().observeOnce(this, Observer {
 			placeDetailedItem = it
 			val placePhotos = ArrayList<String>()
 			for (imageItem in it.images)
@@ -102,8 +102,7 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 		}
 
 		TabLayoutMediator(tlDotsIndicatorPlace, viewPagerPlaceDetailedPhotos){
-			_: TabLayout.Tab, _: Int ->
-			//do nothing
+			_: TabLayout.Tab, _: Int -> //do nothing
 		}.attach()
 
 

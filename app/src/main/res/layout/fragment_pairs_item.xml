@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 19.12.19 21:21
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 26.01.20 17:59
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,8 @@
 
 <layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:bind="http://schemas.android.com/apk/res-auto">
 
 	<data>
 
@@ -36,7 +37,7 @@
 			android:background="@color/colorAccentDark"
 			android:contentDescription="@string/description_user_photo"
 			android:scaleType="centerCrop"
-			app:imageUrl="@{matchedItem.baseUserInfo.mainPhotoUrl}"/>
+			bind:imageUrl="@{matchedItem.baseUserInfo.mainPhotoUrl}"/>
 
 		<ImageView
 			android:id="@+id/pager_container_image_gradient"

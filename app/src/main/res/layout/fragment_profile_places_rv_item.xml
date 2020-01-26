@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.01.20 21:41
+  ~ Last modified 26.01.20 17:59
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,8 @@
 
 <layout xmlns:tools="http://schemas.android.com/tools"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:android="http://schemas.android.com/apk/res/android">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:bind="http://schemas.android.com/apk/res-auto">
 
 	<data>
 
@@ -32,7 +33,7 @@
 			android:layout_width="80dp"
 			android:layout_height="80dp"
 
-			app:circleImage="@{basePlaceInfo.imageUrl}"
+			bind:circleImageUrl="@{basePlaceInfo.imageUrl}"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
@@ -42,7 +43,6 @@
 			android:id="@+id/tvProfilePlaceTitle"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-
 			android:ellipsize="end"
 			android:maxLines="2"
 
