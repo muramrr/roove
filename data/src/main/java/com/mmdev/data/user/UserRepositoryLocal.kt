@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.01.20 13:59
+ * Last modified 26.01.20 19:17
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,8 @@
 package com.mmdev.data.user
 
 import android.util.Log
+import com.facebook.login.LoginManager
+import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.ironz.binaryprefs.Preferences
 import com.mmdev.business.base.BasePlaceInfo
@@ -26,10 +28,12 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
+class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
+                                              private val auth: FirebaseAuth,
+                                              private val fbLogin: LoginManager) :
 		LocalUserRepository {
 
-	val gson = Gson()
+	private val gson = Gson()
 
 	companion object{
 		private const val PREF_KEY_GENERAL_IF_SAVED = "saved"
@@ -72,15 +76,22 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 				                      mainPhotoUrl,uid),
 				         preferredGender,
 				         photoUrls.toMutableList(),
-				         placesToGoItems
-				)
+				         placesToGoItems)
 			}catch (e: Exception) {
 				Log.wtf(TAG, "read exception, but user is saved")
+				if (auth.currentUser != null) {
+					auth.signOut()
+					fbLogin.logOut()
+				}
 				prefs.edit().clear().commit()
 				null
 			}
 		}
 		else {
+			if (auth.currentUser != null) {
+				auth.signOut()
+				fbLogin.logOut()
+			}
 			Log.wtf(TAG, "User is not saved")
 			null
 		}

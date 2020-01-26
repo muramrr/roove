@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 26.01.20 18:52
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+	android:shape="ring"
+	android:innerRadiusRatio="2.5"
+	android:thickness="4dp"
+	android:useLevel="true">
+
+	<solid android:color="@color/white_85" />
+
+</shape>
