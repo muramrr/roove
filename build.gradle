@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 17.01.20 19:03
+ * Last modified 26.01.20 13:50
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@ buildscript {
 		kotlin_version = '1.3.61'
 
 		// facebook
-		facebook_sdk_version = '5.13.0'
+		facebook_sdk_version = '5.15.0'
 
 		//firebase
 		firebase_auth_version = '19.2.0'
@@ -28,6 +28,9 @@ buildscript {
 		// Dagger
 		dagger_version = '2.25.4'
 
+		//retrofit
+		retrofit_version = '2.7.1'
+
 		// RxJava
 		rxjava_version = '2.2.17'
 
@@ -35,22 +38,25 @@ buildscript {
 		rxandroid_version = '2.1.1'
 
 		// ViewModel and LiveData
-		lifecycle_version = '2.2.0-rc03'
+		lifecycle_version = '2.2.0'
 
 		//tests
 		junitVersion = "4.12"
 
 		libs = [
-			dagger          : ('com.google.dagger:dagger:' + dagger_version),
-			daggerCompiler  : ('com.google.dagger:dagger-compiler:' + dagger_version),
-			facebookLogin   : ('com.facebook.android:facebook-login:' + facebook_sdk_version),
-			firebaseAuth    : ('com.google.firebase:firebase-auth:' + firebase_auth_version),
-			firebaseCore    : ('com.google.firebase:firebase-core:' + firebase_core_version),
-			firestorage     : ('com.google.firebase:firebase-storage:' + firebase_storage_version),
-			firestore       : ('com.google.firebase:firebase-firestore:' + firebase_firestore_version),
-			rxJava          : ('io.reactivex.rxjava2:rxjava:' + rxjava_version),
-			rxAndroid       : ('io.reactivex.rxjava2:rxandroid:' + rxandroid_version),
-			junit           : ('junit:junit:' + junitVersion),
+			dagger              : ('com.google.dagger:dagger:' + dagger_version),
+			daggerCompiler      : ('com.google.dagger:dagger-compiler:' + dagger_version),
+			facebookLogin       : ('com.facebook.android:facebook-login:' + facebook_sdk_version),
+			firebaseAuth        : ('com.google.firebase:firebase-auth:' + firebase_auth_version),
+			firebaseCore        : ('com.google.firebase:firebase-core:' + firebase_core_version),
+			firestorage         : ('com.google.firebase:firebase-storage:' + firebase_storage_version),
+			firestore           : ('com.google.firebase:firebase-firestore:' + firebase_firestore_version),
+			retrofit            : ('com.squareup.retrofit2:retrofit:' + retrofit_version),
+			retrofitAdapter     : ('com.squareup.retrofit2:adapter-rxjava2:' + retrofit_version),
+			retrofitConverter   : ('com.squareup.retrofit2:converter-gson:' + retrofit_version),
+			rxJava              : ('io.reactivex.rxjava2:rxjava:' + rxjava_version),
+			rxAndroid           : ('io.reactivex.rxjava2:rxandroid:' + rxandroid_version),
+			junit               : ('junit:junit:' + junitVersion),
 		]
 
 	}
@@ -68,8 +74,6 @@ buildscript {
 		jcenter()
 		google()
 		mavenCentral()
-
-
 	}
 
 }

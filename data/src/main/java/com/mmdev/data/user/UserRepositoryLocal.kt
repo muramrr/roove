@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.01.20 19:12
+ * Last modified 25.01.20 19:40
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -72,10 +72,11 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences):
 				                      mainPhotoUrl,uid),
 				         preferredGender,
 				         photoUrls.toMutableList(),
-				         placesToGoItems.toMutableList()
+				         placesToGoItems
 				)
 			}catch (e: Exception) {
 				Log.wtf(TAG, "read exception, but user is saved")
+				prefs.edit().clear().commit()
 				null
 			}
 		}
