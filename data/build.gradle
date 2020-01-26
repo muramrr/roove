@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.01.20 18:53
+ * Last modified 26.01.20 13:50
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -74,10 +74,10 @@ dependencies {
 	// RxJava
 	implementation libs.rxJava
 
-	// retrofit
-	implementation 'com.squareup.retrofit2:retrofit:2.7.1'
-	implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
-	implementation "com.squareup.retrofit2:adapter-rxjava2:2.7.1"
+	// Retrofit
+	implementation libs.retrofit
+	implementation libs.retrofitAdapter
+	implementation libs.retrofitConverter
 
 	// Dagger
 	implementation libs.dagger
@@ -85,6 +85,6 @@ dependencies {
 
 	//binary prefs
 	implementation "com.github.yandextaxitech:binaryprefs:1.0.1"
-	implementation 'com.google.code.gson:gson:2.8.5'
+	implementation 'com.google.code.gson:gson:2.8.6'
 
 }
