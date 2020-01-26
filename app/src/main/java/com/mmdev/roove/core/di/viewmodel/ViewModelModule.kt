@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 18:35
+ * Last modified 26.01.20 14:00
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,8 +29,6 @@ import com.mmdev.business.chat.usecase.SendPhotoUseCase
 import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
 import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
-import com.mmdev.business.events.repository.EventsRepository
-import com.mmdev.business.events.usecase.GetEventsUseCase
 import com.mmdev.business.pairs.GetMatchedUsersUseCase
 import com.mmdev.business.pairs.PairsRepository
 import com.mmdev.business.places.repository.PlacesRepository
@@ -52,7 +50,6 @@ import com.mmdev.roove.ui.dating.cards.CardsViewModel
 import com.mmdev.roove.ui.dating.chat.ChatViewModel
 import com.mmdev.roove.ui.dating.conversations.ConversationsViewModel
 import com.mmdev.roove.ui.dating.pairs.PairsViewModel
-import com.mmdev.roove.ui.events.EventsViewModel
 import com.mmdev.roove.ui.places.PlacesViewModel
 import dagger.Module
 import dagger.Provides
@@ -108,11 +105,11 @@ class ViewModelModule {
 		                       GetConversationsListUseCase(repo))
 
 
-	@IntoMap
-	@Provides
-	@ViewModelKey(EventsViewModel::class)
-	fun eventsViewModel(repo: EventsRepository): ViewModel =
-		EventsViewModel(GetEventsUseCase(repo))
+//	@IntoMap
+//	@Provides
+//	@ViewModelKey(EventsViewModel::class)
+//	fun eventsViewModel(repo: EventsRepository): ViewModel =
+//		EventsViewModel(GetEventsUseCase(repo))
 
 
 	@IntoMap
