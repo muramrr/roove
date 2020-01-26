@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.01.20 17:59
+  ~ Last modified 26.01.20 19:21
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,8 +11,7 @@
 
 <layout xmlns:tools="http://schemas.android.com/tools"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:bind="http://schemas.android.com/apk/res-auto">
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<data>
 
@@ -38,9 +37,9 @@
 			android:layout_height="match_parent"
 			android:background="@color/colorAccentDark"
 			android:scaleType="centerCrop"
-			android:visibility='@{placeItem.images[0].image!="" ? View.VISIBLE : View.GONE}'
 
-			bind:imageUrl="@{placeItem.images[0].image}"
+			app:bindImageUrl="@{placeItem.images[0].image}"
+			app:progressBar="@{pbImageLoading}"
 
 			tools:ignore="ContentDescription" />
 
@@ -49,9 +48,14 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
-			android:progress="100"
+			android:indeterminate="false"
+			android:minHeight="32dp"
+			android:minWidth="32dp"
+			android:max="100"
+			android:progressDrawable="@drawable/progress_drawable"
 
-			style="@style/Widget.AppCompat.ProgressBar" />
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+			/>
 
 		<ImageView
 			android:id="@+id/ivImageBottomGradient"

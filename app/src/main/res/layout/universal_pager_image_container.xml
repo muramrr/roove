@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.01.20 18:02
+  ~ Last modified 26.01.20 19:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:bind="http://schemas.android.com/apk/res-auto">
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<data>
 		<variable
@@ -18,18 +18,24 @@
 			type="String" />
 	</data>
 
-	<FrameLayout
+	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
 		<ImageView
 			android:id="@+id/image_container_iv"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
 			android:background="@color/colorPrimaryDark"
 			android:scaleType="centerCrop"
 
-			bind:imageUrl="@{imageUrl}"
+			app:bindImageUrl="@{imageUrl}"
+			app:progressBar="@{pbImageLoading}"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
 
 			android:contentDescription="@string/description_user_photo" />
 
@@ -40,8 +46,32 @@
 			android:layout_gravity="bottom"
 			android:scaleType="centerCrop"
 			android:src="@drawable/gradient_transparent"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toBottomOf="@id/image_container_iv"
+
 			android:contentDescription="@string/description_user_photo" />
 
-	</FrameLayout>
+		<ProgressBar
+			android:id="@+id/pbImageLoading"
+			android:layout_width="150dp"
+			android:layout_height="150dp"
+			android:layout_gravity="center"
+			android:indeterminate="false"
+			android:minHeight="32dp"
+			android:minWidth="32dp"
+			android:max="100"
+			android:progressDrawable="@drawable/progress_drawable"
+
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			/>
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

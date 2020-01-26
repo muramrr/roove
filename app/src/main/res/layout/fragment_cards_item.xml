@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.01.20 17:59
+  ~ Last modified 26.01.20 19:09
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,8 +11,7 @@
 
 <layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:bind="http://schemas.android.com/apk/res-auto">
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<data>
 
@@ -47,12 +46,32 @@
 				android:contentDescription="@string/description_user_photo"
 				android:scaleType="centerCrop"
 
-				bind:imageUrl="@{cardItem.baseUserInfo.mainPhotoUrl}"
+				app:bindImageUrl="@{cardItem.baseUserInfo.mainPhotoUrl}"
+				app:progressBar="@{pbImageLoading}"
 
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent" />
+
+			<ProgressBar
+				android:id="@+id/pbImageLoading"
+				android:layout_width="150dp"
+				android:layout_height="150dp"
+				android:layout_gravity="center"
+				android:indeterminate="false"
+				android:minHeight="32dp"
+				android:minWidth="32dp"
+				android:max="100"
+				android:progressDrawable="@drawable/progress_drawable"
+
+				style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintBottom_toBottomOf="parent"
+				/>
 
 			<View
 				android:id="@+id/ivCardBottomGradient"

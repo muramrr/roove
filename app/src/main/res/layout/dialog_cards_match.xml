@@ -3,7 +3,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.01.20 17:59
+  ~ Last modified 26.01.20 19:09
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,6 @@
 <layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:bind="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<data>
@@ -57,7 +56,9 @@
 			android:adjustViewBounds="true"
 			android:scaleType="centerCrop"
 			android:src="@drawable/default_avatar"
-			bind:circleImageUrl="@{photoUrl}"
+
+			app:bindCircleImageUrl="@{photoUrl}"
+
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
@@ -71,6 +72,7 @@
 			android:layout_height="wrap_content"
 			android:text="@{name, default = @string/default_name}"
 			android:textSize="28sp"
+
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
@@ -92,7 +94,8 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintVertical_bias="0.9" />
+			app:layout_constraintVertical_bias="0.9"
+			/>
 
 
 	</androidx.constraintlayout.widget.ConstraintLayout>

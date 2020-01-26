@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.01.20 17:59
+  ~ Last modified 26.01.20 18:09
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@
 
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:bind="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<data>
@@ -59,7 +58,7 @@
 			android:src="@drawable/loading"
 			android:visibility='@{viewModel.showLoading ? View.VISIBLE : View.GONE, default = "visible"}'
 
-			bind:loadingImage="@{true}"
+			app:bindLoadingImage="@{true}"
 
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
