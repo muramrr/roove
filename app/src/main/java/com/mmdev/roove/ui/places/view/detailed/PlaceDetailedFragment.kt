@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.01.20 19:19
+ * Last modified 26.01.20 14:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -89,7 +89,7 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 			tvPlaceDetailedDescription.text = it.description
 			tvPlaceDetailedFullDescription.text = it.body_text
 		})
-		localRepoViewModel.getSavedUser()?.let { userItem = it }
+		sharedViewModel.getCurrentUser().value?.let { userItem = it }
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -116,13 +116,18 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 		}
 
 		fabPlaceDetailed.setOnClickListener {
-			userItem.placesToGo.add(BasePlaceInfo(placeDetailedItem.id,
-			                                      placeDetailedItem.short_title,
-			                                      placeDetailedItem.images[0].image))
-			remoteRepoViewModel.updateUserItem(userItem)
-			remoteRepoViewModel.getUserUpdateStatus().observeOnce(this, Observer {
-				if (it) localRepoViewModel.saveUserInfo(userItem)
-			})
+			val placeToGoItem = BasePlaceInfo(placeDetailedItem.id,
+			                                  placeDetailedItem.short_title,
+			                                  placeDetailedItem.images[0].image)
+
+			if (!userItem.placesToGo.contains(placeToGoItem)){
+				userItem.placesToGo.add(placeToGoItem)
+				remoteRepoViewModel.updateUserItem(userItem)
+				remoteRepoViewModel.getUserUpdateStatus().observeOnce(this, Observer {
+					if (it) localRepoViewModel.saveUserInfo(userItem)
+				})
+			}
+			//Log.wtf("mylogs", "{${userItem.placesToGo}}")
 		}
 	}
 
