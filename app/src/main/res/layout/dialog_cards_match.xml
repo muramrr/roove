@@ -2,8 +2,8 @@
 
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 15.12.19 16:06
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 26.01.20 17:59
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@
 <layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:bind="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<data>
@@ -56,7 +57,7 @@
 			android:adjustViewBounds="true"
 			android:scaleType="centerCrop"
 			android:src="@drawable/default_avatar"
-			app:circleImage="@{photoUrl}"
+			bind:circleImageUrl="@{photoUrl}"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"

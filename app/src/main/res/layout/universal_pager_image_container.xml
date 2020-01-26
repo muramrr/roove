@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 19.12.19 17:54
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 26.01.20 18:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<layout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:bind="http://schemas.android.com/apk/res-auto">
 
 	<data>
 		<variable
@@ -29,7 +28,9 @@
 			android:layout_height="match_parent"
 			android:background="@color/colorPrimaryDark"
 			android:scaleType="centerCrop"
-			app:imageUrl="@{imageUrl}"
+
+			bind:imageUrl="@{imageUrl}"
+
 			android:contentDescription="@string/description_user_photo" />
 
 		<ImageView

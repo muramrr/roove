@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.01.20 21:27
+ * Last modified 26.01.20 15:34
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,7 +45,7 @@ import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
-import com.mmdev.roove.core.GlideApp
+import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.databinding.FragmentChatBinding
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.SharedViewModel

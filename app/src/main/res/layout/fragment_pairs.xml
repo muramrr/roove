@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.01.20 20:31
+  ~ Last modified 26.01.20 17:59
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,11 +34,9 @@
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:layout_marginEnd="@dimen/general_margin_8"
-
 			android:background="@color/colorPrimaryDark"
 			android:clipToPadding="false"
 			android:overScrollMode="never"
-
 			android:visibility='@{viewModel.showTextHelper ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
 
 			app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
@@ -59,9 +57,10 @@
 
 			android:text="There is no matches...\n\nKeep swiping!"
 			android:textSize="24sp"
+			android:visibility='@{viewModel.showTextHelper ? View.VISIBLE : View.INVISIBLE, default = "invisible"}'
+
 			style="@style/regular_text_white85op"
 
-			android:visibility='@{viewModel.showTextHelper ? View.VISIBLE : View.INVISIBLE, default = "invisible"}'
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"

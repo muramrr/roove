@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 19:25
+ * Last modified 26.01.20 15:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,8 +32,7 @@ import kotlinx.android.synthetic.main.fragment_cards.*
 
 class CardsFragment: BaseFragment() {
 
-	private val mCardsStackAdapter =
-		CardsStackAdapter(listOf())
+	private val mCardsStackAdapter = CardsStackAdapter(listOf())
 
 	private lateinit var mAppearedCardItem: CardItem
 	private lateinit var mDisappearedCardItem: CardItem

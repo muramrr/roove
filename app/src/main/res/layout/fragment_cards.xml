@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.01.20 17:46
+  ~ Last modified 26.01.20 17:59
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:bind="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<data>
@@ -35,11 +36,13 @@
 			android:clipToPadding="false"
 			android:padding="@dimen/general_margin_16"
 			android:visibility='@{viewModel.showLoading ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
-			tools:listitem="@layout/fragment_cards_item"
+
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
+
+			tools:listitem="@layout/fragment_cards_item"
 			/>
 
 	    <ImageView
@@ -47,7 +50,8 @@
 	        android:layout_width="120dp"
 	        android:layout_height="120dp"
 		    android:visibility='@{viewModel.showLoading ? View.VISIBLE : View.GONE, default = "visible"}'
-		    app:loadingImage="@{true}"
+		    bind:loadingImage="@{true}"
+
 	        app:layout_constraintBottom_toBottomOf="parent"
 	        app:layout_constraintEnd_toEndOf="parent"
 	        app:layout_constraintStart_toStartOf="parent"
