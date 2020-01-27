@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.01.20 18:14
+ * Last modified 27.01.20 18:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 package com.mmdev.data.user
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
 import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mmdev.business.user.repository.RemoteUserRepository
@@ -28,7 +29,8 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class UserRepositoryRemoteImpl @Inject constructor(private val db: FirebaseFirestore):
+class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: FirebaseInstanceId,
+                                                   private val db: FirebaseFirestore):
 		RemoteUserRepository {
 
 	companion object {
@@ -44,14 +46,18 @@ class UserRepositoryRemoteImpl @Inject constructor(private val db: FirebaseFires
 				.document(userItem.baseUserInfo.city)
 				.collection(userItem.baseUserInfo.gender)
 				.document(userItem.baseUserInfo.userId)
-			ref.set(userItem)
-				.addOnSuccessListener {
-					db.collection(BASE_COLLECTION_REFERENCE)
-						.document(userItem.baseUserInfo.userId)
-						.set(userItem.baseUserInfo)
-					emitter.onComplete()
-				}
-				.addOnFailureListener { emitter.onError(it) }
+			fInstance.instanceId.addOnSuccessListener {instanceResult ->
+				userItem.baseUserInfo.registrationTokens.add(instanceResult.token)
+				ref.set(userItem)
+					.addOnSuccessListener {
+						db.collection(BASE_COLLECTION_REFERENCE)
+							.document(userItem.baseUserInfo.userId)
+							.set(userItem.baseUserInfo)
+						emitter.onComplete()
+					}
+					.addOnFailureListener { emitter.onError(it) }
+			}.addOnFailureListener { emitter.onError(it) }
+
 		}.subscribeOn(Schedulers.io())
 	}
 

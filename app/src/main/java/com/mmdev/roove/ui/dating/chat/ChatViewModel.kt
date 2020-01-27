@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 17:14
+ * Last modified 27.01.20 18:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,10 +79,13 @@ class ChatViewModel @Inject constructor(private val getConversationUC: GetConver
                        { Log.wtf(TAG, "can't send message fragment_chat, $emptyChat") }))
 	}
 
-	fun sendPhoto(photoUri: String, sender: BaseUserInfo){
+	fun sendPhoto(photoUri: String, sender: BaseUserInfo, recipient: String){
 		disposables.add(sendPhotoExecution(photoUri)
             .flatMapCompletable {
-	            sendMessageExecution(MessageItem(sender, photoAttachementItem = it), emptyChat)
+	            sendMessageExecution(MessageItem(sender = sender,
+	                                             recipientId = recipient,
+	                                             photoAttachmentItem = it),
+	                                 emptyChat)
             }
             .doOnSubscribe { showLoading.value = true }
             .doOnComplete { showLoading.value = false }
@@ -94,11 +97,9 @@ class ChatViewModel @Inject constructor(private val getConversationUC: GetConver
 	fun getMessagesList() = messagesList
 
 
+
 	private fun getConversationExecution(partnerId: String) = getConversationUC.execute(partnerId)
-
 	private fun getMessagesExecution(conversation: ConversationItem) = getMessagesUC.execute(conversation)
-
 	private fun sendMessageExecution(messageItem: MessageItem, emptyChat: Boolean? = false) = sendMessageUC.execute(messageItem, emptyChat)
-
 	private fun sendPhotoExecution(photoUri: String) = sendPhotoUC.execute(photoUri)
 }

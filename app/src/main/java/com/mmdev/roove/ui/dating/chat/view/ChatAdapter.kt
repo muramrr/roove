@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.01.20 15:31
+ * Last modified 27.01.20 18:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,10 +56,15 @@ class ChatAdapter (private var listMessageItems: List<MessageItem>):
 	}
 
 	override fun getItemViewType(position: Int): Int {
-		val (sender, _, _,photoAttached) = listMessageItems[position]
-		return if (photoAttached != null)
-			if (sender.userId == userId) RIGHT_MSG_IMG else LEFT_MSG_IMG
-		else if (sender.userId == userId) RIGHT_MSG else LEFT_MSG
+		val message = listMessageItems[position]
+		return if (message.photoAttachmentItem != null) {
+			if (message.sender.userId == userId) RIGHT_MSG_IMG
+			else LEFT_MSG_IMG
+		}
+		else {
+			if (message.sender.userId == userId) RIGHT_MSG
+			else LEFT_MSG
+		}
 	}
 
 	override fun getItemCount() = listMessageItems.size
@@ -68,8 +73,8 @@ class ChatAdapter (private var listMessageItems: List<MessageItem>):
 
 	fun setCurrentUserId(id: String){ userId = id }
 
-	fun updateData(chats: List<MessageItem>) {
-		this.listMessageItems = chats
+	fun updateData(newMessagesItems: List<MessageItem>) {
+		this.listMessageItems = newMessagesItems
 		notifyDataSetChanged()
 	}
 
@@ -109,8 +114,8 @@ class ChatAdapter (private var listMessageItems: List<MessageItem>):
 			setIvUserAvatar(messageItem.sender.mainPhotoUrl)
 			setTextMessage(messageItem.text)
 			messageItem.timestamp?.let { setTvTimestamp(convertTimestamp(messageItem.timestamp!!)) }
-			messageItem.photoAttachementItem?.let { setIvChatPhoto(messageItem
-				                                                       .photoAttachementItem!!
+			messageItem.photoAttachmentItem?.let { setIvChatPhoto(messageItem
+				                                                       .photoAttachmentItem!!
 				                                                       .fileUrl) }
 		}
 
