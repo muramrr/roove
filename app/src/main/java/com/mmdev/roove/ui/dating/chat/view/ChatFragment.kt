@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.01.20 15:34
+ * Last modified 27.01.20 18:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,6 +69,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	//saving state
 	private var partnerName = ""
 	private var partnerMainPhotoUrl = ""
+	private var partnerId = ""
 	private lateinit var currentConversation: ConversationItem
 	private var isOnCreateCalled: Boolean = false
 
@@ -116,6 +117,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		sharedViewModel.conversationSelected.observe(this, Observer {
 			if (!isOnCreateCalled && !this::currentConversation.isInitialized) {
 				currentConversation = it
+				partnerId = it.partner.userId
 				partnerName = it.partner.name
 				partnerMainPhotoUrl = it.partner.mainPhotoUrl
 				setupContentToolbar()
@@ -191,7 +193,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		mChatAdapter.setOnAttachedPhotoClickListener(object: ChatAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
 
-				val photoUrl = mChatAdapter.getItem(position).photoAttachementItem!!.fileUrl
+				val photoUrl = mChatAdapter.getItem(position).photoAttachmentItem!!.fileUrl
 				val dialog =
 					FullScreenDialogFragment.newInstance(
 							photoUrl)
@@ -232,6 +234,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		super.onResume()
 
 		if (isOnCreateCalled && this::currentConversation.isInitialized) {
+			partnerId = currentConversation.partner.userId
 			partnerName = currentConversation.partner.name
 			partnerMainPhotoUrl = currentConversation.partner.mainPhotoUrl
 
@@ -283,9 +286,10 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		if (edTextMessageInput.text.isNotEmpty() &&
 		    edTextMessageInput.text.toString().trim().isNotEmpty()) {
 
-			val message = MessageItem(userItemModel.baseUserInfo,
-			                          edTextMessageInput.text.toString().trim(),
-			                          photoAttachementItem = null)
+			val message = MessageItem(sender = userItemModel.baseUserInfo,
+			                          recipientId = partnerId,
+			                          text = edTextMessageInput.text.toString().trim(),
+			                          photoAttachmentItem = null)
 
 			chatViewModel.sendMessage(message)
 			edTextMessageInput.setText("")
@@ -374,7 +378,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 				val selectedUri = data?.data
 				chatViewModel.sendPhoto(selectedUri.toString(),
-				                        sender = userItemModel.baseUserInfo)
+				                        userItemModel.baseUserInfo,
+				                        partnerId)
 
 
 			}
@@ -385,7 +390,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 				if (mFilePathImageCamera.exists()) {
 					chatViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString(),
-					                        sender = userItemModel.baseUserInfo)
+					                        userItemModel.baseUserInfo,
+					                        partnerId)
 				}
 				else Toast.makeText(context,
 						"filePathImageCamera is null or filePathImageCamera isn't exists",
