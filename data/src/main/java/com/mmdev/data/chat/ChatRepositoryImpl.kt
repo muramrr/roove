@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 18:02
+ * Last modified 27.01.20 17:45
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.chat.entity.MessageItem
-import com.mmdev.business.chat.entity.PhotoAttachementItem
+import com.mmdev.business.chat.entity.PhotoAttachmentItem
 import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.user.UserItem
@@ -147,17 +147,17 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 		}.subscribeOn(Schedulers.io())
 	}
 
-	override fun sendPhoto(photoUri: String): Observable<PhotoAttachementItem> {
+	override fun sendPhoto(photoUri: String): Observable<PhotoAttachmentItem> {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()+".jpg"
 		val storageRef = storage
 			.child(GENERAL_FOLDER_STORAGE_IMG)
 			.child(conversation.conversationId)
 			.child(namePhoto)
-		return Observable.create(ObservableOnSubscribe<PhotoAttachementItem>{ emitter ->
+		return Observable.create(ObservableOnSubscribe<PhotoAttachmentItem>{ emitter ->
 			val uploadTask = storageRef.putFile(Uri.parse(photoUri))
 				.addOnSuccessListener {
 					storageRef.downloadUrl.addOnSuccessListener{
-						val photoAttached = PhotoAttachementItem(it.toString(), namePhoto)
+						val photoAttached = PhotoAttachmentItem(it.toString(), namePhoto)
 						emitter.onNext(photoAttached)
 					}
 				}
@@ -216,7 +216,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			.document(partner.userId)
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversation.conversationId)
-		if (messageItem.photoAttachementItem != null) {
+		if (messageItem.photoAttachmentItem != null) {
 			// for current
 			cur.update(CONVERSATION_LASTMESSAGETEXT_FIELD, "Photo")
 			cur.update(CONVERSATION_LASTMESSAGETIMESTAMP_FIELD, messageItem.timestamp)

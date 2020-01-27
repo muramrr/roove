@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:21
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 27.01.20 17:45
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@
 package com.mmdev.business.chat.repository
 
 import com.mmdev.business.chat.entity.MessageItem
-import com.mmdev.business.chat.entity.PhotoAttachementItem
+import com.mmdev.business.chat.entity.PhotoAttachmentItem
 import com.mmdev.business.conversations.ConversationItem
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -25,6 +25,6 @@ interface ChatRepository {
 
 	fun sendMessage(messageItem: MessageItem, emptyChat: Boolean? = false): Completable
 
-	fun sendPhoto(photoUri: String): Observable<PhotoAttachementItem>
+	fun sendPhoto(photoUri: String): Observable<PhotoAttachmentItem>
 
 }
