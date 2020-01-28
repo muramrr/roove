@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.01.20 18:58
+ * Last modified 28.01.20 15:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 
 package com.mmdev.data.user
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import com.mmdev.business.base.BaseUserInfo
@@ -30,7 +31,8 @@ import javax.inject.Singleton
 
 @Singleton
 class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: FirebaseInstanceId,
-                                                   private val db: FirebaseFirestore):
+                                                   private val db: FirebaseFirestore,
+                                                   private val localRepo: UserRepositoryLocal):
 		RemoteUserRepository {
 
 	companion object {
@@ -88,8 +90,17 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 			ref.get()
 				.addOnSuccessListener {
 					val remoteUserItem = it.toObject(UserItem::class.java)!!
-					if (userItem == remoteUserItem) emitter.onSuccess(userItem)
-					else emitter.onSuccess(remoteUserItem)
+					fInstance.instanceId.addOnSuccessListener { instanceResult ->
+						remoteUserItem.baseUserInfo.registrationTokens.add(instanceResult.token)
+						if (userItem == remoteUserItem) emitter.onSuccess(userItem)
+						else {
+							//save new userItem
+							Log.wtf("mylogs", "with tokens: ${remoteUserItem.baseUserInfo}")
+							localRepo.saveUserInfo(remoteUserItem)
+							emitter.onSuccess(remoteUserItem)
+						}
+					}
+					.addOnFailureListener { instanceIdError -> emitter.onError(instanceIdError) }
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
@@ -118,6 +129,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 					db.collection(BASE_COLLECTION_REFERENCE)
 						.document(userItem.baseUserInfo.userId)
 						.set(userItem.baseUserInfo)
+					localRepo.saveUserInfo(userItem)
 					emitter.onComplete()
 				}
 				.addOnFailureListener { emitter.onError(it) }
