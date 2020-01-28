@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.01.20 18:19
+ * Last modified 28.01.20 15:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,7 +34,7 @@ class RemoteUserRepoViewModel @Inject constructor(
 	private val updateUserItemUC: UpdateUserItemUseCase) : ViewModel() {
 
 
-
+	private val fetchedUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	private val isUserUpdated: MutableLiveData<Boolean> = MutableLiveData()
 	private val receivedUserItem: MutableLiveData<UserItem> = MutableLiveData()
 
@@ -44,6 +44,18 @@ class RemoteUserRepoViewModel @Inject constructor(
 		private const val TAG = "mylogs_RemoteRepoViewModel"
 	}
 
+
+	fun fetchUserItem(userItem: UserItem){
+		disposables.add(fetchUserInfoExecution(userItem)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+	                       fetchedUserItem.value = it
+	                       Log.wtf(TAG, "fetched user: $it")
+                       },
+                       {
+                           Log.wtf(TAG, "fetch user error: $it")
+                       }))
+	}
 
 	fun getFullUserItem(baseUserInfo: BaseUserInfo){
 		disposables.add(getFullUserItemExecution(baseUserInfo)
@@ -68,6 +80,8 @@ class RemoteUserRepoViewModel @Inject constructor(
 	                       Log.wtf(TAG, "updating user fail: $it")
                        }))
 	}
+
+	fun getFetchedUserItem() = fetchedUserItem
 
 	fun getUser() = receivedUserItem
 
