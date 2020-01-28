@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.01.20 15:43
+ * Last modified 28.01.20 15:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,9 +29,11 @@ import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.auth.view.AuthFlowFragment
 import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
+import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.main.MainFlowFragment
 import com.mmdev.roove.utils.doOnApplyWindowInsets
+import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity: AppCompatActivity(R.layout.activity_main) {
@@ -40,6 +42,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 
 	private lateinit var authViewModel: AuthViewModel
 	private lateinit var localRepoViewModel: LocalUserRepoViewModel
+	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
 
 	private val factory = injector.factory()
@@ -79,6 +82,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 		progressDialog = LoadingDialog(this@MainActivity)
 
 		localRepoViewModel = ViewModelProvider(this, factory)[LocalUserRepoViewModel::class.java]
+		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
 		sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		authViewModel.checkIsAuthenticated()
@@ -99,8 +103,13 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 			}
 			else {
 				showMainFlowFragment()
-				localRepoViewModel.getSavedUser()?.let {
-					savedUser -> sharedViewModel.setCurrentUser(savedUser)
+				localRepoViewModel.getSavedUser()?.let { savedUser ->
+					remoteRepoViewModel.fetchUserItem(savedUser)
+					remoteRepoViewModel.getFetchedUserItem().observeOnce(this, Observer {
+						fetchedUser -> sharedViewModel.setCurrentUser(fetchedUser)
+						remoteRepoViewModel.updateUserItem(fetchedUser)
+					})
+
 				}
 				Log.wtf(TAG_LOG, "USER IS LOGGED IN")
 			}
