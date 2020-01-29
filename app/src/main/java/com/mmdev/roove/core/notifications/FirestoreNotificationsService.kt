@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.01.20 18:15
+ * Last modified 29.01.20 16:02
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,7 @@ class FirestoreNotificationsService: FirebaseMessagingService() {
 
 	override fun onMessageReceived(remoteMessage: RemoteMessage) {
 		if (remoteMessage.notification != null)
-			Log.wtf("mylogs", remoteMessage.data.toString())
+			Log.wtf("mylogs_SERVICENOTIFICATIONS", remoteMessage.data.toString())
 
 //		val messageTitle = remoteMessage.notification!!.title
 //		val messageBody = remoteMessage.notification!!.body

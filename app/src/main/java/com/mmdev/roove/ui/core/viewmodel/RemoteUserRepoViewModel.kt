@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 28.01.20 15:35
+ * Last modified 29.01.20 16:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ package com.mmdev.roove.ui.core.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mmdev.business.base.BaseUserInfo
+import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
 import com.mmdev.business.user.usecase.remote.FetchUserInfoUseCase
@@ -50,7 +50,7 @@ class RemoteUserRepoViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       fetchedUserItem.value = it
-	                       Log.wtf(TAG, "fetched user: $it")
+	                       //Log.wtf(TAG, "fetched user: $it")
                        },
                        {
                            Log.wtf(TAG, "fetch user error: $it")
