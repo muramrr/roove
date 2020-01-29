@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.01.20 19:12
+ * Last modified 29.01.20 16:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.mmdev.business.base.BaseUserInfo
+import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
@@ -216,9 +216,12 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 		}
 
 		btnRegistrationDone.setOnClickListener {
-			val finalUserModel = BaseUserInfo(name, age, city, gender,
-			                                  baseUserInfo.mainPhotoUrl,
-			                                  baseUserInfo.userId)
+			val finalUserModel = BaseUserInfo(name,
+			                                                                             age,
+			                                                                             city,
+			                                                                             gender,
+			                                                                             baseUserInfo.mainPhotoUrl,
+			                                                                             baseUserInfo.userId)
 
 			authViewModel.signUp(UserItem(finalUserModel,
 			                              preferredGender,

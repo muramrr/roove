@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 28.01.20 15:36
+ * Last modified 29.01.20 17:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -86,16 +86,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 		sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		authViewModel.checkIsAuthenticated()
-//		authViewModel.getAuthStatus().observeOnce(this, Observer {
-//			if (it == false) {
-//				showAuthFlowFragment()
-//				Log.wtf(TAG_LOG, "USER IS NOT LOGGED IN")
-//			}
-//			else {
-//				showDrawerFlowFragment()
-//				Log.wtf(TAG_LOG, "USER IS LOGGED IN")
-//			}
-//		})
 		authViewModel.getAuthStatus().observe(this, Observer {
 			if (it == false) {
 				showAuthFlowFragment()
@@ -107,7 +97,6 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 					remoteRepoViewModel.fetchUserItem(savedUser)
 					remoteRepoViewModel.getFetchedUserItem().observeOnce(this, Observer {
 						fetchedUser -> sharedViewModel.setCurrentUser(fetchedUser)
-						remoteRepoViewModel.updateUserItem(fetchedUser)
 					})
 
 				}

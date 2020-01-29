@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 18:01
+ * Last modified 29.01.20 16:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.auth.repository.AuthRepository
-import com.mmdev.business.base.BaseUserInfo
+import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mmdev.data.user.UserRepositoryLocal
 import com.mmdev.data.user.UserRepositoryRemoteImpl
@@ -49,9 +49,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					val ref = db.collection(BASE_COLLECTION_REFERENCE)
 					ref.document(auth.currentUser!!.uid)
 						.get()
-						.addOnSuccessListener {
-							userDoc -> emitter.onNext(userDoc.exists())
-						}
+						.addOnSuccessListener { userDoc -> emitter.onNext(userDoc.exists()) }
 						.addOnFailureListener { emitter.onNext(false) }
 				}
 				//Log.wtf("mylogs_AuthRepoImpl", "${auth.currentUser}")
@@ -97,9 +95,10 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					if (it.isSuccessful && auth.currentUser != null) {
 						val firebaseUser = auth.currentUser!!
 						val photoUrl = firebaseUser.photoUrl.toString() + "?height=500"
-						val baseUser = BaseUserInfo(name = firebaseUser.displayName!!,
-						                            mainPhotoUrl = photoUrl,
-						                            userId = firebaseUser.uid)
+						val baseUser =
+							BaseUserInfo(name = firebaseUser.displayName!!,
+							                                                        mainPhotoUrl = photoUrl,
+							                                                        userId = firebaseUser.uid)
 						emitter.onSuccess(baseUser)
 
 					}

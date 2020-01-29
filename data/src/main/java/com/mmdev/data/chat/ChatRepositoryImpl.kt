@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.01.20 17:45
+ * Last modified 29.01.20 18:44
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,11 +15,11 @@ import android.text.format.DateFormat
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
-import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.chat.entity.PhotoAttachmentItem
 import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import io.reactivex.*
 import io.reactivex.Observable
