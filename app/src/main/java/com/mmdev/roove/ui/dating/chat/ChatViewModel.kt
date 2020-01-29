@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.01.20 18:42
+ * Last modified 29.01.20 18:44
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,13 +12,13 @@ package com.mmdev.roove.ui.dating.chat
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.business.base.BaseUserInfo
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.chat.usecase.GetConversationWithPartnerUseCase
 import com.mmdev.business.chat.usecase.GetMessagesUseCase
 import com.mmdev.business.chat.usecase.SendMessageUseCase
 import com.mmdev.business.chat.usecase.SendPhotoUseCase
 import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject

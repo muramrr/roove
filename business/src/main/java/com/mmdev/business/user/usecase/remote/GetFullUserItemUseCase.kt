@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.01.20 17:55
+ * Last modified 29.01.20 16:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 
 package com.mmdev.business.user.usecase.remote
 
-import com.mmdev.business.base.BaseUserInfo
+import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.repository.RemoteUserRepository
 
 /**

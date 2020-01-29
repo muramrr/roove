@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.01.20 14:31
+ * Last modified 29.01.20 17:07
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mmdev.business.base.BasePlaceInfo
+import com.mmdev.business.places.BasePlaceInfo
 import com.mmdev.business.places.PlaceDetailedItem
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
@@ -115,15 +115,16 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 		}
 
 		fabPlaceDetailed.setOnClickListener {
-			val placeToGoItem = BasePlaceInfo(placeDetailedItem.id,
-			                                  placeDetailedItem.short_title,
-			                                  placeDetailedItem.images[0].image)
+			val placeToGoItem = BasePlaceInfo(
+					placeDetailedItem.id,
+					placeDetailedItem.short_title,
+					placeDetailedItem.images[0].image)
 
 			if (!userItem.placesToGo.contains(placeToGoItem)){
 				userItem.placesToGo.add(placeToGoItem)
 				remoteRepoViewModel.updateUserItem(userItem)
 				remoteRepoViewModel.getUserUpdateStatus().observeOnce(this, Observer {
-					if (it) localRepoViewModel.saveUserInfo(userItem)
+					//successful adding place
 				})
 			}
 			//Log.wtf("mylogs", "{${userItem.placesToGo}}")
