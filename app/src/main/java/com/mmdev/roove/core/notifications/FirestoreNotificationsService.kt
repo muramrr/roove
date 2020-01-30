@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.01.20 16:02
+ * Last modified 30.01.20 20:27
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,37 +11,43 @@
 package com.mmdev.roove.core.notifications
 
 import android.util.Log
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.os.bundleOf
+import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.mmdev.roove.R
+import com.mmdev.roove.ui.MainActivity
 
 
 class FirestoreNotificationsService: FirebaseMessagingService() {
 
 
 	override fun onMessageReceived(remoteMessage: RemoteMessage) {
-		if (remoteMessage.notification != null)
-			Log.wtf("mylogs_SERVICENOTIFICATIONS", remoteMessage.data.toString())
+		Log.wtf("mylogs_SERVICENOTIFICATIONS", remoteMessage.data.toString())
 
-//		val messageTitle = remoteMessage.notification!!.title
-//		val messageBody = remoteMessage.notification!!.body
-//		val clickAction = remoteMessage.notification!!.clickAction
-//		val messageData = remoteMessage.data["message"]
-//		val fromData = remoteMessage.data["from_id"]
-//		// Create an explicit intent for an Activity in your app
-//		val resultIntent = Intent(clickAction)
-//		resultIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//		resultIntent.putExtra("message", messageData)
-//		resultIntent.putExtra("from_id", fromData)
-//		val pendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0)
-//		val mBuilder = NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
-//			.setSmallIcon(R.mipmap.ic_launcher_round).setContentTitle(messageTitle)
-//			.setContentText(messageBody).setStyle(NotificationCompat.BigTextStyle().bigText(messageTitle))
-//			.setPriority(NotificationCompat.PRIORITY_MAX)
-//		mBuilder.setContentIntent(pendingIntent)
-//		val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
-//		val notificationId = System.currentTimeMillis().toInt()
-//		// notificationId is a unique int for each notification that you must define
-//		notificationManager.notify(notificationId, mBuilder.build())
+		val conversation = bundleOf("CONVERSATION_ID" to remoteMessage.data["CONVERSATION_ID"])
+
+		val pendingIntent = NavDeepLinkBuilder(this)
+			.setComponentName(MainActivity::class.java)
+			.setGraph(R.navigation.main_navigation)
+			.setDestination(R.id.chatFragmentNav)
+			.setArguments(conversation)
+			.createPendingIntent()
+
+		val notificationBuilder = NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
+			.setSmallIcon(R.drawable.ic_arrow_drop_up_24dp)
+			.setContentTitle(remoteMessage.data["SENDER_NAME"])
+			.setContentText(remoteMessage.data["CONTENT"])
+			.setCategory(NotificationCompat.CATEGORY_MESSAGE)
+			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+			.setContentIntent(pendingIntent)
+
+
+		val notificationId = System.currentTimeMillis().toInt()
+		// notificationId is a unique int for each notification that you must define
+		NotificationManagerCompat.from(this).notify(notificationId, notificationBuilder.build())
 	}
 
 

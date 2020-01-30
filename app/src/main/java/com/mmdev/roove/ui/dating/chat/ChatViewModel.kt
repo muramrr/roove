@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.01.20 18:44
+ * Last modified 30.01.20 20:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,31 +13,56 @@ package com.mmdev.roove.ui.dating.chat
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.chat.entity.MessageItem
-import com.mmdev.business.chat.usecase.GetConversationWithPartnerUseCase
-import com.mmdev.business.chat.usecase.GetMessagesUseCase
-import com.mmdev.business.chat.usecase.SendMessageUseCase
-import com.mmdev.business.chat.usecase.SendPhotoUseCase
+import com.mmdev.business.chat.usecase.*
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
-class ChatViewModel @Inject constructor(private val getConversationUC: GetConversationWithPartnerUseCase,
-                                        private val getMessagesUC: GetMessagesUseCase,
-                                        private val sendMessageUC: SendMessageUseCase,
-                                        private val sendPhotoUC: SendPhotoUseCase) : BaseViewModel() {
+class ChatViewModel
+@Inject constructor(private val getConversationByIdUC: GetConversationByIdUseCase,
+                    private val getConversationWPartnerUC: GetConversationWithPartnerUseCase,
+                    private val getMessagesUC: GetMessagesUseCase,
+                    private val sendMessageUC: SendMessageUseCase,
+                    private val sendPhotoUC: SendPhotoUseCase) : BaseViewModel() {
 
 
+	private lateinit var selectedConversation: ConversationItem
 
 	private var emptyChat = false
 	private val messagesList: MutableLiveData<List<MessageItem>> = MutableLiveData()
 	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
 
 
+	fun getConversationById(conversationId: String){
+		disposables.add(getConversationByIdExecution(conversationId)
+            .flatMapObservable {
+                selectedConversation = it
+                getMessagesExecution(it)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+	                       if(it.isNotEmpty()) {
+		                       messagesList.value = it
+		                       emptyChat = false
+	                       }
+	                       else emptyChat = true
+	                       Log.wtf(TAG, "get conv by id messages to show: ${it.size}")
+	                       Log.wtf(TAG, "is empty chat? + $emptyChat")
+                       },
+                       {
+	                       Log.wtf(TAG, "get conversation by id error: $it")
+                       }))
+
+	}
+
 	fun startListenToEmptyChat(partnerId: String){
-		disposables.add(getConversationExecution(partnerId)
-            .flatMapObservable { getMessagesExecution(it) }
+		disposables.add(getConversationWPartnerExecution(partnerId)
+            .flatMapObservable {
+	            selectedConversation = it
+	            getMessagesExecution(it)
+            }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       if(it.isNotEmpty()) {
@@ -54,6 +79,7 @@ class ChatViewModel @Inject constructor(private val getConversationUC: GetConver
 	}
 
 	fun loadMessages(conversation: ConversationItem){
+		selectedConversation = conversation
 		disposables.add(getMessagesExecution(conversation)
             .doOnSubscribe { showLoading.value = true }
             .doOnNext { showLoading.value = false }
@@ -84,7 +110,8 @@ class ChatViewModel @Inject constructor(private val getConversationUC: GetConver
             .flatMapCompletable {
 	            sendMessageExecution(MessageItem(sender = sender,
 	                                             recipientId = recipient,
-	                                             photoAttachmentItem = it),
+	                                             photoAttachmentItem = it,
+	                                             conversationId = selectedConversation.conversationId),
 	                                 emptyChat)
             }
             .doOnSubscribe { showLoading.value = true }
@@ -97,9 +124,21 @@ class ChatViewModel @Inject constructor(private val getConversationUC: GetConver
 	fun getMessagesList() = messagesList
 
 
+	private fun getConversationByIdExecution(conversationId: String) =
+		getConversationByIdUC.execute(conversationId)
 
-	private fun getConversationExecution(partnerId: String) = getConversationUC.execute(partnerId)
-	private fun getMessagesExecution(conversation: ConversationItem) = getMessagesUC.execute(conversation)
-	private fun sendMessageExecution(messageItem: MessageItem, emptyChat: Boolean? = false) = sendMessageUC.execute(messageItem, emptyChat)
-	private fun sendPhotoExecution(photoUri: String) = sendPhotoUC.execute(photoUri)
+	private fun getConversationWPartnerExecution(partnerId: String) =
+		getConversationWPartnerUC.execute(partnerId)
+
+	private fun getMessagesExecution(conversation: ConversationItem) =
+		getMessagesUC.execute(conversation)
+
+	private fun sendMessageExecution(messageItem: MessageItem, emptyChat: Boolean? = false) =
+		sendMessageUC.execute(messageItem, emptyChat)
+
+	private fun sendPhotoExecution(photoUri: String) =
+		sendPhotoUC.execute(photoUri)
+
+
+
 }

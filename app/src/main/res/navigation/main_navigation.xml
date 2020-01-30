@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.01.20 21:27
+  ~ Last modified 30.01.20 20:27
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -216,6 +216,10 @@
 				android:name="FAB_VISIBLE" />
 
 		</action>
+
+		<argument
+			android:name="CONVERSATION_ID"
+			app:argType="string" />
 	</fragment>
 
 </navigation>

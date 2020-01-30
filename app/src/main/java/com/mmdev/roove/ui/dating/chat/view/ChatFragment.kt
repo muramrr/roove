@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.01.20 18:42
+ * Last modified 30.01.20 21:07
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -65,7 +65,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 	private lateinit var userItemModel: UserItem
 
-
+	private var receivedConversationId = ""
+	private var isDeepLinkJump: Boolean = false
 	//saving state
 	private var partnerName = ""
 	private var partnerMainPhotoUrl = ""
@@ -90,17 +91,24 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 		// Gallery Permissions
 		private const val REQUEST_STORAGE = 1
-		private val PERMISSIONS_STORAGE =
-			arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+		private val PERMISSIONS_STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+		                                          Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
 		// Camera Permission
 		private const val REQUEST_CAMERA = 2
-		private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
+		private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA,
+		                                         Manifest.permission.READ_EXTERNAL_STORAGE)
+
+		private const val CONVERSATION_ID_KEY = "CONVERSATION_ID"
 
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+
+		arguments?.let {
+			receivedConversationId = it.getString(CONVERSATION_ID_KEY, "")
+		}
 
 		chatViewModel = ViewModelProvider(this@ChatFragment, factory)[ChatViewModel::class.java]
 
@@ -114,31 +122,25 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			mChatAdapter.setCurrentUserId(it.baseUserInfo.userId)
 		})
 
-		sharedViewModel.conversationSelected.observe(this, Observer {
-			if (!isOnCreateCalled && !this::currentConversation.isInitialized) {
-				currentConversation = it
-				partnerId = it.partner.userId
-				partnerName = it.partner.name
-				partnerMainPhotoUrl = it.partner.mainPhotoUrl
-				setupContentToolbar()
-				isOnCreateCalled = true
-//				if (it.conversationId.isNotEmpty()) {
-//					Log.wtf("mylogs_ChatFragment", "not empty")
-//					chatViewModel.loadMessages(it)
-//					chatViewModel.getMessagesList().observe(this, Observer { messageList ->
-//						mChatAdapter.updateData(messageList)
-//					})
-//				}
-//				else {
-//					Log.wtf("mylogs_ChatFragment", "start listen to empty chat")
-//					chatViewModel.startListenToEmptyChat(it.partner.userId)
-//					chatViewModel.getMessagesList().observe(this, Observer { messageList ->
-//						mChatAdapter.updateData(messageList)
-//					})
-//				}
-			}
-		})
-
+		if (receivedConversationId.isNotEmpty()) {
+			isDeepLinkJump = true
+			chatViewModel.loadMessages(ConversationItem(conversationId = receivedConversationId))
+			chatViewModel.getMessagesList().observe(this, Observer { messageList ->
+				mChatAdapter.updateData(messageList)
+			})
+		}
+		else {
+			sharedViewModel.conversationSelected.observe(this, Observer {
+				if (!isOnCreateCalled && !this::currentConversation.isInitialized) {
+					currentConversation = it
+					partnerId = it.partner.userId
+					partnerName = it.partner.name
+					partnerMainPhotoUrl = it.partner.mainPhotoUrl
+					setupContentToolbar()
+					isOnCreateCalled = true
+				}
+			})
+		}
 
 
 	}
@@ -213,10 +215,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			when (item.itemId) {
 				R.id.chat_action_user ->{
 					findNavController().navigate(R.id.action_chat_to_profileFragment)
-					sharedViewModel.setCardSelected(
-							CardItem(currentConversation.partner,
-							         currentConversation.conversationStarted)
-					)
+					sharedViewModel.setCardSelected(CardItem(currentConversation.partner,
+					                                         currentConversation.conversationStarted))
 				}
 
 				R.id.chat_action_report -> { Toast.makeText(context,
@@ -233,7 +233,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		// onCreate is no longer being called in this scenario
 		super.onResume()
 
-		if (isOnCreateCalled && this::currentConversation.isInitialized) {
+		if (isOnCreateCalled && this::currentConversation.isInitialized && !isDeepLinkJump) {
 			partnerId = currentConversation.partner.userId
 			partnerName = currentConversation.partner.name
 			partnerMainPhotoUrl = currentConversation.partner.mainPhotoUrl
@@ -289,7 +289,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			val message = MessageItem(sender = userItemModel.baseUserInfo,
 			                          recipientId = partnerId,
 			                          text = edTextMessageInput.text.toString().trim(),
-			                          photoAttachmentItem = null)
+			                          photoAttachmentItem = null,
+			                          conversationId = currentConversation.conversationId)
 
 			chatViewModel.sendMessage(message)
 			edTextMessageInput.setText("")
