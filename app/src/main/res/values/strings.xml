@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 27.01.20 16:31
+  ~ Last modified 30.01.20 20:14
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,7 +55,11 @@
 	<string name="russia_sochi">Сочи</string>
 	<string name="russia_spb">Санкт-Петербург</string>
 
-	<string name="default_notification_channel_id">chat_notifications</string>
+
+
+	<string name="notification_channel_id">roove_notifications</string>
+	<string name="notification_channel_name">Messages</string>
+	<string name="notification_channel_description">Message notification</string>
 
 
 

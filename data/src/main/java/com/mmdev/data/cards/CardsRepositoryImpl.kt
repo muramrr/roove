@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.01.20 18:44
+ * Last modified 30.01.20 20:44
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -74,12 +74,17 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 						emitter.onSuccess(true)
 
-						handleMatch(likedCardItem, CardItem(currentUserInfo))
-
 						val conversationId = firestore
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 							.document()
 							.id
+
+						likedCardItem.conversationId = conversationId
+
+						handleMatch(likedCardItem, CardItem(currentUserInfo,
+						                                    conversationId = conversationId))
+
+
 
 						//set conversation for another user
 						setupConversationForLikedUser(conversationId,
