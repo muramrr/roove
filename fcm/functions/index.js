@@ -9,20 +9,18 @@ exports.notifyNewMessage = functions.firestore
         const message = docSnapshot.data();
         const recipientId = message['recipientId'];
         const sender = message['sender'];
+        const conversationId = message['conversationId']
 
         return admin.firestore().doc('usersBase/' + recipientId).get().then(userDoc => {
             const registrationTokens = userDoc.get('registrationTokens')
 
-            const notificationBody = (message['photoAttachmentItem'] === null) ? message['text'] : "You received a new image message."
+            const notificationBody = (message['photoAttachmentItem'] === null) ? message['text'] : "Image."
             const payload = {
-                notification: {
-                    title: sender.name + " sent you a message.",
-                    body: notificationBody,
-                    clickAction: "ChatFragment"
-                },
                 data: {
-                    USER_NAME: sender.name,
-                    USER_ID: sender.userId
+                    SENDER_NAME: sender.name,
+                    SENDER_ID: sender.userId,
+                    CONVERSATION_ID: conversationId,
+                    CONTENT: notificationBody
                 }
             }
 

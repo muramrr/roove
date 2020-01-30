@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.01.20 18:44
+ * Last modified 30.01.20 20:49
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,6 +56,19 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	private var partner = BaseUserInfo()
 
 
+	override fun getConversationById(conversationId: String): Single<ConversationItem>{
+		return Single.create(SingleOnSubscribe<ConversationItem> { emitter ->
+			firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(conversationId)
+				.get()
+				.addOnSuccessListener {
+					if (it.exists()) emitter.onSuccess(it.toObject(ConversationItem::class.java)!!)
+					else emitter.onError(Exception("no such conversation"))
+				}
+				.addOnFailureListener { emitter.onError(it) }
+		}).subscribeOn(Schedulers.io())
+
+	}
 
 	override fun getConversationWithPartner(partnerId: String): Single<ConversationItem> {
 		return Single.create(SingleOnSubscribe<ConversationItem> { emitter ->
