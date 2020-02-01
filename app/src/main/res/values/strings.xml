@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.01.20 20:14
+  ~ Last modified 01.02.20 20:39
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -57,9 +57,13 @@
 
 
 
-	<string name="notification_channel_id">roove_notifications</string>
-	<string name="notification_channel_name">Messages</string>
-	<string name="notification_channel_description">Message notification</string>
+	<string name="notification_channel_id_messages">message_notifications</string>
+	<string name="notification_channel_name_messages">Messages</string>
+	<string name="notification_channel_description_messages">Message notification</string>
+
+	<string name="notification_channel_id_match">match_notifications</string>
+	<string name="notification_channel_name_match">Matches</string>
+	<string name="notification_channel_description_match">Match notification</string>
 
 
 
