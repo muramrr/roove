@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.02.20 14:47
+ * Last modified 01.02.20 20:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,10 +41,12 @@ class FirestoreNotificationsService: FirebaseMessagingService() {
 			.setArguments(conversation)
 			.createPendingIntent()
 
-		val notificationBuilder = NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
-			.setSmallIcon(R.drawable.ic_arrow_drop_up_24dp)
+		val notificationBuilder = NotificationCompat.Builder(this,
+		                                                     getString(R.string.notification_channel_id_messages))
+			.setSmallIcon(R.drawable.ic_notification_message)
 			.setContentTitle(remoteMessage.data["SENDER_NAME"])
 			.setContentText(remoteMessage.data["CONTENT"])
+			.setNumber(1)
 			.setCategory(NotificationCompat.CATEGORY_MESSAGE)
 			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 			.setContentIntent(pendingIntent)
@@ -63,10 +65,12 @@ class FirestoreNotificationsService: FirebaseMessagingService() {
 			.setDestination(R.id.pairsFragmentNav)
 			.createPendingIntent()
 
-		val notificationBuilder = NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
-			.setSmallIcon(R.drawable.ic_arrow_drop_up_24dp)
+		val notificationBuilder = NotificationCompat.Builder(this,
+		                                                     getString(R.string.notification_channel_id_match))
+			.setSmallIcon(R.drawable.ic_notification_match)
 			.setContentTitle("It's a match!")
 			.setContentText(remoteMessage.data["CONTENT"])
+			.setNumber(1)
 			.setCategory(NotificationCompat.CATEGORY_MESSAGE)
 			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 			.setContentIntent(pendingIntent)
