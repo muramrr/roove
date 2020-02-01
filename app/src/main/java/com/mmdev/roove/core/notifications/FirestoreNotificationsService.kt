@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 30.01.20 20:27
+ * Last modified 01.02.20 14:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,7 +26,12 @@ class FirestoreNotificationsService: FirebaseMessagingService() {
 
 	override fun onMessageReceived(remoteMessage: RemoteMessage) {
 		Log.wtf("mylogs_SERVICENOTIFICATIONS", remoteMessage.data.toString())
+		if (remoteMessage.data["TYPE"] == "NEW_MATCH") notifyNewMatch(remoteMessage)
+		else notifyNewMessage(remoteMessage)
+	}
 
+
+	private fun notifyNewMessage(remoteMessage: RemoteMessage){
 		val conversation = bundleOf("CONVERSATION_ID" to remoteMessage.data["CONVERSATION_ID"])
 
 		val pendingIntent = NavDeepLinkBuilder(this)
@@ -50,5 +55,26 @@ class FirestoreNotificationsService: FirebaseMessagingService() {
 		NotificationManagerCompat.from(this).notify(notificationId, notificationBuilder.build())
 	}
 
+	private fun notifyNewMatch(remoteMessage: RemoteMessage){
+
+		val pendingIntent = NavDeepLinkBuilder(this)
+			.setComponentName(MainActivity::class.java)
+			.setGraph(R.navigation.main_navigation)
+			.setDestination(R.id.pairsFragmentNav)
+			.createPendingIntent()
+
+		val notificationBuilder = NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
+			.setSmallIcon(R.drawable.ic_arrow_drop_up_24dp)
+			.setContentTitle("It's a match!")
+			.setContentText(remoteMessage.data["CONTENT"])
+			.setCategory(NotificationCompat.CATEGORY_MESSAGE)
+			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+			.setContentIntent(pendingIntent)
+
+
+		val notificationId = System.currentTimeMillis().toInt()
+		// notificationId is a unique int for each notification that you must define
+		NotificationManagerCompat.from(this).notify(notificationId, notificationBuilder.build())
+	}
 
 }
