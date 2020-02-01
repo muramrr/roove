@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 30.01.20 20:12
+ * Last modified 01.02.20 20:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,16 +35,23 @@ class App : Application() {
 			.build()
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 			// Create the NotificationChannel
-			val descriptionText = getString(R.string.notification_channel_description)
-			val mChannel = NotificationChannel(getString(R.string.notification_channel_id),
-			                                   getString(R.string.notification_channel_name),
-			                                   NotificationManager.IMPORTANCE_DEFAULT)
-				.apply { description = descriptionText }
+			val messageNotificationChannel =
+				NotificationChannel(getString(R.string.notification_channel_id_messages),
+				                    getString(R.string.notification_channel_name_messages),
+				                    NotificationManager.IMPORTANCE_DEFAULT)
+				.apply { description = getString(R.string.notification_channel_description_messages) }
+
+			val matchNotificationChannel =
+				NotificationChannel(getString(R.string.notification_channel_id_match),
+				                    getString(R.string.notification_channel_name_match),
+				                    NotificationManager.IMPORTANCE_DEFAULT)
+				.apply { description = getString(R.string.notification_channel_description_match) }
 			// Register the channel with the system; you can't change the importance
 			// or other notification behaviors after this
-			val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-			notificationManager.createNotificationChannel(mChannel)
+			notificationManager.createNotificationChannel(messageNotificationChannel)
+			notificationManager.createNotificationChannel(matchNotificationChannel)
 		}
 
 	}
