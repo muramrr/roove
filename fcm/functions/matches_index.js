@@ -3,24 +3,20 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
-exports.notifyNewMessage = functions.firestore
-    .document('conversations/{conversationId}/messages/{message}')
+exports.notifyNewMatch = functions.firestore
+    .document('users/{city}/{gender}/{userId}/matched/{cardItem}')
     .onCreate((docSnapshot, context) => {
-        const message = docSnapshot.data();
-        const recipientId = message['recipientId'];
-        const sender = message['sender'];
-        const conversationId = message['conversationId']
+        const cardUserToNotifiyItem = docSnapshot.data();
+        const cardUserToNotifiyId = cardUserToNotifiyItem['baseUserInfo'].userId;
 
-        return admin.firestore().doc('usersBase/' + recipientId).get().then(userDoc => {
+        return admin.firestore().doc('usersBase/' + cardUserToNotifiyId).get().then(userDoc => {
             const registrationTokens = userDoc.get('registrationTokens')
 
-            const notificationBody = (message['photoAttachmentItem'] === null) ? message['text'] : "Image."
+            const notificationBody = "You've got a new match!"
             const payload = {
                 data: {
-                    SENDER_NAME: sender.name,
-                    SENDER_ID: sender.userId,
-                    CONVERSATION_ID: conversationId,
-                    CONTENT: notificationBody
+                    CONTENT: notificationBody,
+                  	TYPE: "NEW_MATCH"
                 }
             }
 
@@ -42,7 +38,7 @@ exports.notifyNewMessage = functions.firestore
                     }
                 })
 
-                return admin.firestore().doc("usersBase/" + recipientId).update({
+                return admin.firestore().doc("usersBase/" + cardUserToNotifiyId).update({
                     registrationTokens: stillRegisteredTokens
                 })
             })
