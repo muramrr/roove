@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.02.20 20:39
+ * Last modified 02.02.20 16:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,7 @@ import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.mmdev.roove.R
+import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.ui.MainActivity
 
 
@@ -51,6 +52,17 @@ class FirestoreNotificationsService: FirebaseMessagingService() {
 			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 			.setContentIntent(pendingIntent)
 
+		val futureTarget = GlideApp.with(this)
+			.asBitmap()
+			.circleCrop()
+			.load(remoteMessage.data["SENDER_PHOTO"])
+			.submit()
+
+		val bitmap = futureTarget.get()
+		notificationBuilder.setLargeIcon(bitmap)
+
+		GlideApp.with(this).clear(futureTarget)
+
 
 		val notificationId = System.currentTimeMillis().toInt()
 		// notificationId is a unique int for each notification that you must define
@@ -74,6 +86,17 @@ class FirestoreNotificationsService: FirebaseMessagingService() {
 			.setCategory(NotificationCompat.CATEGORY_MESSAGE)
 			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 			.setContentIntent(pendingIntent)
+
+		val futureTarget = GlideApp.with(this)
+			.asBitmap()
+			.load(R.mipmap.ic_launcher_round)
+			.submit()
+
+		val bitmap = futureTarget.get()
+		notificationBuilder.setLargeIcon(bitmap)
+
+		GlideApp.with(this).clear(futureTarget)
+
 
 
 		val notificationId = System.currentTimeMillis().toInt()
