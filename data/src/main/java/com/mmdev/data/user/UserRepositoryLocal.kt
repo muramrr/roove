@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.01.20 18:39
+ * Last modified 02.02.20 18:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,13 +62,27 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				val gender = prefs.getString(PREF_KEY_CURRENT_USER_GENDER, "")!!
 				val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")!!
 				val mainPhotoUrl = prefs.getString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, "")!!
+
+				val registrationTokensStrings =
+					JSONArray(prefs.getString(PREF_KEY_CURRENT_USER_REG_TOKENS,"")!!)
+				val registrationTokens = mutableListOf<String>()
+				for (i in 0 until registrationTokensStrings.length())
+					registrationTokens.add(registrationTokensStrings.get(i).toString())
+
 				val preferredGender = prefs.getString(PREF_KEY_CURRENT_USER_P_GENDER, "")!!
-				val photoUrls = prefs.getStringSet(PREF_KEY_CURRENT_USER_PHOTO_URLS, setOf(""))!!
-				val placesToGoStrings = JSONArray(prefs.getString(PREF_KEY_CURRENT_USER_PLACES_ID, "")!!)
+
+				val photoUrlsStrings =
+					JSONArray(prefs.getString(PREF_KEY_CURRENT_USER_PHOTO_URLS, "")!!)
+				val photoUrls = mutableListOf<String>()
+				for (i in 0 until photoUrlsStrings.length())
+					photoUrls.add(photoUrlsStrings.get(i).toString())
+
+				val placesToGoStrings =
+					JSONArray(prefs.getString(PREF_KEY_CURRENT_USER_PLACES_ID, "")!!)
 				val placesToGoItems = mutableListOf<BasePlaceInfo>()
 				for (i in 0 until placesToGoStrings.length())
 					placesToGoItems.add(gson.fromJson(placesToGoStrings.get(i).toString(), BasePlaceInfo::class.java))
-				val registrationTokens = prefs.getStringSet(PREF_KEY_CURRENT_USER_REG_TOKENS, setOf(""))!!
+
 
 				Log.wtf(TAG, "retrieved user info from sharedpref successfully")
 
@@ -78,9 +92,9 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				                                     gender,
 				                                     mainPhotoUrl,
 				                                     uid,
-				                                     registrationTokens.toMutableList()),
+				                                     registrationTokens),
 				         preferredGender = preferredGender,
-				         photoURLs = photoUrls.toMutableList(),
+				         photoURLs = photoUrls,
 				         placesToGo = placesToGoItems)
 			}catch (e: Exception) {
 				Log.wtf(TAG, "read exception, but user is saved")
@@ -115,16 +129,24 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		editor.putString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, userItem.baseUserInfo.mainPhotoUrl)
 		editor.putString(PREF_KEY_CURRENT_USER_ID, userItem.baseUserInfo.userId)
 		editor.putString(PREF_KEY_CURRENT_USER_P_GENDER, userItem.preferredGender)
-		editor.putStringSet(PREF_KEY_CURRENT_USER_PHOTO_URLS, userItem.photoURLs.toSet())
+
+		val photoUrlsList = mutableListOf<String>()
+		for (photoUrl in userItem.photoURLs)
+			photoUrlsList.add(gson.toJson(photoUrl))
+		editor.putString(PREF_KEY_CURRENT_USER_PHOTO_URLS, photoUrlsList.toString())
 
 		val placesToGoList = mutableListOf<String>()
 		for (place in userItem.placesToGo)
 			placesToGoList.add(gson.toJson(place))
-
 		editor.putString(PREF_KEY_CURRENT_USER_PLACES_ID, placesToGoList.toString())
-		editor.putStringSet(PREF_KEY_CURRENT_USER_REG_TOKENS, userItem.baseUserInfo.registrationTokens.toSet())
+
+		val registrationTokensList = mutableListOf<String>()
+		for (token in userItem.baseUserInfo.registrationTokens)
+			registrationTokensList.add(gson.toJson(token))
+		editor.putString(PREF_KEY_CURRENT_USER_REG_TOKENS, registrationTokensList.toString())
+
 		editor.commit()
-		//Log.wtf(TAG, "User successfully saved: $userItem")
+		Log.wtf(TAG, "User successfully saved: $userItem")
 	}
 
 }
