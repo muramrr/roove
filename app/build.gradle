@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.01.20 15:14
+ * Last modified 02.02.20 20:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -80,9 +80,9 @@ dependencies {
 	implementation project(':data')
 
 	//core
-	implementation 'androidx.core:core-ktx:1.2.0-rc01'
+	implementation 'androidx.core:core-ktx:1.3.0-alpha01'
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-	implementation 'androidx.appcompat:appcompat:1.2.0-alpha01'
+	implementation 'androidx.appcompat:appcompat:1.2.0-alpha02'
 	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 	implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
 	implementation 'androidx.drawerlayout:drawerlayout:1.1.0-alpha03'
@@ -106,7 +106,7 @@ dependencies {
 	//glide
 	implementation 'com.github.bumptech.glide:glide:4.11.0'
 	kapt 'com.github.bumptech.glide:compiler:4.11.0'
-	implementation('com.github.bumptech.glide:okhttp3-integration:4.9.0') {
+	implementation('com.github.bumptech.glide:okhttp3-integration:4.11.0') {
 		exclude group: 'glide-parent'
 	}
 
