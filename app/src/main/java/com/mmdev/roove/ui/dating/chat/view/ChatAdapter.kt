@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.01.20 18:42
+ * Last modified 02.02.20 20:23
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -113,10 +113,8 @@ class ChatAdapter (private var listMessageItems: List<MessageItem>):
 		fun bind(messageItem: MessageItem) {
 			setIvUserAvatar(messageItem.sender.mainPhotoUrl)
 			setTextMessage(messageItem.text)
-			messageItem.timestamp?.let { setTvTimestamp(convertTimestamp(messageItem.timestamp!!)) }
-			messageItem.photoAttachmentItem?.let { setIvChatPhoto(messageItem
-				                                                       .photoAttachmentItem!!
-				                                                       .fileUrl) }
+			messageItem.timestamp?.let { setTvTimestamp(convertTimestamp(it as Date)) }
+			messageItem.photoAttachmentItem?.let { setIvChatPhoto(it.fileUrl) }
 		}
 
 		/* sets user profile pic in ImgView binded layout */
@@ -154,9 +152,9 @@ class ChatAdapter (private var listMessageItems: List<MessageItem>):
 	 * @param date timestamp made by firestore
 	 * @return string in format hh:mm AM/PM
 	 */
-	private fun convertTimestamp(date: Date): String {
-		return SimpleDateFormat("EEE, d MMM yyyy hh:mm a", Locale.ENGLISH).format(date)
-	}
+	private fun convertTimestamp(date: Date) =
+		SimpleDateFormat("EEE, d MMM yyyy hh:mm a", Locale.ENGLISH).format(date)
+
 
 	// parent fragment will override this method to respond to click events
 	interface OnItemClickListener {

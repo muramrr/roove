@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.02.20 19:37
+ * Last modified 02.02.20 20:24
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -128,7 +128,12 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			receivedPartnerPhotoUrl = it.getString(PARTNER_PHOTO_KEY, "")
 			receivedPartnerId = it.getString(PARTNER_ID_KEY, "")
 			receivedConversationId = it.getString(CONVERSATION_ID_KEY, "")
-			isDeepLinkJump = true
+			if (receivedPartnerName.isNotEmpty() &&
+			    receivedPartnerCity.isNotEmpty() &&
+			    receivedPartnerGender.isNotEmpty() &&
+			    receivedPartnerPhotoUrl.isNotEmpty()&&
+                receivedPartnerId.isNotEmpty() &&
+                receivedConversationId.isNotEmpty()) isDeepLinkJump = true
 		}
 
 		chatViewModel = ViewModelProvider(this@ChatFragment, factory)[ChatViewModel::class.java]

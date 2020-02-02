@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 30.01.20 20:49
+ * Last modified 02.02.20 20:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,8 @@ package com.mmdev.data.chat
 import android.net.Uri
 import android.text.format.DateFormat
 import android.util.Log
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.mmdev.business.chat.entity.MessageItem
@@ -50,7 +52,6 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 		private const val TAG = "mylogs_ChatRepoImpl"
 	}
-
 
 	private var conversation = ConversationItem()
 	private var partner = BaseUserInfo()
@@ -108,7 +109,9 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 					}
 					val messages = ArrayList<MessageItem>()
 					for (doc in snapshots!!) {
-						messages.add(doc.toObject(MessageItem::class.java))
+						val message = doc.toObject(MessageItem::class.java)
+						message.timestamp = (message.timestamp as Timestamp?)?.toDate()
+						messages.add(message)
 					}
 					emitter.onNext(messages)
 				}
@@ -122,6 +125,8 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 		val conversation = firestore
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversation.conversationId)
+
+		messageItem.timestamp = FieldValue.serverTimestamp()
 		return Completable.create { emitter ->
 			if (emptyChat != null && emptyChat == false)
 				conversation.collection(SECONDARY_COLLECTION_REFERENCE)
