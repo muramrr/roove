@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.02.20 17:02
+ * Last modified 02.02.20 19:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,6 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +44,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.mmdev.business.cards.CardItem
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
@@ -68,8 +68,15 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 	private lateinit var userItemModel: UserItem
 
+	private var receivedPartnerName = ""
+	private var receivedPartnerCity = ""
+	private var receivedPartnerGender = ""
+	private var receivedPartnerPhotoUrl = ""
+	private var receivedPartnerId = ""
 	private var receivedConversationId = ""
+
 	private var isDeepLinkJump: Boolean = false
+
 	//saving state
 	private var partnerName = ""
 	private var partnerMainPhotoUrl = ""
@@ -102,6 +109,11 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA,
 		                                         Manifest.permission.READ_EXTERNAL_STORAGE)
 
+		private const val PARTNER_NAME_KEY = "PARTNER_NAME"
+		private const val PARTNER_CITY_KEY = "PARTNER_CITY"
+		private const val PARTNER_GENDER_KEY = "PARTNER_GENDER"
+		private const val PARTNER_PHOTO_KEY = "PARTNER_PHOTO"
+		private const val PARTNER_ID_KEY = "PARTNER_ID"
 		private const val CONVERSATION_ID_KEY = "CONVERSATION_ID"
 
 	}
@@ -110,7 +122,13 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		super.onCreate(savedInstanceState)
 
 		arguments?.let {
+			receivedPartnerName = it.getString(PARTNER_NAME_KEY, "")
+			receivedPartnerCity = it.getString(PARTNER_CITY_KEY, "")
+			receivedPartnerGender = it.getString(PARTNER_GENDER_KEY, "")
+			receivedPartnerPhotoUrl = it.getString(PARTNER_PHOTO_KEY, "")
+			receivedPartnerId = it.getString(PARTNER_ID_KEY, "")
 			receivedConversationId = it.getString(CONVERSATION_ID_KEY, "")
+			isDeepLinkJump = true
 		}
 
 		chatViewModel = ViewModelProvider(this@ChatFragment, factory)[ChatViewModel::class.java]
@@ -125,26 +143,28 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			mChatAdapter.setCurrentUserId(it.baseUserInfo.userId)
 		})
 
-		if (receivedConversationId.isNotEmpty()) {
-			isDeepLinkJump = true
-			chatViewModel.loadMessages(ConversationItem(conversationId = receivedConversationId))
-			chatViewModel.getMessagesList().observe(this, Observer { messageList ->
-				mChatAdapter.updateData(messageList)
-			})
-		}
-		else {
-			sharedViewModel.conversationSelected.observe(this, Observer {
-				if (!isOnCreateCalled && !this::currentConversation.isInitialized) {
-					currentConversation = it
-					partnerId = it.partner.userId
-					partnerName = it.partner.name
-					partnerMainPhotoUrl = it.partner.mainPhotoUrl
-					setupContentToolbar()
-					isOnCreateCalled = true
-				}
-			})
+		if (isDeepLinkJump) {
+			val receivedConversationItem = ConversationItem(
+					BaseUserInfo(name = receivedPartnerName,
+					             city = receivedPartnerCity,
+					             gender = receivedPartnerGender,
+					             mainPhotoUrl = receivedPartnerPhotoUrl,
+					             userId = receivedPartnerId),
+					conversationId = receivedConversationId,
+					conversationStarted = true)
+			sharedViewModel.setConversationSelected(receivedConversationItem)
 		}
 
+		sharedViewModel.conversationSelected.observe(this, Observer {
+			if (!isOnCreateCalled && !this::currentConversation.isInitialized) {
+				currentConversation = it
+				partnerName = it.partner.name
+				partnerMainPhotoUrl = it.partner.mainPhotoUrl
+				partnerId = it.partner.userId
+				setupContentToolbar()
+				isOnCreateCalled = true
+			}
+		})
 
 	}
 
@@ -187,6 +207,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			alertDialog.show()
 		}
 
+		//automatically scroll to bottom if new message is received
 		mChatAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
 			override fun onChanged() {
 				super.onChanged()
@@ -195,27 +216,30 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			}
 		})
 
+		//if message contains photo then it opens in fullscreen dialog
 		mChatAdapter.setOnAttachedPhotoClickListener(object: ChatAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
 
 				val photoUrl = mChatAdapter.getItem(position).photoAttachmentItem!!.fileUrl
 				val dialog =
-					FullScreenDialogFragment.newInstance(
-							photoUrl)
-				dialog.show(childFragmentManager,
-				            FullScreenDialogFragment::class.java.canonicalName)
+					FullScreenDialogFragment.newInstance(photoUrl)
+				dialog.show(childFragmentManager, FullScreenDialogFragment::class.java.canonicalName)
 
 			}
 		})
 
+		//touch event guarantee that if user want to scroll or touches recycler with messages
+		//keyboard hide and edittext focus clear
 		rvMessageList.apply {
 			adapter = mChatAdapter
 			layoutManager = LinearLayoutManager(context).apply { stackFromEnd = true }
-		}
-		rvMessageList.setOnClickListener {
-			val inputMethodManager = it.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-			inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
-			Log.wtf("mylogs_ChatFragment", "recycler clicked")
+			setOnTouchListener { v, _ ->
+				val iMM = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+				iMM.hideSoftInputFromWindow(v.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+				edTextMessageInput.clearFocus()
+
+				return@setOnTouchListener false
+			}
 		}
 
 		toolbarChat.setNavigationOnClickListener { findNavController().navigateUp() }
@@ -238,10 +262,11 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 	override fun onResume() {
 		// returns to fragment from onStop
+		// if user clicks on toolbar partner icon this fragment will not be destroyed
 		// onCreate is no longer being called in this scenario
 		super.onResume()
 
-		if (isOnCreateCalled && this::currentConversation.isInitialized && !isDeepLinkJump) {
+		if (isOnCreateCalled && this::currentConversation.isInitialized ) {
 			partnerId = currentConversation.partner.userId
 			partnerName = currentConversation.partner.name
 			partnerMainPhotoUrl = currentConversation.partner.mainPhotoUrl
@@ -319,14 +344,11 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			val result = ActivityCompat.checkSelfPermission(context!!, permission)
 			if (result != PackageManager.PERMISSION_GRANTED) listPermissionsNeeded.add(permission)
 		}
-		if (listPermissionsNeeded.isNotEmpty()) requestPermissions(PERMISSIONS_CAMERA,
-		                                                           REQUEST_CAMERA)
+		if (listPermissionsNeeded.isNotEmpty()) requestPermissions(PERMISSIONS_CAMERA, REQUEST_CAMERA)
 		else startCameraIntent()
 	}
 
-	/*
-	 * take photo directly by camera
-	 */
+	//take photo directly by camera
 	private fun startCameraIntent() {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()
 		mFilePathImageCamera = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
@@ -337,8 +359,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
 			putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
 		}
-		startActivityForResult(intent,
-		                       IMAGE_CAMERA_REQUEST)
+		startActivityForResult(intent, IMAGE_CAMERA_REQUEST)
 	}
 
 	/*
@@ -348,14 +369,11 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	private fun photoGalleryClick() {
 		if (ActivityCompat.checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE)
 				!= PackageManager.PERMISSION_GRANTED)
-			requestPermissions(PERMISSIONS_STORAGE,
-			                   REQUEST_STORAGE)
+			requestPermissions(PERMISSIONS_STORAGE, REQUEST_STORAGE)
 		else startGalleryIntent()
 	}
 
-	/*
-	 * choose photo from gallery
-	 */
+	//choose photo from gallery
 	private fun startGalleryIntent() {
 		val intent = Intent().apply {
 			action = Intent.ACTION_GET_CONTENT
@@ -366,14 +384,14 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	}
 
 	// start after permissions was granted
+	// If request is cancelled, the result arrays are empty.
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-		// If request is cancelled, the result arrays are empty.
-		if (requestCode == REQUEST_CAMERA)
 		// check camera permission was granted
+		if (requestCode == REQUEST_CAMERA)
 			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
 				startCameraIntent()
-		if (requestCode == REQUEST_STORAGE)
 		// check gallery permission was granted
+		if (requestCode == REQUEST_STORAGE)
 			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
 				startGalleryIntent()
 	}
@@ -388,8 +406,6 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 				chatViewModel.sendPhoto(selectedUri.toString(),
 				                        userItemModel.baseUserInfo,
 				                        partnerId)
-
-
 			}
 		}
 		// send photo taken by camera

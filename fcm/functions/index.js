@@ -54,21 +54,44 @@ exports.notifyNewMessage = functions.region('europe-west1')
         const recipientId = message['recipientId'];
         const sender = message['sender'];
         const conversationId = message['conversationId'];
+        const photoAttachmentItem = message['photoAttachmentItem']
 
         return admin.firestore().doc('usersBase/' + recipientId).get().then(userDoc => {
             const registrationTokens = userDoc.get('registrationTokens');
-
-            const notificationBody = (message['photoAttachmentItem'] === null) ? message['text'] : "Image.";
-            const payload = {
-                data: {
-                    SENDER_NAME: sender.name,
-                    SENDER_ID: sender.userId,
-                    SENDER_PHOTO: sender.mainPhotoUrl,
-                    CONVERSATION_ID: conversationId,
-                    CONTENT: notificationBody,
-                  	TYPE: "NEW_MESSAGE"
+            var payload;
+            if (photoAttachmentItem === null) {
+              const notificationBody = message['text'];
+              payload = {
+                  data: {
+                      SENDER_NAME: sender.name,
+                      SENDER_CITY: sender.city,
+                      SENDER_GENDER: sender.gender,
+                      SENDER_PHOTO: sender.mainPhotoUrl,
+                      SENDER_ID: sender.userId,
+                      CONVERSATION_ID: conversationId,
+                      CONTENT: notificationBody,
+                    	TYPE: "NEW_MESSAGE"
+                    }
                 }
             }
+            else {
+              const notificationBody = "Photo";
+              payload = {
+                  data: {
+                      SENDER_NAME: sender.name,
+                      SENDER_CITY: sender.city,
+                      SENDER_GENDER: sender.gender,
+                      SENDER_PHOTO: sender.mainPhotoUrl,
+                      SENDER_ID: sender.userId,
+                      CONVERSATION_ID: conversationId,
+                      CONTENT: notificationBody,
+                      CONTENT_PHOTO: photoAttachmentItem['fileUrl'],
+                    	TYPE: "NEW_MESSAGE"
+                    }
+                }
+            }
+
+
 
             return admin.messaging().sendToDevice(registrationTokens, payload).then( response => {
                 const stillRegisteredTokens = registrationTokens;

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.02.20 17:47
+ * Last modified 02.02.20 19:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -60,12 +60,17 @@ class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserv
 			if (remoteMessage.data["TYPE"] == "NEW_MATCH") notifyNewMatch(remoteMessage)
 			else notifyNewMessage(remoteMessage)
 		}
-
 	}
 
 
 	private fun notifyNewMessage(remoteMessage: RemoteMessage){
-		val conversation = bundleOf("CONVERSATION_ID" to remoteMessage.data["CONVERSATION_ID"])
+		val conversation = bundleOf(
+				"PARTNER_NAME" to remoteMessage.data["SENDER_NAME"],
+				"PARTNER_CITY" to remoteMessage.data["SENDER_CITY"],
+				"PARTNER_GENDER" to remoteMessage.data["SENDER_GENDER"],
+				"PARTNER_PHOTO" to remoteMessage.data["SENDER_PHOTO"],
+				"PARTNER_ID" to remoteMessage.data["SENDER_ID"],
+				"CONVERSATION_ID" to remoteMessage.data["CONVERSATION_ID"])
 
 		val pendingIntent = NavDeepLinkBuilder(this)
 			.setComponentName(MainActivity::class.java)
