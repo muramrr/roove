@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.02.20 16:01
+ * Last modified 02.02.20 17:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,10 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.bundleOf
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -22,13 +26,41 @@ import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.ui.MainActivity
 
 
-class FirestoreNotificationsService: FirebaseMessagingService() {
+class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserver {
 
+	private var isAppInForeground = false
+
+	override fun onCreate() {
+		super.onCreate()
+		ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+		ProcessLifecycleOwner.get().lifecycle.removeObserver(this)
+	}
+
+
+	@OnLifecycleEvent(Lifecycle.Event.ON_START)
+	private fun onForegroundStart() {
+		isAppInForeground = true
+	}
+
+	@OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+	private fun onForegroundStop() {
+		isAppInForeground = false
+	}
 
 	override fun onMessageReceived(remoteMessage: RemoteMessage) {
-		Log.wtf("mylogs_SERVICENOTIFICATIONS", remoteMessage.data.toString())
-		if (remoteMessage.data["TYPE"] == "NEW_MATCH") notifyNewMatch(remoteMessage)
-		else notifyNewMessage(remoteMessage)
+		if(isAppInForeground) {
+			// do foreground stuff on your activities
+			Log.wtf("mylogs_SERVICENOTIFICATIONS", remoteMessage.data.toString())
+		} else {
+			// send a notification
+			if (remoteMessage.data["TYPE"] == "NEW_MATCH") notifyNewMatch(remoteMessage)
+			else notifyNewMessage(remoteMessage)
+		}
+
 	}
 
 
