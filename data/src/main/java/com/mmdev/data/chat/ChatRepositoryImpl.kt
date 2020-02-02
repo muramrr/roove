@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.02.20 20:21
+ * Last modified 02.02.20 20:29
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@ package com.mmdev.data.chat
 
 import android.net.Uri
 import android.text.format.DateFormat
-import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -96,7 +95,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	override fun getMessagesList(conversation: ConversationItem): Observable<List<MessageItem>> {
 		this.conversation = conversation
 		this.partner = conversation.partner
-		Log.wtf(TAG, "conversation set, id = ${conversation.conversationId}")
+		//Log.wtf(TAG, "conversation set, id = ${conversation.conversationId}")
 		return Observable.create(ObservableOnSubscribe<List<MessageItem>> { emitter ->
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversation.conversationId)
@@ -218,7 +217,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.userId)
 			.update(CONVERSATION_STARTED_FIELD, true)
-		Log.wtf(TAG, "convers status updated")
+		//Log.wtf(TAG, "convers status updated")
 	}
 
 	private fun updateLastMessage(messageItem: MessageItem) {
@@ -250,7 +249,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			par.update(CONVERSATION_LASTMESSAGETEXT_FIELD, messageItem.text)
 			par.update(CONVERSATION_LASTMESSAGETIMESTAMP_FIELD, messageItem.timestamp)
 		}
-		Log.wtf(TAG, "last message updated")
+		//Log.wtf(TAG, "last message updated")
 	}
 
 }
