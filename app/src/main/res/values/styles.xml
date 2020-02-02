@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 22.01.20 19:25
+  ~ Last modified 02.02.20 16:41
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -141,8 +141,6 @@
 		<item name="android:insetBottom">0dp</item>
 		<item name="iconGravity">textStart</item>
 		<item name="iconPadding">0dp</item>
-		<item name="iconTint">@color/mtrl_btn_text_color_selector</item>
-		<item name="rippleColor">?colorOnPrimary</item>
 	</style>
 
 	<!-- SPECIFIC STYLES -->

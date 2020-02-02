@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 30.01.20 21:07
+ * Last modified 02.02.20 17:02
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ package com.mmdev.roove.ui.dating.chat.view
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -22,11 +23,13 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -174,8 +177,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		btnSendAttachment.setOnClickListener {
 			val builder = AlertDialog.Builder(context!!)
 				.setItems(arrayOf("Camera", "Gallery")) {
-					_, which ->
-					if (which == 0) { photoCameraClick() }
+					_, itemIndex ->
+					if (itemIndex == 0) { photoCameraClick() }
 					else { photoGalleryClick() }
 				}
 			val alertDialog = builder.create()
@@ -208,6 +211,11 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		rvMessageList.apply {
 			adapter = mChatAdapter
 			layoutManager = LinearLayoutManager(context).apply { stackFromEnd = true }
+		}
+		rvMessageList.setOnClickListener {
+			val inputMethodManager = it.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+			inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
+			Log.wtf("mylogs_ChatFragment", "recycler clicked")
 		}
 
 		toolbarChat.setNavigationOnClickListener { findNavController().navigateUp() }
@@ -280,7 +288,6 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	/*
 	* Send plain text msg to chat if editText is not empty
 	* else shake animation
-	* rx chain: create conversation -> set conversation id -> send message -> observe new messages
 	*/
 	private fun sendMessageClick() {
 		if (edTextMessageInput.text.isNotEmpty() &&

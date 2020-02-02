@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.01.20 18:09
+  ~ Last modified 02.02.20 17:26
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,7 +34,6 @@
 			android:layout_height="?actionBarSize"
 			android:background="@color/colorPrimary"
 			android:theme="@style/AppTheme.AppBarOverlay"
-
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent">
@@ -51,6 +50,93 @@
 
 		</com.google.android.material.appbar.AppBarLayout>
 
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/rvMessageList"
+			android:layout_height="0dp"
+			android:layout_width="0dp"
+			android:background="@color/colorPrimaryDark"
+			android:overScrollMode="never"
+			android:scrollbars="none"
+			android:visibility='@{viewModel.showLoading ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
+
+			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/appBarChat"
+			app:layout_constraintBottom_toTopOf="@id/edTextMessageInput"
+			tools:itemCount="3"
+			tools:listitem="@layout/fragment_chat_item_left"/>
+
+		<View
+			android:id="@+id/messageInputContainerBackground"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:background="@color/colorAccentDark"
+			android:focusable="false"
+			android:clickable="false"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/rvMessageList"/>
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btnSendAttachment"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="2dp"
+			android:padding="@dimen/general_margin_16"
+
+			app:cornerRadius="50dp"
+			app:icon="@drawable/ic_chat_attachment_24dp"
+			app:iconTint="@color/white_50"
+			app:rippleColor="@color/black_50"
+			style="@style/MyMaterialIconButton"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@id/edTextMessageInput"
+			/>
+
+		<EditText
+			android:id="@+id/edTextMessageInput"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:background="@null"
+
+			android:imeOptions="actionSend"
+			android:inputType="text|textMultiLine"
+			android:hint="@string/fragment_chat_ed_hint"
+			android:padding="@dimen/general_margin_16"
+
+			android:textColorHint="@color/white_50"
+			android:textSize="18sp"
+			style="@style/regular_text_white85op"
+
+			tools:ignore="Autofill"
+
+			app:layout_constraintStart_toEndOf="@id/btnSendAttachment"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@id/btnSendMessage"/>
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btnSendMessage"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/general_margin_16"
+
+			app:backgroundTint="@color/chat_send_button_bg_tint"
+			app:cornerRadius="50dp"
+			app:icon="@drawable/ic_chat_send_24dp"
+			app:iconTint="@color/chat_send_button_icon_tint"
+			app:rippleColor="@color/black_50"
+			style="@style/MyMaterialIconButton"
+
+			app:layout_constraintStart_toEndOf="@id/edTextMessageInput"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+
+			/>
+
 		<ImageView
 			android:id="@+id/ivChatLoading"
 			android:layout_width="120dp"
@@ -65,87 +151,6 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			tools:ignore="ContentDescription" />
-
-		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/rvMessageList"
-			android:layout_height="0dp"
-			android:layout_width="0dp"
-			android:background="@color/colorPrimaryDark"
-			android:overScrollMode="never"
-			android:scrollbars="none"
-			android:visibility='@{viewModel.showLoading ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
-
-			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/appBarChat"
-			app:layout_constraintBottom_toTopOf="@id/messageInputContainer"
-			tools:itemCount="3"
-			tools:listitem="@layout/fragment_chat_item_left"/>
-
-		<RelativeLayout
-			android:id="@+id/messageInputContainer"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:background="@color/colorAccentDark"
-
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/rvMessageList">
-
-			<ImageView
-				android:id="@+id/btnSendAttachment"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:background="?attr/selectableItemBackgroundBorderless"
-				android:clickable="true"
-				android:focusable="true"
-				android:layout_alignParentStart="true"
-				android:layout_centerVertical="true"
-				android:padding="@dimen/general_margin_16"
-				android:contentDescription="@string/fragment_chat_attach_img_description"
-				android:src="@drawable/ic_chat_attachment_24dp"/>
-
-			<EditText
-				android:id="@+id/edTextMessageInput"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@null"
-
-				android:layout_toStartOf="@+id/btnSendMessage"
-				android:layout_toEndOf="@+id/btnSendAttachment"
-				android:layout_centerVertical="true"
-
-				android:imeOptions="actionSend"
-				android:inputType="text|textMultiLine"
-				android:hint="@string/fragment_chat_ed_hint"
-				android:padding="@dimen/general_margin_16"
-
-				android:textColorHint="@color/white_50"
-				android:textSize="18sp"
-				style="@style/regular_text_white85op"
-
-				tools:ignore="Autofill"/>
-
-
-			<com.google.android.material.button.MaterialButton
-				android:id="@+id/btnSendMessage"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignParentEnd="true"
-				android:layout_centerVertical="true"
-				android:padding="@dimen/general_margin_16"
-				android:contentDescription="@string/fragment_chat_send_img_description"
-
-				app:cornerRadius="24dp"
-				app:icon="@drawable/ic_chat_send_24dp"
-				app:iconTint="@color/material_chat_button"
-				app:rippleColor="@color/black_50"
-				style="@style/MyMaterialIconButton"
-				/>
-
-		</RelativeLayout>
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
