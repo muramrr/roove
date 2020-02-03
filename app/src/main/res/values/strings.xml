@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 01.02.20 20:39
+  ~ Last modified 03.02.20 18:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,8 +16,8 @@
 	<!--Default strings-->
 	<string name="default_name">John Doe</string>
 	<string name="default_city">Anytown</string>
-	<string name="default_message_text">Text text text \n text \n text text</string>
-	<string name="default_message_date">dd/mm/yyyy</string>
+	<string name="default_message_text">Text text text \n text \n text text maybe more text to test well</string>
+	<string name="default_message_date">hh:mm</string>
 
 	<!--Some UI strings-->
 	<string name="navigation_drawer_open">Open navigation drawer</string>
