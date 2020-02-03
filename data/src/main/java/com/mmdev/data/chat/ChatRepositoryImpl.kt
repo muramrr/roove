@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.02.20 20:29
+ * Last modified 03.02.20 19:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@ import android.text.format.DateFormat
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageReference
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.chat.entity.PhotoAttachmentItem
@@ -27,7 +28,6 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
                                              private val firestore: FirebaseFirestore,
@@ -54,21 +54,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 	private var conversation = ConversationItem()
 	private var partner = BaseUserInfo()
-
-
-	override fun getConversationById(conversationId: String): Single<ConversationItem>{
-		return Single.create(SingleOnSubscribe<ConversationItem> { emitter ->
-			firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.document(conversationId)
-				.get()
-				.addOnSuccessListener {
-					if (it.exists()) emitter.onSuccess(it.toObject(ConversationItem::class.java)!!)
-					else emitter.onError(Exception("no such conversation"))
-				}
-				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
-
-	}
+	private val messages = mutableListOf<MessageItem>()
 
 	override fun getConversationWithPartner(partnerId: String): Single<ConversationItem> {
 		return Single.create(SingleOnSubscribe<ConversationItem> { emitter ->
@@ -81,8 +67,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 				.get()
 				.addOnSuccessListener {
 					if (!it.isEmpty) {
-						val conversation =
-							it.documents[0].toObject(ConversationItem::class.java)!!
+						val conversation = it.documents[0].toObject(ConversationItem::class.java)!!
 						emitter.onSuccess(conversation)
 					}
 					else emitter.onError(Exception("chatRepository: can't retrive such conversation"))
@@ -93,6 +78,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	}
 
 	override fun getMessagesList(conversation: ConversationItem): Observable<List<MessageItem>> {
+		if (messages.size>0) messages.clear()
 		this.conversation = conversation
 		this.partner = conversation.partner
 		//Log.wtf(TAG, "conversation set, id = ${conversation.conversationId}")
@@ -100,19 +86,18 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversation.conversationId)
 				.collection(SECONDARY_COLLECTION_REFERENCE)
-				.orderBy("timestamp")
+				.orderBy("timestamp", Query.Direction.DESCENDING)
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
 						emitter.onError(e)
 						return@addSnapshotListener
 					}
-					val messages = ArrayList<MessageItem>()
 					for (doc in snapshots!!) {
 						val message = doc.toObject(MessageItem::class.java)
 						message.timestamp = (message.timestamp as Timestamp?)?.toDate()
 						messages.add(message)
 					}
-					emitter.onNext(messages)
+					emitter.onNext(messages.asReversed())
 				}
 			emitter.setCancellable{ listener.remove() }
 		}).subscribeOn(Schedulers.io())
@@ -137,26 +122,29 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 					}
 					.addOnFailureListener { emitter.onError(it) }
 			else {
-				conversation.get().addOnSuccessListener { documentSnapshot ->
-					if (documentSnapshot.exists())
-						conversation.collection(SECONDARY_COLLECTION_REFERENCE).document()
-							.set(messageItem)
-							.addOnSuccessListener {
-								updateLastMessage(messageItem)
-								emitter.onComplete()
-							}
-							.addOnFailureListener { emitter.onError(it) }
-
-					else {
-						updateStartedStatus()
-						conversation.collection(SECONDARY_COLLECTION_REFERENCE).document()
-							.set(messageItem)
-							.addOnSuccessListener {
-								updateLastMessage(messageItem)
-								emitter.onComplete()
-							}
-							.addOnFailureListener { emitter.onError(it) }
-					}
+				conversation.get()
+					.addOnSuccessListener { documentSnapshot ->
+						if (documentSnapshot.exists()) {
+							conversation.collection(SECONDARY_COLLECTION_REFERENCE)
+								.document()
+								.set(messageItem)
+								.addOnSuccessListener {
+									updateLastMessage(messageItem)
+									emitter.onComplete()
+								}
+								.addOnFailureListener { emitter.onError(it) }
+						}
+						else {
+							updateStartedStatus()
+							conversation.collection(SECONDARY_COLLECTION_REFERENCE)
+								.document()
+								.set(messageItem)
+								.addOnSuccessListener {
+									updateLastMessage(messageItem)
+									emitter.onComplete()
+								}
+								.addOnFailureListener { emitter.onError(it) }
+						}
 
 				}.addOnFailureListener { emitter.onError(it) }
 			}

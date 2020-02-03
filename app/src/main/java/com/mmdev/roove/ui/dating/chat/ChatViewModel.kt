@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 30.01.20 20:57
+ * Last modified 03.02.20 19:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,10 @@ package com.mmdev.roove.ui.dating.chat
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.chat.entity.MessageItem
-import com.mmdev.business.chat.usecase.*
+import com.mmdev.business.chat.usecase.GetConversationWithPartnerUseCase
+import com.mmdev.business.chat.usecase.GetMessagesUseCase
+import com.mmdev.business.chat.usecase.SendMessageUseCase
+import com.mmdev.business.chat.usecase.SendPhotoUseCase
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.roove.ui.core.BaseViewModel
@@ -21,8 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 class ChatViewModel
-@Inject constructor(private val getConversationByIdUC: GetConversationByIdUseCase,
-                    private val getConversationWPartnerUC: GetConversationWithPartnerUseCase,
+@Inject constructor(private val getConversationWPartnerUC: GetConversationWithPartnerUseCase,
                     private val getMessagesUC: GetMessagesUseCase,
                     private val sendMessageUC: SendMessageUseCase,
                     private val sendPhotoUC: SendPhotoUseCase) : BaseViewModel() {
@@ -33,29 +35,6 @@ class ChatViewModel
 	private var emptyChat = false
 	private val messagesList: MutableLiveData<List<MessageItem>> = MutableLiveData()
 	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
-
-
-	fun getConversationById(conversationId: String){
-		disposables.add(getConversationByIdExecution(conversationId)
-            .flatMapObservable {
-                selectedConversation = it
-                getMessagesExecution(it)
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-	                       if(it.isNotEmpty()) {
-		                       messagesList.value = it
-		                       emptyChat = false
-	                       }
-	                       else emptyChat = true
-	                       Log.wtf(TAG, "get conv by id messages to show: ${it.size}")
-	                       Log.wtf(TAG, "is empty chat? + $emptyChat")
-                       },
-                       {
-	                       Log.wtf(TAG, "get conversation by id error: $it")
-                       }))
-
-	}
 
 	fun startListenToEmptyChat(partnerId: String){
 		disposables.add(getConversationWPartnerExecution(partnerId)
@@ -122,10 +101,6 @@ class ChatViewModel
 	}
 
 	fun getMessagesList() = messagesList
-
-
-	private fun getConversationByIdExecution(conversationId: String) =
-		getConversationByIdUC.execute(conversationId)
 
 	private fun getConversationWPartnerExecution(partnerId: String) =
 		getConversationWPartnerUC.execute(partnerId)
