@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.02.20 17:35
+ * Last modified 03.02.20 17:45
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -67,7 +67,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 			insets.replaceSystemWindowInsets(Rect(0,
 			                                      insets.systemWindowInsetTop,
 			                                      0,
-			                                      insets.systemWindowInsetBottom))
+			                                      insets.systemWindowInsetBottom))!!
 		}
 
 		GlideApp.with(ivMainSplashLogo.context)

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.01.20 19:01
+ * Last modified 03.02.20 17:44
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ package com.mmdev.roove.utils
 
 import android.graphics.Rect
 import android.view.View
+import android.view.WindowInsets
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -39,11 +40,10 @@ fun View.addSystemTopPadding(targetView: View = this, isConsumed: Boolean = fals
 		targetView.updatePadding(top = initialPadding.top + insets.systemWindowInsetTop)
 
 		if (isConsumed) {
-			insets
-				.replaceSystemWindowInsets(Rect(insets.systemWindowInsetLeft,
+			insets.replaceSystemWindowInsets(Rect(insets.systemWindowInsetLeft,
 				                                0,
 				                                insets.systemWindowInsetRight,
-				                                insets.systemWindowInsetBottom))
+				                                insets.systemWindowInsetBottom))!!
 		} else {
 			insets
 		}
@@ -55,11 +55,10 @@ fun View.addSystemBottomPadding(targetView: View = this, isConsumed: Boolean = f
 		targetView.updatePadding(bottom = initialPadding.bottom + insets.systemWindowInsetBottom)
 
 		if (isConsumed) {
-			insets
-				.replaceSystemWindowInsets(Rect(insets.systemWindowInsetLeft,
+			insets.replaceSystemWindowInsets(Rect(insets.systemWindowInsetLeft,
 				                                insets.systemWindowInsetTop,
 				                                insets.systemWindowInsetRight,
-				                                0))
+				                                0))!!
 		} else {
 			insets
 		}
@@ -71,11 +70,10 @@ fun View.addSystemRightPadding(targetView: View = this, isConsumed: Boolean = fa
 		targetView.updatePadding(right = initialPadding.right + insets.systemWindowInsetRight)
 
 		if (isConsumed) {
-			insets
-				.replaceSystemWindowInsets(Rect(insets.systemWindowInsetLeft,
+			insets.replaceSystemWindowInsets(Rect(insets.systemWindowInsetLeft,
 				                                insets.systemWindowInsetTop,
 				                                0,
-				                                insets.systemWindowInsetBottom))
+				                                insets.systemWindowInsetBottom))!!
 		} else {
 			insets
 		}
@@ -87,11 +85,11 @@ fun View.addSystemLeftPadding(targetView: View = this, isConsumed: Boolean = fal
 		targetView.updatePadding(left = initialPadding.left + insets.systemWindowInsetLeft)
 
 		if (isConsumed) {
-			insets
-				.replaceSystemWindowInsets(Rect(0,
+			val a = WindowInsets.Builder()
+			insets.replaceSystemWindowInsets(Rect(0,
 				                                insets.systemWindowInsetTop,
 				                                insets.systemWindowInsetRight,
-				                                insets.systemWindowInsetBottom))
+				                                insets.systemWindowInsetBottom))!!
 		} else {
 			insets
 		}
@@ -99,10 +97,11 @@ fun View.addSystemLeftPadding(targetView: View = this, isConsumed: Boolean = fal
 }
 
 
-fun View.doOnApplyWindowInsets(block: (View, insets: WindowInsetsCompat, initialPadding: Rect) -> WindowInsetsCompat) {
+fun View.doOnApplyWindowInsets(block: (View, WindowInsetsCompat, Rect) -> WindowInsetsCompat) {
 	val initialPadding = recordInitialPaddingForView(this)
 	ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
 		block(v, insets, initialPadding)
+
 	}
 	requestApplyInsetsWhenAttached()
 }
