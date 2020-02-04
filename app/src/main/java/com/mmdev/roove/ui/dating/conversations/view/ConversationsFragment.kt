@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 16:51
+ * Last modified 04.02.20 17:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -46,7 +46,7 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 		} ?: throw Exception("Invalid Activity")
 
 
-		conversationsViewModel = ViewModelProvider(this, factory)[ConversationsViewModel::class.java]
+		conversationsViewModel = ViewModelProvider(this@ConversationsFragment, factory)[ConversationsViewModel::class.java]
 
 		conversationsViewModel.getConversationsList().observe(this, Observer {
 			mConversationsAdapter.updateData(it)
