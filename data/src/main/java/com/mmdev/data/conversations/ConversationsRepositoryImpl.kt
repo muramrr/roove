@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 16:49
+ * Last modified 04.02.20 17:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 
 package com.mmdev.data.conversations
 
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.conversations.repository.ConversationsRepository
@@ -28,6 +29,15 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
                                                       currentUser: UserItem):
 		ConversationsRepository {
 
+	private var currentUserDocReference: DocumentReference
+
+	init {
+		currentUserDocReference = firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(currentUser.baseUserInfo.city)
+			.collection(currentUser.baseUserInfo.gender)
+			.document(currentUser.baseUserInfo.userId)
+	}
+
 	companion object{
 		// firestore users references
 		private const val USERS_COLLECTION_REFERENCE = "users"
@@ -35,9 +45,9 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 		// firestore conversations reference
 		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
+		private const val TAG = "mylogs_ConverRepoImpl"
 	}
 
-	private val currentUserInfo = currentUser.baseUserInfo
 
 
 	override fun deleteConversation(conversationItem: ConversationItem): Completable {
@@ -49,10 +59,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				.delete()
 
 			//delete in current user section
-			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUserInfo.city)
-				.collection(currentUserInfo.gender)
-				.document(currentUserInfo.userId)
+			currentUserDocReference
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversationItem.conversationId)
 				.delete()
@@ -73,26 +80,22 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 	}
 
 	override fun getConversationsList(): Single<List<ConversationItem>> {
+
 		return Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
-			val listener = firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUserInfo.city)
-				.collection(currentUserInfo.gender)
-				.document(currentUserInfo.userId)
+			currentUserDocReference
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
 				.orderBy("lastMessageTimestamp")
-				.addSnapshotListener { snapshots, e ->
-					if (e != null) {
-						emitter.onError(e)
-						return@addSnapshotListener
-					}
+				.get()
+				.addOnSuccessListener { docSnapshot ->
 					val conversations = ArrayList<ConversationItem>()
-					for (doc in snapshots!!) {
-						conversations.add(doc.toObject(ConversationItem::class.java))
-					}
+					if (!docSnapshot.isEmpty)
+						for (doc in docSnapshot!!) {
+							conversations.add(doc.toObject(ConversationItem::class.java))
+						}
 					emitter.onSuccess(conversations)
 				}
-			emitter.setCancellable{ listener.remove() }
+				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
 	}
 
