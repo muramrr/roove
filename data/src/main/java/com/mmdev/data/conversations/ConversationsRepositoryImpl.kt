@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 17:14
+ * Last modified 04.02.20 17:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,9 +79,8 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 		}.subscribeOn(Schedulers.io())
 	}
 
-	override fun getConversationsList(): Single<List<ConversationItem>> {
-
-		return Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
+	override fun getConversationsList() =
+		Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
 			currentUserDocReference
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
@@ -97,7 +96,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
-	}
+
 
 
 }
