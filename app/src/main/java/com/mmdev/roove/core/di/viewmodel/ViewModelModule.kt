@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.02.20 19:10
+ * Last modified 04.02.20 15:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +25,7 @@ import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.chat.usecase.GetConversationWithPartnerUseCase
 import com.mmdev.business.chat.usecase.GetMessagesUseCase
 import com.mmdev.business.chat.usecase.SendMessageUseCase
-import com.mmdev.business.chat.usecase.SendPhotoUseCase
+import com.mmdev.business.chat.usecase.UploadMessagePhotoUseCase
 import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
 import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
@@ -94,7 +94,7 @@ class ViewModelModule {
 		ChatViewModel(GetConversationWithPartnerUseCase(repo),
 		              GetMessagesUseCase(repo),
 		              SendMessageUseCase(repo),
-		              SendPhotoUseCase(repo))
+		              UploadMessagePhotoUseCase(repo))
 
 
 	@IntoMap

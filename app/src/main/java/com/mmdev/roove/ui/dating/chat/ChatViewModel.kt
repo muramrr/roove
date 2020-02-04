@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.02.20 19:10
+ * Last modified 04.02.20 16:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.chat.usecase.GetConversationWithPartnerUseCase
 import com.mmdev.business.chat.usecase.GetMessagesUseCase
 import com.mmdev.business.chat.usecase.SendMessageUseCase
-import com.mmdev.business.chat.usecase.SendPhotoUseCase
+import com.mmdev.business.chat.usecase.UploadMessagePhotoUseCase
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.roove.ui.core.BaseViewModel
@@ -27,7 +27,7 @@ class ChatViewModel
 @Inject constructor(private val getConversationWPartnerUC: GetConversationWithPartnerUseCase,
                     private val getMessagesUC: GetMessagesUseCase,
                     private val sendMessageUC: SendMessageUseCase,
-                    private val sendPhotoUC: SendPhotoUseCase) : BaseViewModel() {
+                    private val uploadMessagePhotoUC: UploadMessagePhotoUseCase) : BaseViewModel() {
 
 
 	private lateinit var selectedConversation: ConversationItem
@@ -84,6 +84,7 @@ class ChatViewModel
                        { Log.wtf(TAG, "can't send message fragment_chat, $emptyChat") }))
 	}
 
+	//upload photo then send it as message item
 	fun sendPhoto(photoUri: String, sender: BaseUserInfo, recipient: String){
 		disposables.add(sendPhotoExecution(photoUri)
             .flatMapCompletable {
@@ -112,7 +113,7 @@ class ChatViewModel
 		sendMessageUC.execute(messageItem, emptyChat)
 
 	private fun sendPhotoExecution(photoUri: String) =
-		sendPhotoUC.execute(photoUri)
+		uploadMessagePhotoUC.execute(photoUri)
 
 
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.02.20 19:37
+ * Last modified 04.02.20 16:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,9 +13,9 @@ package com.mmdev.data.chat
 import android.net.Uri
 import android.text.format.DateFormat
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageReference
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.chat.entity.PhotoAttachmentItem
@@ -32,6 +32,15 @@ import javax.inject.Inject
 class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
                                              private val firestore: FirebaseFirestore,
                                              private val storage: StorageReference): ChatRepository{
+
+	private var currentUserDocReference: DocumentReference
+
+	init {
+		currentUserDocReference = firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(currentUser.baseUserInfo.city)
+			.collection(currentUser.baseUserInfo.gender)
+			.document(currentUser.baseUserInfo.userId)
+	}
 
 	companion object {
 		// Firebase firestore references
@@ -54,23 +63,20 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 	private var conversation = ConversationItem()
 	private var partner = BaseUserInfo()
-	private val messages = mutableListOf<MessageItem>()
 
 	override fun getConversationWithPartner(partnerId: String): Single<ConversationItem> {
 		return Single.create(SingleOnSubscribe<ConversationItem> { emitter ->
-			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUser.baseUserInfo.city)
-				.collection(currentUser.baseUserInfo.gender)
-				.document(currentUser.baseUserInfo.userId)
+			currentUserDocReference
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.whereEqualTo(CONVERSATION_PARTNER_FIELD, partnerId)
 				.get()
 				.addOnSuccessListener {
 					if (!it.isEmpty) {
 						val conversation = it.documents[0].toObject(ConversationItem::class.java)!!
+						this.conversation = conversation
 						emitter.onSuccess(conversation)
 					}
-					else emitter.onError(Exception("chatRepository: can't retrive such conversation"))
+					else emitter.onError(Exception("$TAG: can't retrive such conversation"))
 				}
 				.addOnFailureListener { emitter.onError(it) }
 
@@ -78,7 +84,6 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	}
 
 	override fun getMessagesList(conversation: ConversationItem): Observable<List<MessageItem>> {
-		if (messages.size>0) messages.clear()
 		this.conversation = conversation
 		this.partner = conversation.partner
 		//Log.wtf(TAG, "conversation set, id = ${conversation.conversationId}")
@@ -86,20 +91,21 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversation.conversationId)
 				.collection(SECONDARY_COLLECTION_REFERENCE)
-				.orderBy("timestamp", Query.Direction.DESCENDING)
+				.orderBy("timestamp")
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
 						emitter.onError(e)
 						return@addSnapshotListener
 					}
+					val messages = ArrayList<MessageItem>()
 					for (doc in snapshots!!) {
 						val message = doc.toObject(MessageItem::class.java)
 						message.timestamp = (message.timestamp as Timestamp?)?.toDate()
-						messages.add(message)
+						if (!messages.contains(message)) messages.add(message)
 					}
-					emitter.onNext(messages.asReversed())
+					emitter.onNext(messages)
 				}
-			emitter.setCancellable{ listener.remove() }
+			emitter.setCancellable { listener.remove() }
 		}).subscribeOn(Schedulers.io())
 	}
 
@@ -111,48 +117,22 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			.document(conversation.conversationId)
 
 		messageItem.timestamp = FieldValue.serverTimestamp()
-		return Completable.create { emitter ->
-			if (emptyChat != null && emptyChat == false)
-				conversation.collection(SECONDARY_COLLECTION_REFERENCE)
-					.document()
-					.set(messageItem)
-					.addOnSuccessListener {
-						updateLastMessage(messageItem)
-						emitter.onComplete()
-					}
-					.addOnFailureListener { emitter.onError(it) }
-			else {
-				conversation.get()
-					.addOnSuccessListener { documentSnapshot ->
-						if (documentSnapshot.exists()) {
-							conversation.collection(SECONDARY_COLLECTION_REFERENCE)
-								.document()
-								.set(messageItem)
-								.addOnSuccessListener {
-									updateLastMessage(messageItem)
-									emitter.onComplete()
-								}
-								.addOnFailureListener { emitter.onError(it) }
-						}
-						else {
-							updateStartedStatus()
-							conversation.collection(SECONDARY_COLLECTION_REFERENCE)
-								.document()
-								.set(messageItem)
-								.addOnSuccessListener {
-									updateLastMessage(messageItem)
-									emitter.onComplete()
-								}
-								.addOnFailureListener { emitter.onError(it) }
-						}
 
-				}.addOnFailureListener { emitter.onError(it) }
-			}
+		return Completable.create { emitter ->
+			conversation.collection(SECONDARY_COLLECTION_REFERENCE)
+				.document()
+				.set(messageItem)
+				.addOnSuccessListener {
+					updateLastMessage(messageItem)
+					if (emptyChat != null && emptyChat == true) updateStartedStatus()
+					emitter.onComplete()
+				}
+				.addOnFailureListener { emitter.onError(it) }
 
 		}.subscribeOn(Schedulers.io())
 	}
 
-	override fun sendPhoto(photoUri: String): Observable<PhotoAttachmentItem> {
+	override fun uploadMessagePhoto(photoUri: String): Observable<PhotoAttachmentItem> {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()+".jpg"
 		val storageRef = storage
 			.child(GENERAL_FOLDER_STORAGE_IMG)
@@ -174,34 +154,27 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 	private fun updateStartedStatus() {
 		// for current
-		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUser.baseUserInfo.city)
-			.collection(currentUser.baseUserInfo.gender)
-			.document(currentUser.baseUserInfo.userId)
+		currentUserDocReference
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversation.conversationId)
 			.update(CONVERSATION_STARTED_FIELD, true)
-		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUser.baseUserInfo.city)
-			.collection(currentUser.baseUserInfo.gender)
-			.document(currentUser.baseUserInfo.userId)
+		currentUserDocReference
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.document(partner.userId)
 			.update(CONVERSATION_STARTED_FIELD, true)
 
 
 		// for partner
-		firestore.collection(USERS_COLLECTION_REFERENCE)
+		val partnerUserReference = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(partner.city)
 			.collection(partner.gender)
 			.document(partner.userId)
+
+		partnerUserReference
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversation.conversationId)
 			.update(CONVERSATION_STARTED_FIELD, true)
-		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(partner.city)
-			.collection(partner.gender)
-			.document(partner.userId)
+		partnerUserReference
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.userId)
 			.update(CONVERSATION_STARTED_FIELD, true)
@@ -209,18 +182,17 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	}
 
 	private fun updateLastMessage(messageItem: MessageItem) {
-		val cur = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUser.baseUserInfo.city)
-			.collection(currentUser.baseUserInfo.gender)
-			.document(currentUser.baseUserInfo.userId)
+		val cur = currentUserDocReference
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversation.conversationId)
+
 		val par = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(partner.city)
 			.collection(partner.gender)
 			.document(partner.userId)
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversation.conversationId)
+
 		if (messageItem.photoAttachmentItem != null) {
 			// for current
 			cur.update(CONVERSATION_LASTMESSAGETEXT_FIELD, "Photo")

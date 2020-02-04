@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.02.20 19:10
+ * Last modified 04.02.20 15:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,6 +25,6 @@ interface ChatRepository {
 
 	fun sendMessage(messageItem: MessageItem, emptyChat: Boolean? = false): Completable
 
-	fun sendPhoto(photoUri: String): Observable<PhotoAttachmentItem>
+	fun uploadMessagePhoto(photoUri: String): Observable<PhotoAttachmentItem>
 
 }

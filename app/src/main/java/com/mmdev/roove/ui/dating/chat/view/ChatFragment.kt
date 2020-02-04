@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.02.20 20:24
+ * Last modified 04.02.20 16:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,6 +54,7 @@ import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.dating.chat.ChatViewModel
 import com.mmdev.roove.utils.addSystemBottomPadding
+import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_chat.*
 import java.io.File
 import java.util.*
@@ -121,6 +122,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
+		//deep link from notification
 		arguments?.let {
 			receivedPartnerName = it.getString(PARTNER_NAME_KEY, "")
 			receivedPartnerCity = it.getString(PARTNER_CITY_KEY, "")
@@ -160,7 +162,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			sharedViewModel.setConversationSelected(receivedConversationItem)
 		}
 
-		sharedViewModel.conversationSelected.observe(this, Observer {
+		sharedViewModel.conversationSelected.observeOnce(this, Observer {
 			if (!isOnCreateCalled && !this::currentConversation.isInitialized) {
 				currentConversation = it
 				partnerName = it.partner.name
@@ -199,6 +201,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		})
 
 		btnSendMessage.setOnClickListener { sendMessageClick() }
+
 		btnSendAttachment.setOnClickListener {
 			val builder = AlertDialog.Builder(context!!)
 				.setItems(arrayOf("Camera", "Gallery")) {
@@ -226,8 +229,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			override fun onItemClick(view: View, position: Int) {
 
 				val photoUrl = mChatAdapter.getItem(position).photoAttachmentItem!!.fileUrl
-				val dialog =
-					FullScreenDialogFragment.newInstance(photoUrl)
+				val dialog = FullScreenDialogFragment.newInstance(photoUrl)
 				dialog.show(childFragmentManager, FullScreenDialogFragment::class.java.canonicalName)
 
 			}
@@ -248,6 +250,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		}
 
 		toolbarChat.setNavigationOnClickListener { findNavController().navigateUp() }
+
 		toolbarChat.setOnMenuItemClickListener { item ->
 			when (item.itemId) {
 				R.id.chat_action_user ->{
@@ -256,9 +259,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 					                                         currentConversation.conversationStarted))
 				}
 
-				R.id.chat_action_report -> { Toast.makeText(context,
-				                                            "chat report click",
-				                                            Toast.LENGTH_SHORT).show()
+				R.id.chat_action_report -> {
+					Toast.makeText(context, "chat report click", Toast.LENGTH_SHORT).show()
 				}
 			}
 			return@setOnMenuItemClickListener true
@@ -272,9 +274,6 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		super.onResume()
 
 		if (isOnCreateCalled && this::currentConversation.isInitialized ) {
-			partnerId = currentConversation.partner.userId
-			partnerName = currentConversation.partner.name
-			partnerMainPhotoUrl = currentConversation.partner.mainPhotoUrl
 
 			if (currentConversation.conversationId.isNotEmpty()) {
 				chatViewModel.loadMessages(currentConversation)
@@ -341,9 +340,9 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	/*
 	 * Checks if the app has permissions to OPEN CAMERA and take photos
 	 * If the app does not has permission then the user will be prompted to grant permissions
+	 * else open camera intent
 	 */
 	private fun photoCameraClick() {
-		// Check if we have needed permissions
 		val listPermissionsNeeded = ArrayList<String>()
 		for (permission in PERMISSIONS_CAMERA) {
 			val result = ActivityCompat.checkSelfPermission(context!!, permission)
@@ -370,6 +369,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	/*
 	 * Checks if the app has permissions to READ user files
 	 * If the app does not has permission then the user will be prompted to grant permissions
+	 * else open gallery to choose photo
 	 */
 	private fun photoGalleryClick() {
 		if (ActivityCompat.checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -378,7 +378,6 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		else startGalleryIntent()
 	}
 
-	//choose photo from gallery
 	private fun startGalleryIntent() {
 		val intent = Intent().apply {
 			action = Intent.ACTION_GET_CONTENT
