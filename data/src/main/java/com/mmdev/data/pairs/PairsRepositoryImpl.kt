@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.01.20 18:37
+ * Last modified 04.02.20 18:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,8 +14,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.cards.CardItem
 import com.mmdev.business.pairs.PairsRepository
 import com.mmdev.business.user.UserItem
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
+import io.reactivex.Single
+import io.reactivex.SingleOnSubscribe
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -37,27 +37,24 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
 	}
 
-	override fun getMatchedUsersList(): Observable<List<CardItem>> {
+	override fun getMatchedUsersList(): Single<List<CardItem>> {
 
-		return Observable.create(ObservableOnSubscribe<List<CardItem>> { emitter ->
-			val listener = firestore.collection(USERS_COLLECTION_REFERENCE)
+		return Single.create(SingleOnSubscribe<List<CardItem>> { emitter ->
+			firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(currentUserInfo.city)
 				.collection(currentUserInfo.gender)
 				.document(currentUserInfo.userId)
 				.collection(USER_MATCHED_COLLECTION_REFERENCE)
 				.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
-				.addSnapshotListener { snapshots, e ->
-					if (e != null) {
-						emitter.onError(e)
-						return@addSnapshotListener
-					}
+				.get()
+				.addOnSuccessListener {
 					val matchedUsersList = ArrayList<CardItem>()
-					for (doc in snapshots!!) {
+					for (doc in it!!) {
 						matchedUsersList.add(doc.toObject(CardItem::class.java))
 					}
-					emitter.onNext(matchedUsersList)
+					emitter.onSuccess(matchedUsersList)
 				}
-			emitter.setCancellable { listener.remove() }
+				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
 	}
 
