@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 16:42
+ * Last modified 04.02.20 18:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -57,6 +57,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
 		// Firebase Storage references
 		private const val GENERAL_FOLDER_STORAGE_IMG = "images"
+		private const val SECONDARY_FOLDER_STORAGE_IMG = "conversations"
 
 		private const val TAG = "mylogs_ChatRepoImpl"
 	}
@@ -86,6 +87,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	override fun getMessagesList(conversation: ConversationItem): Observable<List<MessageItem>> {
 		this.conversation = conversation
 		this.partner = conversation.partner
+
 		//Log.wtf(TAG, "conversation set, id = ${conversation.conversationId}")
 		return Observable.create(ObservableOnSubscribe<List<MessageItem>> { emitter ->
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -136,18 +138,19 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()+".jpg"
 		val storageRef = storage
 			.child(GENERAL_FOLDER_STORAGE_IMG)
+			.child(SECONDARY_FOLDER_STORAGE_IMG)
 			.child(conversation.conversationId)
 			.child(namePhoto)
-		return Observable.create(ObservableOnSubscribe<PhotoAttachmentItem>{ emitter ->
+		return Observable.create(ObservableOnSubscribe<PhotoAttachmentItem> { emitter ->
 			val uploadTask = storageRef.putFile(Uri.parse(photoUri))
 				.addOnSuccessListener {
-					storageRef.downloadUrl.addOnSuccessListener{
+					storageRef.downloadUrl.addOnSuccessListener {
 						val photoAttached = PhotoAttachmentItem(it.toString(), namePhoto)
 						emitter.onNext(photoAttached)
 					}
 				}
 				.addOnFailureListener { emitter.onError(it) }
-			emitter.setCancellable{ uploadTask.cancel() }
+			emitter.setCancellable { uploadTask.cancel() }
 		}).subscribeOn(Schedulers.io())
 	}
 
