@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.01.20 18:37
+ * Last modified 04.02.20 16:49
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,8 +15,8 @@ import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.user.UserItem
 import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
+import io.reactivex.Single
+import io.reactivex.SingleOnSubscribe
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -72,8 +72,8 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 		}.subscribeOn(Schedulers.io())
 	}
 
-	override fun getConversationsList(): Observable<List<ConversationItem>> {
-		return Observable.create(ObservableOnSubscribe<List<ConversationItem>> { emitter ->
+	override fun getConversationsList(): Single<List<ConversationItem>> {
+		return Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
 			val listener = firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(currentUserInfo.city)
 				.collection(currentUserInfo.gender)
@@ -90,7 +90,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 					for (doc in snapshots!!) {
 						conversations.add(doc.toObject(ConversationItem::class.java))
 					}
-					emitter.onNext(conversations)
+					emitter.onSuccess(conversations)
 				}
 			emitter.setCancellable{ listener.remove() }
 		}).subscribeOn(Schedulers.io())
