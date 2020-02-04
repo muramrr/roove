@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 19:25
+ * Last modified 04.02.20 18:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentPairsBinding
@@ -49,7 +48,9 @@ class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
 
 		pairsViewModel = ViewModelProvider(this@PairsFragment, factory)[PairsViewModel::class.java]
 
-		pairsViewModel.loadMatchedUsers()
+		pairsViewModel.getMatchedUsersList().observe(this, Observer {
+			mPairsAdapter.updateData(it)
+		})
 
 	}
 
@@ -65,14 +66,9 @@ class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-		pairsViewModel.getMatchedUsersList().observe(this, Observer {
-			mPairsAdapter.updateData(it)
-		})
-
 		rvPairList.apply {
 			adapter = mPairsAdapter
 			layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-			itemAnimator = DefaultItemAnimator()
 		}
 
 		mPairsAdapter.setOnItemClickListener(object: PairsAdapter.OnItemClickListener {
@@ -86,6 +82,8 @@ class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
 		})
 	}
 
-
-
+	override fun onResume() {
+		super.onResume()
+		pairsViewModel.loadMatchedUsers()
+	}
 }
