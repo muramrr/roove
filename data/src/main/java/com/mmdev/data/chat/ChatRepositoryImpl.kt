@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 18:19
+ * Last modified 04.02.20 18:38
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -84,7 +84,12 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 		}).subscribeOn(Schedulers.io())
 	}
 
-	override fun getMessagesList(conversation: ConversationItem): Observable<List<MessageItem>> {
+
+	override fun loadMessages(conversation: ConversationItem): Single<List<MessageItem>> {
+		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	}
+
+	override fun observeNewMessages(conversation: ConversationItem): Observable<List<MessageItem>> {
 		this.conversation = conversation
 		this.partner = conversation.partner
 
