@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 16:58
+ * Last modified 04.02.20 18:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -276,7 +276,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		if (isOnCreateCalled && this::currentConversation.isInitialized ) {
 
 			if (currentConversation.conversationId.isNotEmpty()) {
-				chatViewModel.loadMessages(currentConversation)
+				chatViewModel.observeNewMessages(currentConversation)
 				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
 					mChatAdapter.updateData(messageList)
 				})
