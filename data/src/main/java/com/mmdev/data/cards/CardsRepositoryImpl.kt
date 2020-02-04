@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 30.01.20 20:44
+ * Last modified 04.02.20 17:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 package com.mmdev.data.cards
 
 import android.util.Log
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.cards.CardItem
 import com.mmdev.business.cards.repository.CardsRepository
@@ -28,8 +29,17 @@ import javax.inject.Inject
  */
 
 class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
-                                              private val currentUserItem: UserItem):
+                                              private val currentUser: UserItem):
 		CardsRepository {
+
+	private var currentUserDocReference: DocumentReference
+
+	init {
+		currentUserDocReference = firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(currentUser.baseUserInfo.city)
+			.collection(currentUser.baseUserInfo.gender)
+			.document(currentUser.baseUserInfo.userId)
+	}
 
 	companion object {
 		private const val USERS_COLLECTION_REFERENCE = "users"
@@ -40,16 +50,12 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		private const val TAG = "mylogs_CardsRepoImpl"
 	}
 
-	private val currentUserInfo = currentUserItem.baseUserInfo
 
 	/*
 	* note: swiped left
 	*/
 	override fun addToSkipped(skippedCardItem: CardItem) {
-		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUserInfo.city)
-			.collection(currentUserInfo.gender)
-			.document(currentUserInfo.userId)
+		currentUserDocReference
 			.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 			.document(skippedCardItem.baseUserInfo.userId)
 			.set(skippedCardItem)
@@ -67,7 +73,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				.collection(likedCardItem.baseUserInfo.gender)
 				.document(likedCardItem.baseUserInfo.userId)
 				.collection(USER_LIKED_COLLECTION_REFERENCE)
-				.document(currentUserInfo.userId)
+				.document(currentUser.baseUserInfo.userId)
 				.get()
 				.addOnSuccessListener { userDoc ->
 					if (userDoc.exists()) {
@@ -81,7 +87,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 						likedCardItem.conversationId = conversationId
 
-						handleMatch(likedCardItem, CardItem(currentUserInfo,
+						handleMatch(likedCardItem, CardItem(currentUser.baseUserInfo,
 						                                    conversationId = conversationId))
 
 
@@ -91,10 +97,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						                              likedCardItem.baseUserInfo)
 
 						//set conversation for current user
-						firestore.collection(USERS_COLLECTION_REFERENCE)
-							.document(currentUserInfo.city)
-							.collection(currentUserInfo.gender)
-							.document(currentUserInfo.userId)
+						currentUserDocReference
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 							.document(conversationId)
 							.set(ConversationItem(partner = likedCardItem.baseUserInfo,
@@ -107,10 +110,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					}
 
 					else {
-						firestore.collection(USERS_COLLECTION_REFERENCE)
-							.document(currentUserInfo.city)
-							.collection(currentUserInfo.gender)
-							.document(currentUserInfo.userId)
+						currentUserDocReference
 							.collection(USER_LIKED_COLLECTION_REFERENCE)
 							.document(likedCardItem.baseUserInfo.userId)
 							.set(likedCardItem)
@@ -127,7 +127,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 	/* return filtered users list as Single */
 	override fun getUsersByPreferences(): Single<List<CardItem>> {
-		val cardsRepositoryHelper = CardsRepositoryHelper(firestore, currentUserItem)
+		val cardsRepositoryHelper = CardsRepositoryHelper(firestore, currentUser)
 		return Single.zip(cardsRepositoryHelper.getAllUsersCards(),
 		                  cardsRepositoryHelper.zipLists(),
 		                  BiFunction<List<CardItem>, List<String>, List<CardItem>>
@@ -149,7 +149,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		addToMatchCollection(currentCardItem.baseUserInfo, likedCardItem)
 
 		//note:uncomment for release
-		deleteFromLikesCollection(likedCardItem.baseUserInfo, currentUserInfo.userId)
+		deleteFromLikesCollection(likedCardItem.baseUserInfo, currentUser.baseUserInfo.userId)
 
 		deleteFromLikesCollection(currentCardItem.baseUserInfo,
 		                          likedCardItem.baseUserInfo.userId)
@@ -184,7 +184,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.document(likedUser.userId)
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversationId)
-			.set(ConversationItem(partner = currentUserItem.baseUserInfo,
+			.set(ConversationItem(partner = currentUser.baseUserInfo,
 			                      conversationId = conversationId,
 			                      lastMessageTimestamp = null))
 	}
@@ -201,14 +201,14 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 	//note:debug only
 	//
-	private fun setLikedForBots(){
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("apzjzpbvdj").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("avzcixhglp").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("dtrfbjseuq").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("eoswtmcpul").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("ryknjtobrx").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
-		firestore.collection(USERS_COLLECTION_REFERENCE).document("snykckkosz").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
-		Log.wtf(TAG, "liked for bots executed")
-	}
+//	private fun setLikedForBots(){
+//		firestore.collection(USERS_COLLECTION_REFERENCE).document("apzjzpbvdj").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
+//		firestore.collection(USERS_COLLECTION_REFERENCE).document("avzcixhglp").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
+//		firestore.collection(USERS_COLLECTION_REFERENCE).document("dtrfbjseuq").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
+//		firestore.collection(USERS_COLLECTION_REFERENCE).document("eoswtmcpul").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
+//		firestore.collection(USERS_COLLECTION_REFERENCE).document("ryknjtobrx").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
+//		firestore.collection(USERS_COLLECTION_REFERENCE).document("snykckkosz").collection(USER_LIKED_COLLECTION_REFERENCE).document(currentUserInfo.userId).set(currentUserItem)
+//		Log.wtf(TAG, "liked for bots executed")
+//	}
 
 }
