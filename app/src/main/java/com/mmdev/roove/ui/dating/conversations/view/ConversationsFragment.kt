@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 18:30
+ * Last modified 04.02.20 16:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.mmdev.roove.R
@@ -49,8 +48,6 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 
 		conversationsViewModel = ViewModelProvider(this, factory)[ConversationsViewModel::class.java]
 
-		conversationsViewModel.loadConversationsList()
-
 		conversationsViewModel.getConversationsList().observe(this, Observer {
 			mConversationsAdapter.updateData(it)
 		})
@@ -72,7 +69,6 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 		rvConversationList.apply {
 			adapter = mConversationsAdapter
 			layoutManager = LinearLayoutManager(context, VERTICAL, false)
-			itemAnimator = DefaultItemAnimator()
 		}
 
 		mConversationsAdapter.setOnItemClickListener(object: ConversationsAdapter.OnItemClickListener {
@@ -87,6 +83,11 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 
 		})
 
+	}
+
+	override fun onResume() {
+		super.onResume()
+		conversationsViewModel.loadConversationsList()
 	}
 
 }
