@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.01.20 20:31
+  ~ Last modified 05.02.20 15:18
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,6 +33,7 @@
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:clipToPadding="false"
+
 			android:overScrollMode="never"
 			android:scrollbars="vertical"
 
