@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 18:38
+ * Last modified 05.02.20 18:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,9 +13,7 @@ package com.mmdev.data.chat
 import android.net.Uri
 import android.text.format.DateFormat
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.*
 import com.google.firebase.storage.StorageReference
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.chat.entity.PhotoAttachmentItem
@@ -65,6 +63,10 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	private var conversation = ConversationItem()
 	private var partner = BaseUserInfo()
 
+	private lateinit var paginateQuery: Query
+	private lateinit var paginateLastVisible: DocumentSnapshot
+	private val paginateMessageList = mutableListOf<MessageItem>()
+
 	override fun getConversationWithPartner(partnerId: String): Single<ConversationItem> {
 		return Single.create(SingleOnSubscribe<ConversationItem> { emitter ->
 			currentUserDocReference
@@ -86,7 +88,47 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 
 	override fun loadMessages(conversation: ConversationItem): Single<List<MessageItem>> {
-		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+		this.conversation = conversation
+		this.partner = conversation.partner
+
+		//check is this first call
+		if (!this::paginateQuery.isInitialized)
+			paginateQuery = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(conversation.conversationId)
+				.collection(SECONDARY_COLLECTION_REFERENCE)
+				.orderBy("timestamp", Query.Direction.DESCENDING)
+				.limit(15)
+
+		//Log.wtf(TAG, "load messages called")
+
+		return Single.create(SingleOnSubscribe<List<MessageItem>> { emitter ->
+			paginateQuery
+				.get()
+				.addOnSuccessListener {
+					//check if there is messages first
+					//it will throw exception IndexOutOfRange without this statement
+					if (!it.isEmpty) {
+						for (doc in it) {
+							val message = doc.toObject(MessageItem::class.java)
+							message.timestamp = (message.timestamp as Timestamp?)?.toDate()
+							if (!paginateMessageList.contains(message))
+								paginateMessageList.add(message)
+						}
+						emitter.onSuccess(paginateMessageList)
+
+						//new cursor position
+						paginateLastVisible = it.documents[it.size() - 1]
+						//update query with new cursor position
+						paginateQuery = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+							.document(conversation.conversationId)
+							.collection(SECONDARY_COLLECTION_REFERENCE)
+							.orderBy("timestamp", Query.Direction.DESCENDING).limit(15)
+							.startAfter(paginateLastVisible)
+					}
+				}
+				.addOnFailureListener { emitter.onError(it) }
+
+		}).subscribeOn(Schedulers.io())
 	}
 
 	override fun observeNewMessages(conversation: ConversationItem): Observable<List<MessageItem>> {
@@ -98,19 +140,19 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversation.conversationId)
 				.collection(SECONDARY_COLLECTION_REFERENCE)
-				.orderBy("timestamp")
+				.orderBy("timestamp", Query.Direction.DESCENDING)
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
 						emitter.onError(e)
 						return@addSnapshotListener
 					}
-					val messages = ArrayList<MessageItem>()
+					val messages = mutableListOf<MessageItem>()
 					for (doc in snapshots!!) {
 						val message = doc.toObject(MessageItem::class.java)
 						message.timestamp = (message.timestamp as Timestamp?)?.toDate()
 						if (!messages.contains(message)) messages.add(message)
 					}
-					emitter.onNext(messages)
+					emitter.onNext(messages.asReversed())
 				}
 			emitter.setCancellable { listener.remove() }
 		}).subscribeOn(Schedulers.io())
