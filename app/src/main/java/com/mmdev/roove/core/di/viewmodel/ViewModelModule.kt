@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 18:35
+ * Last modified 05.02.20 15:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,10 +22,7 @@ import com.mmdev.business.cards.usecase.AddToSkippedUseCase
 import com.mmdev.business.cards.usecase.CheckMatchUseCase
 import com.mmdev.business.cards.usecase.GetUsersByPreferencesUseCase
 import com.mmdev.business.chat.repository.ChatRepository
-import com.mmdev.business.chat.usecase.GetConversationWithPartnerUseCase
-import com.mmdev.business.chat.usecase.ObserveNewMessagesUseCase
-import com.mmdev.business.chat.usecase.SendMessageUseCase
-import com.mmdev.business.chat.usecase.UploadMessagePhotoUseCase
+import com.mmdev.business.chat.usecase.*
 import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
 import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
@@ -92,6 +89,7 @@ class ViewModelModule {
 	@ViewModelKey(ChatViewModel::class)
 	fun chatViewModel(repo: ChatRepository): ViewModel =
 		ChatViewModel(GetConversationWithPartnerUseCase(repo),
+		              LoadMessagesUseCase(repo),
 		              ObserveNewMessagesUseCase(repo),
 		              SendMessageUseCase(repo),
 		              UploadMessagePhotoUseCase(repo))
