@@ -12,6 +12,8 @@ Used libraries/patterns:
 * Firebase Auth;
 * Firestore to store *user, messages* data;
 * Firestorage to store *photos*;
+* Data pagination;
+* Retrofit to access public [Kudago](kudago.com) Api; 
 * Facebook SDK to login.
 
 
