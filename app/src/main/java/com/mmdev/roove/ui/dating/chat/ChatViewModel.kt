@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 18:35
+ * Last modified 05.02.20 17:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,10 +13,7 @@ package com.mmdev.roove.ui.dating.chat
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.chat.entity.MessageItem
-import com.mmdev.business.chat.usecase.GetConversationWithPartnerUseCase
-import com.mmdev.business.chat.usecase.ObserveNewMessagesUseCase
-import com.mmdev.business.chat.usecase.SendMessageUseCase
-import com.mmdev.business.chat.usecase.UploadMessagePhotoUseCase
+import com.mmdev.business.chat.usecase.*
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.roove.ui.core.BaseViewModel
@@ -25,6 +22,7 @@ import javax.inject.Inject
 
 class ChatViewModel
 @Inject constructor(private val getConversationWPartnerUC: GetConversationWithPartnerUseCase,
+                    private val loadMessagesUC: LoadMessagesUseCase,
                     private val observeNewMessagesUC: ObserveNewMessagesUseCase,
                     private val sendMessageUC: SendMessageUseCase,
                     private val uploadMessagePhotoUC: UploadMessagePhotoUseCase) : BaseViewModel() {
@@ -57,6 +55,24 @@ class ChatViewModel
                        }))
 	}
 
+	fun loadMessages(conversation: ConversationItem) {
+		selectedConversation = conversation
+		disposables.add(loadMessagesExecution(conversation)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+	                       if(it.isNotEmpty()) {
+		                       messagesList.value = it
+		                       emptyChat = false
+	                       }
+	                       else emptyChat = true
+	                       Log.wtf(TAG, "messages to show: ${it.size}")
+                       },
+                       {
+	                       Log.wtf(TAG, "load messages error: $it")
+                       }))
+
+	}
+
 	fun observeNewMessages(conversation: ConversationItem){
 		selectedConversation = conversation
 		disposables.add(observeNewMessagesExecution(conversation)
@@ -80,8 +96,8 @@ class ChatViewModel
 	fun sendMessage(messageItem: MessageItem){
 		disposables.add(sendMessageExecution(messageItem, emptyChat)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ Log.wtf(TAG, "Message sent fragment_chat") },
-                       { Log.wtf(TAG, "can't send message fragment_chat, $emptyChat") }))
+            .subscribe({ Log.wtf(TAG, "Message sent") },
+                       { Log.wtf(TAG, "can't send message, $emptyChat") }))
 	}
 
 	//upload photo then send it as message item
@@ -105,6 +121,9 @@ class ChatViewModel
 
 	private fun getConversationWPartnerExecution(partnerId: String) =
 		getConversationWPartnerUC.execute(partnerId)
+
+	private fun loadMessagesExecution(conversation: ConversationItem) =
+		loadMessagesUC.execute(conversation)
 
 	private fun observeNewMessagesExecution(conversation: ConversationItem) =
 		observeNewMessagesUC.execute(conversation)

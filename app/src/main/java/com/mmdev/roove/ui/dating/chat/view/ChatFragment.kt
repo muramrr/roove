@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 18:35
+ * Last modified 05.02.20 18:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -53,6 +53,7 @@ import com.mmdev.roove.databinding.FragmentChatBinding
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.dating.chat.ChatViewModel
+import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import com.mmdev.roove.utils.addSystemBottomPadding
 import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_chat.*
@@ -97,6 +98,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 	//static fields
 	companion object {
+		private const val TAG = "mylogs_ChatFragment"
+
 		private const val IMAGE_GALLERY_REQUEST = 1
 		private const val IMAGE_CAMERA_REQUEST = 2
 
@@ -215,14 +218,14 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			alertDialog.show()
 		}
 
-		//automatically scroll to bottom if new message is received
-		mChatAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-			override fun onChanged() {
-				super.onChanged()
-				val friendlyMessageCount = mChatAdapter.itemCount
-				rvMessageList.scrollToPosition(friendlyMessageCount - 1)
-			}
-		})
+		//automatically scroll to bottom if data in adapter updates
+//		mChatAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+//			override fun onChanged() {
+//				super.onChanged()
+//				val friendlyMessageCount = mChatAdapter.itemCount
+//				rvMessageList.scrollToPosition(0)
+//			}
+//		})
 
 		//if message contains photo then it opens in fullscreen dialog
 		mChatAdapter.setOnAttachedPhotoClickListener(object: ChatAdapter.OnItemClickListener {
@@ -237,9 +240,10 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 		//touch event guarantee that if user want to scroll or touches recycler with messages
 		//keyboard hide and edittext focus clear
+		val linearLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
 		rvMessageList.apply {
 			adapter = mChatAdapter
-			layoutManager = LinearLayoutManager(context).apply { stackFromEnd = true }
+			layoutManager = linearLayoutManager
 			setOnTouchListener { v, _ ->
 				val iMM = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 				iMM.hideSoftInputFromWindow(v.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
@@ -247,6 +251,14 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 				return@setOnTouchListener false
 			}
+			addOnScrollListener(object: EndlessRecyclerViewScrollListener(linearLayoutManager) {
+				override fun onLoadMore(page: Int, totalItemsCount: Int) {
+					if (linearLayoutManager.findLastVisibleItemPosition() == totalItemsCount - 4){
+						chatViewModel.loadMessages(currentConversation)
+					}
+
+				}
+			})
 		}
 
 		toolbarChat.setNavigationOnClickListener { findNavController().navigateUp() }
@@ -276,7 +288,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		if (isOnCreateCalled && this::currentConversation.isInitialized ) {
 
 			if (currentConversation.conversationId.isNotEmpty()) {
-				chatViewModel.observeNewMessages(currentConversation)
+				chatViewModel.loadMessages(currentConversation)
 				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
 					mChatAdapter.updateData(messageList)
 				})
@@ -288,7 +300,6 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 				})
 			}
 			setupContentToolbar()
-
 		}
 	}
 
@@ -330,6 +341,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 			chatViewModel.sendMessage(message)
 			edTextMessageInput.setText("")
+			rvMessageList.scrollToPosition(0)
 
 		}
 		else edTextMessageInput.startAnimation(
@@ -378,6 +390,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		else startGalleryIntent()
 	}
 
+	//open gallery chooser
 	private fun startGalleryIntent() {
 		val intent = Intent().apply {
 			action = Intent.ACTION_GET_CONTENT

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 05.02.20 16:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,12 +37,12 @@ abstract class EndlessRecyclerViewScrollListener: OnScrollListener {
 
 	internal constructor(layoutManager: GridLayoutManager) {
 		mLayoutManager = layoutManager
-		visibleThreshold = visibleThreshold * layoutManager.spanCount
+		visibleThreshold *= layoutManager.spanCount
 	}
 
-	constructor(layoutManager: StaggeredGridLayoutManager) {
+	internal constructor(layoutManager: StaggeredGridLayoutManager) {
 		mLayoutManager = layoutManager
-		visibleThreshold = visibleThreshold * layoutManager.spanCount
+		visibleThreshold *= layoutManager.spanCount
 	}
 
 	private fun getLastVisibleItem(lastVisibleItemPositions: IntArray): Int {
@@ -59,20 +59,26 @@ abstract class EndlessRecyclerViewScrollListener: OnScrollListener {
 	override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
 		var lastVisibleItemPosition = 0
 		val totalItemCount = mLayoutManager.itemCount
-		if (mLayoutManager is StaggeredGridLayoutManager) {
-			val lastVisibleItemPositions: IntArray =
-				(mLayoutManager as StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
-			// get maximum element within the list
+		when (mLayoutManager) {
+			is StaggeredGridLayoutManager -> {
+				val lastVisibleItemPositions: IntArray = (mLayoutManager as StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
+				// get maximum element within the list
+				lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions)
+			}
 
-			lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions)
+			// If the total item count is zero and the previous isn't, assume the
+			// list is invalidated and should be reset back to initial state
+			is LinearLayoutManager -> lastVisibleItemPosition = (mLayoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+			is GridLayoutManager -> lastVisibleItemPosition = (mLayoutManager as GridLayoutManager).findLastVisibleItemPosition()
+			// If it’s still loading, we check to see if the dataset count has
+			// changed, if so we conclude it has finished loading and update the current page
+			// number and total item count.
+
+			// If it isn’t currently loading, we check to see if we have breached
+			// the visibleThreshold and need to reload more data.
+			// If we do need to reload some more data, we execute onLoadMore to fetch the data.
+			// threshold should reflect how many total columns there are too
 		}
-
-		// If the total item count is zero and the previous isn't, assume the
-		// list is invalidated and should be reset back to initial state
-		else if (mLayoutManager is LinearLayoutManager) lastVisibleItemPosition =
-			(mLayoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-		else if (mLayoutManager is GridLayoutManager) lastVisibleItemPosition =
-			(mLayoutManager as GridLayoutManager).findLastVisibleItemPosition()
 
 		if (totalItemCount < previousTotalItemCount) {
 			currentPage = startingPageIndex
