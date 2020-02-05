@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 17:20
+ * Last modified 05.02.20 15:50
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ package com.mmdev.data.conversations
 
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.user.UserItem
@@ -83,11 +84,11 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 		Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
 			currentUserDocReference
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.orderBy("lastMessageTimestamp", Query.Direction.DESCENDING)
 				.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
-				.orderBy("lastMessageTimestamp")
 				.get()
 				.addOnSuccessListener { docSnapshot ->
-					val conversations = ArrayList<ConversationItem>()
+					val conversations = mutableListOf<ConversationItem>()
 					if (!docSnapshot.isEmpty)
 						for (doc in docSnapshot!!) {
 							conversations.add(doc.toObject(ConversationItem::class.java))
