@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 17:01
+ * Last modified 05.02.20 15:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.mmdev.roove.R
@@ -69,6 +70,7 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 		rvConversationList.apply {
 			adapter = mConversationsAdapter
 			layoutManager = LinearLayoutManager(context, VERTICAL, false)
+			addItemDecoration(DividerItemDecoration(this.context, VERTICAL))
 		}
 
 		mConversationsAdapter.setOnItemClickListener(object: ConversationsAdapter.OnItemClickListener {

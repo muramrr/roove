@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.01.20 19:21
+  ~ Last modified 05.02.20 15:25
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,8 +27,7 @@
 		android:layout_marginStart="@dimen/card_margin_fix_rview_8"
 		android:layout_marginBottom="@dimen/card_margin_fix_rview_8"
 		app:cardBackgroundColor="@color/colorPrimary"
-		app:cardCornerRadius="10dp"
-		app:cardElevation="1dp">
+		app:cardCornerRadius="10dp">
 
 		<ImageView
 			android:layout_width="match_parent"
