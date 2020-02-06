@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 19:35
+ * Last modified 06.02.20 15:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,7 +32,10 @@ class MainFlowFragment: FlowFragment(R.layout.fragment_main_flow) {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		containerMain.addSystemTopPadding()
 		bottomNavigationView.addSystemBottomPadding()
+
+		//set selected bottom menu item on startup
 		bottomNavigationView.selectedItemId = R.id.bottomCards
+		fabCards.isSelected = true
 
 
 		val navHost =
@@ -56,22 +59,26 @@ class MainFlowFragment: FlowFragment(R.layout.fragment_main_flow) {
 					R.id.bottomPlaces -> {
 						navControllerMain.popBackStack()
 						navControllerMain.navigate(R.id.placesFragmentNav)
+						fabCards.isSelected = false
 
 					}
 					R.id.bottomPairs -> {
 						navControllerMain.popBackStack()
 						navControllerMain.navigate(R.id.pairsFragmentNav)
+						fabCards.isSelected = false
 
 					}
 					//R.id.bottomCards -> navControllerDating.navigate(R.id.cardsFragmentNav)
 					R.id.bottomConversations -> {
 						navControllerMain.popBackStack()
 						navControllerMain.navigate(R.id.conversationsFragmentNav)
+						fabCards.isSelected = false
 
 					}
 					R.id.bottomSettings -> {
 						navControllerMain.popBackStack()
 						navControllerMain.navigate(R.id.settingsFragmentNav)
+						fabCards.isSelected = false
 
 					}
 				}
@@ -85,6 +92,7 @@ class MainFlowFragment: FlowFragment(R.layout.fragment_main_flow) {
 				bottomNavigationView.selectedItemId = R.id.bottomCards
 				navControllerMain.popBackStack()
 				navControllerMain.navigate(R.id.cardsFragmentNav)
+				it.isSelected = true
 			}
 		}
 

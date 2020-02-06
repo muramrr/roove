@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.01.20 16:42
+ * Last modified 06.02.20 15:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,7 +54,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 	private lateinit var cityList: Map<String, String>
 
 
-	companion object{
+	companion object {
 		private const val TAG = "mylogs_RegistrFragment"
 	}
 
@@ -95,25 +95,22 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 		disableFab()
 
 		// don't allow to break transitions
-		containerRegistration.setTransitionListener(
-				object : MotionLayout.TransitionListener {
+		containerRegistration.setTransitionListener(object : MotionLayout.TransitionListener {
 
-					override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean,
-					                                 p3: Float) {}
+			override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {}
 
-					override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
-						btnRegistrationBack.isClickable = false
-						btnRegistrationNext.isClickable = false
-					}
+			override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+				btnRegistrationBack.isClickable = false
+				btnRegistrationNext.isClickable = false
+			}
 
-					override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {}
+			override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {}
 
-					override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
-						btnRegistrationBack.isClickable = true
-						btnRegistrationNext.isClickable = true
-					}
-				}
-		)
+			override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
+				btnRegistrationBack.isClickable = true
+				btnRegistrationNext.isClickable = true
+			}
+		})
 
 
 
@@ -217,18 +214,16 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 		btnRegistrationDone.setOnClickListener {
 			val finalUserModel = BaseUserInfo(name,
-			                                                                             age,
-			                                                                             city,
-			                                                                             gender,
-			                                                                             baseUserInfo.mainPhotoUrl,
-			                                                                             baseUserInfo.userId)
+			                                  age,
+			                                  city,
+			                                  gender,
+			                                  baseUserInfo.mainPhotoUrl,
+			                                  baseUserInfo.userId)
 
 			authViewModel.signUp(UserItem(finalUserModel,
 			                              preferredGender,
 			                              mutableListOf(finalUserModel.mainPhotoUrl)))
 		}
-
-
 
 
 
@@ -345,9 +340,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 	}
 
 	private fun restoreStep5State(){
-		if (city.isNotEmpty()) {
-			enableFab()
-		}
+		if (city.isNotEmpty()) enableFab()
 		else disableFab()
 	}
 
@@ -361,13 +354,11 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 
 	private fun enableFab(){
-		if (!btnRegistrationNext.isEnabled)
-			btnRegistrationNext.isEnabled = true
+		if (!btnRegistrationNext.isEnabled) btnRegistrationNext.isEnabled = true
 	}
 
 	private fun disableFab(){
-		if (btnRegistrationNext.isEnabled)
-			btnRegistrationNext.isEnabled = false
+		if (btnRegistrationNext.isEnabled) btnRegistrationNext.isEnabled = false
 	}
 
 

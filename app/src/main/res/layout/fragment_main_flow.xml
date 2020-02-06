@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 21.01.20 15:15
+  ~ Last modified 06.02.20 15:46
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -58,6 +58,9 @@
 		android:layout_height="wrap_content"
 		android:scaleType="center"
 		android:src="@drawable/ic_cards_24dp"
+
+		app:backgroundTint="@color/bottom_navigation_card_button"
+		app:tint="@color/bottom_navigation_card_button_icon"
 
 		app:elevation="2dp"
 		app:fabSize="auto"
