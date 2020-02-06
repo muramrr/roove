@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 18:38
+ * Last modified 06.02.20 16:24
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,7 @@ interface ChatRepository {
 
 	fun loadMessages(conversation: ConversationItem): Single<List<MessageItem>>
 
-	fun observeNewMessages(conversation: ConversationItem): Observable<List<MessageItem>>
+	fun observeNewMessages(conversation: ConversationItem): Observable<MessageItem>
 
 	fun sendMessage(messageItem: MessageItem, emptyChat: Boolean? = false): Completable
 

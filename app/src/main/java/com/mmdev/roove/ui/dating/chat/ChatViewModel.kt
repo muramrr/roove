@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 05.02.20 17:21
+ * Last modified 06.02.20 17:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,9 +30,11 @@ class ChatViewModel
 
 	private lateinit var selectedConversation: ConversationItem
 
-	private var emptyChat = false
-	private val messagesList: MutableLiveData<List<MessageItem>> = MutableLiveData()
+	private var emptyChat = true
+	private val localMessagesList = mutableListOf<MessageItem>()
+	private val messagesList: MutableLiveData<MutableList<MessageItem>> = MutableLiveData()
 	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
+
 
 	fun startListenToEmptyChat(partnerId: String){
 		disposables.add(getConversationWPartnerExecution(partnerId)
@@ -42,12 +44,10 @@ class ChatViewModel
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       if(it.isNotEmpty()) {
-		                       messagesList.value = it
-		                       emptyChat = false
-	                       }
-	                       else emptyChat = true
-	                       Log.wtf(TAG, "empty chat messages to show: ${it.size}")
+	                       messagesList.value?.add(0, it)
+	                       messagesList.value = messagesList.value
+	                       emptyChat = false
+
 	                       Log.wtf(TAG, "is empty chat? + $emptyChat")
                        },
                        {
@@ -60,11 +60,12 @@ class ChatViewModel
 		disposables.add(loadMessagesExecution(conversation)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       if(it.isNotEmpty()) {
-		                       messagesList.value = it
-		                       emptyChat = false
+	                       emptyChat = if(it.isNotEmpty()) {
+
+		                       messagesList.value = it.toMutableList()
+		                       false
 	                       }
-	                       else emptyChat = true
+	                       else true
 	                       Log.wtf(TAG, "messages to show: ${it.size}")
                        },
                        {
@@ -76,20 +77,16 @@ class ChatViewModel
 	fun observeNewMessages(conversation: ConversationItem){
 		selectedConversation = conversation
 		disposables.add(observeNewMessagesExecution(conversation)
-            .doOnSubscribe { showLoading.value = true }
-            .doOnNext { showLoading.value = false }
-            .doFinally { showLoading.value = false }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       if(it.isNotEmpty()) {
-		                       messagesList.value = it
-		                       emptyChat = false
-	                       }
-	                       else emptyChat = true
-	                       Log.wtf(TAG, "messages to show: ${it.size}")
+	                       messagesList.value?.add(0, it)
+	                       messagesList.value = messagesList.value
+	                       emptyChat = false
+
+	                       Log.wtf(TAG, "new message sent: ${it.text}")
                        },
                        {
-	                       Log.wtf(TAG, "get messages error: $it")
+	                       Log.wtf(TAG, "observe messages error: $it")
                        }))
 	}
 
