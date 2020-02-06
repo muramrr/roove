@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 05.02.20 18:16
+ * Last modified 06.02.20 17:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ package com.mmdev.data.chat
 
 import android.net.Uri
 import android.text.format.DateFormat
+import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.*
 import com.google.firebase.storage.StorageReference
@@ -26,6 +27,13 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
+
+/**
+ * [observeNewMessages] method uses firebase snapshot listener
+ * read more about local changes and writing to backend with "latency compensation"
+ * @link https://firebase.google.com/docs/firestore/query-data/listen
+ */
+
 
 class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
                                              private val firestore: FirebaseFirestore,
@@ -65,7 +73,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 	private lateinit var paginateQuery: Query
 	private lateinit var paginateLastVisible: DocumentSnapshot
-	private val paginateMessageList = mutableListOf<MessageItem>()
+	private val messagesList = mutableListOf<MessageItem>()
 
 	override fun getConversationWithPartner(partnerId: String): Single<ConversationItem> {
 		return Single.create(SingleOnSubscribe<ConversationItem> { emitter ->
@@ -111,10 +119,10 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 						for (doc in it) {
 							val message = doc.toObject(MessageItem::class.java)
 							message.timestamp = (message.timestamp as Timestamp?)?.toDate()
-							if (!paginateMessageList.contains(message))
-								paginateMessageList.add(message)
+							if (!messagesList.contains(message))
+								messagesList.add(message)
 						}
-						emitter.onSuccess(paginateMessageList)
+						emitter.onSuccess(messagesList)
 
 						//new cursor position
 						paginateLastVisible = it.documents[it.size() - 1]
@@ -131,12 +139,12 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 		}).subscribeOn(Schedulers.io())
 	}
 
-	override fun observeNewMessages(conversation: ConversationItem): Observable<List<MessageItem>> {
+	override fun observeNewMessages(conversation: ConversationItem): Observable<MessageItem> {
 		this.conversation = conversation
 		this.partner = conversation.partner
 
 		//Log.wtf(TAG, "conversation set, id = ${conversation.conversationId}")
-		return Observable.create(ObservableOnSubscribe<List<MessageItem>> { emitter ->
+		return Observable.create(ObservableOnSubscribe<MessageItem>{ emitter ->
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversation.conversationId)
 				.collection(SECONDARY_COLLECTION_REFERENCE)
@@ -146,13 +154,37 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 						emitter.onError(e)
 						return@addSnapshotListener
 					}
-					val messages = mutableListOf<MessageItem>()
-					for (doc in snapshots!!) {
-						val message = doc.toObject(MessageItem::class.java)
-						message.timestamp = (message.timestamp as Timestamp?)?.toDate()
-						if (!messages.contains(message)) messages.add(message)
+
+					if (snapshots != null) {
+						if (snapshots.metadata.hasPendingWrites()) {
+							for (dc in snapshots.documentChanges) {
+								if (dc.type == DocumentChange.Type.MODIFIED) {
+									Log.d(TAG, "Modified: ${dc.document.data}")
+
+								}
+								if (dc.type == DocumentChange.Type.ADDED) {
+									Log.d(TAG, "Added: ${dc.document.data}")
+									val message = dc.document.toObject(MessageItem::class.java)
+									message.timestamp = (message.timestamp as Timestamp?)?.toDate()
+									if (!messagesList.contains(message)) {
+										emitter.onNext(message)
+									}
+								}
+							}
+						}
+						else {
+//							if (snapshots.documents[0].get("sender.userId") != currentUser.baseUserInfo.userId){
+//								val message = snapshots.documents[0].toObject(MessageItem::class.java)!!
+//								message.timestamp = (message.timestamp as Timestamp?)?.toDate()
+//								if (!messagesList.contains(message))
+//									emitter.onNext(message)
+//								Log.wtf(TAG, "received from partner: $message")
+//							}
+						}
 					}
-					emitter.onNext(messages.asReversed())
+					else Log.wtf(TAG, "snapshots is null")
+
+
 				}
 			emitter.setCancellable { listener.remove() }
 		}).subscribeOn(Schedulers.io())
