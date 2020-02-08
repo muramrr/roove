@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.02.20 17:15
+ * Last modified 08.02.20 18:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -173,6 +173,11 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 				partnerId = it.partner.userId
 				setupContentToolbar()
 				isOnCreateCalled = true
+				if (currentConversation.conversationId.isNotEmpty()){
+					chatViewModel.observeNewMessages(currentConversation)
+					chatViewModel.loadMessages(currentConversation)
+				}
+				else chatViewModel.startListenToEmptyChat(partnerId)
 			}
 		})
 
@@ -288,15 +293,14 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		if (isOnCreateCalled && this::currentConversation.isInitialized ) {
 
 			if (currentConversation.conversationId.isNotEmpty()) {
-				chatViewModel.observeNewMessages(currentConversation)
-				chatViewModel.loadMessages(currentConversation)
+
 				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
 					mChatAdapter.updateData(messageList)
 					//Log.wtf(TAG, "received messages in fragment = ${messageList.size}")
 				})
 			}
 			else {
-				chatViewModel.startListenToEmptyChat(currentConversation.partner.userId)
+				//chatViewModel.startListenToEmptyChat(currentConversation.partner.userId)
 				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
 					mChatAdapter.updateData(messageList)
 				})
