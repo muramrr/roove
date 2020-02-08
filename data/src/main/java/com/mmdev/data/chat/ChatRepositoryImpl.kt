@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.02.20 17:41
+ * Last modified 08.02.20 18:06
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -143,8 +143,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 		this.conversation = conversation
 		this.partner = conversation.partner
 
-		//Log.wtf(TAG, "conversation set, id = ${conversation.conversationId}")
-		return Observable.create(ObservableOnSubscribe<MessageItem>{ emitter ->
+		return Observable.create(ObservableOnSubscribe<MessageItem> { emitter ->
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversation.conversationId)
 				.collection(SECONDARY_COLLECTION_REFERENCE)
@@ -155,31 +154,36 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 						return@addSnapshotListener
 					}
 
+					Log.wtf(TAG, "observe messages called")
 					if (snapshots != null) {
+						//if sent from current device
 						if (snapshots.metadata.hasPendingWrites()) {
 							for (dc in snapshots.documentChanges) {
-								if (dc.type == DocumentChange.Type.MODIFIED) {
-									Log.d(TAG, "Modified: ${dc.document.data}")
-
-								}
+//								if (dc.type == DocumentChange.Type.MODIFIED) {
+//									Log.wtf(TAG, "Modified: ${dc.document.data}")
+//
+//								}
 								if (dc.type == DocumentChange.Type.ADDED) {
-									Log.d(TAG, "Added: ${dc.document.data}")
+
 									val message = dc.document.toObject(MessageItem::class.java)
 									message.timestamp = (message.timestamp as Timestamp?)?.toDate()
-									if (!messagesList.contains(message)) {
+									if (messagesList.isNotEmpty() && !messagesList.contains(message)){
+										Log.wtf(TAG, "Added: ${dc.document.data}")
 										emitter.onNext(message)
 									}
+
 								}
 							}
 						}
+						//partner send msg
 						else {
-//							if (snapshots.documents[0].get("sender.userId") != currentUser.baseUserInfo.userId){
-//								val message = snapshots.documents[0].toObject(MessageItem::class.java)!!
-//								message.timestamp = (message.timestamp as Timestamp?)?.toDate()
-//								if (!messagesList.contains(message))
-//									emitter.onNext(message)
-//								Log.wtf(TAG, "received from partner: $message")
-//							}
+							if (snapshots.documents[0].get("sender.userId") != currentUser.baseUserInfo.userId){
+								val message = snapshots.documents[0].toObject(MessageItem::class.java)!!
+								message.timestamp = (message.timestamp as Timestamp?)?.toDate()
+								if (messagesList.isNotEmpty() && !messagesList.contains(message))
+									emitter.onNext(message)
+
+							}
 						}
 					}
 					else Log.wtf(TAG, "snapshots is null")
@@ -221,10 +225,12 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			.child(conversation.conversationId)
 			.child(namePhoto)
 		return Observable.create(ObservableOnSubscribe<PhotoAttachmentItem> { emitter ->
+			//Log.wtf(TAG, "upload photo observable called")
 			val uploadTask = storageRef.putFile(Uri.parse(photoUri))
 				.addOnSuccessListener {
 					storageRef.downloadUrl.addOnSuccessListener {
-						val photoAttached = PhotoAttachmentItem(it.toString(), namePhoto)
+						val photoAttached = PhotoAttachmentItem(namePhoto, it.toString())
+						//Log.wtf(TAG, "photo uploaded: $photoAttached")
 						emitter.onNext(photoAttached)
 					}
 				}
