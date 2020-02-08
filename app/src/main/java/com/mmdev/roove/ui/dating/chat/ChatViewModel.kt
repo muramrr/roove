@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.02.20 17:41
+ * Last modified 08.02.20 16:38
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,7 +31,6 @@ class ChatViewModel
 	private lateinit var selectedConversation: ConversationItem
 
 	private var emptyChat = true
-	private val localMessagesList = mutableListOf<MessageItem>()
 	private val messagesList: MutableLiveData<MutableList<MessageItem>> = MutableLiveData()
 	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -61,7 +60,6 @@ class ChatViewModel
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       emptyChat = if(it.isNotEmpty()) {
-
 		                       messagesList.value = it.toMutableList()
 		                       false
 	                       }
@@ -83,7 +81,7 @@ class ChatViewModel
 	                       messagesList.value = messagesList.value
 	                       emptyChat = false
 
-	                       Log.wtf(TAG, "new message sent: ${it.text}")
+	                       Log.wtf(TAG, "new message in conversation: $it")
                        },
                        {
 	                       Log.wtf(TAG, "observe messages error: $it")
@@ -98,20 +96,22 @@ class ChatViewModel
 	}
 
 	//upload photo then send it as message item
-	fun sendPhoto(photoUri: String, sender: BaseUserInfo, recipient: String){
-		disposables.add(sendPhotoExecution(photoUri)
+	fun sendPhoto(photoUri: String, sender: BaseUserInfo, recipient: String) {
+		disposables.add(uploadPhotoExecution(photoUri)
             .flatMapCompletable {
-	            sendMessageExecution(MessageItem(sender = sender,
-	                                             recipientId = recipient,
-	                                             photoAttachmentItem = it,
-	                                             conversationId = selectedConversation.conversationId),
-	                                 emptyChat)
+	            val photoMessage = MessageItem(sender = sender,
+	                                           recipientId = recipient,
+	                                           photoAttachmentItem = it,
+	                                           conversationId = selectedConversation.conversationId)
+	            sendMessageExecution(photoMessage, emptyChat)
             }
-            .doOnSubscribe { showLoading.value = true }
-            .doOnComplete { showLoading.value = false }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ Log.wtf(TAG, "Photo sent") },
-                       { Log.wtf(TAG, "Sending photo error: $it") }))
+            .subscribe({
+	                       Log.wtf(TAG, "Photo sent")
+                       },
+                       {
+	                       Log.wtf(TAG, "Sending photo error: $it")
+                       }))
 	}
 
 	fun getMessagesList() = messagesList
@@ -128,7 +128,7 @@ class ChatViewModel
 	private fun sendMessageExecution(messageItem: MessageItem, emptyChat: Boolean? = false) =
 		sendMessageUC.execute(messageItem, emptyChat)
 
-	private fun sendPhotoExecution(photoUri: String) =
+	private fun uploadPhotoExecution(photoUri: String) =
 		uploadMessagePhotoUC.execute(photoUri)
 
 

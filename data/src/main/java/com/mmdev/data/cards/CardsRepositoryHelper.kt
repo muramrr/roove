@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.01.20 17:19
+ * Last modified 08.02.20 15:48
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -53,7 +53,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 					val allUsersCards = ArrayList<CardItem>()
 					for (doc in it.result!!.documents)
 						allUsersCards.add(doc.toObject(CardItem::class.java)!!)
-					Log.wtf(TAG, "all on complete, size = " + allUsersCards.size)
+					//Log.wtf(TAG, "all on complete, size = " + allUsersCards.size)
 					emitter.onSuccess(allUsersCards)
 				}
 			}.addOnFailureListener {
@@ -103,7 +103,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 					val likedUsersCardsIds = ArrayList<String>()
 					for (doc in it.result!!.documents)
 						likedUsersCardsIds.add(doc.id)
-					Log.wtf(TAG, "likes on complete, size = " + likedUsersCardsIds.size)
+					//Log.wtf(TAG, "likes on complete, size = " + likedUsersCardsIds.size)
 					emitter.onSuccess(likedUsersCardsIds)
 				}
 			}.addOnFailureListener {
@@ -130,7 +130,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 					val matchedUsersCardsIds = ArrayList<String>()
 					for (doc in it.result!!.documents)
 						matchedUsersCardsIds.add(doc.id)
-					Log.wtf(TAG, "matches on complete, size = " + matchedUsersCardsIds.size)
+					//Log.wtf(TAG, "matches on complete, size = " + matchedUsersCardsIds.size)
 					emitter.onSuccess(matchedUsersCardsIds)
 				}
 			}.addOnFailureListener {
@@ -157,7 +157,7 @@ class CardsRepositoryHelper constructor(private val firestore: FirebaseFirestore
 					val skippedUsersCardsIds = ArrayList<String>()
 					for (doc in it.result!!.documents)
 						skippedUsersCardsIds.add(doc.id)
-					Log.wtf(TAG, "skips on complete, size = " + skippedUsersCardsIds.size)
+					//Log.wtf(TAG, "skips on complete, size = " + skippedUsersCardsIds.size)
 					emitter.onSuccess(skippedUsersCardsIds)
 				}
 			}.addOnFailureListener {
