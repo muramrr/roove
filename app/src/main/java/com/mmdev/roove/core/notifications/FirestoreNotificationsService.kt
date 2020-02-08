@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.02.20 16:00
+ * Last modified 08.02.20 19:27
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,7 +55,7 @@ class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserv
 		if(isAppInForeground) {
 			// do foreground stuff on your activities
 			Log.wtf("mylogs_FCMService",
-			        "app is in foreground, unhandled notification: ${remoteMessage.data}")
+			        "app is in foreground, unhandled notification: ${remoteMessage.data["CONTENT"]}")
 		} else {
 			// send a notification
 			if (remoteMessage.data["TYPE"] == "NEW_MATCH") notifyNewMatch(remoteMessage)

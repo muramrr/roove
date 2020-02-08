@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.02.20 16:38
+ * Last modified 08.02.20 19:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -49,9 +49,7 @@ class ChatViewModel
 
 	                       Log.wtf(TAG, "is empty chat? + $emptyChat")
                        },
-                       {
-	                       Log.wtf(TAG, "get messages empty chat error: $it")
-                       }))
+                       { Log.wtf(TAG, "get messages empty chat error: $it") }))
 	}
 
 	fun loadMessages(conversation: ConversationItem) {
@@ -66,9 +64,7 @@ class ChatViewModel
 	                       else true
 	                       Log.wtf(TAG, "messages to show: ${it.size}")
                        },
-                       {
-	                       Log.wtf(TAG, "load messages error: $it")
-                       }))
+                       { Log.wtf(TAG, "load messages error: $it") }))
 
 	}
 
@@ -81,18 +77,16 @@ class ChatViewModel
 	                       messagesList.value = messagesList.value
 	                       emptyChat = false
 
-	                       Log.wtf(TAG, "new message in conversation: $it")
+	                       Log.wtf(TAG, "new message in conversation: ${it.text}")
                        },
-                       {
-	                       Log.wtf(TAG, "observe messages error: $it")
-                       }))
+                       { Log.wtf(TAG, "observe messages error: $it") }))
 	}
 
 	fun sendMessage(messageItem: MessageItem){
 		disposables.add(sendMessageExecution(messageItem, emptyChat)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ Log.wtf(TAG, "Message sent") },
-                       { Log.wtf(TAG, "can't send message, $emptyChat") }))
+            .subscribe({ /*Log.wtf(TAG, "Message sent")*/ },
+                       { Log.wtf(TAG, "can't send message: $it") }))
 	}
 
 	//upload photo then send it as message item
@@ -106,12 +100,8 @@ class ChatViewModel
 	            sendMessageExecution(photoMessage, emptyChat)
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-	                       Log.wtf(TAG, "Photo sent")
-                       },
-                       {
-	                       Log.wtf(TAG, "Sending photo error: $it")
-                       }))
+            .subscribe({ /*Log.wtf(TAG, "Photo sent")*/ },
+                       { Log.wtf(TAG, "Sending photo error: $it") }))
 	}
 
 	fun getMessagesList() = messagesList
