@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.02.20 18:46
+ * Last modified 08.02.20 19:23
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,6 +23,7 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -148,7 +149,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		} ?: throw Exception("Invalid Activity")
 
 
-		sharedViewModel.getCurrentUser().observe(this, Observer {
+		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			userItemModel = it
 			mChatAdapter.setCurrentUserId(it.baseUserInfo.userId)
 		})
@@ -166,19 +167,22 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		}
 
 		sharedViewModel.conversationSelected.observeOnce(this, Observer {
-			if (!isOnCreateCalled && !this::currentConversation.isInitialized) {
+			if (!this::currentConversation.isInitialized) {
 				currentConversation = it
 				partnerName = it.partner.name
 				partnerMainPhotoUrl = it.partner.mainPhotoUrl
 				partnerId = it.partner.userId
-				setupContentToolbar()
-				isOnCreateCalled = true
 				if (currentConversation.conversationId.isNotEmpty()){
 					chatViewModel.observeNewMessages(currentConversation)
 					chatViewModel.loadMessages(currentConversation)
 				}
 				else chatViewModel.startListenToEmptyChat(partnerId)
 			}
+		})
+
+		chatViewModel.getMessagesList().observe(this, Observer {
+			mChatAdapter.updateData(it)
+			Log.wtf(TAG, "received messages in fragment = ${it.size}")
 		})
 
 	}
@@ -290,23 +294,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		// onCreate is no longer being called in this scenario
 		super.onResume()
 
-		if (isOnCreateCalled && this::currentConversation.isInitialized ) {
-
-			if (currentConversation.conversationId.isNotEmpty()) {
-
-				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
-					mChatAdapter.updateData(messageList)
-					//Log.wtf(TAG, "received messages in fragment = ${messageList.size}")
-				})
-			}
-			else {
-				//chatViewModel.startListenToEmptyChat(currentConversation.partner.userId)
-				chatViewModel.getMessagesList().observe(this, Observer { messageList ->
-					mChatAdapter.updateData(messageList)
-				})
-			}
-			setupContentToolbar()
-		}
+		if (this::currentConversation.isInitialized ) { setupContentToolbar() }
 	}
 
 	private fun setupContentToolbar(){
