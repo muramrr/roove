@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.02.20 17:26
+  ~ Last modified 09.02.20 17:07
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,6 +55,7 @@
 			android:layout_height="0dp"
 			android:layout_width="0dp"
 			android:background="@color/colorPrimaryDark"
+			android:focusable="true"
 			android:overScrollMode="never"
 			android:scrollbars="none"
 			android:visibility='@{viewModel.showLoading ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
