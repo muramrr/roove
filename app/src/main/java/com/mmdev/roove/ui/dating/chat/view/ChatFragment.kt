@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.02.20 19:23
+ * Last modified 09.02.20 17:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -173,8 +173,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 				partnerMainPhotoUrl = it.partner.mainPhotoUrl
 				partnerId = it.partner.userId
 				if (currentConversation.conversationId.isNotEmpty()){
-					chatViewModel.observeNewMessages(currentConversation)
 					chatViewModel.loadMessages(currentConversation)
+					chatViewModel.observeNewMessages(currentConversation)
 				}
 				else chatViewModel.startListenToEmptyChat(partnerId)
 			}
@@ -182,7 +182,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 		chatViewModel.getMessagesList().observe(this, Observer {
 			mChatAdapter.updateData(it)
-			Log.wtf(TAG, "received messages in fragment = ${it.size}")
+			Log.wtf(TAG, "messages to show = ${it.size}")
 		})
 
 	}
@@ -262,7 +262,9 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			}
 			addOnScrollListener(object: EndlessRecyclerViewScrollListener(linearLayoutManager) {
 				override fun onLoadMore(page: Int, totalItemsCount: Int) {
+
 					if (linearLayoutManager.findLastVisibleItemPosition() == totalItemsCount - 4){
+						Log.wtf(TAG, "load seems to be called")
 						chatViewModel.loadMessages(currentConversation)
 					}
 
@@ -282,6 +284,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 				R.id.chat_action_report -> {
 					Toast.makeText(context, "chat report click", Toast.LENGTH_SHORT).show()
+					chatViewModel.loadMessages(currentConversation)
 				}
 			}
 			return@setOnMenuItemClickListener true
