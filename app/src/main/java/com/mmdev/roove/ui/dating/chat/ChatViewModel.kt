@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.02.20 19:36
+ * Last modified 09.02.20 16:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,10 +28,15 @@ class ChatViewModel
                     private val uploadMessagePhotoUC: UploadMessagePhotoUseCase) : BaseViewModel() {
 
 
+	private val messagesList: MutableLiveData<MutableList<MessageItem>> = MutableLiveData()
+	init {
+		messagesList.value = mutableListOf()
+	}
+
 	private lateinit var selectedConversation: ConversationItem
 
 	private var emptyChat = true
-	private val messagesList: MutableLiveData<MutableList<MessageItem>> = MutableLiveData()
+
 	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
 
 
@@ -58,11 +63,12 @@ class ChatViewModel
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       emptyChat = if(it.isNotEmpty()) {
-		                       messagesList.value = it.toMutableList()
+		                       messagesList.value?.addAll(it)
+		                       messagesList.value = messagesList.value
 		                       false
 	                       }
 	                       else true
-	                       Log.wtf(TAG, "messages to show: ${it.size}")
+	                       Log.wtf(TAG, "pagination loaded messages: ${it.size}")
                        },
                        { Log.wtf(TAG, "load messages error: $it") }))
 

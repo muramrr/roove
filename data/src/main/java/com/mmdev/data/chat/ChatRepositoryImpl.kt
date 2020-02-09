@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.02.20 19:39
+ * Last modified 09.02.20 17:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,6 +27,7 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 /**
  * [observeNewMessages] method uses firebase snapshot listener
@@ -73,9 +74,12 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 	private lateinit var paginateQuery: Query
 	private lateinit var paginateLastVisible: DocumentSnapshot
+
 	private val messagesList = mutableListOf<MessageItem>()
+	private var emptyChat = false
 
 	override fun getConversationWithPartner(partnerId: String): Single<ConversationItem> {
+		emptyChat = true
 		return Single.create(SingleOnSubscribe<ConversationItem> { emitter ->
 			currentUserDocReference
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -105,7 +109,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 				.document(conversation.conversationId)
 				.collection(SECONDARY_COLLECTION_REFERENCE)
 				.orderBy("timestamp", Query.Direction.DESCENDING)
-				.limit(15)
+				.limit(20)
 
 		//Log.wtf(TAG, "load messages called")
 
@@ -116,13 +120,15 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 					//check if there is messages first
 					//it will throw exception IndexOutOfRange without this statement
 					if (!it.isEmpty) {
+						val paginateMessageList = ArrayList<MessageItem>()
 						for (doc in it) {
 							val message = doc.toObject(MessageItem::class.java)
 							message.timestamp = (message.timestamp as Timestamp?)?.toDate()
-							if (!messagesList.contains(message))
-								messagesList.add(message)
+							if (!paginateMessageList.contains(message))
+								paginateMessageList.add(message)
 						}
-						emitter.onSuccess(messagesList)
+						messagesList.addAll(paginateMessageList)
+						emitter.onSuccess(paginateMessageList)
 
 						//new cursor position
 						paginateLastVisible = it.documents[it.size() - 1]
@@ -130,7 +136,8 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 						paginateQuery = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 							.document(conversation.conversationId)
 							.collection(SECONDARY_COLLECTION_REFERENCE)
-							.orderBy("timestamp", Query.Direction.DESCENDING).limit(15)
+							.orderBy("timestamp", Query.Direction.DESCENDING)
+							.limit(20)
 							.startAfter(paginateLastVisible)
 					}
 				}
@@ -154,7 +161,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 						return@addSnapshotListener
 					}
 
-					if (snapshots != null) {
+					if (snapshots != null && snapshots.documents.isNotEmpty()) {
 						//if sent from current device
 						if (snapshots.metadata.hasPendingWrites()) {
 							for (dc in snapshots.documentChanges) {
@@ -162,15 +169,11 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 //									Log.wtf(TAG, "Modified: ${dc.document.data}")
 //								}
 								if (dc.type == DocumentChange.Type.ADDED) {
-
 									val message = dc.document.toObject(MessageItem::class.java)
 									message.timestamp = (message.timestamp as Timestamp?)?.toDate()
 									Log.wtf(TAG, "Added: ${dc.document["text"]}")
-									if (messagesList.isNotEmpty()){
-										messagesList.add(0, message)
-										emitter.onNext(message)
-									}
-
+									emitter.onNext(message)
+									messagesList.add(0, message)
 								}
 							}
 						}
@@ -179,14 +182,20 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 							if (snapshots.documents[0].get("sender.userId") != currentUser.baseUserInfo.userId){
 								val message = snapshots.documents[0].toObject(MessageItem::class.java)!!
 								message.timestamp = (message.timestamp as Timestamp?)?.toDate()
+								//check if last message was loaded with pagination before
+
 								if (messagesList.isNotEmpty() && !messagesList.contains(message)){
 									messagesList.add(0, message)
+									emitter.onNext(message)
+								}else if (emptyChat){
+									messagesList.add(0, message)
+									emptyChat = false
 									emitter.onNext(message)
 								}
 							}
 						}
 					}
-					else Log.wtf(TAG, "snapshots is null")
+					else Log.wtf(TAG, "snapshots is null or empty")
 
 				}
 			emitter.setCancellable { listener.remove() }
