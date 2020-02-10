@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 18:03
+ * Last modified 10.02.20 16:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 
 package com.mmdev.roove.core.di.modules
 
+import com.ironz.binaryprefs.Preferences
 import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.chat.repository.ChatRepository
@@ -21,6 +22,7 @@ import com.mmdev.business.user.repository.LocalUserRepository
 import com.mmdev.business.user.repository.RemoteUserRepository
 import com.mmdev.data.auth.AuthRepositoryImpl
 import com.mmdev.data.cards.CardsRepositoryImpl
+import com.mmdev.data.cards.LocalStorageLists
 import com.mmdev.data.chat.ChatRepositoryImpl
 import com.mmdev.data.conversations.ConversationsRepositoryImpl
 import com.mmdev.data.events.EventsRepositoryImpl
@@ -46,8 +48,7 @@ class RepositoryModule {
 	fun chatRepository(repository: ChatRepositoryImpl): ChatRepository = repository
 
 	@Provides
-	fun conversationsRepository(repository: ConversationsRepositoryImpl): ConversationsRepository
-			= repository
+	fun conversationsRepository(repository: ConversationsRepositoryImpl): ConversationsRepository = repository
 
 	@Provides
 	@Singleton
@@ -65,7 +66,10 @@ class RepositoryModule {
 
 	@Provides
 	@Singleton
-	fun remoteUserRepository(repository: UserRepositoryRemoteImpl): RemoteUserRepository =
-		repository
+	fun remoteUserRepository(repository: UserRepositoryRemoteImpl): RemoteUserRepository = repository
+
+	@Provides
+	@Singleton
+	fun localStorageLists(prefs: Preferences) = LocalStorageLists(prefs)
 
 }
