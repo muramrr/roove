@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.02.20 17:45
+ * Last modified 11.02.20 18:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,6 +47,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 	companion object{
 		private const val TAG_LOG = "mylogs_MainActivity"
 	}
+
+//	init {
+//		//Fakeit.initWithLocale("ru")
+//	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -105,7 +109,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 			else progressDialog.dismissDialog()
 		})
 
-
+		//creating fake users, do not call this on UI thread
+		//UtilityManager.createFakeUsersOnRemote()
 
 	}
 
@@ -133,6 +138,8 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 		ivMainSplashLogo.visibility = View.GONE
 
 	}
+
+
 
 
 

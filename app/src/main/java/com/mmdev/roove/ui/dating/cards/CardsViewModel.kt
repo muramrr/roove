@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 17:00
+ * Last modified 11.02.20 19:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -61,8 +61,12 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
                 else showTextHelper.value = true
             }
             .subscribe({
-	                       Log.wtf(TAG, "cards to show: ${it.size}")
-	                       usersCardsList.value = it
+	                       if(it.isNotEmpty()) {
+		                       usersCardsList.value = it
+		                       showLoading.value = false
+		                       showTextHelper.value = false
+	                       }
+	                       Log.wtf(TAG, "pagination loaded cards: ${it.size}")
                        },
                        {
 	                       Log.wtf(TAG, "get potential users error: $it")
