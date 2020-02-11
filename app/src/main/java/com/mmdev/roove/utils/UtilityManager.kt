@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 19.12.19 21:21
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 11.02.20 18:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,133 +10,48 @@
 
 package com.mmdev.roove.utils
 
-import java.util.*
+import com.google.firebase.firestore.FirebaseFirestore
+import com.mmdev.business.user.BaseUserInfo
+import com.mmdev.business.user.UserItem
+import com.mooveit.library.Fakeit
+import kotlin.random.Random
 
 object UtilityManager {
 
-//	fun generateUsers(): List<UserItem> {
-//		val gender1 = "male"
-//		val gender2 = "female"
-//		val users: ArrayList<UserItem> = ArrayList()
-//		val photoURLs = ArrayList<String>()
-//		photoURLs.add("https://pp.userapi.com/c638424/v638424593/15ad9/SiQb3lYQQrQ.jpg")
-//		users.add(UserItem("Daria Roman",
-//		                                                              18,
-//		                                                              "Kyiv",
-//		                                                              "female",
-//		                                                              "male",
-//		                                                              "https://pp.userapi.com/c638424/v638424593/15ad9/SiQb3lYQQrQ.jpg",
-//		                                                              photoURLs,
-//		                                                              generateRandomID()))
-//		photoURLs.clear()
-//		photoURLs.add("https://source.unsplash.com/NYyCqdBOKwc/600x800")
-//		users.add(UserItem("Shana Gross",
-//		                                                              21,
-//		                                                              "Kyoto",
-//		                                                              gender1,
-//		                                                              gender2,
-//		                                                              "https://source.unsplash.com/NYyCqdBOKwc/600x800",
-//		                                                              photoURLs,
-//		                                                              generateRandomID()))
-//		photoURLs.clear()
-//		photoURLs.add("https://source.unsplash.com/buF62ewDLcQ/600x800")
-//		users.add(UserItem("Borys Bowes",
-//		                                                              23,
-//		                                                              "Kyoto",
-//		                                                              gender1,
-//		                                                              gender2,
-//		                                                              "https://source.unsplash.com/buF62ewDLcQ/600x800",
-//		                                                              photoURLs,
-//		                                                              generateRandomID()))
-//		photoURLs.clear()
-//		photoURLs.add("https://source.unsplash.com/THozNzxEP3g/600x800")
-//		users.add(UserItem("Judith Foreman",
-//		                                                              22,
-//		                                                              "New York",
-//		                                                              gender1,
-//		                                                              gender2,
-//		                                                              "https://source.unsplash.com/THozNzxEP3g/600x800",
-//		                                                              photoURLs,
-//		                                                              generateRandomID()))
-//		photoURLs.clear()
-//		photoURLs.add("https://source.unsplash.com/USrZRcRS2Lw/600x800")
-//		users.add(UserItem("Jamie Tyson",
-//		                                                              20,
-//		                                                              "New York",
-//		                                                              "female",
-//		                                                              "male",
-//		                                                              "https://source.unsplash.com/USrZRcRS2Lw/600x800",
-//		                                                              photoURLs,
-//		                                                              generateRandomID()))
-//		photoURLs.clear()
-//		photoURLs.add("https://source.unsplash.com/PeFk7fzxTdk/600x800")
-//		users.add(UserItem("Sanah Clements",
-//		                                                              24,
-//		                                                              "New York",
-//		                                                              "female",
-//		                                                              "male",
-//		                                                              "https://source.unsplash.com/PeFk7fzxTdk/600x800",
-//		                                                              photoURLs,
-//		                                                              generateRandomID()))
-//		photoURLs.clear()
-//		photoURLs.add("https://source.unsplash.com/LrMWHKqilUw/600x800")
-//		users.add(UserItem("Mikaeel Sykes",
-//		                                                              27,
-//		                                                              "Paris",
-//		                                                              "female",
-//		                                                              "male",
-//		                                                              "https://source.unsplash.com/LrMWHKqilUw/600x800",
-//		                                                              photoURLs,
-//		                                                              generateRandomID()))
-//		photoURLs.clear()
-//		photoURLs.add("https://source.unsplash.com/HN-5Z6AmxrM/600x800")
-//		users.add(UserItem("Madihah Read",
-//		                                                              21,
-//		                                                              "Paris",
-//		                                                              "female",
-//		                                                              "male",
-//		                                                              "https://source.unsplash.com/HN-5Z6AmxrM/600x800",
-//		                                                              photoURLs,
-//		                                                              generateRandomID()))
-//		photoURLs.clear()
-//		photoURLs.add("https://source.unsplash.com/CdVAUADdqEc/600x800")
-//		users.add(UserItem("Leila Sutton",
-//		                                                              30,
-//		                                                              "London",
-//		                                                              "female",
-//		                                                              "male",
-//		                                                              "https://source.unsplash.com/CdVAUADdqEc/600x800",
-//		                                                              photoURLs,
-//		                                                              generateRandomID()))
-//		photoURLs.clear()
-//		photoURLs.add("https://source.unsplash.com/AWh9C-QjhE4/600x800")
-//		users.add(UserItem("Simran Quintana",
-//		                                                              28,
-//		                                                              "China",
-//		                                                              "female",
-//		                                                              "male",
-//		                                                              "https://source.unsplash.com/AWh9C-QjhE4/600x800",
-//		                                                              photoURLs,
-//		                                                              generateRandomID()))
-//		return users
-//	}
+	private val db: FirebaseFirestore
 
-	/*
-    generate random uid
-     */
-	private fun generateRandomID(): String {
-		val leftLimit = 97 // letter 'a'
+	init {
+		Fakeit.initWithLocale("ru")
+		db = FirebaseFirestore.getInstance()
+	}
 
-		val rightLimit = 122 // letter 'z'
+	private fun createFakeUser(city: String = "nsk", gender: String = "female")=
+		UserItem(BaseUserInfo(Fakeit.name().firstName(),
+		                      Random.nextInt(18, 22),
+		                      city,
+		                      gender,
+		                      "https://graph.facebook.com/2175470722496419/picture?height=500",
+		                      randomUid(),
+		                      mutableListOf()),
+		         "male",
+		         mutableListOf(),
+		         mutableListOf())
 
-		val targetStringLength = 10
-		val random = Random()
-		val buffer = StringBuilder(targetStringLength)
-		for (i in 0 until targetStringLength) {
-			val randomLimitedInt =
-				leftLimit + (random.nextFloat() * (rightLimit - leftLimit + 1)).toInt()
-			buffer.append(randomLimitedInt.toChar())
-		}
-		return buffer.toString()
+
+	private fun randomUid(): String {
+		val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+		return (1..10)
+			.map { i -> Random.nextInt(0, charPool.size) }
+			.map(charPool::get)
+			.joinToString("")
+	}
+
+	fun createFakeUsersOnRemote(userItem: UserItem = createFakeUser()){
+		for (i in 0 until 500)
+			db.collection("users")
+				.document(userItem.baseUserInfo.city)
+				.collection(userItem.baseUserInfo.gender)
+				.document(userItem.baseUserInfo.userId)
+				.set(userItem)
 	}
 }

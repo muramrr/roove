@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 09.02.20 17:37
+ * Last modified 11.02.20 18:43
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -72,8 +72,8 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	private var conversation = ConversationItem()
 	private var partner = BaseUserInfo()
 
-	private lateinit var paginateQuery: Query
-	private lateinit var paginateLastVisible: DocumentSnapshot
+	private lateinit var paginateChatQuery: Query
+	private lateinit var paginateLastLoadedMessage: DocumentSnapshot
 
 	private val messagesList = mutableListOf<MessageItem>()
 	private var emptyChat = false
@@ -104,8 +104,8 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 		this.partner = conversation.partner
 
 		//check is this first call
-		if (!this::paginateQuery.isInitialized)
-			paginateQuery = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+		if (!this::paginateChatQuery.isInitialized)
+			paginateChatQuery = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversation.conversationId)
 				.collection(SECONDARY_COLLECTION_REFERENCE)
 				.orderBy("timestamp", Query.Direction.DESCENDING)
@@ -114,7 +114,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 		//Log.wtf(TAG, "load messages called")
 
 		return Single.create(SingleOnSubscribe<List<MessageItem>> { emitter ->
-			paginateQuery
+			paginateChatQuery
 				.get()
 				.addOnSuccessListener {
 					//check if there is messages first
@@ -131,14 +131,14 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 						emitter.onSuccess(paginateMessageList)
 
 						//new cursor position
-						paginateLastVisible = it.documents[it.size() - 1]
+						paginateLastLoadedMessage = it.documents[it.size() - 1]
 						//update query with new cursor position
-						paginateQuery = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+						paginateChatQuery = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 							.document(conversation.conversationId)
 							.collection(SECONDARY_COLLECTION_REFERENCE)
 							.orderBy("timestamp", Query.Direction.DESCENDING)
 							.limit(20)
-							.startAfter(paginateLastVisible)
+							.startAfter(paginateLastLoadedMessage)
 					}
 				}
 				.addOnFailureListener { emitter.onError(it) }
