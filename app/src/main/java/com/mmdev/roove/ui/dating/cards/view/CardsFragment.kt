@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.01.20 15:31
+ * Last modified 11.02.20 19:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ package com.mmdev.roove.ui.dating.cards.view
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +33,7 @@ import kotlinx.android.synthetic.main.fragment_cards.*
 
 class CardsFragment: BaseFragment() {
 
-	private val mCardsStackAdapter = CardsStackAdapter(listOf())
+	private val mCardsStackAdapter = CardsStackAdapter(mutableListOf())
 
 	private lateinit var mAppearedCardItem: CardItem
 	private lateinit var mDisappearedCardItem: CardItem
@@ -101,9 +102,9 @@ class CardsFragment: BaseFragment() {
 				//if there is no available user to show - show loading
 				mDisappearedCardItem = mCardsStackAdapter.getCardItem(position)
 				if (position == mCardsStackAdapter.itemCount - 1) {
-					cardsViewModel.showLoading.value = true
-					cardsViewModel.showTextHelper.value = true
+					cardsViewModel.loadUsersByPreferences()
 				}
+				Log.wtf("mylogs_CardFragment", "${mCardsStackAdapter.itemCount}")
 			}
 
 		})
