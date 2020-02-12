@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.02.20 18:53
+ * Last modified 12.02.20 19:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -133,8 +133,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 							.collection(USER_LIKED_COLLECTION_REFERENCE)
 							.document(likedCardItem.baseUserInfo.userId)
 							.set(likedCardItem)
-//						likedList.add(likedCardItem.baseUserInfo.userId)
-//						localStorageLists.saveLikedList(likedList)
+
 						emitter.onSuccess(false)
 					}
 
@@ -164,18 +163,17 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.collection(USER_LIKED_COLLECTION_REFERENCE)
 			.get()
 		return Single.create(SingleOnSubscribe<List<String>>{ emitter ->
-			query.addOnCompleteListener {
-				if (it.result != null) {
-					//likedList.clear()
-					for (doc in it.result!!.documents){
-						likedList.add(doc.id)
+			query.addOnSuccessListener {
+				if (!it.isEmpty) {
+					for (doc in it){
+						if (!likedList.contains(doc.id))
+							likedList.add(doc.id)
 					}
-
 					Log.wtf(TAG, "likes on complete, size = " + likedList.size)
 
 					emitter.onSuccess(likedList)
-					//localStorageLists.saveLikedList(likedList)
 				}
+				else emitter.onSuccess(likedList)
 			}.addOnFailureListener {
 				Log.wtf(TAG, "liked fail + $it")
 				emitter.onError(it)
@@ -192,18 +190,17 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.get()
 		return Single.create(SingleOnSubscribe<List<String>> { emitter ->
-			query.addOnCompleteListener {
-				if (it.result != null) {
-					//matchedList.clear()
-					for (doc in it.result!!.documents){
-						matchedList.add(doc.id)
+			query.addOnSuccessListener {
+				if (!it.isEmpty) {
+					for (doc in it){
+						if (!matchedList.contains(doc.id))
+							matchedList.add(doc.id)
 					}
-
 					Log.wtf(TAG, "matches on complete, size = " + matchedList.size)
-
 					emitter.onSuccess(matchedList)
-					//localStorageLists.saveMatchedList(matchedList)
+
 				}
+				else emitter.onSuccess(matchedList)
 			}.addOnFailureListener {
 				Log.wtf(TAG, "matches fail + $it")
 				emitter.onError(it)
@@ -220,10 +217,11 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 			.get()
 		return Single.create(SingleOnSubscribe<List<String>> { emitter ->
-			query.addOnCompleteListener {
-				if (it.result != null) {
-					for (doc in it.result!!.documents){
-						skippedList.add(doc.id)
+			query.addOnSuccessListener {
+				if (!it.isEmpty) {
+					for (doc in it) {
+						if (!skippedList.contains(doc.id))
+							skippedList.add(doc.id)
 					}
 
 					Log.wtf(TAG, "skips on complete, size = " + skippedList.size)
@@ -231,6 +229,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					emitter.onSuccess(skippedList)
 					//localStorageLists.saveSkippedList(skippedList)
 				}
+				else emitter.onSuccess(skippedList)
 			}.addOnFailureListener {
 				emitter.onError(it)
 				Log.wtf(TAG, "skipped fail + $it")
@@ -249,7 +248,10 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			paginateCardsQuery = firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(currentUser.baseUserInfo.city)
 				.collection(currentUser.preferredGender)
+				.orderBy(USERS_FILTER_AGE)
+				.orderBy("baseUserInfo.userId", Query.Direction.DESCENDING)
 				.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.baseUserInfo.age)
+				.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, 18)
 				.limit(10)
 
 		return Single.create(SingleOnSubscribe<List<CardItem>>{ emitter ->
@@ -269,7 +271,10 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						paginateCardsQuery = firestore.collection(USERS_COLLECTION_REFERENCE)
 							.document(currentUser.baseUserInfo.city)
 							.collection(currentUser.preferredGender)
+							.orderBy(USERS_FILTER_AGE)
+							.orderBy("baseUserInfo.userId", Query.Direction.DESCENDING)
 							.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.baseUserInfo.age)
+							.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, 18)
 							.limit(10)
 							.startAfter(paginateLastLoadedCard)
 					}
@@ -297,8 +302,22 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		uidList.addAll(liked)
 		uidList.addAll(matched)
 		uidList.addAll(skipped)
+		Log.wtf(TAG, "merged lists: ${uidList.size}")
 		return uidList
 	}
+
+
+
+	/* return filtered all users list from already written ids as List<UserItem> */
+	private fun filterUsers(cardItemList: List<CardItem>, ids: List<String>): List<CardItem>{
+		val filteredUsersList = ArrayList<CardItem>()
+		for (card in cardItemList)
+			if (!ids.contains(card.baseUserInfo.userId))
+				filteredUsersList.add(card)
+		Log.wtf(TAG, "filtered users: ${filteredUsersList.size}")
+		return filteredUsersList
+	}
+
 
 	/**
 	 * 1. add to matches collection for liked user
@@ -353,14 +372,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			                      lastMessageTimestamp = null))
 	}
 
-	/* return filtered all users list from already written ids as List<UserItem> */
-	private fun filterUsers(cardItemList: List<CardItem>, ids: List<String>): List<CardItem>{
-		val filteredUsersList = ArrayList<CardItem>()
-		for (card in cardItemList)
-			if (!ids.contains(card.baseUserInfo.userId))
-				filteredUsersList.add(card)
-		return filteredUsersList
-	}
+
 
 
 	//note:debug only
