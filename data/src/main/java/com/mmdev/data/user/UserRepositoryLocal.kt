@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.02.20 18:41
+ * Last modified 15.02.20 14:15
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,8 +47,6 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		private const val PREF_KEY_CURRENT_USER_P_GENDER = "preferedGender"
 		private const val PREF_KEY_CURRENT_USER_PHOTO_URLS = "photourls"
 		private const val PREF_KEY_CURRENT_USER_PLACES_ID = "placesToGo"
-		private const val PREF_KEY_CURRENT_USER_REG_TOKENS = "registrationTokens"
-
 
 		private const val TAG = "mylogs_UserRepoImpl"
 	}
@@ -62,12 +60,6 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				val gender = prefs.getString(PREF_KEY_CURRENT_USER_GENDER, "")!!
 				val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")!!
 				val mainPhotoUrl = prefs.getString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, "")!!
-
-				val registrationTokensStrings =
-					JSONArray(prefs.getString(PREF_KEY_CURRENT_USER_REG_TOKENS,"")!!)
-				val registrationTokens = mutableListOf<String>()
-				for (i in 0 until registrationTokensStrings.length())
-					registrationTokens.add(registrationTokensStrings.get(i).toString())
 
 				val preferredGender = prefs.getString(PREF_KEY_CURRENT_USER_P_GENDER, "")!!
 
@@ -91,8 +83,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				                                     city,
 				                                     gender,
 				                                     mainPhotoUrl,
-				                                     uid,
-				                                     registrationTokens),
+				                                     uid),
 				         preferredGender = preferredGender,
 				         photoURLs = photoUrls,
 				         placesToGo = placesToGoItems)
@@ -139,11 +130,6 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		for (place in userItem.placesToGo)
 			placesToGoList.add(gson.toJson(place))
 		editor.putString(PREF_KEY_CURRENT_USER_PLACES_ID, placesToGoList.toString())
-
-		val registrationTokensList = mutableListOf<String>()
-		for (token in userItem.baseUserInfo.registrationTokens)
-			registrationTokensList.add(gson.toJson(token))
-		editor.putString(PREF_KEY_CURRENT_USER_REG_TOKENS, registrationTokensList.toString())
 
 		editor.commit()
 		Log.wtf(TAG, "User successfully saved: $userItem")

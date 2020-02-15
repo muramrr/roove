@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.01.20 16:42
+ * Last modified 15.02.20 14:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import com.facebook.login.LoginManager
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mmdev.business.auth.AuthUserItem
 import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
@@ -95,31 +96,30 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					if (it.isSuccessful && auth.currentUser != null) {
 						val firebaseUser = auth.currentUser!!
 						val photoUrl = firebaseUser.photoUrl.toString() + "?height=500"
-						val baseUser =
-							BaseUserInfo(name = firebaseUser.displayName!!,
-							                                                        mainPhotoUrl = photoUrl,
-							                                                        userId = firebaseUser.uid)
+						val baseUser = BaseUserInfo(name = firebaseUser.displayName!!,
+						                            mainPhotoUrl = photoUrl,
+						                            userId = firebaseUser.uid)
 						emitter.onSuccess(baseUser)
 
 					}
-					else emitter.onError(Exception("User is null"))
+					else emitter.onError(Exception("Facebook login error"))
 				}
 				.addOnFailureListener { emitter.onError(Exception("Failed to sign in: $it")) }
 
 		}).observeOn(Schedulers.io())
 	}
 
-	private fun retrieveFullUser(baseUserInfo: BaseUserInfo): Single<UserItem>{
+	private fun retrieveFullUser(baseUserInfo: BaseUserInfo): Single<UserItem> {
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
-			val ref = db.collection(BASE_COLLECTION_REFERENCE)
-			ref.document(baseUserInfo.userId).get()
+			val ref = db.collection(BASE_COLLECTION_REFERENCE).document(baseUserInfo.userId)
+			ref.get()
 				.addOnSuccessListener { userDoc ->
 					if (userDoc.exists()) {
-						val userInBase = userDoc.toObject(BaseUserInfo::class.java)!!
+						val userInAuthBase = userDoc.toObject(AuthUserItem::class.java)!!
 						db.collection(GENERAL_COLLECTION_REFERENCE)
-							.document(userInBase.city)
-							.collection(userInBase.gender)
-							.document(userInBase.userId)
+							.document(userInAuthBase.baseUserInfo.city)
+							.collection(userInAuthBase.baseUserInfo.gender)
+							.document(userInAuthBase.baseUserInfo.userId)
 							.get()
 							.addOnSuccessListener {
 								if (it.exists()) {
@@ -127,7 +127,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 									localRepo.saveUserInfo(retrievedUser)
 									emitter.onSuccess(retrievedUser)
 								}
-								else emitter.onSuccess(UserItem(userInBase))
+								else emitter.onSuccess(UserItem(userInAuthBase.baseUserInfo))
 							}
 							.addOnFailureListener { emitter.onError(it) }
 					} else emitter.onSuccess(UserItem(baseUserInfo))
