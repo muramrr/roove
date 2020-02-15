@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.01.20 17:02
+ * Last modified 15.02.20 14:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.data.user
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
+import com.mmdev.business.auth.AuthUserItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mmdev.business.user.repository.RemoteUserRepository
@@ -43,18 +44,19 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 	}
 
 	override fun createUserOnRemote(userItem: UserItem): Completable {
+		val authUserItem = AuthUserItem(userItem.baseUserInfo)
 		return Completable.create { emitter ->
 			val ref = db.collection(GENERAL_COLLECTION_REFERENCE)
 				.document(userItem.baseUserInfo.city)
 				.collection(userItem.baseUserInfo.gender)
 				.document(userItem.baseUserInfo.userId)
-			fInstance.instanceId.addOnSuccessListener {instanceResult ->
-				userItem.baseUserInfo.registrationTokens.add(instanceResult.token)
+			fInstance.instanceId.addOnSuccessListener { instanceResult ->
+				authUserItem.registrationTokens.add(instanceResult.token)
 				ref.set(userItem)
 					.addOnSuccessListener {
 						db.collection(BASE_COLLECTION_REFERENCE)
 							.document(userItem.baseUserInfo.userId)
-							.set(userItem.baseUserInfo)
+							.set(authUserItem)
 						emitter.onComplete()
 					}
 					.addOnFailureListener { emitter.onError(it) }
@@ -83,16 +85,35 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 
 	override fun fetchUserInfo(userItem: UserItem): Single<UserItem> {
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
-			val ref = db.collection(GENERAL_COLLECTION_REFERENCE)
+			val refGeneral = db.collection(GENERAL_COLLECTION_REFERENCE)
 				.document(userItem.baseUserInfo.city)
 				.collection(userItem.baseUserInfo.gender)
 				.document(userItem.baseUserInfo.userId)
-			ref.get()
-				.addOnSuccessListener {
-					val remoteUserItem = it.toObject(UserItem::class.java)!!
+
+			val refAuth = db.collection(BASE_COLLECTION_REFERENCE)
+				.document(userItem.baseUserInfo.userId)
+			//get general user item first
+			refGeneral.get()
+				.addOnSuccessListener { remoteUser ->
+					val remoteUserItem = remoteUser.toObject(UserItem::class.java)!!
+					//check if registration token exists
 					fInstance.instanceId.addOnSuccessListener { instanceResult ->
-						if (!remoteUserItem.baseUserInfo.registrationTokens.contains(instanceResult.token))
-							remoteUserItem.baseUserInfo.registrationTokens.add(instanceResult.token)
+						refAuth.get()
+							.addOnSuccessListener { authUser ->
+								val knownTokens = mutableListOf<String>()
+
+								if (authUser["registrationTokens"] != null)
+									knownTokens.addAll(authUser["registrationTokens"] as List<String>)
+
+								//update tokens
+								if (!knownTokens.contains(instanceResult.token)) {
+									knownTokens.add(instanceResult.token)
+									refAuth.update("registrationTokens", knownTokens)
+									Log.wtf(TAG, "updated registration tokens successfully")
+								}
+							}
+							.addOnFailureListener { authUserErr -> emitter.onError(authUserErr) }
+
 
 						if (userItem == remoteUserItem) {
 							Log.wtf(TAG, "no reason to fetch user")
@@ -100,20 +121,10 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 						}
 						//save new userItem
 						else {
-							ref.set(remoteUserItem)
-								.addOnSuccessListener {
-									db.collection(BASE_COLLECTION_REFERENCE)
-										.document(userItem.baseUserInfo.userId)
-										.set(remoteUserItem.baseUserInfo)
-										.addOnSuccessListener {
-											localRepo.saveUserInfo(remoteUserItem)
-											emitter.onSuccess(remoteUserItem)
-											Log.wtf(TAG, "user fetching result: {$remoteUserItem}")
-											Log.wtf(TAG, "user sent to compare: {$userItem}")
-										}
-										.addOnFailureListener { updBaseErr -> emitter.onError(updBaseErr) }
-								}
-								.addOnFailureListener { updFullErr -> emitter.onError(updFullErr) }
+							localRepo.saveUserInfo(remoteUserItem)
+							emitter.onSuccess(remoteUserItem)
+							Log.wtf(TAG, "user fetching result: {$remoteUserItem}")
+							Log.wtf(TAG, "user sent to compare: {$userItem}")
 						}
 					}
 					.addOnFailureListener { instanceIdError -> emitter.onError(instanceIdError) }

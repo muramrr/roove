@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.02.20 18:16
+ * Last modified 15.02.20 14:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,8 +31,7 @@ object UtilityManager {
 		                      city,
 		                      gender,
 		                      "https://graph.facebook.com/2175470722496419/picture?height=500",
-		                      randomUid(),
-		                      mutableListOf()),
+		                      randomUid()),
 		         "male",
 		         mutableListOf(),
 		         mutableListOf())
