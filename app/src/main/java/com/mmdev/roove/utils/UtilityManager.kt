@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 15.02.20 14:16
+ * Last modified 15.02.20 14:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,7 +40,7 @@ object UtilityManager {
 	private fun randomUid(): String {
 		val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 		return (1..10)
-			.map { i -> Random.nextInt(0, charPool.size) }
+			.map { Random.nextInt(0, charPool.size) }
 			.map(charPool::get)
 			.joinToString("")
 	}

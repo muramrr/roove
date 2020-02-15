@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.02.20 17:44
+ * Last modified 15.02.20 14:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@ package com.mmdev.roove.utils
 
 import android.graphics.Rect
 import android.view.View
-import android.view.WindowInsets
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -85,7 +84,6 @@ fun View.addSystemLeftPadding(targetView: View = this, isConsumed: Boolean = fal
 		targetView.updatePadding(left = initialPadding.left + insets.systemWindowInsetLeft)
 
 		if (isConsumed) {
-			val a = WindowInsets.Builder()
 			insets.replaceSystemWindowInsets(Rect(0,
 				                                insets.systemWindowInsetTop,
 				                                insets.systemWindowInsetRight,

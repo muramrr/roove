@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.02.20 17:59
+ * Last modified 15.02.20 14:50
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -127,8 +127,8 @@ dependencies {
 	implementation libs.retrofitConverter
 
 	// Navigation component
-	implementation 'androidx.navigation:navigation-fragment-ktx:2.2.0'
-	implementation 'androidx.navigation:navigation-ui-ktx:2.2.0'
+	implementation 'androidx.navigation:navigation-fragment-ktx:2.2.1'
+	implementation 'androidx.navigation:navigation-ui-ktx:2.2.1'
 
 
 	// ViewModel and LiveData
@@ -137,6 +137,8 @@ dependencies {
 	//binary prefs
 	implementation "com.github.yandextaxitech:binaryprefs:1.0.1"
 
-	implementation 'com.github.bmoliveira:snake-yaml:v1.18-android'
+
+	implementation 'com.github.moove-it:fakeit:v0.5'
+	implementation 'com.github.bmoliveira:snake-yaml:1.18.1-android-rc2'
 
 }
