@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 15.02.20 14:15
+ * Last modified 16.02.20 15:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -82,9 +82,9 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				                                     age,
 				                                     city,
 				                                     gender,
+				                                     preferredGender,
 				                                     mainPhotoUrl,
 				                                     uid),
-				         preferredGender = preferredGender,
 				         photoURLs = photoUrls,
 				         placesToGo = placesToGoItems)
 			}catch (e: Exception) {
@@ -117,9 +117,9 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		editor.putInt(PREF_KEY_CURRENT_USER_AGE, userItem.baseUserInfo.age)
 		editor.putString(PREF_KEY_CURRENT_USER_CITY, userItem.baseUserInfo.city)
 		editor.putString(PREF_KEY_CURRENT_USER_GENDER, userItem.baseUserInfo.gender)
+		editor.putString(PREF_KEY_CURRENT_USER_P_GENDER, userItem.baseUserInfo.preferredGender)
 		editor.putString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, userItem.baseUserInfo.mainPhotoUrl)
 		editor.putString(PREF_KEY_CURRENT_USER_ID, userItem.baseUserInfo.userId)
-		editor.putString(PREF_KEY_CURRENT_USER_P_GENDER, userItem.preferredGender)
 
 		val photoUrlsList = mutableListOf<String>()
 		for (photoUrl in userItem.photoURLs)

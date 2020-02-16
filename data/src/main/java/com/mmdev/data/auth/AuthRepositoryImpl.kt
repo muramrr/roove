@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 15.02.20 14:20
+ * Last modified 16.02.20 16:09
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -60,11 +60,10 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		}).subscribeOn(Schedulers.io())
 	}
 
-	override fun signIn(token: String): Single<UserItem>{
-		return signInWithFacebook(token)
-			.flatMap { retrieveFullUser(it) }
+	override fun signIn(token: String): Single<HashMap<Boolean, UserItem>> =
+		signInWithFacebook(token)
+			.flatMap { checkAndRetrieveFullUser(it) }
 			.subscribeOn(Schedulers.io())
-	}
 
 	/**
 	 * create new [UserItem] document on remote
@@ -109,11 +108,12 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		}).observeOn(Schedulers.io())
 	}
 
-	private fun retrieveFullUser(baseUserInfo: BaseUserInfo): Single<UserItem> {
-		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
+	private fun checkAndRetrieveFullUser(baseUserInfo: BaseUserInfo): Single<HashMap<Boolean, UserItem>>  =
+		Single.create(SingleOnSubscribe<HashMap<Boolean, UserItem>> { emitter ->
 			val ref = db.collection(BASE_COLLECTION_REFERENCE).document(baseUserInfo.userId)
 			ref.get()
 				.addOnSuccessListener { userDoc ->
+					//if base info about user exists in db
 					if (userDoc.exists()) {
 						val userInAuthBase = userDoc.toObject(AuthUserItem::class.java)!!
 						db.collection(GENERAL_COLLECTION_REFERENCE)
@@ -122,19 +122,22 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 							.document(userInAuthBase.baseUserInfo.userId)
 							.get()
 							.addOnSuccessListener {
+								//if full user info exists in db
 								if (it.exists()) {
 									val retrievedUser = it.toObject(UserItem::class.java)!!
 									localRepo.saveUserInfo(retrievedUser)
-									emitter.onSuccess(retrievedUser)
+									emitter.onSuccess(hashMapOf(false to retrievedUser))
 								}
-								else emitter.onSuccess(UserItem(userInAuthBase.baseUserInfo))
+								//auth user exists but full is not => return continue reg flag "true"
+								else emitter.onSuccess(hashMapOf(true to UserItem(userInAuthBase.baseUserInfo)))
 							}
 							.addOnFailureListener { emitter.onError(it) }
-					} else emitter.onSuccess(UserItem(baseUserInfo))
+					}
+					//if user is not stored => return new UserItem with continue reg flag "true"
+					else emitter.onSuccess(hashMapOf(true to UserItem(baseUserInfo)))
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).observeOn(Schedulers.io())
-	}
 
 }
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 17:11
+ * Last modified 16.02.20 17:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,11 +15,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.business.cards.CardItem
+import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentCardsItemBinding
 
-class CardsStackAdapter (private var cardsList: List<CardItem>):
+class CardsStackAdapter (private var usersList: List<UserItem>):
 		RecyclerView.Adapter<CardsStackAdapter.CardsViewHolder>() {
 
 
@@ -33,16 +33,16 @@ class CardsStackAdapter (private var cardsList: List<CardItem>):
 		                                        false))
 
 
-	override fun onBindViewHolder(holderCards: CardsViewHolder, position: Int) {
-		holderCards.bind(cardsList[position])
-	}
+	override fun onBindViewHolder(holderCards: CardsViewHolder, position: Int) =
+		holderCards.bind(usersList[position])
 
-	override fun getItemCount() = cardsList.size
 
-	fun getCardItem(position: Int) = cardsList[position]
+	override fun getItemCount() = usersList.size
 
-	fun updateData(newCardItems: List<CardItem>) {
-		cardsList = newCardItems
+	fun getUserItem(position: Int) = usersList[position]
+
+	fun updateData(newCardItems: List<UserItem>) {
+		usersList = newCardItems
 		notifyDataSetChanged()
 	}
 
@@ -66,8 +66,8 @@ class CardsStackAdapter (private var cardsList: List<CardItem>):
 		*   updating any Views that have expressions bound to modified variables.
 		*   This must be run on the UI thread.
 		*/
-		fun bind(cardItem: CardItem){
-			binding.cardItem = cardItem
+		fun bind(userItem: UserItem){
+			binding.userItem = userItem
 			binding.executePendingBindings()
 		}
 

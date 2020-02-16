@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 30.01.20 20:35
+ * Last modified 16.02.20 17:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,8 +10,8 @@
 
 package com.mmdev.business.cards
 
-import com.mmdev.business.user.BaseUserInfo
+import com.mmdev.business.user.UserItem
 
-data class CardItem(val baseUserInfo: BaseUserInfo = BaseUserInfo(),
-                    val conversationStarted: Boolean = false,
-                    var conversationId: String = "")
+data class MatchedUserItem(val userItem: UserItem = UserItem(),
+                           val conversationStarted: Boolean = false,
+                           var conversationId: String = "")

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 15.02.20 14:55
+ * Last modified 16.02.20 16:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,9 +30,9 @@ object UtilityManager {
 		                      Random.nextInt(18, 22),
 		                      city,
 		                      gender,
+		                      "male",
 		                      "https://graph.facebook.com/2175470722496419/picture?height=500",
 		                      randomUid()),
-		         "male",
 		         mutableListOf(),
 		         mutableListOf())
 

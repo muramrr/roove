@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.01.20 19:17
+ * Last modified 16.02.20 18:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,9 +50,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 
 	companion object{
-
 		private const val FAB_VISIBLE_KEY = "FAB_VISIBLE"
-
 	}
 
 
@@ -69,7 +67,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
 
-		sharedViewModel.cardSelected.observe(this, Observer { carditem ->
+		sharedViewModel.userCardSelected.observe(this, Observer { carditem ->
 			//block to sharedviewmodel update card clicked on another screen
 			if (!isOnCreateCalled) {
 				remoteRepoViewModel.getFullUserItem(carditem.baseUserInfo)
@@ -113,10 +111,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 			}
 		}
 
-		rvProfileWantToGoList.apply {
-			adapter = mUserPlacesToGoAdapter
-		}
-
+		rvProfileWantToGoList.apply { adapter = mUserPlacesToGoAdapter }
 
 		mUserPlacesToGoAdapter.setOnItemClickListener(object: ProfilePlacesToGoAdapter.OnItemClickListener {
 
@@ -131,7 +126,6 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 		})
 
-
 		if (fabVisible) {
 			fabProfileSendMessage.setOnClickListener {
 
@@ -139,11 +133,8 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 				sharedViewModel.setConversationSelected(ConversationItem(selectedUser.baseUserInfo))
 			}
-
 		}
 		else fabProfileSendMessage.visibility = View.GONE
-
-
 
 	}
 

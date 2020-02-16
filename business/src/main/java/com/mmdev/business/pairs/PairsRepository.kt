@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 18:25
+ * Last modified 16.02.20 17:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 
 package com.mmdev.business.pairs
 
-import com.mmdev.business.cards.CardItem
+import com.mmdev.business.cards.MatchedUserItem
 import io.reactivex.Single
 
 /**
@@ -19,6 +19,6 @@ import io.reactivex.Single
 
 interface PairsRepository {
 
-	fun getMatchedUsersList(): Single<List<CardItem>>
+	fun getMatchedUsersList(): Single<List<MatchedUserItem>>
 
 }

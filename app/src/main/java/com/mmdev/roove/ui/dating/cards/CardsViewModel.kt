@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.02.20 19:12
+ * Last modified 16.02.20 17:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,10 +12,10 @@ package com.mmdev.roove.ui.dating.cards
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.business.cards.CardItem
 import com.mmdev.business.cards.usecase.AddToSkippedUseCase
 import com.mmdev.business.cards.usecase.CheckMatchUseCase
 import com.mmdev.business.cards.usecase.GetUsersByPreferencesUseCase
+import com.mmdev.business.user.UserItem
 import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
@@ -25,7 +25,7 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
                                          private val getUsersByPreferencesUC: GetUsersByPreferencesUseCase):
 		BaseViewModel(){
 
-	private val usersCardsList: MutableLiveData<List<CardItem>> = MutableLiveData()
+	private val usersCardsList: MutableLiveData<List<UserItem>> = MutableLiveData()
 
 	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
 	val showMatchDialog: MutableLiveData<Boolean> = MutableLiveData()
@@ -33,18 +33,18 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
 
 
 
-	fun addToSkipped(skippedCardItem: CardItem) {
-		addToSkippedExecution(skippedCardItem)
-		Log.wtf(TAG, "skipped card: ${skippedCardItem.baseUserInfo.name}")
+	fun addToSkipped(skippedUserItem: UserItem) {
+		addToSkippedExecution(skippedUserItem)
+		Log.wtf(TAG, "skipped card: ${skippedUserItem.baseUserInfo.name}")
 	}
 
 
-	fun checkMatch(likedCardItem: CardItem){
-		disposables.add(checkMatchExecution(likedCardItem)
+	fun checkMatch(likedUserItem: UserItem){
+		disposables.add(checkMatchExecution(likedUserItem)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                            showMatchDialog.value = it
-                           Log.wtf(TAG, "liked card: ${likedCardItem.baseUserInfo.name}")
+                           Log.wtf(TAG, "liked card: ${likedUserItem.baseUserInfo.name}")
 	                       Log.wtf(TAG, "match? + ${showMatchDialog.value}")
                        },
                        {
@@ -78,10 +78,10 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
 
 
 
-	private fun addToSkippedExecution(skippedCardItem: CardItem) = addToSkippedUC.execute(skippedCardItem)
 
-	private fun checkMatchExecution(likedCardItem: CardItem) = checkMatchUC.execute(likedCardItem)
 
+	private fun addToSkippedExecution(skippedUserItem: UserItem) = addToSkippedUC.execute(skippedUserItem)
+	private fun checkMatchExecution(likedUserItem: UserItem) = checkMatchUC.execute(likedUserItem)
 	private fun getUsersByPreferencesExecution() = getUsersByPreferencesUC.execute()
 }
 

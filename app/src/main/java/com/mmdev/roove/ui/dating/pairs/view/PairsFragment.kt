@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 18:25
+ * Last modified 16.02.20 17:56
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,8 +31,7 @@ import kotlinx.android.synthetic.main.fragment_pairs.*
 
 class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
 
-	private val mPairsAdapter =
-		PairsAdapter(listOf())
+	private val mPairsAdapter = PairsAdapter(listOf())
 
 
 	private lateinit var sharedViewModel: SharedViewModel
@@ -74,7 +73,7 @@ class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
 		mPairsAdapter.setOnItemClickListener(object: PairsAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
 
-				sharedViewModel.setCardSelected(mPairsAdapter.getPairItem(position))
+				sharedViewModel.setMatchedUserItem(mPairsAdapter.getPairItem(position))
 
 				findNavController().navigate(R.id.action_pairs_to_profileFragment)
 

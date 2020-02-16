@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.01.20 19:09
+  ~ Last modified 16.02.20 17:30
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,8 +16,8 @@
 	<data>
 
 		<variable
-			name="cardItem"
-			type="com.mmdev.business.cards.CardItem" />
+			name="userItem"
+			type="com.mmdev.business.user.UserItem" />
 
 	</data>
 
@@ -46,7 +46,7 @@
 				android:contentDescription="@string/description_user_photo"
 				android:scaleType="centerCrop"
 
-				app:bindImageUrl="@{cardItem.baseUserInfo.mainPhotoUrl}"
+				app:bindImageUrl="@{userItem.baseUserInfo.mainPhotoUrl}"
 				app:progressBar="@{pbImageLoading}"
 
 				app:layout_constraintBottom_toBottomOf="parent"
@@ -91,7 +91,7 @@
 				android:layout_height="wrap_content"
 				android:layout_margin="@dimen/general_margin_16"
 
-				android:text="@{cardItem.baseUserInfo.name, default = @string/default_name}"
+				android:text="@{userItem.baseUserInfo.name, default = @string/default_name}"
 				android:textSize="24sp"
 				style="@style/regular_text_white85op"
 
