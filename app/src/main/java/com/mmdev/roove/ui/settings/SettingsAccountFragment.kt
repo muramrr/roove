@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 21.01.20 19:53
+ * Last modified 16.02.20 16:23
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -112,7 +112,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 	private fun initProfile() {
 		edSettingsName.setText(userItem.baseUserInfo.name)
 		dropSettingsGender.setText(userItem.baseUserInfo.gender)
-		dropSettingsPreferredGender.setText(userItem.preferredGender)
+		dropSettingsPreferredGender.setText(userItem.baseUserInfo.preferredGender)
 		tvSettingsAgeDisplay.text = "Age: ${userItem.baseUserInfo.age}"
 		sliderSettingsAge.value = userItem.baseUserInfo.age.toFloat()
 
@@ -180,7 +180,7 @@ class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
 
 		dropSettingsPreferredGender.setOnItemClickListener { _, _, position, _ ->
 			preferredGender = preferredGenderList[position]
-			userItem.preferredGender = preferredGender
+			userItem.baseUserInfo.preferredGender = preferredGender
 		}
 	}
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.01.20 16:42
+ * Last modified 16.02.20 16:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -63,15 +63,15 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
             .doOnSubscribe { showProgress.value = true }
             .doFinally { showProgress.value = false }
             .subscribe({
-	                       if (it.preferredGender.isNotEmpty()) {
+	                       if (it.containsKey(false)) {
 		                       Log.wtf(TAG, "successfully retrieved user")
 		                       continueRegistration.value = false
-		                       userItem.value = it
+		                       userItem.value = it.getValue(false)
 	                       }
 	                       else {
 		                       continueRegistration.value = true
-		                       baseUserInfo.value = it.baseUserInfo
-		                       Log.wtf(TAG, "received user: =${baseUserInfo.value}")
+		                       baseUserInfo.value = it.getValue(true).baseUserInfo
+		                       //Log.wtf(TAG, "received user: =${baseUserInfo.value}")
 	                       }
 	                       Log.wtf(TAG, "continue registration? -${continueRegistration.value}")
                        },

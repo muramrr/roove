@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 17:14
+ * Last modified 16.02.20 17:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ package com.mmdev.roove.ui.dating.pairs
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.business.cards.CardItem
+import com.mmdev.business.cards.MatchedUserItem
 import com.mmdev.business.pairs.GetMatchedUsersUseCase
 import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -26,7 +26,7 @@ import javax.inject.Inject
 class PairsViewModel @Inject constructor(private val getMatchedUsersUC: GetMatchedUsersUseCase):
 		BaseViewModel() {
 
-	private val matchedUsersList: MutableLiveData<List<CardItem>> = MutableLiveData()
+	private val matchedUsersList: MutableLiveData<List<MatchedUserItem>> = MutableLiveData()
 
 	val showTextHelper: MutableLiveData<Boolean> = MutableLiveData()
 

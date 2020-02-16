@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 17:30
+ * Last modified 16.02.20 17:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,7 +35,7 @@ class MatchDialogFragment: DialogFragment() {
 
 		private const val PHOTO_KEY = "PHOTO_URL"
 		private const val NAME_KEY = "NAME"
-		fun newInstance(name:String, photoUrl: String) = MatchDialogFragment().apply {
+		fun newInstance(name: String, photoUrl: String) = MatchDialogFragment().apply {
 			arguments = Bundle().apply {
 				putString(NAME_KEY, name)
 				putString(PHOTO_KEY, photoUrl)

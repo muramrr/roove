@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 09.02.20 17:26
+ * Last modified 16.02.20 18:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,7 +42,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.mmdev.business.cards.CardItem
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.user.BaseUserInfo
@@ -85,7 +84,6 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	private var partnerMainPhotoUrl = ""
 	private var partnerId = ""
 	private lateinit var currentConversation: ConversationItem
-	private var isOnCreateCalled: Boolean = false
 
 
 	private val mChatAdapter: ChatAdapter = ChatAdapter(listOf())
@@ -277,14 +275,14 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		toolbarChat.setOnMenuItemClickListener { item ->
 			when (item.itemId) {
 				R.id.chat_action_user ->{
-					findNavController().navigate(R.id.action_chat_to_profileFragment)
-					sharedViewModel.setCardSelected(CardItem(currentConversation.partner,
-					                                         currentConversation.conversationStarted))
+//					findNavController().navigate(R.id.action_chat_to_profileFragment)
+//					sharedViewModel.setUserSelected(MatchedUserItem(currentConversation.partner,
+//					                                                currentConversation.conversationStarted))
 				}
 
 				R.id.chat_action_report -> {
 					Toast.makeText(context, "chat report click", Toast.LENGTH_SHORT).show()
-					chatViewModel.loadMessages(currentConversation)
+					//chatViewModel.loadMessages(currentConversation)
 				}
 			}
 			return@setOnMenuItemClickListener true

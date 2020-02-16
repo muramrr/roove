@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.02.20 18:28
+ * Last modified 16.02.20 17:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 
 package com.mmdev.business.cards.repository
 
-import com.mmdev.business.cards.CardItem
+import com.mmdev.business.user.UserItem
 import io.reactivex.Single
 
 /**
@@ -19,11 +19,11 @@ import io.reactivex.Single
 
 interface CardsRepository {
 
-	fun addToSkipped(skippedCardItem: CardItem)
+	fun addToSkipped(skippedUserItem: UserItem)
 
-	fun checkMatch(likedCardItem: CardItem): Single<Boolean>
+	fun checkMatch(likedUserItem: UserItem): Single<Boolean>
 
-	fun getUsersByPreferences(): Single<List<CardItem>>
+	fun getUsersByPreferences(): Single<List<UserItem>>
 
 //	fun getLikedList(): Single<List<String>>
 //

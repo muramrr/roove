@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.02.20 19:12
+ * Last modified 16.02.20 17:56
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.mmdev.business.cards.CardItem
+import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentCardsBinding
 import com.mmdev.roove.ui.core.BaseFragment
@@ -35,8 +35,8 @@ class CardsFragment: BaseFragment() {
 
 	private val mCardsStackAdapter = CardsStackAdapter(mutableListOf())
 
-	private lateinit var mAppearedCardItem: CardItem
-	private lateinit var mDisappearedCardItem: CardItem
+	private lateinit var mAppearedUserItem: UserItem
+	private lateinit var mDisappearedUserItem: UserItem
 
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var cardsViewModel: CardsViewModel
@@ -55,7 +55,7 @@ class CardsFragment: BaseFragment() {
 			mCardsStackAdapter.updateData(it)
 		})
 		cardsViewModel.showMatchDialog.observe(this, Observer {
-			if (it) showMatchDialog(mDisappearedCardItem)
+			if (it) showMatchDialog(mDisappearedUserItem)
 		})
 
 	}
@@ -77,7 +77,7 @@ class CardsFragment: BaseFragment() {
 
 			override fun onCardAppeared(view: View, position: Int) {
 				//get current displayed on card profile
-				mAppearedCardItem = mCardsStackAdapter.getCardItem(position)
+				mAppearedUserItem = mCardsStackAdapter.getUserItem(position)
 
 			}
 
@@ -87,11 +87,11 @@ class CardsFragment: BaseFragment() {
 				//if right = add to liked
 				//else = add to skipped
 				if (direction == Direction.Right) {
-					cardsViewModel.checkMatch(mAppearedCardItem)
+					cardsViewModel.checkMatch(mAppearedUserItem)
 				}
 
 				if (direction == Direction.Left) {
-					cardsViewModel.addToSkipped(mAppearedCardItem)
+					cardsViewModel.addToSkipped(mAppearedUserItem)
 				}
 			}
 
@@ -100,7 +100,7 @@ class CardsFragment: BaseFragment() {
 
 			override fun onCardDisappeared(view: View, position: Int) {
 				//if there is no available user to show - show loading
-				mDisappearedCardItem = mCardsStackAdapter.getCardItem(position)
+				mDisappearedUserItem = mCardsStackAdapter.getUserItem(position)
 				if (position == mCardsStackAdapter.itemCount - 1) {
 					cardsViewModel.loadUsersByPreferences()
 				}
@@ -117,7 +117,7 @@ class CardsFragment: BaseFragment() {
 		mCardsStackAdapter.setOnItemClickListener(object: CardsStackAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
 
-				sharedViewModel.setCardSelected(mCardsStackAdapter.getCardItem(position))
+				sharedViewModel.setUserSelected(mCardsStackAdapter.getUserItem(position))
 
 				findNavController().navigate(R.id.action_cards_to_profileFragment)
 			}
@@ -126,12 +126,9 @@ class CardsFragment: BaseFragment() {
 	}
 
 
-	private fun showMatchDialog(matchCardItem: CardItem) {
-
-		val dialog =
-			MatchDialogFragment.newInstance(
-					matchCardItem.baseUserInfo.name,
-					matchCardItem.baseUserInfo.mainPhotoUrl)
+	private fun showMatchDialog(userItem: UserItem) {
+		val dialog = MatchDialogFragment.newInstance(userItem.baseUserInfo.name,
+		                                             userItem.baseUserInfo.mainPhotoUrl)
 
 		dialog.show(childFragmentManager, MatchDialogFragment::class.java.canonicalName)
 	}

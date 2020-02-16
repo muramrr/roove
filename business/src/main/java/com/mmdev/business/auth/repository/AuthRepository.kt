@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 21.12.19 18:52
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 16.02.20 16:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,7 @@ interface AuthRepository {
 
 	fun isAuthenticatedListener(): Observable<Boolean>
 
-	fun signIn(token: String): Single<UserItem>
+	fun signIn(token: String): Single<HashMap<Boolean, UserItem>>
 
 	fun registerUser(userItem: UserItem): Completable
 

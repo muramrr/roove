@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 18:25
+ * Last modified 16.02.20 17:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@
 package com.mmdev.data.pairs
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mmdev.business.cards.CardItem
+import com.mmdev.business.cards.MatchedUserItem
 import com.mmdev.business.pairs.PairsRepository
 import com.mmdev.business.user.UserItem
 import io.reactivex.Single
@@ -37,9 +37,9 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
 	}
 
-	override fun getMatchedUsersList(): Single<List<CardItem>> {
+	override fun getMatchedUsersList(): Single<List<MatchedUserItem>> {
 
-		return Single.create(SingleOnSubscribe<List<CardItem>> { emitter ->
+		return Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
 			firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(currentUserInfo.city)
 				.collection(currentUserInfo.gender)
@@ -48,9 +48,9 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
 				.get()
 				.addOnSuccessListener {
-					val matchedUsersList = ArrayList<CardItem>()
+					val matchedUsersList = ArrayList<MatchedUserItem>()
 					for (doc in it!!) {
-						matchedUsersList.add(doc.toObject(CardItem::class.java))
+						matchedUsersList.add(doc.toObject(MatchedUserItem::class.java))
 					}
 					emitter.onSuccess(matchedUsersList)
 				}

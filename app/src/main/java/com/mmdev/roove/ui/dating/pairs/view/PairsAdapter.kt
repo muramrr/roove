@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 17:11
+ * Last modified 16.02.20 17:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.business.cards.CardItem
+import com.mmdev.business.cards.MatchedUserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentPairsItemBinding
 
@@ -26,7 +26,7 @@ import com.mmdev.roove.databinding.FragmentPairsItemBinding
  * This is the documentation block about the class
  */
 
-class PairsAdapter (private var mPairsList: List<CardItem>):
+class PairsAdapter (private var mPairsList: List<MatchedUserItem>):
 		RecyclerView.Adapter<PairsAdapter.PairsViewHolder>() {
 
 
@@ -39,13 +39,13 @@ class PairsAdapter (private var mPairsList: List<CardItem>):
 		                                                parent,
 		                                                false))
 
-	override fun onBindViewHolder(holder: PairsViewHolder, position: Int) {
+	override fun onBindViewHolder(holder: PairsViewHolder, position: Int) =
 		holder.bind(mPairsList[position])
-	}
+
 
 	override fun getItemCount() = mPairsList.size
 
-	fun updateData(newPairsList: List<CardItem>) {
+	fun updateData(newPairsList: List<MatchedUserItem>) {
 		mPairsList = newPairsList
 		notifyDataSetChanged()
 	}
@@ -73,7 +73,7 @@ class PairsAdapter (private var mPairsList: List<CardItem>):
 		*   updating any Views that have expressions bound to modified variables.
 		*   This must be run on the UI thread.
 		*/
-		fun bind(matchedItem: CardItem){
+		fun bind(matchedItem: MatchedUserItem){
 			binding.matchedItem = matchedItem
 			binding.executePendingBindings()
 		}
