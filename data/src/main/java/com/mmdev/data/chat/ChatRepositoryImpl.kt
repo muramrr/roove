@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 17.02.20 15:52
+ * Last modified 17.02.20 16:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -154,25 +154,18 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 							}
 						}
 						//partner send msg
-						else {
-							if (snapshots.documents[0].get("sender.userId") != currentUser.baseUserInfo.userId){
-								val message = snapshots.documents[0].toObject(MessageItem::class.java)!!
-								message.timestamp = (message.timestamp as Timestamp?)?.toDate()
-								//check if last message was loaded with pagination before
+						else if (snapshots.documents[0].get("sender.userId") != currentUser.baseUserInfo.userId) {
+							Log.wtf(TAG, "received message from partner")
+							val message = snapshots.documents[0].toObject(MessageItem::class.java)!!
+							message.timestamp = (message.timestamp as Timestamp?)?.toDate()
+							//check if last message was loaded with pagination before
+							Log.wtf(TAG, "mapped message text: ${message.text}")
+							emitter.onNext(message)
+							messagesList.add(0, message)
 
-								if (messagesList.isNotEmpty() && !messagesList.contains(message)){
-									messagesList.add(0, message)
-									emitter.onNext(message)
-								}else if (emptyChat){
-									messagesList.add(0, message)
-									emptyChat = false
-									emitter.onNext(message)
-								}
-							}
 						}
 					}
 					else Log.wtf(TAG, "snapshots is null or empty")
-
 				}
 			emitter.setCancellable { listener.remove() }
 		}).subscribeOn(Schedulers.io())
