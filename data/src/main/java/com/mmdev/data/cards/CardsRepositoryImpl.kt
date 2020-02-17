@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.02.20 17:18
+ * Last modified 17.02.20 15:40
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,9 +15,9 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.mmdev.business.cards.MatchedUserItem
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import io.reactivex.Single
@@ -75,8 +75,10 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		currentUserDocReference
 			.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 			.document(skippedUserItem.baseUserInfo.userId)
+			.set(mapOf("userId" to skippedUserItem.baseUserInfo.userId))
 
-		skippedList.add(skippedUserItem.baseUserInfo.userId)
+
+		//skippedList.add(skippedUserItem.baseUserInfo.userId)
 	}
 
 	/*
@@ -115,7 +117,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						likedUserDocRef
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 							.document(conversationId)
-							.set(ConversationItem(partner = currentUser.baseUserInfo,
+							.set(ConversationItem(partner = currentUser,
 							                      conversationId = conversationId,
 							                      lastMessageTimestamp = null))
 
@@ -123,7 +125,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						currentUserDocReference
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 							.document(conversationId)
-							.set(ConversationItem(partner = likedUserItem.baseUserInfo,
+							.set(ConversationItem(partner = likedUserItem,
 							                      conversationId = conversationId,
 							                      lastMessageTimestamp = null))
 
@@ -136,7 +138,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						currentUserDocReference
 							.collection(USER_LIKED_COLLECTION_REFERENCE)
 							.document(likedUserItem.baseUserInfo.userId)
-							.id
+							.set(mapOf("userId" to likedUserItem.baseUserInfo.userId))
 
 						emitter.onSuccess(false)
 					}
@@ -151,6 +153,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 	/* return filtered users list as Single */
 	override fun getUsersByPreferences(): Single<List<UserItem>> {
+		//Log.wtf(TAG, "get users called")
 		return Single.zip(getAllUsersCards(),
 		                  zipLists(),
 		                  BiFunction<List<UserItem>, List<String>, List<UserItem>>
@@ -163,6 +166,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	* GET LIKED USERS IDS LIST
 	*/
 	private fun getLikedList(): Single<List<String>> {
+		//Log.wtf(TAG, "get liked called")
 		val query = currentUserDocReference
 			.collection(USER_LIKED_COLLECTION_REFERENCE)
 			.get()
@@ -190,6 +194,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	* GET MATCHED IDS LIST
 	*/
 	private fun getMatchedList(): Single<List<String>> {
+		//Log.wtf(TAG, "get matched called")
 		val query = currentUserDocReference
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.get()
@@ -217,6 +222,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	* GET SKIPPED USERS IDS LIST
 	*/
 	private fun getSkippedList(): Single<List<String>> {
+		//Log.wtf(TAG, "get skipped called")
 		val query = currentUserDocReference
 			.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 			.get()
@@ -247,6 +253,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	* GET ALL USERS OBJECTS
 	*/
 	private fun getAllUsersCards(): Single<List<UserItem>> {
+		//Log.wtf(TAG, "get all called")
 		//check is this first call
 		if (!this::paginateCardsQuery.isInitialized)
 			paginateCardsQuery = firestore.collection(USERS_COLLECTION_REFERENCE)
@@ -254,7 +261,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				.collection(currentUser.baseUserInfo.preferredGender)
 				.orderBy(USERS_FILTER_AGE)
 				.orderBy("baseUserInfo.userId", Query.Direction.DESCENDING)
-				.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.baseUserInfo.age)
+				.whereLessThanOrEqualTo(USERS_FILTER_AGE, 22)
 				.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, 18)
 				.limit(10)
 
@@ -266,7 +273,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						val allUsersList = ArrayList<UserItem>()
 						for (doc in it)
 							allUsersList.add(doc.toObject(UserItem::class.java))
-						Log.wtf(TAG, "all on complete, size = " + allUsersList.size)
+						//Log.wtf(TAG, "all on complete, size = " + allUsersList.size)
 						emitter.onSuccess(allUsersList)
 
 						//new cursor position
@@ -306,7 +313,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		uidList.addAll(liked)
 		uidList.addAll(matched)
 		uidList.addAll(skipped)
-		Log.wtf(TAG, "merged lists: ${uidList.size}")
+		//Log.wtf(TAG, "merged lists: ${uidList.size}")
 		return uidList
 	}
 
@@ -318,7 +325,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		for (user in usersItemsList)
 			if (!ids.contains(user.baseUserInfo.userId))
 				filteredUsersList.add(user)
-		Log.wtf(TAG, "filtered users: ${filteredUsersList.size}")
+		//Log.wtf(TAG, "filtered users: ${filteredUsersList.size}")
 		return filteredUsersList
 	}
 

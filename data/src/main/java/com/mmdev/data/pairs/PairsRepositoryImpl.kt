@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.02.20 17:10
+ * Last modified 17.02.20 15:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@
 package com.mmdev.data.pairs
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mmdev.business.cards.MatchedUserItem
+import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.pairs.PairsRepository
 import com.mmdev.business.user.UserItem
 import io.reactivex.Single
@@ -24,8 +24,7 @@ import javax.inject.Inject
  */
 
 class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
-                                              currentUser: UserItem):
-		PairsRepository {
+                                              currentUser: UserItem): PairsRepository {
 
 
 	private val currentUserInfo = currentUser.baseUserInfo
@@ -37,9 +36,8 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
 	}
 
-	override fun getMatchedUsersList(): Single<List<MatchedUserItem>> {
-
-		return Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
+	override fun getMatchedUsersList(): Single<List<MatchedUserItem>> =
+		Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
 			firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(currentUserInfo.city)
 				.collection(currentUserInfo.gender)
@@ -56,7 +54,5 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
-	}
-
 
 }

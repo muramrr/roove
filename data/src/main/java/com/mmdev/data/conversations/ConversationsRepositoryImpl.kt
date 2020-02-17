@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 05.02.20 15:50
+ * Last modified 17.02.20 14:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -51,8 +51,8 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 
 
 
-	override fun deleteConversation(conversationItem: ConversationItem): Completable {
-		return Completable.create { emitter ->
+	override fun deleteConversation(conversationItem: ConversationItem): Completable =
+		Completable.create { emitter ->
 
 			//delete in general
 			firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -67,9 +67,9 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 
 			//delete in partner section
 			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(conversationItem.partner.city)
-				.collection(conversationItem.partner.gender)
-				.document(conversationItem.partner.userId)
+				.document(conversationItem.partner.baseUserInfo.city)
+				.collection(conversationItem.partner.baseUserInfo.gender)
+				.document(conversationItem.partner.baseUserInfo.userId)
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversationItem.conversationId)
 				.delete()
@@ -78,7 +78,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				.addOnFailureListener { emitter.onError(it) }
 
 		}.subscribeOn(Schedulers.io())
-	}
+
 
 	override fun getConversationsList() =
 		Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->

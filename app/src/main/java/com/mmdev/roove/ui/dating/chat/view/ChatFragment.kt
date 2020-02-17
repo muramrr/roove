@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.02.20 18:01
+ * Last modified 17.02.20 15:13
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -152,30 +152,29 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			mChatAdapter.setCurrentUserId(it.baseUserInfo.userId)
 		})
 
+		//if it was a deep link navigation then create ConversationItem "on a flight"
 		if (isDeepLinkJump) {
 			val receivedConversationItem = ConversationItem(
-					BaseUserInfo(name = receivedPartnerName,
-					             city = receivedPartnerCity,
-					             gender = receivedPartnerGender,
-					             mainPhotoUrl = receivedPartnerPhotoUrl,
-					             userId = receivedPartnerId),
+					UserItem(BaseUserInfo(name = receivedPartnerName,
+					                      city = receivedPartnerCity,
+					                      gender = receivedPartnerGender,
+					                      mainPhotoUrl = receivedPartnerPhotoUrl,
+					                      userId = receivedPartnerId)),
 					conversationId = receivedConversationId,
 					conversationStarted = true)
 			sharedViewModel.setConversationSelected(receivedConversationItem)
 		}
 
 		sharedViewModel.conversationSelected.observeOnce(this, Observer {
-			if (!this::currentConversation.isInitialized) {
-				currentConversation = it
-				partnerName = it.partner.name
-				partnerMainPhotoUrl = it.partner.mainPhotoUrl
-				partnerId = it.partner.userId
-				if (currentConversation.conversationId.isNotEmpty()){
-					chatViewModel.loadMessages(currentConversation)
-					chatViewModel.observeNewMessages(currentConversation)
-				}
-				else chatViewModel.startListenToEmptyChat(partnerId)
+			currentConversation = it
+			partnerName = it.partner.baseUserInfo.name
+			partnerMainPhotoUrl = it.partner.baseUserInfo.mainPhotoUrl
+			partnerId = it.partner.baseUserInfo.userId
+			if (currentConversation.conversationId.isNotEmpty()) {
+				chatViewModel.loadMessages(currentConversation)
+				chatViewModel.observeNewMessages(currentConversation)
 			}
+
 		})
 
 		chatViewModel.getMessagesList().observe(this, Observer {
@@ -212,6 +211,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 		btnSendMessage.setOnClickListener { sendMessageClick() }
 
+		//show attachment dialog picker
 		btnSendAttachment.setOnClickListener {
 			val builder = AlertDialog.Builder(context!!)
 				.setItems(arrayOf("Camera", "Gallery")) {
@@ -245,12 +245,12 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			}
 		})
 
-		//touch event guarantee that if user want to scroll or touches recycler with messages
-		//keyboard hide and edittext focus clear
 		val linearLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
 		rvMessageList.apply {
 			adapter = mChatAdapter
 			layoutManager = linearLayoutManager
+			//touch event guarantee that if user want to scroll or touches recycler with messages
+			//keyboard hide and edittext focus clear
 			setOnTouchListener { v, _ ->
 				val iMM = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 				iMM.hideSoftInputFromWindow(v.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
@@ -258,6 +258,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 				return@setOnTouchListener false
 			}
+			//load more messages on scroll
 			addOnScrollListener(object: EndlessRecyclerViewScrollListener(linearLayoutManager) {
 				override fun onLoadMore(page: Int, totalItemsCount: Int) {
 
@@ -275,9 +276,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		toolbarChat.setOnMenuItemClickListener { item ->
 			when (item.itemId) {
 				R.id.chat_action_user ->{
-//					findNavController().navigate(R.id.action_chat_to_profileFragment)
-//					sharedViewModel.setUserSelected(MatchedUserItem(currentConversation.partner,
-//					                                                currentConversation.conversationStarted))
+					findNavController().navigate(R.id.action_chat_to_profileFragment)
+					sharedViewModel.setUserSelected(currentConversation.partner)
 				}
 
 				R.id.chat_action_report -> {

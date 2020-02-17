@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 09.02.20 16:47
+ * Last modified 17.02.20 15:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,19 +13,21 @@ package com.mmdev.roove.ui.dating.chat
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.chat.entity.MessageItem
-import com.mmdev.business.chat.usecase.*
+import com.mmdev.business.chat.usecase.LoadMessagesUseCase
+import com.mmdev.business.chat.usecase.ObserveNewMessagesUseCase
+import com.mmdev.business.chat.usecase.SendMessageUseCase
+import com.mmdev.business.chat.usecase.UploadMessagePhotoUseCase
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
-class ChatViewModel
-@Inject constructor(private val getConversationWPartnerUC: GetConversationWithPartnerUseCase,
-                    private val loadMessagesUC: LoadMessagesUseCase,
-                    private val observeNewMessagesUC: ObserveNewMessagesUseCase,
-                    private val sendMessageUC: SendMessageUseCase,
-                    private val uploadMessagePhotoUC: UploadMessagePhotoUseCase) : BaseViewModel() {
+class ChatViewModel @Inject constructor(private val loadMessagesUC: LoadMessagesUseCase,
+                                        private val observeNewMessagesUC: ObserveNewMessagesUseCase,
+                                        private val sendMessageUC: SendMessageUseCase,
+                                        private val uploadMessagePhotoUC: UploadMessagePhotoUseCase) :
+		BaseViewModel() {
 
 
 	private val messagesList: MutableLiveData<MutableList<MessageItem>> = MutableLiveData()
@@ -39,23 +41,6 @@ class ChatViewModel
 
 	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
 
-
-	fun startListenToEmptyChat(partnerId: String){
-		disposables.add(getConversationWPartnerExecution(partnerId)
-            .flatMapObservable {
-	            selectedConversation = it
-	            observeNewMessagesExecution(it)
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-	                       messagesList.value?.add(0, it)
-	                       messagesList.value = messagesList.value
-	                       emptyChat = false
-
-	                       Log.wtf(TAG, "is empty chat? + $emptyChat")
-                       },
-                       { Log.wtf(TAG, "get messages empty chat error: $it") }))
-	}
 
 	fun loadMessages(conversation: ConversationItem) {
 		selectedConversation = conversation
@@ -111,9 +96,6 @@ class ChatViewModel
 	}
 
 	fun getMessagesList() = messagesList
-
-	private fun getConversationWPartnerExecution(partnerId: String) =
-		getConversationWPartnerUC.execute(partnerId)
 
 	private fun loadMessagesExecution(conversation: ConversationItem) =
 		loadMessagesUC.execute(conversation)

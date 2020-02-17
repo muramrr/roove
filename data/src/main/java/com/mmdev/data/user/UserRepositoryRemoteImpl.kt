@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 15.02.20 14:42
+ * Last modified 17.02.20 15:28
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -123,8 +123,8 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 						else {
 							localRepo.saveUserInfo(remoteUserItem)
 							emitter.onSuccess(remoteUserItem)
-							Log.wtf(TAG, "user fetching result: {$remoteUserItem}")
-							Log.wtf(TAG, "user sent to compare: {$userItem}")
+							Log.wtf(TAG, "user was: {$userItem}")
+							Log.wtf(TAG, "user saved: {$remoteUserItem}")
 						}
 					}
 					.addOnFailureListener { instanceIdError -> emitter.onError(instanceIdError) }
