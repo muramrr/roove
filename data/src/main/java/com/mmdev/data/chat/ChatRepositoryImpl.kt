@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.02.20 18:43
+ * Last modified 17.02.20 15:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -78,30 +78,9 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	private val messagesList = mutableListOf<MessageItem>()
 	private var emptyChat = false
 
-	override fun getConversationWithPartner(partnerId: String): Single<ConversationItem> {
-		emptyChat = true
-		return Single.create(SingleOnSubscribe<ConversationItem> { emitter ->
-			currentUserDocReference
-				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.whereEqualTo(CONVERSATION_PARTNER_FIELD, partnerId)
-				.get()
-				.addOnSuccessListener {
-					if (!it.isEmpty) {
-						val conversation = it.documents[0].toObject(ConversationItem::class.java)!!
-						this.conversation = conversation
-						emitter.onSuccess(conversation)
-					}
-					else emitter.onError(Exception("$TAG: can't retrive such conversation"))
-				}
-				.addOnFailureListener { emitter.onError(it) }
-
-		}).subscribeOn(Schedulers.io())
-	}
-
-
 	override fun loadMessages(conversation: ConversationItem): Single<List<MessageItem>> {
 		this.conversation = conversation
-		this.partner = conversation.partner
+		this.partner = conversation.partner.baseUserInfo
 
 		//check is this first call
 		if (!this::paginateChatQuery.isInitialized)
@@ -148,7 +127,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 	override fun observeNewMessages(conversation: ConversationItem): Observable<MessageItem> {
 		this.conversation = conversation
-		this.partner = conversation.partner
+		this.partner = conversation.partner.baseUserInfo
 
 		return Observable.create(ObservableOnSubscribe<MessageItem> { emitter ->
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -165,9 +144,6 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 						//if sent from current device
 						if (snapshots.metadata.hasPendingWrites()) {
 							for (dc in snapshots.documentChanges) {
-//								if (dc.type == DocumentChange.Type.MODIFIED) {
-//									Log.wtf(TAG, "Modified: ${dc.document.data}")
-//								}
 								if (dc.type == DocumentChange.Type.ADDED) {
 									val message = dc.document.toObject(MessageItem::class.java)
 									message.timestamp = (message.timestamp as Timestamp?)?.toDate()

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.02.20 17:46
+ * Last modified 17.02.20 14:45
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.business.cards.MatchedUserItem
+import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentPairsItemBinding
 

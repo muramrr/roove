@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.02.20 17:56
+ * Last modified 17.02.20 15:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,8 +12,8 @@ package com.mmdev.roove.ui.core
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mmdev.business.cards.MatchedUserItem
 import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.user.UserItem
 
 /**
@@ -30,7 +30,7 @@ class SharedViewModel: ViewModel() {
 
 	val matchedUserItemSelected: MutableLiveData<MatchedUserItem> = MutableLiveData()
 
-	val userCardSelected: MutableLiveData<UserItem> = MutableLiveData()
+	val userSelected: MutableLiveData<UserItem> = MutableLiveData()
 
 	val conversationSelected: MutableLiveData<ConversationItem> = MutableLiveData()
 
@@ -39,13 +39,9 @@ class SharedViewModel: ViewModel() {
 
 	fun getCurrentUser() = currentUser
 
-	fun setCurrentUser(userItem: UserItem) {
-		currentUser.value = userItem
-	}
+	fun setCurrentUser(userItem: UserItem) { currentUser.value = userItem }
 
-	fun setUserSelected(userItem: UserItem) {
-		userCardSelected.value = userItem
-	}
+	fun setUserSelected(userItem: UserItem) { userSelected.value = userItem }
 
 	fun setConversationSelected(conversationItem: ConversationItem) {
 		conversationSelected.value = conversationItem

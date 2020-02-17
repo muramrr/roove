@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.02.20 17:56
+ * Last modified 17.02.20 15:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -102,7 +102,7 @@ class CardsFragment: BaseFragment() {
 				//if there is no available user to show - show loading
 				mDisappearedUserItem = mCardsStackAdapter.getUserItem(position)
 				if (position == mCardsStackAdapter.itemCount - 1) {
-					cardsViewModel.loadUsersByPreferences()
+					//cardsViewModel.loadUsersByPreferences()
 				}
 				Log.wtf("mylogs_CardFragment", "${mCardsStackAdapter.itemCount}")
 			}

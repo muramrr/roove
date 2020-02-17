@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.02.20 16:24
+ * Last modified 17.02.20 15:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,8 +18,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 
 interface ChatRepository {
-
-	fun getConversationWithPartner(partnerId: String): Single<ConversationItem>
 
 	fun loadMessages(conversation: ConversationItem): Single<List<MessageItem>>
 

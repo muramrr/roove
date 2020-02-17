@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.02.20 18:03
+ * Last modified 17.02.20 15:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,7 +26,7 @@ import com.mmdev.roove.R
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.ImagePagerAdapter
 import com.mmdev.roove.ui.core.SharedViewModel
-import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
+import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 /**
@@ -41,12 +41,10 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 	private var fabVisible: Boolean = false
 
-	//saving state
 	private lateinit var selectedUser: UserItem
-	private var isOnCreateCalled: Boolean = false
+	private lateinit var conversationId: String
 
 	private lateinit var sharedViewModel: SharedViewModel
-	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
 
 
 	companion object{
@@ -65,22 +63,28 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 			ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
-		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
+		//if true -> seems that we navigates here from pairs fragment
+		if (fabVisible) {
+			sharedViewModel.matchedUserItemSelected.observeOnce(this, Observer {
+				conversationId = it.conversationId
+				selectedUser = it.userItem
+				//ui
+				collapseBarProfile.title = selectedUser.baseUserInfo.name
+				userPhotosAdapter.updateData(selectedUser.photoURLs.toList())
+				mUserPlacesToGoAdapter.updateData(selectedUser.placesToGo.toList())
+			})
+		}
+		//else we navigates here from cards or chat fragment
+		else {
+			sharedViewModel.userSelected.observeOnce(this, Observer {
+				selectedUser = it
+				//ui
+				collapseBarProfile.title = selectedUser.baseUserInfo.name
+				userPhotosAdapter.updateData(selectedUser.photoURLs.toList())
+				mUserPlacesToGoAdapter.updateData(selectedUser.placesToGo.toList())
 
-		sharedViewModel.userCardSelected.observe(this, Observer { carditem ->
-			//block to sharedviewmodel update card clicked on another screen
-			if (!isOnCreateCalled) {
-				remoteRepoViewModel.getFullUserItem(carditem.baseUserInfo)
-				remoteRepoViewModel.getUser().observe(this, Observer {
-					selectedUser = it
-					collapseBarProfile.title = selectedUser.baseUserInfo.name
-					userPhotosAdapter.updateData(selectedUser.photoURLs.toList())
-					mUserPlacesToGoAdapter.updateData(selectedUser.placesToGo.toList())
-					isOnCreateCalled = true
-				})
-			}
-
-		})
+			})
+		}
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -131,20 +135,20 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 				findNavController().navigate(R.id.action_profile_to_chatFragment)
 
-				sharedViewModel.setConversationSelected(ConversationItem(selectedUser.baseUserInfo))
+				sharedViewModel.setConversationSelected(ConversationItem(selectedUser,
+				                                                         conversationId,
+				                                                         false))
 			}
 		}
 		else fabProfileSendMessage.visibility = View.GONE
 
 	}
 
-	override fun onResume() {
-		super.onResume()
-		if (isOnCreateCalled) {
-			collapseBarProfile.title = selectedUser.baseUserInfo.name
-			userPhotosAdapter.updateData(selectedUser.photoURLs.toList())
-		}
-	}
+//	override fun onResume() {
+//		super.onResume()
+//		collapseBarProfile.title = selectedUser.baseUserInfo.name
+//		userPhotosAdapter.updateData(selectedUser.photoURLs.toList())
+//	}
 
 	override fun onBackPressed() {
 		findNavController().navigateUp()

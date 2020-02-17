@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.02.20 15:36
+ * Last modified 17.02.20 15:28
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -58,10 +58,9 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				val age = prefs.getInt(PREF_KEY_CURRENT_USER_AGE, 18)
 				val city = prefs.getString(PREF_KEY_CURRENT_USER_CITY, "")!!
 				val gender = prefs.getString(PREF_KEY_CURRENT_USER_GENDER, "")!!
+				val preferredGender = prefs.getString(PREF_KEY_CURRENT_USER_P_GENDER, "")!!
 				val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")!!
 				val mainPhotoUrl = prefs.getString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, "")!!
-
-				val preferredGender = prefs.getString(PREF_KEY_CURRENT_USER_P_GENDER, "")!!
 
 				val photoUrlsStrings =
 					JSONArray(prefs.getString(PREF_KEY_CURRENT_USER_PHOTO_URLS, "")!!)
