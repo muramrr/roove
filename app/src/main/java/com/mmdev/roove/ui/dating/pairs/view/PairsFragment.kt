@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.02.20 19:02
+ * Last modified 18.02.20 20:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@
 package com.mmdev.roove.ui.dating.pairs.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,7 +77,7 @@ class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
 						.findLastVisibleItemPositions(null)[0]
 
 					if ((totalItemsCount - visibleItemCount) <= (pastVisibleItems + 4)){
-						Log.wtf("mylogs_PairsFragment", "load called ")
+						//Log.wtf("mylogs_PairsFragment", "load called ")
 						pairsViewModel.loadMatchedUsers()
 					}
 
