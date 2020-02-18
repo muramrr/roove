@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.02.20 18:44
+ * Last modified 18.02.20 20:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,11 @@ import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mooveit.library.Fakeit
+import java.util.*
+import java.util.concurrent.ThreadLocalRandom
+import java.util.concurrent.TimeUnit
 import kotlin.random.Random
+
 
 object UtilityManager {
 
@@ -52,19 +56,36 @@ object UtilityManager {
 			.joinToString("")
 	}
 
-	fun createFakeUsersOnRemote(userItem: UserItem = createFakeUser()){
-		for (i in 0 until 500)
-			db.collection(USERS_COLLECTION_REFERENCE)
-				.document(userItem.baseUserInfo.city)
-				.collection(userItem.baseUserInfo.gender)
-				.document(userItem.baseUserInfo.userId)
-				.set(userItem)
+	private fun generateDateBetween(startInclusive: Date, endExclusive: Date): Date {
+		val startMillis: Long = startInclusive.time
+		val endMillis: Long = endExclusive.time
+		val randomMillisSinceEpoch: Long = ThreadLocalRandom.current().nextLong(startMillis, endMillis)
+		return Date(randomMillisSinceEpoch)
 	}
 
-	fun generateLocalMatchesList(matchItem: MatchedUserItem = MatchedUserItem(createFakeUser())): List<MatchedUserItem> {
-		val matchedList = mutableListOf<MatchedUserItem>()
-		for (i in 0 until 20)
-			matchedList.add(matchItem)
-		return  matchedList
+	fun createFakeUsersOnRemote(userItem: UserItem = createFakeUser()) {
+		db.collection(USERS_COLLECTION_REFERENCE)
+			.document(userItem.baseUserInfo.city)
+			.collection(userItem.baseUserInfo.gender)
+			.document(userItem.baseUserInfo.userId)
+			.set(userItem)
+	}
+
+	fun generateMatchesListOnRemote(userItem: UserItem = createFakeUser()) {
+
+		val aDay: Long = TimeUnit.DAYS.toMillis(1)
+		val now = Date().time
+		val hundredYearsAgo = Date(now - aDay * 365 * 100)
+		val tenDaysAgo = Date(now - aDay * 10)
+		val randomDate = generateDateBetween(hundredYearsAgo, tenDaysAgo)
+
+		db.collection(USERS_COLLECTION_REFERENCE)
+			.document("msk")
+			.collection("male")
+			.document("5Bi3FfUE8nQppPyo5mqquIsBijf1")
+			.collection(USER_MATCHED_COLLECTION_REFERENCE)
+			.document(userItem.baseUserInfo.userId)
+			.set(MatchedUserItem(userItem, matchedDate = randomDate))
+
 	}
 }
