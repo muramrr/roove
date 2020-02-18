@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.02.20 16:25
+ * Last modified 18.02.20 18:44
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 package com.mmdev.roove.utils
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mooveit.library.Fakeit
@@ -21,9 +22,15 @@ object UtilityManager {
 	private val db: FirebaseFirestore
 
 	init {
-		Fakeit.initWithLocale("ru")
+		Fakeit.init()
 		db = FirebaseFirestore.getInstance()
 	}
+
+	private const val USERS_COLLECTION_REFERENCE = "users"
+	private const val USER_LIKED_COLLECTION_REFERENCE = "liked"
+	private const val USER_SKIPPED_COLLECTION_REFERENCE = "skipped"
+	private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
+	private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 
 	private fun createFakeUser(city: String = "nsk", gender: String = "female")=
 		UserItem(BaseUserInfo(Fakeit.name().firstName(),
@@ -47,10 +54,17 @@ object UtilityManager {
 
 	fun createFakeUsersOnRemote(userItem: UserItem = createFakeUser()){
 		for (i in 0 until 500)
-			db.collection("users")
+			db.collection(USERS_COLLECTION_REFERENCE)
 				.document(userItem.baseUserInfo.city)
 				.collection(userItem.baseUserInfo.gender)
 				.document(userItem.baseUserInfo.userId)
 				.set(userItem)
+	}
+
+	fun generateLocalMatchesList(matchItem: MatchedUserItem = MatchedUserItem(createFakeUser())): List<MatchedUserItem> {
+		val matchedList = mutableListOf<MatchedUserItem>()
+		for (i in 0 until 20)
+			matchedList.add(matchItem)
+		return  matchedList
 	}
 }
