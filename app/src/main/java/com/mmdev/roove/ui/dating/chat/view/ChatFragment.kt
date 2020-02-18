@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 17.02.20 15:13
+ * Last modified 18.02.20 18:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -263,7 +263,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 				override fun onLoadMore(page: Int, totalItemsCount: Int) {
 
 					if (linearLayoutManager.findLastVisibleItemPosition() == totalItemsCount - 4){
-						Log.wtf(TAG, "load seems to be called")
+						//Log.wtf(TAG, "load seems to be called")
 						chatViewModel.loadMessages(currentConversation)
 					}
 

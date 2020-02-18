@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 17.02.20 16:11
+ * Last modified 18.02.20 18:04
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,10 +40,10 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
                                              private val firestore: FirebaseFirestore,
                                              private val storage: StorageReference): ChatRepository{
 
-	private var currentUserDocReference: DocumentReference
+	private var currentUserDocRef: DocumentReference
 
 	init {
-		currentUserDocReference = firestore.collection(USERS_COLLECTION_REFERENCE)
+		currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.city)
 			.collection(currentUser.baseUserInfo.gender)
 			.document(currentUser.baseUserInfo.userId)
@@ -55,7 +55,6 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 		private const val SECONDARY_COLLECTION_REFERENCE = "messages"
 
 		//firestore conversation fields for updating
-		private const val CONVERSATION_PARTNER_FIELD = "partner.userId"
 		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
 		private const val CONVERSATION_LASTMESSAGETEXT_FIELD = "lastMessageText"
 		private const val CONVERSATION_LASTMESSAGETIMESTAMP_FIELD = "lastMessageTimestamp"
@@ -75,8 +74,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	private lateinit var paginateChatQuery: Query
 	private lateinit var paginateLastLoadedMessage: DocumentSnapshot
 
-	private val messagesList = mutableListOf<MessageItem>()
-	private var emptyChat = false
+
 
 	override fun loadMessages(conversation: ConversationItem): Single<List<MessageItem>> {
 		this.conversation = conversation
@@ -103,10 +101,8 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 						for (doc in it) {
 							val message = doc.toObject(MessageItem::class.java)
 							message.timestamp = (message.timestamp as Timestamp?)?.toDate()
-							if (!paginateMessageList.contains(message))
-								paginateMessageList.add(message)
+							paginateMessageList.add(message)
 						}
-						messagesList.addAll(paginateMessageList)
 						emitter.onSuccess(paginateMessageList)
 
 						//new cursor position
@@ -149,7 +145,6 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 									message.timestamp = (message.timestamp as Timestamp?)?.toDate()
 									Log.wtf(TAG, "Added: ${dc.document["text"]}")
 									emitter.onNext(message)
-									messagesList.add(0, message)
 								}
 							}
 						}
@@ -161,8 +156,6 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 							//check if last message was loaded with pagination before
 							Log.wtf(TAG, "mapped message text: ${message.text}")
 							emitter.onNext(message)
-							messagesList.add(0, message)
-
 						}
 					}
 					else Log.wtf(TAG, "snapshots is null or empty")
@@ -220,11 +213,11 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 	private fun updateStartedStatus() {
 		// for current
-		currentUserDocReference
+		currentUserDocRef
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversation.conversationId)
 			.update(CONVERSATION_STARTED_FIELD, true)
-		currentUserDocReference
+		currentUserDocRef
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.document(partner.userId)
 			.update(CONVERSATION_STARTED_FIELD, true)
@@ -248,7 +241,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	}
 
 	private fun updateLastMessage(messageItem: MessageItem) {
-		val cur = currentUserDocReference
+		val cur = currentUserDocRef
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversation.conversationId)
 
