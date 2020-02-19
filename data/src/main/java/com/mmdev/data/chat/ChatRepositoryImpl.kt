@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.02.20 18:04
+ * Last modified 19.02.20 14:06
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,8 +56,9 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 		//firestore conversation fields for updating
 		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
-		private const val CONVERSATION_LASTMESSAGETEXT_FIELD = "lastMessageText"
-		private const val CONVERSATION_LASTMESSAGETIMESTAMP_FIELD = "lastMessageTimestamp"
+		private const val CONVERSATION_LAST_MESSAGE_TEXT_FIELD = "lastMessageText"
+		private const val CONVERSATION_TIMESTAMP_FIELD = "lastMessageTimestamp"
+		private const val MESSAGE_TIMESTAMP_FIELD = "timestamp"
 
 		private const val USERS_COLLECTION_REFERENCE = "users"
 		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
@@ -85,7 +86,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			paginateChatQuery = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversation.conversationId)
 				.collection(SECONDARY_COLLECTION_REFERENCE)
-				.orderBy("timestamp", Query.Direction.DESCENDING)
+				.orderBy(MESSAGE_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
 				.limit(20)
 
 		//Log.wtf(TAG, "load messages called")
@@ -108,12 +109,8 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 						//new cursor position
 						paginateLastLoadedMessage = it.documents[it.size() - 1]
 						//update query with new cursor position
-						paginateChatQuery = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-							.document(conversation.conversationId)
-							.collection(SECONDARY_COLLECTION_REFERENCE)
-							.orderBy("timestamp", Query.Direction.DESCENDING)
-							.limit(20)
-							.startAfter(paginateLastLoadedMessage)
+						paginateChatQuery =
+							paginateChatQuery.startAfter(paginateLastLoadedMessage)
 					}
 				}
 				.addOnFailureListener { emitter.onError(it) }
@@ -129,7 +126,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversation.conversationId)
 				.collection(SECONDARY_COLLECTION_REFERENCE)
-				.orderBy("timestamp", Query.Direction.DESCENDING)
+				.orderBy(MESSAGE_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
 						emitter.onError(e)
@@ -254,19 +251,19 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 		if (messageItem.photoAttachmentItem != null) {
 			// for current
-			cur.update(CONVERSATION_LASTMESSAGETEXT_FIELD, "Photo")
-			cur.update(CONVERSATION_LASTMESSAGETIMESTAMP_FIELD, messageItem.timestamp)
+			cur.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, "Photo")
+			cur.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
 			// for partner
-			par.update(CONVERSATION_LASTMESSAGETEXT_FIELD, "Photo")
-			par.update(CONVERSATION_LASTMESSAGETIMESTAMP_FIELD, messageItem.timestamp)
+			par.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, "Photo")
+			par.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
 		}
 		else {
 			// for current
-			cur.update(CONVERSATION_LASTMESSAGETEXT_FIELD, messageItem.text)
-			cur.update(CONVERSATION_LASTMESSAGETIMESTAMP_FIELD, messageItem.timestamp)
+			cur.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, messageItem.text)
+			cur.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
 			// for partner
-			par.update(CONVERSATION_LASTMESSAGETEXT_FIELD, messageItem.text)
-			par.update(CONVERSATION_LASTMESSAGETIMESTAMP_FIELD, messageItem.timestamp)
+			par.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, messageItem.text)
+			par.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
 		}
 		//Log.wtf(TAG, "last message updated")
 	}

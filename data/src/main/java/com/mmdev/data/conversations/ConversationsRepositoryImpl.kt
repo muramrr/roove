@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 17.02.20 14:57
+ * Last modified 19.02.20 13:43
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 package com.mmdev.data.conversations
 
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.mmdev.business.conversations.ConversationItem
@@ -30,13 +31,20 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
                                                       currentUser: UserItem):
 		ConversationsRepository {
 
-	private var currentUserDocReference: DocumentReference
+	private var currentUserDocRef: DocumentReference
+	private var paginateConversationsQuery: Query
 
 	init {
-		currentUserDocReference = firestore.collection(USERS_COLLECTION_REFERENCE)
+		currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.city)
 			.collection(currentUser.baseUserInfo.gender)
 			.document(currentUser.baseUserInfo.userId)
+
+		paginateConversationsQuery = currentUserDocRef
+			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+			.orderBy(CONVERSATION_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
+			.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
+			.limit(20)
 	}
 
 	companion object{
@@ -46,8 +54,12 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 		// firestore conversations reference
 		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
+		private const val CONVERSATION_TIMESTAMP_FIELD = "lastMessageTimestamp"
 		private const val TAG = "mylogs_ConverRepoImpl"
 	}
+
+
+	private lateinit var paginateLastConversationLoaded: DocumentSnapshot
 
 
 
@@ -60,7 +72,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				.delete()
 
 			//delete in current user section
-			currentUserDocReference
+			currentUserDocRef
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversationItem.conversationId)
 				.delete()
@@ -80,23 +92,27 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 		}.subscribeOn(Schedulers.io())
 
 
-	override fun getConversationsList() =
-		Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
-			currentUserDocReference
-				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.orderBy("lastMessageTimestamp", Query.Direction.DESCENDING)
-				.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
+	override fun getConversationsList(): Single<List<ConversationItem>> {
+		return Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
+			paginateConversationsQuery
 				.get()
-				.addOnSuccessListener { docSnapshot ->
-					val conversations = mutableListOf<ConversationItem>()
-					if (!docSnapshot.isEmpty)
-						for (doc in docSnapshot!!) {
-							conversations.add(doc.toObject(ConversationItem::class.java))
+				.addOnSuccessListener {
+					if (!it.isEmpty){
+						val paginateConversationsList = ArrayList<ConversationItem>()
+						for (doc in it) {
+							paginateConversationsList.add(doc.toObject(ConversationItem::class.java))
 						}
-					emitter.onSuccess(conversations)
+						emitter.onSuccess(paginateConversationsList)
+						//new cursor position
+						paginateLastConversationLoaded = it.documents[it.size() - 1]
+						//update query with new cursor position
+						paginateConversationsQuery =
+							paginateConversationsQuery.startAfter(paginateLastConversationLoaded)
+					}
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
+	}
 
 
 

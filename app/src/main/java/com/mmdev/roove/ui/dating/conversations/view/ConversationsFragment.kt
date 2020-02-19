@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 05.02.20 15:19
+ * Last modified 19.02.20 13:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,6 +25,7 @@ import com.mmdev.roove.databinding.FragmentConversationsBinding
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.dating.conversations.ConversationsViewModel
+import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import kotlinx.android.synthetic.main.fragment_conversations.*
 
 /**
@@ -66,11 +67,23 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 			.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+		val linearLayoutManager = LinearLayoutManager(context, VERTICAL, false)
 		rvConversationList.apply {
 			adapter = mConversationsAdapter
-			layoutManager = LinearLayoutManager(context, VERTICAL, false)
+			layoutManager = linearLayoutManager
 			addItemDecoration(DividerItemDecoration(this.context, VERTICAL))
+
+			//load more conversations on scroll
+			addOnScrollListener(object: EndlessRecyclerViewScrollListener(linearLayoutManager) {
+				override fun onLoadMore(page: Int, totalItemsCount: Int) {
+
+					if (linearLayoutManager.findLastVisibleItemPosition() == totalItemsCount - 4){
+						//Log.wtf(TAG, "load seems to be called")
+						conversationsViewModel.loadConversationsList()
+					}
+
+				}
+			})
 		}
 
 		mConversationsAdapter.setOnItemClickListener(object: ConversationsAdapter.OnItemClickListener {
