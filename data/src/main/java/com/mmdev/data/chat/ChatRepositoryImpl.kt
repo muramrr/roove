@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 19.02.20 14:06
+ * Last modified 19.02.20 17:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -72,6 +72,8 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	private var conversation = ConversationItem()
 	private var partner = BaseUserInfo()
 
+	private val messagesList = mutableListOf<MessageItem>()
+
 	private lateinit var paginateChatQuery: Query
 	private lateinit var paginateLastLoadedMessage: DocumentSnapshot
 
@@ -102,9 +104,11 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 						for (doc in it) {
 							val message = doc.toObject(MessageItem::class.java)
 							message.timestamp = (message.timestamp as Timestamp?)?.toDate()
-							paginateMessageList.add(message)
+							if (!messagesList.contains(message))
+								paginateMessageList.add(message)
 						}
 						emitter.onSuccess(paginateMessageList)
+						messagesList.addAll(paginateMessageList)
 
 						//new cursor position
 						paginateLastLoadedMessage = it.documents[it.size() - 1]
@@ -142,6 +146,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 									message.timestamp = (message.timestamp as Timestamp?)?.toDate()
 									Log.wtf(TAG, "Added: ${dc.document["text"]}")
 									emitter.onNext(message)
+									messagesList.add(0, message)
 								}
 							}
 						}
@@ -152,7 +157,10 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 							message.timestamp = (message.timestamp as Timestamp?)?.toDate()
 							//check if last message was loaded with pagination before
 							Log.wtf(TAG, "mapped message text: ${message.text}")
-							emitter.onNext(message)
+							if (!messagesList.contains(message)) {
+								emitter.onNext(message)
+								messagesList.add(0, message)
+							}
 						}
 					}
 					else Log.wtf(TAG, "snapshots is null or empty")

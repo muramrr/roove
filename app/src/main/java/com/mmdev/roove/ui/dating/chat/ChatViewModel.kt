@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 17.02.20 15:11
+ * Last modified 19.02.20 17:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,12 +47,11 @@ class ChatViewModel @Inject constructor(private val loadMessagesUC: LoadMessages
 		disposables.add(loadMessagesExecution(conversation)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       emptyChat = if(it.isNotEmpty()) {
+	                       if(it.isNotEmpty()) {
 		                       messagesList.value?.addAll(it)
 		                       messagesList.value = messagesList.value
-		                       false
+		                       emptyChat = false
 	                       }
-	                       else true
 	                       Log.wtf(TAG, "pagination loaded messages: ${it.size}")
                        },
                        { Log.wtf(TAG, "load messages error: $it") }))
