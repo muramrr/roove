@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.02.20 18:04
+ * Last modified 19.02.20 13:43
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,11 +31,20 @@ class PairsRepositoryImpl @Inject constructor(firestore: FirebaseFirestore,
 
 
 	private var currentUserDocRef: DocumentReference
+	private var paginateMatchesQuery: Query
+
 	init {
 		currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.city)
 			.collection(currentUser.baseUserInfo.gender)
 			.document(currentUser.baseUserInfo.userId)
+
+		paginateMatchesQuery = currentUserDocRef
+			.collection(USER_MATCHED_COLLECTION_REFERENCE)
+			.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
+			.orderBy(MATCHED_DATE_FIELD, Query.Direction.DESCENDING)
+			.limit(20)
+
 	}
 
 	companion object {
@@ -46,19 +55,11 @@ class PairsRepositoryImpl @Inject constructor(firestore: FirebaseFirestore,
 		private const val MATCHED_DATE_FIELD = "matchedDate"
 	}
 
-	private lateinit var paginateMatchesQuery: Query
+
 	private lateinit var paginateLastMatchedLoaded: DocumentSnapshot
 
 
 	override fun getMatchedUsersList(): Single<List<MatchedUserItem>> {
-		//check is this first call
-		if (!this::paginateMatchesQuery.isInitialized)
-			paginateMatchesQuery = currentUserDocRef
-				.collection(USER_MATCHED_COLLECTION_REFERENCE)
-				.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
-				.orderBy(MATCHED_DATE_FIELD, Query.Direction.DESCENDING)
-				.limit(20)
-
 		return Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
 			paginateMatchesQuery
 				.get()
@@ -72,14 +73,11 @@ class PairsRepositoryImpl @Inject constructor(firestore: FirebaseFirestore,
 						//new cursor position
 						paginateLastMatchedLoaded = it.documents[it.size() - 1]
 						//update query with new cursor position
-						paginateMatchesQuery = currentUserDocRef
-							.collection(USER_MATCHED_COLLECTION_REFERENCE)
-							.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
-							.orderBy(MATCHED_DATE_FIELD, Query.Direction.DESCENDING)
-							.limit(20)
-							.startAfter(paginateLastMatchedLoaded)
+						paginateMatchesQuery =
+							paginateMatchesQuery.startAfter(paginateLastMatchedLoaded)
 					}
-				}.addOnFailureListener { emitter.onError(it) }
+				}
+				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
 	}
 

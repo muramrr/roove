@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 17:14
+ * Last modified 19.02.20 13:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,7 +32,10 @@ class ConversationsViewModel @Inject constructor(private val deleteUC: DeleteCon
 
 	private val deleteConversationStatus: MutableLiveData<Boolean> = MutableLiveData()
 
-	private val conversationsList: MutableLiveData<List<ConversationItem>> = MutableLiveData()
+	private val conversationsList: MutableLiveData<MutableList<ConversationItem>> = MutableLiveData()
+	init {
+		conversationsList.value = mutableListOf()
+	}
 
 
 	val showTextHelper: MutableLiveData<Boolean> = MutableLiveData()
@@ -57,11 +60,12 @@ class ConversationsViewModel @Inject constructor(private val deleteUC: DeleteCon
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       if (it.isNotEmpty()) {
-		                       conversationsList.value = it
+		                       conversationsList.value?.addAll(it)
+		                       conversationsList.value = conversationsList.value
 		                       showTextHelper.value = false
 	                       }
 	                       else showTextHelper.value = true
-                           Log.wtf(TAG, "conversations to show: ${it.size}")
+                           Log.wtf(TAG, "loaded conversations: ${it.size}")
                        },
                        {
                            Log.wtf(TAG, "load convers list error: $it")

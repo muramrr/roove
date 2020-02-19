@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.02.20 20:16
+ * Last modified 19.02.20 13:59
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 package com.mmdev.roove.utils
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
@@ -36,7 +37,7 @@ object UtilityManager {
 	private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
 	private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 
-	private fun createFakeUser(city: String = "nsk", gender: String = "female")=
+	private fun createFakeUser(city: String = "msk", gender: String = "female")=
 		UserItem(BaseUserInfo(Fakeit.name().firstName(),
 		                      Random.nextInt(18, 22),
 		                      city,
@@ -63,7 +64,15 @@ object UtilityManager {
 		return Date(randomMillisSinceEpoch)
 	}
 
-	fun createFakeUsersOnRemote(userItem: UserItem = createFakeUser()) {
+	private fun generateRandomDate(): Date {
+		val aDay: Long = TimeUnit.DAYS.toMillis(1)
+		val now = Date().time
+		val hundredYearsAgo = Date(now - aDay * 365 * 100)
+		val tenDaysAgo = Date(now - aDay * 10)
+		return generateDateBetween(hundredYearsAgo, tenDaysAgo)
+	}
+
+	fun createFakeUserOnRemote(userItem: UserItem = createFakeUser()) {
 		db.collection(USERS_COLLECTION_REFERENCE)
 			.document(userItem.baseUserInfo.city)
 			.collection(userItem.baseUserInfo.gender)
@@ -71,13 +80,9 @@ object UtilityManager {
 			.set(userItem)
 	}
 
-	fun generateMatchesListOnRemote(userItem: UserItem = createFakeUser()) {
+	fun generateMatcheOnRemote(userItem: UserItem = createFakeUser()) {
 
-		val aDay: Long = TimeUnit.DAYS.toMillis(1)
-		val now = Date().time
-		val hundredYearsAgo = Date(now - aDay * 365 * 100)
-		val tenDaysAgo = Date(now - aDay * 10)
-		val randomDate = generateDateBetween(hundredYearsAgo, tenDaysAgo)
+		val randomDate = generateRandomDate()
 
 		db.collection(USERS_COLLECTION_REFERENCE)
 			.document("msk")
@@ -86,6 +91,23 @@ object UtilityManager {
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.document(userItem.baseUserInfo.userId)
 			.set(MatchedUserItem(userItem, matchedDate = randomDate))
+
+	}
+
+	fun generateConversationOnRemote(){
+		val conversationId = randomUid()
+		db.collection(USERS_COLLECTION_REFERENCE)
+			.document("msk")
+			.collection("male")
+			.document("5Bi3FfUE8nQppPyo5mqquIsBijf1")
+			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+			.document(conversationId)
+			.set(ConversationItem(conversationId = conversationId,
+			                      conversationStarted = true,
+			                      lastMessageTimestamp = generateRandomDate(),
+			                      lastMessageText = Fakeit.lorem().words(),
+			                      partner = createFakeUser()))
+
 
 	}
 }
