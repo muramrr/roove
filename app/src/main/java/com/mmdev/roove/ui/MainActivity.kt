@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 19.02.20 13:48
+ * Last modified 19.02.20 14:50
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,6 @@ import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.main.MainFlowFragment
-import com.mmdev.roove.utils.UtilityManager
 import com.mmdev.roove.utils.doOnApplyWindowInsets
 import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.activity_main.*
@@ -112,8 +111,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 
 		//creating fake users, do not call this on UI thread
 		//UtilityManager.createFakeUsersOnRemote()
-		for (i in 0 until 153)
-			UtilityManager.generateConversationOnRemote()
+		for (i in 0 until 153){
+			//UtilityManager.generateConversationOnRemote()
+		}
+
 
 	}
 

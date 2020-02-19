@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.02.20 18:16
+ * Last modified 19.02.20 17:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,6 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -170,16 +169,12 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			partnerName = it.partner.baseUserInfo.name
 			partnerMainPhotoUrl = it.partner.baseUserInfo.mainPhotoUrl
 			partnerId = it.partner.baseUserInfo.userId
-			if (currentConversation.conversationId.isNotEmpty()) {
-				chatViewModel.loadMessages(currentConversation)
-				chatViewModel.observeNewMessages(currentConversation)
-			}
-
+			chatViewModel.loadMessages(it)
+			chatViewModel.observeNewMessages(it)
 		})
 
 		chatViewModel.getMessagesList().observe(this, Observer {
 			mChatAdapter.updateData(it)
-			Log.wtf(TAG, "messages to show = ${it.size}")
 		})
 
 	}
