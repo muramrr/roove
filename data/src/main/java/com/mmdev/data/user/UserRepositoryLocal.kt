@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 17.02.20 15:28
+ * Last modified 22.02.20 15:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -75,7 +75,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 					placesToGoItems.add(gson.fromJson(placesToGoStrings.get(i).toString(), BasePlaceInfo::class.java))
 
 
-				Log.wtf(TAG, "retrieved user info from sharedpref successfully")
+				//Log.wtf(TAG, "retrieved user info from sharedpref successfully")
 
 				UserItem(baseUserInfo = BaseUserInfo(name,
 				                                     age,

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 17.02.20 15:19
+ * Last modified 22.02.20 14:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,7 +39,7 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
 	}
 
 
-	fun checkMatch(likedUserItem: UserItem){
+	fun checkMatch(likedUserItem: UserItem) {
 		disposables.add(checkMatchExecution(likedUserItem)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -52,24 +52,21 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
                        }))
 	}
 
-	fun loadUsersByPreferences(){
+	fun loadUsersByPreferences() {
 		disposables.add(getUsersByPreferencesExecution()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showLoading.value = true }
-            .doOnSuccess {
-                if(it.isNotEmpty()) showLoading.value = false
-                else showTextHelper.value = true
-            }
             .subscribe({
 	                       if(it.isNotEmpty()) {
 		                       usersCardsList.value = it
 		                       showLoading.value = false
 		                       showTextHelper.value = false
 	                       }
-	                       Log.wtf(TAG, "pagination loaded cards: ${it.size}")
+	                       else showTextHelper.value = true
+	                       Log.wtf(TAG, "loaded cards: ${it.size}")
                        },
                        {
-	                       Log.wtf(TAG, "get potential users error: $it")
+	                       Log.wtf(TAG, "error: $it")
                        }))
 	}
 
