@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.02.20 16:23
+ * Last modified 22.02.20 17:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,14 +27,14 @@ import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.utils.observeOnce
-import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.android.synthetic.main.fragment_settings_edit_info.*
 
 
 /**
  * This is the documentation block about the class
  */
 
-class SettingsAccountFragment: BaseFragment(R.layout.fragment_settings) {
+class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_info) {
 
 	private lateinit var userItem: UserItem
 
