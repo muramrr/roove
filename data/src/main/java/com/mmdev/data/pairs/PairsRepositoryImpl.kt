@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 19.02.20 13:43
+ * Last modified 22.02.20 14:23
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -76,6 +76,7 @@ class PairsRepositoryImpl @Inject constructor(firestore: FirebaseFirestore,
 						paginateMatchesQuery =
 							paginateMatchesQuery.startAfter(paginateLastMatchedLoaded)
 					}
+					else emitter.onSuccess(listOf())
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())

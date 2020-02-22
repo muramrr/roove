@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.02.20 20:19
+ * Last modified 22.02.20 14:06
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,7 +44,7 @@ class PairsViewModel @Inject constructor(private val getMatchedUsersUC: GetMatch
 		                       showTextHelper.value = false
 	                       }
 	                       else showTextHelper.value = true
-	                       Log.wtf(TAG, "loaded cards: ${it.size}")
+	                       Log.wtf(TAG, "loaded pairs: ${it.size}")
                        },
                        {
                            Log.wtf(TAG, "error + $it")

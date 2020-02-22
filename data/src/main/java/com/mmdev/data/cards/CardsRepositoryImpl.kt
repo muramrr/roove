@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 17.02.20 15:40
+ * Last modified 22.02.20 16:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -77,8 +77,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.document(skippedUserItem.baseUserInfo.userId)
 			.set(mapOf("userId" to skippedUserItem.baseUserInfo.userId))
 
-
-		//skippedList.add(skippedUserItem.baseUserInfo.userId)
+		skippedList.add(skippedUserItem.baseUserInfo.userId)
 	}
 
 	/*
@@ -100,6 +99,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					if (userDoc.exists()) {
 
 						emitter.onSuccess(true)
+						matchedList.add(likedUserItem.baseUserInfo.userId)
 
 						//create predefined conversation for this match
 						val conversationId = firestore
@@ -140,6 +140,8 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 							.document(likedUserItem.baseUserInfo.userId)
 							.set(mapOf("userId" to likedUserItem.baseUserInfo.userId))
 
+						likedList.add(likedUserItem.baseUserInfo.userId)
+
 						emitter.onSuccess(false)
 					}
 
@@ -152,40 +154,49 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	}
 
 	/* return filtered users list as Single */
-	override fun getUsersByPreferences(): Single<List<UserItem>> {
-		//Log.wtf(TAG, "get users called")
-		return Single.zip(getAllUsersCards(),
-		                  zipLists(),
-		                  BiFunction<List<UserItem>, List<String>, List<UserItem>>
-		                  { userList, ids  -> filterUsers(userList, ids) })
+	override fun getUsersByPreferences() =
+		Single.zip(getAllUsersCards(),
+		           zipLists(),
+		           BiFunction<List<UserItem>, List<String>, List<UserItem>>
+		           { userList, ids  -> filterUsers(userList, ids) })
 			.subscribeOn(Schedulers.io())
 
+	/* return filtered all users list from already written ids as List<UserItem> */
+	private fun filterUsers(usersItemsList: List<UserItem>, ids: List<String>): List<UserItem>{
+		val filteredUsersList = ArrayList<UserItem>()
+		if (usersItemsList.isNotEmpty())
+			for (user in usersItemsList)
+				if (!ids.contains(user.baseUserInfo.userId))
+					filteredUsersList.add(user)
+		//Log.wtf(TAG, "filtered users: ${filteredUsersList.size}")
+		return filteredUsersList
 	}
+
 
 	/*
 	* GET LIKED USERS IDS LIST
 	*/
 	private fun getLikedList(): Single<List<String>> {
 		//Log.wtf(TAG, "get liked called")
-		val query = currentUserDocReference
-			.collection(USER_LIKED_COLLECTION_REFERENCE)
-			.get()
 		return Single.create(SingleOnSubscribe<List<String>>{ emitter ->
-			query.addOnSuccessListener {
-				if (!it.isEmpty) {
-					for (doc in it){
-						if (!likedList.contains(doc.id))
-							likedList.add(doc.id)
-					}
-					Log.wtf(TAG, "likes on complete, size = " + likedList.size)
+			val query = currentUserDocReference
+				.collection(USER_LIKED_COLLECTION_REFERENCE)
 
-					emitter.onSuccess(likedList)
+			query
+				.get()
+				.addOnSuccessListener {
+					if (!it.isEmpty) {
+						for (doc in it){
+							if (!likedList.contains(doc.id))
+								likedList.add(doc.id)
+						}
+						//Log.wtf(TAG, "likes on complete, size = " + likedList.size)
+
+						emitter.onSuccess(likedList)
+					}
+					else emitter.onSuccess(likedList)
 				}
-				else emitter.onSuccess(likedList)
-			}.addOnFailureListener {
-				Log.wtf(TAG, "liked fail + $it")
-				emitter.onError(it)
-			}
+				.addOnFailureListener { emitter.onError(it) }
 		}).observeOn(Schedulers.io())
 
 	}
@@ -195,25 +206,24 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	*/
 	private fun getMatchedList(): Single<List<String>> {
 		//Log.wtf(TAG, "get matched called")
-		val query = currentUserDocReference
-			.collection(USER_MATCHED_COLLECTION_REFERENCE)
-			.get()
 		return Single.create(SingleOnSubscribe<List<String>> { emitter ->
-			query.addOnSuccessListener {
-				if (!it.isEmpty) {
-					for (doc in it){
-						if (!matchedList.contains(doc.id))
-							matchedList.add(doc.id)
-					}
-					Log.wtf(TAG, "matches on complete, size = " + matchedList.size)
-					emitter.onSuccess(matchedList)
+			val query = currentUserDocReference
+				.collection(USER_MATCHED_COLLECTION_REFERENCE)
 
-				}
-				else emitter.onSuccess(matchedList)
-			}.addOnFailureListener {
-				Log.wtf(TAG, "matches fail + $it")
-				emitter.onError(it)
-			}
+			query
+				.get()
+				.addOnSuccessListener {
+					if (!it.isEmpty) {
+						for (doc in it){
+							if (!matchedList.contains(doc.id))
+								matchedList.add(doc.id)
+						}
+						//Log.wtf(TAG, "matches on complete, size = " + matchedList.size)
+						emitter.onSuccess(matchedList)
+
+					}
+					else emitter.onSuccess(matchedList) }
+				.addOnFailureListener { emitter.onError(it) }
 
 		}).observeOn(Schedulers.io())
 	}
@@ -223,30 +233,28 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	*/
 	private fun getSkippedList(): Single<List<String>> {
 		//Log.wtf(TAG, "get skipped called")
-		val query = currentUserDocReference
-			.collection(USER_SKIPPED_COLLECTION_REFERENCE)
-			.get()
 		return Single.create(SingleOnSubscribe<List<String>> { emitter ->
-			query.addOnSuccessListener {
-				if (!it.isEmpty) {
-					for (doc in it) {
-						if (!skippedList.contains(doc.id))
-							skippedList.add(doc.id)
+			val query = currentUserDocReference
+				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
+
+			query
+				.get()
+				.addOnSuccessListener {
+					if (!it.isEmpty) {
+						for (doc in it) {
+							if (!skippedList.contains(doc.id))
+								skippedList.add(doc.id)
+						}
+
+						//Log.wtf(TAG, "skips on complete, size = " + skippedList.size)
+
+						emitter.onSuccess(skippedList)
+						//localStorageLists.saveSkippedList(skippedList)
 					}
-
-					Log.wtf(TAG, "skips on complete, size = " + skippedList.size)
-
-					emitter.onSuccess(skippedList)
-					//localStorageLists.saveSkippedList(skippedList)
+					else emitter.onSuccess(skippedList)
 				}
-				else emitter.onSuccess(skippedList)
-			}.addOnFailureListener {
-				emitter.onError(it)
-				Log.wtf(TAG, "skipped fail + $it")
-			}
-
+				.addOnFailureListener { emitter.onError(it) }
 		}).observeOn(Schedulers.io())
-
 	}
 
 	/*
@@ -263,7 +271,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				.orderBy("baseUserInfo.userId", Query.Direction.DESCENDING)
 				.whereLessThanOrEqualTo(USERS_FILTER_AGE, 22)
 				.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, 18)
-				.limit(10)
+				//.limit(10)
 
 		return Single.create(SingleOnSubscribe<List<UserItem>>{ emitter ->
 			paginateCardsQuery
@@ -276,19 +284,20 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						//Log.wtf(TAG, "all on complete, size = " + allUsersList.size)
 						emitter.onSuccess(allUsersList)
 
-						//new cursor position
-						paginateLastLoadedCard = it.documents[it.size() - 1]
-						//update query with new cursor position
-						paginateCardsQuery = firestore.collection(USERS_COLLECTION_REFERENCE)
-							.document(currentUser.baseUserInfo.city)
-							.collection(currentUser.baseUserInfo.preferredGender)
-							.orderBy(USERS_FILTER_AGE)
-							.orderBy("baseUserInfo.userId", Query.Direction.DESCENDING)
-							.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.baseUserInfo.age)
-							.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, 18)
-							.limit(10)
-							.startAfter(paginateLastLoadedCard)
+//						//new cursor position
+//						paginateLastLoadedCard = it.documents[it.size() - 1]
+//						//update query with new cursor position
+//						paginateCardsQuery = firestore.collection(USERS_COLLECTION_REFERENCE)
+//							.document(currentUser.baseUserInfo.city)
+//							.collection(currentUser.baseUserInfo.preferredGender)
+//							.orderBy(USERS_FILTER_AGE)
+//							.orderBy("baseUserInfo.userId", Query.Direction.DESCENDING)
+//							.whereLessThanOrEqualTo(USERS_FILTER_AGE, 22)
+//							.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, 18)
+//							.limit(10)
+//							.startAfter(paginateLastLoadedCard)
 					}
+					else emitter.onSuccess(listOf())
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).observeOn(Schedulers.io())
@@ -306,9 +315,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 
 	/* merge all liked + matched + skipped users lists */
-	private fun mergeLists(liked: List<String>,
-	                       matched: List<String>,
-	                       skipped: List<String>): List<String> {
+	private fun mergeLists(liked: List<String>, matched: List<String>, skipped: List<String>): List<String> {
 		val uidList = ArrayList<String>()
 		uidList.addAll(liked)
 		uidList.addAll(matched)
@@ -319,15 +326,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 
 
-	/* return filtered all users list from already written ids as List<UserItem> */
-	private fun filterUsers(usersItemsList: List<UserItem>, ids: List<String>): List<UserItem>{
-		val filteredUsersList = ArrayList<UserItem>()
-		for (user in usersItemsList)
-			if (!ids.contains(user.baseUserInfo.userId))
-				filteredUsersList.add(user)
-		//Log.wtf(TAG, "filtered users: ${filteredUsersList.size}")
-		return filteredUsersList
-	}
+
 
 
 	/**

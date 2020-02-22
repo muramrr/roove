@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 19.02.20 13:59
+ * Last modified 22.02.20 14:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,10 +25,22 @@ import kotlin.random.Random
 object UtilityManager {
 
 	private val db: FirebaseFirestore
-
+	private var randomFemalePhotoUrlsList: List<String>
 	init {
 		Fakeit.init()
 		db = FirebaseFirestore.getInstance()
+		randomFemalePhotoUrlsList = listOf(
+				"https://images.unsplash.com/photo-1520419423130-2967ef45211a?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1510649343685-d3b08f12def1?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1464863979621-258859e62245?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1464863979621-258859e62245?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1447194047554-cfe888edc98c?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1474901879171-d6f34b3a99b0?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1515017051947-c15e2934398b?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1513792859704-f49baf5c0b70?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1514846326710-096e4a8035e0?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500"
+		)
 	}
 
 	private const val USERS_COLLECTION_REFERENCE = "users"
@@ -37,15 +49,15 @@ object UtilityManager {
 	private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
 	private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 
-	private fun createFakeUser(city: String = "msk", gender: String = "female")=
+	private fun createFakeUser(city: String = "nsk", gender: String = "female")=
 		UserItem(BaseUserInfo(Fakeit.name().firstName(),
 		                      Random.nextInt(18, 22),
 		                      city,
 		                      gender,
 		                      "male",
-		                      "https://graph.facebook.com/2175470722496419/picture?height=500",
+		                      randomFemalePhotoUrlsList[Random.nextInt(0, 9)],
 		                      randomUid()),
-		         mutableListOf(),
+		         randomFemalePhotoUrlsList.toMutableList(),
 		         mutableListOf())
 
 
