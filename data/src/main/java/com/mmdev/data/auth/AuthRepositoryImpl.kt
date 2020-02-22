@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.02.20 16:09
+ * Last modified 22.02.20 17:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -94,7 +94,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 				.addOnCompleteListener{
 					if (it.isSuccessful && auth.currentUser != null) {
 						val firebaseUser = auth.currentUser!!
-						val photoUrl = firebaseUser.photoUrl.toString() + "?height=500"
+						val photoUrl = firebaseUser.photoUrl.toString() + "?height=1000"
 						val baseUser = BaseUserInfo(name = firebaseUser.displayName!!,
 						                            mainPhotoUrl = photoUrl,
 						                            userId = firebaseUser.uid)
