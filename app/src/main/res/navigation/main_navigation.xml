@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.01.20 20:27
+  ~ Last modified 22.02.20 17:38
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -145,7 +145,7 @@
 	<fragment
 		android:id="@+id/settingsFragmentNav"
 		android:label="Settings"
-		android:name="com.mmdev.roove.ui.settings.SettingsAccountFragment"
+		android:name="com.mmdev.roove.ui.settings.SettingsFragment"
 		tools:layout="@layout/fragment_settings" />
 
 
