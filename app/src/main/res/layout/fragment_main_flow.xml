@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 06.02.20 15:46
+  ~ Last modified 23.02.20 17:04
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,8 +43,8 @@
 			android:id="@+id/bottomNavigationView"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:itemIconTint="@color/bottom_navigation_item"
-			app:itemTextColor="@color/bottom_navigation_item"
+			app:itemIconTint="@color/white_tint_checked"
+			app:itemTextColor="@color/white_tint_checked"
 
 			app:labelVisibilityMode="labeled"
 			app:menu="@menu/bottom_navigation_menu"
@@ -59,8 +59,8 @@
 		android:scaleType="center"
 		android:src="@drawable/ic_cards_24dp"
 
-		app:backgroundTint="@color/bottom_navigation_card_button"
-		app:tint="@color/bottom_navigation_card_button_icon"
+		app:backgroundTint="@color/lolite_tint_selected"
+		app:tint="@color/white_tint_selected"
 
 		app:elevation="2dp"
 		app:fabSize="auto"

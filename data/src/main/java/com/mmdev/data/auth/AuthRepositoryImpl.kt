@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.02.20 17:51
+ * Last modified 23.02.20 14:32
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 
 package com.mmdev.data.auth
 
+import android.util.Log
 import com.facebook.login.LoginManager
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -86,10 +87,9 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	 * this fun is called first when user is trying to sign in via facebook
 	 * creates a basic [BaseUserInfo] object based on public facebook profile
 	 */
-	private fun signInWithFacebook(token: String): Single<BaseUserInfo> {
-		val credential = FacebookAuthProvider.getCredential(token)
-		return Single.create(SingleOnSubscribe<BaseUserInfo> { emitter ->
-
+	private fun signInWithFacebook(token: String): Single<BaseUserInfo> =
+		Single.create(SingleOnSubscribe<BaseUserInfo> { emitter ->
+			val credential = FacebookAuthProvider.getCredential(token)
 			auth.signInWithCredential(credential)
 				.addOnCompleteListener{
 					if (it.isSuccessful && auth.currentUser != null) {
@@ -104,32 +104,31 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					else emitter.onError(Exception("Facebook login error"))
 				}
 				.addOnFailureListener { emitter.onError(Exception("Failed to sign in: $it")) }
-
 		}).observeOn(Schedulers.io())
-	}
 
-	private fun checkAndRetrieveFullUser(baseUserInfo: BaseUserInfo): Single<HashMap<Boolean, UserItem>>  =
+	private fun checkAndRetrieveFullUser(baseUserInfo: BaseUserInfo): Single<HashMap<Boolean, UserItem>> =
 		Single.create(SingleOnSubscribe<HashMap<Boolean, UserItem>> { emitter ->
 			val ref = db.collection(BASE_COLLECTION_REFERENCE).document(baseUserInfo.userId)
 			ref.get()
-				.addOnSuccessListener { userDoc ->
+				.addOnSuccessListener { baseUserDoc ->
 					//if base info about user exists in db
-					if (userDoc.exists()) {
-						val userInAuthBase = userDoc.toObject(AuthUserItem::class.java)!!
+					if (baseUserDoc.exists()) {
+						val userInBase = baseUserDoc.toObject(AuthUserItem::class.java)!!
+						Log.wtf("mylogs_AuthRepoImpl", "$userInBase")
 						db.collection(GENERAL_COLLECTION_REFERENCE)
-							.document(userInAuthBase.baseUserInfo.city)
-							.collection(userInAuthBase.baseUserInfo.gender)
-							.document(userInAuthBase.baseUserInfo.userId)
+							.document(userInBase.baseUserInfo.city)
+							.collection(userInBase.baseUserInfo.gender)
+							.document(userInBase.baseUserInfo.userId)
 							.get()
-							.addOnSuccessListener {
+							.addOnSuccessListener { fullUserDoc ->
 								//if full user info exists in db
-								if (it.exists()) {
-									val retrievedUser = it.toObject(UserItem::class.java)!!
+								if (fullUserDoc.exists()) {
+									val retrievedUser = fullUserDoc.toObject(UserItem::class.java)!!
 									localRepo.saveUserInfo(retrievedUser)
 									emitter.onSuccess(hashMapOf(false to retrievedUser))
 								}
 								//auth user exists but full is not => return continue reg flag "true"
-								else emitter.onSuccess(hashMapOf(true to UserItem(userInAuthBase.baseUserInfo)))
+								else emitter.onSuccess(hashMapOf(true to UserItem(userInBase.baseUserInfo)))
 							}
 							.addOnFailureListener { emitter.onError(it) }
 					}

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.02.20 17:26
+ * Last modified 23.02.20 16:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.navigation.fragment.findNavController
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
@@ -79,7 +79,7 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		super.onCreate(savedInstanceState)
 
 		activity?.run {
-			authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
+
 			localRepoViewModel = ViewModelProvider(this, factory)[LocalUserRepoViewModel::class.java]
 			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
@@ -97,8 +97,6 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		changerPreferredGenderSetup()
 		changerAgeSetup()
 		changerCitySetup()
-
-		btnSettingsLogOut.setOnClickListener { showSignOutPrompt() }
 
 		btnSettingsSave.setOnClickListener {
 			remoteRepoViewModel.updateUserItem(userItem)
@@ -205,23 +203,9 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		}
 	}
 
-	/*
-	* log out pop up
-	*/
-	private fun showSignOutPrompt() {
-		MaterialAlertDialogBuilder(context)
-			.setTitle("Do you wish to log out?")
-			.setMessage("This will permanently log you out.")
-			.setPositiveButton("Log out") { dialog, _ ->
-				authViewModel.logOut()
-				dialog.dismiss()
-			}
-			.setNegativeButton("Cancel") { dialog, _ ->
-				dialog.dismiss()
-			}
-			.show()
 
+	override fun onBackPressed() {
+		super.onBackPressed()
+		findNavController().navigateUp()
 	}
-
-
 }
