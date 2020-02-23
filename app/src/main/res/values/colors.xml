@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.01.20 19:26
+  ~ Last modified 23.02.20 17:35
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,6 +62,8 @@
 	<color name="material_red_a700">#D50000</color>
 
 	<color name="material_orange_600">#FB8C00</color>
+
+	<color name="material_orange_a700">#FF6D00</color>
 	<color name="material_blue_400">#42A5F5</color>
 	<color name="material_blue_a700">#2962FF</color>
 

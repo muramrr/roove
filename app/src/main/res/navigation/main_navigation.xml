@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 22.02.20 17:38
+  ~ Last modified 23.02.20 18:33
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -146,10 +146,24 @@
 		android:id="@+id/settingsFragmentNav"
 		android:label="Settings"
 		android:name="com.mmdev.roove.ui.settings.SettingsFragment"
-		tools:layout="@layout/fragment_settings" />
+		tools:layout="@layout/fragment_settings" >
 
+		<action
+			android:id="@+id/action_settings_to_settingsEditInfoFragment"
+			app:destination="@id/settingsEditInfoFragmentNav" />
 
+		<action
+			android:id="@+id/action_settings_to_placeDetailedFragment"
+			app:destination="@id/placeDetailedFragmentNav" />
 
+	</fragment>
+
+	<!-- secondary settings edit fragment -->
+	<fragment
+		android:id="@+id/settingsEditInfoFragmentNav"
+		android:label="Edit"
+		android:name="com.mmdev.roove.ui.settings.SettingsEditInfoFragment"
+		tools:layout="@layout/fragment_settings_edit_info" />
 
 	<!-- secondary places detailed fragment-->
 	<fragment

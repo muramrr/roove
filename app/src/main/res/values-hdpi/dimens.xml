@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 22.01.20 19:22
+  ~ Last modified 23.02.20 16:14
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,4 +14,5 @@
 	<dimen name="auth_tv_slogan1">40sp</dimen>
 	<dimen name="auth_tv_slogan2">20sp</dimen>
 	<dimen name="collapseBarHeight">300dp</dimen>
+	<dimen name="rvSettingsPhotoElementWidth">150dp</dimen>
 </resources>

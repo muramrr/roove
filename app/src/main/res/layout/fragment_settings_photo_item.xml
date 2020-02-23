@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 22.02.20 18:02
+  ~ Last modified 23.02.20 16:14
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,17 +10,21 @@
   -->
 
 <androidx.cardview.widget.CardView
-	android:layout_gravity="center"
 	android:layout_height="wrap_content"
 	android:layout_width="wrap_content"
+
+	app:cardBackgroundColor="@color/colorPrimaryDark"
+	app:cardCornerRadius="15dp"
+
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<ImageView
 		android:id="@+id/ivUserItemPhoto"
-		android:layout_width="200dp"
-		android:layout_height="400dp"
+		android:layout_width="@dimen/rvSettingsPhotoElementWidth"
+		android:layout_height="300dp"
 		android:src="@drawable/placeholder_profile"
-		android:scaleType="centerCrop"/>
+		android:scaleType="center"/>
 
 
 </androidx.cardview.widget.CardView>

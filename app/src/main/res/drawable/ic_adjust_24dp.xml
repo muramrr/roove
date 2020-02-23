@@ -1,0 +1,19 @@
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 23.02.20 17:23
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+<vector android:height="24dp"
+    android:viewportHeight="335.2"
+    android:viewportWidth="335.2"
+    android:width="24dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="@color/white" android:pathData="M327.6,61.8H194.4C191.2,47 177.6,35.4 162,35.4c-16,0 -29.2,11.2 -32.4,26.4H7.2C3.2,61.8 0,65 0,69s3.2,7.2 7.2,7.2h122c3.2,14.8 16.8,26.4 32.4,26.4c16,0 29.2,-11.2 32.4,-26.4h133.6c4,0 7.2,-3.2 7.2,-7.2S331.6,61.8 327.6,61.8zM162,88.6c-10.4,0 -19.2,-8.4 -19.2,-19.2s8.4,-19.2 19.2,-19.2c10.4,0 19.2,8.4 19.2,19.2C181.2,79.8 172.8,88.6 162,88.6z"/>
+    <path android:fillColor="@color/white" android:pathData="M328,160.6H126c-3.2,-14.8 -16.8,-26.4 -32.4,-26.4c-16,0 -29.2,11.2 -32.4,26.4h-54c-4,0 -7.2,3.2 -7.2,7.2s3.2,7.2 7.2,7.2h54c3.2,14.8 16.8,26.4 32.4,26.4c16,0 29.2,-11.2 32.4,-26.4h202c4,0 7.2,-3.2 7.2,-7.2S332,160.6 328,160.6zM93.6,187c-10.4,0 -19.2,-8.4 -19.2,-19.2c0,-10.4 8.8,-19.2 19.2,-19.2c10.4,0 19.2,8.4 19.2,19.2C112.8,178.2 104.4,187 93.6,187z"/>
+    <path android:fillColor="@color/white" android:pathData="M327.6,259h-62.8c-3.2,-14.8 -16.8,-26.4 -32.4,-26.4c-16,0 -29.2,11.2 -32.4,26.4H7.2c-4,0 -7.2,3.2 -7.2,7.2s3.2,7.2 7.2,7.2h192.4c3.2,14.8 16.8,26.4 32.4,26.4c16,0 29.2,-11.2 32.4,-26.4h63.2c4,0 7.2,-3.2 7.2,-7.2S331.6,259 327.6,259zM232,285.8c-10.4,0 -19.2,-8.4 -19.2,-19.2c0,-10.8 8.8,-19.2 19.2,-19.2c10.4,0 19.2,8.4 19.2,19.2C251.2,277.4 242.8,285.8 232,285.8z"/>
+</vector>

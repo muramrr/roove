@@ -2,33 +2,179 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 22.02.20 17:53
+  ~ Last modified 23.02.20 18:30
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
-
-	android:layout_height="match_parent"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
 	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/colorPrimaryDark"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
-	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/rvUserPhotosList"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
+	<androidx.core.widget.NestedScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
 		android:clipToPadding="false"
-		android:orientation="horizontal"
+		android:overScrollMode="never"
+		android:fillViewport="true">
 
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
 
-		tools:listitem="@layout/fragment_settings_photo_item"
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/containerSettings"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:animateLayoutChanges="true">
+
+			<androidx.appcompat.widget.Toolbar
+				android:id="@+id/toolbarSettings"
+				android:layout_width="0dp"
+				android:layout_height="?actionBarSize"
+				android:background="@color/colorPrimary"
+
+				app:layout_constraintBottom_toTopOf="@id/rvUserPhotosList"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				app:menu="@menu/settings_menu"
+
+				app:popupTheme="@style/menuPopupStyle"
+				app:title="Настройки"
+				app:titleTextAppearance="@style/ToolbarTitle"
+				app:titleTextColor="@color/white_85" />
+
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/rvUserPhotosList"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/general_margin_16"
+				android:clipToPadding="false"
+				android:orientation="horizontal"
+				android:overScrollMode="never"
+
+				app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/toolbarSettings"
+
+				tools:listitem="@layout/fragment_settings_photo_item" />
+
+			<!-- add a photo -->
+			<com.google.android.material.floatingactionbutton.FloatingActionButton
+				android:id="@+id/fabSettingsAddPhoto"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_add_a_photo_24dp"
+
+				app:backgroundTint="@color/material_orange_a700"
+				app:layout_constraintBottom_toBottomOf="@id/rvUserPhotosList"
+
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
+				app:layout_constraintTop_toBottomOf="@id/rvUserPhotosList"
+				app:rippleColor="@color/black_50" />
+
+
+			<com.google.android.material.textview.MaterialTextView
+				android:id="@+id/tvNameAge"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/general_margin_16"
+				android:text="Андрій, 22"
+				android:textSize="22sp"
+
+				style="@style/regular_text_white85op"
+
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
+				app:layout_constraintTop_toBottomOf="@id/fabSettingsAddPhoto"/>
+
+			<com.google.android.material.textview.MaterialTextView
+				android:id="@+id/tvCity"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Москва"
+				android:textSize="22sp"
+
+				style="@style/regular_text_white85op"
+
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
+				app:layout_constraintTop_toBottomOf="@id/tvNameAge"
+				/>
+
+			<TextView
+				android:id="@+id/tvSettingsWantToGoHeader"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/general_margin_16"
+
+				android:text="Хочу сходить"
+				android:textSize="22sp"
+				style="@style/medium_text_white85op"
+
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
+				app:layout_constraintTop_toBottomOf="@id/tvCity"
+				app:layout_constraintBottom_toTopOf="@id/rvSettingsWantToGoList"
+				/>
+
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/rvSettingsWantToGoList"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/general_margin_8"
+				android:layout_marginBottom="100dp"
+				android:orientation="horizontal"
+				android:visibility="visible"
+				app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/tvSettingsWantToGoHeader"
+				app:layout_constraintBottom_toBottomOf="parent"
+
+				tools:listitem="@layout/fragment_profile_places_rv_item"/>
+
+
+			<!-- start padding -->
+			<androidx.constraintlayout.widget.Guideline
+				android:id="@+id/guidelineStart"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				app:layout_constraintGuide_begin="@dimen/general_margin_8" />
+
+			<!-- end padding -->
+			<androidx.constraintlayout.widget.Guideline
+				android:id="@+id/guidelineEnd"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				app:layout_constraintGuide_end="@dimen/general_margin_8" />
+
+
+		</androidx.constraintlayout.widget.ConstraintLayout>
+
+	</androidx.core.widget.NestedScrollView>
+
+	<!-- edit -->
+	<com.google.android.material.floatingactionbutton.FloatingActionButton
+		android:id="@+id/fabSettingsEdit"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="24dp"
+		android:src="@drawable/ic_create_24dp"
+		app:layout_anchor="@id/containerSettings"
+		app:layout_anchorGravity="bottom|end"
+
+		app:backgroundTint="@color/amethyst"
+		app:rippleColor="@color/black_50"
 		/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
