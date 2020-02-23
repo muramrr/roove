@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 17.02.20 15:11
+ * Last modified 23.02.20 18:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,7 +37,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 
 	private val userPhotosAdapter = ImagePagerAdapter(listOf())
-	private val mUserPlacesToGoAdapter = ProfilePlacesToGoAdapter(listOf())
+	private val mPlacesToGoAdapter = PlacesToGoAdapter(listOf())
 
 	private var fabVisible: Boolean = false
 
@@ -71,7 +71,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 				//ui
 				collapseBarProfile.title = selectedUser.baseUserInfo.name
 				userPhotosAdapter.updateData(selectedUser.photoURLs.toList())
-				mUserPlacesToGoAdapter.updateData(selectedUser.placesToGo.toList())
+				mPlacesToGoAdapter.updateData(selectedUser.placesToGo.toList())
 			})
 		}
 		//else we navigates here from cards or chat fragment
@@ -81,7 +81,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 				//ui
 				collapseBarProfile.title = selectedUser.baseUserInfo.name
 				userPhotosAdapter.updateData(selectedUser.photoURLs.toList())
-				mUserPlacesToGoAdapter.updateData(selectedUser.placesToGo.toList())
+				mPlacesToGoAdapter.updateData(selectedUser.placesToGo.toList())
 
 			})
 		}
@@ -115,14 +115,14 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 			}
 		}
 
-		rvProfileWantToGoList.apply { adapter = mUserPlacesToGoAdapter }
+		rvProfileWantToGoList.apply { adapter = mPlacesToGoAdapter }
 
-		mUserPlacesToGoAdapter.setOnItemClickListener(object: ProfilePlacesToGoAdapter.OnItemClickListener {
+		mPlacesToGoAdapter.setOnItemClickListener(object: PlacesToGoAdapter.OnItemClickListener {
 
 			override fun onItemClick(view: View, position: Int) {
 
 				val placeId = bundleOf("PLACE_ID" to
-						                       mUserPlacesToGoAdapter.getPlaceToGoItem(position).id)
+						                       mPlacesToGoAdapter.getPlaceToGoItem(position).id)
 
 				findNavController().navigate(R.id.action_profile_to_placeDetailedFragment, placeId)
 

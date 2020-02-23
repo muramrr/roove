@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 22.02.20 16:48
+  ~ Last modified 23.02.20 18:25
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,6 @@
 		android:layout_width="match_parent"
 		android:padding="@dimen/general_margin_8"
 		android:animateLayoutChanges="true">
-
 
 		<!--name-->
 		<com.google.android.material.textfield.TextInputLayout
@@ -237,34 +236,6 @@
 
 
 
-
-		<!--log out-->
-		<com.google.android.material.button.MaterialButton
-			android:id="@+id/btnSettingsLogOut"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/general_margin_16"
-
-			android:padding="@dimen/general_margin_16"
-
-			android:fontFamily="@font/rubik_medium"
-			android:text="Log out"
-			android:textColor="@color/white"
-			android:textSize="20sp"
-			android:textAllCaps="false"
-
-			app:rippleColor="@color/material_red_a700"
-
-			app:strokeColor="@color/material_red_a700"
-			app:strokeWidth="2dp"
-
-			style="@style/Widget.MaterialComponents.Button.TextButton"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintBottom_toTopOf="@id/btnSettingsSave"
-			app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedDescription"
-			/>
-
 		<!--save-->
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/btnSettingsSave"
@@ -274,7 +245,7 @@
 			android:padding="@dimen/general_margin_16"
 
 			android:fontFamily="@font/rubik_medium"
-			android:text="Save"
+			android:text="Сохранить"
 			android:textColor="@color/white"
 			android:textSize="20sp"
 			android:textAllCaps="false"
@@ -286,6 +257,7 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedDescription"
 			/>
 
 		<TextView

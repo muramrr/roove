@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 15.02.20 14:55
+ * Last modified 23.02.20 14:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 
 package com.mmdev.roove.utils
 
+import android.content.Context
 import android.graphics.Rect
 import android.view.View
 import android.widget.Toast
@@ -20,6 +21,7 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+
 
 fun AppCompatActivity.showToastText(text: String) =
 	Toast.makeText(this, text, Toast.LENGTH_LONG).show()
@@ -33,6 +35,7 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
 	})
 }
 
+fun Context.dp2px(dpValue: Float): Int = (dpValue * this.resources.displayMetrics.density + 0.5f).toInt()
 
 fun View.addSystemTopPadding(targetView: View = this, isConsumed: Boolean = false) {
 	doOnApplyWindowInsets { _, insets, initialPadding ->

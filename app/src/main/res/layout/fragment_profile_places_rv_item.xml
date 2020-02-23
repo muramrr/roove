@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 29.01.20 16:42
+  ~ Last modified 23.02.20 18:03
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,6 +31,7 @@
 			android:id="@+id/ivProfilePlaceImage"
 			android:layout_width="80dp"
 			android:layout_height="80dp"
+			android:src="@drawable/placeholder_image"
 
 			app:bindCircleImageUrl="@{basePlaceInfo.imageUrl}"
 

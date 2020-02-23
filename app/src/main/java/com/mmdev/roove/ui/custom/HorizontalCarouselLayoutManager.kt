@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.02.20 18:02
+ * Last modified 23.02.20 16:29
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,8 +28,9 @@ class HorizontalCarouselLayoutManager: LinearLayoutManager {
 	constructor(context: Context?): super(context)
 	constructor(context: Context?, orientation: Int, reverseLayout: Boolean): super(context, orientation, reverseLayout)
 
+
+
 	override fun scrollVerticallyBy(dy: Int, recycler: Recycler?, state: RecyclerView.State?): Int {
-		val orientation = orientation
 		return if (orientation == VERTICAL) {
 			val scrolled = super.scrollVerticallyBy(dy, recycler, state)
 			val midpoint = height / 2f
@@ -52,9 +53,7 @@ class HorizontalCarouselLayoutManager: LinearLayoutManager {
 		else { 0 }
 	}
 
-	override fun scrollHorizontallyBy(dx: Int, recycler: Recycler?,
-	                                  state: RecyclerView.State?): Int {
-		val orientation = orientation
+	override fun scrollHorizontallyBy(dx: Int, recycler: Recycler?, state: RecyclerView.State?): Int {
 		return if (orientation == HORIZONTAL) {
 			val scrolled = super.scrollHorizontallyBy(dx, recycler, state)
 			val midpoint = width / 2f
@@ -76,5 +75,11 @@ class HorizontalCarouselLayoutManager: LinearLayoutManager {
 			scrolled
 		}
 		else { 0 }
+	}
+
+	//apply effect immediately
+	override fun onLayoutChildren(recycler: Recycler?, state: RecyclerView.State?) {
+		super.onLayoutChildren(recycler, state)
+		scrollHorizontallyBy(0, recycler, state)
 	}
 }

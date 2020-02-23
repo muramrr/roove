@@ -1,20 +1,29 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.01.20 20:40
+  ~ Last modified 23.02.20 16:58
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<vector android:height="24dp" android:viewportHeight="296.664"
-    android:viewportWidth="296.664" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+<vector
+    android:height="24dp"
+    android:width="24dp"
+    android:viewportHeight="296.664"
+    android:viewportWidth="296.664"
+
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
     <path android:fillColor="@color/white" android:pathData="M58.355,226.748V69.414c0,-1.709 0.294,-3.391 0.526,-5.039L13.778,79.057C3.316,82.455 -2.42,93.797 0.979,104.258l48.639,149.633c2.738,8.428 10.639,13.816 19.075,13.816c2.035,0 4.109,-0.315 6.143,-0.975l12.796,-4.211C71.066,259.213 58.355,244.242 58.355,226.748z"/>
+
     <path android:fillColor="#00000000"
         android:pathData="M122.688,28.957l0,0.25l0.012,0"
         android:strokeColor="#FFFFFF" android:strokeLineCap="round"
         android:strokeLineJoin="round" android:strokeWidth="0"/>
+
     <path android:fillColor="@color/white" android:pathData="M91.098,203.275l48.617,-149.602c0.491,-1.512 1.078,-3.342 1.746,-4.342H94.688c-11,0 -20.333,9.082 -20.333,20.082v157.334c0,11 9.333,20.584 20.333,20.584h15.969C94.061,239.332 85.361,220.932 91.098,203.275z"/>
+
     <path android:fillColor="@color/white" android:pathData="M282.848,79.057L180.134,45.684c-2.034,-0.662 -4.102,-0.975 -6.138,-0.975c-8.436,0 -16.326,5.387 -19.064,13.814l-48.617,149.633c-3.399,10.463 2.379,21.803 12.841,25.203l102.713,33.373c2.034,0.66 4.102,0.975 6.138,0.975c8.436,0 16.326,-5.389 19.064,-13.816l48.618,-149.633C299.088,93.797 293.31,82.455 282.848,79.057zM186.839,196.049c-48.438,-58.818 -20.22,-88.049 -2.361,-87.969c15.049,0.072 21.176,10.863 23.789,21.967c8.049,-8.84 19.938,-12.586 32.156,-3.801C254.922,136.67 260.59,176.898 186.839,196.049z"/>
 </vector>

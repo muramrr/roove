@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.01.20 16:42
+ * Last modified 23.02.20 18:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,8 +23,8 @@ import com.mmdev.roove.databinding.FragmentProfilePlacesRvItemBinding
  * This is the documentation block about the class
  */
 
-class ProfilePlacesToGoAdapter (private var mPlacesToGoList: List<BasePlaceInfo>):
-		RecyclerView.Adapter<ProfilePlacesToGoAdapter.PlacesToGoItemHolder>() {
+class PlacesToGoAdapter (private var mPlacesToGoList: List<BasePlaceInfo>):
+		RecyclerView.Adapter<PlacesToGoAdapter.PlacesToGoItemHolder>() {
 
 	private lateinit var mClickListener: OnItemClickListener
 
