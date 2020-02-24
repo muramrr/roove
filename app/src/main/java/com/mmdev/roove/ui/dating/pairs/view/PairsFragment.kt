@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.02.20 20:19
+ * Last modified 24.02.20 16:32
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -76,7 +76,7 @@ class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
 					val pastVisibleItems = staggeredGridLayoutManager
 						.findLastVisibleItemPositions(null)[0]
 
-					if ((totalItemsCount - visibleItemCount) <= (pastVisibleItems + 4)){
+					if ((totalItemsCount - visibleItemCount) == (pastVisibleItems + 4)){
 						//Log.wtf("mylogs_PairsFragment", "load called ")
 						pairsViewModel.loadMatchedUsers()
 					}
