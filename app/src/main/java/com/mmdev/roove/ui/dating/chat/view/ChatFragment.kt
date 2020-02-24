@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 19.02.20 17:55
+ * Last modified 24.02.20 16:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -31,7 +30,6 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -49,8 +47,7 @@ import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.databinding.FragmentChatBinding
-import com.mmdev.roove.ui.core.BaseFragment
-import com.mmdev.roove.ui.core.SharedViewModel
+import com.mmdev.roove.ui.core.*
 import com.mmdev.roove.ui.dating.chat.ChatViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import com.mmdev.roove.utils.addSystemBottomPadding
@@ -58,7 +55,6 @@ import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_chat.*
 import java.io.File
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -345,13 +341,13 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	 * else open camera intent
 	 */
 	private fun photoCameraClick() {
-		val listPermissionsNeeded = ArrayList<String>()
-		for (permission in PERMISSIONS_CAMERA) {
-			val result = ActivityCompat.checkSelfPermission(context!!, permission)
-			if (result != PackageManager.PERMISSION_GRANTED) listPermissionsNeeded.add(permission)
-		}
-		if (listPermissionsNeeded.isNotEmpty()) requestPermissions(PERMISSIONS_CAMERA, REQUEST_CAMERA)
-		else startCameraIntent()
+		handlePermission(AppPermission.CAMERA,
+		                 onGranted = { startCameraIntent() },
+		                 onDenied = { requestPermissionsList(it) },
+		                 onExplanationNeeded = {
+			                 /** Additional explanation for permission usage needed **/
+		                 }
+		)
 	}
 
 	//take photo directly by camera
@@ -374,10 +370,13 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	 * else open gallery to choose photo
 	 */
 	private fun photoGalleryClick() {
-		if (ActivityCompat.checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE)
-				!= PackageManager.PERMISSION_GRANTED)
-			requestPermissions(PERMISSIONS_STORAGE, REQUEST_STORAGE)
-		else startGalleryIntent()
+		handlePermission(AppPermission.GALLERY,
+		                 onGranted = { startGalleryIntent() },
+		                 onDenied = { requestPermissionsList(it) },
+		                 onExplanationNeeded = {
+			                 /** Additional explanation for permission usage needed **/
+		                 }
+		)
 	}
 
 	//open gallery chooser
@@ -393,14 +392,17 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	// start after permissions was granted
 	// If request is cancelled, the result arrays are empty.
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-		// check camera permission was granted
-		if (requestCode == REQUEST_CAMERA)
-			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-				startCameraIntent()
-		// check gallery permission was granted
-		if (requestCode == REQUEST_STORAGE)
-			if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-				startGalleryIntent()
+		onRequestPermissionsResultReceived(requestCode, grantResults,
+		                                   onPermissionGranted = {
+			                                   when (it){
+				                                   AppPermission.CAMERA -> startCameraIntent()
+				                                   AppPermission.GALLERY -> startGalleryIntent()
+			                                   }
+		                                   },
+		                                   onPermissionDenied = {
+			                                   /** show message that permission is denied**/
+			                                   //snackbarWithoutAction(it.deniedMessageId)
+		                                   })
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

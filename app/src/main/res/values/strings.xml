@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 03.02.20 18:02
+  ~ Last modified 24.02.20 16:17
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -65,6 +65,13 @@
 	<string name="notification_channel_name_match">Matches</string>
 	<string name="notification_channel_description_match">Match notification</string>
 
+	<!-- CAMERA PERMISSIONS -->
+	<string name="permission_camera_explanation">Application needs CAMERA_PERMISSION in order to capture image. Please allow permission.</string>
+	<string name="permission_camera_denied">Please enable CAMERA_PERMISSION. Go to \nSettings -> Apps -> Permission</string>
+
+	<!-- GALLERY PERMISSIONS -->
+	<string name="permission_read_ext_storage_explanation">Application needs READ_EXTERNAL_STORAGE_PERMISSION in order to access your gallery. Please allow permission.</string>
+	<string name="permission_read_ext_storage_denied">Please enable READ_EXTERNAL_STORAGE_PERMISSION. Go to \nSettings -> Apps -> Permission</string>
 
 
 </resources>

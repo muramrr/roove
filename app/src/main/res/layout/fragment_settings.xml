@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.02.20 18:30
+  ~ Last modified 24.02.20 14:17
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -86,7 +86,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="@dimen/general_margin_16"
-				android:text="Андрій, 22"
+				android:text="@string/default_name"
 				android:textSize="22sp"
 
 				style="@style/regular_text_white85op"
