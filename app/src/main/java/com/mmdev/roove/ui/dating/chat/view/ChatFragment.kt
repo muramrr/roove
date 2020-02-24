@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 24.02.20 16:25
+ * Last modified 24.02.20 16:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package com.mmdev.roove.ui.dating.chat.view
 
-import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
@@ -97,15 +96,6 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		private const val IMAGE_GALLERY_REQUEST = 1
 		private const val IMAGE_CAMERA_REQUEST = 2
 
-		// Gallery Permissions
-		private const val REQUEST_STORAGE = 1
-		private val PERMISSIONS_STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-		                                          Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-		// Camera Permission
-		private const val REQUEST_CAMERA = 2
-		private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA,
-		                                         Manifest.permission.READ_EXTERNAL_STORAGE)
 
 		private const val PARTNER_NAME_KEY = "PARTNER_NAME"
 		private const val PARTNER_CITY_KEY = "PARTNER_CITY"
