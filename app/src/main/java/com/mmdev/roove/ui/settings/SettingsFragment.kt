@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.02.20 18:33
+ * Last modified 24.02.20 16:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,9 @@ package com.mmdev.roove.ui.settings
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -57,9 +59,6 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 
 		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			userItem = it
-			mSettingsPhotoAdapter.updateData(it.photoURLs)
-			mPlacesToGoAdapter.updateData(it.placesToGo.toList())
-			tvNameAge.text = it.baseUserInfo.name + ", " + it.baseUserInfo.age
 		})
 	}
 
@@ -98,28 +97,45 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 		rvSettingsWantToGoList.apply { adapter = mPlacesToGoAdapter }
 
 		mPlacesToGoAdapter.setOnItemClickListener(object: PlacesToGoAdapter.OnItemClickListener {
-
 			override fun onItemClick(view: View, position: Int) {
-
 				val placeId = bundleOf("PLACE_ID" to
 						                       mPlacesToGoAdapter.getPlaceToGoItem(position).id)
-
 				findNavController().navigate(R.id.action_settings_to_placeDetailedFragment, placeId)
-
 			}
-
 		})
 
 		fabSettingsEdit.setOnClickListener {
-
 			findNavController().navigate(R.id.action_settings_to_settingsEditInfoFragment)
+		}
 
+		fabSettingsAddPhoto.setOnClickListener {
+			//show attachment dialog picker
+			val builder = AlertDialog.Builder(it.context)
+				.setItems(arrayOf("Camera", "Gallery")) {
+					_, itemIndex ->
+					if (itemIndex == 0) { }
+					else { }
+				}
+			val alertDialog = builder.create()
+			val params = alertDialog.window?.attributes
+			params?.gravity = Gravity.BOTTOM
+			alertDialog.show()
+		}
+	}
+
+	override fun onResume() {
+		super.onResume()
+		if (this::userItem.isInitialized) {
+			mSettingsPhotoAdapter.updateData(userItem.photoURLs)
+			mPlacesToGoAdapter.updateData(userItem.placesToGo.toList())
+			val nameAgeText = "${userItem.baseUserInfo.name}, ${userItem.baseUserInfo.age}"
+			tvNameAge.text = nameAgeText
 		}
 	}
 
 	/*
-	* log out pop up
-	*/
+		* log out pop up
+		*/
 	private fun showSignOutPrompt() {
 		MaterialAlertDialogBuilder(context)
 			.setTitle("Do you wish to log out?")
