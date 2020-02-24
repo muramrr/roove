@@ -382,6 +382,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	// start after permissions was granted
 	// If request is cancelled, the result arrays are empty.
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 		onRequestPermissionsResultReceived(requestCode, grantResults,
 		                                   onPermissionGranted = {
 			                                   when (it){
