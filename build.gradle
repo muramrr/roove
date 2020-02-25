@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.02.20 20:21
+ * Last modified 25.02.20 16:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,10 +29,10 @@ buildscript {
 		dagger_version = '2.26'
 
 		//retrofit
-		retrofit_version = '2.7.1'
+		retrofit_version = '2.7.2'
 
 		// RxJava
-		rxjava_version = '2.2.17'
+		rxjava_version = '2.2.18'
 
 		// RxAndroid
 		rxandroid_version = '2.1.1'
@@ -63,10 +63,10 @@ buildscript {
 
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.5.3'
+		classpath 'com.android.tools.build:gradle:3.6.0'
 		classpath 'com.google.gms:google-services:4.3.3'
 		classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-		classpath 'com.github.ben-manes:gradle-versions-plugin:0.27.0'
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0'
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 
