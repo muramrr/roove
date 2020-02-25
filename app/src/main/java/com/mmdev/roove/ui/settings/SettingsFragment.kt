@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 24.02.20 16:42
+ * Last modified 25.02.20 15:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -176,7 +176,7 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 	private fun photoCameraClick() {
 		handlePermission(AppPermission.CAMERA,
 		                 onGranted = { startCameraIntent() },
-		                 onDenied = { requestPermissionsList(it) },
+		                 onDenied = { requestAppPermissions(it) },
 		                 onExplanationNeeded = { it.explanationMessageId }
 		)
 	}
@@ -203,7 +203,7 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 	private fun photoGalleryClick() {
 		handlePermission(AppPermission.GALLERY,
 		                 onGranted = { startGalleryIntent() },
-		                 onDenied = { requestPermissionsList(it) },
+		                 onDenied = { requestAppPermissions(it) },
 		                 onExplanationNeeded = { it.explanationMessageId }
 		)
 	}
