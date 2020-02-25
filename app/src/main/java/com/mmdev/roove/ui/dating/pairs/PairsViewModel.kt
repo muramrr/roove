@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.02.20 14:06
+ * Last modified 25.02.20 16:29
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,7 +43,7 @@ class PairsViewModel @Inject constructor(private val getMatchedUsersUC: GetMatch
 		                       matchedUsersList.value = matchedUsersList.value
 		                       showTextHelper.value = false
 	                       }
-	                       else showTextHelper.value = true
+	                       else if (matchedUsersList.value?.isEmpty()!!) showTextHelper.value = true
 	                       Log.wtf(TAG, "loaded pairs: ${it.size}")
                        },
                        {
