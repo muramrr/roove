@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.02.20 15:08
+ * Last modified 25.02.20 17:40
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -132,6 +132,17 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 
 		editor.commit()
 		Log.wtf(TAG, "User successfully saved: $userItem")
+	}
+
+	fun updatePhotosField(photoURLs: List<String>) {
+
+		val editor = prefs.edit()
+		val photoUrlsList = mutableListOf<String>()
+		for (photoUrl in photoURLs)
+			photoUrlsList.add(gson.toJson(photoUrl))
+		editor.putString(PREF_KEY_CURRENT_USER_PHOTO_URLS, photoUrlsList.toString())
+
+		editor.apply()
 	}
 
 }

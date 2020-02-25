@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.02.20 17:26
+ * Last modified 25.02.20 18:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,6 +42,7 @@ class SettingsUserPhotoAdapter (private var photosUrlsList: List<String>):
 
 	fun updateData(newPhotoUrls: List<String>) {
 		photosUrlsList = newPhotoUrls
+		notifyDataSetChanged()
 	}
 
 
