@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 24.02.20 16:25
+ * Last modified 25.02.20 15:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,7 +40,7 @@ fun Fragment.isPermissionsGranted(permission: AppPermission) = checkPermissionsN
 //fun Fragment.isExplanationNeeded(permission: AppPermission) =
 	//shouldShowRequestPermissionRationale(permission.permissionsList)
 
-fun Fragment.requestPermissionsList(permission: AppPermission) = requestPermissions(permission.permissionsList, permission.requestCode)
+fun Fragment.requestAppPermissions(permission: AppPermission) = requestPermissions(permission.permissionsList, permission.requestCode)
 
 inline fun Fragment.handlePermission(permission: AppPermission,
                                      onGranted: (AppPermission) -> Unit,
