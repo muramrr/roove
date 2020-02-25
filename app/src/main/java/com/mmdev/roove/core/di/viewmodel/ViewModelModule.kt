@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 17.02.20 15:11
+ * Last modified 25.02.20 17:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,8 +40,8 @@ import com.mmdev.business.user.usecase.local.GetSavedUserUseCase
 import com.mmdev.business.user.usecase.local.SaveUserInfoUseCase
 import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
 import com.mmdev.business.user.usecase.remote.FetchUserInfoUseCase
-import com.mmdev.business.user.usecase.remote.GetFullUserItemUseCase
 import com.mmdev.business.user.usecase.remote.UpdateUserItemUseCase
+import com.mmdev.business.user.usecase.remote.UploadUserProfilePhotoUseCase
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
@@ -141,8 +141,8 @@ class ViewModelModule {
 	fun remoteUserRepoViewModel(repo: RemoteUserRepository): ViewModel =
 		RemoteUserRepoViewModel(DeleteUserUseCase(repo),
 		                        FetchUserInfoUseCase(repo),
-		                        GetFullUserItemUseCase(repo),
-		                        UpdateUserItemUseCase(repo))
+		                        UpdateUserItemUseCase(repo),
+		                        UploadUserProfilePhotoUseCase(repo))
 
 	@IntoMap
 	@Provides

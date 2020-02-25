@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.01.20 16:42
+ * Last modified 25.02.20 18:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,9 @@ package com.mmdev.business.user.repository
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
+import java.util.*
 
 /**
  * This is the documentation block about the class
@@ -30,5 +32,7 @@ interface RemoteUserRepository {
 	fun getFullUserItem(baseUserInfo: BaseUserInfo): Single<UserItem>
 
 	fun updateUserItem(userItem: UserItem): Completable
+
+	fun uploadUserProfilePhoto(photoUri: String, userItem: UserItem): Observable<HashMap<Double, List<String>>>
 
 }
