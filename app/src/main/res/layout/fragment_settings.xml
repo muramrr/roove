@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 24.02.20 14:17
+  ~ Last modified 25.02.20 16:11
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@color/colorPrimaryDark"
+
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
@@ -37,16 +37,17 @@
 				android:layout_height="?actionBarSize"
 				android:background="@color/colorPrimary"
 
+				app:menu="@menu/settings_menu"
+
+				app:title="Настройки"
+				app:titleTextAppearance="@style/ToolbarTitle"
+				app:titleTextColor="@color/white_85"
+
 				app:layout_constraintBottom_toTopOf="@id/rvUserPhotosList"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
-				app:menu="@menu/settings_menu"
-
-				app:popupTheme="@style/menuPopupStyle"
-				app:title="Настройки"
-				app:titleTextAppearance="@style/ToolbarTitle"
-				app:titleTextColor="@color/white_85" />
+				/>
 
 			<androidx.recyclerview.widget.RecyclerView
 				android:id="@+id/rvUserPhotosList"
@@ -109,14 +110,14 @@
 				app:layout_constraintTop_toBottomOf="@id/tvNameAge"
 				/>
 
-			<TextView
+			<com.google.android.material.textview.MaterialTextView
 				android:id="@+id/tvSettingsWantToGoHeader"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:padding="@dimen/general_margin_16"
 
-				android:text="Хочу сходить"
-				android:textSize="22sp"
+				android:text="Хочу посетить"
+				android:textSize="24sp"
 				style="@style/medium_text_white85op"
 
 				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
@@ -129,8 +130,8 @@
 				android:id="@+id/rvSettingsWantToGoList"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
+				android:clipToPadding="false"
 				android:padding="@dimen/general_margin_8"
-				android:layout_marginBottom="100dp"
 				android:orientation="horizontal"
 				android:visibility="visible"
 				app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -138,12 +139,45 @@
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/tvSettingsWantToGoHeader"
-				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintBottom_toTopOf="@id/tvSettingsAboutHeader"
 
 				tools:listitem="@layout/fragment_profile_places_rv_item"/>
 
+			<com.google.android.material.textview.MaterialTextView
+				android:id="@+id/tvSettingsAboutHeader"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/general_margin_16"
 
-			<!-- start padding -->
+				android:text="Обо мне"
+				android:textSize="24sp"
+				style="@style/medium_text_white85op"
+
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
+				app:layout_constraintTop_toBottomOf="@id/rvSettingsWantToGoList"
+				/>
+
+			<com.google.android.material.textview.MaterialTextView
+				android:id="@+id/tvSettingsAboutText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="100dp"
+				android:lineSpacingExtra="10sp"
+
+				android:text="@string/default_profile_about_text"
+				android:textSize="18sp"
+
+				style="@style/regular_text_white85op"
+
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
+				app:layout_constraintTop_toBottomOf="@id/tvSettingsAboutHeader"
+				app:layout_constraintBottom_toBottomOf="parent"
+				/>
+
+
+			<!-- left padding -->
 			<androidx.constraintlayout.widget.Guideline
 				android:id="@+id/guidelineStart"
 				android:layout_width="wrap_content"
@@ -151,7 +185,7 @@
 				android:orientation="vertical"
 				app:layout_constraintGuide_begin="@dimen/general_margin_8" />
 
-			<!-- end padding -->
+			<!-- right padding -->
 			<androidx.constraintlayout.widget.Guideline
 				android:id="@+id/guidelineEnd"
 				android:layout_width="wrap_content"
