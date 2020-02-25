@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.02.20 15:22
+ * Last modified 25.02.20 18:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.roove.ui.settings
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -36,6 +37,7 @@ import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.core.*
+import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.custom.HorizontalCarouselLayoutManager
 import com.mmdev.roove.ui.profile.view.PlacesToGoAdapter
 import com.mmdev.roove.utils.observeOnce
@@ -54,8 +56,10 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 	private val mSettingsPhotoAdapter = SettingsUserPhotoAdapter(listOf())
 	private val mPlacesToGoAdapter = PlacesToGoAdapter(listOf())
 
-	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var authViewModel: AuthViewModel
+	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
+	private lateinit var sharedViewModel: SharedViewModel
+
 
 	private lateinit var userItem: UserItem
 
@@ -71,11 +75,18 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 		super.onCreate(savedInstanceState)
 		activity?.run {
 			authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
+			remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
 			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
 		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			userItem = it
+			mSettingsPhotoAdapter.updateData(it.photoURLs)
+			mPlacesToGoAdapter.updateData(it.placesToGo.toList())
+		})
+
+		remoteRepoViewModel.photoURLs.observe(this, Observer {
+			mSettingsPhotoAdapter.updateData(it)
 		})
 	}
 
@@ -143,8 +154,6 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 	override fun onResume() {
 		super.onResume()
 		if (this::userItem.isInitialized) {
-			mSettingsPhotoAdapter.updateData(userItem.photoURLs)
-			mPlacesToGoAdapter.updateData(userItem.placesToGo.toList())
 			val nameAgeText = "${userItem.baseUserInfo.name}, ${userItem.baseUserInfo.age}"
 			tvNameAge.text = nameAgeText
 		}
@@ -210,12 +219,11 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 
 	//open gallery chooser
 	private fun startGalleryIntent() {
-		val intent = Intent().apply {
+		val intent = Intent.createChooser(Intent().apply {
 			action = Intent.ACTION_GET_CONTENT
 			type = "image/*"
-		}
-		startActivityForResult(Intent.createChooser(intent, "Select image"),
-		                       IMAGE_GALLERY_REQUEST)
+		}, "Select image")
+		startActivityForResult(intent, IMAGE_GALLERY_REQUEST)
 	}
 
 	// start after permissions was granted
@@ -240,7 +248,7 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 			if (resultCode == Activity.RESULT_OK) {
 
 				val selectedUri = data?.data
-				//send photo selectedUri.toString()
+				remoteRepoViewModel.uploadUserProfilePhoto(selectedUri.toString(), userItem)
 			}
 		}
 		// send photo taken by camera
@@ -248,12 +256,12 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 			if (resultCode == Activity.RESULT_OK) {
 
 				if (mFilePathImageCamera.exists()) {
-					//sendPhoto(Uri.fromFile(mFilePathImageCamera).toString(), userItemModel.baseUserInfo, partnerId)
+					remoteRepoViewModel.uploadUserProfilePhoto(Uri.fromFile(mFilePathImageCamera).toString(),
+					                                           userItem)
 				}
 				else Toast.makeText(context,
 				                    "filePathImageCamera is null or filePathImageCamera isn't exists",
-				                    Toast.LENGTH_LONG)
-					.show()
+				                    Toast.LENGTH_LONG).show()
 			}
 		}
 	}
