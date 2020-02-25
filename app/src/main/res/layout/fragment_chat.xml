@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 09.02.20 17:07
+  ~ Last modified 25.02.20 16:11
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,27 +28,23 @@
 		android:layout_height="match_parent"
 		android:background="@color/colorPrimaryDark">
 
-		<com.google.android.material.appbar.AppBarLayout
-			android:id="@+id/appBarChat"
+		<androidx.appcompat.widget.Toolbar
+			android:id="@+id/toolbarChat"
 			android:layout_width="match_parent"
 			android:layout_height="?actionBarSize"
 			android:background="@color/colorPrimary"
-			android:theme="@style/AppTheme.AppBarOverlay"
+
+			app:menu="@menu/chat_menu"
+			app:navigationIcon="@drawable/ic_arrow_back_24dp"
+
+			app:titleTextAppearance="@style/ToolbarTitle"
+			app:titleTextColor="@color/white_85"
+			app:title="@string/default_name"
+
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent">
-
-			<androidx.appcompat.widget.Toolbar
-				android:id="@+id/toolbarChat"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				app:menu="@menu/chat_menu"
-				app:navigationIcon="@drawable/ic_arrow_back_24dp"
-				app:popupTheme="@style/menuPopupStyle"
-				app:titleTextAppearance="@style/ToolbarTitle"
-				app:title="@string/default_name"/>
-
-		</com.google.android.material.appbar.AppBarLayout>
+			app:layout_constraintTop_toTopOf="parent"
+			/>
 
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/rvMessageList"
@@ -63,7 +59,7 @@
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/appBarChat"
+			app:layout_constraintTop_toBottomOf="@id/toolbarChat"
 			app:layout_constraintBottom_toTopOf="@id/edTextMessageInput"
 			tools:itemCount="3"
 			tools:listitem="@layout/fragment_chat_item_left"/>

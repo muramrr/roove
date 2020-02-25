@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 08.12.19 16:50
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 25.02.20 16:09
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,15 +13,16 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<item
-		android:id="@+id/chat_action_report"
-		android:orderInCategory="100"
-		android:title="Жалоба"
-		app:showAsAction="never" />
-
-	<item
 		android:id="@+id/chat_action_user"
 		android:icon="@drawable/default_avatar"
-		android:orderInCategory="200"
 		android:title=""
 		app:showAsAction="ifRoom" />
+
+	<item
+		android:id="@+id/chat_action_report"
+		android:icon="@drawable/ic_flag_24dp"
+		android:title="Жалоба"
+		app:showAsAction="ifRoom" />
+
+
 </menu>
