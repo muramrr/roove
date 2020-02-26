@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.02.20 18:25
+ * Last modified 26.02.20 17:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -122,20 +122,6 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 			snapHelper.attachToRecyclerView(this)
 		}
 
-		rvSettingsWantToGoList.apply { adapter = mPlacesToGoAdapter }
-
-		mPlacesToGoAdapter.setOnItemClickListener(object: PlacesToGoAdapter.OnItemClickListener {
-			override fun onItemClick(view: View, position: Int) {
-				val placeId = bundleOf("PLACE_ID" to
-						                       mPlacesToGoAdapter.getPlaceToGoItem(position).id)
-				findNavController().navigate(R.id.action_settings_to_placeDetailedFragment, placeId)
-			}
-		})
-
-		fabSettingsEdit.setOnClickListener {
-			findNavController().navigate(R.id.action_settings_to_settingsEditInfoFragment)
-		}
-
 		fabSettingsAddPhoto.setOnClickListener {
 			//show attachment dialog picker
 			val builder = AlertDialog.Builder(it.context)
@@ -149,6 +135,24 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 			params?.gravity = Gravity.CENTER
 			alertDialog.show()
 		}
+
+
+		rvSettingsWantToGoList.apply { adapter = mPlacesToGoAdapter }
+
+		mPlacesToGoAdapter.setOnItemClickListener(object: PlacesToGoAdapter.OnItemClickListener {
+			override fun onItemClick(view: View, position: Int) {
+				val placeId = bundleOf("PLACE_ID" to
+						                       mPlacesToGoAdapter.getPlaceToGoItem(position).id)
+				findNavController().navigate(R.id.action_settings_to_placeDetailedFragment, placeId)
+			}
+		})
+
+
+		fabSettingsEdit.setOnClickListener {
+			findNavController().navigate(R.id.action_settings_to_settingsEditInfoFragment)
+		}
+
+
 	}
 
 	override fun onResume() {
@@ -156,6 +160,7 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 		if (this::userItem.isInitialized) {
 			val nameAgeText = "${userItem.baseUserInfo.name}, ${userItem.baseUserInfo.age}"
 			tvNameAge.text = nameAgeText
+			tvSettingsAboutText.text = userItem.aboutText
 		}
 	}
 
