@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.02.20 14:58
+ * Last modified 26.02.20 17:09
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import android.content.Context
 import android.graphics.Rect
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -23,7 +22,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 
 
-fun AppCompatActivity.showToastText(text: String) =
+fun Context.showToastText(text: String) =
 	Toast.makeText(this, text, Toast.LENGTH_LONG).show()
 
 fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {

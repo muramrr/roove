@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.02.20 16:39
+ * Last modified 26.02.20 17:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,11 +22,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
-import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.core.BaseFragment
-import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
+import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.utils.observeOnce
+import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_settings_edit_info.*
 
 
@@ -46,13 +46,14 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 	private var cityToDisplay = ""
 
+	private var descriptionText = ""
+
 	private lateinit var cityList: Map<String, String>
 	private lateinit var genderList: List<String>
 	private lateinit var preferredGenderList: List<String>
 
-	private lateinit var authViewModel: AuthViewModel
-	private lateinit var localRepoViewModel: LocalUserRepoViewModel
 	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
+	private lateinit var sharedViewModel: SharedViewModel
 
 	companion object{
 		private const val TAG = "mylogs_SettingsAccFragment"
@@ -79,12 +80,14 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		super.onCreate(savedInstanceState)
 
 		activity?.run {
-
-			localRepoViewModel = ViewModelProvider(this, factory)[LocalUserRepoViewModel::class.java]
 			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
+			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
+
 		} ?: throw Exception("Invalid Activity")
 
-		localRepoViewModel.getSavedUser()?.let { userItem = it }
+		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
+			userItem = it
+		})
 
 	}
 
@@ -98,56 +101,92 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		changerAgeSetup()
 		changerCitySetup()
 
-		btnSettingsSave.setOnClickListener {
+		btnSettingsEditSave.setOnClickListener {
 			remoteRepoViewModel.updateUserItem(userItem)
 			remoteRepoViewModel.getUserUpdateStatus().observeOnce(this, Observer {
-				if (it) localRepoViewModel.saveUserInfo(userItem)
+				if (it) {
+					context?.showToastText("Successfully saved")
+					sharedViewModel.userSelected.value = userItem
+				}
 			})
 		}
 	}
 
 
 	private fun initProfile() {
-		edSettingsName.setText(userItem.baseUserInfo.name)
-		dropSettingsGender.setText(userItem.baseUserInfo.gender)
-		dropSettingsPreferredGender.setText(userItem.baseUserInfo.preferredGender)
-		tvSettingsAgeDisplay.text = "Age: ${userItem.baseUserInfo.age}"
-		sliderSettingsAge.value = userItem.baseUserInfo.age.toFloat()
+		if (this::userItem.isInitialized) {
+			edSettingsEditName.setText(userItem.baseUserInfo.name)
+			dropSettingsEditGender.setText(userItem.baseUserInfo.gender)
+			dropSettingsEditPreferredGender.setText(userItem.baseUserInfo.preferredGender)
+			tvSettingsEditAge.text = "Age: ${userItem.baseUserInfo.age}"
+			sliderSettingsEditAge.value = userItem.baseUserInfo.age.toFloat()
 
-		cityToDisplay = cityList.filterValues { it == userItem.baseUserInfo.city }.keys.first()
-		dropSettingsCity.setText(cityToDisplay)
+			cityToDisplay = cityList.filterValues { it == userItem.baseUserInfo.city }.keys.first()
+			dropSettingsEditCity.setText(cityToDisplay)
+
+			edSettingsEditDescription.setText(userItem.aboutText)
+		}
 	}
 
 	private fun changerNameSetup() {
-		edSettingsName.addTextChangedListener(object: TextWatcher {
+		edSettingsEditName.addTextChangedListener(object: TextWatcher {
 			override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
 			override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-				layoutSettingsChangeName.isCounterEnabled = true
+				layoutSettingsEditName.isCounterEnabled = true
 			}
 
 			override fun afterTextChanged(s: Editable) {
 				when {
-					s.length > layoutSettingsChangeName.counterMaxLength -> {
-						layoutSettingsChangeName.error = "Max length reached"
-						btnSettingsSave.isEnabled = false
+					s.length > layoutSettingsEditName.counterMaxLength -> {
+						layoutSettingsEditName.error = "Max length reached"
+						btnSettingsEditSave.isEnabled = false
 					}
 					s.isEmpty() -> {
-						layoutSettingsChangeName.error = "Name must not be empty"
-						btnSettingsSave.isEnabled = false
+						layoutSettingsEditName.error = "Name must not be empty"
+						btnSettingsEditSave.isEnabled = false
 
 					}
 					else -> {
-						layoutSettingsChangeName.error = ""
+						layoutSettingsEditName.error = ""
 						name = s.toString().trim()
 						userItem.baseUserInfo.name = name
-						btnSettingsSave.isEnabled = true
+						btnSettingsEditSave.isEnabled = true
 					}
 				}
 			}
 		})
 
-		edSettingsName.setOnEditorActionListener { v, actionId, _ ->
+		edSettingsEditName.setOnEditorActionListener { v, actionId, _ ->
+			if (actionId == EditorInfo.IME_ACTION_DONE) {
+				v.text = v.text.toString().trim()
+				v.clearFocus()
+			}
+			return@setOnEditorActionListener false
+		}
+
+		edSettingsEditDescription.addTextChangedListener(object: TextWatcher {
+			override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+			override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+				layoutSettingsEditName.isCounterEnabled = true
+			}
+
+			override fun afterTextChanged(s: Editable) {
+				if (s.length > layoutSettingsEditDescription.counterMaxLength){
+					layoutSettingsEditDescription.error = "Max length reached"
+					btnSettingsEditSave.isEnabled = false
+				}
+				else {
+					layoutSettingsEditDescription.error = ""
+					descriptionText = s.toString().trim()
+					userItem.aboutText = descriptionText
+					btnSettingsEditSave.isEnabled = true
+				}
+			}
+		})
+
+		edSettingsEditDescription.setOnEditorActionListener { v, actionId, _ ->
 			if (actionId == EditorInfo.IME_ACTION_DONE) {
 				v.text = v.text.toString().trim()
 				v.clearFocus()
@@ -161,9 +200,9 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		val genderAdapter = ArrayAdapter<String>(context!!,
 		                                         R.layout.drop_text_item,
 		                                         genderList)
-		dropSettingsGender.setAdapter(genderAdapter)
+		dropSettingsEditGender.setAdapter(genderAdapter)
 
-		dropSettingsGender.setOnItemClickListener { _, _, position, _ ->
+		dropSettingsEditGender.setOnItemClickListener { _, _, position, _ ->
 			gender = genderList[position]
 			userItem.baseUserInfo.gender = gender
 		}
@@ -174,9 +213,9 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		                                                  R.layout.drop_text_item,
 		                                                  preferredGenderList)
 
-		dropSettingsPreferredGender.setAdapter(preferredGenderAdapter )
+		dropSettingsEditPreferredGender.setAdapter(preferredGenderAdapter )
 
-		dropSettingsPreferredGender.setOnItemClickListener { _, _, position, _ ->
+		dropSettingsEditPreferredGender.setOnItemClickListener { _, _, position, _ ->
 			preferredGender = preferredGenderList[position]
 			userItem.baseUserInfo.preferredGender = preferredGender
 		}
@@ -186,9 +225,9 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		val cityAdapter = ArrayAdapter<String>(context!!,
 		                                       R.layout.drop_text_item,
 		                                       cityList.map { it.key })
-		dropSettingsCity.setAdapter(cityAdapter)
+		dropSettingsEditCity.setAdapter(cityAdapter)
 
-		dropSettingsCity.setOnItemClickListener { _, _, position, _ ->
+		dropSettingsEditCity.setOnItemClickListener { _, _, position, _ ->
 			city = cityList.map { it.value }[position]
 			cityToDisplay = cityList.map { it.key }[position]
 			userItem.baseUserInfo.city = city
@@ -196,13 +235,12 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 	}
 
 	private fun changerAgeSetup() {
-		sliderSettingsAge.setOnChangeListener{ _, value ->
+		sliderSettingsEditAge.setOnChangeListener{ _, value ->
 			age = value.toInt()
 			userItem.baseUserInfo.age = age
-			tvSettingsAgeDisplay.text = "Age: $age"
+			tvSettingsEditAge.text = "Age: $age"
 		}
 	}
-
 
 	override fun onBackPressed() {
 		super.onBackPressed()

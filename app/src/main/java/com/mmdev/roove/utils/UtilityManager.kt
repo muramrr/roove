@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.02.20 14:35
+ * Last modified 26.02.20 17:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -57,8 +57,8 @@ object UtilityManager {
 		                      "male",
 		                      randomFemalePhotoUrlsList[Random.nextInt(0, 9)],
 		                      randomUid()),
-		         randomFemalePhotoUrlsList.toMutableList(),
-		         mutableListOf())
+		         photoURLs = randomFemalePhotoUrlsList.toMutableList(),
+		         placesToGo = mutableListOf())
 
 
 	private fun randomUid(): String {
