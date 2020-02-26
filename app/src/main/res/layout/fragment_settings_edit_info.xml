@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.02.20 18:25
+  ~ Last modified 26.02.20 17:09
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,7 @@
 
 		<!--name-->
 		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/layoutSettingsChangeName"
+			android:id="@+id/layoutSettingsEditName"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/general_margin_16"
@@ -52,7 +52,7 @@
 			>
 
 			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/edSettingsName"
+				android:id="@+id/edSettingsEditName"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:background="@null"
@@ -71,7 +71,7 @@
 
 		<!--gender-->
 		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/layoutSettingsGender"
+			android:id="@+id/layoutSettingsEditGender"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="@dimen/general_margin_16"
@@ -87,13 +87,13 @@
 			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
 
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toStartOf="@id/layoutSettingsPreferredGender"
-			app:layout_constraintTop_toBottomOf="@id/layoutSettingsChangeName"
-			app:layout_constraintBottom_toTopOf="@id/sliderSettingsAge"
+			app:layout_constraintEnd_toStartOf="@id/layoutSettingsEditPreferredGender"
+			app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditName"
+			app:layout_constraintBottom_toTopOf="@id/sliderSettingsEditAge"
 			>
 
 			<com.google.android.material.textview.MaterialAutoCompleteTextView
-				android:id="@+id/dropSettingsGender"
+				android:id="@+id/dropSettingsEditGender"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:background="@null"
@@ -112,7 +112,7 @@
 
 		<!--PreferredGender-->
 		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/layoutSettingsPreferredGender"
+			android:id="@+id/layoutSettingsEditPreferredGender"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="24dp"
@@ -127,13 +127,13 @@
 			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
 
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toEndOf="@id/layoutSettingsGender"
-			app:layout_constraintTop_toBottomOf="@id/layoutSettingsChangeName"
-			app:layout_constraintBottom_toTopOf="@id/sliderSettingsAge"
+			app:layout_constraintStart_toEndOf="@id/layoutSettingsEditGender"
+			app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditName"
+			app:layout_constraintBottom_toTopOf="@id/sliderSettingsEditAge"
 			>
 
 			<com.google.android.material.textview.MaterialAutoCompleteTextView
-				android:id="@+id/dropSettingsPreferredGender"
+				android:id="@+id/dropSettingsEditPreferredGender"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:background="@null"
@@ -153,7 +153,7 @@
 
 		<!--age-->
 		<com.google.android.material.slider.Slider
-			android:id="@+id/sliderSettingsAge"
+			android:id="@+id/sliderSettingsEditAge"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 
@@ -165,7 +165,7 @@
 
 			app:activeTrackColor="?colorSecondary"
 			app:inactiveTrackColor="@color/lolite_25"
-			android:labelFor="@id/tvSettingsAgeDisplay"
+			android:labelFor="@id/tvSettingsEditAge"
 
 			android:value="18"
 			android:valueFrom="18"
@@ -173,12 +173,12 @@
 
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/layoutSettingsGender"
-			app:layout_constraintBottom_toTopOf="@id/tvSettingsAgeDisplay"
+			app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditGender"
+			app:layout_constraintBottom_toTopOf="@id/tvSettingsEditAge"
 			/>
 
-		<TextView
-			android:id="@+id/tvSettingsAgeDisplay"
+		<com.google.android.material.textview.MaterialTextView
+			android:id="@+id/tvSettingsEditAge"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 
@@ -189,13 +189,13 @@
 
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/sliderSettingsAge"
-			app:layout_constraintBottom_toTopOf="@id/layoutSettingsCity"
+			app:layout_constraintTop_toBottomOf="@id/sliderSettingsEditAge"
+			app:layout_constraintBottom_toTopOf="@id/layoutSettingsEditCity"
 			/>
 
 		<!--city-->
 		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/layoutSettingsCity"
+			android:id="@+id/layoutSettingsEditCity"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/general_margin_16"
@@ -211,11 +211,12 @@
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/tvSettingsAgeDisplay"
+			app:layout_constraintTop_toBottomOf="@id/tvSettingsEditAge"
+			app:layout_constraintBottom_toTopOf="@id/layoutSettingsEditDescription"
 			>
 
 			<com.google.android.material.textview.MaterialAutoCompleteTextView
-				android:id="@+id/dropSettingsCity"
+				android:id="@+id/dropSettingsEditCity"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 
@@ -234,11 +235,58 @@
 
 		</com.google.android.material.textfield.TextInputLayout>
 
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/layoutSettingsEditDescription"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/general_margin_8"
+
+			app:counterMaxLength="200"
+
+			app:boxStrokeErrorColor="@color/colorError"
+			app:boxStrokeColor="@color/text_input_layout"
+			app:boxStrokeWidth="2dp"
+
+			android:hint="About me"
+			app:hintEnabled="true"
+			app:hintTextColor="@color/white"
+
+			app:errorEnabled="true"
+			app:errorTextColor="@color/colorError"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditCity"
+			app:layout_constraintBottom_toTopOf="@id/btnSettingsEditSave"
+			>
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/edSettingsEditDescription"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:background="@null"
+
+				android:imeOptions="actionDone"
+				android:inputType="textMultiLine"
+				android:lineSpacingExtra="10sp"
+				android:maxLines="6"
+
+				android:text="@string/default_profile_about_text"
+				android:textCursorDrawable="@color/lolite"
+				android:textSize="18sp"
+
+				style="@style/regular_text_white85op" />
+
+
+		</com.google.android.material.textfield.TextInputLayout>
+
+
 
 
 		<!--save-->
 		<com.google.android.material.button.MaterialButton
-			android:id="@+id/btnSettingsSave"
+			android:id="@+id/btnSettingsEditSave"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 
@@ -257,26 +305,8 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedDescription"
+			app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditDescription"
 			/>
-
-		<TextView
-			android:id="@+id/tvPlaceDetailedDescription"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:lineSpacingExtra="10sp"
-			android:paddingStart="@dimen/general_margin_16"
-			android:paddingEnd="@dimen/general_margin_16"
-
-			android:text="TEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\nTEST\n"
-			android:textSize="16sp"
-			style="@style/regular_text_white85op"
-
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/layoutSettingsCity"
-			/>
-
 
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
