@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.02.20 14:22
+ * Last modified 26.02.20 20:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,12 +33,15 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 
 	private var currentUserDocRef: DocumentReference
 	private var paginateConversationsQuery: Query
+	private var currentUserId: String
 
 	init {
 		currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.city)
 			.collection(currentUser.baseUserInfo.gender)
 			.document(currentUser.baseUserInfo.userId)
+
+		currentUserId = currentUser.baseUserInfo.userId
 
 		paginateConversationsQuery = currentUserDocRef
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -50,6 +53,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 	companion object{
 		// firestore users references
 		private const val USERS_COLLECTION_REFERENCE = "users"
+		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
 
 		// firestore conversations reference
 		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
@@ -65,35 +69,47 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 
 	override fun deleteConversation(conversationItem: ConversationItem): Completable =
 		Completable.create { emitter ->
+			val partnerDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(conversationItem.partner.baseUserInfo.city)
+				.collection(conversationItem.partner.baseUserInfo.gender)
+				.document(conversationItem.partner.baseUserInfo.userId)
 
-			//delete in general
-			firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.document(conversationItem.conversationId)
+			//current user delete from matched list
+			currentUserDocRef
+				.collection(USER_MATCHED_COLLECTION_REFERENCE)
+				.document(conversationItem.partner.baseUserInfo.userId)
 				.delete()
 
-			//delete in current user section
+			//current user delete from conversations list
 			currentUserDocRef
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversationItem.conversationId)
 				.delete()
 
-			//delete in partner section
-			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(conversationItem.partner.baseUserInfo.city)
-				.collection(conversationItem.partner.baseUserInfo.gender)
-				.document(conversationItem.partner.baseUserInfo.userId)
+			//partner delete from matched list
+			partnerDocRef.collection(USER_MATCHED_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.delete()
+
+			//partner delete from conversations list
+			partnerDocRef
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversationItem.conversationId)
 				.delete()
-
 				.addOnSuccessListener { emitter.onComplete() }
 				.addOnFailureListener { emitter.onError(it) }
+
+			//todo:delete subcollection
+			//delete in general
+			firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(conversationItem.conversationId)
+				.delete()
 
 		}.subscribeOn(Schedulers.io())
 
 
-	override fun getConversationsList(): Single<List<ConversationItem>> {
-		return Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
+	override fun getConversationsList(): Single<List<ConversationItem>> =
+		Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
 			paginateConversationsQuery
 				.get()
 				.addOnSuccessListener {
@@ -113,7 +129,6 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
-	}
 
 
 

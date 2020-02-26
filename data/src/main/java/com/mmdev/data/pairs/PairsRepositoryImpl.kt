@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.02.20 14:23
+ * Last modified 26.02.20 20:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import com.google.firebase.firestore.Query
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.pairs.PairsRepository
 import com.mmdev.business.user.UserItem
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.schedulers.Schedulers
@@ -26,11 +27,12 @@ import javax.inject.Inject
  * This is the documentation block about the class
  */
 
-class PairsRepositoryImpl @Inject constructor(firestore: FirebaseFirestore,
+class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
                                               currentUser: UserItem): PairsRepository {
 
 
 	private var currentUserDocRef: DocumentReference
+	private var currentUserId: String
 	private var paginateMatchesQuery: Query
 
 	init {
@@ -38,6 +40,8 @@ class PairsRepositoryImpl @Inject constructor(firestore: FirebaseFirestore,
 			.document(currentUser.baseUserInfo.city)
 			.collection(currentUser.baseUserInfo.gender)
 			.document(currentUser.baseUserInfo.userId)
+
+		currentUserId = currentUser.baseUserInfo.userId
 
 		paginateMatchesQuery = currentUserDocRef
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
@@ -50,7 +54,9 @@ class PairsRepositoryImpl @Inject constructor(firestore: FirebaseFirestore,
 	companion object {
 		private const val USERS_COLLECTION_REFERENCE = "users"
 		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
+		private const val USER_SKIPPED_COLLECTION_REFERENCE = "skipped"
 
+		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
 		private const val MATCHED_DATE_FIELD = "matchedDate"
 	}
@@ -58,6 +64,48 @@ class PairsRepositoryImpl @Inject constructor(firestore: FirebaseFirestore,
 
 	private lateinit var paginateLastMatchedLoaded: DocumentSnapshot
 
+
+	override fun deleteMatchedUser(matchedUserItem: MatchedUserItem): Completable =
+		Completable.create{ emitter ->
+			val matchedUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(matchedUserItem.userItem.baseUserInfo.city)
+				.collection(matchedUserItem.userItem.baseUserInfo.gender)
+				.document(matchedUserItem.userItem.baseUserInfo.userId)
+
+			//delete from  match collection
+			currentUserDocRef
+				.collection(USER_MATCHED_COLLECTION_REFERENCE)
+				.document(matchedUserItem.userItem.baseUserInfo.userId)
+				.delete()
+
+			//delete from  match collection
+			matchedUserDocRef
+				.collection(USER_MATCHED_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.delete()
+
+			//add to skipped collection
+			currentUserDocRef
+				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
+				.document(matchedUserItem.userItem.baseUserInfo.userId)
+				.set(mapOf("userId" to matchedUserItem.userItem.baseUserInfo.userId))
+
+			//add to skipped collection
+			matchedUserDocRef
+				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.set(mapOf("userId" to currentUserId))
+
+			//delete predefined conversation
+			firestore
+				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(matchedUserItem.conversationId)
+				.delete()
+				.addOnSuccessListener { emitter.onComplete() }
+				.addOnFailureListener { emitter.onError(it) }
+
+
+		}.subscribeOn(Schedulers.io())
 
 	override fun getMatchedUsersList(): Single<List<MatchedUserItem>> {
 		return Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
