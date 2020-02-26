@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.02.20 16:14
+ * Last modified 26.02.20 20:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,7 +36,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
                                               private val localStorageLists: LocalStorageLists):
 		CardsRepository {
 
-	private var currentUserDocReference: DocumentReference
+	private var currentUserDocRef: DocumentReference
 	private val likedList = mutableListOf<String>()
 	private val matchedList = mutableListOf<String>()
 	private val skippedList = mutableListOf<String>()
@@ -46,7 +46,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	private lateinit var paginateLastLoadedCard: DocumentSnapshot
 
 	init {
-		currentUserDocReference = firestore.collection(USERS_COLLECTION_REFERENCE)
+		currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.city)
 			.collection(currentUser.baseUserInfo.gender)
 			.document(currentUser.baseUserInfo.userId)
@@ -72,7 +72,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	* if swiped left -> add skipped userId to skipped collection
 	*/
 	override fun addToSkipped(skippedUserItem: UserItem) {
-		currentUserDocReference
+		currentUserDocRef
 			.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 			.document(skippedUserItem.baseUserInfo.userId)
 			.set(mapOf("userId" to skippedUserItem.baseUserInfo.userId))
@@ -122,7 +122,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 							                      lastMessageTimestamp = null))
 
 						//set conversation for current user
-						currentUserDocReference
+						currentUserDocRef
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 							.document(conversationId)
 							.set(ConversationItem(partner = likedUserItem,
@@ -135,7 +135,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					}
 
 					else {
-						currentUserDocReference
+						currentUserDocRef
 							.collection(USER_LIKED_COLLECTION_REFERENCE)
 							.document(likedUserItem.baseUserInfo.userId)
 							.set(mapOf("userId" to likedUserItem.baseUserInfo.userId))
@@ -179,7 +179,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	private fun getLikedList(): Single<List<String>> {
 		//Log.wtf(TAG, "get liked called")
 		return Single.create(SingleOnSubscribe<List<String>>{ emitter ->
-			val query = currentUserDocReference
+			val query = currentUserDocRef
 				.collection(USER_LIKED_COLLECTION_REFERENCE)
 
 			query
@@ -207,7 +207,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	private fun getMatchedList(): Single<List<String>> {
 		//Log.wtf(TAG, "get matched called")
 		return Single.create(SingleOnSubscribe<List<String>> { emitter ->
-			val query = currentUserDocReference
+			val query = currentUserDocRef
 				.collection(USER_MATCHED_COLLECTION_REFERENCE)
 
 			query
@@ -234,7 +234,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	private fun getSkippedList(): Single<List<String>> {
 		//Log.wtf(TAG, "get skipped called")
 		return Single.create(SingleOnSubscribe<List<String>> { emitter ->
-			val query = currentUserDocReference
+			val query = currentUserDocRef
 				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 
 			query

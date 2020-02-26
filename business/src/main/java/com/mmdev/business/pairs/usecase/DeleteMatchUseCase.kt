@@ -8,19 +8,17 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.business.pairs
+package com.mmdev.business.pairs.usecase
 
-import io.reactivex.Completable
-import io.reactivex.Single
+import com.mmdev.business.pairs.MatchedUserItem
+import com.mmdev.business.pairs.PairsRepository
 
 /**
  * This is the documentation block about the class
  */
 
-interface PairsRepository {
+class DeleteMatchUseCase (private val repository: PairsRepository)  {
 
-	fun deleteMatchedUser(matchedUserItem: MatchedUserItem): Completable
-
-	fun getMatchedUsersList(): Single<List<MatchedUserItem>>
+	fun execute(t: MatchedUserItem) = repository.deleteMatchedUser(t)
 
 }
