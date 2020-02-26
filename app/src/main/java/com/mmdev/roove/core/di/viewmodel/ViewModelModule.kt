@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.02.20 17:42
+ * Last modified 26.02.20 20:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,8 +29,9 @@ import com.mmdev.business.chat.usecase.UploadMessagePhotoUseCase
 import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
 import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
-import com.mmdev.business.pairs.GetMatchedUsersUseCase
 import com.mmdev.business.pairs.PairsRepository
+import com.mmdev.business.pairs.usecase.DeleteMatchUseCase
+import com.mmdev.business.pairs.usecase.GetMatchedUsersUseCase
 import com.mmdev.business.places.repository.PlacesRepository
 import com.mmdev.business.places.usecase.GetPlaceDetailsUseCase
 import com.mmdev.business.places.usecase.GetPlacesUseCase
@@ -116,7 +117,8 @@ class ViewModelModule {
 	@Provides
 	@ViewModelKey(PairsViewModel::class)
 	fun pairsViewModel(repo: PairsRepository): ViewModel =
-		PairsViewModel(GetMatchedUsersUseCase(repo))
+		PairsViewModel(DeleteMatchUseCase(repo),
+		               GetMatchedUsersUseCase(repo))
 
 
 	@IntoMap

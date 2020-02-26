@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.02.20 17:11
+ * Last modified 26.02.20 18:34
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -165,8 +165,8 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 	}
 
 	/*
-		* log out pop up
-		*/
+	* log out pop up
+	*/
 	private fun showSignOutPrompt() {
 		MaterialAlertDialogBuilder(context)
 			.setTitle("Do you wish to log out?")

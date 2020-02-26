@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 17:11
+ * Last modified 26.02.20 18:17
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,7 @@ import com.mmdev.roove.databinding.FragmentConversationsItemBinding
  * This is the documentation block about the class
  */
 
-class ConversationsAdapter (private var conversationsList: List<ConversationItem>):
+class ConversationsAdapter (private var conversationsList: MutableList<ConversationItem>):
 		RecyclerView.Adapter<ConversationsAdapter.ConversationsViewHolder>() {
 
 
@@ -42,12 +42,19 @@ class ConversationsAdapter (private var conversationsList: List<ConversationItem
 
 	override fun getItemCount() = conversationsList.size
 
+	fun getConversationItem(position: Int) = conversationsList[position]
+
+	fun removeAt(position: Int) {
+		conversationsList.removeAt(position)
+		notifyItemRemoved(position)
+	}
+
 	fun updateData(conversations: List<ConversationItem>) {
-		conversationsList = conversations
+		conversationsList = conversations.toMutableList()
 		notifyDataSetChanged()
 	}
 
-	fun getConversationItem(position: Int) = conversationsList[position]
+
 
 	// allows clicks events to be caught
 	fun setOnItemClickListener(itemClickListener: OnItemClickListener) {

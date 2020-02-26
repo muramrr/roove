@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.02.20 17:22
+ * Last modified 26.02.20 19:24
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -110,8 +110,8 @@ object UtilityManager {
 		val conversationId = randomUid()
 		db.collection(USERS_COLLECTION_REFERENCE)
 			.document("msk")
-			.collection("male")
-			.document("5Bi3FfUE8nQppPyo5mqquIsBijf1")
+			.collection("female")
+			.document("g5q5vvujWkXcn0uwKdE4YEgOvnp2")
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversationId)
 			.set(ConversationItem(conversationId = conversationId,
