@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:05
+ * Last modified 27.02.20 17:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@ package com.mmdev.roove.ui.dating.cards.view
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,7 +85,7 @@ class CardsFragment: BaseFragment() {
 			override fun onCardAppeared(view: View, position: Int) {
 				//get current displayed on card profile
 				mAppearedUserItem = mCardsStackAdapter.getUserItem(position)
-				Log.wtf(TAG, "appeared name = ${mAppearedUserItem.baseUserInfo.name}")
+				//Log.wtf(TAG, "appeared name = ${mAppearedUserItem.baseUserInfo.name}")
 			}
 
 			override fun onCardDragging(direction: Direction, ratio: Float) {}
@@ -129,7 +128,7 @@ class CardsFragment: BaseFragment() {
 
 				sharedViewModel.setUserSelected(mAppearedUserItem)
 
-				Log.wtf(TAG, "clicked pos $position")
+				//Log.wtf(TAG, "clicked pos $position")
 
 				findNavController().navigate(R.id.action_cards_to_profileFragment)
 			}
