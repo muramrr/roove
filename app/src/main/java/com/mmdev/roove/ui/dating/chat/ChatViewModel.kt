@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 19.02.20 17:35
+ * Last modified 27.02.20 15:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ import com.mmdev.business.chat.usecase.ObserveNewMessagesUseCase
 import com.mmdev.business.chat.usecase.SendMessageUseCase
 import com.mmdev.business.chat.usecase.UploadMessagePhotoUseCase
 import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.user.BaseUserInfo
+import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject

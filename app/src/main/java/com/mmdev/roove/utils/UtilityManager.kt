@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:05
+ * Last modified 27.02.20 15:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,9 +12,9 @@ package com.mmdev.roove.utils
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.UserItem
 import com.mmdev.business.pairs.MatchedUserItem
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.UserItem
 import com.mooveit.library.Fakeit
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
@@ -55,14 +55,16 @@ object UtilityManager {
 
 	private fun createFakeUser(city: String = "nsk", gender: String = "female")=
 		UserItem(BaseUserInfo(Fakeit.name().firstName(),
-		                      Random.nextInt(18, 22),
-		                      city,
-		                      gender,
-		                      "male",
-		                      randomFemalePhotoUrlsList[Random.nextInt(0, 9)],
-		                      randomUid()),
-		         photoURLs = randomFemalePhotoUrlsList.toMutableList(),
-		         placesToGo = mutableListOf())
+		                                                                 Random.nextInt(18, 22),
+		                                                                 city,
+		                                                                 gender,
+		                                                                 "male",
+		                                                                 randomFemalePhotoUrlsList[Random.nextInt(
+				                                                                 0,
+				                                                                 9)],
+		                                                                 randomUid()),
+		                                                    photoURLs = randomFemalePhotoUrlsList.toMutableList(),
+		                                                    placesToGo = mutableListOf())
 
 
 	private fun randomUid(): String {

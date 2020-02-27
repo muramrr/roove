@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:46
+ * Last modified 27.02.20 15:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,10 +15,10 @@ import com.facebook.login.LoginManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.ironz.binaryprefs.Preferences
-import com.mmdev.business.localrepository.LocalUserRepository
+import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.UserItem
+import com.mmdev.business.local.LocalUserRepository
 import com.mmdev.business.places.BasePlaceInfo
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.UserItem
 import org.json.JSONArray
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -78,14 +78,14 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				//Log.wtf(TAG, "retrieved user info from sharedpref successfully")
 
 				UserItem(baseUserInfo = BaseUserInfo(name,
-				                                     age,
-				                                     city,
-				                                     gender,
-				                                     preferredGender,
-				                                     mainPhotoUrl,
-				                                     uid),
-				         photoURLs = photoUrls,
-				         placesToGo = placesToGoItems)
+				                                                                                age,
+				                                                                                city,
+				                                                                                gender,
+				                                                                                preferredGender,
+				                                                                                mainPhotoUrl,
+				                                                                                uid),
+				                                                    photoURLs = photoUrls,
+				                                                    placesToGo = placesToGoItems)
 			}catch (e: Exception) {
 				Log.wtf(TAG, "read exception, but user is saved")
 				if (auth.currentUser != null) {

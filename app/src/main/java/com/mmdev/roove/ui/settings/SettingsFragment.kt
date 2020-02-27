@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.02.20 18:34
+ * Last modified 27.02.20 15:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,7 +32,7 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mmdev.business.user.UserItem
+import com.mmdev.business.core.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel

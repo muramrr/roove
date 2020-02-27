@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.02.20 14:32
+ * Last modified 27.02.20 15:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,8 +17,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.auth.AuthUserItem
 import com.mmdev.business.auth.repository.AuthRepository
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.UserItem
+import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.UserItem
 import com.mmdev.data.user.UserRepositoryLocal
 import com.mmdev.data.user.UserRepositoryRemoteImpl
 import io.reactivex.*
@@ -61,7 +61,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		}).subscribeOn(Schedulers.io())
 	}
 
-	override fun signIn(token: String): Single<HashMap<Boolean, UserItem>> =
+	override fun signIn(token: String): Single<HashMap<Boolean, BaseUserInfo>> =
 		signInWithFacebook(token)
 			.flatMap { checkAndRetrieveFullUser(it) }
 			.subscribeOn(Schedulers.io())
@@ -95,9 +95,10 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					if (it.isSuccessful && auth.currentUser != null) {
 						val firebaseUser = auth.currentUser!!
 						val photoUrl = firebaseUser.photoUrl.toString() + "?height=1000"
-						val baseUser = BaseUserInfo(name = firebaseUser.displayName!!,
-						                            mainPhotoUrl = photoUrl,
-						                            userId = firebaseUser.uid)
+						val baseUser =
+							BaseUserInfo(name = firebaseUser.displayName!!,
+							                                                        mainPhotoUrl = photoUrl,
+							                                                        userId = firebaseUser.uid)
 						emitter.onSuccess(baseUser)
 
 					}
@@ -106,8 +107,8 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 				.addOnFailureListener { emitter.onError(Exception("Failed to sign in: $it")) }
 		}).observeOn(Schedulers.io())
 
-	private fun checkAndRetrieveFullUser(baseUserInfo: BaseUserInfo): Single<HashMap<Boolean, UserItem>> =
-		Single.create(SingleOnSubscribe<HashMap<Boolean, UserItem>> { emitter ->
+	private fun checkAndRetrieveFullUser(baseUserInfo: BaseUserInfo): Single<HashMap<Boolean, BaseUserInfo>> =
+		Single.create(SingleOnSubscribe<HashMap<Boolean, BaseUserInfo>> { emitter ->
 			val ref = db.collection(BASE_COLLECTION_REFERENCE).document(baseUserInfo.userId)
 			ref.get()
 				.addOnSuccessListener { baseUserDoc ->
@@ -125,15 +126,15 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 								if (fullUserDoc.exists()) {
 									val retrievedUser = fullUserDoc.toObject(UserItem::class.java)!!
 									localRepo.saveUserInfo(retrievedUser)
-									emitter.onSuccess(hashMapOf(false to retrievedUser))
+									emitter.onSuccess(hashMapOf(false to retrievedUser.baseUserInfo))
 								}
 								//auth user exists but full is not => return continue reg flag "true"
-								else emitter.onSuccess(hashMapOf(true to UserItem(userInBase.baseUserInfo)))
+								else emitter.onSuccess(hashMapOf(true to userInBase.baseUserInfo))
 							}
 							.addOnFailureListener { emitter.onError(it) }
 					}
 					//if user is not stored => return new UserItem with continue reg flag "true"
-					else emitter.onSuccess(hashMapOf(true to UserItem(baseUserInfo)))
+					else emitter.onSuccess(hashMapOf(true to baseUserInfo))
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).observeOn(Schedulers.io())

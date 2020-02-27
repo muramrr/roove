@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.02.20 15:22
+ * Last modified 27.02.20 15:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,8 +40,8 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.UserItem
+import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
@@ -139,14 +139,14 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 		//if it was a deep link navigation then create ConversationItem "on a flight"
 		if (isDeepLinkJump) {
-			val receivedConversationItem = ConversationItem(
-					UserItem(BaseUserInfo(name = receivedPartnerName,
-					                      city = receivedPartnerCity,
-					                      gender = receivedPartnerGender,
-					                      mainPhotoUrl = receivedPartnerPhotoUrl,
-					                      userId = receivedPartnerId)),
-					conversationId = receivedConversationId,
-					conversationStarted = true)
+			val receivedConversationItem = ConversationItem(UserItem(
+					BaseUserInfo(name = receivedPartnerName,
+					             city = receivedPartnerCity,
+					             gender = receivedPartnerGender,
+					             mainPhotoUrl = receivedPartnerPhotoUrl,
+					             userId = receivedPartnerId)),
+			                                                conversationId = receivedConversationId,
+			                                                conversationStarted = true)
 			sharedViewModel.setConversationSelected(receivedConversationItem)
 		}
 
