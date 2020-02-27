@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.02.20 20:03
+ * Last modified 27.02.20 15:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,17 +35,13 @@ import com.mmdev.business.pairs.usecase.GetMatchedUsersUseCase
 import com.mmdev.business.places.repository.PlacesRepository
 import com.mmdev.business.places.usecase.GetPlaceDetailsUseCase
 import com.mmdev.business.places.usecase.GetPlacesUseCase
-import com.mmdev.business.user.repository.LocalUserRepository
 import com.mmdev.business.user.repository.RemoteUserRepository
-import com.mmdev.business.user.usecase.local.GetSavedUserUseCase
-import com.mmdev.business.user.usecase.local.SaveUserInfoUseCase
 import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
 import com.mmdev.business.user.usecase.remote.FetchUserInfoUseCase
 import com.mmdev.business.user.usecase.remote.UpdateUserItemUseCase
 import com.mmdev.business.user.usecase.remote.UploadUserProfilePhotoUseCase
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.core.SharedViewModel
-import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.dating.cards.CardsViewModel
 import com.mmdev.roove.ui.dating.chat.ChatViewModel
@@ -127,15 +123,6 @@ class ViewModelModule {
 	fun placesViewModel(repo: PlacesRepository): ViewModel =
 		PlacesViewModel(GetPlacesUseCase(repo),
 		                GetPlaceDetailsUseCase(repo))
-
-
-	@IntoMap
-	@Provides
-	@ViewModelKey(LocalUserRepoViewModel::class)
-	fun localUserRepoViewModel(repo: LocalUserRepository): ViewModel =
-		LocalUserRepoViewModel(GetSavedUserUseCase(repo),
-		                       SaveUserInfoUseCase(repo))
-
 
 	@IntoMap
 	@Provides
