@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.02.20 18:12
+ * Last modified 27.02.20 15:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -46,6 +46,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 		private const val BASE_COLLECTION_REFERENCE = "usersBase"
 
 		private const val USER_PHOTOS_LIST_FIELD = "photoURLs"
+		private const val USER_BASE_REGISTRATION_TOKENS_FIELD = "registrationTokens"
 
 		private const val GENERAL_FOLDER_STORAGE_IMG = "images"
 		private const val SECONDARY_FOLDER_STORAGE_IMG = "profilePhotos"
@@ -82,8 +83,9 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 				}.addOnFailureListener { emitter.onError(it) }
 		}.subscribeOn(Schedulers.io())
 
-	override fun fetchUserInfo(userItem: UserItem): Single<UserItem> {
+	override fun fetchUserInfo(): Single<UserItem> {
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
+			val userItem = localRepo.getSavedUser()!!
 			val refGeneral = fillUserGeneralRef(userItem.baseUserInfo)
 
 			val refBase = fillUserBaseRef(userItem.baseUserInfo.userId)
@@ -92,35 +94,24 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 				.addOnSuccessListener { remoteUser ->
 					val remoteUserItem = remoteUser.toObject(UserItem::class.java)!!
 					//check if registration token exists
-					fInstance.instanceId.addOnSuccessListener { instanceResult ->
-						refBase.get()
-							.addOnSuccessListener { authUser ->
-								val knownTokens = mutableListOf<String>()
+					fInstance.instanceId
+						.addOnSuccessListener { instanceResult ->
+							//add new token
+							refBase.update(USER_BASE_REGISTRATION_TOKENS_FIELD,
+							               FieldValue.arrayUnion(instanceResult.token))
 
-								if (authUser["registrationTokens"] != null)
-									knownTokens.addAll(authUser["registrationTokens"] as List<String>)
 
-								//update tokens
-								if (!knownTokens.contains(instanceResult.token)) {
-									knownTokens.add(instanceResult.token)
-									refBase.update("registrationTokens", knownTokens)
-									Log.wtf(TAG, "updated registration tokens successfully")
-								}
+							if (userItem == remoteUserItem) {
+								Log.wtf(TAG, "no reason to fetch user")
+								emitter.onSuccess(userItem)
 							}
-							.addOnFailureListener { authUserErr -> emitter.onError(authUserErr) }
-
-
-						if (userItem == remoteUserItem) {
-							Log.wtf(TAG, "no reason to fetch user")
-							emitter.onSuccess(userItem)
-						}
-						//save new userItem
-						else {
-							localRepo.saveUserInfo(remoteUserItem)
-							emitter.onSuccess(remoteUserItem)
-							Log.wtf(TAG, "user was: {$userItem}")
-							Log.wtf(TAG, "user saved: {$remoteUserItem}")
-						}
+							//save new userItem
+							else {
+								localRepo.saveUserInfo(remoteUserItem)
+								emitter.onSuccess(remoteUserItem)
+								Log.wtf(TAG, "user was: {$userItem}")
+								Log.wtf(TAG, "user saved: {$remoteUserItem}")
+							}
 					}
 					.addOnFailureListener { instanceIdError -> emitter.onError(instanceIdError) }
 				}

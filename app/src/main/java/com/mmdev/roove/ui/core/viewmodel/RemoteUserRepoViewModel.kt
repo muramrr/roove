@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.02.20 18:12
+ * Last modified 27.02.20 15:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,8 +45,8 @@ class RemoteUserRepoViewModel @Inject constructor(
 	}
 
 
-	fun fetchUserItem(userItem: UserItem) {
-		disposables.add(fetchUserInfoExecution(userItem)
+	fun fetchUserItem() {
+		disposables.add(fetchUserInfoExecution()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       fetchedUserItem.value = it
@@ -90,8 +90,8 @@ class RemoteUserRepoViewModel @Inject constructor(
 
 	private fun deleteUserExecution(userItem: UserItem) =
 		deleteUserUC.execute(userItem)
-	private fun fetchUserInfoExecution(userItem: UserItem) =
-		fetchUserUC.execute(userItem)
+	private fun fetchUserInfoExecution() =
+		fetchUserUC.execute()
 	private fun updateUserItemExecution(userItem: UserItem) =
 		updateUserItemUC.execute(userItem)
 	private fun uploadUserProfilePhotoExecution(photoUri: String, userItem: UserItem) =

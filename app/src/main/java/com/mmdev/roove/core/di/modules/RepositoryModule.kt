@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.02.20 16:26
+ * Last modified 27.02.20 15:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,9 +16,9 @@ import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.events.repository.EventsRepository
+import com.mmdev.business.localrepository.LocalUserRepository
 import com.mmdev.business.pairs.PairsRepository
 import com.mmdev.business.places.repository.PlacesRepository
-import com.mmdev.business.user.repository.LocalUserRepository
 import com.mmdev.business.user.repository.RemoteUserRepository
 import com.mmdev.data.auth.AuthRepositoryImpl
 import com.mmdev.data.cards.CardsRepositoryImpl

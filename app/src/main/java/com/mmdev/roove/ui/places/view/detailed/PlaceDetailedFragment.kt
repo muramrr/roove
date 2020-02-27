@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.01.20 17:07
+ * Last modified 27.02.20 15:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,12 +10,10 @@
 
 package com.mmdev.roove.ui.places.view.detailed
 
-
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -29,16 +27,12 @@ import com.mmdev.roove.R
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.ImagePagerAdapter
 import com.mmdev.roove.ui.core.SharedViewModel
-import com.mmdev.roove.ui.core.viewmodel.LocalUserRepoViewModel
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.places.PlacesViewModel
 import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_place_detailed.*
 
 
-/**
- * A simple [Fragment] subclass.
- */
 class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 
 	private lateinit var userItem: UserItem
@@ -51,7 +45,6 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 
 	private lateinit var placesViewModel: PlacesViewModel
 	private lateinit var sharedViewModel: SharedViewModel
-	private lateinit var localRepoViewModel: LocalUserRepoViewModel
 	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
 
 	companion object{
@@ -66,7 +59,6 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 		}
 
 		activity?.run {
-			localRepoViewModel = ViewModelProvider(this, factory)[LocalUserRepoViewModel::class.java]
 			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
 			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
