@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.02.20 19:17
+ * Last modified 27.02.20 16:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentConversationsBinding
 import com.mmdev.roove.ui.core.BaseFragment
-import com.mmdev.roove.ui.core.SharedViewModel
+import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
 import com.mmdev.roove.ui.custom.SwipeToDeleteCallback
 import com.mmdev.roove.ui.dating.conversations.ConversationsViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:53
+ * Last modified 27.02.20 16:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,6 +38,7 @@ import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.core.*
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
+import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
 import com.mmdev.roove.ui.custom.HorizontalCarouselLayoutManager
 import com.mmdev.roove.ui.profile.view.PlacesToGoAdapter
 import com.mmdev.roove.utils.observeOnce

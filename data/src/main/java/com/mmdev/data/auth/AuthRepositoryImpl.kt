@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:53
+ * Last modified 27.02.20 17:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package com.mmdev.data.auth
 
-import android.util.Log
 import com.facebook.login.LoginManager
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -36,6 +35,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	companion object {
 		private const val GENERAL_COLLECTION_REFERENCE = "users"
 		private const val BASE_COLLECTION_REFERENCE = "usersBase"
+		private const val TAG = "mylogs_AuthRepositoryImpl"
 	}
 
 	/**
@@ -46,15 +46,25 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	override fun isAuthenticatedListener(): Observable<Boolean> {
 		return Observable.create(ObservableOnSubscribe<Boolean>{ emitter ->
 			val authStateListener = FirebaseAuth.AuthStateListener { auth ->
-				if (auth.currentUser == null) emitter.onNext(false)
-				else {
+				if (auth.currentUser == null) {
+					emitter.onNext(false)
+					//Log.wtf(TAG, "current user is null +false")
+				}
+				else if (auth.currentUser != null) {
+					//Log.wtf(TAG, "current user is not null")
 					val ref = db.collection(BASE_COLLECTION_REFERENCE)
-					ref.document(auth.currentUser!!.uid)
+						.document(auth.currentUser!!.uid)
+					ref
 						.get()
-						.addOnSuccessListener { userDoc -> emitter.onNext(userDoc.exists()) }
+						.addOnSuccessListener {
+							//Log.wtf(TAG, "success get document")
+							if (it.exists()){
+								emitter.onNext(true)
+								//Log.wtf(TAG, "document exists")
+							}
+						}
 						.addOnFailureListener { emitter.onNext(false) }
 				}
-				//Log.wtf("mylogs_AuthRepoImpl", "${auth.currentUser}")
 			}
 			auth.addAuthStateListener(authStateListener)
 			emitter.setCancellable { auth.removeAuthStateListener(authStateListener) }
@@ -95,16 +105,14 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					if (it.isSuccessful && auth.currentUser != null) {
 						val firebaseUser = auth.currentUser!!
 						val photoUrl = firebaseUser.photoUrl.toString() + "?height=1000"
-						val baseUser =
-							BaseUserInfo(name = firebaseUser.displayName!!,
-							                                                        mainPhotoUrl = photoUrl,
-							                                                        userId = firebaseUser.uid)
+						val baseUser = BaseUserInfo(name = firebaseUser.displayName!!,
+						                            mainPhotoUrl = photoUrl,
+						                            userId = firebaseUser.uid)
 						emitter.onSuccess(baseUser)
-
 					}
-					else emitter.onError(Exception("Facebook login error"))
+					else emitter.onError(Exception(it.exception))
 				}
-				.addOnFailureListener { emitter.onError(Exception("Failed to sign in: $it")) }
+				.addOnFailureListener { emitter.onError(it) }
 		}).observeOn(Schedulers.io())
 
 	private fun checkAndRetrieveFullUser(baseUserInfo: BaseUserInfo): Single<HashMap<Boolean, BaseUserInfo>> =
@@ -115,7 +123,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					//if base info about user exists in db
 					if (baseUserDoc.exists()) {
 						val userInBase = baseUserDoc.toObject(AuthUserItem::class.java)!!
-						Log.wtf("mylogs_AuthRepoImpl", "$userInBase")
+						//Log.wtf(TAG, "$userInBase")
 						db.collection(GENERAL_COLLECTION_REFERENCE)
 							.document(userInBase.baseUserInfo.city)
 							.collection(userInBase.baseUserInfo.gender)

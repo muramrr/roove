@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:00
+ * Last modified 27.02.20 16:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -72,14 +72,14 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 	override fun deleteConversation(conversationItem: ConversationItem): Completable =
 		Completable.create { emitter ->
 			val partnerDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(conversationItem.partner.baseUserInfo.city)
-				.collection(conversationItem.partner.baseUserInfo.gender)
-				.document(conversationItem.partner.baseUserInfo.userId)
+				.document(conversationItem.partner.city)
+				.collection(conversationItem.partner.gender)
+				.document(conversationItem.partner.userId)
 
 			//current user delete from matched list
 			currentUserDocRef
 				.collection(USER_MATCHED_COLLECTION_REFERENCE)
-				.document(conversationItem.partner.baseUserInfo.userId)
+				.document(conversationItem.partner.userId)
 				.delete()
 
 			//current user delete from conversations list

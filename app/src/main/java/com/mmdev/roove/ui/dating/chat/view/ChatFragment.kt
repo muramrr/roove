@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:53
+ * Last modified 27.02.20 16:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,6 +47,7 @@ import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.databinding.FragmentChatBinding
 import com.mmdev.roove.ui.core.*
+import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
 import com.mmdev.roove.ui.dating.chat.ChatViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import com.mmdev.roove.utils.addSystemBottomPadding
@@ -139,22 +140,22 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 		//if it was a deep link navigation then create ConversationItem "on a flight"
 		if (isDeepLinkJump) {
-			val receivedConversationItem = ConversationItem(UserItem(
+			val receivedConversationItem = ConversationItem(
 					BaseUserInfo(name = receivedPartnerName,
 					             city = receivedPartnerCity,
 					             gender = receivedPartnerGender,
 					             mainPhotoUrl = receivedPartnerPhotoUrl,
-					             userId = receivedPartnerId)),
-			                                                conversationId = receivedConversationId,
-			                                                conversationStarted = true)
+					             userId = receivedPartnerId),
+					conversationId = receivedConversationId,
+					conversationStarted = true)
 			sharedViewModel.setConversationSelected(receivedConversationItem)
 		}
 
 		sharedViewModel.conversationSelected.observeOnce(this, Observer {
 			currentConversation = it
-			partnerName = it.partner.baseUserInfo.name
-			partnerMainPhotoUrl = it.partner.baseUserInfo.mainPhotoUrl
-			partnerId = it.partner.baseUserInfo.userId
+			partnerName = it.partner.name
+			partnerMainPhotoUrl = it.partner.mainPhotoUrl
+			partnerId = it.partner.userId
 			chatViewModel.loadMessages(it)
 			chatViewModel.observeNewMessages(it)
 		})
@@ -258,7 +259,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			when (item.itemId) {
 				R.id.chat_action_user ->{
 					findNavController().navigate(R.id.action_chat_to_profileFragment)
-					sharedViewModel.setUserSelected(currentConversation.partner)
+					sharedViewModel.setUserSelected(UserItem(currentConversation.partner))
 				}
 
 				R.id.chat_action_report -> {

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 17.02.20 15:15
+  ~ Last modified 27.02.20 16:31
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,7 +36,7 @@
 			android:contentDescription="@string/description_user_photo"
 			android:scaleType="centerCrop"
 
-			app:bindImageUrl="@{matchedItem.userItem.baseUserInfo.mainPhotoUrl}"
+			app:bindImageUrl="@{matchedItem.baseUserInfo.mainPhotoUrl}"
 			app:progressBar="@{pbImageLoading}"
 			/>
 
@@ -70,7 +70,7 @@
 			android:layout_gravity="center|bottom"
 			android:layout_margin="@dimen/general_margin_8"
 
-			android:text="@{matchedItem.userItem.baseUserInfo.name, default = @string/default_name}"
+			android:text="@{matchedItem.baseUserInfo.name, default = @string/default_name}"
 			android:textSize="20sp"
 			style="@style/regular_text_white85op"/>
 
