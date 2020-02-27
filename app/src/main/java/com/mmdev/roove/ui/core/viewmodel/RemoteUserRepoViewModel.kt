@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:42
+ * Last modified 27.02.20 15:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,11 +13,11 @@ package com.mmdev.roove.ui.core.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mmdev.business.user.UserItem
-import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
-import com.mmdev.business.user.usecase.remote.FetchUserInfoUseCase
-import com.mmdev.business.user.usecase.remote.UpdateUserItemUseCase
-import com.mmdev.business.user.usecase.remote.UploadUserProfilePhotoUseCase
+import com.mmdev.business.core.UserItem
+import com.mmdev.business.remote.usecase.DeleteUserUseCase
+import com.mmdev.business.remote.usecase.FetchUserInfoUseCase
+import com.mmdev.business.remote.usecase.UpdateUserItemUseCase
+import com.mmdev.business.remote.usecase.UploadUserProfilePhotoUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject

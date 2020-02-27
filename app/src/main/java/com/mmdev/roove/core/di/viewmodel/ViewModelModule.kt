@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:42
+ * Last modified 27.02.20 15:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,11 +35,11 @@ import com.mmdev.business.pairs.usecase.GetMatchedUsersUseCase
 import com.mmdev.business.places.repository.PlacesRepository
 import com.mmdev.business.places.usecase.GetPlaceDetailsUseCase
 import com.mmdev.business.places.usecase.GetPlacesUseCase
-import com.mmdev.business.user.repository.RemoteUserRepository
-import com.mmdev.business.user.usecase.remote.DeleteUserUseCase
-import com.mmdev.business.user.usecase.remote.FetchUserInfoUseCase
-import com.mmdev.business.user.usecase.remote.UpdateUserItemUseCase
-import com.mmdev.business.user.usecase.remote.UploadUserProfilePhotoUseCase
+import com.mmdev.business.remote.RemoteUserRepository
+import com.mmdev.business.remote.usecase.DeleteUserUseCase
+import com.mmdev.business.remote.usecase.FetchUserInfoUseCase
+import com.mmdev.business.remote.usecase.UpdateUserItemUseCase
+import com.mmdev.business.remote.usecase.UploadUserProfilePhotoUseCase
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
@@ -128,10 +128,14 @@ class ViewModelModule {
 	@Provides
 	@ViewModelKey(RemoteUserRepoViewModel::class)
 	fun remoteUserRepoViewModel(repo: RemoteUserRepository): ViewModel =
-		RemoteUserRepoViewModel(DeleteUserUseCase(repo),
-		                        FetchUserInfoUseCase(repo),
-		                        UpdateUserItemUseCase(repo),
-		                        UploadUserProfilePhotoUseCase(repo))
+		RemoteUserRepoViewModel(DeleteUserUseCase(
+				repo),
+		                        FetchUserInfoUseCase(
+				                        repo),
+		                        UpdateUserItemUseCase(
+				                        repo),
+		                        UploadUserProfilePhotoUseCase(
+				                        repo))
 
 	@IntoMap
 	@Provides

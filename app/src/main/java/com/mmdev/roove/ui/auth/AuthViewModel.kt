@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.02.20 16:05
+ * Last modified 27.02.20 15:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,8 +16,8 @@ import com.mmdev.business.auth.usecase.IsAuthenticatedListenerUseCase
 import com.mmdev.business.auth.usecase.LogOutUseCase
 import com.mmdev.business.auth.usecase.SignInUseCase
 import com.mmdev.business.auth.usecase.SignUpUseCase
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.UserItem
+import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.UserItem
 import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
@@ -37,7 +37,6 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 
 	val showProgress: MutableLiveData<Boolean> = MutableLiveData()
 
-	private val userItem: MutableLiveData<UserItem> = MutableLiveData()
 
 	private val baseUserInfo: MutableLiveData<BaseUserInfo> = MutableLiveData()
 
@@ -66,11 +65,10 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 	                       if (it.containsKey(false)) {
 		                       Log.wtf(TAG, "successfully retrieved user")
 		                       continueRegistration.value = false
-		                       userItem.value = it.getValue(false)
 	                       }
 	                       else {
 		                       continueRegistration.value = true
-		                       baseUserInfo.value = it.getValue(true).baseUserInfo
+		                       baseUserInfo.value = it.getValue(true)
 		                       //Log.wtf(TAG, "received user: =${baseUserInfo.value}")
 	                       }
 	                       Log.wtf(TAG, "continue registration? -${continueRegistration.value}")
@@ -87,7 +85,6 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
             .subscribe({
 	                       continueRegistration.value = false
 	                       isAuthenticatedStatus.value = true
-	                       this.userItem.value = userItem
                        },
                        {
                            Log.wtf(TAG, it)
@@ -100,12 +97,6 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 	fun getAuthStatus() = isAuthenticatedStatus
 
 	fun getBaseUserInfo() = baseUserInfo
-
-	fun getUserItem() = userItem
-
-
-
-
 
 
 

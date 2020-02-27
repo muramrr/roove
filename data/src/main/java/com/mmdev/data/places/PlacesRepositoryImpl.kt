@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 18:55
+ * Last modified 27.02.20 15:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,8 +10,8 @@
 
 package com.mmdev.data.places
 
+import com.mmdev.business.core.UserItem
 import com.mmdev.business.places.repository.PlacesRepository
-import com.mmdev.business.user.UserItem
 import javax.inject.Inject
 
 /**
