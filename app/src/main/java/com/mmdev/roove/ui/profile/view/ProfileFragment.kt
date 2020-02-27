@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.02.20 17:42
+ * Last modified 27.02.20 15:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,10 +79,9 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 			sharedViewModel.userSelected.observeOnce(this, Observer {
 				selectedUser = it
 				//ui
-				collapseBarProfile.title = selectedUser.baseUserInfo.name
 				userPhotosAdapter.updateData(selectedUser.photoURLs.toList())
 				mPlacesToGoAdapter.updateData(selectedUser.placesToGo.toList())
-				tvProfileAboutText.text = it.aboutText
+
 			})
 		}
 	}
@@ -144,11 +143,14 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 	}
 
-//	override fun onResume() {
-//		super.onResume()
-//		collapseBarProfile.title = selectedUser.baseUserInfo.name
-//		userPhotosAdapter.updateData(selectedUser.photoURLs.toList())
-//	}
+	override fun onResume() {
+		super.onResume()
+		if (this::selectedUser.isInitialized){
+			tvProfileAboutText.text = selectedUser.aboutText
+			collapseBarProfile.title = selectedUser.baseUserInfo.name
+		}
+
+	}
 
 	override fun onBackPressed() {
 		findNavController().navigateUp()

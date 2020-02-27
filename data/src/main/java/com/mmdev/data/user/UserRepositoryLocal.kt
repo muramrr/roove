@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.02.20 17:40
+ * Last modified 27.02.20 15:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,10 +15,10 @@ import com.facebook.login.LoginManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.ironz.binaryprefs.Preferences
+import com.mmdev.business.localrepository.LocalUserRepository
 import com.mmdev.business.places.BasePlaceInfo
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
-import com.mmdev.business.user.repository.LocalUserRepository
 import org.json.JSONArray
 import javax.inject.Inject
 import javax.inject.Singleton

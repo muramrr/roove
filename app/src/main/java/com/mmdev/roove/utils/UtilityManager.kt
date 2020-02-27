@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.02.20 19:24
+ * Last modified 27.02.20 15:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -49,6 +49,10 @@ object UtilityManager {
 	private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
 	private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 
+	private const val GENDER = "female"
+	private const val CITY = "msk"
+	private const val USERID = "L6udxztFxqadDeHvN6qXdIpZihF3"
+
 	private fun createFakeUser(city: String = "nsk", gender: String = "female")=
 		UserItem(BaseUserInfo(Fakeit.name().firstName(),
 		                      Random.nextInt(18, 22),
@@ -92,14 +96,14 @@ object UtilityManager {
 			.set(userItem)
 	}
 
-	fun generateMatcheOnRemote(userItem: UserItem = createFakeUser()) {
+	fun generateMatchesOnRemote(userItem: UserItem = createFakeUser()) {
 
 		val randomDate = generateRandomDate()
 
 		db.collection(USERS_COLLECTION_REFERENCE)
-			.document("msk")
-			.collection("male")
-			.document("5Bi3FfUE8nQppPyo5mqquIsBijf1")
+			.document(CITY)
+			.collection(GENDER)
+			.document(USERID)
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.document(userItem.baseUserInfo.userId)
 			.set(MatchedUserItem(userItem, matchedDate = randomDate))
@@ -109,9 +113,9 @@ object UtilityManager {
 	fun generateConversationOnRemote(){
 		val conversationId = randomUid()
 		db.collection(USERS_COLLECTION_REFERENCE)
-			.document("msk")
-			.collection("female")
-			.document("g5q5vvujWkXcn0uwKdE4YEgOvnp2")
+			.document(CITY)
+			.collection(GENDER)
+			.document(USERID)
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversationId)
 			.set(ConversationItem(conversationId = conversationId,
