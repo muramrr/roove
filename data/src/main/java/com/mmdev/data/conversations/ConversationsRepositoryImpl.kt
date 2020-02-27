@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:53
+ * Last modified 27.02.20 16:00
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -59,6 +59,8 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
 		private const val CONVERSATION_TIMESTAMP_FIELD = "lastMessageTimestamp"
+
+		private const val CONVERSATION_DELETED_FIELD = "conversationDeleted"
 		private const val TAG = "mylogs_ConverRepoImpl"
 	}
 
@@ -96,14 +98,13 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversationItem.conversationId)
 				.delete()
-				.addOnSuccessListener { emitter.onComplete() }
-				.addOnFailureListener { emitter.onError(it) }
 
-			//todo:delete subcollection
-			//delete in general
+			//mark that conversation no need to be exists
 			firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversationItem.conversationId)
-				.delete()
+				.update(CONVERSATION_DELETED_FIELD, true)
+				.addOnSuccessListener { emitter.onComplete() }
+				.addOnFailureListener { emitter.onError(it) }
 
 		}.subscribeOn(Schedulers.io())
 
