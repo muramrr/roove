@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:57
+ * Last modified 27.02.20 16:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -108,7 +108,7 @@ object UtilityManager {
 			.document(USERID)
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.document(userItem.baseUserInfo.userId)
-			.set(MatchedUserItem(userItem, matchedDate = randomDate))
+			.set(MatchedUserItem(userItem.baseUserInfo, matchedDate = randomDate))
 
 	}
 
@@ -124,7 +124,7 @@ object UtilityManager {
 			                      conversationStarted = true,
 			                      lastMessageTimestamp = generateRandomDate(),
 			                      lastMessageText = Fakeit.lorem().words(),
-			                      partner = createFakeUser()))
+			                      partner = createFakeUser().baseUserInfo))
 
 
 	}

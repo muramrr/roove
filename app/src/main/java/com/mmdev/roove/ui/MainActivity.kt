@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:51
+ * Last modified 27.02.20 16:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,8 +24,8 @@ import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.auth.view.AuthFlowFragment
-import com.mmdev.roove.ui.core.SharedViewModel
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
+import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
 import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.main.MainFlowFragment
 import com.mmdev.roove.utils.doOnApplyWindowInsets
@@ -43,7 +43,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 	private val factory = injector.factory()
 
 	companion object{
-		private const val TAG_LOG = "mylogs_MainActivity"
+		private const val TAG = "mylogs_MainActivity"
 	}
 
 //	init {
@@ -88,7 +88,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 		authViewModel.getAuthStatus().observe(this, Observer {
 			if (it == false) {
 				showAuthFlowFragment()
-				Log.wtf(TAG_LOG, "USER IS NOT LOGGED IN")
+				Log.wtf(TAG, "USER IS NOT LOGGED IN")
 			}
 			else {
 				showMainFlowFragment()
@@ -97,7 +97,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 					fetchedUser -> sharedViewModel.setCurrentUser(fetchedUser)
 				})
 
-				Log.wtf(TAG_LOG, "USER IS LOGGED IN")
+				Log.wtf(TAG, "USER IS LOGGED IN")
 			}
 		})
 		authViewModel.showProgress.observe(this, Observer {

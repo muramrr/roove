@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 24.02.20 16:32
+ * Last modified 27.02.20 16:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentPairsBinding
 import com.mmdev.roove.ui.core.BaseFragment
-import com.mmdev.roove.ui.core.SharedViewModel
+import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
 import com.mmdev.roove.ui.dating.pairs.PairsViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import kotlinx.android.synthetic.main.fragment_pairs.*

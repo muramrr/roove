@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:57
+ * Last modified 27.02.20 16:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -68,14 +68,14 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	override fun deleteMatchedUser(matchedUserItem: MatchedUserItem): Completable =
 		Completable.create{ emitter ->
 			val matchedUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(matchedUserItem.userItem.baseUserInfo.city)
-				.collection(matchedUserItem.userItem.baseUserInfo.gender)
-				.document(matchedUserItem.userItem.baseUserInfo.userId)
+				.document(matchedUserItem.baseUserInfo.city)
+				.collection(matchedUserItem.baseUserInfo.gender)
+				.document(matchedUserItem.baseUserInfo.userId)
 
 			//delete from  match collection
 			currentUserDocRef
 				.collection(USER_MATCHED_COLLECTION_REFERENCE)
-				.document(matchedUserItem.userItem.baseUserInfo.userId)
+				.document(matchedUserItem.baseUserInfo.userId)
 				.delete()
 
 			//delete from  match collection
@@ -87,8 +87,8 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			//add to skipped collection
 			currentUserDocRef
 				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
-				.document(matchedUserItem.userItem.baseUserInfo.userId)
-				.set(mapOf("userId" to matchedUserItem.userItem.baseUserInfo.userId))
+				.document(matchedUserItem.baseUserInfo.userId)
+				.set(mapOf("userId" to matchedUserItem.baseUserInfo.userId))
 
 			//add to skipped collection
 			matchedUserDocRef

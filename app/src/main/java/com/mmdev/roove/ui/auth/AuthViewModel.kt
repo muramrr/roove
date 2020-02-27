@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:53
+ * Last modified 27.02.20 16:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -63,15 +63,12 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
             .doFinally { showProgress.value = false }
             .subscribe({
 	                       if (it.containsKey(false)) {
-		                       Log.wtf(TAG, "successfully retrieved user")
 		                       continueRegistration.value = false
 	                       }
 	                       else {
 		                       continueRegistration.value = true
 		                       baseUserInfo.value = it.getValue(true)
-		                       //Log.wtf(TAG, "received user: =${baseUserInfo.value}")
 	                       }
-	                       Log.wtf(TAG, "continue registration? -${continueRegistration.value}")
                        },
                        {
 	                       Log.wtf(TAG, "$it")
@@ -93,9 +90,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 
 
 	fun logOut() = logOutExecution()
-
 	fun getAuthStatus() = isAuthenticatedStatus
-
 	fun getBaseUserInfo() = baseUserInfo
 
 

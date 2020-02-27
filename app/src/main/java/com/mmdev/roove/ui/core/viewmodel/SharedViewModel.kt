@@ -1,14 +1,14 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:57
+ * Last modified 27.02.20 16:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.ui.core
+package com.mmdev.roove.ui.core.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -38,8 +38,8 @@ class SharedViewModel: ViewModel() {
 	private val currentUser: MutableLiveData<UserItem> = MutableLiveData()
 
 	fun getCurrentUser() = currentUser
-
 	fun setCurrentUser(userItem: UserItem) { currentUser.value = userItem }
+
 
 	fun setUserSelected(userItem: UserItem) { userSelected.value = userItem }
 

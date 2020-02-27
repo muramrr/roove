@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.02.20 20:03
+ * Last modified 27.02.20 16:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,7 +42,7 @@ class PairsViewModel @Inject constructor(private val deleteMatchUC: DeleteMatchU
 		disposables.add(deleteMatchExecution(matchedUser)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       Log.wtf(TAG, "matchedUser ${matchedUser.userItem.baseUserInfo.userId} deleted")
+	                       Log.wtf(TAG, "matchedUser ${matchedUser.baseUserInfo.userId} deleted")
 	                       deleteMatchStatus.value = true
                        },
                        {
