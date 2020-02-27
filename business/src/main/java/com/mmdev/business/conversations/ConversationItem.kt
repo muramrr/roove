@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:53
+ * Last modified 27.02.20 16:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,14 +10,14 @@
 
 package com.mmdev.business.conversations
 
-import com.mmdev.business.core.UserItem
+import com.mmdev.business.core.BaseUserInfo
 import java.util.*
 
 /**
  * This is the documentation block about the class
  */
 
-data class ConversationItem(val partner: UserItem = UserItem(),
+data class ConversationItem(val partner: BaseUserInfo = BaseUserInfo(),
                             val conversationId: String = "",
                             val conversationStarted: Boolean = false,
                             val lastMessageText: String = "",

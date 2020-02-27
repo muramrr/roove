@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:53
+ * Last modified 27.02.20 16:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,14 +12,11 @@ package com.mmdev.roove.ui.core.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
-import com.mmdev.business.remote.usecase.DeleteUserUseCase
-import com.mmdev.business.remote.usecase.FetchUserInfoUseCase
-import com.mmdev.business.remote.usecase.UpdateUserItemUseCase
-import com.mmdev.business.remote.usecase.UploadUserProfilePhotoUseCase
+import com.mmdev.business.remote.usecase.*
+import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 /**
@@ -29,16 +26,16 @@ import javax.inject.Inject
 class RemoteUserRepoViewModel @Inject constructor(
 	private val deleteUserUC: DeleteUserUseCase,
 	private val fetchUserUC: FetchUserInfoUseCase,
+	private val getFullUserInfoUC: GetFullUserInfoUseCase,
 	private val updateUserItemUC: UpdateUserItemUseCase,
-	private val uploadUserProfilePhotoUC: UploadUserProfilePhotoUseCase) : ViewModel() {
+	private val uploadUserProfilePhotoUC: UploadUserProfilePhotoUseCase) : BaseViewModel() {
 
 
 	private val fetchedUserItem: MutableLiveData<UserItem> = MutableLiveData()
+	private val retrievedUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	private val isUserUpdated: MutableLiveData<Boolean> = MutableLiveData()
 
 	val photoURLs: MutableLiveData<List<String>> = MutableLiveData()
-
-	private val disposables = CompositeDisposable()
 
 	companion object{
 		private const val TAG = "mylogs_RemoteRepoViewModel"
@@ -55,6 +52,18 @@ class RemoteUserRepoViewModel @Inject constructor(
                        {
                            Log.wtf(TAG, "fetch user error: $it")
                        }))
+	}
+
+	fun getFullUserInfo(baseUserInfo: BaseUserInfo) {
+		disposables.add(getFullUserInfoExecution(baseUserInfo)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                            retrievedUserItem.value = it
+                       },
+                       {
+
+                       }))
+
 	}
 
 	fun updateUserItem(userItem: UserItem) {
@@ -83,7 +92,7 @@ class RemoteUserRepoViewModel @Inject constructor(
 	}
 
 	fun getFetchedUserItem() = fetchedUserItem
-
+	fun getRetrievedUserItem() = retrievedUserItem
 	fun getUserUpdateStatus() = isUserUpdated
 
 
@@ -92,16 +101,12 @@ class RemoteUserRepoViewModel @Inject constructor(
 		deleteUserUC.execute(userItem)
 	private fun fetchUserInfoExecution() =
 		fetchUserUC.execute()
+	private fun getFullUserInfoExecution(baseUserInfo: BaseUserInfo) =
+		getFullUserInfoUC.execute(baseUserInfo)
 	private fun updateUserItemExecution(userItem: UserItem) =
 		updateUserItemUC.execute(userItem)
 	private fun uploadUserProfilePhotoExecution(photoUri: String, userItem: UserItem) =
 		uploadUserProfilePhotoUC.execute(photoUri, userItem)
 
 
-
-
-	override fun onCleared() {
-		disposables.clear()
-		super.onCleared()
-	}
 }

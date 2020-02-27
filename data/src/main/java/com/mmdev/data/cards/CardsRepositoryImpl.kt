@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:57
+ * Last modified 27.02.20 16:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -108,8 +108,8 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 							.id
 
 						//execute add and remove for documents for each of users
-						handleMatch(MatchedUserItem(likedUserItem, conversationId = conversationId),
-						            MatchedUserItem(currentUser, conversationId = conversationId))
+						handleMatch(MatchedUserItem(likedUserItem.baseUserInfo, conversationId = conversationId),
+						            MatchedUserItem(currentUser.baseUserInfo, conversationId = conversationId))
 
 
 
@@ -117,7 +117,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						likedUserDocRef
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 							.document(conversationId)
-							.set(ConversationItem(partner = currentUser,
+							.set(ConversationItem(partner = currentUser.baseUserInfo,
 							                      conversationId = conversationId,
 							                      lastMessageTimestamp = null))
 
@@ -125,7 +125,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						currentUserDocRef
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 							.document(conversationId)
-							.set(ConversationItem(partner = likedUserItem,
+							.set(ConversationItem(partner = likedUserItem.baseUserInfo,
 							                      conversationId = conversationId,
 							                      lastMessageTimestamp = null))
 
@@ -336,18 +336,18 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	 * 4. remove from likes collection for CURRENT user
 	 */
 	private fun handleMatch(matchedUserItem: MatchedUserItem, currentUserMatchedItem: MatchedUserItem) {
-		addToMatchCollection(userForWhichToAdd = matchedUserItem.userItem.baseUserInfo,
+		addToMatchCollection(userForWhichToAdd = matchedUserItem.baseUserInfo,
 		                     whomToAdd = currentUserMatchedItem)
 
-		addToMatchCollection(userForWhichToAdd = currentUserMatchedItem.userItem.baseUserInfo,
+		addToMatchCollection(userForWhichToAdd = currentUserMatchedItem.baseUserInfo,
 		                     whomToAdd = matchedUserItem)
 
 		//note:uncomment for release
-		deleteFromLikesCollection(userForWhichDelete = matchedUserItem.userItem.baseUserInfo,
+		deleteFromLikesCollection(userForWhichDelete = matchedUserItem.baseUserInfo,
 		                          whomToDeleteId = currentUser.baseUserInfo.userId)
 
-		deleteFromLikesCollection(userForWhichDelete = currentUserMatchedItem.userItem.baseUserInfo,
-		                          whomToDeleteId = matchedUserItem.userItem.baseUserInfo.userId)
+		deleteFromLikesCollection(userForWhichDelete = currentUserMatchedItem.baseUserInfo,
+		                          whomToDeleteId = matchedUserItem.baseUserInfo.userId)
 
 		Log.wtf(TAG, "match handle executed")
 	}
@@ -358,7 +358,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.collection(userForWhichToAdd.gender)
 			.document(userForWhichToAdd.userId)
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
-			.document(whomToAdd.userItem.baseUserInfo.userId)
+			.document(whomToAdd.baseUserInfo.userId)
 			.set(whomToAdd)
 
 	}

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:53
+ * Last modified 27.02.20 16:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +25,8 @@ import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.ImagePagerAdapter
-import com.mmdev.roove.ui.core.SharedViewModel
+import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
+import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
 import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_profile.*
 
@@ -44,6 +45,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 	private lateinit var selectedUser: UserItem
 	private lateinit var conversationId: String
 
+	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
 
 
@@ -59,31 +61,35 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 			fabVisible = it.getBoolean(FAB_VISIBLE_KEY)
 		}
 
-		sharedViewModel = activity?.run {
-			ViewModelProvider(this, factory)[SharedViewModel::class.java]
+		activity?.run {
+			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
+
+		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
 
 		//if true -> seems that we navigates here from pairs fragment
 		if (fabVisible) {
 			sharedViewModel.matchedUserItemSelected.observeOnce(this, Observer {
 				conversationId = it.conversationId
-				selectedUser = it.userItem
-				//ui
-				collapseBarProfile.title = selectedUser.baseUserInfo.name
-				userPhotosAdapter.updateData(selectedUser.photoURLs.toList())
-				mPlacesToGoAdapter.updateData(selectedUser.placesToGo.toList())
+				remoteRepoViewModel.getFullUserInfo(it.baseUserInfo)
 			})
 		}
 		//else we navigates here from cards or chat fragment
 		else {
 			sharedViewModel.userSelected.observeOnce(this, Observer {
-				selectedUser = it
-				//ui
-				userPhotosAdapter.updateData(selectedUser.photoURLs.toList())
-				mPlacesToGoAdapter.updateData(selectedUser.placesToGo.toList())
-
+				remoteRepoViewModel.getFullUserInfo(it.baseUserInfo)
 			})
 		}
+
+		remoteRepoViewModel.getRetrievedUserItem().observeOnce(this, Observer {
+			selectedUser = it
+			//ui
+			collapseBarProfile.title = it.baseUserInfo.name
+			userPhotosAdapter.updateData(it.photoURLs.toList())
+			mPlacesToGoAdapter.updateData(it.placesToGo.toList())
+			tvProfileAboutText.text = it.aboutText
+			collapseBarProfile.title = it.baseUserInfo.name
+		})
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -134,7 +140,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 				findNavController().navigate(R.id.action_profile_to_chatFragment)
 
-				sharedViewModel.setConversationSelected(ConversationItem(selectedUser,
+				sharedViewModel.setConversationSelected(ConversationItem(selectedUser.baseUserInfo,
 				                                                         conversationId,
 				                                                         false))
 			}

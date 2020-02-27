@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:53
+ * Last modified 27.02.20 16:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -81,7 +81,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 	override fun loadMessages(conversation: ConversationItem): Single<List<MessageItem>> {
 		this.conversation = conversation
-		this.partner = conversation.partner.baseUserInfo
+		this.partner = conversation.partner
 
 		//check is this first call
 		if (!this::paginateChatQuery.isInitialized)
@@ -124,7 +124,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 
 	override fun observeNewMessages(conversation: ConversationItem): Observable<MessageItem> {
 		this.conversation = conversation
-		this.partner = conversation.partner.baseUserInfo
+		this.partner = conversation.partner
 
 		return Observable.create(ObservableOnSubscribe<MessageItem> { emitter ->
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
