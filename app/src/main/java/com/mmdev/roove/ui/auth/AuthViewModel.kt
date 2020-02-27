@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:47
+ * Last modified 27.02.20 17:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -48,7 +48,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
             .debounce(1000, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       isAuthenticatedStatus.value = it
+	                       if (isAuthenticatedStatus.value != it) isAuthenticatedStatus.value = it
                        },
                        {
                            error.value = it

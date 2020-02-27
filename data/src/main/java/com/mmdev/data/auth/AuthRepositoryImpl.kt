@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 17:03
+ * Last modified 27.02.20 17:09
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,8 +62,9 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 								emitter.onNext(true)
 								//Log.wtf(TAG, "document exists")
 							}
+							else emitter.onNext(false)
 						}
-						.addOnFailureListener { emitter.onNext(false) }
+						.addOnFailureListener { emitter.onError(it) }
 				}
 			}
 			auth.addAuthStateListener(authStateListener)
