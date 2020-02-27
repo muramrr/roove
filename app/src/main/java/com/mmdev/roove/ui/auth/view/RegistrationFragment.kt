@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:36
+ * Last modified 27.02.20 17:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
 import android.widget.ArrayAdapter
@@ -82,8 +81,6 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 		authViewModel.getBaseUserInfo().observe(this, Observer {
 			baseUserInfo = it
 		})
-		Log.wtf(TAG, "oncreate called")
-
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
