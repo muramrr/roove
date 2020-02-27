@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 17.02.20 15:11
+ * Last modified 27.02.20 15:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,8 +13,8 @@ package com.mmdev.roove.ui.core
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.core.UserItem
 import com.mmdev.business.pairs.MatchedUserItem
-import com.mmdev.business.user.UserItem
 
 /**
  * In general, you should strongly prefer passing only the minimal amount of data between destinations.

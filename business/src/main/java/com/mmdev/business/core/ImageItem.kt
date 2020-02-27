@@ -8,17 +8,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.business.cards.usecase
-
-import com.mmdev.business.cards.repository.CardsRepository
-import com.mmdev.business.core.UserItem
+package com.mmdev.business.core
 
 /**
  * This is the documentation block about the class
  */
 
-class CheckMatchUseCase (private val repository: CardsRepository)  {
-
-	fun execute(t: UserItem) = repository.checkMatch(t)
-
-}
+//image url
+data class ImageItem (val image: String = "")

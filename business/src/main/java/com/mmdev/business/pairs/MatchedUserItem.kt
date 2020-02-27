@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.02.20 17:33
+ * Last modified 27.02.20 15:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 
 package com.mmdev.business.pairs
 
-import com.mmdev.business.user.UserItem
+import com.mmdev.business.core.UserItem
 import java.util.*
 
 data class MatchedUserItem(val userItem: UserItem = UserItem(),

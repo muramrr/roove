@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.02.20 20:03
+ * Last modified 27.02.20 15:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,9 +17,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.UserItem
 import com.mmdev.business.pairs.MatchedUserItem
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.UserItem
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.functions.BiFunction

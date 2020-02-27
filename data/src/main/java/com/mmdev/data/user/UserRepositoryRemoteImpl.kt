@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:42
+ * Last modified 27.02.20 15:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,9 +18,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.StorageReference
 import com.mmdev.business.auth.AuthUserItem
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.UserItem
-import com.mmdev.business.user.repository.RemoteUserRepository
+import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.UserItem
+import com.mmdev.business.remote.RemoteUserRepository
 import io.reactivex.*
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
