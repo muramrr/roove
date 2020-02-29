@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:30
+ * Last modified 29.02.20 18:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,20 +54,21 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 		// firestore users references
 		private const val USERS_COLLECTION_REFERENCE = "users"
 		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
+		private const val USER_SKIPPED_COLLECTION_REFERENCE = "skipped"
+
+		private const val USER_ID_FIELD = "userId"
 
 		// firestore conversations reference
 		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
 		private const val CONVERSATION_TIMESTAMP_FIELD = "lastMessageTimestamp"
-
 		private const val CONVERSATION_DELETED_FIELD = "conversationDeleted"
+
 		private const val TAG = "mylogs_ConverRepoImpl"
 	}
 
 
 	private lateinit var paginateLastConversationLoaded: DocumentSnapshot
-
-
 
 	override fun deleteConversation(conversationItem: ConversationItem): Completable =
 		Completable.create { emitter ->
@@ -99,10 +100,22 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				.document(conversationItem.conversationId)
 				.delete()
 
+			//add to skipped collection
+			currentUserDocRef
+				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
+				.document(conversationItem.partner.userId)
+				.set(mapOf(USER_ID_FIELD to conversationItem.partner.userId))
+
+			//add to skipped collection
+			partnerDocRef
+				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.set(mapOf(USER_ID_FIELD to currentUserId))
+
 			//mark that conversation no need to be exists
 			firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversationItem.conversationId)
-				.update(CONVERSATION_DELETED_FIELD, true)
+				.set(mapOf(CONVERSATION_DELETED_FIELD to true))
 				.addOnSuccessListener { emitter.onComplete() }
 				.addOnFailureListener { emitter.onError(it) }
 

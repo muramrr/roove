@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:30
+ * Last modified 29.02.20 18:06
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -59,6 +59,7 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
 		private const val MATCHED_DATE_FIELD = "matchedDate"
+		private const val USER_ID_FIELD = "userId"
 	}
 
 
@@ -88,13 +89,13 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			currentUserDocRef
 				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 				.document(matchedUserItem.baseUserInfo.userId)
-				.set(mapOf("userId" to matchedUserItem.baseUserInfo.userId))
+				.set(mapOf(USER_ID_FIELD to matchedUserItem.baseUserInfo.userId))
 
 			//add to skipped collection
 			matchedUserDocRef
 				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 				.document(currentUserId)
-				.set(mapOf("userId" to currentUserId))
+				.set(mapOf(USER_ID_FIELD to currentUserId))
 
 			//delete predefined conversation
 			firestore

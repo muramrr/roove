@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:30
+ * Last modified 29.02.20 18:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,8 +32,7 @@ import javax.inject.Inject
  */
 
 class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
-                                              private val currentUser: UserItem,
-                                              private val localStorageLists: LocalStorageLists):
+                                              private val currentUser: UserItem):
 		CardsRepository {
 
 	private var currentUserDocRef: DocumentReference
@@ -62,6 +61,8 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
 		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 
+		private const val USER_ID_FIELD = "userId"
+
 		private const val USERS_FILTER_AGE = "baseUserInfo.age"
 
 		private const val TAG = "mylogs_CardsRepoImpl"
@@ -75,7 +76,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		currentUserDocRef
 			.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 			.document(skippedUserItem.baseUserInfo.userId)
-			.set(mapOf("userId" to skippedUserItem.baseUserInfo.userId))
+			.set(mapOf(USER_ID_FIELD to skippedUserItem.baseUserInfo.userId))
 
 		skippedList.add(skippedUserItem.baseUserInfo.userId)
 	}
@@ -111,8 +112,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						handleMatch(MatchedUserItem(likedUserItem.baseUserInfo, conversationId = conversationId),
 						            MatchedUserItem(currentUser.baseUserInfo, conversationId = conversationId))
 
-
-
 						//set conversation for liked user
 						likedUserDocRef
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -138,7 +137,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						currentUserDocRef
 							.collection(USER_LIKED_COLLECTION_REFERENCE)
 							.document(likedUserItem.baseUserInfo.userId)
-							.set(mapOf("userId" to likedUserItem.baseUserInfo.userId))
+							.set(mapOf(USER_ID_FIELD to likedUserItem.baseUserInfo.userId))
 
 						likedList.add(likedUserItem.baseUserInfo.userId)
 
