@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:51
+ * Last modified 29.02.20 18:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package com.mmdev.roove.core.di.modules
 
-import com.ironz.binaryprefs.Preferences
 import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.chat.repository.ChatRepository
@@ -22,7 +21,6 @@ import com.mmdev.business.places.repository.PlacesRepository
 import com.mmdev.business.remote.RemoteUserRepository
 import com.mmdev.data.auth.AuthRepositoryImpl
 import com.mmdev.data.cards.CardsRepositoryImpl
-import com.mmdev.data.cards.LocalStorageLists
 import com.mmdev.data.chat.ChatRepositoryImpl
 import com.mmdev.data.conversations.ConversationsRepositoryImpl
 import com.mmdev.data.events.EventsRepositoryImpl
@@ -67,9 +65,5 @@ class RepositoryModule {
 	@Provides
 	@Singleton
 	fun remoteUserRepository(repository: UserRepositoryRemoteImpl): RemoteUserRepository = repository
-
-	@Provides
-	@Singleton
-	fun localStorageLists(prefs: Preferences) = LocalStorageLists(prefs)
 
 }
