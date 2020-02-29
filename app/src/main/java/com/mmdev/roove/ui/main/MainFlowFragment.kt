@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.02.20 15:47
+ * Last modified 29.02.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,32 +11,38 @@
 package com.mmdev.roove.ui.main
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.mmdev.roove.R
+import com.mmdev.roove.databinding.FragmentMainFlowBinding
 import com.mmdev.roove.ui.core.FlowFragment
-import com.mmdev.roove.utils.addSystemBottomPadding
-import com.mmdev.roove.utils.addSystemTopPadding
 import kotlinx.android.synthetic.main.fragment_main_flow.*
 
 /**
  * This is the documentation block about the class
  */
 
-class MainFlowFragment: FlowFragment(R.layout.fragment_main_flow) {
+class MainFlowFragment: FlowFragment() {
 
 	private lateinit var navControllerMain: NavController
 
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+	                          savedInstanceState: Bundle?) =
+		FragmentMainFlowBinding.inflate(inflater, container, false)
+			.apply {
+				executePendingBindings()
+			}
+			.root
+
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		containerMain.addSystemTopPadding()
-		bottomNavigationView.addSystemBottomPadding()
 
 		//set selected bottom menu item on startup
 		bottomNavigationView.selectedItemId = R.id.bottomCards
 		fabCards.isSelected = true
-
 
 		val navHost =
 			childFragmentManager.findFragmentById(R.id.mainHostFragment) as NavHostFragment

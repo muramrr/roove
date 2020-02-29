@@ -2,74 +2,79 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.02.20 17:04
+  ~ Last modified 29.02.20 17:23
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
-	android:id="@+id/containerMain"
+<layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-	<fragment
-		android:id="@+id/mainHostFragment"
-		android:layout_width="0dp"
-		android:layout_height="0dp"
-		android:name="androidx.navigation.fragment.NavHostFragment"
-		app:navGraph="@navigation/main_navigation"
-		app:defaultNavHost="true"
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/containerMain"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:paddingTopSystemWindowInsets = "@{true}">
 
-		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintBottom_toTopOf="@id/containerBottomNavigation"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		/>
+		<fragment
+			android:id="@+id/mainHostFragment"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:name="androidx.navigation.fragment.NavHostFragment"
+			app:navGraph="@navigation/main_navigation"
+			app:defaultNavHost="true"
 
-	<androidx.coordinatorlayout.widget.CoordinatorLayout
-		android:id="@+id/containerBottomNavigation"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintBottom_toBottomOf="parent">
-
-		<com.google.android.material.bottomnavigation.BottomNavigationView
-			android:id="@+id/bottomNavigationView"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			app:itemIconTint="@color/white_tint_checked"
-			app:itemTextColor="@color/white_tint_checked"
-
-			app:labelVisibilityMode="labeled"
-			app:menu="@menu/bottom_navigation_menu"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/containerBottomNavigation"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
 			/>
 
-	</androidx.coordinatorlayout.widget.CoordinatorLayout>
+		<androidx.coordinatorlayout.widget.CoordinatorLayout
+			android:id="@+id/containerBottomNavigation"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
 
-	<com.google.android.material.floatingactionbutton.FloatingActionButton
-		android:id="@+id/fabCards"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:scaleType="center"
-		android:src="@drawable/ic_cards_24dp"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent">
 
-		app:backgroundTint="@color/lolite_tint_selected"
-		app:tint="@color/white_tint_selected"
+			<com.google.android.material.bottomnavigation.BottomNavigationView
+				android:id="@+id/bottomNavigationView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
 
-		app:elevation="2dp"
-		app:fabSize="auto"
+				app:itemIconTint="@color/white_tint_checked"
+				app:itemTextColor="@color/white_tint_checked"
+				app:labelVisibilityMode="labeled"
+				app:menu="@menu/bottom_navigation_menu"
+				app:paddingBottomSystemWindowInsets = "@{true}"
+				/>
 
-		app:layout_anchorGravity="top|center"
+		</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="@id/containerBottomNavigation"
-		/>
+		<com.google.android.material.floatingactionbutton.FloatingActionButton
+			android:id="@+id/fabCards"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:scaleType="center"
+			android:src="@drawable/ic_cards_24dp"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+			app:backgroundTint="@color/lolite_tint_selected"
+			app:tint="@color/white_tint_selected"
+
+			app:elevation="2dp"
+			app:fabSize="auto"
+
+			app:layout_anchorGravity="top|center"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="@id/containerBottomNavigation"
+			/>
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:33
+ * Last modified 29.02.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,7 +50,6 @@ import com.mmdev.roove.ui.core.*
 import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
 import com.mmdev.roove.ui.dating.chat.ChatViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
-import com.mmdev.roove.utils.addSystemBottomPadding
 import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_chat.*
 import java.io.File
@@ -178,7 +177,6 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		containerChat.addSystemBottomPadding()
 
 		edTextMessageInput.addTextChangedListener(object: TextWatcher{
 			override fun afterTextChanged(s: Editable?) {}

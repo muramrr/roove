@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:47
+ * Last modified 29.02.20 17:24
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,29 +10,28 @@
 
 package com.mmdev.roove.ui
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.updatePadding
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.core.injector
+import com.mmdev.roove.databinding.ActivityMainBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.auth.view.AuthFlowFragment
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
 import com.mmdev.roove.ui.custom.LoadingDialog
 import com.mmdev.roove.ui.main.MainFlowFragment
-import com.mmdev.roove.utils.doOnApplyWindowInsets
 import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity: AppCompatActivity(R.layout.activity_main) {
+class MainActivity: AppCompatActivity() {
 
 	private lateinit var progressDialog: LoadingDialog
 
@@ -60,17 +59,10 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
 						View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 			//status bar and navigation bar colors assigned in theme
 		}
-
+		
 		super.onCreate(savedInstanceState)
 
-		main_activity_container.doOnApplyWindowInsets { view, insets, initialPadding ->
-			view.updatePadding(left = initialPadding.left + insets.systemWindowInsetLeft,
-			                   right = initialPadding.right + insets.systemWindowInsetRight)
-			insets.replaceSystemWindowInsets(Rect(0,
-			                                      insets.systemWindowInsetTop,
-			                                      0,
-			                                      insets.systemWindowInsetBottom))!!
-		}
+		val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
 		GlideApp.with(ivMainSplashLogo.context)
 			.asGif()

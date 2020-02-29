@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.02.20 17:09
+ * Last modified 29.02.20 17:38
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,11 +11,9 @@
 package com.mmdev.roove.utils
 
 import android.content.Context
-import android.graphics.Rect
 import android.view.View
+import android.view.WindowInsets
 import android.widget.Toast
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -36,88 +34,62 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
 
 fun Context.dp2px(dpValue: Float): Int = (dpValue * this.resources.displayMetrics.density + 0.5f).toInt()
 
-fun View.addSystemTopPadding(targetView: View = this, isConsumed: Boolean = false) {
+fun View.addSystemTopPadding(targetView: View = this) =
 	doOnApplyWindowInsets { _, insets, initialPadding ->
 		targetView.updatePadding(top = initialPadding.top + insets.systemWindowInsetTop)
-
-		if (isConsumed) {
-			insets.replaceSystemWindowInsets(Rect(insets.systemWindowInsetLeft,
-				                                0,
-				                                insets.systemWindowInsetRight,
-				                                insets.systemWindowInsetBottom))!!
-		} else {
-			insets
-		}
 	}
-}
 
-fun View.addSystemBottomPadding(targetView: View = this, isConsumed: Boolean = false) {
+
+fun View.addSystemBottomPadding(targetView: View = this) =
 	doOnApplyWindowInsets { _, insets, initialPadding ->
 		targetView.updatePadding(bottom = initialPadding.bottom + insets.systemWindowInsetBottom)
-
-		if (isConsumed) {
-			insets.replaceSystemWindowInsets(Rect(insets.systemWindowInsetLeft,
-				                                insets.systemWindowInsetTop,
-				                                insets.systemWindowInsetRight,
-				                                0))!!
-		} else {
-			insets
-		}
 	}
-}
 
-fun View.addSystemRightPadding(targetView: View = this, isConsumed: Boolean = false) {
+fun View.addSystemRightPadding(targetView: View = this) =
 	doOnApplyWindowInsets { _, insets, initialPadding ->
 		targetView.updatePadding(right = initialPadding.right + insets.systemWindowInsetRight)
-
-		if (isConsumed) {
-			insets.replaceSystemWindowInsets(Rect(insets.systemWindowInsetLeft,
-				                                insets.systemWindowInsetTop,
-				                                0,
-				                                insets.systemWindowInsetBottom))!!
-		} else {
-			insets
-		}
 	}
-}
 
-fun View.addSystemLeftPadding(targetView: View = this, isConsumed: Boolean = false) {
+
+fun View.addSystemLeftPadding(targetView: View = this) =
 	doOnApplyWindowInsets { _, insets, initialPadding ->
 		targetView.updatePadding(left = initialPadding.left + insets.systemWindowInsetLeft)
-
-		if (isConsumed) {
-			insets.replaceSystemWindowInsets(Rect(0,
-				                                insets.systemWindowInsetTop,
-				                                insets.systemWindowInsetRight,
-				                                insets.systemWindowInsetBottom))!!
-		} else {
-			insets
-		}
 	}
-}
 
 
-fun View.doOnApplyWindowInsets(block: (View, WindowInsetsCompat, Rect) -> WindowInsetsCompat) {
+
+fun View.doOnApplyWindowInsets(f: (View, WindowInsets, InitialPadding) -> Unit) {
+	// Create a snapshot of the view's padding state
 	val initialPadding = recordInitialPaddingForView(this)
-	ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
-		block(v, insets, initialPadding)
-
+	// Set an actual OnApplyWindowInsetsListener which proxies to the given
+	// lambda, also passing in the original padding state
+	setOnApplyWindowInsetsListener { v, insets ->
+		f(v, insets, initialPadding)
+		// Always return the insets, so that children can also use them
+		insets
 	}
+	// request some insets
 	requestApplyInsetsWhenAttached()
 }
 
+data class InitialPadding(val left: Int, val top: Int,
+                          val right: Int, val bottom: Int)
+
 private fun recordInitialPaddingForView(view: View) =
-	Rect(view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom)
+	InitialPadding(view.paddingLeft, view.paddingTop,
+	               view.paddingRight, view.paddingBottom)
 
 private fun View.requestApplyInsetsWhenAttached() {
 	if (isAttachedToWindow) {
-		ViewCompat.requestApplyInsets(this)
-	}
-	else {
-		addOnAttachStateChangeListener(object: View.OnAttachStateChangeListener {
+		// We're already attached, just request as normal
+		requestApplyInsets()
+	} else {
+		// We're not attached to the hierarchy, add a listener to
+		// request when we are
+		addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
 			override fun onViewAttachedToWindow(v: View) {
 				v.removeOnAttachStateChangeListener(this)
-				ViewCompat.requestApplyInsets(v)
+				v.requestApplyInsets()
 			}
 
 			override fun onViewDetachedFromWindow(v: View) = Unit
