@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 25.02.20 16:11
+  ~ Last modified 29.02.20 17:48
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,7 +26,9 @@
 		android:id="@+id/containerChat"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/colorPrimaryDark">
+		android:background="@color/colorPrimaryDark"
+		app:paddingBottomSystemWindowInsets="@{true}"
+		>
 
 		<androidx.appcompat.widget.Toolbar
 			android:id="@+id/toolbarChat"

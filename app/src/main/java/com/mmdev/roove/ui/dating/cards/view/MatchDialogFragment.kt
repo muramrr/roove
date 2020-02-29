@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.02.20 17:30
+ * Last modified 29.02.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.DialogCardsMatchBinding
-import com.mmdev.roove.utils.addSystemBottomPadding
 import kotlinx.android.synthetic.main.dialog_cards_match.*
 
 /**
@@ -25,7 +24,6 @@ import kotlinx.android.synthetic.main.dialog_cards_match.*
  */
 
 class MatchDialogFragment: DialogFragment() {
-
 
 	private var receivedName = ""
 	private var receivedPhotoUrl = ""
@@ -65,7 +63,5 @@ class MatchDialogFragment: DialogFragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		tvMatchDialogBack.setOnClickListener { dialog?.dismiss() }
-		dialogMatchContainer.addSystemBottomPadding()
-
 	}
 }

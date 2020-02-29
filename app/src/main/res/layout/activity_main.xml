@@ -2,26 +2,32 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 08.01.20 18:25
+  ~ Last modified 29.02.20 17:23
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<FrameLayout android:id="@+id/main_activity_container"
-	android:layout_height="match_parent"
-	android:layout_width="match_parent"
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools">
-
-	<ImageView
-		android:id="@+id/ivMainSplashLogo"
-		android:background="@color/black"
-		android:layout_width="match_parent"
+	<FrameLayout
+		android:id="@+id/main_activity_container"
 		android:layout_height="match_parent"
-		android:src="@drawable/logo_loading"
-		tools:ignore="ContentDescription"/>
+		android:layout_width="match_parent"
+		app:paddingRightSystemWindowInsets = "@{true}"
+		app:paddingLeftSystemWindowInsets = "@{true}"
+		>
 
-</FrameLayout>
+		<ImageView
+			android:id="@+id/ivMainSplashLogo"
+			android:background="@color/black"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:src="@drawable/logo_loading"
+			tools:ignore="ContentDescription"/>
+
+	</FrameLayout>
+</layout>
