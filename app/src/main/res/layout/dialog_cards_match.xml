@@ -3,7 +3,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.01.20 19:09
+  ~ Last modified 29.02.20 17:52
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,10 +31,12 @@
 		android:id="@+id/dialogMatchContainer"
 		android:background="@color/colorPrimaryDark"
 		android:layout_height="match_parent"
-		android:layout_width="match_parent" >
+		android:layout_width="match_parent"
+		app:paddingBottomSystemWindowInsets="@{true}"
+		>
 
 		<TextView
-			android:id="@+id/its_a_match_tv"
+			android:id="@+id/tvItIsMatch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 
@@ -67,7 +69,7 @@
 			tools:ignore="ContentDescription" />
 
 		<TextView
-			android:id="@+id/matched_name"
+			android:id="@+id/tvMatchedName"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@{name, default = @string/default_name}"

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.01.20 19:25
+ * Last modified 29.02.20 17:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 
 package com.mmdev.roove.utils
 
+import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.databinding.BindingAdapter
@@ -58,4 +59,28 @@ object BindingAdapterUtils {
 					.error(R.drawable.placeholder_image))
 	}
 
+	@JvmStatic
+	@BindingAdapter("app:paddingLeftSystemWindowInsets",
+	                "app:paddingTopSystemWindowInsets",
+	                "app:paddingRightSystemWindowInsets",
+	                "app:paddingBottomSystemWindowInsets",
+	                requireAll = false)
+	fun applySystemWindowInsets(view: View,
+	                            applyLeft: Boolean,
+	                            applyTop: Boolean,
+	                            applyRight: Boolean,
+	                            applyBottom: Boolean) {
+		view.doOnApplyWindowInsets { targetView, insets, padding ->
+
+			val left = if (applyLeft) insets.systemWindowInsetLeft else 0
+			val top = if (applyTop) insets.systemWindowInsetTop else 0
+			val right = if (applyRight) insets.systemWindowInsetRight else 0
+			val bottom = if (applyBottom) insets.systemWindowInsetBottom else 0
+
+			targetView.setPadding(padding.left + left,
+			                      padding.top + top,
+			                      padding.right + right,
+			                      padding.bottom + bottom)
+		}
+	}
 }
