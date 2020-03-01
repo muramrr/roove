@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 17:04
+ * Last modified 01.03.20 17:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
@@ -85,15 +86,15 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 		} ?: throw Exception("Invalid Activity")
 
-		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
+		sharedViewModel.getCurrentUser().observe(this, Observer {
 			userItem = it
+			initProfile(it)
 		})
 
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-		initProfile()
 
 		changerNameSetup()
 		changerGenderSetup()
@@ -113,19 +114,17 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 	}
 
 
-	private fun initProfile() {
-		if (this::userItem.isInitialized) {
-			edSettingsEditName.setText(userItem.baseUserInfo.name)
-			dropSettingsEditGender.setText(userItem.baseUserInfo.gender)
-			dropSettingsEditPreferredGender.setText(userItem.baseUserInfo.preferredGender)
-			tvSettingsEditAge.text = "Age: ${userItem.baseUserInfo.age}"
-			sliderSettingsEditAge.value = userItem.baseUserInfo.age.toFloat()
+	private fun initProfile(userItem: UserItem) {
+		edSettingsEditName.setText(userItem.baseUserInfo.name)
+		dropSettingsEditGender.setText(userItem.baseUserInfo.gender)
+		dropSettingsEditPreferredGender.setText(userItem.baseUserInfo.preferredGender)
+		tvSettingsEditAge.text = "Age: ${userItem.baseUserInfo.age}"
+		sliderSettingsEditAge.value = userItem.baseUserInfo.age.toFloat()
 
-			cityToDisplay = cityList.filterValues { it == userItem.baseUserInfo.city }.keys.first()
-			dropSettingsEditCity.setText(cityToDisplay)
+		cityToDisplay = cityList.filterValues { it == userItem.baseUserInfo.city }.keys.first()
+		dropSettingsEditCity.setText(cityToDisplay)
 
-			edSettingsEditDescription.setText(userItem.aboutText)
-		}
+		edSettingsEditDescription.setText(userItem.aboutText)
 	}
 
 	private fun changerNameSetup() {
@@ -169,7 +168,7 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
 			override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-				layoutSettingsEditName.isCounterEnabled = true
+				layoutSettingsEditDescription.isCounterEnabled = true
 			}
 
 			override fun afterTextChanged(s: Editable) {
@@ -192,6 +191,14 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 				v.clearFocus()
 			}
 			return@setOnEditorActionListener false
+		}
+
+		edSettingsEditDescription.setOnTouchListener { view, event ->
+			view.parent.requestDisallowInterceptTouchEvent(true)
+			if ((event.action and MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+				view.parent.requestDisallowInterceptTouchEvent(false)
+			}
+			return@setOnTouchListener false
 		}
 
 	}
@@ -240,6 +247,11 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			userItem.baseUserInfo.age = age
 			tvSettingsEditAge.text = "Age: $age"
 		}
+	}
+
+	override fun onResume() {
+		super.onResume()
+		if (this::userItem.isInitialized) initProfile(userItem)
 	}
 
 	override fun onBackPressed() {
