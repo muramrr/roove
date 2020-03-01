@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.02.20 17:24
+ * Last modified 01.03.20 16:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,10 +44,6 @@ class MainActivity: AppCompatActivity() {
 	companion object{
 		private const val TAG = "mylogs_MainActivity"
 	}
-
-//	init {
-//		//Fakeit.initWithLocale("ru")
-//	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -98,9 +94,7 @@ class MainActivity: AppCompatActivity() {
 		})
 
 		//creating fake users, do not call this on UI thread
-		//UtilityManager.createFakeUsersOnRemote()
-//		for (i in 0 until 20){
-//			UtilityManager.generateConversationOnRemote()
+//		for (i in 0 until 200){
 //			UtilityManager.generateMatchesOnRemote()
 //		}
 
@@ -131,9 +125,5 @@ class MainActivity: AppCompatActivity() {
 		ivMainSplashLogo.visibility = View.GONE
 
 	}
-
-
-
-
 
 }
