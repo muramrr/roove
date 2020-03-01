@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.02.20 18:25
+ * Last modified 01.03.20 18:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,57 +11,46 @@
 package com.mmdev.roove.ui.settings
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.mmdev.roove.R
-import com.mmdev.roove.core.glide.GlideApp
+import com.mmdev.roove.databinding.FragmentSettingsPhotoItemBinding
 
 /**
- * This is the documentation block about the class
+ * better to use notifyItemInserted instead of notifyDataSetChanged()
+ * but bug with custom layout manager exists
  */
 
-class SettingsUserPhotoAdapter (private var photosUrlsList: List<String>):
+class SettingsUserPhotoAdapter (private var photosUrlsList: MutableList<String>):
 		RecyclerView.Adapter<SettingsUserPhotoAdapter.SettingsPhotoViewHolder>() {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-		SettingsPhotoViewHolder(LayoutInflater.from(parent.context)
-			                    .inflate(R.layout.fragment_settings_photo_item,
-			                             parent,
-			                             false))
+		SettingsPhotoViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+		                                                R.layout.fragment_settings_photo_item,
+		                                                parent,
+		                                                false))
 
 
-	override fun onBindViewHolder(viewHolder: SettingsPhotoViewHolder, position: Int) {
+	override fun onBindViewHolder(viewHolder: SettingsPhotoViewHolder, position: Int) =
 		viewHolder.bind(photosUrlsList[position])
-	}
 
 
 	override fun getItemCount() = photosUrlsList.size
 
 	fun updateData(newPhotoUrls: List<String>) {
-		photosUrlsList = newPhotoUrls
+		photosUrlsList = newPhotoUrls.toMutableList()
 		notifyDataSetChanged()
 	}
 
-
-	inner class SettingsPhotoViewHolder(view: View): RecyclerView.ViewHolder(view) {
-
-		private val ivUserPhoto: ImageView = itemView.findViewById(R.id.ivUserItemPhoto)
+	inner class SettingsPhotoViewHolder(private val binding: FragmentSettingsPhotoItemBinding):
+			RecyclerView.ViewHolder(binding.root) {
 
 		fun bind(photoUrl: String) {
-
-			GlideApp.with(ivUserPhoto.context)
-				.load(photoUrl)
-				.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-				.placeholder(R.drawable.placeholder_profile)
-				.into(ivUserPhoto)
-
+			binding.photoUrl = photoUrl
+			binding.executePendingBindings()
 		}
 
 	}
-
-
 
 }

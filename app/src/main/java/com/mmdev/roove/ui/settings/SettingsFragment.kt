@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:05
+ * Last modified 01.03.20 18:23
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,7 +54,7 @@ import kotlin.math.round
 
 class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 
-	private val mSettingsPhotoAdapter = SettingsUserPhotoAdapter(listOf())
+	private val mSettingsPhotoAdapter = SettingsUserPhotoAdapter(mutableListOf())
 	private val mPlacesToGoAdapter = PlacesToGoAdapter(listOf())
 
 	private lateinit var authViewModel: AuthViewModel
@@ -84,9 +84,10 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 			userItem = it
 			mSettingsPhotoAdapter.updateData(it.photoURLs)
 			mPlacesToGoAdapter.updateData(it.placesToGo.toList())
+			initProfile(it)
 		})
 
-		remoteRepoViewModel.photoURLs.observe(this, Observer {
+		remoteRepoViewModel.photoUrls.observe(this, Observer {
 			mSettingsPhotoAdapter.updateData(it)
 		})
 	}
@@ -153,16 +154,17 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 			findNavController().navigate(R.id.action_settings_to_settingsEditInfoFragment)
 		}
 
+	}
 
+	private fun initProfile(userItem: UserItem) {
+		val nameAgeText = "${userItem.baseUserInfo.name}, ${userItem.baseUserInfo.age}"
+		tvNameAge.text = nameAgeText
+		tvSettingsAboutText.text = userItem.aboutText
 	}
 
 	override fun onResume() {
 		super.onResume()
-		if (this::userItem.isInitialized) {
-			val nameAgeText = "${userItem.baseUserInfo.name}, ${userItem.baseUserInfo.age}"
-			tvNameAge.text = nameAgeText
-			tvSettingsAboutText.text = userItem.aboutText
-		}
+		if (this::userItem.isInitialized) initProfile(userItem)
 	}
 
 	/*
