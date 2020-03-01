@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.03.20 17:22
+ * Last modified 01.03.20 19:04
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,6 +38,8 @@ import kotlinx.android.synthetic.main.fragment_settings_edit_info.*
 class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_info) {
 
 	private lateinit var userItem: UserItem
+
+	private val mEditorPhotoAdapter = SettingsEditInfoPhotoAdapter(mutableListOf())
 
 	private var name = ""
 	private var age = 0
@@ -89,12 +91,14 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		sharedViewModel.getCurrentUser().observe(this, Observer {
 			userItem = it
 			initProfile(it)
+			mEditorPhotoAdapter.updateData(it.photoURLs)
 		})
 
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+		rvSettingsEditPhotos.adapter =  mEditorPhotoAdapter
 
 		changerNameSetup()
 		changerGenderSetup()
@@ -125,6 +129,8 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		dropSettingsEditCity.setText(cityToDisplay)
 
 		edSettingsEditDescription.setText(userItem.aboutText)
+
+
 	}
 
 	private fun changerNameSetup() {
