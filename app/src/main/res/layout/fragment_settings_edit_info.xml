@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 01.03.20 17:20
+  ~ Last modified 01.03.20 17:33
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -291,9 +291,6 @@
 
 			</com.google.android.material.textfield.TextInputLayout>
 
-
-
-
 			<!--save-->
 			<com.google.android.material.button.MaterialButton
 				android:id="@+id/btnSettingsEditSave"
@@ -308,7 +305,7 @@
 				android:textSize="20sp"
 				android:textAllCaps="false"
 
-				android:backgroundTint="@color/lolite"
+				app:backgroundTint="@color/lolite_tint_enabled"
 				app:rippleColor="@color/black_50"
 
 				style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
