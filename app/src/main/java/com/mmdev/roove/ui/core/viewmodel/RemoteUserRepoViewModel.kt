@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:20
+ * Last modified 01.03.20 18:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,7 +35,7 @@ class RemoteUserRepoViewModel @Inject constructor(
 	private val retrievedUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	private val isUserUpdated: MutableLiveData<Boolean> = MutableLiveData()
 
-	val photoURLs: MutableLiveData<List<String>> = MutableLiveData()
+	val photoUrls: MutableLiveData<List<String>> = MutableLiveData()
 
 	companion object{
 		private const val TAG = "mylogs_RemoteRepoViewModel"
@@ -83,7 +83,7 @@ class RemoteUserRepoViewModel @Inject constructor(
 		disposables.add(uploadUserProfilePhotoExecution(photoUri, userItem)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       if (it.containsKey(100.00)) photoURLs.value = it.getValue(100.00)
+	                       if (it.containsKey(100.00)) photoUrls.value = it.getValue(100.00)
 	                       else Log.wtf(TAG, "Upload is ${"%.2f".format(it.keys.elementAt(0))}% done")
                        },
                        {

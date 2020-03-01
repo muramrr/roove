@@ -2,29 +2,42 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.02.20 16:14
+  ~ Last modified 01.03.20 18:25
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<androidx.cardview.widget.CardView
-	android:layout_height="wrap_content"
-	android:layout_width="wrap_content"
-
-	app:cardBackgroundColor="@color/colorPrimaryDark"
-	app:cardCornerRadius="15dp"
-
+<layout
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<ImageView
-		android:id="@+id/ivUserItemPhoto"
-		android:layout_width="@dimen/rvSettingsPhotoElementWidth"
-		android:layout_height="300dp"
-		android:src="@drawable/placeholder_profile"
-		android:scaleType="center"/>
+	<data>
+
+		<variable
+			name="photoUrl"
+			type="String" />
+
+	</data>
+
+	<androidx.cardview.widget.CardView
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+
+		app:cardBackgroundColor="@color/colorPrimaryDark"
+		app:cardCornerRadius="15dp">
+
+		<ImageView
+			android:id="@+id/ivUserItemPhoto"
+			android:layout_width="@dimen/rvSettingsPhotoElementWidth"
+			android:layout_height="300dp"
+			android:src="@drawable/placeholder_profile"
+			android:scaleType="center"
+
+			app:bindImageUrl="@{photoUrl}"
+			android:contentDescription="@string/description_user_photo" />
 
 
-</androidx.cardview.widget.CardView>
+	</androidx.cardview.widget.CardView>
+</layout>

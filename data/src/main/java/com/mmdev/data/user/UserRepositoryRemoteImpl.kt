@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:53
+ * Last modified 01.03.20 18:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -155,7 +155,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 				.child(namePhoto)
 			val uploadTask = storageRef.putFile(Uri.parse(photoUri))
 				.addOnProgressListener {
-					val progress = (100.0 * it.bytesTransferred) / it.totalByteCount
+					val progress = (99.0 * it.bytesTransferred) / it.totalByteCount
 					emitter.onNext(hashMapOf(progress to listOf()))
 				}
 				.addOnSuccessListener {
