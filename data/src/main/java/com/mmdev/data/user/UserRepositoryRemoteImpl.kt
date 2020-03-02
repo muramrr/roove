@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 20:03
+ * Last modified 02.03.20 20:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -86,18 +86,20 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 
 	override fun deletePhoto(photoItem: PhotoItem, userItem: UserItem): Completable =
 		Completable.create { emitter ->
-			storage
-				.child(GENERAL_FOLDER_STORAGE_IMG)
-				.child(SECONDARY_FOLDER_STORAGE_IMG)
-				.child(userItem.baseUserInfo.userId)
-				.child(photoItem.fileName)
-				.delete()
-				.addOnSuccessListener {
-					fillUserGeneralRef(userItem.baseUserInfo)
-						.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayRemove(photoItem))
-					emitter.onComplete()
-				}
-				.addOnFailureListener { emitter.onError(it) }
+			if (photoItem.fileName != "facebookPhoto")
+				storage
+					.child(GENERAL_FOLDER_STORAGE_IMG)
+					.child(SECONDARY_FOLDER_STORAGE_IMG)
+					.child(userItem.baseUserInfo.userId)
+					.child(photoItem.fileName)
+					.delete()
+					.addOnSuccessListener {
+						fillUserGeneralRef(userItem.baseUserInfo)
+							.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayRemove(photoItem))
+						emitter.onComplete()
+					}
+					.addOnFailureListener { emitter.onError(it) }
+			else emitter.onError(Exception("Facebook photo is not removable"))
 		}.subscribeOn(Schedulers.io())
 
 	override fun fetchUserInfo(): Single<UserItem> {
