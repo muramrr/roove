@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:53
+ * Last modified 02.03.20 19:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 package com.mmdev.business.remote
 
 import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -25,6 +26,8 @@ interface RemoteUserRepository {
 
 	fun createUserOnRemote(userItem: UserItem): Completable
 
+	fun deletePhoto(photoItem: PhotoItem, userItem: UserItem): Completable
+
 	fun deleteUser(userItem: UserItem): Completable
 
 	fun fetchUserInfo(): Single<UserItem>
@@ -33,6 +36,6 @@ interface RemoteUserRepository {
 
 	fun updateUserItem(userItem: UserItem): Completable
 
-	fun uploadUserProfilePhoto(photoUri: String, userItem: UserItem): Observable<HashMap<Double, List<String>>>
+	fun uploadUserProfilePhoto(photoUri: String, userItem: UserItem): Observable<HashMap<Double, List<PhotoItem>>>
 
 }

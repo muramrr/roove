@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 18:18
+ * Last modified 02.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,13 +79,13 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 
 		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			userItem = it
-			mSettingsPhotoAdapter.updateData(it.photoURLs)
+			mSettingsPhotoAdapter.updateData(it.photoURLs.map { photoItem -> photoItem.fileUrl })
 			mPlacesToGoAdapter.updateData(it.placesToGo.toList())
 			initProfile(it)
 		})
 
 		remoteRepoViewModel.photoUrls.observe(this, Observer {
-			mSettingsPhotoAdapter.updateData(it)
+			mSettingsPhotoAdapter.updateData(it.map { photoItem -> photoItem.fileUrl })
 		})
 	}
 

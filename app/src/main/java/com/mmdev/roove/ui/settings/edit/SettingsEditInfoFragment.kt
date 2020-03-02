@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 18:22
+ * Last modified 02.03.20 19:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,7 +79,7 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		sharedViewModel.getCurrentUser().observe(this, Observer {
 			userItem = it
 			initProfile(it)
-			mEditorPhotoAdapter.updateData(it.photoURLs)
+			mEditorPhotoAdapter.updateData(it.photoURLs.map { photoItem -> photoItem.fileUrl })
 		})
 
 	}
@@ -104,6 +104,20 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			adapter =  mEditorPhotoAdapter
 			addItemDecoration(GridItemDecoration())
 		}
+
+		mEditorPhotoAdapter.setOnItemClickListener(object: SettingsEditInfoPhotoAdapter
+		                                                   .OnItemClickListener {
+			override fun onItemClick(view: View, position: Int) {
+				remoteRepoViewModel.deletePhoto(userItem.photoURLs[position], userItem)
+				remoteRepoViewModel.photoDeletionStatus.observeOnce(this@SettingsEditInfoFragment,
+				                                                    Observer{
+					if (it) {
+						mEditorPhotoAdapter.removeAt(position)
+						userItem.photoURLs.removeAt(position)
+					}
+				})
+			}
+		})
 
 		//touch event guarantee that if user want to scroll or touch outside of edit box
 		//keyboard hide and edittext focus clear

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.03.20 18:21
+ * Last modified 02.03.20 19:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.roove.ui.core.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.remote.usecase.*
 import com.mmdev.roove.ui.core.BaseViewModel
@@ -24,6 +25,7 @@ import javax.inject.Inject
  */
 
 class RemoteUserRepoViewModel @Inject constructor(
+	private val deletePhotoUC: DeletePhotoUseCase,
 	private val deleteUserUC: DeleteUserUseCase,
 	private val fetchUserUC: FetchUserInfoUseCase,
 	private val getFullUserInfoUC: GetFullUserInfoUseCase,
@@ -35,12 +37,27 @@ class RemoteUserRepoViewModel @Inject constructor(
 	private val retrievedUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	private val isUserUpdated: MutableLiveData<Boolean> = MutableLiveData()
 
-	val photoUrls: MutableLiveData<List<String>> = MutableLiveData()
+
+	val photoDeletionStatus: MutableLiveData<Boolean> = MutableLiveData()
+	val photoUrls: MutableLiveData<List<PhotoItem>> = MutableLiveData()
 
 	companion object{
 		private const val TAG = "mylogs_RemoteRepoViewModel"
 	}
 
+
+	fun deletePhoto(photoItem: PhotoItem, userItem: UserItem){
+		disposables.add(deletePhotoExecution(photoItem, userItem)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+	                       photoDeletionStatus.value = true
+	                       Log.wtf(TAG, "photo deleted")
+                       },
+                       {
+	                       Log.wtf(TAG, "photo delete error: $it")
+	                       photoDeletionStatus.value = false
+                       }))
+	}
 
 	fun fetchUserItem() {
 		disposables.add(fetchUserInfoExecution()
@@ -91,12 +108,15 @@ class RemoteUserRepoViewModel @Inject constructor(
                        }))
 	}
 
+
+
 	fun getFetchedUserItem() = fetchedUserItem
 	fun getRetrievedUserItem() = retrievedUserItem
 	fun getUserUpdateStatus() = isUserUpdated
 
 
-
+	private fun deletePhotoExecution(photoItem: PhotoItem, userItem: UserItem) =
+		deletePhotoUC.execute(photoItem, userItem)
 	private fun deleteUserExecution(userItem: UserItem) =
 		deleteUserUC.execute(userItem)
 	private fun fetchUserInfoExecution() =
