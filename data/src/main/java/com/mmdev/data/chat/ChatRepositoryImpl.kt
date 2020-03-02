@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:30
+ * Last modified 02.03.20 20:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,10 +17,10 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.*
 import com.google.firebase.storage.StorageReference
 import com.mmdev.business.chat.entity.MessageItem
-import com.mmdev.business.chat.entity.PhotoAttachmentItem
 import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
 import io.reactivex.*
 import io.reactivex.Observable
@@ -193,19 +193,21 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 	}
 
 
-	override fun uploadMessagePhoto(photoUri: String): Observable<PhotoAttachmentItem> {
+	override fun uploadMessagePhoto(photoUri: String): Observable<PhotoItem> {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()+".jpg"
 		val storageRef = storage
 			.child(GENERAL_FOLDER_STORAGE_IMG)
 			.child(SECONDARY_FOLDER_STORAGE_IMG)
 			.child(conversation.conversationId)
 			.child(namePhoto)
-		return Observable.create(ObservableOnSubscribe<PhotoAttachmentItem> { emitter ->
+		return Observable.create(ObservableOnSubscribe<PhotoItem> { emitter ->
 			//Log.wtf(TAG, "upload photo observable called")
 			val uploadTask = storageRef.putFile(Uri.parse(photoUri))
 				.addOnSuccessListener {
 					storageRef.downloadUrl.addOnSuccessListener {
-						val photoAttached = PhotoAttachmentItem(namePhoto, it.toString())
+						val photoAttached = PhotoItem(
+								namePhoto,
+								it.toString())
 						//Log.wtf(TAG, "photo uploaded: $photoAttached")
 						emitter.onNext(photoAttached)
 					}
@@ -257,7 +259,7 @@ class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversation.conversationId)
 
-		if (messageItem.photoAttachmentItem != null) {
+		if (messageItem.photoItem != null) {
 			// for current
 			cur.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, "Photo")
 			cur.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)

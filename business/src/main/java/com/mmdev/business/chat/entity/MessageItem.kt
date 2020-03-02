@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:53
+ * Last modified 02.03.20 19:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,10 +11,11 @@
 package com.mmdev.business.chat.entity
 
 import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.PhotoItem
 
 data class MessageItem(val sender: BaseUserInfo = BaseUserInfo(),
                        val recipientId: String = "",
                        val text: String = "",
                        var timestamp: Any? = null,
-                       val photoAttachmentItem: PhotoAttachmentItem? = PhotoAttachmentItem(),
+                       val photoItem: PhotoItem? = PhotoItem(),
                        val conversationId: String = "")

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:20
+ * Last modified 02.03.20 19:06
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -125,7 +125,8 @@ class ViewModelModule {
 	@Provides
 	@ViewModelKey(RemoteUserRepoViewModel::class)
 	fun remoteUserRepoViewModel(repo: RemoteUserRepository): ViewModel =
-		RemoteUserRepoViewModel(DeleteUserUseCase(repo),
+		RemoteUserRepoViewModel(DeletePhotoUseCase(repo),
+		                        DeleteUserUseCase(repo),
 		                        FetchUserInfoUseCase(repo),
 		                        GetFullUserInfoUseCase(repo),
 		                        UpdateUserItemUseCase(repo),

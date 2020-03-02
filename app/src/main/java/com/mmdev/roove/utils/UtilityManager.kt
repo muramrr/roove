@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.02.20 19:35
+ * Last modified 02.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -63,7 +63,7 @@ object UtilityManager {
 		                      preferredGender,
 		                      randomFemalePhotoUrlsList[Random.nextInt(0, 9)],
 		                      randomUid()),
-		         photoURLs = randomFemalePhotoUrlsList.toMutableList(),
+		         //photoURLs = randomFemalePhotoUrlsList.toMutableList(),
 		         placesToGo = mutableListOf())
 
 
