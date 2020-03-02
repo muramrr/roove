@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 17:08
+ * Last modified 02.03.20 18:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -165,11 +165,11 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 			override fun afterTextChanged(s: Editable) {
 				when {
 					s.length > layoutInputChangeName.counterMaxLength -> {
-						layoutInputChangeName.error = "Max length reached"
+						layoutInputChangeName.error = getString(R.string.text_max_length_error)
 						disableFab()
 					}
 					s.isEmpty() -> {
-						layoutInputChangeName.error = "Name must not be empty"
+						layoutInputChangeName.error = getString(R.string.text_empty_error)
 						disableFab()
 					}
 					else -> {
@@ -220,7 +220,9 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 			                                  baseUserInfo.userId)
 
 			authViewModel.signUp(UserItem(finalUserModel,
-			                              photoURLs = mutableListOf(finalUserModel.mainPhotoUrl)))
+			                              cityToDisplay = cityToDisplay,
+			                              photoURLs = mutableListOf(finalUserModel.mainPhotoUrl))
+			)
 		}
 
 
@@ -331,7 +333,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 			edInputChangeName.setText(baseUserInfo.name)
 		}
 		else if (edInputChangeName.text.isNullOrEmpty()) {
-			layoutInputChangeName.error = "Name must not be empty"
+			layoutInputChangeName.error = getString(R.string.text_empty_error)
 			disableFab()
 		}
 		layoutInputChangeName.isCounterEnabled = false

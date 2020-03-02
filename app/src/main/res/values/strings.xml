@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.02.20 17:09
+  ~ Last modified 02.03.20 18:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -73,6 +73,9 @@
 	<string name="permission_read_ext_storage_explanation">Application needs READ_EXTERNAL_STORAGE_PERMISSION in order to access your gallery. Please allow permission.</string>
 	<string name="permission_read_ext_storage_denied">Please enable READ_EXTERNAL_STORAGE_PERMISSION. Go to \nSettings -> Apps -> Permission</string>
 	<string name="default_profile_about_text">Besides, she’s a got a kind personality and she smiles a lot. All in all, she is rather attractive. People say the same about me, but I think that she is more beautiful than me.</string>
+
+	<string name="text_max_length_error">Max length reached</string>
+	<string name="text_empty_error">Field must not be empty</string>
 
 
 </resources>

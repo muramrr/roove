@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.02.20 16:41
+  ~ Last modified 02.03.20 16:58
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -131,6 +131,10 @@
 		<item name="cornerSize">8dp</item>
 	</style>
 
+	<style name="ShapeAppearanceOverlay.MyApp.Button.Rounded" parent="">
+		<item name="cornerFamily">rounded</item>
+		<item name="cornerSize">50%</item>
+	</style>
 
 
 	<style name="MyMaterialIconButton" parent="Widget.MaterialComponents.Button.TextButton">

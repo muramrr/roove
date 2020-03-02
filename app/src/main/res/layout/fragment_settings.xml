@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 25.02.20 16:11
+  ~ Last modified 02.03.20 18:10
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,14 +43,14 @@
 				app:titleTextAppearance="@style/ToolbarTitle"
 				app:titleTextColor="@color/white_85"
 
-				app:layout_constraintBottom_toTopOf="@id/rvUserPhotosList"
+				app:layout_constraintBottom_toTopOf="@id/rvSettingsUserPhotosList"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
 				/>
 
 			<androidx.recyclerview.widget.RecyclerView
-				android:id="@+id/rvUserPhotosList"
+				android:id="@+id/rvSettingsUserPhotosList"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="@dimen/general_margin_16"
@@ -74,16 +74,17 @@
 				android:src="@drawable/ic_add_a_photo_24dp"
 
 				app:backgroundTint="@color/material_orange_a700"
-				app:layout_constraintBottom_toBottomOf="@id/rvUserPhotosList"
+				app:rippleColor="@color/black_50"
 
+				app:layout_constraintBottom_toBottomOf="@id/rvSettingsUserPhotosList"
 				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/rvUserPhotosList"
-				app:rippleColor="@color/black_50" />
+				app:layout_constraintTop_toBottomOf="@id/rvSettingsUserPhotosList"
+				/>
 
 
 			<com.google.android.material.textview.MaterialTextView
-				android:id="@+id/tvNameAge"
+				android:id="@+id/tvSettingsNameAge"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="@dimen/general_margin_16"
@@ -97,7 +98,7 @@
 				app:layout_constraintTop_toBottomOf="@id/fabSettingsAddPhoto"/>
 
 			<com.google.android.material.textview.MaterialTextView
-				android:id="@+id/tvCity"
+				android:id="@+id/tvSettingsCity"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="Москва"
@@ -107,7 +108,7 @@
 
 				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/tvNameAge"
+				app:layout_constraintTop_toBottomOf="@id/tvSettingsNameAge"
 				/>
 
 			<com.google.android.material.textview.MaterialTextView
@@ -122,7 +123,7 @@
 
 				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/tvCity"
+				app:layout_constraintTop_toBottomOf="@id/tvSettingsCity"
 				app:layout_constraintBottom_toTopOf="@id/rvSettingsWantToGoList"
 				/>
 
