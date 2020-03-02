@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.02.20 18:33
+  ~ Last modified 02.03.20 16:11
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -162,7 +162,7 @@
 	<fragment
 		android:id="@+id/settingsEditInfoFragmentNav"
 		android:label="Edit"
-		android:name="com.mmdev.roove.ui.settings.SettingsEditInfoFragment"
+		android:name="com.mmdev.roove.ui.settings.edit.SettingsEditInfoFragment"
 		tools:layout="@layout/fragment_settings_edit_info" />
 
 	<!-- secondary places detailed fragment-->

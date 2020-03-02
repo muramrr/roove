@@ -1,14 +1,14 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.03.20 19:04
+ * Last modified 02.03.20 16:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.ui.settings
+package com.mmdev.roove.ui.settings.edit
 
 import android.content.Context
 import android.os.Bundle
@@ -21,6 +21,8 @@ import android.widget.ArrayAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.core.BaseFragment
@@ -39,7 +41,9 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 	private lateinit var userItem: UserItem
 
-	private val mEditorPhotoAdapter = SettingsEditInfoPhotoAdapter(mutableListOf())
+	private val mEditorPhotoAdapter =
+		SettingsEditInfoPhotoAdapter(
+				mutableListOf())
 
 	private var name = ""
 	private var age = 0
@@ -98,7 +102,10 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-		rvSettingsEditPhotos.adapter =  mEditorPhotoAdapter
+		rvSettingsEditPhotos.apply {
+			adapter =  mEditorPhotoAdapter
+			addItemDecoration(DividerItemDecoration(this.context, VERTICAL))
+		}
 
 		changerNameSetup()
 		changerGenderSetup()
@@ -110,8 +117,8 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			remoteRepoViewModel.updateUserItem(userItem)
 			remoteRepoViewModel.getUserUpdateStatus().observeOnce(this, Observer {
 				if (it) {
-					context?.showToastText("Successfully saved")
 					sharedViewModel.userSelected.value = userItem
+					context?.showToastText("Successfully saved")
 				}
 			})
 		}
@@ -129,7 +136,6 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		dropSettingsEditCity.setText(cityToDisplay)
 
 		edSettingsEditDescription.setText(userItem.aboutText)
-
 
 	}
 
