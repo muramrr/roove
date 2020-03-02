@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.03.20 16:58
+  ~ Last modified 02.03.20 18:49
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -173,7 +173,7 @@
 		<item name="android:fontFamily">@font/rubik_regular</item>
 		<item name="textAllCaps">false</item>
 		<item name="android:textColor">@color/white_10</item>
-		<item name="android:textSize">36sp</item>
+		<item name="android:textSize">32sp</item>
 	</style>
 
 	<!-- uncollapsed toolbar profile title -->

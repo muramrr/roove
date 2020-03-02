@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.03.20 17:34
+  ~ Last modified 02.03.20 18:36
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@
 	</data>
 
 	<FrameLayout
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:background="@color/transparent"
 		>
@@ -30,14 +30,15 @@
 		<androidx.cardview.widget.CardView
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
-
+			android:layout_marginTop="@dimen/general_margin_16"
+			android:layout_marginEnd="@dimen/general_margin_16"
 			app:cardBackgroundColor="@color/colorPrimaryDark"
 			app:cardCornerRadius="15dp">
 
 			<ImageView
 				android:layout_width="@dimen/rvSettingsEditPhotoElementWidth"
 				android:layout_height="@dimen/rvSettingsEditPhotoElementHeight"
-				android:src="@drawable/placeholder_profile"
+				android:background="@color/colorPrimary"
 				android:layout_gravity="center"
 
 				android:scaleType="centerCrop"
@@ -52,8 +53,6 @@
 			android:layout_width="48dp"
 			android:layout_height="48dp"
 			android:layout_gravity="end|top"
-			android:layout_marginBottom="@dimen/general_margin_16"
-			android:layout_marginStart="@dimen/general_margin_16"
 
 			android:insetTop="0dp"
 			android:insetBottom="0dp"
