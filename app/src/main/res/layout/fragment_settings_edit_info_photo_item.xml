@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 01.03.20 18:58
+  ~ Last modified 02.03.20 17:34
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,33 +21,51 @@
 
 	</data>
 
-	<androidx.cardview.widget.CardView
+	<FrameLayout
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
+		android:background="@color/transparent"
+		>
 
-		app:cardBackgroundColor="@color/colorPrimaryDark"
-		app:cardCornerRadius="15dp">
+		<androidx.cardview.widget.CardView
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
 
-		<ImageView
-			android:layout_width="@dimen/rvSettingsPhotoElementWidth"
-			android:layout_height="300dp"
-			android:src="@drawable/placeholder_profile"
-			android:scaleType="center"
+			app:cardBackgroundColor="@color/colorPrimaryDark"
+			app:cardCornerRadius="15dp">
 
-			app:bindImageUrl="@{photoUrl}"
-			android:contentDescription="@string/description_user_photo" />
+			<ImageView
+				android:layout_width="@dimen/rvSettingsEditPhotoElementWidth"
+				android:layout_height="@dimen/rvSettingsEditPhotoElementHeight"
+				android:src="@drawable/placeholder_profile"
+				android:layout_gravity="center"
 
-		<ImageButton
+				android:scaleType="centerCrop"
+
+				app:bindImageUrl="@{photoUrl}"
+				android:contentDescription="@string/description_user_photo" />
+
+		</androidx.cardview.widget.CardView>
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btnDeletePhoto"
 			android:layout_width="48dp"
 			android:layout_height="48dp"
-			android:background="@color/transparent"
-			android:layout_gravity="end"
+			android:layout_gravity="end|top"
+			android:layout_marginBottom="@dimen/general_margin_16"
+			android:layout_marginStart="@dimen/general_margin_16"
 
-			android:src="@drawable/ic_remove_circle_outline_24dp"
-			android:scaleType="fitCenter"
+			android:insetTop="0dp"
+			android:insetBottom="0dp"
 
-			android:contentDescription="@string/description_user_photo" />
+			app:backgroundTint="@color/material_red_a700"
+			app:iconSize="24dp"
+			app:icon="@drawable/ic_clear_24dp"
+			app:elevation="@null"
+			app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
 
+			style="@style/Widget.MaterialComponents.Button.Icon"
+			/>
+	</FrameLayout>
 
-	</androidx.cardview.widget.CardView>
 </layout>
