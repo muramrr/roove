@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 16:28
+ * Last modified 02.03.20 18:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -59,7 +59,6 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
 
-
 	private lateinit var userItem: UserItem
 
 	// File
@@ -100,7 +99,7 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 			return@setOnMenuItemClickListener true
 		}
 
-		rvUserPhotosList.apply {
+		rvSettingsUserPhotosList.apply {
 			adapter = mSettingsPhotoAdapter
 			layoutManager = HorizontalCarouselLayoutManager(this.context, HORIZONTAL, false)
 			//item decorator to make first and last item align center
@@ -143,8 +142,9 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 
 	private fun initProfile(userItem: UserItem) {
 		val nameAgeText = "${userItem.baseUserInfo.name}, ${userItem.baseUserInfo.age}"
-		tvNameAge.text = nameAgeText
+		tvSettingsNameAge.text = nameAgeText
 		tvSettingsAboutText.text = userItem.aboutText
+		tvSettingsCity.text = userItem.cityToDisplay
 	}
 
 	override fun onResume() {

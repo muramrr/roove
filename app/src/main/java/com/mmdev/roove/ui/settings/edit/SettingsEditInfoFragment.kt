@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 16:16
+ * Last modified 02.03.20 18:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,17 +17,18 @@ import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+import androidx.recyclerview.widget.GridLayoutManager
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.core.BaseFragment
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
+import com.mmdev.roove.ui.custom.GridItemDecoration
 import com.mmdev.roove.utils.observeOnce
 import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_settings_edit_info.*
@@ -66,23 +67,6 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		private const val TAG = "mylogs_SettingsAccFragment"
 	}
 
-	override fun onAttach(context: Context) {
-		super.onAttach(context)
-		cityList = mapOf(context.getString(R.string.russia_ekb) to "ekb",
-		                 context.getString(R.string.russia_krasnoyarsk) to "krasnoyarsk",
-		                 context.getString(R.string.russia_krd) to "krd",
-		                 context.getString(R.string.russia_kzn) to "kzn",
-		                 context.getString(R.string.russia_msk) to "msk",
-		                 context.getString(R.string.russia_nnv) to "nnv",
-		                 context.getString(R.string.russia_nsk) to "nsk",
-		                 context.getString(R.string.russia_sochi) to "sochi",
-		                 context.getString(R.string.russia_spb) to "spb")
-
-		genderList = listOf("male", "female")
-		preferredGenderList = listOf("male", "female", "everyone")
-
-	}
-
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
@@ -101,17 +85,35 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		val context = view.context
+		cityList = mapOf(context.getString(R.string.russia_ekb) to "ekb",
+		                 context.getString(R.string.russia_krasnoyarsk) to "krasnoyarsk",
+		                 context.getString(R.string.russia_krd) to "krd",
+		                 context.getString(R.string.russia_kzn) to "kzn",
+		                 context.getString(R.string.russia_msk) to "msk",
+		                 context.getString(R.string.russia_nnv) to "nnv",
+		                 context.getString(R.string.russia_nsk) to "nsk",
+		                 context.getString(R.string.russia_sochi) to "sochi",
+		                 context.getString(R.string.russia_spb) to "spb")
+
+		genderList = listOf("male", "female")
+		preferredGenderList = listOf("male", "female", "everyone")
 
 		rvSettingsEditPhotos.apply {
+			layoutManager = GridLayoutManager(this.context, 2, GridLayoutManager.VERTICAL, false)
 			adapter =  mEditorPhotoAdapter
-			addItemDecoration(DividerItemDecoration(this.context, VERTICAL))
+			addItemDecoration(GridItemDecoration())
 		}
 
-		changerNameSetup()
-		changerGenderSetup()
-		changerPreferredGenderSetup()
-		changerAgeSetup()
-		changerCitySetup()
+		//touch event guarantee that if user want to scroll or touch outside of edit box
+		//keyboard hide and edittext focus clear
+		containerScrollSettings.setOnTouchListener { v, _ ->
+			val iMM = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+			iMM.hideSoftInputFromWindow(v.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+			edSettingsEditDescription.clearFocus()
+			return@setOnTouchListener false
+		}
+
 
 		btnSettingsEditSave.setOnClickListener {
 			remoteRepoViewModel.updateUserItem(userItem)
@@ -133,9 +135,16 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		sliderSettingsEditAge.value = userItem.baseUserInfo.age.toFloat()
 
 		cityToDisplay = cityList.filterValues { it == userItem.baseUserInfo.city }.keys.first()
-		dropSettingsEditCity.setText(cityToDisplay)
+		dropSettingsEditCity.setText(userItem.cityToDisplay)
 
 		edSettingsEditDescription.setText(userItem.aboutText)
+
+		changerNameSetup()
+		changerGenderSetup()
+		changerPreferredGenderSetup()
+		changerAgeSetup()
+		changerCitySetup()
+		changerDescriptionSetup()
 
 	}
 
@@ -150,11 +159,11 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			override fun afterTextChanged(s: Editable) {
 				when {
 					s.length > layoutSettingsEditName.counterMaxLength -> {
-						layoutSettingsEditName.error = "Max length reached"
+						layoutSettingsEditName.error = getString(R.string.text_max_length_error)
 						btnSettingsEditSave.isEnabled = false
 					}
 					s.isEmpty() -> {
-						layoutSettingsEditName.error = "Name must not be empty"
+						layoutSettingsEditName.error = getString(R.string.text_empty_error)
 						btnSettingsEditSave.isEnabled = false
 
 					}
@@ -175,6 +184,57 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			}
 			return@setOnEditorActionListener false
 		}
+	}
+
+	private fun changerGenderSetup() {
+		val genderAdapter = ArrayAdapter<String>(context!!,
+		                                         R.layout.drop_text_item,
+		                                         genderList)
+		dropSettingsEditGender.setAdapter(genderAdapter)
+
+		dropSettingsEditGender.setOnItemClickListener { _, _, position, _ ->
+			gender = genderList[position]
+			userItem.baseUserInfo.gender = gender
+		}
+	}
+
+	private fun changerPreferredGenderSetup() {
+		val preferredGenderAdapter = ArrayAdapter<String>(context!!,
+		                                                  R.layout.drop_text_item,
+		                                                  preferredGenderList)
+
+		dropSettingsEditPreferredGender.setAdapter(preferredGenderAdapter)
+
+		dropSettingsEditPreferredGender.setOnItemClickListener { _, _, position, _ ->
+			preferredGender = preferredGenderList[position]
+			userItem.baseUserInfo.preferredGender = preferredGender
+		}
+
+	}
+
+	private fun changerAgeSetup() {
+		sliderSettingsEditAge.setOnChangeListener{ _, value ->
+			age = value.toInt()
+			userItem.baseUserInfo.age = age
+			tvSettingsEditAge.text = "Age: $age"
+		}
+	}
+
+	private fun changerCitySetup() {
+		val cityAdapter = ArrayAdapter<String>(context!!,
+		                                       R.layout.drop_text_item,
+		                                       cityList.map { it.key })
+		dropSettingsEditCity.setAdapter(cityAdapter)
+
+		dropSettingsEditCity.setOnItemClickListener { _, _, position, _ ->
+			city = cityList.map { it.value }[position]
+			cityToDisplay = cityList.map { it.key }[position]
+			userItem.baseUserInfo.city = city
+			userItem.cityToDisplay = cityToDisplay
+		}
+	}
+
+	private fun changerDescriptionSetup() {
 
 		edSettingsEditDescription.addTextChangedListener(object: TextWatcher {
 			override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -185,7 +245,7 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 			override fun afterTextChanged(s: Editable) {
 				if (s.length > layoutSettingsEditDescription.counterMaxLength){
-					layoutSettingsEditDescription.error = "Max length reached"
+					layoutSettingsEditDescription.error = getString(R.string.text_max_length_error)
 					btnSettingsEditSave.isEnabled = false
 				}
 				else {
@@ -215,52 +275,6 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 	}
 
-	private fun changerGenderSetup() {
-		val genderAdapter = ArrayAdapter<String>(context!!,
-		                                         R.layout.drop_text_item,
-		                                         genderList)
-		dropSettingsEditGender.setAdapter(genderAdapter)
-
-		dropSettingsEditGender.setOnItemClickListener { _, _, position, _ ->
-			gender = genderList[position]
-			userItem.baseUserInfo.gender = gender
-		}
-	}
-
-	private fun changerPreferredGenderSetup() {
-		val preferredGenderAdapter = ArrayAdapter<String>(context!!,
-		                                                  R.layout.drop_text_item,
-		                                                  preferredGenderList)
-
-		dropSettingsEditPreferredGender.setAdapter(preferredGenderAdapter )
-
-		dropSettingsEditPreferredGender.setOnItemClickListener { _, _, position, _ ->
-			preferredGender = preferredGenderList[position]
-			userItem.baseUserInfo.preferredGender = preferredGender
-		}
-	}
-
-	private fun changerCitySetup() {
-		val cityAdapter = ArrayAdapter<String>(context!!,
-		                                       R.layout.drop_text_item,
-		                                       cityList.map { it.key })
-		dropSettingsEditCity.setAdapter(cityAdapter)
-
-		dropSettingsEditCity.setOnItemClickListener { _, _, position, _ ->
-			city = cityList.map { it.value }[position]
-			cityToDisplay = cityList.map { it.key }[position]
-			userItem.baseUserInfo.city = city
-		}
-	}
-
-	private fun changerAgeSetup() {
-		sliderSettingsEditAge.setOnChangeListener{ _, value ->
-			age = value.toInt()
-			userItem.baseUserInfo.age = age
-			tvSettingsEditAge.text = "Age: $age"
-		}
-	}
-
 	override fun onResume() {
 		super.onResume()
 		if (this::userItem.isInitialized) initProfile(userItem)
@@ -270,4 +284,5 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		super.onBackPressed()
 		findNavController().navigateUp()
 	}
+
 }
