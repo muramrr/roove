@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.02.20 17:52
+ * Last modified 02.03.20 17:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -204,15 +204,6 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			params?.gravity = Gravity.BOTTOM
 			alertDialog.show()
 		}
-
-		//automatically scroll to bottom if data in adapter updates
-//		mChatAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-//			override fun onChanged() {
-//				super.onChanged()
-//				val friendlyMessageCount = mChatAdapter.itemCount
-//				rvMessageList.scrollToPosition(0)
-//			}
-//		})
 
 		//if message contains photo then it opens in fullscreen dialog
 		mChatAdapter.setOnAttachedPhotoClickListener(object: ChatAdapter.OnItemClickListener {
