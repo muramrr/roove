@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.03.20 18:23
+ * Last modified 02.03.20 16:28
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@ package com.mmdev.roove.ui.settings
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -29,7 +28,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.core.UserItem
@@ -39,13 +37,13 @@ import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.core.*
 import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
+import com.mmdev.roove.ui.custom.CenterFirstLastItemDecoration
 import com.mmdev.roove.ui.custom.HorizontalCarouselLayoutManager
 import com.mmdev.roove.ui.profile.view.PlacesToGoAdapter
 import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_settings.*
 import java.io.File
 import java.util.*
-import kotlin.math.round
 
 
 /**
@@ -106,20 +104,7 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 			adapter = mSettingsPhotoAdapter
 			layoutManager = HorizontalCarouselLayoutManager(this.context, HORIZONTAL, false)
 			//item decorator to make first and last item align center
-			addItemDecoration(object: RecyclerView.ItemDecoration(){
-				override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView,
-				                            state: RecyclerView.State) {
-					val position = parent.getChildViewHolder(view).adapterPosition
-					if (position == 0 || position == state.itemCount - 1) {
-						val displayWidth = resources.displayMetrics.widthPixels
-						val childElementWidth = resources.getDimension(R.dimen.rvSettingsPhotoElementWidth)
-						//val elementMargin = 160
-						val padding = round(displayWidth / 2f - childElementWidth / 2f).toInt()
-						if (position == 0) { outRect.left = padding }
-						else { outRect.right = padding }
-					}
-				}
-			})
+			addItemDecoration(CenterFirstLastItemDecoration())
 			val snapHelper: SnapHelper = LinearSnapHelper()
 			snapHelper.attachToRecyclerView(this)
 		}
@@ -190,13 +175,11 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 	 * If the app does not has permission then the user will be prompted to grant permissions
 	 * else open camera intent
 	 */
-	private fun photoCameraClick() {
+	private fun photoCameraClick() =
 		handlePermission(AppPermission.CAMERA,
 		                 onGranted = { startCameraIntent() },
 		                 onDenied = { requestAppPermissions(it) },
-		                 onExplanationNeeded = { it.explanationMessageId }
-		)
-	}
+		                 onExplanationNeeded = { it.explanationMessageId })
 
 	//take photo directly by camera
 	private fun startCameraIntent() {
@@ -217,13 +200,11 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 	 * If the app does not has permission then the user will be prompted to grant permissions
 	 * else open gallery to choose photo
 	 */
-	private fun photoGalleryClick() {
+	private fun photoGalleryClick() =
 		handlePermission(AppPermission.GALLERY,
 		                 onGranted = { startGalleryIntent() },
 		                 onDenied = { requestAppPermissions(it) },
-		                 onExplanationNeeded = { it.explanationMessageId }
-		)
-	}
+		                 onExplanationNeeded = { it.explanationMessageId })
 
 	//open gallery chooser
 	private fun startGalleryIntent() {
