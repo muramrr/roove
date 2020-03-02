@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:30
+ * Last modified 02.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -85,7 +85,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 			selectedUser = it
 			//ui
 			collapseBarProfile.title = it.baseUserInfo.name
-			userPhotosAdapter.updateData(it.photoURLs.toList())
+			userPhotosAdapter.updateData(it.photoURLs.map { photoItem -> photoItem.fileUrl }.toList())
 			mPlacesToGoAdapter.updateData(it.placesToGo.toList())
 			tvProfileAboutText.text = it.aboutText
 			collapseBarProfile.title = it.baseUserInfo.name

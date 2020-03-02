@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:57
+ * Last modified 02.03.20 19:48
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,11 +62,11 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")!!
 				val mainPhotoUrl = prefs.getString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, "")!!
 
-				val photoUrlsStrings =
-					JSONArray(prefs.getString(PREF_KEY_CURRENT_USER_PHOTO_URLS, "")!!)
-				val photoUrls = mutableListOf<String>()
-				for (i in 0 until photoUrlsStrings.length())
-					photoUrls.add(photoUrlsStrings.get(i).toString())
+//				val photoUrlsStrings =
+//					JSONArray(prefs.getString(PREF_KEY_CURRENT_USER_PHOTO_URLS, "")!!)
+//				val photoUrls = mutableListOf<String>()
+//				for (i in 0 until photoUrlsStrings.length())
+//					photoUrls.add(photoUrlsStrings.get(i).toString())
 
 				val placesToGoStrings =
 					JSONArray(prefs.getString(PREF_KEY_CURRENT_USER_PLACES_ID, "")!!)
@@ -78,14 +78,14 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				//Log.wtf(TAG, "retrieved user info from sharedpref successfully")
 
 				UserItem(baseUserInfo = BaseUserInfo(name,
-				                                                                                age,
-				                                                                                city,
-				                                                                                gender,
-				                                                                                preferredGender,
-				                                                                                mainPhotoUrl,
-				                                                                                uid),
-				                                                    photoURLs = photoUrls,
-				                                                    placesToGo = placesToGoItems)
+				                                     age,
+				                                     city,
+				                                     gender,
+				                                     preferredGender,
+				                                     mainPhotoUrl,
+				                                     uid),
+						//photoURLs = photoUrls,
+				         placesToGo = placesToGoItems)
 			}catch (e: Exception) {
 				Log.wtf(TAG, "read exception, but user is saved")
 				if (auth.currentUser != null) {
@@ -120,10 +120,10 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		editor.putString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, userItem.baseUserInfo.mainPhotoUrl)
 		editor.putString(PREF_KEY_CURRENT_USER_ID, userItem.baseUserInfo.userId)
 
-		val photoUrlsList = mutableListOf<String>()
-		for (photoUrl in userItem.photoURLs)
-			photoUrlsList.add(gson.toJson(photoUrl))
-		editor.putString(PREF_KEY_CURRENT_USER_PHOTO_URLS, photoUrlsList.toString())
+//		val photoUrlsList = mutableListOf<String>()
+//		for (photoUrl in userItem.photoURLs)
+//			photoUrlsList.add(gson.toJson(photoUrl))
+//		editor.putString(PREF_KEY_CURRENT_USER_PHOTO_URLS, photoUrlsList.toString())
 
 		val placesToGoList = mutableListOf<String>()
 		for (place in userItem.placesToGo)

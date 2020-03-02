@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.03.20 18:21
+ * Last modified 02.03.20 20:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,6 +19,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.StorageReference
 import com.mmdev.business.auth.AuthUserItem
 import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.remote.RemoteUserRepository
 import io.reactivex.*
@@ -83,6 +84,22 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 				}.addOnFailureListener { emitter.onError(it) }
 		}.subscribeOn(Schedulers.io())
 
+	override fun deletePhoto(photoItem: PhotoItem, userItem: UserItem): Completable =
+		Completable.create { emitter ->
+			storage
+				.child(GENERAL_FOLDER_STORAGE_IMG)
+				.child(SECONDARY_FOLDER_STORAGE_IMG)
+				.child(userItem.baseUserInfo.userId)
+				.child(photoItem.fileName)
+				.delete()
+				.addOnSuccessListener {
+					fillUserGeneralRef(userItem.baseUserInfo)
+						.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayRemove(photoItem))
+					emitter.onComplete()
+				}
+				.addOnFailureListener { emitter.onError(it) }
+		}.subscribeOn(Schedulers.io())
+
 	override fun fetchUserInfo(): Single<UserItem> {
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
 			val userItem = localRepo.getSavedUser()!!
@@ -144,8 +161,8 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 		}.subscribeOn(Schedulers.io())
 
 
-	override fun uploadUserProfilePhoto(photoUri: String, userItem: UserItem): Observable<HashMap<Double, List<String>>> =
-		Observable.create(ObservableOnSubscribe<HashMap<Double,List<String>>> { emitter ->
+	override fun uploadUserProfilePhoto(photoUri: String, userItem: UserItem): Observable<HashMap<Double, List<PhotoItem>>> =
+		Observable.create(ObservableOnSubscribe<HashMap<Double, List<PhotoItem>>> { emitter ->
 			val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString() +
 			                "_user_photo" + ".jpg"
 			val storageRef = storage
@@ -162,11 +179,13 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 					storageRef
 						.downloadUrl
 						.addOnSuccessListener {
+							val uploadedPhotoItem = PhotoItem(fileName = namePhoto,
+							                                  fileUrl = it.toString())
 							fillUserGeneralRef(userItem.baseUserInfo)
-								.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayUnion(it.toString()))
+								.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayUnion(uploadedPhotoItem))
 
-							userItem.photoURLs.add(it.toString())
-							localRepo.updatePhotosField(userItem.photoURLs)
+							userItem.photoURLs.add(uploadedPhotoItem)
+							//localRepo.updatePhotosField(userItem.photoURLs)
 							emitter.onNext(hashMapOf(100.00 to userItem.photoURLs))
 							emitter.onComplete()
 						}

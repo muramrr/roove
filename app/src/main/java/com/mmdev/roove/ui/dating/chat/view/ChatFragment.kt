@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 17:21
+ * Last modified 02.03.20 19:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -209,7 +209,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		mChatAdapter.setOnAttachedPhotoClickListener(object: ChatAdapter.OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
 
-				val photoUrl = mChatAdapter.getItem(position).photoAttachmentItem!!.fileUrl
+				val photoUrl = mChatAdapter.getItem(position).photoItem!!.fileUrl
 				val dialog = FullScreenDialogFragment.newInstance(photoUrl)
 				dialog.show(childFragmentManager, FullScreenDialogFragment::class.java.canonicalName)
 
@@ -302,7 +302,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			val message = MessageItem(sender = userItemModel.baseUserInfo,
 			                          recipientId = partnerId,
 			                          text = edTextMessageInput.text.toString().trim(),
-			                          photoAttachmentItem = null,
+			                          photoItem = null,
 			                          conversationId = currentConversation.conversationId)
 
 			chatViewModel.sendMessage(message)

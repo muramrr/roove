@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 18:22
+ * Last modified 02.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
@@ -221,8 +222,11 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 			authViewModel.signUp(UserItem(finalUserModel,
 			                              cityToDisplay = cityToDisplay,
-			                              photoURLs = mutableListOf(finalUserModel.mainPhotoUrl))
-			)
+			                              photoURLs = mutableListOf(
+					                              PhotoItem(fileName = "facebookPhoto",
+					                                        fileUrl = finalUserModel.mainPhotoUrl)
+			                              )
+			))
 		}
 
 
