@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 05.12.19 16:18
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 02.03.20 18:49
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,7 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:background="@color/colorPrimaryDark"
+		android:clipToPadding="false"
 		android:overScrollMode="never"
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintStart_toStartOf="parent"

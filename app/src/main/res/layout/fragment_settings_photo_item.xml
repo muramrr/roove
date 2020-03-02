@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 01.03.20 18:25
+  ~ Last modified 02.03.20 18:36
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,11 +32,32 @@
 			android:id="@+id/ivUserItemPhoto"
 			android:layout_width="@dimen/rvSettingsPhotoElementWidth"
 			android:layout_height="300dp"
-			android:src="@drawable/placeholder_profile"
+			android:background="@color/colorPrimary"
 			android:scaleType="center"
 
 			app:bindImageUrl="@{photoUrl}"
+			app:progressBar="@{pbImageLoading}"
+
 			android:contentDescription="@string/description_user_photo" />
+
+		<ProgressBar
+			android:id="@+id/pbImageLoading"
+			android:layout_width="100dp"
+			android:layout_height="100dp"
+			android:layout_gravity="center"
+			android:indeterminate="false"
+			android:minHeight="32dp"
+			android:minWidth="32dp"
+			android:max="100"
+			android:progressDrawable="@drawable/progress_drawable"
+
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			/>
 
 
 	</androidx.cardview.widget.CardView>
