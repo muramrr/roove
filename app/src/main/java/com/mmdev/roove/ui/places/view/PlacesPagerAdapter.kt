@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.01.20 19:57
+ * Last modified 02.03.20 18:48
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,8 +23,8 @@ class PlacesPagerAdapter (fm: FragmentManager, lifecycle: Lifecycle) :
 	override fun createFragment(position: Int) =
 		when (position){
 			0 -> PlacesPageFragment.newInstance("bar")
-			1 -> PlacesPageFragment.newInstance("gallery")
-			2 -> PlacesPageFragment.newInstance("cafe")
+			1 -> PlacesPageFragment.newInstance("amusement")
+			2 -> PlacesPageFragment.newInstance("art-space")
 			3 -> PlacesPageFragment.newInstance("restaurants")
 			else -> PlacesPageFragment.newInstance("")
 		}
