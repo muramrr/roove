@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.03.20 15:47
+ * Last modified 03.03.20 17:44
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -102,11 +102,15 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		mEditorPhotoAdapter.setOnItemClickListener(object: SettingsEditInfoPhotoAdapter
 		                                                   .OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
-				remoteRepoViewModel.deletePhoto(userItem.photoURLs[position], userItem)
+				val photoToDelete = userItem.photoURLs[position]
+				remoteRepoViewModel.deletePhoto(photoToDelete, userItem)
 				remoteRepoViewModel.photoDeletionStatus.observeOnce(this@SettingsEditInfoFragment,
 				                                                    Observer{
 					if (it) {
+						userItem.photoURLs.removeAt(position)
 						mEditorPhotoAdapter.removeAt(position)
+						if (photoToDelete.fileUrl == userItem.baseUserInfo.mainPhotoUrl)
+							userItem.baseUserInfo.mainPhotoUrl = userItem.photoURLs[0].fileUrl
 					}
 				})
 			}

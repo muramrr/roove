@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 19:36
+ * Last modified 03.03.20 16:45
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,6 +47,7 @@ import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.databinding.FragmentChatBinding
 import com.mmdev.roove.ui.core.*
+import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
 import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
 import com.mmdev.roove.ui.dating.chat.ChatViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
@@ -64,27 +65,22 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 	private lateinit var userItemModel: UserItem
 
-	private var receivedPartnerName = ""
 	private var receivedPartnerCity = ""
 	private var receivedPartnerGender = ""
-	private var receivedPartnerPhotoUrl = ""
 	private var receivedPartnerId = ""
 	private var receivedConversationId = ""
 
 	private var isDeepLinkJump: Boolean = false
 
-	//saving state
-	private var partnerName = ""
-	private var partnerMainPhotoUrl = ""
-	private var partnerId = ""
 	private lateinit var currentConversation: ConversationItem
-
+	private lateinit var currentPartner: UserItem
 
 	private val mChatAdapter: ChatAdapter = ChatAdapter(listOf())
 
 	// File
 	private lateinit var mFilePathImageCamera: File
 
+	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var chatViewModel: ChatViewModel
 
@@ -97,10 +93,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		private const val IMAGE_CAMERA_REQUEST = 2
 
 
-		private const val PARTNER_NAME_KEY = "PARTNER_NAME"
 		private const val PARTNER_CITY_KEY = "PARTNER_CITY"
 		private const val PARTNER_GENDER_KEY = "PARTNER_GENDER"
-		private const val PARTNER_PHOTO_KEY = "PARTNER_PHOTO"
 		private const val PARTNER_ID_KEY = "PARTNER_ID"
 		private const val CONVERSATION_ID_KEY = "CONVERSATION_ID"
 
@@ -111,24 +105,21 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 		//deep link from notification
 		arguments?.let {
-			receivedPartnerName = it.getString(PARTNER_NAME_KEY, "")
 			receivedPartnerCity = it.getString(PARTNER_CITY_KEY, "")
 			receivedPartnerGender = it.getString(PARTNER_GENDER_KEY, "")
-			receivedPartnerPhotoUrl = it.getString(PARTNER_PHOTO_KEY, "")
 			receivedPartnerId = it.getString(PARTNER_ID_KEY, "")
 			receivedConversationId = it.getString(CONVERSATION_ID_KEY, "")
-			if (receivedPartnerName.isNotEmpty() &&
-			    receivedPartnerCity.isNotEmpty() &&
+			if (receivedPartnerCity.isNotEmpty() &&
 			    receivedPartnerGender.isNotEmpty() &&
-			    receivedPartnerPhotoUrl.isNotEmpty()&&
                 receivedPartnerId.isNotEmpty() &&
                 receivedConversationId.isNotEmpty()) isDeepLinkJump = true
 		}
 
 		chatViewModel = ViewModelProvider(this@ChatFragment, factory)[ChatViewModel::class.java]
 
-		sharedViewModel = activity?.run {
-			ViewModelProvider(this, factory)[SharedViewModel::class.java]
+		activity?.run {
+			remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
+			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
 
@@ -139,22 +130,23 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 		//if it was a deep link navigation then create ConversationItem "on a flight"
 		if (isDeepLinkJump) {
-			val receivedConversationItem = ConversationItem(
-					BaseUserInfo(name = receivedPartnerName,
-					             city = receivedPartnerCity,
-					             gender = receivedPartnerGender,
-					             mainPhotoUrl = receivedPartnerPhotoUrl,
-					             userId = receivedPartnerId),
-					conversationId = receivedConversationId,
-					conversationStarted = true)
-			sharedViewModel.setConversationSelected(receivedConversationItem)
+			remoteRepoViewModel.getRetrievedUserItem().observeOnce(this, Observer {
+				val receivedConversationItem = ConversationItem(partner = it.baseUserInfo,
+				                                                conversationId = receivedConversationId,
+				                                                conversationStarted = true)
+
+				currentPartner = it
+				sharedViewModel.setConversationSelected(receivedConversationItem)
+				setupContentToolbar(it)
+			})
+			remoteRepoViewModel.getFullUserInfo(BaseUserInfo(city = receivedPartnerCity,
+			                                                 gender = receivedPartnerGender,
+			                                                 userId = receivedPartnerId))
+
 		}
 
 		sharedViewModel.conversationSelected.observeOnce(this, Observer {
 			currentConversation = it
-			partnerName = it.partner.name
-			partnerMainPhotoUrl = it.partner.mainPhotoUrl
-			partnerId = it.partner.userId
 			chatViewModel.loadMessages(it)
 			chatViewModel.observeNewMessages(it)
 		})
@@ -248,7 +240,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			when (item.itemId) {
 				R.id.chat_action_user ->{
 					findNavController().navigate(R.id.action_chat_to_profileFragment)
-					sharedViewModel.setUserSelected(UserItem(currentConversation.partner))
+					sharedViewModel.setUserSelected(UserItem(currentPartner.baseUserInfo))
 				}
 
 				R.id.chat_action_report -> {
@@ -265,11 +257,10 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		// if user clicks on toolbar partner icon this fragment will not be destroyed
 		// onCreate is no longer being called in this scenario
 		super.onResume()
-
-		if (this::currentConversation.isInitialized ) { setupContentToolbar() }
+		if (this::currentConversation.isInitialized ) { setupContentToolbar(currentPartner) }
 	}
 
-	private fun setupContentToolbar(){
+	private fun setupContentToolbar(partnerUserItem: UserItem){
 		toolbarChat.apply {
 			//menu declared directly in xml
 			//no need to inflate menu manually
@@ -277,7 +268,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 			val partnerIcon = menu.findItem(R.id.chat_action_user)
 			GlideApp.with(this)
-				.load(partnerMainPhotoUrl)
+				.load(partnerUserItem.photoURLs[0].fileUrl)
 				.centerCrop()
 				.apply(RequestOptions().circleCrop())
 				.into(object : CustomTarget<Drawable>(){
@@ -287,7 +278,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 					override fun onLoadCleared(placeholder: Drawable?) {}
 				})
 
-			title = partnerName
+			title = partnerUserItem.baseUserInfo.name
 		}
 	}
 
@@ -300,7 +291,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		    edTextMessageInput.text.toString().trim().isNotEmpty()) {
 
 			val message = MessageItem(sender = userItemModel.baseUserInfo,
-			                          recipientId = partnerId,
+			                          recipientId = currentConversation.partner.userId,
 			                          text = edTextMessageInput.text.toString().trim(),
 			                          photoItem = null,
 			                          conversationId = currentConversation.conversationId)
@@ -395,7 +386,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 				val selectedUri = data?.data
 				chatViewModel.sendPhoto(selectedUri.toString(),
 				                        userItemModel.baseUserInfo,
-				                        partnerId)
+				                        currentConversation.partner.userId)
 			}
 		}
 		// send photo taken by camera
@@ -405,7 +396,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 				if (mFilePathImageCamera.exists()) {
 					chatViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString(),
 					                        userItemModel.baseUserInfo,
-					                        partnerId)
+					                        currentConversation.partner.userId)
 				}
 				else Toast.makeText(context,
 						"filePathImageCamera is null or filePathImageCamera isn't exists",
