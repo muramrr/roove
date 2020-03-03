@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.03.20 15:47
+ * Last modified 03.03.20 17:40
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -57,6 +57,8 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 		private const val TAG = "mylogs_UserRepoRemoteImpl"
 	}
 
+	private lateinit var currentStateUserItem: UserItem
+
 
 	override fun createUserOnRemote(userItem: UserItem): Completable =
 		Completable.create { emitter ->
@@ -90,21 +92,20 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 		Completable.create { emitter ->
 			fillUserGeneralRef(userItem.baseUserInfo).update(USER_PHOTOS_LIST_FIELD,
 			                                                 FieldValue.arrayRemove(photoItem))
-			userItem.photoURLs.remove(photoItem)
-			if (photoItem.fileName != "facebookPhoto")
-				storage
-					.child(GENERAL_FOLDER_STORAGE_IMG)
-					.child(SECONDARY_FOLDER_STORAGE_IMG)
-					.child(userItem.baseUserInfo.userId)
-					.child(photoItem.fileName)
-					.delete()
-					.addOnSuccessListener { emitter.onComplete() }
-					.addOnFailureListener { emitter.onError(it) }
-			else {
+			storage
+				.child(GENERAL_FOLDER_STORAGE_IMG)
+				.child(SECONDARY_FOLDER_STORAGE_IMG)
+				.child(userItem.baseUserInfo.userId)
+				.child(photoItem.fileName)
+				.delete()
+				.addOnFailureListener { emitter.onError(it) }
+
+			if (photoItem.fileUrl == userItem.baseUserInfo.mainPhotoUrl) {
 				fillUserGeneralRef(userItem.baseUserInfo).update(USER_MAIN_PHOTO_FIELD,
 				                                                 userItem.photoURLs[0].fileUrl)
-				emitter.onComplete()
+
 			}
+			emitter.onComplete()
 		}.subscribeOn(Schedulers.io())
 
 	override fun fetchUserInfo(): Single<UserItem> {
@@ -128,11 +129,13 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 							if (userItem == remoteUserItem) {
 								Log.wtf(TAG, "no reason to fetch user")
 								emitter.onSuccess(userItem)
+								currentStateUserItem = userItem
 							}
 							//save new userItem
 							else {
 								localRepo.saveUserInfo(remoteUserItem)
 								emitter.onSuccess(remoteUserItem)
+								currentStateUserItem = remoteUserItem
 								Log.wtf(TAG, "user was: {$userItem}")
 								Log.wtf(TAG, "user saved: {$remoteUserItem}")
 							}
