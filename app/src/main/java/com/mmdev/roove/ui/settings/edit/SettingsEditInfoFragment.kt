@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 19:47
+ * Last modified 03.03.20 15:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,9 +42,7 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 	private lateinit var userItem: UserItem
 
-	private val mEditorPhotoAdapter =
-		SettingsEditInfoPhotoAdapter(
-				mutableListOf())
+	private val mEditorPhotoAdapter = SettingsEditInfoPhotoAdapter(mutableListOf())
 
 	private var name = ""
 	private var age = 0
@@ -57,14 +55,14 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 	private var descriptionText = ""
 
 	private lateinit var cityList: Map<String, String>
-	private lateinit var genderList: List<String>
-	private lateinit var preferredGenderList: List<String>
+	private val genderList = listOf("male", "female")
+	private val preferredGenderList = listOf("male", "female", "everyone")
 
 	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
 
 	companion object{
-		private const val TAG = "mylogs_SettingsAccFragment"
+		private const val TAG = "mylogs_SettingsEditFragment"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +77,6 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		sharedViewModel.getCurrentUser().observe(this, Observer {
 			userItem = it
 			initProfile(it)
-			mEditorPhotoAdapter.updateData(it.photoURLs.map { photoItem -> photoItem.fileUrl })
 		})
 
 	}
@@ -96,11 +93,8 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		                 context.getString(R.string.russia_sochi) to "sochi",
 		                 context.getString(R.string.russia_spb) to "spb")
 
-		genderList = listOf("male", "female")
-		preferredGenderList = listOf("male", "female", "everyone")
-
 		rvSettingsEditPhotos.apply {
-			layoutManager = GridLayoutManager(this.context, 2, GridLayoutManager.VERTICAL, false)
+			layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
 			adapter =  mEditorPhotoAdapter
 			addItemDecoration(GridItemDecoration())
 		}
@@ -113,7 +107,6 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 				                                                    Observer{
 					if (it) {
 						mEditorPhotoAdapter.removeAt(position)
-						userItem.photoURLs.removeAt(position)
 					}
 				})
 			}
@@ -122,7 +115,7 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		//touch event guarantee that if user want to scroll or touch outside of edit box
 		//keyboard hide and edittext focus clear
 		containerScrollSettings.setOnTouchListener { v, _ ->
-			val iMM = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+			val iMM = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 			iMM.hideSoftInputFromWindow(v.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 			edSettingsEditDescription.clearFocus()
 			return@setOnTouchListener false
@@ -134,7 +127,7 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			remoteRepoViewModel.getUserUpdateStatus().observeOnce(this, Observer {
 				if (it) {
 					sharedViewModel.userSelected.value = userItem
-					context?.showToastText("Successfully saved")
+					context.showToastText("Successfully saved")
 				}
 			})
 		}
@@ -142,6 +135,7 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 
 	private fun initProfile(userItem: UserItem) {
+		mEditorPhotoAdapter.updateData(userItem.photoURLs.map { photoItem -> photoItem.fileUrl })
 		edSettingsEditName.setText(userItem.baseUserInfo.name)
 		dropSettingsEditGender.setText(userItem.baseUserInfo.gender)
 		dropSettingsEditPreferredGender.setText(userItem.baseUserInfo.preferredGender)
@@ -191,10 +185,10 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			}
 		})
 
-		edSettingsEditName.setOnEditorActionListener { v, actionId, _ ->
+		edSettingsEditName.setOnEditorActionListener { editText, actionId, _ ->
 			if (actionId == EditorInfo.IME_ACTION_DONE) {
-				v.text = v.text.toString().trim()
-				v.clearFocus()
+				editText.text = editText.text.toString().trim()
+				editText.clearFocus()
 			}
 			return@setOnEditorActionListener false
 		}
@@ -271,10 +265,10 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			}
 		})
 
-		edSettingsEditDescription.setOnEditorActionListener { v, actionId, _ ->
+		edSettingsEditDescription.setOnEditorActionListener { editText, actionId, _ ->
 			if (actionId == EditorInfo.IME_ACTION_DONE) {
-				v.text = v.text.toString().trim()
-				v.clearFocus()
+				editText.text = editText.text.toString().trim()
+				editText.clearFocus()
 			}
 			return@setOnEditorActionListener false
 		}

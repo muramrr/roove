@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 17:09
+ * Last modified 03.03.20 15:28
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -131,7 +131,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 							.document(userInBase.baseUserInfo.userId)
 							.get()
 							.addOnSuccessListener { fullUserDoc ->
-								//if full user info exists in db
+								//if full user info exists in db => return continue reg flag false
 								if (fullUserDoc.exists()) {
 									val retrievedUser = fullUserDoc.toObject(UserItem::class.java)!!
 									localRepo.saveUserInfo(retrievedUser)
