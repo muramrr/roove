@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 19:51
+ * Last modified 03.03.20 15:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,8 +79,6 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 
 		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			userItem = it
-			mSettingsPhotoAdapter.updateData(it.photoURLs.map { photoItem -> photoItem.fileUrl })
-			mPlacesToGoAdapter.updateData(it.placesToGo.toList())
 			initProfile(it)
 		})
 
@@ -145,6 +143,8 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 		tvSettingsNameAge.text = nameAgeText
 		tvSettingsAboutText.text = userItem.aboutText
 		tvSettingsCity.text = userItem.cityToDisplay
+		mSettingsPhotoAdapter.updateData(userItem.photoURLs.map { photoItem -> photoItem.fileUrl })
+		mPlacesToGoAdapter.updateData(userItem.placesToGo.toList())
 	}
 
 	override fun onResume() {
