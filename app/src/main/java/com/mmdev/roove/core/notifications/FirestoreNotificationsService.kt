@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.02.20 19:27
+ * Last modified 03.03.20 16:23
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -66,10 +66,8 @@ class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserv
 
 	private fun notifyNewMessage(remoteMessage: RemoteMessage){
 		val conversation = bundleOf(
-				"PARTNER_NAME" to remoteMessage.data["SENDER_NAME"],
 				"PARTNER_CITY" to remoteMessage.data["SENDER_CITY"],
 				"PARTNER_GENDER" to remoteMessage.data["SENDER_GENDER"],
-				"PARTNER_PHOTO" to remoteMessage.data["SENDER_PHOTO"],
 				"PARTNER_ID" to remoteMessage.data["SENDER_ID"],
 				"CONVERSATION_ID" to remoteMessage.data["CONVERSATION_ID"])
 

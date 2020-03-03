@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 27.02.20 15:53
+  ~ Last modified 03.03.20 16:03
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -46,7 +46,7 @@
 				android:contentDescription="@string/description_user_photo"
 				android:scaleType="centerCrop"
 
-				app:bindImageUrl="@{userItem.baseUserInfo.mainPhotoUrl}"
+				app:bindImageUrl="@{userItem.photoURLs[0].fileUrl}"
 				app:progressBar="@{pbImageLoading}"
 
 				app:layout_constraintBottom_toBottomOf="parent"
