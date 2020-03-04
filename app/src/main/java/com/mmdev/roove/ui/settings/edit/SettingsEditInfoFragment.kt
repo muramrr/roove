@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.03.20 18:08
+ * Last modified 04.03.20 18:47
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -104,14 +105,20 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			override fun onItemClick(view: View, position: Int) {
 				if (mEditorPhotoAdapter.itemCount > 1) {
 					val photoToDelete = mEditorPhotoAdapter.getPhoto(position)
-					remoteRepoViewModel.deletePhoto(photoToDelete, userItem)
+
+					val isMainPhotoDeleting = photoToDelete.fileUrl == userItem.baseUserInfo.mainPhotoUrl
+
+					remoteRepoViewModel.deletePhoto(photoToDelete, userItem, isMainPhotoDeleting)
+
 					remoteRepoViewModel.photoDeletionStatus.observeOnce(this@SettingsEditInfoFragment, Observer {
 						if (it) {
-                            userItem.photoURLs.remove(photoToDelete)
+							userItem.photoURLs.remove(photoToDelete)
                             mEditorPhotoAdapter.removeAt(position)
-                            if (photoToDelete.fileUrl == userItem.baseUserInfo.mainPhotoUrl){
+                            if (isMainPhotoDeleting) {
 	                            userItem.baseUserInfo.mainPhotoUrl = userItem.photoURLs[0].fileUrl
+	                            Log.wtf(TAG, "изменилась главная фотка: ${userItem.baseUserInfo.mainPhotoUrl}")
                             }
+							else Log.wtf(TAG, "главная фотка без изменений")
 
                         }
                     })
