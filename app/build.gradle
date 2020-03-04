@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.02.20 16:40
+ * Last modified 04.03.20 19:45
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -100,8 +100,8 @@ dependencies {
 	implementation libs.firebaseCore
 	implementation libs.firestorage
 	implementation libs.firestore
-	implementation 'com.google.firebase:firebase-analytics:17.2.2'
-	implementation 'com.google.firebase:firebase-messaging:20.1.0'
+	implementation 'com.google.firebase:firebase-analytics:17.2.3'
+	implementation 'com.google.firebase:firebase-messaging:20.1.2'
 
 	//facebook auth
 	//implementation "com.facebook.android:facebook-android-sdk:$facebook_sdk_version"
