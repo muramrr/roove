@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.02.20 17:34
+ * Last modified 04.03.20 19:27
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,15 +14,15 @@ buildscript {
 
 	ext {
 
-		kotlin_version = '1.3.61'
+		kotlin_version = '1.3.70'
 
 		// facebook
 		facebook_sdk_version = '6.1.0'
 
 		//firebase
 		firebase_auth_version = '19.2.0'
-		firebase_core_version = '17.2.2'
-		firebase_firestore_version = '21.4.0'
+		firebase_core_version = '17.2.3'
+		firebase_firestore_version = '21.4.1'
 		firebase_storage_version = '19.1.1'
 
 		// Dagger
