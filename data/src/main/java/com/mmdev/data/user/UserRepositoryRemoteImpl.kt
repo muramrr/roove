@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.03.20 17:40
+ * Last modified 04.03.20 18:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -57,8 +57,6 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 		private const val TAG = "mylogs_UserRepoRemoteImpl"
 	}
 
-	private lateinit var currentStateUserItem: UserItem
-
 
 	override fun createUserOnRemote(userItem: UserItem): Completable =
 		Completable.create { emitter ->
@@ -90,8 +88,16 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 
 	override fun deletePhoto(photoItem: PhotoItem, userItem: UserItem): Completable =
 		Completable.create { emitter ->
-			fillUserGeneralRef(userItem.baseUserInfo).update(USER_PHOTOS_LIST_FIELD,
-			                                                 FieldValue.arrayRemove(photoItem))
+			val currentUserRef = fillUserGeneralRef(userItem.baseUserInfo)
+
+			userItem.photoURLs.remove(photoItem)
+
+			if (photoItem.fileUrl == userItem.baseUserInfo.mainPhotoUrl) {
+				currentUserRef.update(USER_MAIN_PHOTO_FIELD, userItem.photoURLs[0].fileUrl)
+			}
+
+			currentUserRef.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayRemove(photoItem))
+
 			storage
 				.child(GENERAL_FOLDER_STORAGE_IMG)
 				.child(SECONDARY_FOLDER_STORAGE_IMG)
@@ -100,12 +106,10 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 				.delete()
 				.addOnFailureListener { emitter.onError(it) }
 
-			if (photoItem.fileUrl == userItem.baseUserInfo.mainPhotoUrl) {
-				fillUserGeneralRef(userItem.baseUserInfo).update(USER_MAIN_PHOTO_FIELD,
-				                                                 userItem.photoURLs[0].fileUrl)
+			localRepo.saveUserInfo(userItem)
 
-			}
 			emitter.onComplete()
+
 		}.subscribeOn(Schedulers.io())
 
 	override fun fetchUserInfo(): Single<UserItem> {
@@ -129,13 +133,11 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 							if (userItem == remoteUserItem) {
 								Log.wtf(TAG, "no reason to fetch user")
 								emitter.onSuccess(userItem)
-								currentStateUserItem = userItem
 							}
 							//save new userItem
 							else {
 								localRepo.saveUserInfo(remoteUserItem)
 								emitter.onSuccess(remoteUserItem)
-								currentStateUserItem = remoteUserItem
 								Log.wtf(TAG, "user was: {$userItem}")
 								Log.wtf(TAG, "user saved: {$remoteUserItem}")
 							}
@@ -195,7 +197,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 								.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayUnion(uploadedPhotoItem))
 
 							userItem.photoURLs.add(uploadedPhotoItem)
-							//localRepo.updatePhotosField(userItem.photoURLs)
+							localRepo.updatePhotosField(userItem.photoURLs)
 							emitter.onNext(hashMapOf(100.00 to userItem.photoURLs))
 							emitter.onComplete()
 						}

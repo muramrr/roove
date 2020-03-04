@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.03.20 17:44
+ * Last modified 04.03.20 18:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -102,17 +102,21 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		mEditorPhotoAdapter.setOnItemClickListener(object: SettingsEditInfoPhotoAdapter
 		                                                   .OnItemClickListener {
 			override fun onItemClick(view: View, position: Int) {
-				val photoToDelete = userItem.photoURLs[position]
-				remoteRepoViewModel.deletePhoto(photoToDelete, userItem)
-				remoteRepoViewModel.photoDeletionStatus.observeOnce(this@SettingsEditInfoFragment,
-				                                                    Observer{
-					if (it) {
-						userItem.photoURLs.removeAt(position)
-						mEditorPhotoAdapter.removeAt(position)
-						if (photoToDelete.fileUrl == userItem.baseUserInfo.mainPhotoUrl)
-							userItem.baseUserInfo.mainPhotoUrl = userItem.photoURLs[0].fileUrl
-					}
-				})
+				if (mEditorPhotoAdapter.itemCount > 1) {
+					val photoToDelete = mEditorPhotoAdapter.getPhoto(position)
+					remoteRepoViewModel.deletePhoto(photoToDelete, userItem)
+					remoteRepoViewModel.photoDeletionStatus.observeOnce(this@SettingsEditInfoFragment, Observer {
+						if (it) {
+                            userItem.photoURLs.remove(photoToDelete)
+                            mEditorPhotoAdapter.removeAt(position)
+                            if (photoToDelete.fileUrl == userItem.baseUserInfo.mainPhotoUrl){
+	                            userItem.baseUserInfo.mainPhotoUrl = userItem.photoURLs[0].fileUrl
+                            }
+
+                        }
+                    })
+				}
+				else context.showToastText("Хотя бы 1 фотка должна быть")
 			}
 		})
 
@@ -139,7 +143,7 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 
 	private fun initProfile(userItem: UserItem) {
-		mEditorPhotoAdapter.updateData(userItem.photoURLs.map { photoItem -> photoItem.fileUrl })
+		mEditorPhotoAdapter.updateData(userItem.photoURLs)
 		edSettingsEditName.setText(userItem.baseUserInfo.name)
 		dropSettingsEditGender.setText(userItem.baseUserInfo.gender)
 		dropSettingsEditPreferredGender.setText(userItem.baseUserInfo.preferredGender)
