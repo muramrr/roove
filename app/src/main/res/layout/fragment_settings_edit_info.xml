@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.03.20 17:52
+  ~ Last modified 04.03.20 19:45
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -179,7 +179,6 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 
-			app:floatingLabel="true"
 			app:haloColor="?colorSecondary"
 
 			app:thumbColor="@color/white_85"
@@ -188,6 +187,7 @@
 			app:activeTrackColor="?colorSecondary"
 			app:inactiveTrackColor="@color/lolite_25"
 			android:labelFor="@id/tvSettingsEditAge"
+			app:floatingLabel="true"
 
 			android:value="18"
 			android:valueFrom="18"
