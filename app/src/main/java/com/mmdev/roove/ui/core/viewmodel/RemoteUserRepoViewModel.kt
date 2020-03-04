@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 19:47
+ * Last modified 04.03.20 17:43
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -101,7 +101,8 @@ class RemoteUserRepoViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       if (it.containsKey(100.00)) photoUrls.value = it.getValue(100.00)
-	                       else Log.wtf(TAG, "Upload is ${"%.2f".format(it.keys.elementAt(0))}% done")
+	                       //else Log.wtf(TAG, "Upload is ${"%.2f".format(it.keys.elementAt(0))}%
+	                       // done")
                        },
                        {
 	                       Log.wtf(TAG, "uploading photo error: $it")
