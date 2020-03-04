@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.03.20 18:05
+ * Last modified 04.03.20 18:43
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -86,17 +86,17 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 				}.addOnFailureListener { emitter.onError(it) }
 		}.subscribeOn(Schedulers.io())
 
-	override fun deletePhoto(photoItem: PhotoItem, userItem: UserItem): Completable =
+	override fun deletePhoto(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean): Completable =
 		Completable.create { emitter ->
 			val currentUserRef = fillUserGeneralRef(userItem.baseUserInfo)
 
 			userItem.photoURLs.remove(photoItem)
 
-			if (photoItem.fileUrl == userItem.baseUserInfo.mainPhotoUrl) {
+			if (isMainPhotoDeleting) {
+				Log.wtf(TAG, "deleting mainphoto")
 				currentUserRef.update(USER_MAIN_PHOTO_FIELD, userItem.photoURLs[0].fileUrl)
+				userItem.baseUserInfo.mainPhotoUrl = userItem.photoURLs[0].fileUrl
 			}
-
-			currentUserRef.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayRemove(photoItem))
 
 			storage
 				.child(GENERAL_FOLDER_STORAGE_IMG)
@@ -105,6 +105,8 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 				.child(photoItem.fileName)
 				.delete()
 				.addOnFailureListener { emitter.onError(it) }
+
+			currentUserRef.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayRemove(photoItem))
 
 			localRepo.saveUserInfo(userItem)
 
