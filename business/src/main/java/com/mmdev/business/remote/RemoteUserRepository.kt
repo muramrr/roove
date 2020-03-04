@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 19:47
+ * Last modified 04.03.20 18:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,7 +26,7 @@ interface RemoteUserRepository {
 
 	fun createUserOnRemote(userItem: UserItem): Completable
 
-	fun deletePhoto(photoItem: PhotoItem, userItem: UserItem): Completable
+	fun deletePhoto(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean): Completable
 
 	fun deleteUser(userItem: UserItem): Completable
 

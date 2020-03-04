@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.03.20 17:43
+ * Last modified 04.03.20 18:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -46,8 +46,8 @@ class RemoteUserRepoViewModel @Inject constructor(
 	}
 
 
-	fun deletePhoto(photoItem: PhotoItem, userItem: UserItem){
-		disposables.add(deletePhotoExecution(photoItem, userItem)
+	fun deletePhoto(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean) {
+		disposables.add(deletePhotoExecution(photoItem, userItem, isMainPhotoDeleting)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       photoDeletionStatus.value = true
@@ -116,8 +116,8 @@ class RemoteUserRepoViewModel @Inject constructor(
 	fun getUserUpdateStatus() = isUserUpdated
 
 
-	private fun deletePhotoExecution(photoItem: PhotoItem, userItem: UserItem) =
-		deletePhotoUC.execute(photoItem, userItem)
+	private fun deletePhotoExecution(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean) =
+		deletePhotoUC.execute(photoItem, userItem, isMainPhotoDeleting)
 	private fun deleteUserExecution(userItem: UserItem) =
 		deleteUserUC.execute(userItem)
 	private fun fetchUserInfoExecution() =
