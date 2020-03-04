@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 19:48
+ * Last modified 04.03.20 18:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.ironz.binaryprefs.Preferences
 import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.local.LocalUserRepository
 import com.mmdev.business.places.BasePlaceInfo
@@ -45,6 +46,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		private const val PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL = "mainphotourl"
 		private const val PREF_KEY_CURRENT_USER_ID = "uid"
 		private const val PREF_KEY_CURRENT_USER_P_GENDER = "preferedGender"
+		private const val PREF_KEY_CURRENT_USER_CITY_TO_DISPLAY = "citytodisplay"
 		private const val PREF_KEY_CURRENT_USER_PHOTO_URLS = "photourls"
 		private const val PREF_KEY_CURRENT_USER_PLACES_ID = "placesToGo"
 
@@ -57,22 +59,25 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				val name = prefs.getString(PREF_KEY_CURRENT_USER_NAME , "")!!
 				val age = prefs.getInt(PREF_KEY_CURRENT_USER_AGE, 18)
 				val city = prefs.getString(PREF_KEY_CURRENT_USER_CITY, "")!!
+				val cityToDisplay = prefs.getString(PREF_KEY_CURRENT_USER_CITY_TO_DISPLAY, "")!!
 				val gender = prefs.getString(PREF_KEY_CURRENT_USER_GENDER, "")!!
 				val preferredGender = prefs.getString(PREF_KEY_CURRENT_USER_P_GENDER, "")!!
 				val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")!!
 				val mainPhotoUrl = prefs.getString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, "")!!
 
-//				val photoUrlsStrings =
-//					JSONArray(prefs.getString(PREF_KEY_CURRENT_USER_PHOTO_URLS, "")!!)
-//				val photoUrls = mutableListOf<String>()
-//				for (i in 0 until photoUrlsStrings.length())
-//					photoUrls.add(photoUrlsStrings.get(i).toString())
+				val photosStrings =
+					JSONArray(prefs.getString(PREF_KEY_CURRENT_USER_PHOTO_URLS, "")!!)
+				val photoItems = mutableListOf<PhotoItem>()
+				for (i in 0 until photosStrings.length())
+					photoItems.add(gson.fromJson(photosStrings.get(i).toString(),
+					                             PhotoItem::class.java))
 
 				val placesToGoStrings =
 					JSONArray(prefs.getString(PREF_KEY_CURRENT_USER_PLACES_ID, "")!!)
 				val placesToGoItems = mutableListOf<BasePlaceInfo>()
 				for (i in 0 until placesToGoStrings.length())
-					placesToGoItems.add(gson.fromJson(placesToGoStrings.get(i).toString(), BasePlaceInfo::class.java))
+					placesToGoItems.add(gson.fromJson(placesToGoStrings.get(i).toString(),
+					                                  BasePlaceInfo::class.java))
 
 
 				//Log.wtf(TAG, "retrieved user info from sharedpref successfully")
@@ -84,7 +89,8 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				                                     preferredGender,
 				                                     mainPhotoUrl,
 				                                     uid),
-						//photoURLs = photoUrls,
+				         cityToDisplay = cityToDisplay,
+				         photoURLs = photoItems,
 				         placesToGo = placesToGoItems)
 			}catch (e: Exception) {
 				Log.wtf(TAG, "read exception, but user is saved")
@@ -115,15 +121,16 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		editor.putString(PREF_KEY_CURRENT_USER_NAME, userItem.baseUserInfo.name)
 		editor.putInt(PREF_KEY_CURRENT_USER_AGE, userItem.baseUserInfo.age)
 		editor.putString(PREF_KEY_CURRENT_USER_CITY, userItem.baseUserInfo.city)
+		editor.putString(PREF_KEY_CURRENT_USER_CITY_TO_DISPLAY, userItem.cityToDisplay)
 		editor.putString(PREF_KEY_CURRENT_USER_GENDER, userItem.baseUserInfo.gender)
 		editor.putString(PREF_KEY_CURRENT_USER_P_GENDER, userItem.baseUserInfo.preferredGender)
 		editor.putString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, userItem.baseUserInfo.mainPhotoUrl)
 		editor.putString(PREF_KEY_CURRENT_USER_ID, userItem.baseUserInfo.userId)
 
-//		val photoUrlsList = mutableListOf<String>()
-//		for (photoUrl in userItem.photoURLs)
-//			photoUrlsList.add(gson.toJson(photoUrl))
-//		editor.putString(PREF_KEY_CURRENT_USER_PHOTO_URLS, photoUrlsList.toString())
+		val photosList = mutableListOf<String>()
+		for (photo in userItem.photoURLs)
+			photosList.add(gson.toJson(photo))
+		editor.putString(PREF_KEY_CURRENT_USER_PHOTO_URLS, photosList.toString())
 
 		val placesToGoList = mutableListOf<String>()
 		for (place in userItem.placesToGo)
@@ -134,13 +141,13 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		Log.wtf(TAG, "User successfully saved: $userItem")
 	}
 
-	fun updatePhotosField(photoURLs: List<String>) {
+	fun updatePhotosField(photoList: List<PhotoItem>) {
 
 		val editor = prefs.edit()
-		val photoUrlsList = mutableListOf<String>()
-		for (photoUrl in photoURLs)
-			photoUrlsList.add(gson.toJson(photoUrl))
-		editor.putString(PREF_KEY_CURRENT_USER_PHOTO_URLS, photoUrlsList.toString())
+		val photosList = mutableListOf<String>()
+		for (photo in photoList)
+			photosList.add(gson.toJson(photo))
+		editor.putString(PREF_KEY_CURRENT_USER_PHOTO_URLS, photosList.toString())
 
 		editor.apply()
 	}
