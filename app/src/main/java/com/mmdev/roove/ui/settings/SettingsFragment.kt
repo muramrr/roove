@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.03.20 15:41
+ * Last modified 04.03.20 19:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -92,7 +92,8 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 
 		toolbarSettings.setOnMenuItemClickListener { item ->
 			when (item.itemId) {
-				R.id.settings_action_log_out -> { showSignOutPrompt() }
+				R.id.settings_action_preferences -> showModalBottomSheet()
+				R.id.settings_action_log_out -> showSignOutPrompt()
 			}
 			return@setOnMenuItemClickListener true
 		}
@@ -168,6 +169,11 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 			}
 			.show()
 
+	}
+
+	private fun showModalBottomSheet() {
+		val modalBottomSheet = SettingsModalBottomSheet.newInstance(false)
+		modalBottomSheet.show(childFragmentManager, SettingsModalBottomSheet.TAG)
 	}
 
 	/*
