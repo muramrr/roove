@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.03.20 19:11
+ * Last modified 05.03.20 18:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -48,15 +48,12 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 	private var age = 0
 	private var city = ""
 	private var gender = ""
-	private var preferredGender = ""
 
 	private var cityToDisplay = ""
 
 	private var descriptionText = ""
 
 	private lateinit var cityList: Map<String, String>
-	private val genderList = listOf("male", "female")
-	private val preferredGenderList = listOf("male", "female", "everyone")
 
 	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
@@ -134,6 +131,18 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			return@setOnTouchListener false
 		}
 
+		btnSettingsEditGenderMale.setOnClickListener {
+			gender = "male"
+			userItem.baseUserInfo.gender = gender
+			toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderMale)
+		}
+
+		btnSettingsEditGenderFemale.setOnClickListener {
+			gender = "female"
+			userItem.baseUserInfo.gender = gender
+			toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderFemale)
+		}
+
 
 		btnSettingsEditSave.setOnClickListener {
 			remoteRepoViewModel.updateUserItem(userItem)
@@ -150,8 +159,9 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 	private fun initProfile(userItem: UserItem) {
 		mEditorPhotoAdapter.updateData(userItem.photoURLs)
 		edSettingsEditName.setText(userItem.baseUserInfo.name)
-		dropSettingsEditGender.setText(userItem.baseUserInfo.gender)
-		dropSettingsEditPreferredGender.setText(userItem.baseUserInfo.preferredGender)
+		if (userItem.baseUserInfo.gender == "male")
+			toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderMale)
+		else toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderFemale)
 		tvSettingsEditAge.text = "Age: ${userItem.baseUserInfo.age}"
 		sliderSettingsEditAge.value = userItem.baseUserInfo.age.toFloat()
 
@@ -161,8 +171,6 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		edSettingsEditDescription.setText(userItem.aboutText)
 
 		changerNameSetup()
-		changerGenderSetup()
-		changerPreferredGenderSetup()
 		changerAgeSetup()
 		changerCitySetup()
 		changerDescriptionSetup()
@@ -205,32 +213,6 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			}
 			return@setOnEditorActionListener false
 		}
-	}
-
-	private fun changerGenderSetup() {
-		val genderAdapter = ArrayAdapter(context!!,
-		                                 R.layout.drop_text_item,
-		                                 genderList)
-		dropSettingsEditGender.setAdapter(genderAdapter)
-
-		dropSettingsEditGender.setOnItemClickListener { _, _, position, _ ->
-			gender = genderList[position]
-			userItem.baseUserInfo.gender = gender
-		}
-	}
-
-	private fun changerPreferredGenderSetup() {
-		val preferredGenderAdapter = ArrayAdapter(context!!,
-		                                          R.layout.drop_text_item,
-		                                          preferredGenderList)
-
-		dropSettingsEditPreferredGender.setAdapter(preferredGenderAdapter)
-
-		dropSettingsEditPreferredGender.setOnItemClickListener { _, _, position, _ ->
-			preferredGender = preferredGenderList[position]
-			userItem.baseUserInfo.preferredGender = preferredGender
-		}
-
 	}
 
 	private fun changerAgeSetup() {
