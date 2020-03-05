@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.03.20 19:22
+ * Last modified 05.03.20 18:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -172,8 +172,8 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 	}
 
 	private fun showModalBottomSheet() {
-		val modalBottomSheet = SettingsModalBottomSheet.newInstance(false)
-		modalBottomSheet.show(childFragmentManager, SettingsModalBottomSheet.TAG)
+		val modalBottomSheet = SettingsModalBottomSheet.newInstance(true)
+		modalBottomSheet.show(childFragmentManager, SettingsModalBottomSheet::class.java.canonicalName)
 	}
 
 	/*

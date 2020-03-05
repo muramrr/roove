@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.03.20 18:36
+  ~ Last modified 05.03.20 17:11
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -61,7 +61,7 @@
 			app:iconSize="24dp"
 			app:icon="@drawable/ic_clear_24dp"
 			app:elevation="@null"
-			app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
+			app:shapeAppearanceOverlay="@style/MyAppShapeAppearanceOverlay.Button.Rounded"
 
 			style="@style/Widget.MaterialComponents.Button.Icon"
 			/>

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 29.02.20 17:23
+  ~ Last modified 05.03.20 18:39
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -63,7 +63,7 @@
 			android:scaleType="center"
 			android:src="@drawable/ic_cards_24dp"
 
-			app:backgroundTint="@color/lolite_tint_selected"
+			app:backgroundTint="@color/lolite_selected_tint"
 			app:tint="@color/white_tint_selected"
 
 			app:elevation="2dp"

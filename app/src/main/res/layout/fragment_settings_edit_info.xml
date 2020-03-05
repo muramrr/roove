@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 04.03.20 19:45
+  ~ Last modified 05.03.20 18:37
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -91,94 +91,65 @@
 
 		</com.google.android.material.textfield.TextInputLayout>
 
-		<!--gender-->
-		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/layoutSettingsEditGender"
+		<com.google.android.material.button.MaterialButtonToggleGroup
+			android:id="@+id/toggleButtonSettingsEditGender"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/general_margin_16"
-			android:layout_marginBottom="24dp"
+			android:gravity="center"
 
-			app:boxStrokeColor="@color/text_input_layout"
-			app:boxStrokeWidth="2dp"
-
-			android:hint="Your gender"
-			app:hintEnabled="true"
-			app:hintTextColor="@color/white"
-
-			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+			app:selectionRequired="true"
+			app:singleSelection="true"
+			app:checkedButton="@id/btnSettingsEditGenderMale"
 
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toStartOf="@id/layoutSettingsEditPreferredGender"
-			app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditName"
-			app:layout_constraintBottom_toTopOf="@id/sliderSettingsEditAge"
-			>
-
-			<com.google.android.material.textview.MaterialAutoCompleteTextView
-				android:id="@+id/dropSettingsEditGender"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@null"
-				android:cursorVisible="false"
-				android:drawablePadding="-24dp"
-				android:focusable="false"
-				android:gravity="center"
-				android:imeOptions="actionDone"
-				android:inputType="text"
-
-				android:text="male"
-				android:textSize="20sp"
-				style="@style/regular_text_white85op" />
-
-		</com.google.android.material.textfield.TextInputLayout>
-
-		<!--PreferredGender-->
-		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/layoutSettingsEditPreferredGender"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="24dp"
-
-			app:boxStrokeColor="@color/text_input_layout"
-			app:boxStrokeWidth="2dp"
-
-			android:hint="Interested in"
-			app:hintEnabled="true"
-			app:hintTextColor="@color/white"
-
-			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toEndOf="@id/layoutSettingsEditGender"
 			app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditName"
-			app:layout_constraintBottom_toTopOf="@id/sliderSettingsEditAge"
-			>
+			app:layout_constraintBottom_toTopOf="@id/sliderSettingsEditAge">
 
-			<com.google.android.material.textview.MaterialAutoCompleteTextView
-				android:id="@+id/dropSettingsEditPreferredGender"
-				android:layout_width="match_parent"
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/btnSettingsEditGenderMale"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:background="@null"
-				android:cursorVisible="false"
-				android:drawablePadding="-24dp"
-				android:focusable="false"
-				android:gravity="center"
-				android:imeOptions="actionDone"
-				android:inputType="text"
+				android:layout_weight="1"
+				android:padding="@dimen/general_margin_16"
 
-				android:text="male"
+				android:text="Male"
 				android:textSize="20sp"
-				style="@style/regular_text_white85op"
+				android:textAllCaps="false"
+				android:textAppearance="@style/light_text_white85op"
+				android:textColor="@color/white_tint_color"
+
+				app:backgroundTint="@color/lolite_checked_tint"
+
+				style="@style/Widget.MaterialComponents.Button.OutlinedButton"
 				/>
 
-		</com.google.android.material.textfield.TextInputLayout>
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/btnSettingsEditGenderFemale"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:padding="@dimen/general_margin_16"
+
+				android:text="Female"
+				android:textSize="20sp"
+				android:textAllCaps="false"
+				android:textAppearance="@style/light_text_white85op"
+				android:textColor="@color/white_tint_color"
+
+				app:backgroundTint="@color/lolite_checked_tint"
+
+				style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+				/>
+
+		</com.google.android.material.button.MaterialButtonToggleGroup>
 
 		<!--age-->
 		<com.google.android.material.slider.Slider
 			android:id="@+id/sliderSettingsEditAge"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-
+			android:layout_marginTop="@dimen/general_margin_16"
 			app:haloColor="?colorSecondary"
 
 			app:thumbColor="@color/white_85"
@@ -186,8 +157,6 @@
 
 			app:activeTrackColor="?colorSecondary"
 			app:inactiveTrackColor="@color/lolite_25"
-			android:labelFor="@id/tvSettingsEditAge"
-			app:floatingLabel="true"
 
 			android:value="18"
 			android:valueFrom="18"
@@ -195,7 +164,7 @@
 
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditGender"
+			app:layout_constraintTop_toBottomOf="@id/toggleButtonSettingsEditGender"
 			app:layout_constraintBottom_toTopOf="@id/tvSettingsEditAge"
 			/>
 
@@ -321,7 +290,7 @@
 			android:textSize="20sp"
 			android:textAllCaps="false"
 
-			app:backgroundTint="@color/lolite_tint_enabled"
+			app:backgroundTint="@color/amethyst_tint_enabled"
 			app:rippleColor="@color/black_50"
 			android:textAppearance="@style/bold_text_white85op"
 
