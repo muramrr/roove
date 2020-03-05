@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 04.03.20 19:23
+  ~ Last modified 05.03.20 18:55
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,23 +10,157 @@
   -->
 
 <androidx.constraintlayout.widget.ConstraintLayout
-
+	android:id="@+id/containerModalBottomSheet"
+	android:background="@color/colorPrimaryDark"
 	android:layout_height="wrap_content"
 	android:layout_width="match_parent"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	>
+
 
 	<TextView
+		android:id="@+id/tvAgePicker"
 		android:layout_width="0dp"
-		android:layout_height="400dp"
-		android:gravity="center"
-		android:text="Bottom Sheet"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/general_margin_8"
+		android:labelFor="@id/rangeSeekBarAgePicker"
+		android:padding="@dimen/general_margin_8"
 
+		android:text="Show ages:"
+		android:textSize="24sp"
 		style="@style/medium_text_white85op"
 
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/cvContainerAgePicker"/>
+
+	<androidx.cardview.widget.CardView
+		android:id="@+id/cvContainerAgePicker"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+
+		app:cardBackgroundColor="@color/colorPrimary"
+		app:cardCornerRadius="20dp"
+		app:contentPadding="@dimen/general_margin_16"
+		android:elevation="0dp"
+
+		app:layout_constraintStart_toStartOf="@id/guidelineStart"
+		app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+		app:layout_constraintTop_toBottomOf="@id/tvAgePicker"
+		app:layout_constraintBottom_toTopOf="@id/tvPreferredGenderPicker">
+
+		<org.florescu.android.rangeseekbar.RangeSeekBar
+			android:id="@+id/rangeSeekBarAgePicker"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@null"
+
+			app:internalPadding="@dimen/general_margin_8"
+			app:showLabels="true"
+
+			app:absoluteMinValue="50"
+			app:absoluteMaxValue="18"
+
+			app:alwaysActive="true"
+			app:textAboveThumbsColor="@color/white"
+			app:thumbDisabled="@drawable/custom_slider_thumb"
+			app:thumbNormal="@drawable/custom_slider_thumb"
+			app:thumbPressed="@drawable/custom_slider_thumb"
+			app:thumbShadow="true"
+			app:valuesAboveThumbs="true"
+			/>
+
+	</androidx.cardview.widget.CardView>
+
+	<TextView
+		android:id="@+id/tvPreferredGenderPicker"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/general_margin_8"
+		android:labelFor="@id/toggleButtonPickerPreferredGender"
+		android:padding="@dimen/general_margin_8"
+
+		android:text="Show me:"
+		android:textSize="24sp"
+		style="@style/medium_text_white85op"
+
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/cvContainerAgePicker"
 		/>
+
+	<com.google.android.material.button.MaterialButtonToggleGroup
+		android:id="@+id/toggleButtonPickerPreferredGender"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="32dp"
+		android:gravity="center"
+
+		app:selectionRequired="true"
+		app:singleSelection="false"
+		app:checkedButton="@id/btnPickerPreferredGenderMale"
+
+		app:layout_constraintStart_toStartOf="@id/guidelineStart"
+		app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+		app:layout_constraintTop_toBottomOf="@id/tvPreferredGenderPicker"
+		app:layout_constraintBottom_toBottomOf="parent"
+		>
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btnPickerPreferredGenderMale"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:padding="@dimen/general_margin_16"
+
+			android:text="Male"
+			android:textSize="20sp"
+			android:textAllCaps="false"
+			android:textAppearance="@style/light_text_white85op"
+			android:textColor="@color/white_tint_color"
+
+			app:backgroundTint="@color/lolite_checked_tint"
+
+			style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+			/>
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btnPickerPreferredGenderFemale"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:padding="@dimen/general_margin_16"
+
+			android:text="Female"
+			android:textSize="20sp"
+			android:textAllCaps="false"
+			android:textAppearance="@style/light_text_white85op"
+			android:textColor="@color/white_tint_color"
+
+			app:backgroundTint="@color/lolite_checked_tint"
+
+			style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+			/>
+
+	</com.google.android.material.button.MaterialButtonToggleGroup>
+
+
+	<!-- left padding -->
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guidelineStart"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_begin="@dimen/general_margin_8" />
+
+	<!-- right padding -->
+	<androidx.constraintlayout.widget.Guideline
+		android:id="@+id/guidelineEnd"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_end="@dimen/general_margin_8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

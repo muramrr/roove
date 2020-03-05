@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 01.03.20 17:33
+  ~ Last modified 05.03.20 18:37
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<item android:alpha="0.38" android:color="@color/lolite" android:state_enabled="false"/>
-	<item android:color="@color/lolite" android:state_enabled="true"/>
+	<item android:alpha="0.08" android:color="@color/lolite" android:state_checked="false"/>
+	<item android:color="@color/lolite" android:state_checked="true"/>
 
 </selector>

@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.03.20 18:49
+  ~ Last modified 05.03.20 17:12
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,9 +45,9 @@
 
 		<item name="materialAlertDialogTheme">@style/MyMaterialAlertDialog</item>
 
-		<item name="shapeAppearanceSmallComponent">@style/AppShapeAppearance.SmallComponent</item>
-		<item name="shapeAppearanceMediumComponent">@style/AppShapeAppearance.MediumComponent</item>
-		<item name="shapeAppearanceLargeComponent">@style/AppShapeAppearance.LargeComponent</item>
+		<item name="shapeAppearanceSmallComponent">@style/MyAppShapeAppearance.SmallComponent</item>
+		<item name="shapeAppearanceMediumComponent">@style/MyAppShapeAppearance.MediumComponent</item>
+		<item name="shapeAppearanceLargeComponent">@style/MyAppShapeAppearance.LargeComponent</item>
 
 	</style>
 
@@ -119,19 +119,19 @@
 
 	</style>
 
-	<style name="AppShapeAppearance.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+	<style name="MyAppShapeAppearance.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
 		<item name="cornerSize">8dp</item>
 	</style>
 
-	<style name="AppShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+	<style name="MyAppShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
 		<item name="cornerSize">8dp</item>
 	</style>
 
-	<style name="AppShapeAppearance.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+	<style name="MyAppShapeAppearance.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
 		<item name="cornerSize">8dp</item>
 	</style>
 
-	<style name="ShapeAppearanceOverlay.MyApp.Button.Rounded" parent="">
+	<style name="MyAppShapeAppearanceOverlay.Button.Rounded" parent="">
 		<item name="cornerFamily">rounded</item>
 		<item name="cornerSize">50%</item>
 	</style>
