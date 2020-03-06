@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.03.20 19:02
+ * Last modified 06.03.20 19:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -46,6 +46,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 		private const val GENERAL_COLLECTION_REFERENCE = "users"
 		private const val BASE_COLLECTION_REFERENCE = "usersBase"
 
+		private const val USER_BASE_INFO_FIELD = "baseUserInfo"
 		private const val USER_MAIN_PHOTO_FIELD = "baseUserInfo.mainPhotoUrl"
 		private const val USER_PHOTOS_LIST_FIELD = "photoURLs"
 		private const val USER_BASE_REGISTRATION_TOKENS_FIELD = "registrationTokens"
@@ -170,8 +171,8 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 				.addOnSuccessListener {
 					db.collection(BASE_COLLECTION_REFERENCE)
 						.document(userItem.baseUserInfo.userId)
-						.set(userItem.baseUserInfo)
-						.addOnCompleteListener {
+						.update(USER_BASE_INFO_FIELD, userItem.baseUserInfo)
+						.addOnSuccessListener {
 							localRepo.saveUserInfo(userItem)
 							emitter.onComplete()
 						}
