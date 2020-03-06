@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.02.20 18:10
+ * Last modified 05.03.20 19:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -268,8 +268,8 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				.collection(currentUser.baseUserInfo.preferredGender)
 				.orderBy(USERS_FILTER_AGE)
 				.orderBy("baseUserInfo.userId", Query.Direction.DESCENDING)
-				.whereLessThanOrEqualTo(USERS_FILTER_AGE, 22)
-				.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, 18)
+				.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
+				.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
 				//.limit(10)
 
 		return Single.create(SingleOnSubscribe<List<UserItem>>{ emitter ->
@@ -322,11 +322,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		//Log.wtf(TAG, "merged lists: ${uidList.size}")
 		return uidList
 	}
-
-
-
-
-
 
 	/**
 	 * 1. add to matches collection for liked user

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 19:51
+ * Last modified 06.03.20 17:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,6 +54,9 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 	private lateinit var cityList: Map<String, String>
 
+	private lateinit var male: String
+	private lateinit var female: String
+	private lateinit var everyone: String
 
 	companion object {
 		private const val TAG = "mylogs_RegistrFragment"
@@ -62,15 +65,18 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
-		cityList = mapOf(context.getString(R.string.russia_ekb) to "ekb",
-		                 context.getString(R.string.russia_krasnoyarsk) to "krasnoyarsk",
-		                 context.getString(R.string.russia_krd) to "krd",
-		                 context.getString(R.string.russia_kzn) to "kzn",
-		                 context.getString(R.string.russia_msk) to "msk",
-		                 context.getString(R.string.russia_nnv) to "nnv",
-		                 context.getString(R.string.russia_nsk) to "nsk",
-		                 context.getString(R.string.russia_sochi) to "sochi",
-		                 context.getString(R.string.russia_spb) to "spb")
+		cityList = mapOf(getString(R.string.russia_ekb) to "ekb",
+		                 getString(R.string.russia_krasnoyarsk) to "krasnoyarsk",
+		                 getString(R.string.russia_krd) to "krd",
+		                 getString(R.string.russia_kzn) to "kzn",
+		                 getString(R.string.russia_msk) to "msk",
+		                 getString(R.string.russia_nnv) to "nnv",
+		                 getString(R.string.russia_nsk) to "nsk",
+		                 getString(R.string.russia_sochi) to "sochi",
+		                 getString(R.string.russia_spb) to "spb")
+		male = getString(R.string.genderMale)
+		female = getString(R.string.genderFemale)
+		everyone = getString(R.string.genderEveryone)
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -117,9 +123,9 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 		btnGenderMale.setOnClickListener {
 			setSelectedMale()
 
-			when (registrationStep){
-				1 -> gender = btnGenderMale.text.toString()
-				2 -> preferredGender = btnGenderMale.text.toString()
+			when (registrationStep) {
+				1 -> gender = male
+				2 -> preferredGender = male
 			}
 
 			enableFab()
@@ -130,8 +136,8 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 			setSelectedFemale()
 
 			when (registrationStep){
-				1 -> gender = btnGenderFemale.text.toString()
-				2 -> preferredGender = btnGenderFemale.text.toString()
+				1 -> gender = female
+				2 -> preferredGender = female
 			}
 
 			enableFab()
@@ -142,7 +148,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 		//step 2
 		btnGenderEveryone.setOnClickListener {
 			setSelectedEveryone()
-			preferredGender = btnGenderEveryone.text.toString()
+			preferredGender = everyone
 			enableFab()
 		}
 
@@ -300,8 +306,8 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 		if (gender.isNotEmpty()){
 			enableFab()
 			when (gender){
-				"male" -> setSelectedMale()
-				"female" -> setSelectedFemale()
+				male -> setSelectedMale()
+				female -> setSelectedFemale()
 			}
 		}
 		else disableFab()
@@ -312,9 +318,9 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 		if (preferredGender.isNotEmpty()){
 			enableFab()
 			when (preferredGender){
-				"male" -> setSelectedMale()
-				"female" -> setSelectedFemale()
-				"everyone" -> setSelectedEveryone()
+				male -> setSelectedMale()
+				female -> setSelectedFemale()
+				everyone -> setSelectedEveryone()
 			}
 		}
 		else disableFab()
