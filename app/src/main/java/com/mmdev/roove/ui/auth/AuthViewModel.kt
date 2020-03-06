@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 17:10
+ * Last modified 06.03.20 17:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,6 @@ import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.ui.core.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsAuthenticatedListenerUseCase,
@@ -45,7 +44,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 
 	fun checkIsAuthenticated() {
 		disposables.add(isAuthenticatedExecution()
-            .debounce(1000, TimeUnit.MILLISECONDS)
+            //.debounce(1000, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       if (isAuthenticatedStatus.value != it) isAuthenticatedStatus.value = it

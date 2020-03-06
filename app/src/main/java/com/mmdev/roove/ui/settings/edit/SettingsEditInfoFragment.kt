@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 05.03.20 18:20
+ * Last modified 06.03.20 17:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -58,12 +58,19 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
 
+	private lateinit var male: String
+	private lateinit var female: String
+
+
 	companion object{
 		private const val TAG = "mylogs_SettingsEditFragment"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+
+		male = getString(R.string.genderMale)
+		female = getString(R.string.genderFemale)
 
 		activity?.run {
 			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
@@ -132,13 +139,13 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		}
 
 		btnSettingsEditGenderMale.setOnClickListener {
-			gender = "male"
+			gender = male
 			userItem.baseUserInfo.gender = gender
 			toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderMale)
 		}
 
 		btnSettingsEditGenderFemale.setOnClickListener {
-			gender = "female"
+			gender = female
 			userItem.baseUserInfo.gender = gender
 			toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderFemale)
 		}
@@ -159,7 +166,7 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 	private fun initProfile(userItem: UserItem) {
 		mEditorPhotoAdapter.updateData(userItem.photoURLs)
 		edSettingsEditName.setText(userItem.baseUserInfo.name)
-		if (userItem.baseUserInfo.gender == "male")
+		if (userItem.baseUserInfo.gender == male)
 			toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderMale)
 		else toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderFemale)
 		tvSettingsEditAge.text = "Age: ${userItem.baseUserInfo.age}"

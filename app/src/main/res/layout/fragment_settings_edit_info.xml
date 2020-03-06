@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 05.03.20 18:37
+  ~ Last modified 06.03.20 17:30
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -113,9 +113,8 @@
 				android:layout_weight="1"
 				android:padding="@dimen/general_margin_16"
 
-				android:text="Male"
+				android:text="@string/genderMale"
 				android:textSize="20sp"
-				android:textAllCaps="false"
 				android:textAppearance="@style/light_text_white85op"
 				android:textColor="@color/white_tint_color"
 
@@ -131,9 +130,8 @@
 				android:layout_weight="1"
 				android:padding="@dimen/general_margin_16"
 
-				android:text="Female"
+				android:text="@string/genderFemale"
 				android:textSize="20sp"
-				android:textAllCaps="false"
 				android:textAppearance="@style/light_text_white85op"
 				android:textColor="@color/white_tint_color"
 
