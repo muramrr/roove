@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.03.20 18:05
+ * Last modified 06.03.20 18:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import com.google.gson.Gson
 import com.ironz.binaryprefs.Preferences
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
+import com.mmdev.business.core.PreferredAgeRange
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.local.LocalUserRepository
 import com.mmdev.business.places.BasePlaceInfo
@@ -43,13 +44,15 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		private const val PREF_KEY_CURRENT_USER_AGE = "age"
 		private const val PREF_KEY_CURRENT_USER_CITY = "city"
 		private const val PREF_KEY_CURRENT_USER_GENDER = "gender"
-		private const val PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL = "mainphotourl"
+		private const val PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL = "mainPhotoUrl"
 		private const val PREF_KEY_CURRENT_USER_ID = "uid"
-		private const val PREF_KEY_CURRENT_USER_P_GENDER = "preferedGender"
-		private const val PREF_KEY_CURRENT_USER_CITY_TO_DISPLAY = "citytodisplay"
-		private const val PREF_KEY_CURRENT_USER_PHOTO_URLS = "photourls"
+		private const val PREF_KEY_CURRENT_USER_P_GENDER = "preferredGender"
+		private const val PREF_KEY_CURRENT_USER_CITY_TO_DISPLAY = "cityToDisplay"
+		private const val PREF_KEY_CURRENT_USER_PHOTO_URLS = "photoUrls"
 		private const val PREF_KEY_CURRENT_USER_PLACES_ID = "placesToGo"
 
+		private const val PREF_KEY_CURRENT_USER_P_AGE_MIN = "preferredAgeMin"
+		private const val PREF_KEY_CURRENT_USER_P_AGE_MAX = "preferredAgeMax"
 		private const val TAG = "mylogs_UserRepoImpl"
 	}
 
@@ -79,6 +82,8 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 					placesToGoItems.add(gson.fromJson(placesToGoStrings.get(i).toString(),
 					                                  BasePlaceInfo::class.java))
 
+				val preferredAgeMin = prefs.getInt(PREF_KEY_CURRENT_USER_P_AGE_MIN, 18)
+				val preferredAgeMax =  prefs.getInt(PREF_KEY_CURRENT_USER_P_AGE_MAX, 18)
 
 				//Log.wtf(TAG, "retrieved user info from sharedpref successfully")
 
@@ -91,7 +96,9 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				                                     uid),
 				         cityToDisplay = cityToDisplay,
 				         photoURLs = photoItems,
-				         placesToGo = placesToGoItems)
+				         placesToGo = placesToGoItems,
+				         preferredAgeRange = PreferredAgeRange(preferredAgeMin, preferredAgeMax))
+
 			}catch (e: Exception) {
 				Log.wtf(TAG, "read exception, but user is saved")
 				if (auth.currentUser != null) {
@@ -136,6 +143,9 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		for (place in userItem.placesToGo)
 			placesToGoList.add(gson.toJson(place))
 		editor.putString(PREF_KEY_CURRENT_USER_PLACES_ID, placesToGoList.toString())
+
+		editor.putInt(PREF_KEY_CURRENT_USER_P_AGE_MIN, userItem.preferredAgeRange.minAge)
+		editor.putInt(PREF_KEY_CURRENT_USER_P_AGE_MAX, userItem.preferredAgeRange.maxAge)
 
 		editor.commit()
 		Log.wtf(TAG, "User successfully saved: $userItem")

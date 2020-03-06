@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 05.03.20 18:55
+ * Last modified 06.03.20 19:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,6 @@ import android.provider.MediaStore
 import android.text.format.DateFormat
 import android.view.Gravity
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
@@ -41,6 +40,7 @@ import com.mmdev.roove.ui.custom.CenterFirstLastItemDecoration
 import com.mmdev.roove.ui.custom.HorizontalCarouselLayoutManager
 import com.mmdev.roove.ui.profile.view.PlacesToGoAdapter
 import com.mmdev.roove.utils.observeOnce
+import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_settings.*
 import java.io.File
 import java.util.*
@@ -84,6 +84,10 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 
 		remoteRepoViewModel.photoUrls.observe(this, Observer {
 			mSettingsPhotoAdapter.updateData(it.map { photoItem -> photoItem.fileUrl })
+		})
+
+		sharedViewModel.modalBottomSheetStatus.observeOnce(this, Observer{
+			if (it == LifecycleStates.STOP) remoteRepoViewModel.updateUserItem(userItem)
 		})
 	}
 
@@ -254,9 +258,8 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 					remoteRepoViewModel.uploadUserProfilePhoto(Uri.fromFile(mFilePathImageCamera).toString(),
 					                                           userItem)
 				}
-				else Toast.makeText(context,
-				                    "filePathImageCamera is null or filePathImageCamera isn't exists",
-				                    Toast.LENGTH_LONG).show()
+				else context?.showToastText("filePathImageCamera is null or filePathImageCamera isn't exists")
+
 			}
 		}
 	}

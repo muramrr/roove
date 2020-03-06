@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.03.20 18:43
+ * Last modified 06.03.20 19:02
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -66,7 +66,8 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 				authUserItem.registrationTokens.add(instanceResult.token)
 				ref.set(userItem)
 					.addOnSuccessListener {
-						fillUserBaseRef(userItem.baseUserInfo.userId)
+						db.collection(BASE_COLLECTION_REFERENCE)
+							.document(userItem.baseUserInfo.userId)
 							.set(authUserItem)
 						emitter.onComplete()
 					}.addOnFailureListener { emitter.onError(it) }
@@ -79,7 +80,8 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 			val ref = fillUserGeneralRef(userItem.baseUserInfo)
 			ref.delete()
 				.addOnSuccessListener {
-					fillUserBaseRef(userItem.baseUserInfo.userId)
+					db.collection(BASE_COLLECTION_REFERENCE)
+						.document(userItem.baseUserInfo.userId)
 						.delete()
 						.addOnCompleteListener { emitter.onComplete() }
 						.addOnFailureListener { emitter.onError(it)  }
@@ -88,25 +90,28 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 
 	override fun deletePhoto(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean): Completable =
 		Completable.create { emitter ->
-			val currentUserRef = fillUserGeneralRef(userItem.baseUserInfo)
+			val ref = fillUserGeneralRef(userItem.baseUserInfo)
 
 			userItem.photoURLs.remove(photoItem)
 
 			if (isMainPhotoDeleting) {
-				Log.wtf(TAG, "deleting mainphoto")
-				currentUserRef.update(USER_MAIN_PHOTO_FIELD, userItem.photoURLs[0].fileUrl)
+				ref.update(USER_MAIN_PHOTO_FIELD, userItem.photoURLs[0].fileUrl)
+				db.collection(BASE_COLLECTION_REFERENCE)
+					.document(userItem.baseUserInfo.userId)
+					.update(USER_MAIN_PHOTO_FIELD, userItem.photoURLs[0].fileUrl)
 				userItem.baseUserInfo.mainPhotoUrl = userItem.photoURLs[0].fileUrl
 			}
 
-			storage
-				.child(GENERAL_FOLDER_STORAGE_IMG)
-				.child(SECONDARY_FOLDER_STORAGE_IMG)
-				.child(userItem.baseUserInfo.userId)
-				.child(photoItem.fileName)
-				.delete()
-				.addOnFailureListener { emitter.onError(it) }
+			if (photoItem.fileName != "facebookPhoto")
+				storage
+					.child(GENERAL_FOLDER_STORAGE_IMG)
+					.child(SECONDARY_FOLDER_STORAGE_IMG)
+					.child(userItem.baseUserInfo.userId)
+					.child(photoItem.fileName)
+					.delete()
+					.addOnFailureListener { emitter.onError(it) }
 
-			currentUserRef.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayRemove(photoItem))
+			ref.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayRemove(photoItem))
 
 			localRepo.saveUserInfo(userItem)
 
@@ -119,7 +124,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 			val userItem = localRepo.getSavedUser()!!
 			val refGeneral = fillUserGeneralRef(userItem.baseUserInfo)
 
-			val refBase = fillUserBaseRef(userItem.baseUserInfo.userId)
+			val refBase = db.collection(BASE_COLLECTION_REFERENCE).document(userItem.baseUserInfo.userId)
 			//get general user item first
 			refGeneral.get()
 				.addOnSuccessListener { remoteUser ->
@@ -163,7 +168,8 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 			val ref = fillUserGeneralRef(userItem.baseUserInfo)
 			ref.set(userItem)
 				.addOnSuccessListener {
-					fillUserBaseRef(userItem.baseUserInfo.userId)
+					db.collection(BASE_COLLECTION_REFERENCE)
+						.document(userItem.baseUserInfo.userId)
 						.set(userItem.baseUserInfo)
 						.addOnCompleteListener {
 							localRepo.saveUserInfo(userItem)
@@ -215,8 +221,4 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 			.document(baseUserInfo.city)
 			.collection(baseUserInfo.gender)
 			.document(baseUserInfo.userId)
-
-	private fun fillUserBaseRef (userId: String) =
-		db.collection(BASE_COLLECTION_REFERENCE)
-			.document(userId)
 }

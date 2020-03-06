@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.03.20 17:22
+ * Last modified 06.03.20 19:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@
 package com.mmdev.roove.ui.settings
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
+import com.mmdev.roove.ui.core.LifecycleStates
 import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
 import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_settings_modal_bottom_sheet.*
@@ -89,9 +89,6 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 				userItem.baseUserInfo.preferredGender = male
 			if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderFemale)
 				userItem.baseUserInfo.preferredGender = female
-
-			Log.wtf("mylogs", userItem.baseUserInfo.preferredGender)
-			Log.wtf("mylogs", "${group.checkedButtonIds}")
 		}
 
 	}
@@ -119,5 +116,15 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 		super.onActivityCreated(savedInstanceState)
 		dismissWithAnimation = arguments?.getBoolean(ARG_DISMISS_WITH_ANIMATION) ?: false
 		(requireDialog() as BottomSheetDialog).dismissWithAnimation = dismissWithAnimation
+	}
+
+	override fun onStop() {
+		sharedViewModel.modalBottomSheetStatus.value = LifecycleStates.STOP
+		super.onStop()
+	}
+
+	override fun onDetach() {
+		sharedViewModel.modalBottomSheetStatus.value = LifecycleStates.DETACH
+		super.onDetach()
 	}
 }
