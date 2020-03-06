@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:20
+ * Last modified 06.03.20 18:13
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModel
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.pairs.MatchedUserItem
+import com.mmdev.roove.ui.core.LifecycleStates
 
 /**
  * In general, you should strongly prefer passing only the minimal amount of data between destinations.
@@ -34,7 +35,7 @@ class SharedViewModel: ViewModel() {
 
 	val conversationSelected: MutableLiveData<ConversationItem> = MutableLiveData()
 
-
+	val modalBottomSheetStatus: MutableLiveData<LifecycleStates> = MutableLiveData()
 	private val currentUser: MutableLiveData<UserItem> = MutableLiveData()
 
 	fun getCurrentUser() = currentUser
@@ -56,7 +57,4 @@ class SharedViewModel: ViewModel() {
 	fun setMatchedUserItem(matchedUserItem: MatchedUserItem) {
 		matchedUserItemSelected.value = matchedUserItem
 	}
-
-
-
 }

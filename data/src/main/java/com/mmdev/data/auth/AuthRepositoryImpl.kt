@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.03.20 15:28
+ * Last modified 06.03.20 18:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -118,8 +118,9 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 
 	private fun checkAndRetrieveFullUser(baseUserInfo: BaseUserInfo): Single<HashMap<Boolean, BaseUserInfo>> =
 		Single.create(SingleOnSubscribe<HashMap<Boolean, BaseUserInfo>> { emitter ->
-			val ref = db.collection(BASE_COLLECTION_REFERENCE).document(baseUserInfo.userId)
-			ref.get()
+			db.collection(BASE_COLLECTION_REFERENCE)
+				.document(baseUserInfo.userId)
+				.get()
 				.addOnSuccessListener { baseUserDoc ->
 					//if base info about user exists in db
 					if (baseUserDoc.exists()) {
