@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 04.03.20 19:45
+  ~ Last modified 06.03.20 17:30
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -48,7 +48,7 @@
 		android:layout_marginEnd="@dimen/general_margin_8"
 
 		android:fontFamily="@font/rubik_medium"
-		android:text="male"
+		android:text="@string/genderMale"
 		android:textSize="12sp"
 
 		app:backgroundTint="@color/material_registration_buttons"
@@ -72,7 +72,7 @@
 		android:layout_height="220dp"
 
 		android:fontFamily="@font/rubik_medium"
-		android:text="female"
+		android:text="@string/genderFemale"
 		android:textSize="12sp"
 
 		app:backgroundTint="@color/material_registration_buttons"
@@ -117,7 +117,7 @@
 		android:layout_marginBottom="24dp"
 
 		android:fontFamily="@font/rubik_medium"
-		android:text="everyone"
+		android:text="@string/genderEveryone"
 		android:textSize="12sp"
 
 		app:backgroundTint="@color/material_registration_buttons"

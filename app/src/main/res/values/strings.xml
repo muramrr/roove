@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.03.20 18:22
+  ~ Last modified 06.03.20 15:47
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -76,6 +76,9 @@
 
 	<string name="text_max_length_error">Max length reached</string>
 	<string name="text_empty_error">Field must not be empty</string>
+	<string name="genderMale">male</string>
+	<string name="genderEveryone">everyone</string>
+	<string name="genderFemale">female</string>
 
 
 </resources>

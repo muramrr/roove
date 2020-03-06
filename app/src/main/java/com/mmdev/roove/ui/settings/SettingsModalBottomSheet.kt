@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 05.03.20 19:11
+ * Last modified 06.03.20 17:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 package com.mmdev.roove.ui.settings
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,10 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var userItem: UserItem
 
+	private lateinit var male: String
+	private lateinit var female: String
+	private lateinit var everyone: String
+
 
 	companion object {
 		private const val ARG_DISMISS_WITH_ANIMATION = "dismiss_with_animation"
@@ -44,6 +49,9 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		male = getString(R.string.genderMale)
+		female = getString(R.string.genderFemale)
+		everyone = getString(R.string.genderEveryone)
 		activity?.run {
 			sharedViewModel = ViewModelProvider(this, injector.factory())[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
@@ -58,28 +66,53 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		rangeSeekBarAgePicker.selectedMinValue = 18
-		rangeSeekBarAgePicker.selectedMaxValue = 22
-		toggleButtonPickerPreferredGender.check(R.id.btnPickerPreferredGenderFemale)
+		rangeSeekBarAgePicker.setOnRangeSeekBarChangeListener { _, number, number2 ->
+			userItem.preferredAgeRange.minAge = number.toInt()
+			userItem.preferredAgeRange.maxAge = number2.toInt()
+		}
+
+//		btnPickerPreferredGenderMale.addOnCheckedChangeListener { button, isChecked ->
+//			if (toggleButtonPickerPreferredGender.checkedButtonIds.size == 1 && isChecked)
+//				userItem.baseUserInfo.preferredGender = male
+//		}
+//
+//		btnPickerPreferredGenderFemale.addOnCheckedChangeListener { button, isChecked ->
+//			if (toggleButtonPickerPreferredGender.checkedButtonIds.size == 1 && isChecked)
+//				userItem.baseUserInfo.preferredGender = female
+//		}
+
+
+		toggleButtonPickerPreferredGender.addOnButtonCheckedListener { group, checkedId, isChecked ->
+			if (group.checkedButtonIds.size > 1)
+				userItem.baseUserInfo.preferredGender = everyone
+			if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderMale)
+				userItem.baseUserInfo.preferredGender = male
+			if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderFemale)
+				userItem.baseUserInfo.preferredGender = female
+
+			Log.wtf("mylogs", userItem.baseUserInfo.preferredGender)
+			Log.wtf("mylogs", "${group.checkedButtonIds}")
+		}
 
 	}
 
 	private fun initProfile(userItem: UserItem) {
 		when (userItem.baseUserInfo.preferredGender) {
-			"male" -> {
+			male -> {
 				toggleButtonPickerPreferredGender.clearChecked()
 				toggleButtonPickerPreferredGender.check(R.id.btnPickerPreferredGenderMale)
 			}
-			"female" -> {
+			female -> {
 				toggleButtonPickerPreferredGender.clearChecked()
 				toggleButtonPickerPreferredGender.check(R.id.btnPickerPreferredGenderFemale)
 			}
-			"everyone" -> {
+			everyone -> {
 				toggleButtonPickerPreferredGender.check(R.id.btnPickerPreferredGenderMale)
 				toggleButtonPickerPreferredGender.check(R.id.btnPickerPreferredGenderFemale)
 			}
-
 		}
+		rangeSeekBarAgePicker.selectedMinValue = userItem.preferredAgeRange.minAge
+		rangeSeekBarAgePicker.selectedMaxValue = userItem.preferredAgeRange.maxAge
 	}
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
