@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:14
+ * Last modified 07.03.20 19:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -120,9 +120,9 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		}
 
 		chatViewModel = ViewModelProvider(this@ChatFragment, factory)[ChatViewModel::class.java]
+		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 
 		activity?.run {
-			remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
@@ -134,26 +134,28 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 		//if it was a deep link navigation then create ConversationItem "on a flight"
 		if (isDeepLinkJump) {
-			remoteRepoViewModel.retrievedUserItem.observeOnce(this, Observer {
-				val receivedConversationItem = ConversationItem(partner = it.baseUserInfo,
-				                                                conversationId = receivedConversationId,
-				                                                conversationStarted = true)
+			val receivedConversationItem =
+				ConversationItem(partner = BaseUserInfo(city = receivedPartnerCity,
+				                                        gender = receivedPartnerGender,
+				                                        userId = receivedPartnerId),
+				                 conversationId = receivedConversationId,
+				                 conversationStarted = true)
 
-				currentPartner = it
-				sharedViewModel.setConversationSelected(receivedConversationItem)
-				setupContentToolbar(it)
-			})
-			remoteRepoViewModel.getFullUserInfo(BaseUserInfo(city = receivedPartnerCity,
-			                                                 gender = receivedPartnerGender,
-			                                                 userId = receivedPartnerId))
-
+			sharedViewModel.setConversationSelected(receivedConversationItem)
 		}
+
+		remoteRepoViewModel.retrievedUserItem.observeOnce(this, Observer {
+			currentPartner = it
+			setupContentToolbar(it)
+		})
 
 		sharedViewModel.conversationSelected.observeOnce(this, Observer {
 			currentConversation = it
+			remoteRepoViewModel.getFullUserInfo(it.partner)
 			chatViewModel.loadMessages(it)
 			chatViewModel.observeNewMessages(it)
 		})
+
 
 		chatViewModel.getMessagesList().observe(this, Observer {
 			mChatAdapter.updateData(it)

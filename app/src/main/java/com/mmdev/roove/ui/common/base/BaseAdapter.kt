@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:14
+ * Last modified 07.03.20 19:45
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,7 @@ import com.mmdev.roove.BR
 abstract class BaseAdapter<T>:
 		RecyclerView.Adapter<BaseAdapter<T>.BaseViewHolder<T>>() {
 
-	private lateinit var mClickListener: OnItemClickListener<T>
+	private var mClickListener: OnItemClickListener<T>? = null
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
 		BaseViewHolder<T>(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
@@ -52,8 +52,10 @@ abstract class BaseAdapter<T>:
 			RecyclerView.ViewHolder(binding.root){
 
 		init {
-			itemView.setOnClickListener {
-				mClickListener.onItemClick(getItem(adapterPosition), adapterPosition)
+			mClickListener?.let { mClickListener ->
+				itemView.setOnClickListener {
+					mClickListener.onItemClick(getItem(adapterPosition), adapterPosition)
+				}
 			}
 		}
 
