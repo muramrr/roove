@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 17:04
+ * Last modified 07.03.20 19:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,9 @@ package com.mmdev.roove.ui.places.view.detailed
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -24,12 +26,14 @@ import com.mmdev.business.core.UserItem
 import com.mmdev.business.places.BasePlaceInfo
 import com.mmdev.business.places.PlaceDetailedItem
 import com.mmdev.roove.R
-import com.mmdev.roove.ui.core.BaseFragment
-import com.mmdev.roove.ui.core.ImagePagerAdapter
-import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
-import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
+import com.mmdev.roove.databinding.FragmentPlaceDetailedBinding
+import com.mmdev.roove.ui.SharedViewModel
+import com.mmdev.roove.ui.common.ImagePagerAdapter
+import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.places.PlacesViewModel
+import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.observeOnce
+import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_place_detailed.*
 
 
@@ -45,7 +49,7 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 
 	private lateinit var placesViewModel: PlacesViewModel
 	private lateinit var sharedViewModel: SharedViewModel
-	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
+	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
 
 	companion object{
 		private const val PLACE_ID_KEY = "PLACE_ID"
@@ -59,7 +63,7 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 		}
 
 		activity?.run {
-			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
+			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
@@ -67,22 +71,26 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 
 		placesViewModel.loadPlaceDetails(receivedPlaceId)
 
-		placesViewModel.getPlaceDetailed().observeOnce(this, Observer {
+		placesViewModel.placeDetailed.observeOnce(this, Observer {
 			placeDetailedItem = it
 			val placePhotos = ArrayList<String>()
 			for (imageItem in it.images)
 				placePhotos.add(imageItem.image)
 
-
-			placePhotosAdapter.updateData(placePhotos)
-
-			collapseBarPlaceDetailed.title = it.short_title
-
-			tvPlaceDetailedDescription.text = it.description
-			tvPlaceDetailedFullDescription.text = it.body_text
+			placePhotosAdapter.setData(placePhotos)
 		})
+
 		sharedViewModel.getCurrentUser().value?.let { userItem = it }
 	}
+
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+	                          savedInstanceState: Bundle?) =
+		FragmentPlaceDetailedBinding.inflate(inflater, container, false)
+			.apply {
+				lifecycleOwner = this@PlaceDetailedFragment
+				viewModel = placesViewModel
+				executePendingBindings()
+			}.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -116,7 +124,7 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 				userItem.placesToGo.add(placeToGoItem)
 				remoteRepoViewModel.updateUserItem(userItem)
 				remoteRepoViewModel.getUserUpdateStatus().observeOnce(this, Observer {
-					//successful adding place
+					context?.showToastText("Place added to your list successfully")
 				})
 			}
 			//Log.wtf("mylogs", "{${userItem.placesToGo}}")

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:05
+ * Last modified 07.03.20 18:13
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,11 +24,13 @@ import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentConversationsBinding
-import com.mmdev.roove.ui.core.BaseFragment
-import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
-import com.mmdev.roove.ui.custom.SwipeToDeleteCallback
+import com.mmdev.roove.ui.SharedViewModel
+import com.mmdev.roove.ui.common.base.BaseAdapter
+import com.mmdev.roove.ui.common.base.BaseFragment
+import com.mmdev.roove.ui.common.custom.SwipeToDeleteCallback
 import com.mmdev.roove.ui.dating.conversations.ConversationsViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import com.mmdev.roove.utils.observeOnce
@@ -40,7 +42,8 @@ import kotlinx.android.synthetic.main.fragment_conversations.*
 
 class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 
-	private val mConversationsAdapter = ConversationsAdapter(mutableListOf())
+	private val mConversationsAdapter =
+		ConversationsAdapter(mutableListOf(), R.layout.fragment_conversations_item)
 
 	private lateinit var snackbar: Snackbar
 
@@ -55,10 +58,7 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 		} ?: throw Exception("Invalid Activity")
 
 		conversationsViewModel = ViewModelProvider(this@ConversationsFragment, factory)[ConversationsViewModel::class.java]
-
-		conversationsViewModel.getConversationsList().observe(this, Observer {
-			mConversationsAdapter.updateData(it)
-		})
+		conversationsViewModel.loadConversationsList()
 
 	}
 
@@ -105,7 +105,7 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 						.setTitle("Удалить диалог?")
 						.setMessage("Это полностью удалит переписку и пару с пользователем")
 						.setPositiveButton("Удалить") { dialog, _ ->
-							conversationsViewModel.deleteConversation(adapter.getConversationItem(itemPosition))
+							conversationsViewModel.deleteConversation(adapter.getItem(itemPosition))
 							adapter.removeAt(itemPosition)
 							conversationsViewModel.getDeleteConversationStatus()
 								.observeOnce(this@ConversationsFragment, Observer {
@@ -125,11 +125,10 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 
 		}
 
-		mConversationsAdapter.setOnItemClickListener(object: ConversationsAdapter.OnItemClickListener {
-			override fun onItemClick(view: View, position: Int) {
+		mConversationsAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<ConversationItem> {
 
-				sharedViewModel.setConversationSelected(mConversationsAdapter.getConversationItem(position))
-
+			override fun onItemClick(item: ConversationItem, position: Int) {
+				sharedViewModel.setConversationSelected(item)
 				findNavController().navigate(R.id.action_conversations_to_chatFragment)
 			}
 		})
@@ -137,11 +136,5 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 	}
 
 	private fun makeSnackbar(view: View) = Snackbar.make(view, "Successfully deleted", Snackbar.LENGTH_SHORT)
-
-
-	override fun onResume() {
-		super.onResume()
-		conversationsViewModel.loadConversationsList()
-	}
 
 }

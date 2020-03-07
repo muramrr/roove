@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 05.02.20 15:25
+  ~ Last modified 07.03.20 15:11
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@
 
 		<import type="android.view.View"/>
 		<variable
-			name="placeItem"
+			name="bindItem"
 			type="com.mmdev.business.places.PlaceItem" />
 
 	</data>
@@ -37,7 +37,7 @@
 			android:background="@color/colorAccentDark"
 			android:scaleType="centerCrop"
 
-			app:bindImageUrl="@{placeItem.images[0].image}"
+			app:bindImageUrl="@{bindItem.images[0].image}"
 			app:progressBar="@{pbImageLoading}"
 
 			tools:ignore="ContentDescription" />
@@ -71,7 +71,7 @@
 			android:layout_gravity="center|bottom"
 			android:layout_margin="@dimen/general_margin_8"
 
-			android:text="@{placeItem.short_title, default = @string/default_name}"
+			android:text="@{bindItem.short_title, default = @string/default_name}"
 			android:textSize="18sp"
 			style="@style/regular_text_white85op"
 			/>

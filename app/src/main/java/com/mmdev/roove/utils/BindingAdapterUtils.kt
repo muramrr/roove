@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.02.20 17:16
+ * Last modified 07.03.20 16:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,14 +14,24 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.core.glide.GlideImageLoader
+import com.mmdev.roove.ui.common.base.BaseAdapter.BindableAdapter
 
 
 object BindingAdapterUtils {
+
+	@JvmStatic
+	@BindingAdapter("app:bindData")
+	fun <T> setRecyclerViewProperties(recyclerView: RecyclerView, data: T) {
+		if (recyclerView.adapter is BindableAdapter<*>) {
+			(recyclerView.adapter as BindableAdapter<T>).setData(data)
+		}
+	}
 
 	@JvmStatic
 	@BindingAdapter("app:bindLoadingImage")
@@ -38,8 +48,8 @@ object BindingAdapterUtils {
 
 	@JvmStatic
 	@BindingAdapter("app:bindCircleImageUrl")
-	fun loadCircleImage(imageView: ImageView, url: String?) {
-		if (!url.isNullOrEmpty())
+	fun loadCircleImage(imageView: ImageView, url: String) {
+		if (url.isNotEmpty())
 			GlideApp.with(imageView.context)
 				.load(url)
 				.centerCrop()
@@ -51,8 +61,8 @@ object BindingAdapterUtils {
 
 	@JvmStatic
 	@BindingAdapter(value = ["app:bindImageUrl", "app:progressBar"], requireAll = false)
-	fun loadPhotoUrl(imageView: ImageView, url: String?, progressBar: ProgressBar?) {
-		if (!url.isNullOrEmpty())
+	fun loadPhotoUrl(imageView: ImageView, url: String, progressBar: ProgressBar?) {
+		if (url.isNotEmpty())
 			GlideImageLoader(imageView, progressBar)
 				.load(url, RequestOptions()
 					.diskCacheStrategy(DiskCacheStrategy.RESOURCE)

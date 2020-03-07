@@ -1,14 +1,14 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.03.20 18:35
+ * Last modified 07.03.20 16:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.roove.ui.core.viewmodel
+package com.mmdev.roove.ui.profile
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -16,7 +16,7 @@ import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.remote.usecase.*
-import com.mmdev.roove.ui.core.BaseViewModel
+import com.mmdev.roove.ui.common.base.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ import javax.inject.Inject
  * This is the documentation block about the class
  */
 
-class RemoteUserRepoViewModel @Inject constructor(
+class RemoteRepoViewModel @Inject constructor(
 	private val deletePhotoUC: DeletePhotoUseCase,
 	private val deleteUserUC: DeleteUserUseCase,
 	private val fetchUserUC: FetchUserInfoUseCase,
@@ -34,7 +34,7 @@ class RemoteUserRepoViewModel @Inject constructor(
 
 
 	private val fetchedUserItem: MutableLiveData<UserItem> = MutableLiveData()
-	private val retrievedUserItem: MutableLiveData<UserItem> = MutableLiveData()
+	val retrievedUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	private val isUserUpdated: MutableLiveData<Boolean> = MutableLiveData()
 
 
@@ -112,7 +112,6 @@ class RemoteUserRepoViewModel @Inject constructor(
 
 
 	fun getFetchedUserItem() = fetchedUserItem
-	fun getRetrievedUserItem() = retrievedUserItem
 	fun getUserUpdateStatus() = isUserUpdated
 
 

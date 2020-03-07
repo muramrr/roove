@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.03.20 18:25
+ * Last modified 07.03.20 17:27
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,47 +10,25 @@
 
 package com.mmdev.roove.ui.settings
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.roove.R
-import com.mmdev.roove.databinding.FragmentSettingsPhotoItemBinding
+import com.mmdev.business.core.PhotoItem
+import com.mmdev.roove.ui.common.base.BaseAdapter
 
 /**
  * better to use notifyItemInserted instead of notifyDataSetChanged()
  * but bug with custom layout manager exists
  */
 
-class SettingsUserPhotoAdapter (private var photosUrlsList: MutableList<String>):
-		RecyclerView.Adapter<SettingsUserPhotoAdapter.SettingsPhotoViewHolder>() {
+class SettingsUserPhotoAdapter (private var photosUrlsList: List<PhotoItem>,
+                                private val layoutId: Int):
+		BaseAdapter<PhotoItem>(),
+		BaseAdapter.BindableAdapter<List<PhotoItem>> {
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-		SettingsPhotoViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
-		                                                R.layout.fragment_settings_photo_item,
-		                                                parent,
-		                                                false))
-
-
-	override fun onBindViewHolder(viewHolder: SettingsPhotoViewHolder, position: Int) =
-		viewHolder.bind(photosUrlsList[position])
-
-
+	override fun getItem(position: Int): PhotoItem = photosUrlsList[position]
 	override fun getItemCount() = photosUrlsList.size
+	override fun getLayoutIdForItem(position: Int) = layoutId
 
-	fun updateData(newPhotoUrls: List<String>) {
-		photosUrlsList = newPhotoUrls.toMutableList()
+	override fun setData(data: List<PhotoItem>) {
+		photosUrlsList = data
 		notifyDataSetChanged()
 	}
-
-	inner class SettingsPhotoViewHolder(private val binding: FragmentSettingsPhotoItemBinding):
-			RecyclerView.ViewHolder(binding.root) {
-
-		fun bind(photoUrl: String) {
-			binding.photoUrl = photoUrl
-			binding.executePendingBindings()
-		}
-
-	}
-
 }

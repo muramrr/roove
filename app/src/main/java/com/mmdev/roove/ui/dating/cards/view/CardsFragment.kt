@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 17:12
+ * Last modified 07.03.20 19:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,8 +21,9 @@ import androidx.navigation.fragment.findNavController
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentCardsBinding
-import com.mmdev.roove.ui.core.BaseFragment
-import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
+import com.mmdev.roove.ui.SharedViewModel
+import com.mmdev.roove.ui.common.base.BaseAdapter
+import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.dating.cards.CardsViewModel
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
@@ -32,7 +33,8 @@ import kotlinx.android.synthetic.main.fragment_cards.*
 
 class CardsFragment: BaseFragment() {
 
-	private val mCardsStackAdapter = CardsStackAdapter(listOf())
+	private val mCardsStackAdapter =
+		CardsStackAdapter(listOf(), R.layout.fragment_cards_item)
 
 	private var mCardsList = mutableListOf<UserItem>()
 
@@ -56,10 +58,8 @@ class CardsFragment: BaseFragment() {
 
 		cardsViewModel = ViewModelProvider(this@CardsFragment, factory)[CardsViewModel::class.java]
 		cardsViewModel.loadUsersByPreferences()
-		cardsViewModel.getUsersCardsList().observe(this, Observer {
-			//mCardsStackAdapter.updateData(it)
+		cardsViewModel.usersCardsList.observe(this, Observer {
 			mCardsList = it.toMutableList()
-			mCardsStackAdapter.updateData(it)
 		})
 		cardsViewModel.showMatchDialog.observe(this, Observer {
 			if (it) showMatchDialog(mDisappearedUserItem)
@@ -84,7 +84,7 @@ class CardsFragment: BaseFragment() {
 
 			override fun onCardAppeared(view: View, position: Int) {
 				//get current displayed on card profile
-				mAppearedUserItem = mCardsStackAdapter.getUserItem(position)
+				mAppearedUserItem = mCardsStackAdapter.getItem(position)
 				//Log.wtf(TAG, "appeared name = ${mAppearedUserItem.baseUserInfo.name}")
 			}
 
@@ -106,7 +106,7 @@ class CardsFragment: BaseFragment() {
 
 			override fun onCardDisappeared(view: View, position: Int) {
 				//needed to show match
-				mDisappearedUserItem = mCardsStackAdapter.getUserItem(position)
+				mDisappearedUserItem = mCardsStackAdapter.getItem(position)
 				//if there is no available user to show - show loading
 				if (position == mCardsStackAdapter.itemCount - 1) {
 					cardsViewModel.showLoading.value = true
@@ -123,13 +123,10 @@ class CardsFragment: BaseFragment() {
 			layoutManager = cardStackLayoutManager
 		}
 
-		mCardsStackAdapter.setOnItemClickListener(object: CardsStackAdapter.OnItemClickListener {
-			override fun onItemClick(view: View, position: Int) {
+		mCardsStackAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<UserItem> {
+			override fun onItemClick(item: UserItem, position: Int) {
 
 				sharedViewModel.setUserSelected(mAppearedUserItem)
-
-				//Log.wtf(TAG, "clicked pos $position")
-
 				findNavController().navigate(R.id.action_cards_to_profileFragment)
 			}
 		})
@@ -138,7 +135,7 @@ class CardsFragment: BaseFragment() {
 
 	override fun onStop() {
 		super.onStop()
-		mCardsStackAdapter.updateData(mCardsList)
+		mCardsStackAdapter.setData(mCardsList)
 	}
 
 	private fun showMatchDialog(userItem: UserItem) {
@@ -147,8 +144,5 @@ class CardsFragment: BaseFragment() {
 
 		dialog.show(childFragmentManager, MatchDialogFragment::class.java.canonicalName)
 	}
-
-
-
 
 }

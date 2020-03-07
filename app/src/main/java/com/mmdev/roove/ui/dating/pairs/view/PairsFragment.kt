@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:05
+ * Last modified 07.03.20 19:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,14 +14,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentPairsBinding
-import com.mmdev.roove.ui.core.BaseFragment
-import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
+import com.mmdev.roove.ui.SharedViewModel
+import com.mmdev.roove.ui.common.base.BaseAdapter
+import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.dating.pairs.PairsViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import kotlinx.android.synthetic.main.fragment_pairs.*
@@ -33,7 +34,7 @@ import kotlinx.android.synthetic.main.fragment_pairs.*
 
 class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
 
-	private val mPairsAdapter = PairsAdapter(listOf())
+	private val mPairsAdapter = PairsAdapter(listOf(), R.layout.fragment_pairs_item)
 
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var pairsViewModel: PairsViewModel
@@ -48,9 +49,7 @@ class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
 
 		pairsViewModel = ViewModelProvider(this@PairsFragment, factory)[PairsViewModel::class.java]
 
-		pairsViewModel.getMatchedUsersList().observe(this, Observer {
-			mPairsAdapter.updateData(it)
-		})
+		pairsViewModel.loadMatchedUsers()
 
 	}
 
@@ -85,19 +84,14 @@ class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
 			})
 		}
 
-		mPairsAdapter.setOnItemClickListener(object: PairsAdapter.OnItemClickListener {
-			override fun onItemClick(view: View, position: Int) {
+		mPairsAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<MatchedUserItem> {
+			override fun onItemClick(item: MatchedUserItem, position: Int) {
 
-				sharedViewModel.setMatchedUserItem(mPairsAdapter.getPairItem(position))
-
+				sharedViewModel.setMatchedUserItem(item)
 				findNavController().navigate(R.id.action_pairs_to_profileFragment)
 
 			}
 		})
 	}
 
-	override fun onResume() {
-		super.onResume()
-		pairsViewModel.loadMatchedUsers()
-	}
 }

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 27.02.20 16:31
+  ~ Last modified 07.03.20 18:13
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@
 	<data>
 
 		<variable
-			name="conversationItem"
+			name="bindItem"
 			type="com.mmdev.business.conversations.ConversationItem" />
 
 	</data>
@@ -35,7 +35,7 @@
 			android:layout_height="64dp"
 			android:layout_marginEnd="8dp"
 
-			app:bindCircleImageUrl="@{conversationItem.partner.mainPhotoUrl}"
+			app:bindCircleImageUrl="@{bindItem.partner.mainPhotoUrl}"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
@@ -47,7 +47,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="8dp"
-			android:text="@{conversationItem.partner.name, default = @string/default_name}"
+			android:text="@{bindItem.partner.name, default = @string/default_name}"
 			android:textSize="16sp"
 
 			app:layout_constraintStart_toEndOf="@id/ivConversationItemUserPhoto"
@@ -67,7 +67,7 @@
 			android:maxLines="1"
 			android:singleLine="true"
 
-			android:text="@{conversationItem.lastMessageText, default = `Some text from last message that can only rest of text`}"
+			android:text="@{bindItem.lastMessageText, default = `Some text from last message that can only rest of text`}"
 			android:textSize="16sp"
 			style="@style/light_text_white85op"
 

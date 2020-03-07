@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 27.02.20 16:31
+  ~ Last modified 07.03.20 17:50
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@
 	<data>
 
 		<variable
-			name="matchedItem"
+			name="bindItem"
 			type="com.mmdev.business.pairs.MatchedUserItem" />
 
 	</data>
@@ -36,7 +36,7 @@
 			android:contentDescription="@string/description_user_photo"
 			android:scaleType="centerCrop"
 
-			app:bindImageUrl="@{matchedItem.baseUserInfo.mainPhotoUrl}"
+			app:bindImageUrl="@{bindItem.baseUserInfo.mainPhotoUrl}"
 			app:progressBar="@{pbImageLoading}"
 			/>
 
@@ -70,7 +70,7 @@
 			android:layout_gravity="center|bottom"
 			android:layout_margin="@dimen/general_margin_8"
 
-			android:text="@{matchedItem.baseUserInfo.name, default = @string/default_name}"
+			android:text="@{bindItem.baseUserInfo.name, default = @string/default_name}"
 			android:textSize="20sp"
 			style="@style/regular_text_white85op"/>
 

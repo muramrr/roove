@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.03.20 17:30
+ * Last modified 07.03.20 19:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,8 +14,10 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
@@ -25,10 +27,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
-import com.mmdev.roove.ui.core.BaseFragment
-import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
-import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
-import com.mmdev.roove.ui.custom.GridItemDecoration
+import com.mmdev.roove.databinding.FragmentSettingsEditInfoBinding
+import com.mmdev.roove.ui.SharedViewModel
+import com.mmdev.roove.ui.common.base.BaseFragment
+import com.mmdev.roove.ui.common.custom.GridItemDecoration
+import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.observeOnce
 import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_settings_edit_info.*
@@ -42,7 +45,8 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 	private lateinit var userItem: UserItem
 
-	private val mEditorPhotoAdapter = SettingsEditInfoPhotoAdapter(mutableListOf())
+	private val mEditorPhotoAdapter =
+		SettingsEditInfoPhotoAdapter(mutableListOf(), R.layout.fragment_settings_edit_info_photo_item)
 
 	private var name = ""
 	private var age = 0
@@ -55,7 +59,7 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 	private lateinit var cityList: Map<String, String>
 
-	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
+	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
 
 	private lateinit var male: String
@@ -73,17 +77,25 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 		female = getString(R.string.genderFemale)
 
 		activity?.run {
-			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
+			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
-
 		} ?: throw Exception("Invalid Activity")
 
 		sharedViewModel.getCurrentUser().observe(this, Observer {
 			userItem = it
-			initProfile(it)
+			initSettings(it)
 		})
 
 	}
+
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+	                          savedInstanceState: Bundle?) =
+		FragmentSettingsEditInfoBinding.inflate(inflater, container, false)
+			.apply {
+				lifecycleOwner = this@SettingsEditInfoFragment
+				viewModel = sharedViewModel
+				executePendingBindings()
+			}.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		val context = view.context
@@ -103,11 +115,11 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			addItemDecoration(GridItemDecoration())
 		}
 
-		mEditorPhotoAdapter.setOnItemClickListener(object: SettingsEditInfoPhotoAdapter
-		                                                   .OnItemClickListener {
+		mEditorPhotoAdapter.setOnItemClickListener(object: SettingsEditInfoPhotoAdapter.OnItemClickListener {
+
 			override fun onItemClick(view: View, position: Int) {
 				if (mEditorPhotoAdapter.itemCount > 1) {
-					val photoToDelete = mEditorPhotoAdapter.getPhoto(position)
+					val photoToDelete = mEditorPhotoAdapter.getItem(position)
 
 					val isMainPhotoDeleting = photoToDelete.fileUrl == userItem.baseUserInfo.mainPhotoUrl
 
@@ -116,12 +128,11 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 					remoteRepoViewModel.photoDeletionStatus.observeOnce(this@SettingsEditInfoFragment, Observer {
 						if (it) {
 							userItem.photoURLs.remove(photoToDelete)
-                            mEditorPhotoAdapter.removeAt(position)
+							mEditorPhotoAdapter.removeAt(position)
+
                             if (isMainPhotoDeleting) {
 	                            userItem.baseUserInfo.mainPhotoUrl = userItem.photoURLs[0].fileUrl
-	                           // Log.wtf(TAG, "изменилась главная фотка: ${userItem.baseUserInfo.mainPhotoUrl}")
                             }
-							//else Log.wtf(TAG, "главная фотка без изменений")
                         }
                     })
 				}
@@ -163,19 +174,10 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 	}
 
 
-	private fun initProfile(userItem: UserItem) {
-		mEditorPhotoAdapter.updateData(userItem.photoURLs)
-		edSettingsEditName.setText(userItem.baseUserInfo.name)
+	private fun initSettings(userItem: UserItem) {
 		if (userItem.baseUserInfo.gender == male)
 			toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderMale)
 		else toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderFemale)
-		tvSettingsEditAge.text = "Age: ${userItem.baseUserInfo.age}"
-		sliderSettingsEditAge.value = userItem.baseUserInfo.age.toFloat()
-
-		cityToDisplay = cityList.filterValues { it == userItem.baseUserInfo.city }.keys.first()
-		dropSettingsEditCity.setText(userItem.cityToDisplay)
-
-		edSettingsEditDescription.setText(userItem.aboutText)
 
 		changerNameSetup()
 		changerAgeSetup()
@@ -283,11 +285,6 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 			return@setOnTouchListener false
 		}
 
-	}
-
-	override fun onResume() {
-		super.onResume()
-		if (this::userItem.isInitialized) initProfile(userItem)
 	}
 
 	override fun onBackPressed() {
