@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.03.20 17:30
+ * Last modified 07.03.20 19:13
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,7 +26,7 @@ import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
-import com.mmdev.roove.ui.core.BaseFragment
+import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.utils.addSystemBottomPadding
 import com.mmdev.roove.utils.addSystemTopPadding
 import kotlinx.android.synthetic.main.fragment_registration.*
@@ -198,9 +198,9 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 
 
 		//step 5
-		val cityAdapter = ArrayAdapter<String>(context!!,
-		                                       R.layout.drop_text_item,
-		                                       cityList.map { it.key })
+		val cityAdapter = ArrayAdapter(context!!,
+		                               R.layout.drop_text_item,
+		                               cityList.map { it.key })
 		dropdownCityChooser.setAdapter(cityAdapter)
 
 		dropdownCityChooser.setOnItemClickListener { _, _, position, _ ->

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.03.20 19:05
+ * Last modified 07.03.20 17:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,8 +22,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
-import com.mmdev.roove.ui.core.LifecycleStates
-import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
+import com.mmdev.roove.ui.SharedViewModel
+import com.mmdev.roove.ui.common.LifecycleStates
 import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_settings_modal_bottom_sheet.*
 
@@ -71,18 +71,7 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 			userItem.preferredAgeRange.maxAge = number2.toInt()
 		}
 
-//		btnPickerPreferredGenderMale.addOnCheckedChangeListener { button, isChecked ->
-//			if (toggleButtonPickerPreferredGender.checkedButtonIds.size == 1 && isChecked)
-//				userItem.baseUserInfo.preferredGender = male
-//		}
-//
-//		btnPickerPreferredGenderFemale.addOnCheckedChangeListener { button, isChecked ->
-//			if (toggleButtonPickerPreferredGender.checkedButtonIds.size == 1 && isChecked)
-//				userItem.baseUserInfo.preferredGender = female
-//		}
-
-
-		toggleButtonPickerPreferredGender.addOnButtonCheckedListener { group, checkedId, isChecked ->
+		toggleButtonPickerPreferredGender.addOnButtonCheckedListener { group, _, _ ->
 			if (group.checkedButtonIds.size > 1)
 				userItem.baseUserInfo.preferredGender = everyone
 			if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderMale)

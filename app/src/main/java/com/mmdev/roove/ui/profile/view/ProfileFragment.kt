@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 19:51
+ * Last modified 07.03.20 19:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,8 +11,9 @@
 package com.mmdev.roove.ui.profile.view
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -22,12 +23,16 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.UserItem
+import com.mmdev.business.places.BasePlaceInfo
 import com.mmdev.roove.R
-import com.mmdev.roove.ui.core.BaseFragment
-import com.mmdev.roove.ui.core.ImagePagerAdapter
-import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
-import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
+import com.mmdev.roove.databinding.FragmentProfileBinding
+import com.mmdev.roove.ui.SharedViewModel
+import com.mmdev.roove.ui.common.ImagePagerAdapter
+import com.mmdev.roove.ui.common.base.BaseAdapter
+import com.mmdev.roove.ui.common.base.BaseFragment
+import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.observeOnce
+import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 /**
@@ -38,19 +43,22 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 
 	private val userPhotosAdapter = ImagePagerAdapter(listOf())
-	private val mPlacesToGoAdapter = PlacesToGoAdapter(listOf())
+
+	private val mPlacesToGoAdapter = PlacesToGoAdapter(listOf(),
+	                                                   R.layout.fragment_profile_places_rv_item)
 
 	private var fabVisible: Boolean = false
 
 	private lateinit var selectedUser: UserItem
 	private lateinit var conversationId: String
 
-	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
+	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
 
 
 	companion object{
 		private const val FAB_VISIBLE_KEY = "FAB_VISIBLE"
+		private const val PLACE_ID_KEY = "PLACE_ID"
 	}
 
 
@@ -65,7 +73,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
-		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
+		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 
 		//if true -> seems that we navigates here from pairs fragment
 		if (fabVisible) {
@@ -81,16 +89,22 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 			})
 		}
 
-		remoteRepoViewModel.getRetrievedUserItem().observeOnce(this, Observer {
+		remoteRepoViewModel.retrievedUserItem.observeOnce(this, Observer {
 			selectedUser = it
 			//ui
-			collapseBarProfile.title = it.baseUserInfo.name
-			userPhotosAdapter.updateData(it.photoURLs.map { photoItem -> photoItem.fileUrl }.toList())
-			mPlacesToGoAdapter.updateData(it.placesToGo.toList())
-			tvProfileAboutText.text = it.aboutText
-			collapseBarProfile.title = it.baseUserInfo.name
+			userPhotosAdapter.setData(it.photoURLs.map { photoItem -> photoItem.fileUrl }.toList())
+
 		})
 	}
+
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+	                          savedInstanceState: Bundle?) =
+		FragmentProfileBinding.inflate(inflater, container, false)
+			.apply {
+				lifecycleOwner = this@ProfileFragment
+				viewModel = remoteRepoViewModel
+				executePendingBindings()
+			}.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -111,10 +125,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 			setNavigationOnClickListener { findNavController().navigateUp() }
 			setOnMenuItemClickListener { item ->
 				when (item.itemId) {
-					R.id.action_report -> { Toast.makeText(context,
-					                                       "action report click",
-					                                       Toast.LENGTH_SHORT).show()
-					}
+					R.id.action_report -> { context.showToastText("Action report clicked") }
 				}
 				return@setOnMenuItemClickListener true
 			}
@@ -122,24 +133,18 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 		rvProfileWantToGoList.apply { adapter = mPlacesToGoAdapter }
 
-		mPlacesToGoAdapter.setOnItemClickListener(object: PlacesToGoAdapter.OnItemClickListener {
+		mPlacesToGoAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<BasePlaceInfo> {
 
-			override fun onItemClick(view: View, position: Int) {
-
-				val placeId = bundleOf("PLACE_ID" to
-						                       mPlacesToGoAdapter.getPlaceToGoItem(position).id)
-
+			override fun onItemClick(item: BasePlaceInfo, position: Int) {
+				val placeId = bundleOf(PLACE_ID_KEY to item.id)
 				findNavController().navigate(R.id.action_profile_to_placeDetailedFragment, placeId)
-
 			}
-
 		})
 
 		if (fabVisible) {
 			fabProfileSendMessage.setOnClickListener {
 
 				findNavController().navigate(R.id.action_profile_to_chatFragment)
-
 				sharedViewModel.setConversationSelected(ConversationItem(selectedUser.baseUserInfo,
 				                                                         conversationId,
 				                                                         false))
@@ -149,18 +154,8 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 
 	}
 
-	override fun onResume() {
-		super.onResume()
-		if (this::selectedUser.isInitialized){
-			tvProfileAboutText.text = selectedUser.aboutText
-			collapseBarProfile.title = selectedUser.baseUserInfo.name
-		}
-
-	}
-
 	override fun onBackPressed() {
 		findNavController().navigateUp()
 	}
-
 
 }

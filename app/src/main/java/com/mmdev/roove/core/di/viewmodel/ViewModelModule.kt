@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 19:06
+ * Last modified 07.03.20 19:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,14 +37,14 @@ import com.mmdev.business.places.usecase.GetPlaceDetailsUseCase
 import com.mmdev.business.places.usecase.GetPlacesUseCase
 import com.mmdev.business.remote.RemoteUserRepository
 import com.mmdev.business.remote.usecase.*
+import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.auth.AuthViewModel
-import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
-import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
 import com.mmdev.roove.ui.dating.cards.CardsViewModel
 import com.mmdev.roove.ui.dating.chat.ChatViewModel
 import com.mmdev.roove.ui.dating.conversations.ConversationsViewModel
 import com.mmdev.roove.ui.dating.pairs.PairsViewModel
 import com.mmdev.roove.ui.places.PlacesViewModel
+import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
@@ -123,19 +123,18 @@ class ViewModelModule {
 
 	@IntoMap
 	@Provides
-	@ViewModelKey(RemoteUserRepoViewModel::class)
+	@ViewModelKey(RemoteRepoViewModel::class)
 	fun remoteUserRepoViewModel(repo: RemoteUserRepository): ViewModel =
-		RemoteUserRepoViewModel(DeletePhotoUseCase(repo),
-		                        DeleteUserUseCase(repo),
-		                        FetchUserInfoUseCase(repo),
-		                        GetFullUserInfoUseCase(repo),
-		                        UpdateUserItemUseCase(repo),
-		                        UploadUserProfilePhotoUseCase(repo))
+		RemoteRepoViewModel(DeletePhotoUseCase(repo),
+		                    DeleteUserUseCase(repo),
+		                    FetchUserInfoUseCase(repo),
+		                    GetFullUserInfoUseCase(repo),
+		                    UpdateUserItemUseCase(repo),
+		                    UploadUserProfilePhotoUseCase(repo))
 
 	@IntoMap
 	@Provides
 	@ViewModelKey(SharedViewModel::class)
-	fun sharedViewModel(): ViewModel =
-		SharedViewModel()
+	fun sharedViewModel(): ViewModel = SharedViewModel()
 
 }

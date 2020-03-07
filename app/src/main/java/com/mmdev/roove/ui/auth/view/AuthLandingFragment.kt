@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:40
+ * Last modified 07.03.20 16:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,7 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
-import com.mmdev.roove.ui.core.BaseFragment
+import com.mmdev.roove.ui.common.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_auth_landing.*
 
 class AuthLandingFragment: BaseFragment(R.layout.fragment_auth_landing)  {

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.03.20 16:45
+ * Last modified 07.03.20 19:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,11 +45,15 @@ import com.mmdev.business.core.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
+import com.mmdev.roove.core.permissions.AppPermission
+import com.mmdev.roove.core.permissions.handlePermission
+import com.mmdev.roove.core.permissions.onRequestPermissionsResultReceived
+import com.mmdev.roove.core.permissions.requestAppPermissions
 import com.mmdev.roove.databinding.FragmentChatBinding
-import com.mmdev.roove.ui.core.*
-import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
-import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
+import com.mmdev.roove.ui.SharedViewModel
+import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.dating.chat.ChatViewModel
+import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_chat.*
@@ -80,7 +84,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	// File
 	private lateinit var mFilePathImageCamera: File
 
-	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
+	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var chatViewModel: ChatViewModel
 
@@ -118,7 +122,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		chatViewModel = ViewModelProvider(this@ChatFragment, factory)[ChatViewModel::class.java]
 
 		activity?.run {
-			remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
+			remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
@@ -130,7 +134,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 		//if it was a deep link navigation then create ConversationItem "on a flight"
 		if (isDeepLinkJump) {
-			remoteRepoViewModel.getRetrievedUserItem().observeOnce(this, Observer {
+			remoteRepoViewModel.retrievedUserItem.observeOnce(this, Observer {
 				val receivedConversationItem = ConversationItem(partner = it.baseUserInfo,
 				                                                conversationId = receivedConversationId,
 				                                                conversationStarted = true)
@@ -257,7 +261,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		// if user clicks on toolbar partner icon this fragment will not be destroyed
 		// onCreate is no longer being called in this scenario
 		super.onResume()
-		if (this::currentConversation.isInitialized ) { setupContentToolbar(currentPartner) }
+		if (this::currentPartner.isInitialized ) { setupContentToolbar(currentPartner) }
 	}
 
 	private fun setupContentToolbar(partnerUserItem: UserItem){
@@ -364,17 +368,21 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	// If request is cancelled, the result arrays are empty.
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-		onRequestPermissionsResultReceived(requestCode, grantResults,
-		                                   onPermissionGranted = {
-			                                   when (it){
-				                                   AppPermission.CAMERA -> startCameraIntent()
-				                                   AppPermission.GALLERY -> startGalleryIntent()
-			                                   }
-		                                   },
-		                                   onPermissionDenied = {
-			                                   /** show message that permission is denied**/
-			                                   //snackbarWithoutAction(it.deniedMessageId)
-		                                   })
+		onRequestPermissionsResultReceived(
+				requestCode,
+				grantResults,
+				onPermissionGranted = {
+					when (it) {
+						AppPermission.CAMERA -> startCameraIntent()
+						AppPermission.GALLERY -> startGalleryIntent()
+					}
+				},
+				onPermissionDenied = {
+					/** show message that permission is denied**/
+					/** show message that permission is denied**/
+
+					//snackbarWithoutAction(it.deniedMessageId)
+				})
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

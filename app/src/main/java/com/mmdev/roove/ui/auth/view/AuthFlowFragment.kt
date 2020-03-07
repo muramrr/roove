@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 21.12.19 20:07
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 07.03.20 16:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.mmdev.roove.R
-import com.mmdev.roove.ui.core.FlowFragment
+import com.mmdev.roove.ui.common.base.FlowFragment
 
 class AuthFlowFragment : FlowFragment(R.layout.fragment_auth_flow)  {
 

@@ -2,214 +2,231 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.03.20 18:10
+  ~ Last modified 07.03.20 17:18
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-
+<layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
-	<androidx.core.widget.NestedScrollView
+	<data>
+
+		<variable
+			name="viewModel"
+			type="com.mmdev.roove.ui.SharedViewModel" />
+
+	</data>
+
+
+	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:clipToPadding="false"
-		android:overScrollMode="never"
-		android:fillViewport="true">
+		android:layout_height="match_parent">
 
-
-		<androidx.constraintlayout.widget.ConstraintLayout
-			android:id="@+id/containerSettings"
+		<androidx.core.widget.NestedScrollView
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:animateLayoutChanges="true">
-
-			<androidx.appcompat.widget.Toolbar
-				android:id="@+id/toolbarSettings"
-				android:layout_width="0dp"
-				android:layout_height="?actionBarSize"
-				android:background="@color/colorPrimary"
-
-				app:menu="@menu/settings_menu"
-
-				app:title="Настройки"
-				app:titleTextAppearance="@style/ToolbarTitle"
-				app:titleTextColor="@color/white_85"
-
-				app:layout_constraintBottom_toTopOf="@id/rvSettingsUserPhotosList"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toTopOf="parent"
-				/>
-
-			<androidx.recyclerview.widget.RecyclerView
-				android:id="@+id/rvSettingsUserPhotosList"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/general_margin_16"
-				android:clipToPadding="false"
-				android:orientation="horizontal"
-				android:overScrollMode="never"
-
-				app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/toolbarSettings"
-
-				tools:listitem="@layout/fragment_settings_photo_item" />
-
-			<!-- add a photo -->
-			<com.google.android.material.floatingactionbutton.FloatingActionButton
-				android:id="@+id/fabSettingsAddPhoto"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:src="@drawable/ic_add_a_photo_24dp"
-
-				app:backgroundTint="@color/material_orange_a700"
-				app:rippleColor="@color/black_50"
-
-				app:layout_constraintBottom_toBottomOf="@id/rvSettingsUserPhotosList"
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/rvSettingsUserPhotosList"
-				/>
+			android:clipToPadding="false"
+			android:overScrollMode="never"
+			android:fillViewport="true">
 
 
-			<com.google.android.material.textview.MaterialTextView
-				android:id="@+id/tvSettingsNameAge"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/general_margin_16"
-				android:text="@string/default_name"
-				android:textSize="22sp"
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:id="@+id/containerSettings"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:animateLayoutChanges="true">
 
-				style="@style/regular_text_white85op"
+				<androidx.appcompat.widget.Toolbar
+					android:id="@+id/toolbarSettings"
+					android:layout_width="0dp"
+					android:layout_height="?actionBarSize"
+					android:background="@color/colorPrimary"
 
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/fabSettingsAddPhoto"/>
+					app:menu="@menu/settings_menu"
 
-			<com.google.android.material.textview.MaterialTextView
-				android:id="@+id/tvSettingsCity"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="Москва"
-				android:textSize="22sp"
+					app:title="Настройки"
+					app:titleTextAppearance="@style/ToolbarTitle"
+					app:titleTextColor="@color/white_85"
 
-				style="@style/regular_text_white85op"
+					app:layout_constraintBottom_toTopOf="@id/rvSettingsUserPhotosList"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					/>
 
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/tvSettingsNameAge"
-				/>
+				<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/rvSettingsUserPhotosList"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/general_margin_16"
+					android:clipToPadding="false"
+					android:orientation="horizontal"
+					android:overScrollMode="never"
 
-			<com.google.android.material.textview.MaterialTextView
-				android:id="@+id/tvSettingsWantToGoHeader"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:padding="@dimen/general_margin_16"
+					app:bindData="@{viewModel.currentUser.photoURLs}"
+					app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
-				android:text="Хочу посетить"
-				android:textSize="24sp"
-				style="@style/medium_text_white85op"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/toolbarSettings"
 
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/tvSettingsCity"
-				app:layout_constraintBottom_toTopOf="@id/rvSettingsWantToGoList"
-				/>
+					tools:listitem="@layout/fragment_settings_photo_item" />
 
-			<androidx.recyclerview.widget.RecyclerView
-				android:id="@+id/rvSettingsWantToGoList"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:clipToPadding="false"
-				android:padding="@dimen/general_margin_8"
-				android:orientation="horizontal"
-				android:visibility="visible"
-				app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+				<!-- add a photo -->
+				<com.google.android.material.floatingactionbutton.FloatingActionButton
+					android:id="@+id/fabSettingsAddPhoto"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:src="@drawable/ic_add_a_photo_24dp"
 
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/tvSettingsWantToGoHeader"
-				app:layout_constraintBottom_toTopOf="@id/tvSettingsAboutHeader"
+					app:backgroundTint="@color/material_orange_a700"
+					app:rippleColor="@color/black_50"
 
-				tools:listitem="@layout/fragment_profile_places_rv_item"/>
-
-			<com.google.android.material.textview.MaterialTextView
-				android:id="@+id/tvSettingsAboutHeader"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:padding="@dimen/general_margin_16"
-
-				android:text="Обо мне"
-				android:textSize="24sp"
-				style="@style/medium_text_white85op"
-
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/rvSettingsWantToGoList"
-				/>
-
-			<com.google.android.material.textview.MaterialTextView
-				android:id="@+id/tvSettingsAboutText"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="100dp"
-				android:lineSpacingExtra="10sp"
-
-				android:text="@string/default_profile_about_text"
-				android:textSize="18sp"
-
-				style="@style/regular_text_white85op"
-
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/tvSettingsAboutHeader"
-				app:layout_constraintBottom_toBottomOf="parent"
-				/>
+					app:layout_constraintBottom_toBottomOf="@id/rvSettingsUserPhotosList"
+					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+					app:layout_constraintStart_toStartOf="@id/guidelineStart"
+					app:layout_constraintTop_toBottomOf="@id/rvSettingsUserPhotosList"
+					/>
 
 
-			<!-- left padding -->
-			<androidx.constraintlayout.widget.Guideline
-				android:id="@+id/guidelineStart"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:orientation="vertical"
-				app:layout_constraintGuide_begin="@dimen/general_margin_8" />
+				<com.google.android.material.textview.MaterialTextView
+					android:id="@+id/tvSettingsNameAge"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/general_margin_16"
 
-			<!-- right padding -->
-			<androidx.constraintlayout.widget.Guideline
-				android:id="@+id/guidelineEnd"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:orientation="vertical"
-				app:layout_constraintGuide_end="@dimen/general_margin_8" />
+					android:text="@{viewModel.currentUser.baseUserInfo.name+ `, `+ viewModel.currentUser.baseUserInfo.age, default = @string/default_name}"
+					android:textSize="22sp"
+
+					style="@style/regular_text_white85op"
+
+					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+					app:layout_constraintStart_toStartOf="@id/guidelineStart"
+					app:layout_constraintTop_toBottomOf="@id/fabSettingsAddPhoto"/>
+
+				<com.google.android.material.textview.MaterialTextView
+					android:id="@+id/tvSettingsCity"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+
+					android:text="@{viewModel.currentUser.cityToDisplay, default = @string/default_city}"
+					android:textSize="22sp"
+
+					style="@style/regular_text_white85op"
+
+					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+					app:layout_constraintStart_toStartOf="@id/guidelineStart"
+					app:layout_constraintTop_toBottomOf="@id/tvSettingsNameAge"
+					/>
+
+				<com.google.android.material.textview.MaterialTextView
+					android:id="@+id/tvSettingsWantToGoHeader"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:padding="@dimen/general_margin_16"
+
+					android:text="Хочу посетить"
+					android:textSize="24sp"
+					style="@style/medium_text_white85op"
+
+					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+					app:layout_constraintStart_toStartOf="@id/guidelineStart"
+					app:layout_constraintTop_toBottomOf="@id/tvSettingsCity"
+					app:layout_constraintBottom_toTopOf="@id/rvSettingsWantToGoList"
+					/>
+
+				<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/rvSettingsWantToGoList"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:clipToPadding="false"
+					android:padding="@dimen/general_margin_8"
+					android:orientation="horizontal"
+					android:visibility="visible"
+
+					app:bindData="@{viewModel.currentUser.placesToGo}"
+
+					app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/tvSettingsWantToGoHeader"
+					app:layout_constraintBottom_toTopOf="@id/tvSettingsAboutHeader"
+
+					tools:listitem="@layout/fragment_profile_places_rv_item"/>
+
+				<com.google.android.material.textview.MaterialTextView
+					android:id="@+id/tvSettingsAboutHeader"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:padding="@dimen/general_margin_16"
+
+					android:text="Обо мне"
+					android:textSize="24sp"
+					style="@style/medium_text_white85op"
+
+					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+					app:layout_constraintStart_toStartOf="@id/guidelineStart"
+					app:layout_constraintTop_toBottomOf="@id/rvSettingsWantToGoList"
+					/>
+
+				<com.google.android.material.textview.MaterialTextView
+					android:id="@+id/tvSettingsAboutText"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="100dp"
+					android:lineSpacingExtra="10sp"
+
+					android:text="@{viewModel.currentUser.aboutText}"
+					android:textSize="18sp"
+
+					style="@style/regular_text_white85op"
+
+					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+					app:layout_constraintStart_toStartOf="@id/guidelineStart"
+					app:layout_constraintTop_toBottomOf="@id/tvSettingsAboutHeader"
+					app:layout_constraintBottom_toBottomOf="parent"
+					/>
 
 
-		</androidx.constraintlayout.widget.ConstraintLayout>
+				<!-- left padding -->
+				<androidx.constraintlayout.widget.Guideline
+					android:id="@+id/guidelineStart"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:orientation="vertical"
+					app:layout_constraintGuide_begin="@dimen/general_margin_8" />
 
-	</androidx.core.widget.NestedScrollView>
+				<!-- right padding -->
+				<androidx.constraintlayout.widget.Guideline
+					android:id="@+id/guidelineEnd"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:orientation="vertical"
+					app:layout_constraintGuide_end="@dimen/general_margin_8" />
 
-	<!-- edit -->
-	<com.google.android.material.floatingactionbutton.FloatingActionButton
-		android:id="@+id/fabSettingsEdit"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_margin="24dp"
-		android:src="@drawable/ic_create_24dp"
-		app:layout_anchor="@id/containerSettings"
-		app:layout_anchorGravity="bottom|end"
 
-		app:backgroundTint="@color/amethyst"
-		app:rippleColor="@color/black_50"
-		/>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+			</androidx.constraintlayout.widget.ConstraintLayout>
+
+		</androidx.core.widget.NestedScrollView>
+
+		<!-- edit -->
+		<com.google.android.material.floatingactionbutton.FloatingActionButton
+			android:id="@+id/fabSettingsEdit"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="24dp"
+			android:src="@drawable/ic_create_24dp"
+			app:layout_anchor="@id/containerSettings"
+			app:layout_anchorGravity="bottom|end"
+
+			app:backgroundTint="@color/amethyst"
+			app:rippleColor="@color/black_50"
+			/>
+	</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

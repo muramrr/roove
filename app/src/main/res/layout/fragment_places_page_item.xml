@@ -1,39 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 07.12.19 18:32
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 07.03.20 15:50
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
-	android:id="@+id/placesContainer"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
+<layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
-	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/rvPlacesList"
-		android:layout_width="0dp"
-		android:layout_height="0dp"
-		android:background="@color/colorPrimaryDark"
-		android:clipToPadding="false"
-		android:overScrollMode="never"
+	<data>
 
-		android:layout_marginEnd="@dimen/general_margin_8"
+		<variable
+			name="viewModel"
+			type="com.mmdev.roove.ui.places.PlacesViewModel" />
 
-		app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-		app:spanCount="2"
-		tools:listitem="@layout/fragment_places_rv_item"
+	</data>
 
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/placesContainer"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/rvPlacesList"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:background="@color/colorPrimaryDark"
+			android:clipToPadding="false"
+			android:overScrollMode="never"
+
+			android:layout_marginEnd="@dimen/general_margin_8"
+
+			app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+			app:spanCount="2"
+			tools:listitem="@layout/fragment_places_page_rv_item"
+			app:bindData="@{viewModel.placesList}"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

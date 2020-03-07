@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.03.20 16:42
+ * Last modified 07.03.20 19:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,10 +24,9 @@ import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.ActivityMainBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.auth.view.AuthFlowFragment
-import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
-import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
-import com.mmdev.roove.ui.custom.LoadingDialog
+import com.mmdev.roove.ui.common.custom.LoadingDialog
 import com.mmdev.roove.ui.main.MainFlowFragment
+import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -36,7 +35,7 @@ class MainActivity: AppCompatActivity() {
 	private lateinit var progressDialog: LoadingDialog
 
 	private lateinit var authViewModel: AuthViewModel
-	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
+	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
 
 	private val factory = injector.factory()
@@ -66,9 +65,10 @@ class MainActivity: AppCompatActivity() {
 			.into(ivMainSplashLogo)
 
 
-		progressDialog = LoadingDialog(this@MainActivity)
+		progressDialog =
+			LoadingDialog(this@MainActivity)
 
-		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
+		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 		sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 

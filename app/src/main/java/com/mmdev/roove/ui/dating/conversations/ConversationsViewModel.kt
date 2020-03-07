@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.02.20 16:27
+ * Last modified 07.03.20 18:13
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
 import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
-import com.mmdev.roove.ui.core.BaseViewModel
+import com.mmdev.roove.ui.common.base.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
@@ -32,7 +32,7 @@ class ConversationsViewModel @Inject constructor(private val deleteUC: DeleteCon
 
 	private val deleteConversationStatus: MutableLiveData<Boolean> = MutableLiveData()
 
-	private val conversationsList: MutableLiveData<MutableList<ConversationItem>> = MutableLiveData()
+	val conversationsList: MutableLiveData<MutableList<ConversationItem>> = MutableLiveData()
 	init {
 		conversationsList.value = mutableListOf()
 	}
@@ -71,8 +71,6 @@ class ConversationsViewModel @Inject constructor(private val deleteUC: DeleteCon
                            Log.wtf(TAG, "load convers list error: $it")
                        }))
 	}
-
-	fun getConversationsList() = conversationsList
 
 	fun getDeleteConversationStatus() = deleteConversationStatus
 

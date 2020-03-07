@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 05.03.20 19:51
+ * Last modified 07.03.20 17:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import com.mmdev.business.places.BasePlaceInfo
 data class UserItem(val baseUserInfo: BaseUserInfo = BaseUserInfo(),
                     var cityToDisplay: String = "",
                     var aboutText: String = "",
-                    val photoURLs: MutableList<PhotoItem> = mutableListOf(),
+                    var photoURLs: MutableList<PhotoItem> = mutableListOf(),
                     val placesToGo: MutableList<BasePlaceInfo> = mutableListOf(),
                     val preferredAgeRange: PreferredAgeRange = PreferredAgeRange())
 

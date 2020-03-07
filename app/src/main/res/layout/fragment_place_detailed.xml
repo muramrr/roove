@@ -2,175 +2,189 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.01.20 19:42
+  ~ Last modified 07.03.20 16:57
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="@color/colorPrimaryDark"
+
+<layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-	<com.google.android.material.appbar.AppBarLayout
-		android:id="@+id/appBarPlaceDetailed"
-		android:layout_width="match_parent"
-		android:layout_height="@dimen/collapseBarHeight"
-		android:theme="@style/AppTheme.AppBarOverlay" >
+	<data>
 
-		<com.google.android.material.appbar.CollapsingToolbarLayout
-			android:id="@+id/collapseBarPlaceDetailed"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			app:collapsedTitleTextAppearance="@style/ToolbarTitle"
-			app:contentScrim="@color/colorPrimary"
-			app:expandedTitleTextAppearance="@style/CollapsingToolbarExpandedTitleWhite"
+		<variable
+			name="viewModel"
+			type="com.mmdev.roove.ui.places.PlacesViewModel" />
 
-			app:layout_scrollFlags="scroll|exitUntilCollapsed"
-			app:title="No place title">
+	</data>
 
-			<androidx.viewpager2.widget.ViewPager2
-				android:id="@+id/viewPagerPlaceDetailedPhotos"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:background="@color/colorPrimary" />
-
-			<com.google.android.material.tabs.TabLayout
-				android:id="@+id/tlDotsIndicatorPlace"
-				android:layout_width="match_parent"
-				android:layout_height="10dp"
-				android:layout_gravity="bottom"
-				android:layout_marginBottom="8dp"
-				android:background="@color/transparent"
-
-				app:tabBackground="@drawable/dot_unselected_state"
-				app:tabIndicator="@drawable/dot_selection_indicator"
-				app:tabIndicatorColor="@color/gradient1"
-				app:tabIndicatorGravity="center"
-				app:tabGravity="center"
-				app:tabMaxWidth="12dp" />
-
-			<androidx.appcompat.widget.Toolbar
-				android:id="@+id/toolbarPlaceDetailed"
-				android:layout_width="match_parent"
-				android:layout_height="?attr/actionBarSize"
-				app:layout_collapseMode="pin"
-				app:navigationIcon="@drawable/ic_arrow_back_24dp"
-				app:popupTheme="@style/menuPopupStyle" />
-
-		</com.google.android.material.appbar.CollapsingToolbarLayout>
-
-	</com.google.android.material.appbar.AppBarLayout>
-
-	<androidx.core.widget.NestedScrollView
-		android:id="@+id/scrollContainerPlaceDetailed"
+	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:overScrollMode="never"
-		app:layout_behavior="@string/appbar_scrolling_view_behavior">
+		android:background="@color/colorPrimaryDark">
 
-		<androidx.constraintlayout.widget.ConstraintLayout
+		<com.google.android.material.appbar.AppBarLayout
+			android:id="@+id/appBarPlaceDetailed"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/collapseBarHeight"
+			android:theme="@style/AppTheme.AppBarOverlay" >
+
+			<com.google.android.material.appbar.CollapsingToolbarLayout
+				android:id="@+id/collapseBarPlaceDetailed"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				app:collapsedTitleTextAppearance="@style/ToolbarTitle"
+				app:contentScrim="@color/colorPrimary"
+				app:expandedTitleTextAppearance="@style/CollapsingToolbarExpandedTitleWhite"
+
+				app:layout_scrollFlags="scroll|exitUntilCollapsed"
+				app:title="@{viewModel.placeDetailed.short_title}">
+
+				<androidx.viewpager2.widget.ViewPager2
+					android:id="@+id/viewPagerPlaceDetailedPhotos"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:background="@color/colorPrimary" />
+
+				<com.google.android.material.tabs.TabLayout
+					android:id="@+id/tlDotsIndicatorPlace"
+					android:layout_width="match_parent"
+					android:layout_height="10dp"
+					android:layout_gravity="bottom"
+					android:layout_marginBottom="8dp"
+					android:background="@color/transparent"
+
+					app:tabBackground="@drawable/dot_unselected_state"
+					app:tabIndicator="@drawable/dot_selection_indicator"
+					app:tabIndicatorColor="@color/gradient1"
+					app:tabIndicatorGravity="center"
+					app:tabGravity="center"
+					app:tabMaxWidth="12dp" />
+
+				<androidx.appcompat.widget.Toolbar
+					android:id="@+id/toolbarPlaceDetailed"
+					android:layout_width="match_parent"
+					android:layout_height="?attr/actionBarSize"
+					app:layout_collapseMode="pin"
+					app:navigationIcon="@drawable/ic_arrow_back_24dp"
+					app:popupTheme="@style/menuPopupStyle" />
+
+			</com.google.android.material.appbar.CollapsingToolbarLayout>
+
+		</com.google.android.material.appbar.AppBarLayout>
+
+		<androidx.core.widget.NestedScrollView
+			android:id="@+id/scrollContainerPlaceDetailed"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:paddingBottom="@dimen/general_margin_16">
+			android:overScrollMode="never"
+			app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-			<TextView
-				android:id="@+id/tvPlaceDetailedAboutHeader"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:padding="@dimen/general_margin_16"
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:paddingBottom="@dimen/general_margin_16">
 
-				android:text="Описание"
-				android:textSize="22sp"
-				style="@style/medium_text_white85op"
+				<TextView
+					android:id="@+id/tvPlaceDetailedAboutHeader"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:padding="@dimen/general_margin_16"
 
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toTopOf="parent"
-				/>
+					android:text="Описание"
+					android:textSize="22sp"
+					style="@style/medium_text_white85op"
 
-			<TextView
-				android:id="@+id/tvPlaceDetailedDescription"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					/>
 
-				android:lineSpacingExtra="10sp"
+				<TextView
+					android:id="@+id/tvPlaceDetailedDescription"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
 
-				android:paddingStart="@dimen/general_margin_16"
-				android:paddingEnd="@dimen/general_margin_16"
+					android:lineSpacingExtra="10sp"
 
-				android:textSize="16sp"
-				style="@style/regular_text_white85op"
+					android:paddingStart="@dimen/general_margin_16"
+					android:paddingEnd="@dimen/general_margin_16"
 
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedAboutHeader"
-				app:layout_constraintBottom_toTopOf="@id/tvPlaceDetailedFullDescription"
+					android:text="@{viewModel.placeDetailed.description}"
+					android:textSize="16sp"
+					style="@style/regular_text_white85op"
 
-				/>
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedAboutHeader"
+					app:layout_constraintBottom_toTopOf="@id/tvPlaceDetailedFullDescription"
 
-			<TextView
-				android:id="@+id/tvPlaceDetailedFullDescription"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
+					/>
 
-				android:lineSpacingExtra="10sp"
-				android:maxLines="1"
+				<TextView
+					android:id="@+id/tvPlaceDetailedFullDescription"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
 
-				android:paddingStart="@dimen/general_margin_16"
-				android:paddingEnd="@dimen/general_margin_16"
+					android:lineSpacingExtra="10sp"
+					android:maxLines="1"
 
-				android:textSize="16sp"
-				style="@style/regular_text_white85op"
+					android:paddingStart="@dimen/general_margin_16"
+					android:paddingEnd="@dimen/general_margin_16"
 
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedDescription"
-				app:layout_constraintBottom_toTopOf="@id/ibExpandDescriptionPlaceDetailed"
+					android:text="@{viewModel.placeDetailed.body_text}"
+					android:textSize="16sp"
+					style="@style/regular_text_white85op"
 
-				/>
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedDescription"
+					app:layout_constraintBottom_toTopOf="@id/ibExpandDescriptionPlaceDetailed"
 
-			<ImageButton
-				android:id="@+id/ibExpandDescriptionPlaceDetailed"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:background="@color/transparent"
+					/>
 
-				android:scaleType="centerInside"
-				android:src="@drawable/ic_arrow_drop_down_24dp"
+				<ImageButton
+					android:id="@+id/ibExpandDescriptionPlaceDetailed"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:background="@color/transparent"
 
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedFullDescription"
-				/>
+					android:scaleType="centerInside"
+					android:src="@drawable/ic_arrow_drop_down_24dp"
+
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedFullDescription"
+					/>
 
 
-		</androidx.constraintlayout.widget.ConstraintLayout>
+			</androidx.constraintlayout.widget.ConstraintLayout>
 
-	</androidx.core.widget.NestedScrollView>
+		</androidx.core.widget.NestedScrollView>
 
-	<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-		android:id="@+id/fabPlaceDetailed"
-		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
-		android:layout_margin="@dimen/general_margin_16"
+		<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+			android:id="@+id/fabPlaceDetailed"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_margin="@dimen/general_margin_16"
 
-		android:text="Хочу посетить"
-		android:textAlignment="center"
-		android:textAllCaps="false"
-		android:textAppearance="@style/bold_text_white85op"
-		android:textSize="14sp"
+			android:text="Хочу посетить"
+			android:textAlignment="center"
+			android:textAllCaps="false"
+			android:textAppearance="@style/bold_text_white85op"
+			android:textSize="14sp"
 
-		app:backgroundTint="@color/amethyst"
-		app:rippleColor="@color/black_50"
+			app:backgroundTint="@color/amethyst"
+			app:rippleColor="@color/black_50"
 
-		style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+			style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
 
-		app:layout_anchor="@id/scrollContainerPlaceDetailed"
-		app:layout_anchorGravity="bottom|end|right" />
+			app:layout_anchor="@id/scrollContainerPlaceDetailed"
+			app:layout_anchorGravity="bottom|end|right" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+	</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

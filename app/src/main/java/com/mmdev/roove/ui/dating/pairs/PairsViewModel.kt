@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:30
+ * Last modified 07.03.20 18:13
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.pairs.usecase.DeleteMatchUseCase
 import com.mmdev.business.pairs.usecase.GetMatchedUsersUseCase
-import com.mmdev.roove.ui.core.BaseViewModel
+import com.mmdev.roove.ui.common.base.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class PairsViewModel @Inject constructor(private val deleteMatchUC: DeleteMatchU
                                          private val getMatchedUsersUC: GetMatchedUsersUseCase):
 		BaseViewModel() {
 
-	private val matchedUsersList: MutableLiveData<MutableList<MatchedUserItem>> = MutableLiveData()
+	val matchedUsersList: MutableLiveData<MutableList<MatchedUserItem>> = MutableLiveData()
 	init {
 		matchedUsersList.value = mutableListOf()
 	}
@@ -69,9 +69,6 @@ class PairsViewModel @Inject constructor(private val deleteMatchUC: DeleteMatchU
 	}
 
 	fun getDeleteMatchStatus() = deleteMatchStatus
-
-	fun getMatchedUsersList() = matchedUsersList
-
 
 
 	private fun deleteMatchExecution(matchedUser: MatchedUserItem) = deleteMatchUC.execute(matchedUser)

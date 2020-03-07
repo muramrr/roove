@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.03.20 19:05
+ * Last modified 07.03.20 19:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,9 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.format.DateFormat
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
@@ -30,14 +32,22 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.core.UserItem
+import com.mmdev.business.places.BasePlaceInfo
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
+import com.mmdev.roove.core.permissions.AppPermission
+import com.mmdev.roove.core.permissions.handlePermission
+import com.mmdev.roove.core.permissions.onRequestPermissionsResultReceived
+import com.mmdev.roove.core.permissions.requestAppPermissions
+import com.mmdev.roove.databinding.FragmentSettingsBinding
+import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.auth.AuthViewModel
-import com.mmdev.roove.ui.core.*
-import com.mmdev.roove.ui.core.viewmodel.RemoteUserRepoViewModel
-import com.mmdev.roove.ui.core.viewmodel.SharedViewModel
-import com.mmdev.roove.ui.custom.CenterFirstLastItemDecoration
-import com.mmdev.roove.ui.custom.HorizontalCarouselLayoutManager
+import com.mmdev.roove.ui.common.LifecycleStates
+import com.mmdev.roove.ui.common.base.BaseAdapter
+import com.mmdev.roove.ui.common.base.BaseFragment
+import com.mmdev.roove.ui.common.custom.CenterFirstLastItemDecoration
+import com.mmdev.roove.ui.common.custom.HorizontalCarouselLayoutManager
+import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.ui.profile.view.PlacesToGoAdapter
 import com.mmdev.roove.utils.observeOnce
 import com.mmdev.roove.utils.showToastText
@@ -52,11 +62,14 @@ import java.util.*
 
 class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 
-	private val mSettingsPhotoAdapter = SettingsUserPhotoAdapter(mutableListOf())
-	private val mPlacesToGoAdapter = PlacesToGoAdapter(listOf())
+	private val mSettingsPhotoAdapter =
+		SettingsUserPhotoAdapter(mutableListOf(), R.layout.fragment_settings_photo_item)
+
+	private val mPlacesToGoAdapter =
+		PlacesToGoAdapter(listOf(), R.layout.fragment_profile_places_rv_item)
 
 	private lateinit var authViewModel: AuthViewModel
-	private lateinit var remoteRepoViewModel: RemoteUserRepoViewModel
+	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
 	private lateinit var sharedViewModel: SharedViewModel
 
 	private lateinit var userItem: UserItem
@@ -67,23 +80,23 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 	companion object {
 		private const val IMAGE_GALLERY_REQUEST = 1
 		private const val IMAGE_CAMERA_REQUEST = 2
+		private const val PLACE_ID_KEY = "PLACE_ID"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		activity?.run {
 			authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
-			remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteUserRepoViewModel::class.java]
+			remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
 		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			userItem = it
-			initProfile(it)
 		})
 
 		remoteRepoViewModel.photoUrls.observe(this, Observer {
-			mSettingsPhotoAdapter.updateData(it.map { photoItem -> photoItem.fileUrl })
+			mSettingsPhotoAdapter.setData(it)
 		})
 
 		sharedViewModel.modalBottomSheetStatus.observeOnce(this, Observer{
@@ -91,6 +104,14 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 		})
 	}
 
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+	                          savedInstanceState: Bundle?) =
+		FragmentSettingsBinding.inflate(inflater, container, false)
+			.apply {
+				lifecycleOwner = this@SettingsFragment
+				viewModel = sharedViewModel
+				executePendingBindings()
+			}.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -107,6 +128,7 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 			layoutManager = HorizontalCarouselLayoutManager(this.context, HORIZONTAL, false)
 			//item decorator to make first and last item align center
 			addItemDecoration(CenterFirstLastItemDecoration())
+			//adjust auto swipe to item center
 			val snapHelper: SnapHelper = LinearSnapHelper()
 			snapHelper.attachToRecyclerView(this)
 		}
@@ -128,10 +150,10 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 
 		rvSettingsWantToGoList.apply { adapter = mPlacesToGoAdapter }
 
-		mPlacesToGoAdapter.setOnItemClickListener(object: PlacesToGoAdapter.OnItemClickListener {
-			override fun onItemClick(view: View, position: Int) {
-				val placeId = bundleOf("PLACE_ID" to
-						                       mPlacesToGoAdapter.getPlaceToGoItem(position).id)
+		mPlacesToGoAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<BasePlaceInfo> {
+
+			override fun onItemClick(item: BasePlaceInfo, position: Int) {
+				val placeId = bundleOf(PLACE_ID_KEY to item.id)
 				findNavController().navigate(R.id.action_settings_to_placeDetailedFragment, placeId)
 			}
 		})
@@ -141,20 +163,6 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 			findNavController().navigate(R.id.action_settings_to_settingsEditInfoFragment)
 		}
 
-	}
-
-	private fun initProfile(userItem: UserItem) {
-		val nameAgeText = "${userItem.baseUserInfo.name}, ${userItem.baseUserInfo.age}"
-		tvSettingsNameAge.text = nameAgeText
-		tvSettingsAboutText.text = userItem.aboutText
-		tvSettingsCity.text = userItem.cityToDisplay
-		mSettingsPhotoAdapter.updateData(userItem.photoURLs.map { photoItem -> photoItem.fileUrl })
-		mPlacesToGoAdapter.updateData(userItem.placesToGo.toList())
-	}
-
-	override fun onResume() {
-		super.onResume()
-		if (this::userItem.isInitialized) initProfile(userItem)
 	}
 
 	/*
@@ -229,14 +237,16 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 	// If request is cancelled, the result arrays are empty.
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-		onRequestPermissionsResultReceived(requestCode, grantResults,
-		                                   onPermissionGranted = {
-			                                   when (it){
-				                                   AppPermission.CAMERA -> startCameraIntent()
-				                                   AppPermission.GALLERY -> startGalleryIntent()
-			                                   }
-		                                   },
-		                                   onPermissionDenied = { it.deniedMessageId })
+		onRequestPermissionsResultReceived(
+				requestCode,
+				grantResults,
+				onPermissionGranted = {
+					when (it) {
+						AppPermission.CAMERA -> startCameraIntent()
+						AppPermission.GALLERY -> startGalleryIntent()
+					}
+				},
+				onPermissionDenied = { it.deniedMessageId })
 	}
 
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.01.20 18:31
+ * Last modified 07.03.20 16:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ import com.mmdev.business.places.PlaceDetailedItem
 import com.mmdev.business.places.PlaceItem
 import com.mmdev.business.places.usecase.GetPlaceDetailsUseCase
 import com.mmdev.business.places.usecase.GetPlacesUseCase
-import com.mmdev.roove.ui.core.BaseViewModel
+import com.mmdev.roove.ui.common.base.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
@@ -29,8 +29,8 @@ class PlacesViewModel @Inject constructor(private val getPlacesUC: GetPlacesUseC
 		BaseViewModel() {
 
 
-	private val placesList: MutableLiveData<List<PlaceItem>> = MutableLiveData()
-	private val placeDetailed: MutableLiveData<PlaceDetailedItem> = MutableLiveData()
+	val placesList: MutableLiveData<List<PlaceItem>> = MutableLiveData()
+	val placeDetailed: MutableLiveData<PlaceDetailedItem> = MutableLiveData()
 
 	fun loadPlaces(category: String){
 		disposables.add(getPlacesExecution(category)
@@ -56,15 +56,6 @@ class PlacesViewModel @Inject constructor(private val getPlacesUC: GetPlacesUseC
                            Log.wtf(TAG, "$it")
                        }))
 	}
-
-
-
-
-	fun getPlaceDetailed() = placeDetailed
-	fun getPlacesList() = placesList
-
-
-
 
 
 	private fun getPlacesExecution(category: String) = getPlacesUC.execute(category)

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.02.20 18:03
+  ~ Last modified 07.03.20 17:23
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@
 	<data>
 
 		<variable
-			name="basePlaceInfo"
+			name="bindItem"
 			type="com.mmdev.business.places.BasePlaceInfo" />
 
 	</data>
@@ -33,7 +33,7 @@
 			android:layout_height="80dp"
 			android:src="@drawable/placeholder_image"
 
-			app:bindCircleImageUrl="@{basePlaceInfo.imageUrl}"
+			app:bindCircleImageUrl="@{bindItem.imageUrl}"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
@@ -46,7 +46,7 @@
 			android:ellipsize="end"
 			android:maxLines="2"
 
-			android:text="@{basePlaceInfo.short_title, default = `Place title`}"
+			android:text="@{bindItem.short_title, default = `Place title`}"
 			android:textAlignment="center"
 			android:textSize="16sp"
 

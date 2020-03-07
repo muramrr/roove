@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.01.20 19:22
+  ~ Last modified 07.03.20 16:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@
 
 	<data>
 		<variable
-			name="imageUrl"
+			name="bindItem"
 			type="String" />
 	</data>
 
@@ -29,7 +29,7 @@
 			android:background="@color/colorPrimaryDark"
 			android:scaleType="centerCrop"
 
-			app:bindImageUrl="@{imageUrl}"
+			app:bindImageUrl="@{bindItem}"
 			app:progressBar="@{pbImageLoading}"
 
 			app:layout_constraintStart_toStartOf="parent"

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.01.20 17:59
+  ~ Last modified 07.03.20 18:13
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,6 +39,7 @@
 			android:overScrollMode="never"
 			android:visibility='@{viewModel.showTextHelper ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
 
+			app:bindData="@{viewModel.matchedUsersList}"
 			app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
 			app:spanCount="2"
 
