@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 18:13
+ * Last modified 08.03.20 19:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentConversationsBinding
@@ -33,7 +32,7 @@ import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.SwipeToDeleteCallback
 import com.mmdev.roove.ui.dating.conversations.ConversationsViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
-import com.mmdev.roove.utils.observeOnce
+import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_conversations.*
 
 /**
@@ -45,7 +44,6 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 	private val mConversationsAdapter =
 		ConversationsAdapter(mutableListOf(), R.layout.fragment_conversations_item)
 
-	private lateinit var snackbar: Snackbar
 
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var conversationsViewModel: ConversationsViewModel
@@ -57,23 +55,23 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 			ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
-		conversationsViewModel = ViewModelProvider(this@ConversationsFragment, factory)[ConversationsViewModel::class.java]
+		conversationsViewModel = ViewModelProvider(this, factory)[ConversationsViewModel::class.java]
 		conversationsViewModel.loadConversationsList()
+		conversationsViewModel.getDeleteConversationStatus().observe(this, Observer {
+			if (it) context?.showToastText("successfully deleted")
+		})
 
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-	                          savedInstanceState: Bundle?): View {
-		val rootView = FragmentConversationsBinding.inflate(inflater, container, false)
+	                          savedInstanceState: Bundle?) =
+		FragmentConversationsBinding.inflate(inflater, container, false)
 			.apply {
 				lifecycleOwner = this@ConversationsFragment
 				viewModel = conversationsViewModel
 				executePendingBindings()
-			}
-			.root
-		snackbar = makeSnackbar(rootView)
-		return rootView
-	}
+			}.root
+
 
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -89,9 +87,8 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 
 					if (linearLayoutManager.findLastVisibleItemPosition() == totalItemsCount - 4){
 						//Log.wtf(TAG, "load seems to be called")
-						conversationsViewModel.loadConversationsList()
+						conversationsViewModel.loadMoreConversations()
 					}
-
 				}
 			})
 
@@ -102,15 +99,12 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 					val itemPosition = viewHolder.adapterPosition
 
 					MaterialAlertDialogBuilder(context)
+						.setCancelable(false)
 						.setTitle("Удалить диалог?")
 						.setMessage("Это полностью удалит переписку и пару с пользователем")
 						.setPositiveButton("Удалить") { dialog, _ ->
 							conversationsViewModel.deleteConversation(adapter.getItem(itemPosition))
 							adapter.removeAt(itemPosition)
-							conversationsViewModel.getDeleteConversationStatus()
-								.observeOnce(this@ConversationsFragment, Observer {
-									if (it) snackbar.show()
-								})
 							dialog.dismiss()
 						}
 						.setNegativeButton("Отмена") { dialog, _ ->
@@ -134,7 +128,5 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 		})
 
 	}
-
-	private fun makeSnackbar(view: View) = Snackbar.make(view, "Successfully deleted", Snackbar.LENGTH_SHORT)
 
 }

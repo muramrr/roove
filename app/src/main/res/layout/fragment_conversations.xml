@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 07.03.20 18:13
+  ~ Last modified 08.03.20 18:43
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,56 +23,51 @@
 	</data>
 
 
-	<androidx.coordinatorlayout.widget.CoordinatorLayout
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/containerConversations"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:background="@color/colorPrimaryDark">
 
-		<androidx.constraintlayout.widget.ConstraintLayout
-			android:id="@+id/containerConversations"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:background="@color/colorPrimaryDark">
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/rvConversationList"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:clipToPadding="false"
 
-			<androidx.recyclerview.widget.RecyclerView
-				android:id="@+id/rvConversationList"
-				android:layout_width="0dp"
-				android:layout_height="0dp"
-				android:clipToPadding="false"
+			android:overScrollMode="never"
+			android:scrollbars="vertical"
 
-				android:overScrollMode="never"
-				android:scrollbars="vertical"
+			android:visibility='@{viewModel.showTextHelper ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
 
-				android:visibility='@{viewModel.showTextHelper ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
+			app:bindData="@{viewModel.conversationsList}"
+			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
-				app:bindData="@{viewModel.conversationsList}"
-				app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
 
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toTopOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintBottom_toBottomOf="parent"
+			tools:itemCount="5"
+			tools:listitem="@layout/fragment_conversations_item" />
 
-				tools:itemCount="5"
-				tools:listitem="@layout/fragment_conversations_item" />
+		<TextView
+			android:id="@+id/tvConversationsHelperText"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center"
 
-			<TextView
-				android:id="@+id/tvConversationsHelperText"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:gravity="center"
+			android:text="There is no started conversations...\n\nText someone first!"
+			android:textSize="24sp"
+			style="@style/regular_text_white85op"
 
-				android:text="There is no started conversations...\n\nText someone first!"
-				android:textSize="24sp"
-				style="@style/regular_text_white85op"
+			android:visibility='@{viewModel.showTextHelper ? View.VISIBLE : View.INVISIBLE, default = "invisible"}'
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			/>
 
-				android:visibility='@{viewModel.showTextHelper ? View.VISIBLE : View.INVISIBLE, default = "invisible"}'
-				app:layout_constraintBottom_toBottomOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toTopOf="parent"
-				/>
-
-		</androidx.constraintlayout.widget.ConstraintLayout>
-	</androidx.coordinatorlayout.widget.CoordinatorLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

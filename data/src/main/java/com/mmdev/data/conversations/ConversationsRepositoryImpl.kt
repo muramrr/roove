@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.02.20 18:10
+ * Last modified 08.03.20 18:27
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,7 +32,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 		ConversationsRepository {
 
 	private var currentUserDocRef: DocumentReference
-	private var paginateConversationsQuery: Query
+	private var initialConversationsQuery: Query
 	private var currentUserId: String
 
 	init {
@@ -43,14 +43,14 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 
 		currentUserId = currentUser.baseUserInfo.userId
 
-		paginateConversationsQuery = currentUserDocRef
+		initialConversationsQuery = currentUserDocRef
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.orderBy(CONVERSATION_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
 			.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
 			.limit(20)
 	}
 
-	companion object{
+	companion object {
 		// firestore users references
 		private const val USERS_COLLECTION_REFERENCE = "users"
 		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
@@ -69,6 +69,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 
 
 	private lateinit var paginateLastConversationLoaded: DocumentSnapshot
+	private lateinit var paginateConversationsQuery: Query
 
 	override fun deleteConversation(conversationItem: ConversationItem): Completable =
 		Completable.create { emitter ->
@@ -124,10 +125,32 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 
 	override fun getConversationsList(): Single<List<ConversationItem>> =
 		Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
+			initialConversationsQuery
+				.get()
+				.addOnSuccessListener {
+					if (!it.isEmpty) {
+						val conversationsList = ArrayList<ConversationItem>()
+						for (doc in it) {
+							conversationsList.add(doc.toObject(ConversationItem::class.java))
+						}
+						emitter.onSuccess(conversationsList)
+						//new cursor position
+						paginateLastConversationLoaded = it.documents[it.size() - 1]
+						//init pagination query
+						paginateConversationsQuery =
+							initialConversationsQuery.startAfter(paginateLastConversationLoaded)
+					}
+					else emitter.onError(Throwable("Empty list"))
+				}
+				.addOnFailureListener { emitter.onError(it) }
+		}).subscribeOn(Schedulers.io())
+
+	override fun getMoreConversationsList(): Single<List<ConversationItem>> =
+		Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
 			paginateConversationsQuery
 				.get()
 				.addOnSuccessListener {
-					if (!it.isEmpty){
+					if (!it.isEmpty) {
 						val paginateConversationsList = ArrayList<ConversationItem>()
 						for (doc in it) {
 							paginateConversationsList.add(doc.toObject(ConversationItem::class.java))
