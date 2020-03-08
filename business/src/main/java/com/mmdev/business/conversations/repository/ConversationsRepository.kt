@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 16:49
+ * Last modified 08.03.20 18:27
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,8 +20,10 @@ import io.reactivex.Single
 
 interface ConversationsRepository {
 
+	fun deleteConversation(conversationItem: ConversationItem): Completable
+
 	fun getConversationsList(): Single<List<ConversationItem>>
 
-	fun deleteConversation(conversationItem: ConversationItem): Completable
+	fun getMoreConversationsList(): Single<List<ConversationItem>>
 
 }

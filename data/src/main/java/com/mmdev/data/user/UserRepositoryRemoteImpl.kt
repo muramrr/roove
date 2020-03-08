@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.03.20 19:35
+ * Last modified 08.03.20 19:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@ package com.mmdev.data.user
 
 import android.net.Uri
 import android.text.format.DateFormat
-import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
@@ -137,18 +136,11 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 							refBase.update(USER_BASE_REGISTRATION_TOKENS_FIELD,
 							               FieldValue.arrayUnion(instanceResult.token))
 
+							localRepo.saveUserInfo(remoteUserItem)
+							emitter.onSuccess(remoteUserItem)
+//							Log.wtf(TAG, "user was: {$userItem}")
+//							Log.wtf(TAG, "user saved: {$remoteUserItem}")
 
-							if (userItem == remoteUserItem) {
-								Log.wtf(TAG, "no reason to fetch user")
-								emitter.onSuccess(userItem)
-							}
-							//save new userItem
-							else {
-								localRepo.saveUserInfo(remoteUserItem)
-								emitter.onSuccess(remoteUserItem)
-								Log.wtf(TAG, "user was: {$userItem}")
-								Log.wtf(TAG, "user saved: {$remoteUserItem}")
-							}
 					}
 					.addOnFailureListener { instanceIdError -> emitter.onError(instanceIdError) }
 				}

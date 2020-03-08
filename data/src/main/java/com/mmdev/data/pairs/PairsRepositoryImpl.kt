@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.02.20 18:06
+ * Last modified 08.03.20 19:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,7 +33,7 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 	private var currentUserDocRef: DocumentReference
 	private var currentUserId: String
-	private var paginateMatchesQuery: Query
+	private var initialMatchesQuery: Query
 
 	init {
 		currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
@@ -43,7 +43,7 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 		currentUserId = currentUser.baseUserInfo.userId
 
-		paginateMatchesQuery = currentUserDocRef
+		initialMatchesQuery = currentUserDocRef
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
 			.orderBy(MATCHED_DATE_FIELD, Query.Direction.DESCENDING)
@@ -64,6 +64,7 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 
 	private lateinit var paginateLastMatchedLoaded: DocumentSnapshot
+	private lateinit var paginateMatchesQuery: Query
 
 
 	override fun deleteMatchedUser(matchedUserItem: MatchedUserItem): Completable =
@@ -109,6 +110,30 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		}.subscribeOn(Schedulers.io())
 
 	override fun getMatchedUsersList(): Single<List<MatchedUserItem>> {
+		return Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
+			initialMatchesQuery
+				.get()
+				.addOnSuccessListener {
+					if (!it.isEmpty) {
+						val matchesList = ArrayList<MatchedUserItem>()
+						for (doc in it) {
+							matchesList.add(doc.toObject(MatchedUserItem::class.java))
+						}
+						emitter.onSuccess(matchesList)
+						//new cursor position
+						paginateLastMatchedLoaded = it.documents[it.size() - 1]
+						//init pagination query
+						paginateMatchesQuery =
+							initialMatchesQuery.startAfter(paginateLastMatchedLoaded)
+					}
+					else emitter.onError(Throwable("Empty list"))
+				}
+				.addOnFailureListener { emitter.onError(it) }
+		}).subscribeOn(Schedulers.io())
+	}
+
+
+	override fun getMoreMatchedUsersList(): Single<List<MatchedUserItem>> {
 		return Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
 			paginateMatchesQuery
 				.get()

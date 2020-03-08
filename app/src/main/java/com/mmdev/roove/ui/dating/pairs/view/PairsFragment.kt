@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:14
+ * Last modified 08.03.20 19:27
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -77,7 +77,7 @@ class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
 
 					if ((totalItemsCount - visibleItemCount) == (pastVisibleItems + 4)){
 						//Log.wtf("mylogs_PairsFragment", "load called ")
-						pairsViewModel.loadMatchedUsers()
+						pairsViewModel.loadMoreMatchedUsers()
 					}
 
 				}

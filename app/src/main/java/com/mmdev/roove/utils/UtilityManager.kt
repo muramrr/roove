@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 19:51
+ * Last modified 08.03.20 18:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,20 +50,20 @@ object UtilityManager {
 	private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 
 	private const val GENDER = "female"
-	private const val CITY = "nsk"
-	private const val USERID = "L6udxztFxqadDeHvN6qXdIpZihF3"
+	private const val CITY = "nnv"
+	private const val USERID = "g5q5vvujWkXcn0uwKdE4YEgOvnp2"
 
-	private fun createFakeUser(city: String = "nsk",
+	private fun createFakeUser(city: String = CITY,
 	                           gender: String = "male",
 	                           preferredGender: String = "female")=
-		UserItem(BaseUserInfo(Fakeit.name().firstName(),
-		                      Random.nextInt(18, 22),
-		                      city,
-		                      gender,
-		                      preferredGender,
-		                      randomFemalePhotoUrlsList[Random.nextInt(0, 9)],
-		                      randomUid()),
-		         //photoURLs = randomFemalePhotoUrlsList.toMutableList(),
+		UserItem(BaseUserInfo(name = Fakeit.name().firstName(),
+		                      age = Random.nextInt(18, 22),
+		                      city = city,
+		                      gender = gender,
+		                      preferredGender = preferredGender,
+		                      mainPhotoUrl = randomFemalePhotoUrlsList[Random.nextInt(0, 9)],
+		                      userId = randomUid()),
+		         photoURLs = mutableListOf(),
 		         placesToGo = mutableListOf())
 
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 18:13
+ * Last modified 08.03.20 19:27
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.pairs.usecase.DeleteMatchUseCase
 import com.mmdev.business.pairs.usecase.GetMatchedUsersUseCase
+import com.mmdev.business.pairs.usecase.GetMoreMatchedUsersListUseCase
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
@@ -24,9 +25,10 @@ import javax.inject.Inject
  * This is the documentation block about the class
  */
 
-class PairsViewModel @Inject constructor(private val deleteMatchUC: DeleteMatchUseCase,
-                                         private val getMatchedUsersUC: GetMatchedUsersUseCase):
-		BaseViewModel() {
+class PairsViewModel @Inject
+constructor(private val deleteMatchUC: DeleteMatchUseCase,
+            private val getMatchedUsersUC: GetMatchedUsersUseCase,
+            private val getMoreMatchedUsersUC: GetMoreMatchedUsersListUseCase): BaseViewModel() {
 
 	val matchedUsersList: MutableLiveData<MutableList<MatchedUserItem>> = MutableLiveData()
 	init {
@@ -56,12 +58,27 @@ class PairsViewModel @Inject constructor(private val deleteMatchUC: DeleteMatchU
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       if (it.isNotEmpty()) {
-		                       matchedUsersList.value?.addAll(it)
-		                       matchedUsersList.value = matchedUsersList.value
+		                       matchedUsersList.value = it.toMutableList()
 		                       showTextHelper.value = false
 	                       }
-	                       else if (matchedUsersList.value?.isEmpty()!!) showTextHelper.value = true
-	                       Log.wtf(TAG, "loaded pairs: ${it.size}")
+	                       Log.wtf(TAG, "initial loaded pairs: ${it.size}")
+                       },
+                       {
+	                       showTextHelper.value = true
+                           Log.wtf(TAG, "error + $it")
+                       }))
+	}
+
+
+	fun loadMoreMatchedUsers() {
+		disposables.add(getMoreMatchedUsersExecution()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                           if (it.isNotEmpty()) {
+	                           matchedUsersList.value!!.addAll(it)
+	                           matchedUsersList.value = matchedUsersList.value
+                           }
+                           Log.wtf(TAG, "loaded more pairs: ${it.size}")
                        },
                        {
                            Log.wtf(TAG, "error + $it")
@@ -73,4 +90,5 @@ class PairsViewModel @Inject constructor(private val deleteMatchUC: DeleteMatchU
 
 	private fun deleteMatchExecution(matchedUser: MatchedUserItem) = deleteMatchUC.execute(matchedUser)
 	private fun getMatchedUsersExecution() = getMatchedUsersUC.execute()
+	private fun getMoreMatchedUsersExecution() = getMoreMatchedUsersUC.execute()
 }
