@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:14
+ * Last modified 10.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,7 +40,6 @@ import com.mmdev.roove.core.permissions.handlePermission
 import com.mmdev.roove.core.permissions.onRequestPermissionsResultReceived
 import com.mmdev.roove.core.permissions.requestAppPermissions
 import com.mmdev.roove.databinding.FragmentSettingsBinding
-import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.common.LifecycleStates
 import com.mmdev.roove.ui.common.base.BaseAdapter
@@ -60,7 +59,7 @@ import java.util.*
  * This is the documentation block about the class
  */
 
-class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
+class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 	private val mSettingsPhotoAdapter =
 		SettingsUserPhotoAdapter(mutableListOf(), R.layout.fragment_settings_photo_item)
@@ -69,8 +68,7 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 		PlacesToGoAdapter(listOf(), R.layout.fragment_profile_places_rv_item)
 
 	private lateinit var authViewModel: AuthViewModel
-	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
-	private lateinit var sharedViewModel: SharedViewModel
+
 
 	private lateinit var userItem: UserItem
 
@@ -87,20 +85,18 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 		super.onCreate(savedInstanceState)
 		activity?.run {
 			authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
-			remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
-			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
 		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			userItem = it
 		})
 
-		remoteRepoViewModel.photoUrls.observe(this, Observer {
+		associatedViewModel.photoUrls.observe(this, Observer {
 			mSettingsPhotoAdapter.setData(it)
 		})
 
 		sharedViewModel.modalBottomSheetStatus.observeOnce(this, Observer{
-			if (it == LifecycleStates.STOP) remoteRepoViewModel.updateUserItem(userItem)
+			if (it == LifecycleStates.STOP) associatedViewModel.updateUserItem(userItem)
 		})
 	}
 
@@ -257,7 +253,7 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 			if (resultCode == Activity.RESULT_OK) {
 
 				val selectedUri = data?.data
-				remoteRepoViewModel.uploadUserProfilePhoto(selectedUri.toString(), userItem)
+				associatedViewModel.uploadUserProfilePhoto(selectedUri.toString(), userItem)
 			}
 		}
 		// send photo taken by camera
@@ -265,8 +261,8 @@ class SettingsFragment: BaseFragment(R.layout.fragment_settings) {
 			if (resultCode == Activity.RESULT_OK) {
 
 				if (mFilePathImageCamera.exists()) {
-					remoteRepoViewModel.uploadUserProfilePhoto(Uri.fromFile(mFilePathImageCamera).toString(),
-					                                           userItem)
+					associatedViewModel.uploadUserProfilePhoto(Uri.fromFile(mFilePathImageCamera).toString(),
+					                                                                 userItem)
 				}
 				else context?.showToastText("filePathImageCamera is null or filePathImageCamera isn't exists")
 

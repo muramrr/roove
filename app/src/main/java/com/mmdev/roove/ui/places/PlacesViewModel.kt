@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 16:16
+ * Last modified 09.03.20 16:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,8 @@ import com.mmdev.business.places.PlaceItem
 import com.mmdev.business.places.usecase.GetPlaceDetailsUseCase
 import com.mmdev.business.places.usecase.GetPlacesUseCase
 import com.mmdev.roove.ui.common.base.BaseViewModel
+import com.mmdev.roove.ui.common.errors.ErrorType
+import com.mmdev.roove.ui.common.errors.MyError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
@@ -41,7 +43,7 @@ class PlacesViewModel @Inject constructor(private val getPlacesUC: GetPlacesUseC
 	                       Log.wtf(TAG, "$category to display: ${it.results.size}")
                        },
                        {
-                           Log.wtf(TAG, "$it")
+	                       error.value = MyError(ErrorType.LOADING, it)
                        }))
 	}
 
@@ -53,7 +55,7 @@ class PlacesViewModel @Inject constructor(private val getPlacesUC: GetPlacesUseC
                            //Log.wtf(TAG, "$id place details = {$it}")
                        },
                        {
-                           Log.wtf(TAG, "$it")
+	                       error.value = MyError(ErrorType.LOADING, it)
                        }))
 	}
 

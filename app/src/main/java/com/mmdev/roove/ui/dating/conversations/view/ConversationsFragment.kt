@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.03.20 19:31
+ * Last modified 10.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -26,7 +25,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentConversationsBinding
-import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.common.base.BaseAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.SwipeToDeleteCallback
@@ -39,25 +37,18 @@ import kotlinx.android.synthetic.main.fragment_conversations.*
  * This is the documentation block about the class
  */
 
-class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
+class ConversationsFragment: BaseFragment<ConversationsViewModel>(){
 
 	private val mConversationsAdapter =
 		ConversationsAdapter(mutableListOf(), R.layout.fragment_conversations_item)
 
 
-	private lateinit var sharedViewModel: SharedViewModel
-	private lateinit var conversationsViewModel: ConversationsViewModel
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		sharedViewModel = activity?.run {
-			ViewModelProvider(this, factory)[SharedViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
-
-		conversationsViewModel = ViewModelProvider(this, factory)[ConversationsViewModel::class.java]
-		conversationsViewModel.loadConversationsList()
-		conversationsViewModel.getDeleteConversationStatus().observe(this, Observer {
+		associatedViewModel.loadConversationsList()
+		associatedViewModel.getDeleteConversationStatus().observe(this, Observer {
 			if (it) context?.showToastText("successfully deleted")
 		})
 
@@ -68,7 +59,7 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 		FragmentConversationsBinding.inflate(inflater, container, false)
 			.apply {
 				lifecycleOwner = this@ConversationsFragment
-				viewModel = conversationsViewModel
+				viewModel = associatedViewModel
 				executePendingBindings()
 			}.root
 
@@ -87,7 +78,7 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 
 					if (linearLayoutManager.findLastVisibleItemPosition() == totalItemsCount - 4){
 						//Log.wtf(TAG, "load seems to be called")
-						conversationsViewModel.loadMoreConversations()
+						associatedViewModel.loadMoreConversations()
 					}
 				}
 			})
@@ -103,7 +94,7 @@ class ConversationsFragment: BaseFragment(R.layout.fragment_conversations){
 						.setTitle("Удалить диалог?")
 						.setMessage("Это полностью удалит переписку и пару с пользователем")
 						.setPositiveButton("Удалить") { dialog, _ ->
-							conversationsViewModel.deleteConversation(adapter.getItem(itemPosition))
+							associatedViewModel.deleteConversation(adapter.getItem(itemPosition))
 							adapter.removeAt(itemPosition)
 							dialog.dismiss()
 						}

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:14
+ * Last modified 10.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,13 +22,11 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentSettingsEditInfoBinding
-import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.GridItemDecoration
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
@@ -41,7 +39,7 @@ import kotlinx.android.synthetic.main.fragment_settings_edit_info.*
  * This is the documentation block about the class
  */
 
-class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_info) {
+class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 	private lateinit var userItem: UserItem
 
@@ -59,8 +57,6 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 	private lateinit var cityList: Map<String, String>
 
-	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
-	private lateinit var sharedViewModel: SharedViewModel
 
 	private lateinit var male: String
 	private lateinit var female: String
@@ -75,11 +71,6 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 		male = getString(R.string.genderMale)
 		female = getString(R.string.genderFemale)
-
-		activity?.run {
-			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
-			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
 
 		sharedViewModel.getCurrentUser().observe(this, Observer {
 			userItem = it
@@ -123,9 +114,9 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 					val isMainPhotoDeleting = photoToDelete.fileUrl == userItem.baseUserInfo.mainPhotoUrl
 
-					remoteRepoViewModel.deletePhoto(photoToDelete, userItem, isMainPhotoDeleting)
+					associatedViewModel.deletePhoto(photoToDelete, userItem, isMainPhotoDeleting)
 
-					remoteRepoViewModel.photoDeletionStatus.observeOnce(this@SettingsEditInfoFragment, Observer {
+					associatedViewModel.photoDeletionStatus.observeOnce(this@SettingsEditInfoFragment, Observer {
 						if (it) {
 							userItem.photoURLs.remove(photoToDelete)
 							mEditorPhotoAdapter.removeAt(position)
@@ -163,8 +154,8 @@ class SettingsEditInfoFragment: BaseFragment(R.layout.fragment_settings_edit_inf
 
 
 		btnSettingsEditSave.setOnClickListener {
-			remoteRepoViewModel.updateUserItem(userItem)
-			remoteRepoViewModel.getUserUpdateStatus().observeOnce(this, Observer {
+			associatedViewModel.updateUserItem(userItem)
+			associatedViewModel.getUserUpdateStatus().observeOnce(this, Observer {
 				if (it) {
 					sharedViewModel.userSelected.value = userItem
 					context.showToastText("Successfully saved")

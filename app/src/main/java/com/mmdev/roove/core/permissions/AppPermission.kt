@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 13:54
+ * Last modified 09.03.20 15:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,14 +28,14 @@ sealed class AppPermission(val permissionsList: Array<String>,
 
 	/**CAMERA PERMISSIONS**/
 	object CAMERA : AppPermission(arrayOf(Manifest.permission.CAMERA,
-	                                                                                          Manifest.permission.READ_EXTERNAL_STORAGE),
+	                                      Manifest.permission.READ_EXTERNAL_STORAGE),
 	                              REQUEST_CODE_CAMERA,
 	                              R.string.permission_camera_denied,
 	                              R.string.permission_camera_explanation)
 
 	/**READ/WRITE TO STORAGE PERMISSIONS**/
 	object GALLERY : AppPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-	                                                                                           Manifest.permission.WRITE_EXTERNAL_STORAGE),
+	                                       Manifest.permission.WRITE_EXTERNAL_STORAGE),
 	                               REQUEST_CODE_GALLERY,
 	                               R.string.permission_read_ext_storage_denied,
 	                               R.string.permission_read_ext_storage_explanation)

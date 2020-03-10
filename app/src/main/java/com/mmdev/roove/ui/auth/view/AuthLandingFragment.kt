@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 16:16
+ * Last modified 10.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -26,24 +25,17 @@ import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_auth_landing.*
 
-class AuthLandingFragment: BaseFragment(R.layout.fragment_auth_landing)  {
+class AuthLandingFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_auth_landing) {
 
 	//Progress dialog for any authentication action
 	private lateinit var mCallbackManager: CallbackManager
-
-	private lateinit var authViewModel: AuthViewModel
-
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		mCallbackManager = CallbackManager.Factory.create()
 
-		authViewModel = activity?.run {
-			ViewModelProvider(this, factory)[AuthViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
-
-		authViewModel.continueRegistration.observe(this, Observer {
+		associatedViewModel.continueRegistration.observe(this, Observer {
 			if (it == true) findNavController().navigate(R.id.action_auth_landing_to_registrationFragment)
 		})
 
@@ -54,7 +46,7 @@ class AuthLandingFragment: BaseFragment(R.layout.fragment_auth_landing)  {
 		btnFacebookLogin.registerCallback(mCallbackManager, object: FacebookCallback<LoginResult> {
 
 			override fun onSuccess(loginResult: LoginResult) {
-				authViewModel.signIn(loginResult.accessToken.token)
+				associatedViewModel.signIn(loginResult.accessToken.token)
 			}
 
 			override fun onCancel() {}
@@ -64,7 +56,7 @@ class AuthLandingFragment: BaseFragment(R.layout.fragment_auth_landing)  {
 			}
 		})
 		btnFacebookLoginDelegate.setOnClickListener {
-			authViewModel.logOut()
+			associatedViewModel.logOut()
 			btnFacebookLogin.performClick()
 		}
 	}

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.03.20 19:27
+ * Last modified 10.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,13 +14,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentPairsBinding
-import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.common.base.BaseAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.dating.pairs.PairsViewModel
@@ -32,24 +30,15 @@ import kotlinx.android.synthetic.main.fragment_pairs.*
  * This is the documentation block about the class
  */
 
-class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
+class PairsFragment: BaseFragment<PairsViewModel>() {
 
 	private val mPairsAdapter = PairsAdapter(listOf(), R.layout.fragment_pairs_item)
-
-	private lateinit var sharedViewModel: SharedViewModel
-	private lateinit var pairsViewModel: PairsViewModel
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		sharedViewModel = activity?.run {
-			ViewModelProvider(this, factory)[SharedViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
-
-		pairsViewModel = ViewModelProvider(this@PairsFragment, factory)[PairsViewModel::class.java]
-
-		pairsViewModel.loadMatchedUsers()
+		associatedViewModel.loadMatchedUsers()
 
 	}
 
@@ -58,7 +47,7 @@ class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
 		FragmentPairsBinding.inflate(inflater, container, false)
 			.apply {
 				lifecycleOwner = this@PairsFragment
-				viewModel = pairsViewModel
+				viewModel = associatedViewModel
 				executePendingBindings()
 			}
 			.root
@@ -77,7 +66,7 @@ class PairsFragment: BaseFragment(R.layout.fragment_pairs) {
 
 					if ((totalItemsCount - visibleItemCount) == (pastVisibleItems + 4)){
 						//Log.wtf("mylogs_PairsFragment", "load called ")
-						pairsViewModel.loadMoreMatchedUsers()
+						associatedViewModel.loadMoreMatchedUsers()
 					}
 
 				}

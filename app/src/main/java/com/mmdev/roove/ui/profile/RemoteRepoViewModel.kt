@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 16:57
+ * Last modified 09.03.20 16:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,8 @@ import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.remote.usecase.*
 import com.mmdev.roove.ui.common.base.BaseViewModel
+import com.mmdev.roove.ui.common.errors.ErrorType
+import com.mmdev.roove.ui.common.errors.MyError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
@@ -54,8 +56,8 @@ class RemoteRepoViewModel @Inject constructor(
 	                       Log.wtf(TAG, "photo deleted")
                        },
                        {
-	                       Log.wtf(TAG, "photo delete error: $it")
 	                       photoDeletionStatus.value = false
+	                       error.value = MyError(ErrorType.DELETING, it)
                        }))
 	}
 
@@ -67,7 +69,7 @@ class RemoteRepoViewModel @Inject constructor(
 	                       //Log.wtf(TAG, "fetched user: $it")
                        },
                        {
-                           Log.wtf(TAG, "fetch user error: $it")
+	                       error.value = MyError(ErrorType.SAVING, it)
                        }))
 	}
 
@@ -92,7 +94,7 @@ class RemoteRepoViewModel @Inject constructor(
                        },
                        {
 	                       isUserUpdated.value = false
-	                       Log.wtf(TAG, "updating user fail: $it")
+	                       error.value = MyError(ErrorType.SAVING, it)
                        }))
 	}
 
@@ -105,7 +107,7 @@ class RemoteRepoViewModel @Inject constructor(
 	                       // done")
                        },
                        {
-	                       Log.wtf(TAG, "uploading photo error: $it")
+	                       error.value = MyError(ErrorType.SENDING, it)
                        }))
 	}
 

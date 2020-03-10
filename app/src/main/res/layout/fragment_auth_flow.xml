@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 09.12.19 21:46
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 09.03.20 16:43
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<FrameLayout
-	android:id="@+id/authFlowContainer"
-	android:layout_height="match_parent"
-	android:layout_width="match_parent"
+<layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-	<fragment
-		android:id="@+id/authHostFragment"
-		android:layout_width="match_parent"
+	<FrameLayout
+		android:id="@+id/authFlowContainer"
 		android:layout_height="match_parent"
-		android:name="androidx.navigation.fragment.NavHostFragment"
-		app:navGraph="@navigation/auth_navigation"
-		app:defaultNavHost="true" />
+		android:layout_width="match_parent">
 
-</FrameLayout>
+		<fragment
+			android:id="@+id/authHostFragment"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:name="androidx.navigation.fragment.NavHostFragment"
+			app:navGraph="@navigation/auth_navigation"
+			app:defaultNavHost="true" />
+
+	</FrameLayout>
+
+</layout>

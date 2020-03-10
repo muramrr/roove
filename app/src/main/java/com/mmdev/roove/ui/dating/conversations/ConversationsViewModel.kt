@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.03.20 19:29
+ * Last modified 09.03.20 15:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,8 @@ import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
 import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
 import com.mmdev.business.conversations.usecase.GetMoreConversationsListUseCase
 import com.mmdev.roove.ui.common.base.BaseViewModel
+import com.mmdev.roove.ui.common.errors.ErrorType
+import com.mmdev.roove.ui.common.errors.MyError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
@@ -50,8 +52,8 @@ constructor(private val deleteUC: DeleteConversationUseCase,
 	                       deleteConversationStatus.value = true
                        },
                        {
-	                       Log.wtf(TAG, "conversation is not deleted, error = $it")
 	                       deleteConversationStatus.value = false
+	                       error.value = MyError(ErrorType.DELETING, it)
                        }))
 	}
 
@@ -67,9 +69,11 @@ constructor(private val deleteUC: DeleteConversationUseCase,
                            Log.wtf(TAG, "first loaded conversations: ${it.size}")
                        },
                        {
-                           Log.wtf(TAG, "load convers list error: $it")
 	                       showTextHelper.value = true
-                       }))
+	                       error.value = MyError(ErrorType.LOADING, it)
+                       }
+            )
+		)
 	}
 
 	fun loadMoreConversations(){
@@ -83,7 +87,7 @@ constructor(private val deleteUC: DeleteConversationUseCase,
                            Log.wtf(TAG, "loaded more conversations: ${it.size}")
                        },
                        {
-                           Log.wtf(TAG, "load convers list error: $it")
+	                       error.value = MyError(ErrorType.LOADING, it)
                        }))
 	}
 

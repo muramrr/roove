@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.03.20 18:33
+ * Last modified 09.03.20 16:13
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.roove.utils
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.BaseUserInfo
+import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mooveit.library.Fakeit
@@ -55,16 +56,18 @@ object UtilityManager {
 
 	private fun createFakeUser(city: String = CITY,
 	                           gender: String = "male",
-	                           preferredGender: String = "female")=
-		UserItem(BaseUserInfo(name = Fakeit.name().firstName(),
-		                      age = Random.nextInt(18, 22),
-		                      city = city,
-		                      gender = gender,
-		                      preferredGender = preferredGender,
-		                      mainPhotoUrl = randomFemalePhotoUrlsList[Random.nextInt(0, 9)],
-		                      userId = randomUid()),
-		         photoURLs = mutableListOf(),
-		         placesToGo = mutableListOf())
+	                           preferredGender: String = "female"): UserItem {
+		val randomPhotoUrl = randomFemalePhotoUrlsList[Random.nextInt(0, 9)]
+		return UserItem(BaseUserInfo(name = Fakeit.name().firstName(),
+		                             age = Random.nextInt(18, 22),
+		                             city = city,
+		                             gender = gender,
+		                             preferredGender = preferredGender,
+		                             mainPhotoUrl = randomPhotoUrl,
+		                             userId = randomUid()),
+		                photoURLs = mutableListOf(PhotoItem(fileUrl = randomPhotoUrl)),
+		                placesToGo = mutableListOf())
+	}
 
 
 	private fun randomUid(): String {
@@ -98,9 +101,10 @@ object UtilityManager {
 			.set(userItem)
 	}
 
-	fun generateMatchesOnRemote(userItem: UserItem = createFakeUser()) {
+	fun generateMatchesOnRemote() {
 
 		val randomDate = generateRandomDate()
+		val userItem: UserItem = createFakeUser()
 
 		db.collection(USERS_COLLECTION_REFERENCE)
 			.document(CITY)
@@ -109,11 +113,15 @@ object UtilityManager {
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.document(userItem.baseUserInfo.userId)
 			.set(MatchedUserItem(userItem.baseUserInfo, matchedDate = randomDate))
+		createFakeUserOnRemote(userItem)
 
 	}
 
-	fun generateConversationOnRemote(){
+	fun generateConversationOnRemote() {
+
 		val conversationId = randomUid()
+		val userItem: UserItem = createFakeUser()
+
 		db.collection(USERS_COLLECTION_REFERENCE)
 			.document(CITY)
 			.collection(GENDER)
@@ -124,8 +132,8 @@ object UtilityManager {
 			                      conversationStarted = true,
 			                      lastMessageTimestamp = generateRandomDate(),
 			                      lastMessageText = Fakeit.lorem().words(),
-			                      partner = createFakeUser().baseUserInfo))
+			                      partner = userItem.baseUserInfo))
 
-
+		createFakeUserOnRemote(userItem)
 	}
 }
