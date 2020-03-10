@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 09.03.20 15:57
+ * Last modified 10.03.20 20:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ package com.mmdev.roove.ui.dating.cards
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.cards.usecase.AddToSkippedUseCase
 import com.mmdev.business.cards.usecase.CheckMatchUseCase
 import com.mmdev.business.cards.usecase.GetUsersByPreferencesUseCase
@@ -22,10 +23,13 @@ import com.mmdev.roove.ui.common.errors.MyError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
-class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippedUseCase,
-                                         private val checkMatchUC: CheckMatchUseCase,
-                                         private val getUsersByPreferencesUC: GetUsersByPreferencesUseCase):
+class CardsViewModel @Inject constructor(repo: CardsRepository):
 		BaseViewModel(){
+
+
+	private val addToSkippedUC = AddToSkippedUseCase(repo)
+	private val checkMatchUC = CheckMatchUseCase(repo)
+	private val getUsersByPreferencesUC = GetUsersByPreferencesUseCase(repo)
 
 	val usersCardsList: MutableLiveData<List<UserItem>> = MutableLiveData()
 

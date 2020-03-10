@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 09.03.20 16:01
+ * Last modified 10.03.20 20:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
+import com.mmdev.business.remote.RemoteUserRepository
 import com.mmdev.business.remote.usecase.*
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
@@ -26,13 +27,15 @@ import javax.inject.Inject
  * This is the documentation block about the class
  */
 
-class RemoteRepoViewModel @Inject constructor(
-	private val deletePhotoUC: DeletePhotoUseCase,
-	private val deleteUserUC: DeleteUserUseCase,
-	private val fetchUserUC: FetchUserInfoUseCase,
-	private val getFullUserInfoUC: GetFullUserInfoUseCase,
-	private val updateUserItemUC: UpdateUserItemUseCase,
-	private val uploadUserProfilePhotoUC: UploadUserProfilePhotoUseCase) : BaseViewModel() {
+class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : BaseViewModel() {
+
+	private val deletePhotoUC = DeletePhotoUseCase(repo)
+	private val deleteUserUC = DeleteUserUseCase(repo)
+	private val fetchUserUC = FetchUserInfoUseCase(repo)
+	private val getFullUserInfoUC = GetFullUserInfoUseCase(repo)
+	private val updateUserItemUC = UpdateUserItemUseCase(repo)
+	private val uploadUserProfilePhotoUC = UploadUserProfilePhotoUseCase(repo)
+
 
 
 	private val fetchedUserItem: MutableLiveData<UserItem> = MutableLiveData()

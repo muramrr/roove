@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:17
+ * Last modified 10.03.20 20:15
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.roove.ui.common.LifecycleStates
+import javax.inject.Inject
 
 /**
  * In general, you should strongly prefer passing only the minimal amount of data between destinations.
@@ -27,7 +28,7 @@ import com.mmdev.roove.ui.common.LifecycleStates
  * @see https://developer.android.com/guide/navigation/navigation-pass-data
  */
 
-class SharedViewModel: ViewModel() {
+class SharedViewModel @Inject constructor(): ViewModel() {
 
 	val matchedUserItemSelected: MutableLiveData<MatchedUserItem> = MutableLiveData()
 
