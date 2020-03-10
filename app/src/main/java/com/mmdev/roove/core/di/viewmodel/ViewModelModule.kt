@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.03.20 19:27
+ * Last modified 10.03.20 20:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,33 +12,6 @@ package com.mmdev.roove.core.di.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.mmdev.business.auth.repository.AuthRepository
-import com.mmdev.business.auth.usecase.IsAuthenticatedListenerUseCase
-import com.mmdev.business.auth.usecase.LogOutUseCase
-import com.mmdev.business.auth.usecase.SignInUseCase
-import com.mmdev.business.auth.usecase.SignUpUseCase
-import com.mmdev.business.cards.repository.CardsRepository
-import com.mmdev.business.cards.usecase.AddToSkippedUseCase
-import com.mmdev.business.cards.usecase.CheckMatchUseCase
-import com.mmdev.business.cards.usecase.GetUsersByPreferencesUseCase
-import com.mmdev.business.chat.repository.ChatRepository
-import com.mmdev.business.chat.usecase.LoadMessagesUseCase
-import com.mmdev.business.chat.usecase.ObserveNewMessagesUseCase
-import com.mmdev.business.chat.usecase.SendMessageUseCase
-import com.mmdev.business.chat.usecase.UploadMessagePhotoUseCase
-import com.mmdev.business.conversations.repository.ConversationsRepository
-import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
-import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
-import com.mmdev.business.conversations.usecase.GetMoreConversationsListUseCase
-import com.mmdev.business.pairs.PairsRepository
-import com.mmdev.business.pairs.usecase.DeleteMatchUseCase
-import com.mmdev.business.pairs.usecase.GetMatchedUsersUseCase
-import com.mmdev.business.pairs.usecase.GetMoreMatchedUsersListUseCase
-import com.mmdev.business.places.repository.PlacesRepository
-import com.mmdev.business.places.usecase.GetPlaceDetailsUseCase
-import com.mmdev.business.places.usecase.GetPlacesUseCase
-import com.mmdev.business.remote.RemoteUserRepository
-import com.mmdev.business.remote.usecase.*
 import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.dating.cards.CardsViewModel
@@ -47,98 +20,64 @@ import com.mmdev.roove.ui.dating.conversations.ConversationsViewModel
 import com.mmdev.roove.ui.dating.pairs.PairsViewModel
 import com.mmdev.roove.ui.places.PlacesViewModel
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.multibindings.IntoMap
-import javax.inject.Provider
 
 /**
  * add new [ViewModel] down here
  */
 
 @Module
-class ViewModelModule {
+abstract class ViewModelModule {
 
-	@Provides
-	fun provideViewModelFactory(providers: MutableMap<Class<out ViewModel>,
-			@JvmSuppressWildcards
-			Provider<ViewModel>>): ViewModelProvider.Factory = ViewModelFactory(providers)
+
+	@Binds
+	abstract fun provideViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
 
 
 	@IntoMap
-	@Provides
+	@Binds
 	@ViewModelKey(AuthViewModel::class)
-	fun authViewModel(repo: AuthRepository): ViewModel =
-		AuthViewModel(IsAuthenticatedListenerUseCase(repo),
-		              LogOutUseCase(repo),
-		              SignInUseCase(repo),
-		              SignUpUseCase(repo))
+	abstract fun authViewModel(authViewModel: AuthViewModel): ViewModel
 
 
 	@IntoMap
-	@Provides
+	@Binds
 	@ViewModelKey(CardsViewModel::class)
-	fun cardsViewModel(repo: CardsRepository): ViewModel =
-		CardsViewModel(AddToSkippedUseCase(repo),
-		               CheckMatchUseCase(repo),
-		               GetUsersByPreferencesUseCase(repo))
+	abstract fun cardsViewModel(cardsViewModel: CardsViewModel): ViewModel
 
 	@IntoMap
-	@Provides
+	@Binds
 	@ViewModelKey(ChatViewModel::class)
-	fun chatViewModel(repo: ChatRepository): ViewModel =
-		ChatViewModel(LoadMessagesUseCase(repo),
-		              ObserveNewMessagesUseCase(repo),
-		              SendMessageUseCase(repo),
-		              UploadMessagePhotoUseCase(repo))
+	abstract fun chatViewModel(chatViewModel: ChatViewModel): ViewModel
 
 
 	@IntoMap
-	@Provides
+	@Binds
 	@ViewModelKey(ConversationsViewModel::class)
-	fun conversationsViewModel(repo: ConversationsRepository): ViewModel =
-		ConversationsViewModel(DeleteConversationUseCase(repo),
-		                       GetConversationsListUseCase(repo),
-		                       GetMoreConversationsListUseCase(repo))
-
-
-//	@IntoMap
-//	@Provides
-//	@ViewModelKey(EventsViewModel::class)
-//	fun eventsViewModel(repo: EventsRepository): ViewModel =
-//		EventsViewModel(GetEventsUseCase(repo))
+	abstract fun conversationsViewModel(conversationsViewModel: ConversationsViewModel): ViewModel
 
 
 	@IntoMap
-	@Provides
+	@Binds
 	@ViewModelKey(PairsViewModel::class)
-	fun pairsViewModel(repo: PairsRepository): ViewModel =
-		PairsViewModel(DeleteMatchUseCase(repo),
-		               GetMatchedUsersUseCase(repo),
-		               GetMoreMatchedUsersListUseCase(repo))
+	abstract fun pairsViewModel(pairsViewModel: PairsViewModel): ViewModel
 
 
 	@IntoMap
-	@Provides
+	@Binds
 	@ViewModelKey(PlacesViewModel::class)
-	fun placesViewModel(repo: PlacesRepository): ViewModel =
-		PlacesViewModel(GetPlacesUseCase(repo),
-		                GetPlaceDetailsUseCase(repo))
+	abstract fun placesViewModel(placesViewModel: PlacesViewModel): ViewModel
 
 	@IntoMap
-	@Provides
+	@Binds
 	@ViewModelKey(RemoteRepoViewModel::class)
-	fun remoteUserRepoViewModel(repo: RemoteUserRepository): ViewModel =
-		RemoteRepoViewModel(DeletePhotoUseCase(repo),
-		                    DeleteUserUseCase(repo),
-		                    FetchUserInfoUseCase(repo),
-		                    GetFullUserInfoUseCase(repo),
-		                    UpdateUserItemUseCase(repo),
-		                    UploadUserProfilePhotoUseCase(repo))
+	abstract fun remoteUserRepoViewModel(remoteRepoViewModel: RemoteRepoViewModel): ViewModel
 
 	@IntoMap
-	@Provides
+	@Binds
 	@ViewModelKey(SharedViewModel::class)
-	fun sharedViewModel(): ViewModel = SharedViewModel()
+	abstract fun sharedViewModel(sharedViewModel: SharedViewModel): ViewModel
 
 }

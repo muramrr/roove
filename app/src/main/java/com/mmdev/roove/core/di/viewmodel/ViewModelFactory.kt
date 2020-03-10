@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 10.03.20 19:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,13 +28,17 @@ import javax.inject.Singleton
 @Singleton
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory @Inject constructor(private val viewModels: MutableMap<Class<out ViewModel>,
-											Provider<ViewModel>>) :
+		@JvmSuppressWildcards Provider<ViewModel>>) :
 		ViewModelProvider.Factory {
 
 	override fun <T : ViewModel> create(modelClass: Class<T>): T {
 		val viewModelProvider = viewModels[modelClass]
 		                        ?: throw IllegalArgumentException("model class $modelClass not found")
-		return viewModelProvider.get() as T
+		try {
+			return viewModelProvider.get() as T
+		} catch (e: Exception) {
+			throw RuntimeException(e)
+		}
 	}
 
 }

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 09.03.20 16:01
+ * Last modified 10.03.20 20:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 package com.mmdev.roove.ui.auth
 
 import androidx.lifecycle.MutableLiveData
+import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.auth.usecase.IsAuthenticatedListenerUseCase
 import com.mmdev.business.auth.usecase.LogOutUseCase
 import com.mmdev.business.auth.usecase.SignInUseCase
@@ -24,11 +25,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsAuthenticatedListenerUseCase,
-                                        private val logOut: LogOutUseCase,
-                                        private val signIn: SignInUseCase,
-                                        private val signUp: SignUpUseCase) :
+class AuthViewModel @Inject constructor(repo: AuthRepository) :
 		BaseViewModel() {
+
+
+	private val isAuthenticatedListener = IsAuthenticatedListenerUseCase(repo)
+	private val logOut = LogOutUseCase(repo)
+	private val signIn = SignInUseCase(repo)
+	private val signUp = SignUpUseCase(repo)
 
 
 	val continueRegistration: MutableLiveData<Boolean> = MutableLiveData()

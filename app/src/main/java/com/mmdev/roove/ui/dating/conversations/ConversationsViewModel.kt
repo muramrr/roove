@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 09.03.20 15:57
+ * Last modified 10.03.20 20:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.roove.ui.dating.conversations
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.business.conversations.usecase.DeleteConversationUseCase
 import com.mmdev.business.conversations.usecase.GetConversationsListUseCase
 import com.mmdev.business.conversations.usecase.GetMoreConversationsListUseCase
@@ -22,16 +23,11 @@ import com.mmdev.roove.ui.common.errors.MyError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
-/**
- * This is the documentation block about the class
- */
+class ConversationsViewModel @Inject constructor(repo: ConversationsRepository): BaseViewModel() {
 
-class ConversationsViewModel @Inject
-constructor(private val deleteUC: DeleteConversationUseCase,
-            private val getConversationsUC: GetConversationsListUseCase,
-            private val getMoreConversationsUC: GetMoreConversationsListUseCase): BaseViewModel(){
-
-
+	private val deleteUC = DeleteConversationUseCase(repo)
+	private val getConversationsUC = GetConversationsListUseCase(repo)
+	private val getMoreConversationsUC = GetMoreConversationsListUseCase(repo)
 
 
 	private val deleteConversationStatus: MutableLiveData<Boolean> = MutableLiveData()

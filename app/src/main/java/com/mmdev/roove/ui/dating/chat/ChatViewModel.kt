@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 09.03.20 15:57
+ * Last modified 10.03.20 20:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.roove.ui.dating.chat
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.chat.entity.MessageItem
+import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.chat.usecase.LoadMessagesUseCase
 import com.mmdev.business.chat.usecase.ObserveNewMessagesUseCase
 import com.mmdev.business.chat.usecase.SendMessageUseCase
@@ -25,12 +26,14 @@ import com.mmdev.roove.ui.common.errors.MyError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
-class ChatViewModel @Inject constructor(private val loadMessagesUC: LoadMessagesUseCase,
-                                        private val observeNewMessagesUC: ObserveNewMessagesUseCase,
-                                        private val sendMessageUC: SendMessageUseCase,
-                                        private val uploadMessagePhotoUC: UploadMessagePhotoUseCase) :
+class ChatViewModel @Inject constructor(repo: ChatRepository) :
 		BaseViewModel() {
 
+
+	private val loadMessagesUC = LoadMessagesUseCase(repo)
+	private val observeNewMessagesUC = ObserveNewMessagesUseCase(repo)
+	private val sendMessageUC = SendMessageUseCase(repo)
+	private val uploadMessagePhotoUC = UploadMessagePhotoUseCase(repo)
 
 	private val messagesList: MutableLiveData<MutableList<MessageItem>> = MutableLiveData()
 	init {

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 09.03.20 15:57
+ * Last modified 10.03.20 20:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.roove.ui.dating.pairs
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.pairs.MatchedUserItem
+import com.mmdev.business.pairs.PairsRepository
 import com.mmdev.business.pairs.usecase.DeleteMatchUseCase
 import com.mmdev.business.pairs.usecase.GetMatchedUsersUseCase
 import com.mmdev.business.pairs.usecase.GetMoreMatchedUsersListUseCase
@@ -27,10 +28,11 @@ import javax.inject.Inject
  * This is the documentation block about the class
  */
 
-class PairsViewModel @Inject
-constructor(private val deleteMatchUC: DeleteMatchUseCase,
-            private val getMatchedUsersUC: GetMatchedUsersUseCase,
-            private val getMoreMatchedUsersUC: GetMoreMatchedUsersListUseCase): BaseViewModel() {
+class PairsViewModel @Inject constructor(repo: PairsRepository): BaseViewModel() {
+
+	private val deleteMatchUC = DeleteMatchUseCase(repo)
+	private val getMatchedUsersUC = GetMatchedUsersUseCase(repo)
+	private val getMoreMatchedUsersUC = GetMoreMatchedUsersListUseCase(repo)
 
 	val matchedUsersList: MutableLiveData<MutableList<MatchedUserItem>> = MutableLiveData()
 	init {
