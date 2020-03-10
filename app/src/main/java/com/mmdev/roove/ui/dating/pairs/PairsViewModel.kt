@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.03.20 19:27
+ * Last modified 09.03.20 15:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,8 @@ import com.mmdev.business.pairs.usecase.DeleteMatchUseCase
 import com.mmdev.business.pairs.usecase.GetMatchedUsersUseCase
 import com.mmdev.business.pairs.usecase.GetMoreMatchedUsersListUseCase
 import com.mmdev.roove.ui.common.base.BaseViewModel
+import com.mmdev.roove.ui.common.errors.ErrorType
+import com.mmdev.roove.ui.common.errors.MyError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
@@ -48,9 +50,11 @@ constructor(private val deleteMatchUC: DeleteMatchUseCase,
 	                       deleteMatchStatus.value = true
                        },
                        {
-	                       Log.wtf(TAG, "match delete fail, error = $it")
 	                       deleteMatchStatus.value = false
-                       }))
+	                       error.value = MyError(ErrorType.DELETING, it)
+                       }
+            )
+		)
 	}
 
 	fun loadMatchedUsers() {
@@ -65,8 +69,10 @@ constructor(private val deleteMatchUC: DeleteMatchUseCase,
                        },
                        {
 	                       showTextHelper.value = true
-                           Log.wtf(TAG, "error + $it")
-                       }))
+	                       error.value = MyError(ErrorType.LOADING, it)
+                       }
+            )
+		)
 	}
 
 
@@ -81,8 +87,10 @@ constructor(private val deleteMatchUC: DeleteMatchUseCase,
                            Log.wtf(TAG, "loaded more pairs: ${it.size}")
                        },
                        {
-                           Log.wtf(TAG, "error + $it")
-                       }))
+	                       error.value = MyError(ErrorType.LOADING, it)
+                       }
+            )
+		)
 	}
 
 	fun getDeleteMatchStatus() = deleteMatchStatus

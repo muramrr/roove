@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:14
+ * Last modified 10.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,6 @@ import com.mmdev.business.places.BasePlaceInfo
 import com.mmdev.business.places.PlaceDetailedItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentPlaceDetailedBinding
-import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.common.ImagePagerAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.places.PlacesViewModel
@@ -37,7 +36,7 @@ import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_place_detailed.*
 
 
-class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
+class PlaceDetailedFragment: BaseFragment<PlacesViewModel>() {
 
 	private lateinit var userItem: UserItem
 
@@ -47,8 +46,6 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 
 	private lateinit var placeDetailedItem: PlaceDetailedItem
 
-	private lateinit var placesViewModel: PlacesViewModel
-	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
 
 	companion object{
@@ -64,14 +61,11 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 
 		activity?.run {
 			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
-			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
-		placesViewModel = ViewModelProvider(this, factory)[PlacesViewModel::class.java]
+		associatedViewModel.loadPlaceDetails(receivedPlaceId)
 
-		placesViewModel.loadPlaceDetails(receivedPlaceId)
-
-		placesViewModel.placeDetailed.observeOnce(this, Observer {
+		associatedViewModel.placeDetailed.observeOnce(this, Observer {
 			placeDetailedItem = it
 			val placePhotos = ArrayList<String>()
 			for (imageItem in it.images)
@@ -88,7 +82,7 @@ class PlaceDetailedFragment: BaseFragment(R.layout.fragment_place_detailed) {
 		FragmentPlaceDetailedBinding.inflate(inflater, container, false)
 			.apply {
 				lifecycleOwner = this@PlaceDetailedFragment
-				viewModel = placesViewModel
+				viewModel = associatedViewModel
 				executePendingBindings()
 			}.root
 

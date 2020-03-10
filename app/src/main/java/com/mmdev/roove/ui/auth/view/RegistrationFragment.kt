@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:13
+ * Last modified 10.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,6 @@ import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
@@ -36,9 +35,7 @@ import kotlinx.android.synthetic.main.fragment_registration.*
  * This is the documentation block about the class
  */
 
-class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
-
-	private lateinit var authViewModel: AuthViewModel
+class RegistrationFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_registration){
 
 	private var registrationStep = 1
 
@@ -82,10 +79,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		authViewModel = activity?.run {
-			ViewModelProvider(this, factory)[AuthViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
-		authViewModel.getBaseUserInfo().observe(this, Observer {
+		associatedViewModel.getBaseUserInfo().observe(this, Observer {
 			baseUserInfo = it
 		})
 	}
@@ -226,7 +220,7 @@ class RegistrationFragment: BaseFragment(R.layout.fragment_registration){
 			                                  baseUserInfo.mainPhotoUrl,
 			                                  baseUserInfo.userId)
 
-			authViewModel.signUp(UserItem(finalUserModel,
+			associatedViewModel.signUp(UserItem(finalUserModel,
 			                              cityToDisplay = cityToDisplay,
 			                              photoURLs = mutableListOf(
 					                              PhotoItem(fileName = "facebookPhoto",

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.01.20 17:58
+ * Last modified 09.03.20 18:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,7 +45,7 @@ class FullScreenDialogFragment: DialogFragment() {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?) =
 		DialogChatFullScreenImageBinding.inflate(inflater, container, false)
-			.apply {this.photoUrl = receivedPhotoUrl}
+			.apply { this.photoUrl = receivedPhotoUrl }
 			.root
 
 

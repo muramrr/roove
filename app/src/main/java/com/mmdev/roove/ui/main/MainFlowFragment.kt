@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 16:16
+ * Last modified 09.03.20 17:23
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.mmdev.roove.R
@@ -28,14 +27,10 @@ import kotlinx.android.synthetic.main.fragment_main_flow.*
 
 class MainFlowFragment: FlowFragment() {
 
-	private lateinit var navControllerMain: NavController
-
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?) =
 		FragmentMainFlowBinding.inflate(inflater, container, false)
-			.apply {
-				executePendingBindings()
-			}
+			.apply { executePendingBindings() }
 			.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,9 +41,9 @@ class MainFlowFragment: FlowFragment() {
 
 		val navHost =
 			childFragmentManager.findFragmentById(R.id.mainHostFragment) as NavHostFragment
-		navControllerMain = navHost.findNavController()
+		navController = navHost.findNavController()
 
-		navControllerMain.addOnDestinationChangedListener { _, destination, _ ->
+		navController.addOnDestinationChangedListener { _, destination, _ ->
 			if (destination.id in arrayOf(R.id.chatFragmentNav, R.id.profileFragmentNav)) {
 				bottomNavigationView.visibility = View.GONE
 			}
@@ -63,27 +58,27 @@ class MainFlowFragment: FlowFragment() {
 
 				when (nextItem) {
 					R.id.bottomPlaces -> {
-						navControllerMain.popBackStack()
-						navControllerMain.navigate(R.id.placesFragmentNav)
+						navController.popBackStack()
+						navController.navigate(R.id.placesFragmentNav)
 						fabCards.isSelected = false
 
 					}
 					R.id.bottomPairs -> {
-						navControllerMain.popBackStack()
-						navControllerMain.navigate(R.id.pairsFragmentNav)
+						navController.popBackStack()
+						navController.navigate(R.id.pairsFragmentNav)
 						fabCards.isSelected = false
 
 					}
 					//R.id.bottomCards -> navControllerDating.navigate(R.id.cardsFragmentNav)
 					R.id.bottomConversations -> {
-						navControllerMain.popBackStack()
-						navControllerMain.navigate(R.id.conversationsFragmentNav)
+						navController.popBackStack()
+						navController.navigate(R.id.conversationsFragmentNav)
 						fabCards.isSelected = false
 
 					}
 					R.id.bottomSettings -> {
-						navControllerMain.popBackStack()
-						navControllerMain.navigate(R.id.settingsFragmentNav)
+						navController.popBackStack()
+						navController.navigate(R.id.settingsFragmentNav)
 						fabCards.isSelected = false
 
 					}
@@ -94,10 +89,10 @@ class MainFlowFragment: FlowFragment() {
 		}
 
 		fabCards.setOnClickListener {
-			if (navControllerMain.currentDestination?.id != R.id.cardsFragmentNav) {
+			if (navController.currentDestination?.id != R.id.cardsFragmentNav) {
 				bottomNavigationView.selectedItemId = R.id.bottomCards
-				navControllerMain.popBackStack()
-				navControllerMain.navigate(R.id.cardsFragmentNav)
+				navController.popBackStack()
+				navController.navigate(R.id.cardsFragmentNav)
 				it.isSelected = true
 			}
 		}

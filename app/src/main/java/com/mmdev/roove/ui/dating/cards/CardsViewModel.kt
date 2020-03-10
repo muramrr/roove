@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 18:13
+ * Last modified 09.03.20 15:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,8 @@ import com.mmdev.business.cards.usecase.CheckMatchUseCase
 import com.mmdev.business.cards.usecase.GetUsersByPreferencesUseCase
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.ui.common.base.BaseViewModel
+import com.mmdev.roove.ui.common.errors.ErrorType
+import com.mmdev.roove.ui.common.errors.MyError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
@@ -48,7 +50,7 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
 	                       Log.wtf(TAG, "match? + ${showMatchDialog.value}")
                        },
                        {
-                           Log.wtf(TAG, "error match check: $it")
+	                       error.value = MyError(ErrorType.CHECKING, it)
                        }))
 	}
 
@@ -66,7 +68,7 @@ class CardsViewModel @Inject constructor(private val addToSkippedUC: AddToSkippe
 	                       Log.wtf(TAG, "loaded cards: ${it.size}")
                        },
                        {
-	                       Log.wtf(TAG, "error: $it")
+	                       error.value = MyError(ErrorType.LOADING, it)
                        }))
 	}
 

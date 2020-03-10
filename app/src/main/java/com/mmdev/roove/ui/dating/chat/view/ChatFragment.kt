@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:37
+ * Last modified 10.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,7 +50,6 @@ import com.mmdev.roove.core.permissions.handlePermission
 import com.mmdev.roove.core.permissions.onRequestPermissionsResultReceived
 import com.mmdev.roove.core.permissions.requestAppPermissions
 import com.mmdev.roove.databinding.FragmentChatBinding
-import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.dating.chat.ChatViewModel
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
@@ -65,7 +64,7 @@ import java.util.*
  * This is the documentation block about the class
  */
 
-class ChatFragment : BaseFragment(R.layout.fragment_chat) {
+class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_chat) {
 
 	private lateinit var userItemModel: UserItem
 
@@ -85,8 +84,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 	private lateinit var mFilePathImageCamera: File
 
 	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
-	private lateinit var sharedViewModel: SharedViewModel
-	private lateinit var chatViewModel: ChatViewModel
+
 
 
 	//static fields
@@ -119,13 +117,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
                 receivedConversationId.isNotEmpty()) isDeepLinkJump = true
 		}
 
-		chatViewModel = ViewModelProvider(this@ChatFragment, factory)[ChatViewModel::class.java]
 		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
-
-		activity?.run {
-			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
-
 
 		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			userItemModel = it
@@ -152,12 +144,12 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		sharedViewModel.conversationSelected.observeOnce(this, Observer {
 			currentConversation = it
 			remoteRepoViewModel.getFullUserInfo(it.partner)
-			chatViewModel.loadMessages(it)
-			chatViewModel.observeNewMessages(it)
+			associatedViewModel.loadMessages(it)
+			associatedViewModel.observeNewMessages(it)
 		})
 
 
-		chatViewModel.getMessagesList().observe(this, Observer {
+		associatedViewModel.getMessagesList().observe(this, Observer {
 			mChatAdapter.updateData(it)
 		})
 
@@ -169,7 +161,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 		FragmentChatBinding.inflate(inflater, container, false)
 			.apply {
 				lifecycleOwner = this@ChatFragment
-				viewModel = chatViewModel
+				viewModel = associatedViewModel
 				executePendingBindings()
 			}
 			.root
@@ -233,7 +225,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
 					if (linearLayoutManager.findLastVisibleItemPosition() == totalItemsCount - 4){
 						//Log.wtf(TAG, "load seems to be called")
-						chatViewModel.loadMessages(currentConversation)
+						associatedViewModel.loadMessages(currentConversation)
 					}
 
 				}
@@ -302,7 +294,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			                          photoItem = null,
 			                          conversationId = currentConversation.conversationId)
 
-			chatViewModel.sendMessage(message)
+			associatedViewModel.sendMessage(message)
 			edTextMessageInput.setText("")
 			rvMessageList.scrollToPosition(0)
 
@@ -394,7 +386,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			if (resultCode == RESULT_OK) {
 
 				val selectedUri = data?.data
-				chatViewModel.sendPhoto(selectedUri.toString(),
+				associatedViewModel.sendPhoto(selectedUri.toString(),
 				                        userItemModel.baseUserInfo,
 				                        currentConversation.partner.userId)
 			}
@@ -404,7 +396,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 			if (resultCode == RESULT_OK) {
 
 				if (mFilePathImageCamera.exists()) {
-					chatViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString(),
+					associatedViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString(),
 					                        userItemModel.baseUserInfo,
 					                        currentConversation.partner.userId)
 				}

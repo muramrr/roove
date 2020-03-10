@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:14
+ * Last modified 10.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,12 +16,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentCardsBinding
-import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.common.base.BaseAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.dating.cards.CardsViewModel
@@ -31,18 +29,16 @@ import com.yuyakaido.android.cardstackview.Direction
 import kotlinx.android.synthetic.main.fragment_cards.*
 
 
-class CardsFragment: BaseFragment() {
+class CardsFragment: BaseFragment<CardsViewModel>() {
 
-	private val mCardsStackAdapter =
-		CardsStackAdapter(listOf(), R.layout.fragment_cards_item)
+	private val mCardsStackAdapter = CardsStackAdapter(listOf(), R.layout.fragment_cards_item)
 
 	private var mCardsList = mutableListOf<UserItem>()
 
 	private lateinit var mAppearedUserItem: UserItem
 	private lateinit var mDisappearedUserItem: UserItem
 
-	private lateinit var sharedViewModel: SharedViewModel
-	private lateinit var cardsViewModel: CardsViewModel
+
 
 	companion object{
 		private const val TAG = "mylogs_CardsFragment"
@@ -52,16 +48,11 @@ class CardsFragment: BaseFragment() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		sharedViewModel = activity?.run {
-			ViewModelProvider(this, factory)[SharedViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
-
-		cardsViewModel = ViewModelProvider(this@CardsFragment, factory)[CardsViewModel::class.java]
-		cardsViewModel.loadUsersByPreferences()
-		cardsViewModel.usersCardsList.observe(this, Observer {
+		associatedViewModel.loadUsersByPreferences()
+		associatedViewModel.usersCardsList.observe(this, Observer {
 			mCardsList = it.toMutableList()
 		})
-		cardsViewModel.showMatchDialog.observe(this, Observer {
+		associatedViewModel.showMatchDialog.observe(this, Observer {
 			if (it) showMatchDialog(mDisappearedUserItem)
 		})
 
@@ -72,7 +63,7 @@ class CardsFragment: BaseFragment() {
 		FragmentCardsBinding.inflate(inflater, container, false)
 			.apply {
 				lifecycleOwner = this@CardsFragment
-				viewModel = cardsViewModel
+				viewModel = associatedViewModel
 				executePendingBindings()
 			}
 			.root
@@ -93,11 +84,11 @@ class CardsFragment: BaseFragment() {
 			override fun onCardSwiped(direction: Direction) {
 				//if right = add to liked
 				if (direction == Direction.Right) {
-					cardsViewModel.checkMatch(mAppearedUserItem)
+					associatedViewModel.checkMatch(mAppearedUserItem)
 				}
 				//left = add to skipped
 				if (direction == Direction.Left) {
-					cardsViewModel.addToSkipped(mAppearedUserItem)
+					associatedViewModel.addToSkipped(mAppearedUserItem)
 				}
 			}
 
@@ -109,8 +100,8 @@ class CardsFragment: BaseFragment() {
 				mDisappearedUserItem = mCardsStackAdapter.getItem(position)
 				//if there is no available user to show - show loading
 				if (position == mCardsStackAdapter.itemCount - 1) {
-					cardsViewModel.showLoading.value = true
-					cardsViewModel.showTextHelper.value = true
+					associatedViewModel.showLoading.value = true
+					associatedViewModel.showTextHelper.value = true
 				}
 				else mCardsList.removeAt(position)
 

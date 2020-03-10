@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.02.20 17:38
+ * Last modified 10.03.20 18:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,8 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.mmdev.roove.ui.common.base.BaseViewModel
 
 
 fun Context.showToastText(text: String) =
@@ -56,6 +58,18 @@ fun View.addSystemLeftPadding(targetView: View = this) =
 		targetView.updatePadding(left = initialPadding.left + insets.systemWindowInsetLeft)
 	}
 
+
+fun Context.ErrorMaterialDialogBuilder(errorText: String) =
+	MaterialAlertDialogBuilder(this)
+		.setTitle("Ошибка")
+		.setMessage(errorText)
+		.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+
+fun BaseViewModel.showErrorDialog(lifecycleOwner: LifecycleOwner, context: Context?) {
+	this.error.observe(lifecycleOwner, Observer {
+		context?.ErrorMaterialDialogBuilder(it.getErrorMessage())?.show()
+	})
+}
 
 
 fun View.doOnApplyWindowInsets(f: (View, WindowInsets, InitialPadding) -> Unit) {

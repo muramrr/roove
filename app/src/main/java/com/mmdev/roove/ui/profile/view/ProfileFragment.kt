@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:14
+ * Last modified 10.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
@@ -26,7 +25,6 @@ import com.mmdev.business.core.UserItem
 import com.mmdev.business.places.BasePlaceInfo
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentProfileBinding
-import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.common.ImagePagerAdapter
 import com.mmdev.roove.ui.common.base.BaseAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
@@ -39,7 +37,7 @@ import kotlinx.android.synthetic.main.fragment_profile.*
  * This is the documentation block about the class
  */
 
-class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
+class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
 
 	private val userPhotosAdapter = ImagePagerAdapter(listOf())
@@ -52,8 +50,6 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 	private lateinit var selectedUser: UserItem
 	private lateinit var conversationId: String
 
-	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
-	private lateinit var sharedViewModel: SharedViewModel
 
 
 	companion object{
@@ -69,27 +65,21 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 			fabVisible = it.getBoolean(FAB_VISIBLE_KEY)
 		}
 
-		activity?.run {
-			sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
-
-		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
-
 		//if true -> seems that we navigates here from pairs fragment
 		if (fabVisible) {
 			sharedViewModel.matchedUserItemSelected.observeOnce(this, Observer {
 				conversationId = it.conversationId
-				remoteRepoViewModel.getFullUserInfo(it.baseUserInfo)
+				associatedViewModel.getFullUserInfo(it.baseUserInfo)
 			})
 		}
 		//else we navigates here from cards or chat fragment
 		else {
 			sharedViewModel.userSelected.observeOnce(this, Observer {
-				remoteRepoViewModel.getFullUserInfo(it.baseUserInfo)
+				associatedViewModel.getFullUserInfo(it.baseUserInfo)
 			})
 		}
 
-		remoteRepoViewModel.retrievedUserItem.observeOnce(this, Observer {
+		associatedViewModel.retrievedUserItem.observeOnce(this, Observer {
 			selectedUser = it
 			//ui
 			userPhotosAdapter.setData(it.photoURLs.map { photoItem -> photoItem.fileUrl }.toList())
@@ -102,7 +92,7 @@ class ProfileFragment: BaseFragment(R.layout.fragment_profile) {
 		FragmentProfileBinding.inflate(inflater, container, false)
 			.apply {
 				lifecycleOwner = this@ProfileFragment
-				viewModel = remoteRepoViewModel
+				viewModel = associatedViewModel
 				executePendingBindings()
 			}.root
 

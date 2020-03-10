@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 16:16
+ * Last modified 09.03.20 15:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,8 @@ import com.mmdev.business.chat.usecase.UploadMessagePhotoUseCase
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.roove.ui.common.base.BaseViewModel
+import com.mmdev.roove.ui.common.errors.ErrorType
+import com.mmdev.roove.ui.common.errors.MyError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
@@ -54,7 +56,11 @@ class ChatViewModel @Inject constructor(private val loadMessagesUC: LoadMessages
 	                       }
 	                       Log.wtf(TAG, "pagination loaded messages: ${it.size}")
                        },
-                       { Log.wtf(TAG, "load messages error: $it") }))
+                       {
+	                       error.value = MyError(ErrorType.LOADING, it)
+                       }
+            )
+		)
 
 	}
 
@@ -69,14 +75,19 @@ class ChatViewModel @Inject constructor(private val loadMessagesUC: LoadMessages
 
 	                       Log.wtf(TAG, "new message in conversation: ${it.text}")
                        },
-                       { Log.wtf(TAG, "observe messages error: $it") }))
+                       {
+	                       error.value = MyError(ErrorType.RECEIVING, it)
+                       }
+            )
+		)
 	}
 
 	fun sendMessage(messageItem: MessageItem){
 		disposables.add(sendMessageExecution(messageItem, emptyChat)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ /*Log.wtf(TAG, "Message sent")*/ },
-                       { Log.wtf(TAG, "can't send message: $it") }))
+                       { error.value = MyError(ErrorType.SENDING, it) })
+		)
 	}
 
 	//upload photo then send it as message item
@@ -91,23 +102,18 @@ class ChatViewModel @Inject constructor(private val loadMessagesUC: LoadMessages
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ /*Log.wtf(TAG, "Photo sent")*/ },
-                       { Log.wtf(TAG, "Sending photo error: $it") }))
+                       { error.value = MyError(ErrorType.SENDING, it) }))
 	}
 
 	fun getMessagesList() = messagesList
 
+
 	private fun loadMessagesExecution(conversation: ConversationItem) =
 		loadMessagesUC.execute(conversation)
-
 	private fun observeNewMessagesExecution(conversation: ConversationItem) =
 		observeNewMessagesUC.execute(conversation)
-
 	private fun sendMessageExecution(messageItem: MessageItem, emptyChat: Boolean? = false) =
 		sendMessageUC.execute(messageItem, emptyChat)
-
 	private fun uploadPhotoExecution(photoUri: String) =
 		uploadMessagePhotoUC.execute(photoUri)
-
-
-
 }

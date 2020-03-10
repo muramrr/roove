@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 16:16
+ * Last modified 09.03.20 16:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package com.mmdev.roove.ui.auth
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.auth.usecase.IsAuthenticatedListenerUseCase
 import com.mmdev.business.auth.usecase.LogOutUseCase
@@ -19,6 +18,8 @@ import com.mmdev.business.auth.usecase.SignUpUseCase
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.ui.common.base.BaseViewModel
+import com.mmdev.roove.ui.common.errors.ErrorType
+import com.mmdev.roove.ui.common.errors.MyError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -32,11 +33,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 
 	val continueRegistration: MutableLiveData<Boolean> = MutableLiveData()
 
-	//experimental
-	val error: MutableLiveData<Throwable> = MutableLiveData()
-
 	val showProgress: MutableLiveData<Boolean> = MutableLiveData()
-
 
 	private val baseUserInfo: MutableLiveData<BaseUserInfo> = MutableLiveData()
 
@@ -51,8 +48,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 	                       if (isAuthenticatedStatus.value != it) isAuthenticatedStatus.value = it
                        },
                        {
-                           error.value = it
-                           Log.wtf(TAG, it)
+	                       error.value = MyError(ErrorType.AUTHENTICATING, it)
                        }))
 	}
 
@@ -71,7 +67,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 	                       }
                        },
                        {
-	                       Log.wtf(TAG, "$it")
+	                       error.value = MyError(ErrorType.SENDING, it)
                        }
             ))
 	}
@@ -84,7 +80,7 @@ class AuthViewModel @Inject constructor(private val isAuthenticatedListener: IsA
 	                       isAuthenticatedStatus.value = true
                        },
                        {
-                           Log.wtf(TAG, it)
+	                       error.value = MyError(ErrorType.SAVING, it)
                        }))
 	}
 

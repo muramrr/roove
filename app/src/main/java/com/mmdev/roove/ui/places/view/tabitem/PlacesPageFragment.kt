@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:14
+ * Last modified 10.03.20 19:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.business.places.PlaceItem
@@ -27,14 +26,12 @@ import com.mmdev.roove.ui.places.PlacesViewModel
 import kotlinx.android.synthetic.main.fragment_places_page_item.*
 
 
-class PlacesPageFragment: BaseFragment(R.layout.fragment_places_page_item) {
+class PlacesPageFragment: BaseFragment<PlacesViewModel>() {
 
 	private var mPlacesRecyclerAdapter =
 		PlacesRecyclerAdapter(listOf(), R.layout.fragment_places_page_rv_item)
 
 	private var receivedCategory = ""
-
-	private lateinit var placesViewModel: PlacesViewModel
 
 
 	companion object {
@@ -56,8 +53,7 @@ class PlacesPageFragment: BaseFragment(R.layout.fragment_places_page_item) {
 			receivedCategory = it.getString(CATEGORY_KEY, "")
 		}
 
-		placesViewModel = ViewModelProvider(this, factory)[PlacesViewModel::class.java]
-		placesViewModel.loadPlaces(receivedCategory)
+		associatedViewModel.loadPlaces(receivedCategory)
 
 	}
 
@@ -66,7 +62,7 @@ class PlacesPageFragment: BaseFragment(R.layout.fragment_places_page_item) {
 		FragmentPlacesPageItemBinding.inflate(inflater, container, false)
 			.apply {
 				lifecycleOwner = this@PlacesPageFragment
-				viewModel = placesViewModel
+				viewModel = associatedViewModel
 				executePendingBindings()
 			}.root
 
