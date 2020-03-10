@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 19:41
+ * Last modified 10.03.20 20:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,26 +18,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.utils.showErrorDialog
-import java.lang.reflect.ParameterizedType
 
 /**
  * This is the documentation block about the class
  */
 
-abstract class BaseFragment<T: ViewModel> (private val isViewModelActivityHosted: Boolean = false,
-                                           layoutId: Int = 0) :
-		Fragment(layoutId) {
+abstract class BaseFragment<T: ViewModel> (val isViewModelActivityHosted: Boolean = false,
+                                           layoutId: Int = 0) : Fragment(layoutId) {
 
 	val factory = injector.factory()
-
-	internal val associatedViewModel: T by lazy {
-		if (isViewModelActivityHosted) {
-			activity?.run {
-				ViewModelProvider(this, factory).get(getTClass())
-			} ?: throw Exception("Invalid Activity")
-		}
-		else ViewModelProvider(this, factory).get(getTClass())
-	}
 
 	internal val sharedViewModel: SharedViewModel by lazy {
 		activity?.run {
@@ -45,20 +34,34 @@ abstract class BaseFragment<T: ViewModel> (private val isViewModelActivityHosted
 		} ?: throw Exception("Invalid Activity")
 	}
 
+	internal lateinit var associatedViewModel: T
+
 	private lateinit var callback: OnBackPressedCallback
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		setBackButtonDispatcher()
+	}
 
+	override fun onActivityCreated(savedInstanceState: Bundle?) {
+		super.onActivityCreated(savedInstanceState)
 		(associatedViewModel as BaseViewModel).showErrorDialog(this, context)
 	}
 
+	protected inline fun <reified T : ViewModel> getViewModel(): T =
+		if (isViewModelActivityHosted) {
+			activity?.run {
+				ViewModelProvider(this, factory)[T::class.java]
+			} ?: throw Exception("Invalid Activity")
+		}
+		else ViewModelProvider(this, factory)[T::class.java]
+
 	//get actual class from parameterized <T>
 	//CAUTION: REFLECTION USED
-	private fun getTClass(): Class<T> =
-		(javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<T>
+	//use at own risk
+//	private fun getTClass(): Class<T> =
+//		(javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<T>
 
 
 	/**

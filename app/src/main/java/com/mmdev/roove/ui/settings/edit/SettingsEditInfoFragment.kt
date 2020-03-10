@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 19:51
+ * Last modified 10.03.20 20:38
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -68,6 +68,8 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+
+		associatedViewModel = getViewModel()
 
 		male = getString(R.string.genderMale)
 		female = getString(R.string.genderFemale)

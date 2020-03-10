@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 19:51
+ * Last modified 10.03.20 20:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,13 +40,15 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 
 
 
-	companion object{
+	companion object {
 		private const val TAG = "mylogs_CardsFragment"
 	}
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+
+		associatedViewModel = getViewModel()
 
 		associatedViewModel.loadUsersByPreferences()
 		associatedViewModel.usersCardsList.observe(this, Observer {
