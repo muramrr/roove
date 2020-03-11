@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 09.03.20 16:13
+ * Last modified 11.03.20 20:54
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,7 +26,8 @@ import kotlin.random.Random
 object UtilityManager {
 
 	private val db: FirebaseFirestore
-	private var randomFemalePhotoUrlsList: List<String>
+	private val randomFemalePhotoUrlsList: List<String>
+	private val randomMalePhotoUrlsList: List<String>
 	init {
 		Fakeit.init()
 		db = FirebaseFirestore.getInstance()
@@ -42,6 +43,19 @@ object UtilityManager {
 				"https://images.unsplash.com/photo-1513792859704-f49baf5c0b70?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
 				"https://images.unsplash.com/photo-1514846326710-096e4a8035e0?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500"
 		)
+
+		randomMalePhotoUrlsList = listOf(
+				"https://images.unsplash.com/photo-1575751746286-e215a17139b6?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1531599890467-0673e8859bbf?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1506134501047-b0fefdacbb04?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1534235187448-833893dfe3e0?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1551628723-952088378fd3?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1510778670743-06254c768dad?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1522318548694-a0b65c40b0c6?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1555069519-127aadedf1ee?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1565766946249-4fb344ba4a90?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500",
+				"https://images.unsplash.com/photo-1559407838-3cf395241a32?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500"
+		)
 	}
 
 	private const val USERS_COLLECTION_REFERENCE = "users"
@@ -50,14 +64,22 @@ object UtilityManager {
 	private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
 	private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 
-	private const val GENDER = "female"
-	private const val CITY = "nnv"
-	private const val USERID = "g5q5vvujWkXcn0uwKdE4YEgOvnp2"
+	private const val GENDER_FOR_WHICH_CREATE = "female"
+	private const val CITY_WHERE_CREATE = "nnv"
+	private const val USERID_FOR_WHICH_CREATE = "g5q5vvujWkXcn0uwKdE4YEgOvnp2"
 
-	private fun createFakeUser(city: String = CITY,
+	private fun createFakeUser(city: String = CITY_WHERE_CREATE,
 	                           gender: String = "male",
 	                           preferredGender: String = "female"): UserItem {
-		val randomPhotoUrl = randomFemalePhotoUrlsList[Random.nextInt(0, 9)]
+		val randomPhotoNum = Random.nextInt(0, 9)
+		val randomPhotoUrl = randomMalePhotoUrlsList[randomPhotoNum]
+		val randomPhotoList = mutableListOf<PhotoItem>()
+		randomPhotoList.add(PhotoItem(fileUrl = randomPhotoUrl))
+		for (i in 0 until randomPhotoNum-1) {
+			val anotherRandomIndex = Random.nextInt(0, randomPhotoNum)
+			val randomPhotoItem = PhotoItem(fileUrl = randomMalePhotoUrlsList[anotherRandomIndex])
+			randomPhotoList.add(randomPhotoItem)
+		}
 		return UserItem(BaseUserInfo(name = Fakeit.name().firstName(),
 		                             age = Random.nextInt(18, 22),
 		                             city = city,
@@ -65,7 +87,7 @@ object UtilityManager {
 		                             preferredGender = preferredGender,
 		                             mainPhotoUrl = randomPhotoUrl,
 		                             userId = randomUid()),
-		                photoURLs = mutableListOf(PhotoItem(fileUrl = randomPhotoUrl)),
+		                photoURLs = randomPhotoList,
 		                placesToGo = mutableListOf())
 	}
 
@@ -107,9 +129,9 @@ object UtilityManager {
 		val userItem: UserItem = createFakeUser()
 
 		db.collection(USERS_COLLECTION_REFERENCE)
-			.document(CITY)
-			.collection(GENDER)
-			.document(USERID)
+			.document(CITY_WHERE_CREATE)
+			.collection(GENDER_FOR_WHICH_CREATE)
+			.document(USERID_FOR_WHICH_CREATE)
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.document(userItem.baseUserInfo.userId)
 			.set(MatchedUserItem(userItem.baseUserInfo, matchedDate = randomDate))
@@ -123,9 +145,9 @@ object UtilityManager {
 		val userItem: UserItem = createFakeUser()
 
 		db.collection(USERS_COLLECTION_REFERENCE)
-			.document(CITY)
-			.collection(GENDER)
-			.document(USERID)
+			.document(CITY_WHERE_CREATE)
+			.collection(GENDER_FOR_WHICH_CREATE)
+			.document(USERID_FOR_WHICH_CREATE)
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversationId)
 			.set(ConversationItem(conversationId = conversationId,
