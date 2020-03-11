@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:10
+ * Last modified 11.03.20 17:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -67,6 +67,7 @@ class PairsViewModel @Inject constructor(repo: PairsRepository): BaseViewModel()
 		                       matchedUsersList.value = it.toMutableList()
 		                       showTextHelper.value = false
 	                       }
+	                       else showTextHelper.value = true
 	                       Log.wtf(TAG, "initial loaded pairs: ${it.size}")
                        },
                        {

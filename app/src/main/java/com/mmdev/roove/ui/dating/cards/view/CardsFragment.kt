@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:55
+ * Last modified 11.03.20 18:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.fragment_cards.*
 
 class CardsFragment: BaseFragment<CardsViewModel>() {
 
-	private val mCardsStackAdapter = CardsStackAdapter(listOf(), R.layout.fragment_cards_item)
+	private val mCardsStackAdapter = CardsStackAdapter(mutableListOf(), R.layout.fragment_cards_item)
 
 	private var mCardsList = mutableListOf<UserItem>()
 
@@ -52,7 +52,8 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 
 		associatedViewModel.loadUsersByPreferences()
 		associatedViewModel.usersCardsList.observe(this, Observer {
-			mCardsList = it.toMutableList()
+			mCardsList.addAll(it)
+			mCardsStackAdapter.setData(it)
 		})
 		associatedViewModel.showMatchDialog.observe(this, Observer {
 			if (it) showMatchDialog(mDisappearedUserItem)
@@ -78,7 +79,6 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 			override fun onCardAppeared(view: View, position: Int) {
 				//get current displayed on card profile
 				mAppearedUserItem = mCardsStackAdapter.getItem(position)
-				//Log.wtf(TAG, "appeared name = ${mAppearedUserItem.baseUserInfo.name}")
 			}
 
 			override fun onCardDragging(direction: Direction, ratio: Float) {}
@@ -105,7 +105,9 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 					associatedViewModel.showLoading.value = true
 					associatedViewModel.showTextHelper.value = true
 				}
-				else mCardsList.removeAt(position)
+				else {
+					mCardsList.remove(mDisappearedUserItem)
+				}
 
 			}
 
@@ -119,7 +121,7 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 		mCardsStackAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<UserItem> {
 			override fun onItemClick(item: UserItem, position: Int) {
 
-				sharedViewModel.setUserSelected(mAppearedUserItem)
+				sharedViewModel.setUserSelected(item)
 				findNavController().navigate(R.id.action_cards_to_profileFragment)
 			}
 		})
@@ -128,7 +130,7 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 
 	override fun onStop() {
 		super.onStop()
-		mCardsStackAdapter.setData(mCardsList)
+		mCardsStackAdapter.setData(mCardsList.toList())
 	}
 
 	private fun showMatchDialog(userItem: UserItem) {

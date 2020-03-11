@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.03.20 18:27
+ * Last modified 11.03.20 17:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -140,7 +140,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 						paginateConversationsQuery =
 							initialConversationsQuery.startAfter(paginateLastConversationLoaded)
 					}
-					else emitter.onError(Throwable("Empty list"))
+					else emitter.onSuccess(listOf())
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
