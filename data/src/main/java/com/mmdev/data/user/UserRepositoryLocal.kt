@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.03.20 18:46
+ * Last modified 11.03.20 21:29
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,6 +47,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		private const val PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL = "mainPhotoUrl"
 		private const val PREF_KEY_CURRENT_USER_ID = "uid"
 		private const val PREF_KEY_CURRENT_USER_P_GENDER = "preferredGender"
+		private const val PREF_KEY_CURRENT_USER_ABOUT_TEXT = "aboutText"
 		private const val PREF_KEY_CURRENT_USER_CITY_TO_DISPLAY = "cityToDisplay"
 		private const val PREF_KEY_CURRENT_USER_PHOTO_URLS = "photoUrls"
 		private const val PREF_KEY_CURRENT_USER_PLACES_ID = "placesToGo"
@@ -56,7 +57,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		private const val TAG = "mylogs_UserRepoImpl"
 	}
 
-	override fun getSavedUser(): UserItem? {
+	override fun getSavedUser(): UserItem {
 		return if (prefs.getBoolean(PREF_KEY_GENERAL_IF_SAVED, false)) {
 			try {
 				val name = prefs.getString(PREF_KEY_CURRENT_USER_NAME , "")!!
@@ -67,6 +68,8 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				val preferredGender = prefs.getString(PREF_KEY_CURRENT_USER_P_GENDER, "")!!
 				val uid = prefs.getString(PREF_KEY_CURRENT_USER_ID, "")!!
 				val mainPhotoUrl = prefs.getString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, "")!!
+
+				val aboutText = prefs.getString(PREF_KEY_CURRENT_USER_ABOUT_TEXT, "")!!
 
 				val photosStrings =
 					JSONArray(prefs.getString(PREF_KEY_CURRENT_USER_PHOTO_URLS, "")!!)
@@ -94,6 +97,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				                                     preferredGender,
 				                                     mainPhotoUrl,
 				                                     uid),
+				         aboutText = aboutText,
 				         cityToDisplay = cityToDisplay,
 				         photoURLs = photoItems,
 				         placesToGo = placesToGoItems,
@@ -106,7 +110,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 					fbLogin.logOut()
 				}
 				prefs.edit().clear().commit()
-				null
+				UserItem()
 			}
 		}
 		else {
@@ -115,7 +119,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				fbLogin.logOut()
 			}
 			Log.wtf(TAG, "User is not saved")
-			null
+			UserItem()
 		}
 	}
 
@@ -133,6 +137,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		editor.putString(PREF_KEY_CURRENT_USER_P_GENDER, userItem.baseUserInfo.preferredGender)
 		editor.putString(PREF_KEY_CURRENT_USER_MAIN_PHOTO_URL, userItem.baseUserInfo.mainPhotoUrl)
 		editor.putString(PREF_KEY_CURRENT_USER_ID, userItem.baseUserInfo.userId)
+		editor.putString(PREF_KEY_CURRENT_USER_ABOUT_TEXT, userItem.aboutText)
 
 		val photosList = mutableListOf<String>()
 		for (photo in userItem.photoURLs)
