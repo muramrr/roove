@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 03.03.20 16:03
+  ~ Last modified 11.03.20 17:36
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@
 	<data>
 
 		<variable
-			name="userItem"
+			name="bindItem"
 			type="com.mmdev.business.core.UserItem" />
 
 	</data>
@@ -46,7 +46,7 @@
 				android:contentDescription="@string/description_user_photo"
 				android:scaleType="centerCrop"
 
-				app:bindImageUrl="@{userItem.photoURLs[0].fileUrl}"
+				app:bindImageUrl="@{bindItem.photoURLs[0].fileUrl}"
 				app:progressBar="@{pbImageLoading}"
 
 				app:layout_constraintBottom_toBottomOf="parent"
@@ -91,7 +91,7 @@
 				android:layout_height="wrap_content"
 				android:layout_margin="@dimen/general_margin_16"
 
-				android:text="@{userItem.baseUserInfo.name, default = @string/default_name}"
+				android:text="@{bindItem.baseUserInfo.name, default = @string/default_name}"
 				android:textSize="24sp"
 				style="@style/regular_text_white85op"
 
