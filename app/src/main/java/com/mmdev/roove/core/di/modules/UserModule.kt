@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.01.20 18:35
+ * Last modified 11.03.20 21:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,7 +26,7 @@ class UserModule {
 
 	/* get user info from Prefs */
 	@Provides
-	fun provideSavedUser(repository: UserRepositoryLocal) = repository.getSavedUser()!!
+	fun provideSavedUser(repository: UserRepositoryLocal) = repository.getSavedUser()
 
 	@Provides
 	@Singleton
