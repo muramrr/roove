@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 05.03.20 19:55
+ * Last modified 11.03.20 18:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -162,13 +162,13 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 	/* return filtered all users list from already written ids as List<UserItem> */
 	private fun filterUsers(usersItemsList: List<UserItem>, ids: List<String>): List<UserItem>{
-		val filteredUsersList = ArrayList<UserItem>()
+		val filteredUsersList = mutableListOf<UserItem>()
 		if (usersItemsList.isNotEmpty())
 			for (user in usersItemsList)
 				if (!ids.contains(user.baseUserInfo.userId))
 					filteredUsersList.add(user)
 		//Log.wtf(TAG, "filtered users: ${filteredUsersList.size}")
-		return filteredUsersList
+		return filteredUsersList.shuffled()
 	}
 
 
@@ -267,7 +267,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				.document(currentUser.baseUserInfo.city)
 				.collection(currentUser.baseUserInfo.preferredGender)
 				.orderBy(USERS_FILTER_AGE)
-				.orderBy("baseUserInfo.userId", Query.Direction.DESCENDING)
+				//.orderBy("baseUserInfo.userId", Query.Direction.DESCENDING)
 				.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
 				.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
 				//.limit(10)

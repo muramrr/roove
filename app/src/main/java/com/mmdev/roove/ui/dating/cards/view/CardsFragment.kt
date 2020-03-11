@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.03.20 18:16
+ * Last modified 11.03.20 20:23
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,6 @@ import androidx.navigation.fragment.findNavController
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentCardsBinding
-import com.mmdev.roove.ui.common.base.BaseAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.dating.cards.CardsViewModel
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
@@ -31,13 +30,12 @@ import kotlinx.android.synthetic.main.fragment_cards.*
 
 class CardsFragment: BaseFragment<CardsViewModel>() {
 
-	private val mCardsStackAdapter = CardsStackAdapter(mutableListOf(), R.layout.fragment_cards_item)
+	private val mCardsStackAdapter = CardsStackAdapter(mutableListOf())
 
 	private var mCardsList = mutableListOf<UserItem>()
 
 	private lateinit var mAppearedUserItem: UserItem
 	private lateinit var mDisappearedUserItem: UserItem
-
 
 
 	companion object {
@@ -118,7 +116,7 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 			layoutManager = cardStackLayoutManager
 		}
 
-		mCardsStackAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<UserItem> {
+		mCardsStackAdapter.setOnItemClickListener(object: CardsStackAdapter.OnItemClickListener {
 			override fun onItemClick(item: UserItem, position: Int) {
 
 				sharedViewModel.setUserSelected(item)

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 16:35
+ * Last modified 11.03.20 20:23
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,6 +24,7 @@ import com.mmdev.roove.ui.common.base.BaseAdapter.BindableAdapter
 
 
 object BindingAdapterUtils {
+
 
 	@JvmStatic
 	@BindingAdapter("app:bindData")

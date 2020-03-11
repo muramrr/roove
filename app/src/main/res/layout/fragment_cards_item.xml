@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 11.03.20 17:36
+  ~ Last modified 11.03.20 20:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,63 +39,69 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
 
-			<ImageView
-				android:id="@+id/ivCardFacePhoto"
+			<androidx.viewpager2.widget.ViewPager2
+				android:id="@+id/viewPagerCardPhotoList"
 				android:layout_width="0dp"
 				android:layout_height="0dp"
-				android:contentDescription="@string/description_user_photo"
-				android:scaleType="centerCrop"
-
-				app:bindImageUrl="@{bindItem.photoURLs[0].fileUrl}"
-				app:progressBar="@{pbImageLoading}"
 
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent" />
 
-			<ProgressBar
-				android:id="@+id/pbImageLoading"
-				android:layout_width="150dp"
-				android:layout_height="150dp"
-				android:layout_gravity="center"
-				android:indeterminate="false"
-				android:minHeight="32dp"
-				android:minWidth="32dp"
-				android:max="100"
-				android:progressDrawable="@drawable/progress_drawable"
+			<com.google.android.material.tabs.TabLayout
+				android:id="@+id/tlCardPhotosIndicator"
+				android:layout_width="0dp"
+				android:layout_height="2dp"
+				android:layout_marginStart="2dp"
+				android:layout_marginEnd="2dp"
+				android:layout_gravity="bottom"
+				android:background="@color/transparent"
 
-				style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+				app:tabBackground="@drawable/tab_line_unselected_state"
+				app:tabIndicatorColor="@color/white"
+				app:tabIndicatorGravity="center"
+				app:tabIndicatorFullWidth="true"
+				app:tabGravity="fill"
+
+				app:tabMaxWidth="500dp"
 
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
-				app:layout_constraintBottom_toBottomOf="parent"
 				/>
 
-			<View
-				android:id="@+id/ivCardBottomGradient"
-				android:layout_width="0dp"
-				android:layout_height="100dp"
-				android:layout_gravity="bottom"
-				android:background="@drawable/gradient_transparent"
-				android:scaleType="centerCrop"
-
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintBottom_toBottomOf="parent" />
 
 			<TextView
 				android:id="@+id/tvCardUserName"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_margin="@dimen/general_margin_16"
+				android:enabled="false"
 
 				android:text="@{bindItem.baseUserInfo.name, default = @string/default_name}"
 				android:textSize="24sp"
 				style="@style/regular_text_white85op"
 
 				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintBottom_toBottomOf="parent"
+				/>
+
+			<View
+				android:id="@+id/previousImage"
+				android:layout_width="100dp"
+				android:layout_height="0dp"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintBottom_toTopOf="@id/tvCardUserName"
+				/>
+
+			<View
+				android:id="@+id/nextImage"
+				android:layout_width="100dp"
+				android:layout_height="0dp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
 				app:layout_constraintBottom_toBottomOf="parent"
 				/>
 
@@ -144,4 +150,5 @@
 		</androidx.constraintlayout.widget.ConstraintLayout>
 
 	</androidx.cardview.widget.CardView>
+
 </layout>
