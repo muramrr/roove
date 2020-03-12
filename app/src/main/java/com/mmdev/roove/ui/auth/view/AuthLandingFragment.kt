@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 19:51
+ * Last modified 12.03.20 15:02
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,6 +34,8 @@ class AuthLandingFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_a
 		super.onCreate(savedInstanceState)
 
 		mCallbackManager = CallbackManager.Factory.create()
+
+		associatedViewModel = getViewModel()
 
 		associatedViewModel.continueRegistration.observe(this, Observer {
 			if (it == true) findNavController().navigate(R.id.action_auth_landing_to_registrationFragment)
