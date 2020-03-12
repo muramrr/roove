@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:37
+ * Last modified 12.03.20 17:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -135,9 +135,9 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 			fabProfileSendMessage.setOnClickListener {
 
 				findNavController().navigate(R.id.action_profile_to_chatFragment)
-				sharedViewModel.setConversationSelected(ConversationItem(selectedUser.baseUserInfo,
-				                                                         conversationId,
-				                                                         false))
+				sharedViewModel.conversationSelected.value = ConversationItem(selectedUser.baseUserInfo,
+				                                                              conversationId,
+				                                                              false)
 			}
 		}
 		else fabProfileSendMessage.visibility = View.GONE

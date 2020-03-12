@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:37
+ * Last modified 12.03.20 17:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -117,7 +117,7 @@ class PlaceDetailedFragment: BaseFragment<PlacesViewModel>() {
 			if (!userItem.placesToGo.contains(placeToGoItem)){
 				userItem.placesToGo.add(placeToGoItem)
 				remoteRepoViewModel.updateUserItem(userItem)
-				remoteRepoViewModel.getUserUpdateStatus().observeOnce(this, Observer {
+				remoteRepoViewModel.isUserUpdatedStatus.observeOnce(this, Observer {
 					context?.showToastText("Place added to your list successfully")
 				})
 			}
