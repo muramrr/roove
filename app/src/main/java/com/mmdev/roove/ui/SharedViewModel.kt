@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:15
+ * Last modified 12.03.20 16:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModel
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.pairs.MatchedUserItem
-import com.mmdev.roove.ui.common.LifecycleStates
 import javax.inject.Inject
 
 /**
@@ -36,7 +35,7 @@ class SharedViewModel @Inject constructor(): ViewModel() {
 
 	val conversationSelected: MutableLiveData<ConversationItem> = MutableLiveData()
 
-	val modalBottomSheetStatus: MutableLiveData<LifecycleStates> = MutableLiveData()
+	val modalBottomSheetStatus: MutableLiveData<Boolean> = MutableLiveData()
 	private val currentUser: MutableLiveData<UserItem> = MutableLiveData()
 
 	fun getCurrentUser() = currentUser
