@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.03.20 20:55
+ * Last modified 12.03.20 15:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -93,8 +93,9 @@ class MainActivity: AppCompatActivity() {
 		})
 
 		//creating fake data on remote, do not call this on UI thread
-//		for (i in 0 until 100){
-//			UtilityManager.createFakeUserOnRemote()
+//		for (i in 0 until 50){
+//			UtilityManager.generateConversationOnRemote()
+//			UtilityManager.generateMatchesOnRemote()
 //		}
 
 

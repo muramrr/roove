@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:37
+ * Last modified 12.03.20 15:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
@@ -134,16 +133,16 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 		fabSettingsAddPhoto.setOnClickListener {
 			//show attachment dialog picker
-			val builder = AlertDialog.Builder(it.context)
+			val materialDialogPicker = MaterialAlertDialogBuilder(it.context)
 				.setItems(arrayOf("Camera", "Gallery")) {
 					_, itemIndex ->
 					if (itemIndex == 0) { photoCameraClick() }
 					else { photoGalleryClick() }
 				}
-			val alertDialog = builder.create()
-			val params = alertDialog.window?.attributes
+				.create()
+			val params = materialDialogPicker.window?.attributes
 			params?.gravity = Gravity.CENTER
-			alertDialog.show()
+			materialDialogPicker.show()
 		}
 
 
