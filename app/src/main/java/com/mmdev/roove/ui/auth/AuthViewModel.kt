@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:05
+ * Last modified 12.03.20 20:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,9 +25,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class AuthViewModel @Inject constructor(repo: AuthRepository) :
-		BaseViewModel() {
-
+class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() {
 
 	private val isAuthenticatedListener = IsAuthenticatedListenerUseCase(repo)
 	private val logOut = LogOutUseCase(repo)
@@ -36,11 +34,9 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) :
 
 
 	val continueRegistration: MutableLiveData<Boolean> = MutableLiveData()
-
 	val showProgress: MutableLiveData<Boolean> = MutableLiveData()
 
 	private val baseUserInfo: MutableLiveData<BaseUserInfo> = MutableLiveData()
-
 	private val isAuthenticatedStatus: MutableLiveData<Boolean> = MutableLiveData()
 
 

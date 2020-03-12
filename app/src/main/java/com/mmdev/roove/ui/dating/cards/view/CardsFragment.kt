@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 17:22
+ * Last modified 12.03.20 19:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -128,7 +128,8 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 
 	override fun onStop() {
 		super.onStop()
-		mCardsStackAdapter.setData(mCardsList.toList())
+		if (mCardsStackAdapter.itemCount != mCardsList.size)
+			mCardsStackAdapter.setData(mCardsList.toList())
 	}
 
 	private fun showMatchDialog(userItem: UserItem) {

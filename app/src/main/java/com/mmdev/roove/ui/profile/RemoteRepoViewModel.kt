@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 17:39
+ * Last modified 12.03.20 20:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,13 +42,8 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 	val retrievedUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	val isUserUpdatedStatus: MutableLiveData<Boolean> = MutableLiveData()
 
-
 	val photoDeletionStatus: MutableLiveData<Boolean> = MutableLiveData()
 	val photoUrls: MutableLiveData<List<PhotoItem>> = MutableLiveData()
-
-	companion object{
-		private const val TAG = "mylogs_RemoteRepoViewModel"
-	}
 
 
 	fun deletePhoto(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean) {

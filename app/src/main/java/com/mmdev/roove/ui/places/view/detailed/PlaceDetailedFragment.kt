@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 17:30
+ * Last modified 12.03.20 19:29
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -48,7 +48,7 @@ class PlaceDetailedFragment: BaseFragment<PlacesViewModel>() {
 
 	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
 
-	companion object{
+	companion object {
 		private const val PLACE_ID_KEY = "PLACE_ID"
 	}
 
@@ -67,7 +67,7 @@ class PlaceDetailedFragment: BaseFragment<PlacesViewModel>() {
 
 		associatedViewModel.placeDetailed.observeOnce(this, Observer {
 			placeDetailedItem = it
-			val placePhotos = ArrayList<String>()
+			val placePhotos = mutableListOf<String>()
 			for (imageItem in it.images)
 				placePhotos.add(imageItem.image)
 
