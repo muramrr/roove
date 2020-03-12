@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.03.20 19:31
+ * Last modified 12.03.20 15:56
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -121,7 +121,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 
 	override fun fetchUserInfo(): Single<UserItem> {
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
-			val userItem = localRepo.getSavedUser()!!
+			val userItem = localRepo.getSavedUser()
 			val refGeneral = fillUserGeneralRef(userItem.baseUserInfo)
 
 			val refBase = db.collection(BASE_COLLECTION_REFERENCE).document(userItem.baseUserInfo.userId)
@@ -152,7 +152,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 		Single.create(SingleOnSubscribe<UserItem> { emitter ->
 			val ref = fillUserGeneralRef(baseUserInfo)
 			ref.get()
-				.addOnSuccessListener { emitter.onSuccess(it.toObject(UserItem::class.java)!!) }
+				.addOnSuccessListener { if (it.exists()) emitter.onSuccess(it.toObject(UserItem::class.java)!!) }
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
 
