@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 07.03.20 17:23
+  ~ Last modified 12.03.20 20:33
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,12 +31,12 @@
 			android:id="@+id/ivProfilePlaceImage"
 			android:layout_width="80dp"
 			android:layout_height="80dp"
-			android:src="@drawable/placeholder_image"
 
 			app:bindCircleImageUrl="@{bindItem.imageUrl}"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/tvProfilePlaceTitle"
 			tools:ignore="ContentDescription" />
 
 		<TextView
@@ -53,6 +53,7 @@
 			app:layout_constraintStart_toStartOf="@id/ivProfilePlaceImage"
 			app:layout_constraintEnd_toEndOf="@id/ivProfilePlaceImage"
 			app:layout_constraintTop_toBottomOf="@id/ivProfilePlaceImage"
+			app:layout_constraintBottom_toBottomOf="parent"
 
 			style="@style/regular_text_white85op" />
 

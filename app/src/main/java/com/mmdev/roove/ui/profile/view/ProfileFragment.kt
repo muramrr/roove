@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 19:27
+ * Last modified 12.03.20 20:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,22 +37,20 @@ import kotlinx.android.synthetic.main.fragment_profile.*
  * This is the documentation block about the class
  */
 
-class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
+class ProfileFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 
 	private val userPhotosAdapter = ImagePagerAdapter(listOf())
 
-	private val mPlacesToGoAdapter = PlacesToGoAdapter(listOf(),
-	                                                   R.layout.fragment_profile_places_rv_item)
+	private val mPlacesToGoAdapter = PlacesToGoAdapter(listOf())
 
 	private var fabVisible: Boolean = false
 
-	private lateinit var selectedUser: UserItem
-	private lateinit var conversationId: String
+	private var selectedUser: UserItem = UserItem()
+	private var conversationId: String = ""
 
 
-
-	companion object{
+	companion object {
 		private const val FAB_VISIBLE_KEY = "FAB_VISIBLE"
 		private const val PLACE_ID_KEY = "PLACE_ID"
 	}
@@ -60,10 +58,18 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+
 		associatedViewModel = getViewModel()
+
 		arguments?.let {
 			fabVisible = it.getBoolean(FAB_VISIBLE_KEY)
 		}
+
+		associatedViewModel.retrievedUserItem.observeOnce(this, Observer {
+			selectedUser = it
+			//ui
+			userPhotosAdapter.setData(it.photoURLs.map { photoItem -> photoItem.fileUrl })
+		})
 
 		//if true -> seems that we navigates here from pairs fragment
 		if (fabVisible) {
@@ -79,12 +85,6 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 			})
 		}
 
-		associatedViewModel.retrievedUserItem.observeOnce(this, Observer {
-			selectedUser = it
-			//ui
-			userPhotosAdapter.setData(it.photoURLs.map { photoItem -> photoItem.fileUrl }.toList())
-
-		})
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 17:39
+ * Last modified 12.03.20 20:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,8 +62,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 	private val mSettingsPhotoAdapter =
 		SettingsUserPhotoAdapter(mutableListOf(), R.layout.fragment_settings_photo_item)
 
-	private val mPlacesToGoAdapter =
-		PlacesToGoAdapter(listOf(), R.layout.fragment_profile_places_rv_item)
+	private val mPlacesToGoAdapter = PlacesToGoAdapter(listOf())
 
 	private lateinit var authViewModel: AuthViewModel
 
