@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 11.03.20 19:40
+  ~ Last modified 12.03.20 15:44
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,7 +31,7 @@
 			android:id="@+id/appBarPlaceDetailed"
 			android:layout_width="match_parent"
 			android:layout_height="@dimen/collapseBarHeight"
-			android:theme="@style/AppTheme.AppBarOverlay" >
+			>
 
 			<com.google.android.material.appbar.CollapsingToolbarLayout
 				android:id="@+id/collapseBarPlaceDetailed"
@@ -71,7 +71,7 @@
 					android:layout_height="?attr/actionBarSize"
 					app:layout_collapseMode="pin"
 					app:navigationIcon="@drawable/ic_arrow_back_24dp"
-					app:popupTheme="@style/menuPopupStyle" />
+					/>
 
 			</com.google.android.material.appbar.CollapsingToolbarLayout>
 

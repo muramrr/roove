@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 11.03.20 19:40
+  ~ Last modified 12.03.20 15:51
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -74,7 +74,7 @@
 					app:layout_collapseMode="pin"
 					app:menu="@menu/profile_view_menu"
 					app:navigationIcon="@drawable/ic_arrow_back_24dp"
-					app:popupTheme="@style/menuPopupStyle" />
+					app:popupTheme="@style/MyMenuPopupStyle" />
 
 			</com.google.android.material.appbar.CollapsingToolbarLayout>
 
