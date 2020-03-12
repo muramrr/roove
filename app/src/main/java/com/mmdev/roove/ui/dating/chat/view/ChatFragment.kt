@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 17:22
+ * Last modified 12.03.20 18:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -105,6 +105,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		associatedViewModel = getViewModel()
+
 		//deep link from notification
 		arguments?.let {
 			receivedPartnerCity = it.getString(PARTNER_CITY_KEY, "")
@@ -139,6 +140,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 		remoteRepoViewModel.retrievedUserItem.observeOnce(this, Observer {
 			currentPartner = it
 			setupContentToolbar(it)
+			sharedViewModel.userSelected.value = it
 		})
 
 		sharedViewModel.conversationSelected.observeOnce(this, Observer {
@@ -237,9 +239,8 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 
 		toolbarChat.setOnMenuItemClickListener { item ->
 			when (item.itemId) {
-				R.id.chat_action_user ->{
+				R.id.chat_action_user -> {
 					findNavController().navigate(R.id.action_chat_to_profileFragment)
-					sharedViewModel.userSelected.value = UserItem(currentPartner.baseUserInfo)
 				}
 
 				R.id.chat_action_report -> {

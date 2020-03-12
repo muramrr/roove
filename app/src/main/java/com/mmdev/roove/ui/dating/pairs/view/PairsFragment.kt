@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:55
+ * Last modified 12.03.20 19:24
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -49,8 +49,7 @@ class PairsFragment: BaseFragment<PairsViewModel>() {
 				lifecycleOwner = this@PairsFragment
 				viewModel = associatedViewModel
 				executePendingBindings()
-			}
-			.root
+			}.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
