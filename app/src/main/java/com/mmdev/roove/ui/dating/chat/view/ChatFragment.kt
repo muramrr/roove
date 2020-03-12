@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:37
+ * Last modified 12.03.20 15:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,7 +28,6 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -38,6 +37,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.BaseUserInfo
@@ -183,16 +183,17 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 
 		//show attachment dialog picker
 		btnSendAttachment.setOnClickListener {
-			val builder = AlertDialog.Builder(context!!)
+			//show attachment dialog picker
+			val materialDialogPicker = MaterialAlertDialogBuilder(it.context)
 				.setItems(arrayOf("Camera", "Gallery")) {
 					_, itemIndex ->
 					if (itemIndex == 0) { photoCameraClick() }
 					else { photoGalleryClick() }
 				}
-			val alertDialog = builder.create()
-			val params = alertDialog.window?.attributes
+				.create()
+			val params = materialDialogPicker.window?.attributes
 			params?.gravity = Gravity.BOTTOM
-			alertDialog.show()
+			materialDialogPicker.show()
 		}
 
 		//if message contains photo then it opens in fullscreen dialog
