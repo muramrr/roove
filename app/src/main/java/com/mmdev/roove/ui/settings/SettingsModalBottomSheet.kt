@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 17:46
+ * Last modified 12.03.20 16:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 package com.mmdev.roove.ui.settings
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +24,6 @@ import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.SharedViewModel
-import com.mmdev.roove.ui.common.LifecycleStates
 import com.mmdev.roove.utils.observeOnce
 import kotlinx.android.synthetic.main.fragment_settings_modal_bottom_sheet.*
 
@@ -37,6 +37,8 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 	private lateinit var female: String
 	private lateinit var everyone: String
 
+	private var isChanged: Boolean = false
+
 
 	companion object {
 		private const val ARG_DISMISS_WITH_ANIMATION = "dismiss_with_animation"
@@ -49,6 +51,7 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		Log.wtf("mylogs_SHEET", "oncreate value = $isChanged")
 		male = getString(R.string.genderMale)
 		female = getString(R.string.genderFemale)
 		everyone = getString(R.string.genderEveryone)
@@ -69,6 +72,7 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 		rangeSeekBarAgePicker.setOnRangeSeekBarChangeListener { _, number, number2 ->
 			userItem.preferredAgeRange.minAge = number.toInt()
 			userItem.preferredAgeRange.maxAge = number2.toInt()
+			isChanged = true
 		}
 
 		toggleButtonPickerPreferredGender.addOnButtonCheckedListener { group, _, _ ->
@@ -80,6 +84,8 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 				userItem.baseUserInfo.preferredGender = female
 		}
 
+		btnPickerPreferredGenderMale.setOnClickListener { isChanged = true }
+		btnPickerPreferredGenderFemale.setOnClickListener { isChanged = true }
 	}
 
 	private fun initProfile(userItem: UserItem) {
@@ -108,12 +114,7 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 	}
 
 	override fun onStop() {
-		sharedViewModel.modalBottomSheetStatus.value = LifecycleStates.STOP
+		sharedViewModel.modalBottomSheetStatus.value = isChanged
 		super.onStop()
-	}
-
-	override fun onDetach() {
-		sharedViewModel.modalBottomSheetStatus.value = LifecycleStates.DETACH
-		super.onDetach()
 	}
 }
