@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 17:22
+ * Last modified 12.03.20 19:27
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -92,6 +92,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 		FragmentProfileBinding.inflate(inflater, container, false)
 			.apply {
 				lifecycleOwner = this@ProfileFragment
+				isFabVisible = fabVisible
 				viewModel = associatedViewModel
 				executePendingBindings()
 			}.root
@@ -140,7 +141,6 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 				                                                              false)
 			}
 		}
-		else fabProfileSendMessage.visibility = View.GONE
 
 	}
 
