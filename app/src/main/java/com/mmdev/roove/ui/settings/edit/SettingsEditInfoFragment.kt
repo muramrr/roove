@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:38
+ * Last modified 12.03.20 17:50
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,7 +62,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 	private lateinit var female: String
 
 
-	companion object{
+	companion object {
 		private const val TAG = "mylogs_SettingsEditFragment"
 	}
 
@@ -74,7 +74,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 		male = getString(R.string.genderMale)
 		female = getString(R.string.genderFemale)
 
-		sharedViewModel.getCurrentUser().observe(this, Observer {
+		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			userItem = it
 			initSettings(it)
 		})
@@ -157,12 +157,6 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 		btnSettingsEditSave.setOnClickListener {
 			associatedViewModel.updateUserItem(userItem)
-			associatedViewModel.getUserUpdateStatus().observeOnce(this, Observer {
-				if (it) {
-					sharedViewModel.userSelected.value = userItem
-					context.showToastText("Successfully saved")
-				}
-			})
 		}
 	}
 

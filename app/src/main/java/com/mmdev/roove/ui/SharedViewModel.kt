@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 16:21
+ * Last modified 12.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,29 +30,16 @@ import javax.inject.Inject
 class SharedViewModel @Inject constructor(): ViewModel() {
 
 	val matchedUserItemSelected: MutableLiveData<MatchedUserItem> = MutableLiveData()
-
 	val userSelected: MutableLiveData<UserItem> = MutableLiveData()
-
 	val conversationSelected: MutableLiveData<ConversationItem> = MutableLiveData()
 
-	val modalBottomSheetStatus: MutableLiveData<Boolean> = MutableLiveData()
+	val modalBottomSheetNeedUpdateExecution: MutableLiveData<Boolean> = MutableLiveData()
+
 	private val currentUser: MutableLiveData<UserItem> = MutableLiveData()
 
 	fun getCurrentUser() = currentUser
 	fun setCurrentUser(userItem: UserItem) { currentUser.value = userItem }
 
-
-	fun setUserSelected(userItem: UserItem) { userSelected.value = userItem }
-
-	fun setConversationSelected(conversationItem: ConversationItem) {
-		conversationSelected.value = conversationItem
-		//if we moved to user profile from conversation
-//		if (userCardSelected.value?.userItem?.baseUserInfo?.userId != conversationItem.partner.userId) {
-//			Log.wtf("mylogs_SharedViewModel", "card updated")
-//			userCardSelected.value = MatchedUserItem(conversationItem.partner,
-//			                                         conversationStarted = conversationItem.conversationStarted)
-//		}
-	}
 
 	fun setMatchedUserItem(matchedUserItem: MatchedUserItem) {
 		matchedUserItemSelected.value = matchedUserItem

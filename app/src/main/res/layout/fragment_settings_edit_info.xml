@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 07.03.20 18:13
+  ~ Last modified 12.03.20 17:09
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,6 +38,7 @@
 			android:layout_height="match_parent"
 			android:layout_width="match_parent"
 			android:padding="@dimen/general_margin_8"
+			app:paddingBottomSystemWindowInsets="@{true}"
 			android:animateLayoutChanges="true">
 
 			<androidx.recyclerview.widget.RecyclerView

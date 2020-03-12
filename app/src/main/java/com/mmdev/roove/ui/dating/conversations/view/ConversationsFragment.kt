@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:37
+ * Last modified 12.03.20 17:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -113,7 +113,7 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel>(){
 		mConversationsAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<ConversationItem> {
 
 			override fun onItemClick(item: ConversationItem, position: Int) {
-				sharedViewModel.setConversationSelected(item)
+				sharedViewModel.conversationSelected.value = item
 				findNavController().navigate(R.id.action_conversations_to_chatFragment)
 			}
 		})

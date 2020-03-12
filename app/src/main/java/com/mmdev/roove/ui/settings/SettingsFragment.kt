@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 16:28
+ * Last modified 12.03.20 17:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -96,8 +96,11 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 			mSettingsPhotoAdapter.setData(it)
 		})
 
-		sharedViewModel.modalBottomSheetStatus.observe(this, Observer {
-			if (it) associatedViewModel.updateUserItem(userItem)
+		sharedViewModel.modalBottomSheetNeedUpdateExecution.observe(this, Observer {
+			if (it) {
+				associatedViewModel.updateUserItem(userItem)
+				sharedViewModel.modalBottomSheetNeedUpdateExecution.value = false
+			}
 		})
 
 	}
@@ -271,7 +274,5 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 			}
 		}
 	}
-
-
 
 }

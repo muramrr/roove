@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 15:58
+ * Last modified 12.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,7 @@ import com.mmdev.roove.ui.auth.view.AuthFlowFragment
 import com.mmdev.roove.ui.common.custom.LoadingDialog
 import com.mmdev.roove.ui.main.MainFlowFragment
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
-import com.mmdev.roove.utils.observeOnce
+import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity: AppCompatActivity() {
@@ -80,8 +80,8 @@ class MainActivity: AppCompatActivity() {
 			else {
 				showMainFlowFragment()
 				remoteRepoViewModel.fetchUserItem()
-				remoteRepoViewModel.getFetchedUserItem().observeOnce(this, Observer {
-					fetchedUser -> sharedViewModel.setCurrentUser(fetchedUser)
+				remoteRepoViewModel.actualCurrentUserItem.observe(this, Observer {
+					actualUserItem -> sharedViewModel.setCurrentUser(actualUserItem)
 				})
 
 				Log.wtf(TAG, "USER IS LOGGED IN")
@@ -90,6 +90,12 @@ class MainActivity: AppCompatActivity() {
 		authViewModel.showProgress.observe(this, Observer {
 			if (it == true) progressDialog.showDialog()
 			else progressDialog.dismissDialog()
+		})
+
+		remoteRepoViewModel.isUserUpdatedStatus.observe(this, Observer {
+			if (it) {
+				showToastText(getString(R.string.toast_update_success))
+			}
 		})
 
 		//creating fake data on remote, do not call this on UI thread

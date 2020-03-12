@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 15:58
+ * Last modified 12.03.20 17:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -133,7 +133,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 				                 conversationId = receivedConversationId,
 				                 conversationStarted = true)
 
-			sharedViewModel.setConversationSelected(receivedConversationItem)
+			sharedViewModel.conversationSelected.value = receivedConversationItem
 		}
 
 		remoteRepoViewModel.retrievedUserItem.observeOnce(this, Observer {
@@ -239,7 +239,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 			when (item.itemId) {
 				R.id.chat_action_user ->{
 					findNavController().navigate(R.id.action_chat_to_profileFragment)
-					sharedViewModel.setUserSelected(UserItem(currentPartner.baseUserInfo))
+					sharedViewModel.userSelected.value = UserItem(currentPartner.baseUserInfo)
 				}
 
 				R.id.chat_action_report -> {

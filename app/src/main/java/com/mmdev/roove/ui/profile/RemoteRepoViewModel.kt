@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:10
+ * Last modified 12.03.20 17:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,9 +38,9 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 
 
 
-	private val fetchedUserItem: MutableLiveData<UserItem> = MutableLiveData()
+	val actualCurrentUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	val retrievedUserItem: MutableLiveData<UserItem> = MutableLiveData()
-	private val isUserUpdated: MutableLiveData<Boolean> = MutableLiveData()
+	val isUserUpdatedStatus: MutableLiveData<Boolean> = MutableLiveData()
 
 
 	val photoDeletionStatus: MutableLiveData<Boolean> = MutableLiveData()
@@ -68,7 +68,7 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 		disposables.add(fetchUserInfoExecution()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       fetchedUserItem.value = it
+	                       actualCurrentUserItem.value = it
 	                       //Log.wtf(TAG, "fetched user: $it")
                        },
                        {
@@ -83,7 +83,7 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
                             retrievedUserItem.value = it
                        },
                        {
-
+	                       error.value = MyError(ErrorType.LOADING, it)
                        }))
 
 	}
@@ -92,11 +92,12 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 		disposables.add(updateUserItemExecution(userItem)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       isUserUpdated.value = true
+	                       isUserUpdatedStatus.value = true
+	                       actualCurrentUserItem.value = userItem
 	                       Log.wtf(TAG, "update user successful")
                        },
                        {
-	                       isUserUpdated.value = false
+	                       isUserUpdatedStatus.value = false
 	                       error.value = MyError(ErrorType.SAVING, it)
                        }))
 	}
@@ -114,10 +115,6 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
                        }))
 	}
 
-
-
-	fun getFetchedUserItem() = fetchedUserItem
-	fun getUserUpdateStatus() = isUserUpdated
 
 
 	private fun deletePhotoExecution(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean) =

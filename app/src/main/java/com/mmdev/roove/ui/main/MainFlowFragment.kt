@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 09.03.20 17:23
+ * Last modified 12.03.20 16:50
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,7 +44,9 @@ class MainFlowFragment: FlowFragment() {
 		navController = navHost.findNavController()
 
 		navController.addOnDestinationChangedListener { _, destination, _ ->
-			if (destination.id in arrayOf(R.id.chatFragmentNav, R.id.profileFragmentNav)) {
+			if (destination.id in arrayOf(R.id.chatFragmentNav,
+			                              R.id.profileFragmentNav,
+			                              R.id.settingsEditInfoFragmentNav)) {
 				bottomNavigationView.visibility = View.GONE
 			}
 			else bottomNavigationView.visibility = View.VISIBLE

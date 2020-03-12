@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 16:21
+ * Last modified 12.03.20 17:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@
 package com.mmdev.roove.ui.settings
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,13 +50,15 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		Log.wtf("mylogs_SHEET", "oncreate value = $isChanged")
+
 		male = getString(R.string.genderMale)
 		female = getString(R.string.genderFemale)
 		everyone = getString(R.string.genderEveryone)
+
 		activity?.run {
 			sharedViewModel = ViewModelProvider(this, injector.factory())[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
+
 		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			userItem = it
 			initProfile(it)
@@ -114,7 +115,7 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 	}
 
 	override fun onStop() {
-		sharedViewModel.modalBottomSheetStatus.value = isChanged
+		sharedViewModel.modalBottomSheetNeedUpdateExecution.value = isChanged
 		super.onStop()
 	}
 }
