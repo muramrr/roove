@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 17:24
+  ~ Last modified 13.03.20 19:40
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -48,6 +48,7 @@
 				android:layout_height="wrap_content"
 				android:clipToPadding="false"
 				android:orientation="vertical"
+				android:overScrollMode="never"
 
 				app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
 				app:spanCount="2"

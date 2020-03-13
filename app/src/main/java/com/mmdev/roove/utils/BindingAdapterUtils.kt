@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.03.20 20:23
+ * Last modified 13.03.20 19:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -48,26 +48,25 @@ object BindingAdapterUtils {
 	}
 
 	@JvmStatic
-	@BindingAdapter("app:bindCircleImageUrl")
-	fun loadCircleImage(imageView: ImageView, url: String) {
-		if (url.isNotEmpty())
-			GlideApp.with(imageView.context)
-				.load(url)
-				.centerCrop()
-				.apply(RequestOptions().circleCrop())
-				.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-				.placeholder(R.drawable.placeholder_profile)
-				.into(imageView)
-	}
-
-	@JvmStatic
 	@BindingAdapter(value = ["app:bindImageUrl", "app:progressBar"], requireAll = false)
-	fun loadPhotoUrl(imageView: ImageView, url: String, progressBar: ProgressBar?) {
+	fun loadPhotoUrlWithProgress(imageView: ImageView, url: String, progressBar: ProgressBar?) {
 		if (url.isNotEmpty())
-			GlideImageLoader(imageView, progressBar)
-				.load(url, RequestOptions()
+			if (progressBar != null) {
+				GlideImageLoader(imageView, progressBar)
+					.load(url,
+					      RequestOptions()
+						      .dontAnimate()
+						      .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+						      .error(R.drawable.placeholder_image)
+					)
+			}
+			else {
+				GlideApp.with(imageView.context)
+					.load(url)
+					.dontAnimate()
 					.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-					.error(R.drawable.placeholder_image))
+					.into(imageView)
+			}
 	}
 
 	@JvmStatic
