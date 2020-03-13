@@ -3,7 +3,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 14:40
+  ~ Last modified 13.03.20 19:29
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -51,15 +51,14 @@
 			app:layout_constraintVertical_bias="0.1"
 			/>
 
-		<ImageView
+		<com.mmdev.roove.ui.common.custom.components.CircleImageView
 			android:id="@+id/matched_photo"
 			android:layout_width="300dp"
 			android:layout_height="300dp"
 			android:adjustViewBounds="true"
 			android:scaleType="centerCrop"
-			android:src="@drawable/default_avatar"
 
-			app:bindCircleImageUrl="@{photoUrl}"
+			app:bindImageUrl="@{photoUrl}"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"

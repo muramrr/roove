@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 19.01.20 14:48
+  ~ Last modified 13.03.20 19:35
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,5 +10,8 @@
   -->
 
 <resources>
-
+	<declare-styleable name="CircleImageView">
+		<attr name="civ_border_overlay" format="boolean" />
+		<attr name="civ_circle_background_color" format="color" />
+	</declare-styleable>
 </resources>

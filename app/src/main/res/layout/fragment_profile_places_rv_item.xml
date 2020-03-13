@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 17:56
+  ~ Last modified 13.03.20 19:16
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,12 +27,12 @@
 		android:layout_width="wrap_content"
 		android:padding="8dp" >
 
-		<ImageView
+		<com.mmdev.roove.ui.common.custom.components.CircleImageView
 			android:id="@+id/ivProfilePlaceImage"
 			android:layout_width="80dp"
 			android:layout_height="80dp"
 
-			app:bindCircleImageUrl="@{bindItem.imageUrl}"
+			app:bindImageUrl="@{bindItem.imageUrl}"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
