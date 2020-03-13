@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 19:40
+  ~ Last modified 13.03.20 20:45
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -71,7 +71,7 @@
 				android:id="@+id/layoutSettingsEditName"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/general_margin_16"
+				android:layout_marginTop="@dimen/general_margin_8"
 
 				app:counterMaxLength="30"
 
@@ -171,7 +171,7 @@
 				android:layout_marginTop="@dimen/general_margin_16"
 				app:haloColor="?colorSecondary"
 
-				app:thumbColor="@color/white_85"
+				app:thumbColor="@color/white"
 				app:thumbRadius="14dp"
 
 				app:activeTrackColor="?colorSecondary"

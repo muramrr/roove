@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 05.03.20 19:12
+  ~ Last modified 13.03.20 20:43
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
 	android:shape="oval">
 
-	<solid android:color="@color/white_85"/>
+	<solid android:color="@color/white"/>
 
 	<size
 		android:width="32dp"
