@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.03.20 20:54
+ * Last modified 13.03.20 19:50
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -64,20 +64,20 @@ object UtilityManager {
 	private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
 	private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
 
-	private const val GENDER_FOR_WHICH_CREATE = "female"
-	private const val CITY_WHERE_CREATE = "nnv"
-	private const val USERID_FOR_WHICH_CREATE = "g5q5vvujWkXcn0uwKdE4YEgOvnp2"
+	private const val GENDER_FOR_WHICH_CREATE = "male"
+	private const val CITY_WHERE_CREATE = "nsk"
+	private const val USERID_FOR_WHICH_CREATE = "5Bi3FfUE8nQppPyo5mqquIsBijf1"
 
 	private fun createFakeUser(city: String = CITY_WHERE_CREATE,
-	                           gender: String = "male",
-	                           preferredGender: String = "female"): UserItem {
+	                           gender: String = "female",
+	                           preferredGender: String = GENDER_FOR_WHICH_CREATE): UserItem {
 		val randomPhotoNum = Random.nextInt(0, 9)
-		val randomPhotoUrl = randomMalePhotoUrlsList[randomPhotoNum]
+		val randomPhotoUrl = randomFemalePhotoUrlsList[randomPhotoNum]
 		val randomPhotoList = mutableListOf<PhotoItem>()
 		randomPhotoList.add(PhotoItem(fileUrl = randomPhotoUrl))
 		for (i in 0 until randomPhotoNum-1) {
 			val anotherRandomIndex = Random.nextInt(0, randomPhotoNum)
-			val randomPhotoItem = PhotoItem(fileUrl = randomMalePhotoUrlsList[anotherRandomIndex])
+			val randomPhotoItem = PhotoItem(fileUrl = randomFemalePhotoUrlsList[anotherRandomIndex])
 			randomPhotoList.add(randomPhotoItem)
 		}
 		return UserItem(BaseUserInfo(name = Fakeit.name().firstName(),
@@ -115,7 +115,7 @@ object UtilityManager {
 		return generateDateBetween(hundredYearsAgo, tenDaysAgo)
 	}
 
-	fun createFakeUserOnRemote(userItem: UserItem = createFakeUser()) {
+	private fun createFakeUserOnRemote(userItem: UserItem = createFakeUser()) {
 		db.collection(USERS_COLLECTION_REFERENCE)
 			.document(userItem.baseUserInfo.city)
 			.collection(userItem.baseUserInfo.gender)
