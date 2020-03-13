@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.03.20 19:37
+ * Last modified 13.03.20 20:09
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,6 +56,7 @@ object BindingAdapterUtils {
 					.load(url,
 					      RequestOptions()
 						      .dontAnimate()
+						      .optionalCenterCrop()
 						      .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
 						      .error(R.drawable.placeholder_image)
 					)
@@ -64,6 +65,7 @@ object BindingAdapterUtils {
 				GlideApp.with(imageView.context)
 					.load(url)
 					.dontAnimate()
+					.optionalCenterCrop()
 					.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
 					.into(imageView)
 			}
