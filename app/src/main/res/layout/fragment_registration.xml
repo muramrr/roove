@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 06.03.20 17:30
+  ~ Last modified 13.03.20 18:27
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,7 +30,7 @@
 		android:lines="2"
 		android:text="@string/reg_step_1_tv_select_your_gender"
 		android:textSize="40sp"
-		style="@style/medium_text_white85op"
+		style="@style/medium_text"
 
 		android:alpha="0"
 		android:rotationX="90"
@@ -103,7 +103,7 @@
 
 		android:text="@string/reg_step_2_tv_interested_in"
 		android:textSize="40sp"
-		style="@style/medium_text_white85op"
+		style="@style/medium_text"
 
 		app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -146,7 +146,7 @@
 
 		android:text="@string/reg_step_3_tv_specify_your_age"
 		android:textSize="36sp"
-		style="@style/medium_text_white85op"
+		style="@style/medium_text"
 
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -193,7 +193,7 @@
 		android:gravity="center"
 		android:text="18"
 		android:textSize="30sp"
-		style="@style/light_text_white85op"
+		style="@style/light_text"
 
 		android:alpha="0"
 		android:rotationX="90"
@@ -212,9 +212,9 @@
 		android:layout_height="wrap_content"
 
 		android:text="@string/reg_step_4_tv_change_name"
-		android:maxLines="2"
-		android:textSize="32sp"
-		style="@style/medium_text_white85op"
+		android:maxLines="3"
+		android:textSize="30sp"
+		style="@style/medium_text"
 
 		android:alpha="0"
 		android:rotationX="-90"
@@ -264,7 +264,7 @@
 
 			android:textCursorDrawable="@color/lolite"
 			android:textSize="20sp"
-			style="@style/regular_text_white85op" />
+			style="@style/regular_text" />
 
 
 	</com.google.android.material.textfield.TextInputLayout>
@@ -279,7 +279,7 @@
 		android:text="@string/reg_step_5_tv_choose_city"
 		android:maxLines="2"
 		android:textSize="32sp"
-		style="@style/medium_text_white85op"
+		style="@style/medium_text"
 
 		android:alpha="0"
 		android:rotationX="90"
@@ -328,7 +328,7 @@
 
 
 			android:textSize="20sp"
-			style="@style/regular_text_white85op"
+			style="@style/regular_text"
 			/>
 
 	</com.google.android.material.textfield.TextInputLayout>
@@ -344,7 +344,7 @@
 		android:textAlignment="center"
 		android:maxLines="2"
 		android:textSize="32sp"
-		style="@style/medium_text_white85op"
+		style="@style/medium_text"
 
 		android:rotationX="90"
 		android:alpha="0"
@@ -393,7 +393,7 @@
 
 			android:text="@string/default_name"
 			android:textSize="20sp"
-			style="@style/regular_text_white85op" />
+			style="@style/regular_text" />
 
 	</com.google.android.material.textfield.TextInputLayout>
 
@@ -436,7 +436,7 @@
 
 			android:text="male"
 			android:textSize="20sp"
-			style="@style/regular_text_white85op" />
+			style="@style/regular_text" />
 
 	</com.google.android.material.textfield.TextInputLayout>
 
@@ -478,7 +478,7 @@
 
 			android:text="everyone"
 			android:textSize="20sp"
-			style="@style/regular_text_white85op" />
+			style="@style/regular_text" />
 
 	</com.google.android.material.textfield.TextInputLayout>
 
@@ -520,7 +520,7 @@
 
 			android:text="12"
 			android:textSize="20sp"
-			style="@style/regular_text_white85op" />
+			style="@style/regular_text" />
 
 	</com.google.android.material.textfield.TextInputLayout>
 
@@ -561,7 +561,7 @@
 
 			android:text="Krasnoyarsk"
 			android:textSize="20sp"
-			style="@style/regular_text_white85op" />
+			style="@style/regular_text" />
 
 	</com.google.android.material.textfield.TextInputLayout>
 

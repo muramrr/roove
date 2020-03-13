@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 12.03.20 20:33
+  ~ Last modified 13.03.20 17:56
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,6 +37,7 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toTopOf="@id/tvProfilePlaceTitle"
+			app:layout_constraintEnd_toEndOf="parent"
 			tools:ignore="ContentDescription" />
 
 		<TextView
@@ -46,7 +47,7 @@
 			android:ellipsize="end"
 			android:maxLines="2"
 
-			android:text="@{bindItem.short_title, default = `Place title`}"
+			android:text="@{bindItem.short_title, default = `PLACE TITLE`}"
 			android:textAlignment="center"
 			android:textSize="16sp"
 
@@ -55,7 +56,7 @@
 			app:layout_constraintTop_toBottomOf="@id/ivProfilePlaceImage"
 			app:layout_constraintBottom_toBottomOf="parent"
 
-			style="@style/regular_text_white85op" />
+			style="@style/regular_text" />
 
 
 	</androidx.constraintlayout.widget.ConstraintLayout>

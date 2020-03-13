@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 12.03.20 15:44
+  ~ Last modified 13.03.20 16:42
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,30 +25,34 @@
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/colorPrimaryDark">
+		android:background="@color/colorPrimaryDark"
+		>
 
 		<com.google.android.material.appbar.AppBarLayout
 			android:id="@+id/appBarPlaceDetailed"
 			android:layout_width="match_parent"
-			android:layout_height="@dimen/collapseBarHeight"
+			android:layout_height="wrap_content"
+			app:paddingTopSystemWindowInsets="@{true}"
 			>
 
 			<com.google.android.material.appbar.CollapsingToolbarLayout
 				android:id="@+id/collapseBarPlaceDetailed"
 				android:layout_width="match_parent"
-				android:layout_height="match_parent"
+				android:layout_height="@dimen/collapseBarHeight"
+
 				app:collapsedTitleTextAppearance="@style/ToolbarTitle"
 				app:contentScrim="@color/colorPrimary"
 				app:expandedTitleTextAppearance="@style/CollapsingToolbarExpandedTitleWhite"
 
 				app:layout_scrollFlags="scroll|exitUntilCollapsed"
-				app:title="@{viewModel.placeDetailed.short_title}">
+				app:title="@{viewModel.placeDetailed.short_title}"
+				>
 
 				<androidx.viewpager2.widget.ViewPager2
 					android:id="@+id/viewPagerPlaceDetailedPhotos"
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
-					android:background="@color/colorPrimary" />
+					/>
 
 				<com.google.android.material.tabs.TabLayout
 					android:id="@+id/tlDotsIndicatorPlace"
@@ -56,7 +60,7 @@
 					android:layout_height="10dp"
 					android:layout_gravity="bottom"
 					android:layout_marginBottom="8dp"
-					android:background="@color/transparent"
+					android:background="@null"
 
 					app:tabBackground="@drawable/tab_dot_unselected_state"
 					app:tabIndicator="@drawable/tab_dot_selection_indicator"
@@ -97,7 +101,7 @@
 
 					android:text="Описание"
 					android:textSize="22sp"
-					style="@style/medium_text_white85op"
+					style="@style/medium_text"
 
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintEnd_toEndOf="parent"
@@ -116,7 +120,7 @@
 
 					android:text="@{viewModel.placeDetailed.description}"
 					android:textSize="16sp"
-					style="@style/regular_text_white85op"
+					style="@style/regular_text"
 
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintEnd_toEndOf="parent"
@@ -129,16 +133,14 @@
 					android:id="@+id/tvPlaceDetailedFullDescription"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-
 					android:lineSpacingExtra="10sp"
 					android:maxLines="1"
-
 					android:paddingStart="@dimen/general_margin_16"
 					android:paddingEnd="@dimen/general_margin_16"
 
 					android:text="@{viewModel.placeDetailed.body_text}"
 					android:textSize="16sp"
-					style="@style/regular_text_white85op"
+					style="@style/regular_text"
 
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintEnd_toEndOf="parent"
@@ -175,11 +177,11 @@
 			android:text="Хочу посетить"
 			android:textAlignment="center"
 			android:textAllCaps="false"
-			android:textAppearance="@style/bold_text_white85op"
+			android:textAppearance="@style/bold_text"
 			android:textSize="14sp"
 
 			app:backgroundTint="@color/amethyst"
-			app:rippleColor="@color/black_50"
+			app:elevation="@null"
 
 			style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
 

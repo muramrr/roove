@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 07.03.20 17:50
+  ~ Last modified 13.03.20 17:00
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,13 +26,12 @@
 		android:layout_height="300dp"
 		android:layout_marginStart="@dimen/card_margin_fix_rview_8"
 		android:layout_marginBottom="@dimen/card_margin_fix_rview_8"
-		app:cardBackgroundColor="@color/colorPrimary"
+		app:cardBackgroundColor="@color/transparent"
 		app:cardCornerRadius="10dp">
 
 		<ImageView
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:background="@color/colorAccentDark"
 			android:contentDescription="@string/description_user_photo"
 			android:scaleType="centerCrop"
 
@@ -43,7 +42,7 @@
 		<ImageView
 			android:id="@+id/pager_container_image_gradient"
 			android:layout_width="match_parent"
-			android:layout_height="100dp"
+			android:layout_height="50dp"
 			android:layout_gravity="bottom"
 			android:scaleType="centerCrop"
 			android:src="@drawable/gradient_transparent"
@@ -72,7 +71,7 @@
 
 			android:text="@{bindItem.baseUserInfo.name, default = @string/default_name}"
 			android:textSize="20sp"
-			style="@style/regular_text_white85op"/>
+			style="@style/regular_text"/>
 
 
 	</androidx.cardview.widget.CardView>

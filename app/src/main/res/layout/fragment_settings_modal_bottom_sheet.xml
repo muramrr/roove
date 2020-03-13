@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 06.03.20 17:30
+  ~ Last modified 13.03.20 14:40
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,7 @@
 
 		android:text="Show ages:"
 		android:textSize="24sp"
-		style="@style/medium_text_white85op"
+		style="@style/medium_text"
 
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -83,7 +83,7 @@
 
 		android:text="Show me:"
 		android:textSize="24sp"
-		style="@style/medium_text_white85op"
+		style="@style/medium_text"
 
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -116,7 +116,7 @@
 			android:text="@string/genderMale"
 			android:textSize="20sp"
 			android:textAllCaps="false"
-			android:textAppearance="@style/light_text_white85op"
+			android:textAppearance="@style/light_text"
 			android:textColor="@color/white_tint_color"
 
 			app:backgroundTint="@color/lolite_checked_tint"
@@ -133,7 +133,7 @@
 
 			android:text="@string/genderFemale"
 			android:textSize="20sp"
-			android:textAppearance="@style/light_text_white85op"
+			android:textAppearance="@style/light_text"
 			android:textColor="@color/white_tint_color"
 
 			app:backgroundTint="@color/lolite_checked_tint"

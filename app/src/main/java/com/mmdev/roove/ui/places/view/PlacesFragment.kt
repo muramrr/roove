@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 18:48
+ * Last modified 13.03.20 15:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,11 +17,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.roove.R
+import com.mmdev.roove.utils.addSystemTopPadding
 import kotlinx.android.synthetic.main.fragment_places.*
 
 class PlacesFragment: Fragment(R.layout.fragment_places) {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+		tabLayoutPlaces.addSystemTopPadding()
 
 		viewPagerPlaces.apply {
 			(getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER

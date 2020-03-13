@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 12.03.20 16:32
+  ~ Last modified 13.03.20 17:33
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -80,6 +80,7 @@
 	<string name="genderEveryone">everyone</string>
 	<string name="genderFemale">female</string>
 	<string name="toast_update_success">Successfully updated</string>
+	<string name="log_in_with_facebook">Log in with Facebook</string>
 
 
 </resources>

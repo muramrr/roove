@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 20:41
+ * Last modified 13.03.20 14:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,7 +37,7 @@ import kotlinx.android.synthetic.main.fragment_profile.*
  * This is the documentation block about the class
  */
 
-class ProfileFragment: BaseFragment<RemoteRepoViewModel>(true) {
+class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
 
 	private val userPhotosAdapter = ImagePagerAdapter(listOf())

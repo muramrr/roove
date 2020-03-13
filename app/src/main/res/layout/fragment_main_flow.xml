@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 05.03.20 18:39
+  ~ Last modified 13.03.20 16:27
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@
 		android:id="@+id/containerMain"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		app:paddingTopSystemWindowInsets = "@{true}">
+		>
 
 		<fragment
 			android:id="@+id/mainHostFragment"
@@ -40,7 +40,8 @@
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent">
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/mainHostFragment">
 
 			<com.google.android.material.bottomnavigation.BottomNavigationView
 				android:id="@+id/bottomNavigationView"
@@ -51,7 +52,7 @@
 				app:itemTextColor="@color/white_tint_checked"
 				app:labelVisibilityMode="labeled"
 				app:menu="@menu/bottom_navigation_menu"
-				app:paddingBottomSystemWindowInsets = "@{true}"
+				app:paddingBottomSystemWindowInsets="@{true}"
 				/>
 
 		</androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -66,9 +67,8 @@
 			app:backgroundTint="@color/lolite_selected_tint"
 			app:tint="@color/white_tint_selected"
 
-			app:elevation="2dp"
+			app:elevation="@null"
 			app:fabSize="auto"
-
 			app:layout_anchorGravity="top|center"
 
 			app:layout_constraintStart_toStartOf="parent"
