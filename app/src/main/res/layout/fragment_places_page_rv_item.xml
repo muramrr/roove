@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 07.03.20 15:11
+  ~ Last modified 13.03.20 17:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,14 +27,13 @@
 		android:layout_height="300dp"
 		android:layout_marginStart="@dimen/card_margin_fix_rview_8"
 		android:layout_marginBottom="@dimen/card_margin_fix_rview_8"
-		app:cardBackgroundColor="@color/colorPrimary"
+		app:cardBackgroundColor="@color/transparent"
 		app:cardCornerRadius="10dp">
 
 		<ImageView
 			android:id="@+id/ivImageHolder"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:background="@color/colorAccentDark"
 			android:scaleType="centerCrop"
 
 			app:bindImageUrl="@{bindItem.images[0].image}"
@@ -71,9 +70,9 @@
 			android:layout_gravity="center|bottom"
 			android:layout_margin="@dimen/general_margin_8"
 
-			android:text="@{bindItem.short_title, default = @string/default_name}"
+			android:text="@{bindItem.short_title, default = `Place title`}"
 			android:textSize="18sp"
-			style="@style/regular_text_white85op"
+			style="@style/regular_text"
 			/>
 
 

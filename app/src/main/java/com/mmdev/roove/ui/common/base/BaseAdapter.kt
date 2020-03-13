@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:45
+ * Last modified 13.03.20 18:02
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,6 +47,8 @@ abstract class BaseAdapter<T>:
 	open fun setOnItemClickListener(itemClickListener: OnItemClickListener<T>) {
 		mClickListener = itemClickListener
 	}
+
+	override fun onFailedToRecycleView(holder: BaseViewHolder<T>): Boolean { return true }
 
 	inner class BaseViewHolder<T>(private val binding: ViewDataBinding):
 			RecyclerView.ViewHolder(binding.root){

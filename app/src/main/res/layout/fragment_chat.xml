@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 29.02.20 17:48
+  ~ Last modified 13.03.20 17:17
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,12 +28,13 @@
 		android:layout_height="match_parent"
 		android:background="@color/colorPrimaryDark"
 		app:paddingBottomSystemWindowInsets="@{true}"
+
 		>
 
 		<androidx.appcompat.widget.Toolbar
 			android:id="@+id/toolbarChat"
 			android:layout_width="match_parent"
-			android:layout_height="?actionBarSize"
+			android:layout_height="wrap_content"
 			android:background="@color/colorPrimary"
 
 			app:menu="@menu/chat_menu"
@@ -43,16 +44,18 @@
 			app:titleTextColor="@color/white_85"
 			app:title="@string/default_name"
 
+			app:paddingTopSystemWindowInsets="@{true}"
+
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/rvMessageList"
 			/>
 
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/rvMessageList"
 			android:layout_height="0dp"
 			android:layout_width="0dp"
-			android:background="@color/colorPrimaryDark"
 			android:focusable="true"
 			android:overScrollMode="never"
 			android:scrollbars="none"
@@ -88,11 +91,12 @@
 			app:cornerRadius="50dp"
 			app:icon="@drawable/ic_chat_attachment_24dp"
 			app:iconTint="@color/white_50"
-			app:rippleColor="@color/black_50"
+
 			style="@style/MyMaterialIconButton"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/rvMessageList"
 			app:layout_constraintEnd_toStartOf="@id/edTextMessageInput"
 			/>
 
@@ -109,10 +113,11 @@
 
 			android:textColorHint="@color/white_50"
 			android:textSize="18sp"
-			style="@style/regular_text_white85op"
+			style="@style/regular_text"
 
 			tools:ignore="Autofill"
 
+			app:layout_constraintTop_toBottomOf="@id/rvMessageList"
 			app:layout_constraintStart_toEndOf="@id/btnSendAttachment"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@id/btnSendMessage"/>
@@ -127,20 +132,19 @@
 			app:cornerRadius="50dp"
 			app:icon="@drawable/ic_chat_send_24dp"
 			app:iconTint="@color/chat_send_button_icon_tint"
-			app:rippleColor="@color/black_50"
+
 			style="@style/MyMaterialIconButton"
 
 			app:layout_constraintStart_toEndOf="@id/edTextMessageInput"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-
+			app:layout_constraintTop_toBottomOf="@id/rvMessageList"
 			/>
 
 		<ImageView
 			android:id="@+id/ivChatLoading"
 			android:layout_width="120dp"
 			android:layout_height="120dp"
-			android:src="@drawable/loading"
 			android:visibility='@{viewModel.showLoading ? View.VISIBLE : View.GONE, default = "visible"}'
 
 			app:bindLoadingImage="@{true}"

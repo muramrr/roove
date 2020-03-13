@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 08.03.20 18:43
+  ~ Last modified 13.03.20 17:05
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,14 +27,13 @@
 		android:id="@+id/containerConversations"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/colorPrimaryDark">
+		android:background="@color/colorPrimary">
 
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/rvConversationList"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:clipToPadding="false"
-
 			android:overScrollMode="never"
 			android:scrollbars="vertical"
 
@@ -42,6 +41,8 @@
 
 			app:bindData="@{viewModel.conversationsList}"
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+			app:paddingTopSystemWindowInsets="@{true}"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
@@ -59,7 +60,7 @@
 
 			android:text="There is no started conversations...\n\nText someone first!"
 			android:textSize="24sp"
-			style="@style/regular_text_white85op"
+			style="@style/regular_text"
 
 			android:visibility='@{viewModel.showTextHelper ? View.VISIBLE : View.INVISIBLE, default = "invisible"}'
 			app:layout_constraintBottom_toBottomOf="parent"

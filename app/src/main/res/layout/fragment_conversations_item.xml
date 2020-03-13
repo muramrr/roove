@@ -2,14 +2,15 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 07.03.20 18:13
+  ~ Last modified 13.03.20 17:05
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout
+	xmlns:tools="http://schemas.android.com/tools"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -25,7 +26,6 @@
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
-		android:background="@color/colorPrimary"
 		android:padding="8dp" >
 
 
@@ -54,7 +54,7 @@
 			app:layout_constraintTop_toTopOf="@id/ivConversationItemUserPhoto"
 			app:layout_constraintBottom_toTopOf="@id/tvConversationItenLastMessage"
 
-			style="@style/bold_text_white85op" />
+			style="@style/bold_text" />
 
 		<TextView
 			android:id="@+id/tvConversationItenLastMessage"
@@ -69,7 +69,7 @@
 
 			android:text="@{bindItem.lastMessageText, default = `Some text from last message that can only rest of text`}"
 			android:textSize="16sp"
-			style="@style/light_text_white85op"
+			style="@style/light_text"
 
 			app:layout_constraintBottom_toBottomOf="@id/ivConversationItemUserPhoto"
 			app:layout_constraintEnd_toEndOf="parent"

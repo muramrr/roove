@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 03.02.20 19:22
+  ~ Last modified 13.03.20 14:40
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,7 +50,7 @@
 			android:text="@string/default_message_text"
 			android:textIsSelectable="true"
 			android:textSize="16sp"
-			style="@style/regular_text_white85op"/>
+			style="@style/regular_text"/>
 
 	</LinearLayout>
 
@@ -65,6 +65,6 @@
         android:text="@string/default_message_date"
 	    android:textColor="@color/white_25"
 	    android:textSize="8sp"
-        style="@style/regular_text_white85op" />
+        style="@style/regular_text" />
 
 </RelativeLayout>

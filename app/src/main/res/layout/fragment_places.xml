@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.03.20 18:49
+  ~ Last modified 13.03.20 15:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,14 +22,18 @@
 		android:background="@color/colorPrimaryDark"
 		android:clipToPadding="false"
 		android:overScrollMode="never"
-		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
+
 		app:tabIndicator="@color/transparent"
 		app:tabMode="scrollable"
 		app:tabRippleColor="@color/transparent"
 		app:tabSelectedTextColor="@color/white_85"
-		app:tabTextAppearance="@style/tab_text_36sp">
+		app:tabTextAppearance="@style/tab_text_36sp"
+
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/viewPagerPlaces"
+		>
 
 		<com.google.android.material.tabs.TabItem
 			android:layout_width="wrap_content"
@@ -58,6 +62,7 @@
 		android:layout_width="0dp"
 		android:layout_height="0dp"
 		android:overScrollMode="never"
+
 		app:layout_constraintTop_toBottomOf="@+id/tabLayoutPlaces"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"

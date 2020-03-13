@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 12.03.20 17:09
+  ~ Last modified 13.03.20 17:24
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,7 +37,8 @@
 			android:id="@+id/containerSettingsContent"
 			android:layout_height="match_parent"
 			android:layout_width="match_parent"
-			android:padding="@dimen/general_margin_8"
+			android:background="@color/colorPrimaryDark"
+
 			app:paddingBottomSystemWindowInsets="@{true}"
 			android:animateLayoutChanges="true">
 
@@ -52,6 +53,8 @@
 				app:spanCount="2"
 
 				app:bindData="@{viewModel.currentUser.photoURLs}"
+
+				app:paddingTopSystemWindowInsets="@{true}"
 
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -83,9 +86,10 @@
 				app:errorTextColor="@color/colorError"
 				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
 				app:layout_constraintTop_toBottomOf="@id/rvSettingsEditPhotos"
+				app:layout_constraintBottom_toTopOf="@id/toggleButtonSettingsEditGender"
 				>
 
 				<com.google.android.material.textfield.TextInputEditText
@@ -100,9 +104,10 @@
 					android:inputType="textPersonName"
 
 					android:text="@{viewModel.currentUser.baseUserInfo.name, default = @string/default_name}"
+					android:textColor="@color/white"
 					android:textCursorDrawable="@color/lolite"
 					android:textSize="20sp"
-					style="@style/regular_text_white85op" />
+					style="@style/regular_text" />
 
 			</com.google.android.material.textfield.TextInputLayout>
 
@@ -116,8 +121,8 @@
 				app:singleSelection="true"
 				app:checkedButton="@id/btnSettingsEditGenderMale"
 
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
 				app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditName"
 				app:layout_constraintBottom_toTopOf="@id/sliderSettingsEditAge">
 
@@ -130,7 +135,7 @@
 
 					android:text="@string/genderMale"
 					android:textSize="20sp"
-					android:textAppearance="@style/light_text_white85op"
+					android:textAppearance="@style/light_text"
 					android:textColor="@color/white_tint_color"
 
 					app:backgroundTint="@color/lolite_checked_tint"
@@ -147,7 +152,7 @@
 
 					android:text="@string/genderFemale"
 					android:textSize="20sp"
-					android:textAppearance="@style/light_text_white85op"
+					android:textAppearance="@style/light_text"
 					android:textColor="@color/white_tint_color"
 
 					app:backgroundTint="@color/lolite_checked_tint"
@@ -175,8 +180,8 @@
 				android:valueFrom="18"
 				android:valueTo="50"
 
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
 				app:layout_constraintTop_toBottomOf="@id/toggleButtonSettingsEditGender"
 				app:layout_constraintBottom_toTopOf="@id/tvSettingsEditAge"
 				/>
@@ -189,10 +194,10 @@
 				android:gravity="center"
 				android:text="@{`Age: ` + viewModel.currentUser.baseUserInfo.age}"
 				android:textSize="30sp"
-				style="@style/light_text_white85op"
+				style="@style/light_text"
 
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
 				app:layout_constraintTop_toBottomOf="@id/sliderSettingsEditAge"
 				app:layout_constraintBottom_toTopOf="@id/layoutSettingsEditCity"
 				/>
@@ -213,8 +218,8 @@
 
 				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
 
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
 				app:layout_constraintTop_toBottomOf="@id/tvSettingsEditAge"
 				app:layout_constraintBottom_toTopOf="@id/layoutSettingsEditDescription"
 				>
@@ -233,8 +238,9 @@
 					android:inputType="text"
 
 					android:text="@{viewModel.currentUser.cityToDisplay}"
+					android:textColor="@color/white"
 					android:textSize="20sp"
-					style="@style/regular_text_white85op"
+					style="@style/regular_text"
 					/>
 
 			</com.google.android.material.textfield.TextInputLayout>
@@ -260,8 +266,8 @@
 				app:errorTextColor="@color/colorError"
 				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
 				app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditCity"
 				app:layout_constraintBottom_toTopOf="@id/btnSettingsEditSave"
 				>
@@ -283,10 +289,11 @@
 
 					android:text="@{viewModel.currentUser.aboutText}"
 					android:textAlignment="textStart"
+					android:textColor="@color/white"
 					android:textCursorDrawable="@color/lolite"
 					android:textSize="18sp"
 
-					style="@style/regular_text_white85op" />
+					style="@style/regular_text" />
 
 
 			</com.google.android.material.textfield.TextInputLayout>
@@ -305,15 +312,30 @@
 
 				app:backgroundTint="@color/amethyst_tint_enabled"
 				app:rippleColor="@color/black_50"
-				android:textAppearance="@style/bold_text_white85op"
+				android:textAppearance="@style/bold_text"
 
 				style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditDescription"
 				/>
 
+			<!-- left padding -->
+			<androidx.constraintlayout.widget.Guideline
+				android:id="@+id/guidelineStart"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				app:layout_constraintGuide_begin="@dimen/general_margin_8" />
+
+			<!-- right padding -->
+			<androidx.constraintlayout.widget.Guideline
+				android:id="@+id/guidelineEnd"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				app:layout_constraintGuide_end="@dimen/general_margin_8" />
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 

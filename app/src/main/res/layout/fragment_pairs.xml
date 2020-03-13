@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 07.03.20 18:13
+  ~ Last modified 13.03.20 15:20
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,7 +34,6 @@
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:layout_marginEnd="@dimen/general_margin_8"
-			android:background="@color/colorPrimaryDark"
 			android:clipToPadding="false"
 			android:overScrollMode="never"
 			android:visibility='@{viewModel.showTextHelper ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
@@ -42,6 +41,8 @@
 			app:bindData="@{viewModel.matchedUsersList}"
 			app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
 			app:spanCount="2"
+
+			app:paddingTopSystemWindowInsets="@{true}"
 
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +61,7 @@
 			android:textSize="24sp"
 			android:visibility='@{viewModel.showTextHelper ? View.VISIBLE : View.INVISIBLE, default = "invisible"}'
 
-			style="@style/regular_text_white85op"
+			style="@style/regular_text"
 
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"

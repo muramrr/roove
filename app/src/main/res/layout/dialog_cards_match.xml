@@ -3,7 +3,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 29.02.20 17:52
+  ~ Last modified 13.03.20 14:40
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,7 +42,7 @@
 
 			android:text="ITS A MATCH!"
 			android:textSize="24sp"
-			style="@style/regular_text_white85op"
+			style="@style/regular_text"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -80,7 +80,7 @@
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintVertical_bias="0.7"
-			style="@style/medium_text_white85op"/>
+			style="@style/medium_text"/>
 
 		<TextView
 			android:id="@+id/tvMatchDialogBack"

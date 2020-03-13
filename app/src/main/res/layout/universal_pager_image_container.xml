@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 11.03.20 19:12
+  ~ Last modified 13.03.20 16:18
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,6 @@
 			android:id="@+id/image_container_iv"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			android:background="@color/colorPrimaryDark"
 			android:scaleType="centerCrop"
 
 			app:bindImageUrl="@{bindItem}"
@@ -42,7 +41,7 @@
 
 		<ImageView
 			android:id="@+id/pager_container_image_gradient"
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="100dp"
 			android:layout_gravity="bottom"
 			android:scaleType="centerCrop"
@@ -58,7 +57,6 @@
 			android:id="@+id/pbImageLoading"
 			android:layout_width="150dp"
 			android:layout_height="150dp"
-			android:layout_gravity="center"
 			android:indeterminate="false"
 			android:minHeight="32dp"
 			android:minWidth="32dp"

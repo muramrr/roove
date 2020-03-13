@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 14.12.19 19:39
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 13.03.20 17:45
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,11 +19,15 @@
 
 
 	<ImageView
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
 		android:scaleType="centerCrop"
 		android:src="@drawable/background"
-		tools:ignore="ContentDescription" />
+		tools:ignore="ContentDescription"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent"/>
 
 
 	<TextView
@@ -48,14 +52,16 @@
 		app:layout_constraintVertical_bias="0.6"
 		style="@style/auth_slogan2"/>
 
+
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/btnFacebookLoginDelegate"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:padding="@dimen/general_margin_16"
-		android:fontFamily="@font/rubik_medium"
-		android:text="Log in with Facebook"
+
+		android:text="@string/log_in_with_facebook"
 		android:textAllCaps="false"
+		android:textAppearance="@style/medium_text"
 		android:textSize="18sp"
 
 		app:backgroundTint="@color/myFacebookColor"
@@ -71,8 +77,8 @@
 
 	<com.facebook.login.widget.LoginButton
 		android:id="@+id/btnFacebookLogin"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
 		android:visibility="gone"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />

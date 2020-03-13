@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 12.03.20 19:24
+  ~ Last modified 13.03.20 17:12
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,13 +37,16 @@
 		<com.google.android.material.appbar.AppBarLayout
 			android:id="@+id/appBarProfile"
 			android:layout_width="match_parent"
-			android:layout_height="@dimen/collapseBarHeight"
-			android:theme="@style/AppTheme.AppBarOverlay" >
+			android:layout_height="wrap_content"
+			android:theme="@style/AppTheme.AppBarOverlay"
+			app:paddingTopSystemWindowInsets="@{true}"
+			>
 
 			<com.google.android.material.appbar.CollapsingToolbarLayout
 				android:id="@+id/collapseBarProfile"
 				android:layout_width="match_parent"
-				android:layout_height="match_parent"
+				android:layout_height="@dimen/collapseBarHeight"
+
 				app:collapsedTitleTextAppearance="@style/ToolbarTitle"
 				app:contentScrim="@color/colorPrimary"
 				app:expandedTitleTextAppearance="@style/CollapsingToolbarExpandedTitleWhite"
@@ -55,8 +58,7 @@
 				<androidx.viewpager2.widget.ViewPager2
 					android:id="@+id/viewPagerProfilePhotos"
 					android:layout_width="match_parent"
-					android:layout_height="match_parent"
-					android:background="@color/colorPrimary" />
+					android:layout_height="match_parent" />
 
 				<com.google.android.material.tabs.TabLayout
 					android:id="@+id/tlDotsIndicatorProfile"
@@ -64,7 +66,7 @@
 					android:layout_height="10dp"
 					android:layout_gravity="bottom"
 					android:layout_marginBottom="8dp"
-					android:background="@color/transparent"
+					android:background="@null"
 
 					app:tabBackground="@drawable/tab_dot_unselected_state"
 					app:tabIndicator="@drawable/tab_dot_selection_indicator"
@@ -104,7 +106,7 @@
 
 					android:text="About"
 					android:textSize="24sp"
-					style="@style/medium_text_white85op"
+					style="@style/medium_text"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -120,7 +122,7 @@
 
 					android:text="@{viewModel.retrievedUserItem.aboutText}"
 					android:textSize="18sp"
-					style="@style/regular_text_white85op"
+					style="@style/regular_text"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -136,7 +138,7 @@
 
 					android:text="Хочу сходить"
 					android:textSize="24sp"
-					style="@style/medium_text_white85op"
+					style="@style/medium_text"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -191,8 +193,9 @@
 			android:layout_margin="@dimen/general_margin_16"
 			android:src="@drawable/ic_profile_send_message_24dp"
 			android:visibility='@{isFabVisible ? View.VISIBLE : View.GONE, default = "gone"}'
+
 			app:backgroundTint="@color/amethyst"
-			app:rippleColor="@color/black_50"
+
 			app:layout_anchor="@id/appBarProfile"
 			app:layout_anchorGravity="bottom|right|end" />
 
