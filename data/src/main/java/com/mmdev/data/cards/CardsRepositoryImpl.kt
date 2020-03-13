@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.03.20 18:18
+ * Last modified 13.03.20 20:10
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,6 +39,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	private val likedList = mutableListOf<String>()
 	private val matchedList = mutableListOf<String>()
 	private val skippedList = mutableListOf<String>()
+	private val filteredUsersList = mutableListOf<UserItem>()
 
 
 	private lateinit var paginateCardsQuery: Query
@@ -162,10 +163,11 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 	/* return filtered all users list from already written ids as List<UserItem> */
 	private fun filterUsers(usersItemsList: List<UserItem>, ids: List<String>): List<UserItem>{
-		val filteredUsersList = mutableListOf<UserItem>()
+
 		if (usersItemsList.isNotEmpty())
 			for (user in usersItemsList)
-				if (!ids.contains(user.baseUserInfo.userId))
+				if (!ids.contains(user.baseUserInfo.userId) &&
+				    user.baseUserInfo.userId != currentUser.baseUserInfo.userId)
 					filteredUsersList.add(user)
 		//Log.wtf(TAG, "filtered users: ${filteredUsersList.size}")
 		return filteredUsersList.shuffled()
@@ -176,11 +178,9 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	* GET LIKED USERS IDS LIST
 	*/
 	private fun getLikedList(): Single<List<String>> {
-		//Log.wtf(TAG, "get liked called")
 		return Single.create(SingleOnSubscribe<List<String>>{ emitter ->
 			val query = currentUserDocRef
 				.collection(USER_LIKED_COLLECTION_REFERENCE)
-
 			query
 				.get()
 				.addOnSuccessListener {
@@ -189,7 +189,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 							if (!likedList.contains(doc.id))
 								likedList.add(doc.id)
 						}
-						//Log.wtf(TAG, "likes on complete, size = " + likedList.size)
 
 						emitter.onSuccess(likedList)
 					}
@@ -208,7 +207,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		return Single.create(SingleOnSubscribe<List<String>> { emitter ->
 			val query = currentUserDocRef
 				.collection(USER_MATCHED_COLLECTION_REFERENCE)
-
 			query
 				.get()
 				.addOnSuccessListener {
@@ -217,9 +215,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 							if (!matchedList.contains(doc.id))
 								matchedList.add(doc.id)
 						}
-						//Log.wtf(TAG, "matches on complete, size = " + matchedList.size)
 						emitter.onSuccess(matchedList)
-
 					}
 					else emitter.onSuccess(matchedList) }
 				.addOnFailureListener { emitter.onError(it) }
@@ -245,10 +241,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 								skippedList.add(doc.id)
 						}
 
-						//Log.wtf(TAG, "skips on complete, size = " + skippedList.size)
-
 						emitter.onSuccess(skippedList)
-						//localStorageLists.saveSkippedList(skippedList)
 					}
 					else emitter.onSuccess(skippedList)
 				}
