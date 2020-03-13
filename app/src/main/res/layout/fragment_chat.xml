@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 17:17
+  ~ Last modified 13.03.20 20:45
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,7 +41,7 @@
 			app:navigationIcon="@drawable/ic_arrow_back_24dp"
 
 			app:titleTextAppearance="@style/ToolbarTitle"
-			app:titleTextColor="@color/white_85"
+			app:titleTextColor="@color/white"
 			app:title="@string/default_name"
 
 			app:paddingTopSystemWindowInsets="@{true}"

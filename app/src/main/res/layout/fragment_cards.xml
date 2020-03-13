@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 15:15
+  ~ Last modified 13.03.20 20:38
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,7 +35,9 @@
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:clipToPadding="false"
-			android:padding="@dimen/general_margin_16"
+			android:paddingStart="@dimen/general_margin_16"
+			android:paddingEnd="@dimen/general_margin_16"
+			android:paddingBottom="@dimen/general_margin_8"
 			android:visibility='@{viewModel.showLoading ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
 
 			app:paddingTopSystemWindowInsets="@{true}"
@@ -52,8 +54,7 @@
 	        android:id="@+id/ivCardLoading"
 	        android:layout_width="120dp"
 	        android:layout_height="120dp"
-		    android:visibility='@{viewModel.showLoading ? View.VISIBLE : View.GONE, default = "visible"}'
-		    app:bindLoadingImage="@{true}"
+		    app:bindLoadingImage="@{viewModel.showLoading}"
 
 	        app:layout_constraintBottom_toBottomOf="parent"
 	        app:layout_constraintEnd_toEndOf="parent"
