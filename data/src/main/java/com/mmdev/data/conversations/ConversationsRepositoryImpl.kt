@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.03.20 17:31
+ * Last modified 14.03.20 17:49
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,66 +10,28 @@
 
 package com.mmdev.data.conversations
 
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
+
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.conversations.repository.ConversationsRepository
-import com.mmdev.business.core.UserItem
+import com.mmdev.data.core.BaseRepositoryImpl
+import com.mmdev.data.user.UserWrapper
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * This is the documentation block about the class
  */
 
+@Singleton
 class ConversationsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
-                                                      currentUser: UserItem):
-		ConversationsRepository {
+                                                      private val userWrapper: UserWrapper):
+		ConversationsRepository, BaseRepositoryImpl(firestore, userWrapper) {
 
-	private var currentUserDocRef: DocumentReference
-	private var initialConversationsQuery: Query
-	private var currentUserId: String
-
-	init {
-		currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUser.baseUserInfo.city)
-			.collection(currentUser.baseUserInfo.gender)
-			.document(currentUser.baseUserInfo.userId)
-
-		currentUserId = currentUser.baseUserInfo.userId
-
-		initialConversationsQuery = currentUserDocRef
-			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.orderBy(CONVERSATION_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
-			.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
-			.limit(20)
-	}
-
-	companion object {
-		// firestore users references
-		private const val USERS_COLLECTION_REFERENCE = "users"
-		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
-		private const val USER_SKIPPED_COLLECTION_REFERENCE = "skipped"
-
-		private const val USER_ID_FIELD = "userId"
-
-		// firestore conversations reference
-		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
-		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
-		private const val CONVERSATION_TIMESTAMP_FIELD = "lastMessageTimestamp"
-		private const val CONVERSATION_DELETED_FIELD = "conversationDeleted"
-
-		private const val TAG = "mylogs_ConverRepoImpl"
-	}
-
-
-	private lateinit var paginateLastConversationLoaded: DocumentSnapshot
-	private lateinit var paginateConversationsQuery: Query
 
 	override fun deleteConversation(conversationItem: ConversationItem): Completable =
 		Completable.create { emitter ->
@@ -129,7 +91,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				.get()
 				.addOnSuccessListener {
 					if (!it.isEmpty) {
-						val conversationsList = ArrayList<ConversationItem>()
+						val conversationsList = mutableListOf<ConversationItem>()
 						for (doc in it) {
 							conversationsList.add(doc.toObject(ConversationItem::class.java))
 						}
@@ -151,7 +113,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				.get()
 				.addOnSuccessListener {
 					if (!it.isEmpty) {
-						val paginateConversationsList = ArrayList<ConversationItem>()
+						val paginateConversationsList = mutableListOf<ConversationItem>()
 						for (doc in it) {
 							paginateConversationsList.add(doc.toObject(ConversationItem::class.java))
 						}
@@ -166,7 +128,5 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
-
-
 
 }

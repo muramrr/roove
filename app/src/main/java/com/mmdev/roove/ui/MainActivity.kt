@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 17:52
+ * Last modified 14.03.20 16:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -75,16 +75,13 @@ class MainActivity: AppCompatActivity() {
 		authViewModel.getAuthStatus().observe(this, Observer {
 			if (it == false) {
 				showAuthFlowFragment()
-				Log.wtf(TAG, "USER IS NOT LOGGED IN")
 			}
 			else {
-				showMainFlowFragment()
 				remoteRepoViewModel.fetchUserItem()
 				remoteRepoViewModel.actualCurrentUserItem.observe(this, Observer {
 					actualUserItem -> sharedViewModel.setCurrentUser(actualUserItem)
+					showMainFlowFragment()
 				})
-
-				Log.wtf(TAG, "USER IS LOGGED IN")
 			}
 		})
 		authViewModel.showProgress.observe(this, Observer {
@@ -109,6 +106,7 @@ class MainActivity: AppCompatActivity() {
 
 	// show auth fragment
 	private fun showAuthFlowFragment() {
+		Log.wtf(TAG, "USER IS NOT LOGGED IN")
 		supportFragmentManager.beginTransaction().remove(MainFlowFragment()).commitNow()
 		supportFragmentManager.beginTransaction().apply {
 			replace(R.id.main_activity_container,
@@ -121,6 +119,7 @@ class MainActivity: AppCompatActivity() {
 
 	// show main fragment
 	private fun showMainFlowFragment() {
+		Log.wtf(TAG, "USER IS LOGGED IN")
 		supportFragmentManager.beginTransaction().remove(AuthFlowFragment()).commitNow()
 		supportFragmentManager.beginTransaction().apply {
 				replace(R.id.main_activity_container,
@@ -129,7 +128,6 @@ class MainActivity: AppCompatActivity() {
 				commit()
 			}
 		ivMainSplashLogo.visibility = View.GONE
-
 	}
 
 }

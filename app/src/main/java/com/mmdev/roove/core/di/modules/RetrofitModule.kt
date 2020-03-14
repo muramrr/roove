@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 16:58
+ * Last modified 14.03.20 16:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package com.mmdev.roove.core.di.modules
 
-import com.mmdev.data.events.EventsApi
 import com.mmdev.data.places.PlacesApi
 import dagger.Module
 import dagger.Provides
@@ -35,9 +34,9 @@ class RetrofitModule {
 	 * @param retrofit the Retrofit object used to instantiate the service
 	 * @return the Post service implementation.
 	 */
-	@Provides
-	@Singleton
-	fun eventsApi(retrofit: Retrofit): EventsApi = retrofit.create(EventsApi::class.java)
+//	@Provides
+//	@Singleton
+//	fun eventsApi(retrofit: Retrofit): EventsApi = retrofit.create(EventsApi::class.java)
 
 	@Provides
 	@Singleton

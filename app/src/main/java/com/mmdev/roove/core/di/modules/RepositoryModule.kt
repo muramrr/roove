@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.02.20 18:11
+ * Last modified 14.03.20 16:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.conversations.repository.ConversationsRepository
-import com.mmdev.business.events.repository.EventsRepository
 import com.mmdev.business.local.LocalUserRepository
 import com.mmdev.business.pairs.PairsRepository
 import com.mmdev.business.places.repository.PlacesRepository
@@ -23,7 +22,6 @@ import com.mmdev.data.auth.AuthRepositoryImpl
 import com.mmdev.data.cards.CardsRepositoryImpl
 import com.mmdev.data.chat.ChatRepositoryImpl
 import com.mmdev.data.conversations.ConversationsRepositoryImpl
-import com.mmdev.data.events.EventsRepositoryImpl
 import com.mmdev.data.pairs.PairsRepositoryImpl
 import com.mmdev.data.places.PlacesRepositoryImpl
 import com.mmdev.data.user.UserRepositoryLocal
@@ -40,22 +38,23 @@ class RepositoryModule {
 	fun authRepository(repository: AuthRepositoryImpl): AuthRepository = repository
 
 	@Provides
+	@Singleton
 	fun cardsRepository(repository: CardsRepositoryImpl): CardsRepository = repository
 
 	@Provides
+	@Singleton
 	fun chatRepository(repository: ChatRepositoryImpl): ChatRepository = repository
 
 	@Provides
+	@Singleton
 	fun conversationsRepository(repository: ConversationsRepositoryImpl): ConversationsRepository = repository
 
 	@Provides
 	@Singleton
-	fun eventsRepository(repository: EventsRepositoryImpl): EventsRepository = repository
-
-	@Provides
 	fun pairsRepository(repository: PairsRepositoryImpl): PairsRepository = repository
 
 	@Provides
+	@Singleton
 	fun placesRepository(repository: PlacesRepositoryImpl): PlacesRepository = repository
 
 	@Provides

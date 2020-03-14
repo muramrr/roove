@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 06.03.20 18:57
+ * Last modified 14.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,6 @@ import com.mmdev.business.auth.AuthUserItem
 import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
-import com.mmdev.data.user.UserRepositoryLocal
 import com.mmdev.data.user.UserRepositoryRemoteImpl
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
@@ -29,7 +28,6 @@ import javax.inject.Singleton
 class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
                                              private val db: FirebaseFirestore,
                                              private val fbLogin: LoginManager,
-                                             private val localRepo: UserRepositoryLocal,
                                              private val remoteRepo: UserRepositoryRemoteImpl): AuthRepository {
 
 	companion object {
@@ -82,7 +80,6 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	 */
 	override fun registerUser(userItem: UserItem): Completable =
 		remoteRepo.createUserOnRemote(userItem)
-			.doOnComplete { localRepo.saveUserInfo(userItem) }
 			.subscribeOn(Schedulers.io())
 
 
@@ -135,7 +132,6 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 								//if full user info exists in db => return continue reg flag false
 								if (fullUserDoc.exists()) {
 									val retrievedUser = fullUserDoc.toObject(UserItem::class.java)!!
-									localRepo.saveUserInfo(retrievedUser)
 									emitter.onSuccess(hashMapOf(false to retrievedUser.baseUserInfo))
 								}
 								//auth user exists but full is not => return continue reg flag "true"

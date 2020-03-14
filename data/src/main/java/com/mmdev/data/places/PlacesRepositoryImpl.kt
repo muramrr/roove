@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:57
+ * Last modified 14.03.20 16:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,18 +10,21 @@
 
 package com.mmdev.data.places
 
-import com.mmdev.business.core.UserItem
 import com.mmdev.business.places.repository.PlacesRepository
+import com.mmdev.data.user.UserWrapper
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * This is the documentation block about the class
  */
 
-
+@Singleton
 class PlacesRepositoryImpl @Inject constructor(private val placesApi: PlacesApi,
-                                               private val currentUser: UserItem):
+                                               userWrapper: UserWrapper):
 		PlacesRepository {
+
+	private val currentUser = userWrapper.getUser()
 
 	//current time
 	private val unixTime = System.currentTimeMillis() / 1000L
