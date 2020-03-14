@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 20:05
+ * Last modified 14.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,12 +21,13 @@ import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
-import com.mmdev.business.core.UserItem
+import com.mmdev.data.user.UserWrapper
 import io.reactivex.*
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.collections.ArrayList
 
 /**
@@ -35,11 +36,12 @@ import kotlin.collections.ArrayList
  * @link https://firebase.google.com/docs/firestore/query-data/listen
  */
 
+@Singleton
+class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
+                                             private val storage: StorageReference,
+                                             userWrapper: UserWrapper): ChatRepository {
 
-class ChatRepositoryImpl @Inject constructor(private val currentUser: UserItem,
-                                             private val firestore: FirebaseFirestore,
-                                             private val storage: StorageReference): ChatRepository{
-
+	private val currentUser = userWrapper.getUser()
 	private var currentUserDocRef: DocumentReference
 
 	init {

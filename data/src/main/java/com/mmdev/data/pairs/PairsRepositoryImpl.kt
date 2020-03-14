@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.03.20 17:31
+ * Last modified 14.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,23 +14,26 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.mmdev.business.core.UserItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.pairs.PairsRepository
+import com.mmdev.data.user.UserWrapper
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * This is the documentation block about the class
  */
 
+@Singleton
 class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
-                                              currentUser: UserItem): PairsRepository {
+                                              userWrapper: UserWrapper):
+		PairsRepository {
 
-
+	private val currentUser = userWrapper.getUser()
 	private var currentUserDocRef: DocumentReference
 	private var currentUserId: String
 	private var initialMatchesQuery: Query
@@ -115,7 +118,7 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				.get()
 				.addOnSuccessListener {
 					if (!it.isEmpty) {
-						val matchesList = ArrayList<MatchedUserItem>()
+						val matchesList = mutableListOf<MatchedUserItem>()
 						for (doc in it) {
 							matchesList.add(doc.toObject(MatchedUserItem::class.java))
 						}

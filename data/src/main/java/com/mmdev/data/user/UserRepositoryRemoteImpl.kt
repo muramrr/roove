@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 15:56
+ * Last modified 14.03.20 16:56
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,7 +38,8 @@ import javax.inject.Singleton
 class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: FirebaseInstanceId,
                                                    private val db: FirebaseFirestore,
                                                    private val localRepo: UserRepositoryLocal,
-                                                   private val storage: StorageReference):
+                                                   private val storage: StorageReference,
+                                                   private val userWrapper: UserWrapper):
 		RemoteUserRepository {
 
 	companion object {
@@ -137,6 +138,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 							               FieldValue.arrayUnion(instanceResult.token))
 
 							localRepo.saveUserInfo(remoteUserItem)
+							userWrapper.setUser(remoteUserItem)
 							emitter.onSuccess(remoteUserItem)
 //							Log.wtf(TAG, "user was: {$userItem}")
 //							Log.wtf(TAG, "user saved: {$remoteUserItem}")
@@ -166,6 +168,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 						.update(USER_BASE_INFO_FIELD, userItem.baseUserInfo)
 						.addOnSuccessListener {
 							localRepo.saveUserInfo(userItem)
+							userWrapper.setUser(userItem)
 							emitter.onComplete()
 						}
 						.addOnFailureListener { emitter.onError(it) }

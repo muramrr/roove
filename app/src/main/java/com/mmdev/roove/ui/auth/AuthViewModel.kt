@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 20:16
+ * Last modified 14.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,6 @@ import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
 import io.reactivex.android.schedulers.AndroidSchedulers
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() {
@@ -42,7 +41,6 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 
 	fun checkIsAuthenticated() {
 		disposables.add(isAuthenticatedExecution()
-            .debounce(1000, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       if (isAuthenticatedStatus.value != it) isAuthenticatedStatus.value = it

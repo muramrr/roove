@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.03.20 21:22
+ * Last modified 14.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ import com.ironz.binaryprefs.Preferences
 import com.ironz.binaryprefs.encryption.AesValueEncryption
 import com.ironz.binaryprefs.encryption.XorKeyEncryption
 import com.mmdev.data.BuildConfig
-import com.mmdev.data.user.UserRepositoryLocal
+import com.mmdev.data.user.UserWrapper
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -24,9 +24,9 @@ import javax.inject.Singleton
 @Module
 class UserModule {
 
-	/* get user info from Prefs */
 	@Provides
-	fun provideSavedUser(repository: UserRepositoryLocal) = repository.getSavedUser()
+	@Singleton
+	fun provideUserWrapper(): UserWrapper = UserWrapper()
 
 	@Provides
 	@Singleton
