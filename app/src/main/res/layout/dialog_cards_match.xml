@@ -3,7 +3,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 19:29
+  ~ Last modified 16.03.20 15:31
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,8 +55,6 @@
 			android:id="@+id/matched_photo"
 			android:layout_width="300dp"
 			android:layout_height="300dp"
-			android:adjustViewBounds="true"
-			android:scaleType="centerCrop"
 
 			app:bindImageUrl="@{photoUrl}"
 
