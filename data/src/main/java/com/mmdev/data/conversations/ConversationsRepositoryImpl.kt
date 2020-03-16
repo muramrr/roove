@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 14.03.20 17:49
+ * Last modified 16.03.20 15:06
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,9 @@
 package com.mmdev.data.conversations
 
 
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.data.core.BaseRepositoryImpl
@@ -29,12 +31,23 @@ import javax.inject.Singleton
 
 @Singleton
 class ConversationsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
-                                                      private val userWrapper: UserWrapper):
+                                                      userWrapper: UserWrapper):
 		ConversationsRepository, BaseRepositoryImpl(firestore, userWrapper) {
+
+	private var initialConversationsQuery: Query = currentUserDocRef
+		.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+		.orderBy(CONVERSATION_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
+		.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
+		.limit(20)
+
+
+	private lateinit var paginateLastConversationLoaded: DocumentSnapshot
+	private lateinit var paginateConversationsQuery: Query
 
 
 	override fun deleteConversation(conversationItem: ConversationItem): Completable =
 		Completable.create { emitter ->
+			reInit()
 			val partnerDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(conversationItem.partner.city)
 				.collection(conversationItem.partner.gender)
@@ -84,9 +97,9 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 
 		}.subscribeOn(Schedulers.io())
 
-
 	override fun getConversationsList(): Single<List<ConversationItem>> =
 		Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
+			reInit()
 			initialConversationsQuery
 				.get()
 				.addOnSuccessListener {
@@ -102,7 +115,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 						paginateConversationsQuery =
 							initialConversationsQuery.startAfter(paginateLastConversationLoaded)
 					}
-					else emitter.onSuccess(listOf())
+					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
@@ -124,9 +137,17 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 						paginateConversationsQuery =
 							paginateConversationsQuery.startAfter(paginateLastConversationLoaded)
 					}
-					else emitter.onSuccess(listOf())
+					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
 
+	override fun reInit() {
+		super.reInit()
+		initialConversationsQuery = currentUserDocRef
+			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+			.orderBy(CONVERSATION_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
+			.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
+			.limit(20)
+	}
 }

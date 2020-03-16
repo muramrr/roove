@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 14.03.20 17:52
+ * Last modified 16.03.20 15:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,12 +10,12 @@
 
 package com.mmdev.data.pairs
 
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.pairs.PairsRepository
+import com.mmdev.data.core.BaseRepositoryImpl
 import com.mmdev.data.user.UserWrapper
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -31,39 +31,14 @@ import javax.inject.Singleton
 @Singleton
 class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
                                               userWrapper: UserWrapper):
-		PairsRepository {
+		PairsRepository, BaseRepositoryImpl(firestore, userWrapper) {
 
-	private val currentUser = userWrapper.getUser()
-	private var currentUserDocRef: DocumentReference
-	private var currentUserId: String
-	private var initialMatchesQuery: Query
 
-	init {
-		currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUser.baseUserInfo.city)
-			.collection(currentUser.baseUserInfo.gender)
-			.document(currentUser.baseUserInfo.userId)
-
-		currentUserId = currentUser.baseUserInfo.userId
-
-		initialMatchesQuery = currentUserDocRef
-			.collection(USER_MATCHED_COLLECTION_REFERENCE)
-			.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
-			.orderBy(MATCHED_DATE_FIELD, Query.Direction.DESCENDING)
-			.limit(20)
-
-	}
-
-	companion object {
-		private const val USERS_COLLECTION_REFERENCE = "users"
-		private const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
-		private const val USER_SKIPPED_COLLECTION_REFERENCE = "skipped"
-
-		private const val CONVERSATIONS_COLLECTION_REFERENCE = "conversations"
-		private const val CONVERSATION_STARTED_FIELD = "conversationStarted"
-		private const val MATCHED_DATE_FIELD = "matchedDate"
-		private const val USER_ID_FIELD = "userId"
-	}
+	private var initialMatchesQuery: Query = currentUserDocRef
+		.collection(USER_MATCHED_COLLECTION_REFERENCE)
+		.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
+		.orderBy(MATCHED_DATE_FIELD, Query.Direction.DESCENDING)
+		.limit(20)
 
 
 	private lateinit var paginateLastMatchedLoaded: DocumentSnapshot
@@ -71,7 +46,8 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 
 	override fun deleteMatchedUser(matchedUserItem: MatchedUserItem): Completable =
-		Completable.create{ emitter ->
+		Completable.create { emitter ->
+			reInit()
 			val matchedUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(matchedUserItem.baseUserInfo.city)
 				.collection(matchedUserItem.baseUserInfo.gender)
@@ -112,8 +88,9 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 		}.subscribeOn(Schedulers.io())
 
-	override fun getMatchedUsersList(): Single<List<MatchedUserItem>> {
-		return Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
+	override fun getMatchedUsersList(): Single<List<MatchedUserItem>> =
+		Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
+			reInit()
 			initialMatchesQuery
 				.get()
 				.addOnSuccessListener {
@@ -129,15 +106,13 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						paginateMatchesQuery =
 							initialMatchesQuery.startAfter(paginateLastMatchedLoaded)
 					}
-					else emitter.onSuccess(listOf())
+					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
-	}
 
-
-	override fun getMoreMatchedUsersList(): Single<List<MatchedUserItem>> {
-		return Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
+	override fun getMoreMatchedUsersList(): Single<List<MatchedUserItem>> =
+		Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
 			paginateMatchesQuery
 				.get()
 				.addOnSuccessListener {
@@ -153,10 +128,17 @@ class PairsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						paginateMatchesQuery =
 							paginateMatchesQuery.startAfter(paginateLastMatchedLoaded)
 					}
-					else emitter.onSuccess(listOf())
+					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
-	}
 
+	override fun reInit() {
+		super.reInit()
+		initialMatchesQuery = currentUserDocRef
+			.collection(USER_MATCHED_COLLECTION_REFERENCE)
+			.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
+			.orderBy(MATCHED_DATE_FIELD, Query.Direction.DESCENDING)
+			.limit(20)
+	}
 }

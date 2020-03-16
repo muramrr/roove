@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.03.20 21:29
+ * Last modified 15.03.20 14:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,7 +38,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 
 	private val gson = Gson()
 
-	companion object{
+	companion object {
 		private const val PREF_KEY_GENERAL_IF_SAVED = "saved"
 		private const val PREF_KEY_CURRENT_USER_NAME = "name"
 		private const val PREF_KEY_CURRENT_USER_AGE = "age"

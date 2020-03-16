@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 20:05
+ * Last modified 15.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,8 @@ import io.reactivex.Single
 interface ChatRepository {
 
 	fun loadMessages(conversation: ConversationItem): Single<List<MessageItem>>
+
+	fun loadMoreMessages(): Single<List<MessageItem>>
 
 	fun observeNewMessages(conversation: ConversationItem): Observable<MessageItem>
 

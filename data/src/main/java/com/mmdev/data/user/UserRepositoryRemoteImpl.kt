@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 14.03.20 16:56
+ * Last modified 16.03.20 15:06
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ package com.mmdev.data.user
 
 import android.net.Uri
 import android.text.format.DateFormat
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
@@ -21,6 +22,7 @@ import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.remote.RemoteUserRepository
+import com.mmdev.data.core.BaseRepositoryImpl
 import io.reactivex.*
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -37,13 +39,11 @@ import javax.inject.Singleton
 @Singleton
 class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: FirebaseInstanceId,
                                                    private val db: FirebaseFirestore,
-                                                   private val localRepo: UserRepositoryLocal,
                                                    private val storage: StorageReference,
                                                    private val userWrapper: UserWrapper):
-		RemoteUserRepository {
+		RemoteUserRepository, BaseRepositoryImpl(db, userWrapper) {
 
 	companion object {
-		private const val GENERAL_COLLECTION_REFERENCE = "users"
 		private const val BASE_COLLECTION_REFERENCE = "usersBase"
 
 		private const val USER_BASE_INFO_FIELD = "baseUserInfo"
@@ -51,11 +51,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 		private const val USER_PHOTOS_LIST_FIELD = "photoURLs"
 		private const val USER_BASE_REGISTRATION_TOKENS_FIELD = "registrationTokens"
 
-		private const val GENERAL_FOLDER_STORAGE_IMG = "images"
 		private const val SECONDARY_FOLDER_STORAGE_IMG = "profilePhotos"
-
-
-		private const val TAG = "mylogs_UserRepoRemoteImpl"
 	}
 
 
@@ -114,7 +110,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 
 			ref.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayRemove(photoItem))
 
-			localRepo.saveUserInfo(userItem)
+			userWrapper.setUser(userItem)
 
 			emitter.onComplete()
 
@@ -122,29 +118,28 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 
 	override fun fetchUserInfo(): Single<UserItem> {
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
-			val userItem = localRepo.getSavedUser()
+			val userItem = userWrapper.getInMemoryUser()
 			val refGeneral = fillUserGeneralRef(userItem.baseUserInfo)
 
 			val refBase = db.collection(BASE_COLLECTION_REFERENCE).document(userItem.baseUserInfo.userId)
 			//get general user item first
 			refGeneral.get()
 				.addOnSuccessListener { remoteUser ->
-					val remoteUserItem = remoteUser.toObject(UserItem::class.java)!!
-					//check if registration token exists
-					fInstance.instanceId
-						.addOnSuccessListener { instanceResult ->
-							//add new token
-							refBase.update(USER_BASE_REGISTRATION_TOKENS_FIELD,
-							               FieldValue.arrayUnion(instanceResult.token))
+					if (remoteUser.exists()) {
+						val remoteUserItem = remoteUser.toObject(UserItem::class.java)!!
+						//check if registration token exists
+						fInstance.instanceId
+							.addOnSuccessListener { instanceResult ->
+								//add new token
+								refBase.update(USER_BASE_REGISTRATION_TOKENS_FIELD,
+								               FieldValue.arrayUnion(instanceResult.token))
 
-							localRepo.saveUserInfo(remoteUserItem)
-							userWrapper.setUser(remoteUserItem)
-							emitter.onSuccess(remoteUserItem)
-//							Log.wtf(TAG, "user was: {$userItem}")
-//							Log.wtf(TAG, "user saved: {$remoteUserItem}")
+								userWrapper.setUser(remoteUserItem)
+								emitter.onSuccess(remoteUserItem)
+							}
+							.addOnFailureListener { instanceIdError -> emitter.onError(instanceIdError) }
+					} else emitter.onError(Throwable("User does not exist"))
 
-					}
-					.addOnFailureListener { instanceIdError -> emitter.onError(instanceIdError) }
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(Schedulers.io())
@@ -167,7 +162,6 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 						.document(userItem.baseUserInfo.userId)
 						.update(USER_BASE_INFO_FIELD, userItem.baseUserInfo)
 						.addOnSuccessListener {
-							localRepo.saveUserInfo(userItem)
 							userWrapper.setUser(userItem)
 							emitter.onComplete()
 						}
@@ -189,7 +183,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 			val uploadTask = storageRef.putFile(Uri.parse(photoUri))
 				.addOnProgressListener {
 					val progress = (99.0 * it.bytesTransferred) / it.totalByteCount
-					emitter.onNext(hashMapOf(progress to listOf()))
+					emitter.onNext(hashMapOf(progress to emptyList()))
 				}
 				.addOnSuccessListener {
 					storageRef
@@ -201,9 +195,9 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 								.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayUnion(uploadedPhotoItem))
 
 							userItem.photoURLs.add(uploadedPhotoItem)
-							localRepo.updatePhotosField(userItem.photoURLs)
 							emitter.onNext(hashMapOf(100.00 to userItem.photoURLs))
 							emitter.onComplete()
+							userWrapper.setUser(userItem)
 						}
 						.addOnFailureListener { emitter.onError(it) }
 				}
@@ -212,9 +206,10 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 		}).subscribeOn(Schedulers.io())
 
 
-	private fun fillUserGeneralRef (baseUserInfo: BaseUserInfo) =
-		db.collection(GENERAL_COLLECTION_REFERENCE)
+	private fun fillUserGeneralRef (baseUserInfo: BaseUserInfo): DocumentReference {
+		return db.collection(USERS_COLLECTION_REFERENCE)
 			.document(baseUserInfo.city)
 			.collection(baseUserInfo.gender)
 			.document(baseUserInfo.userId)
+	}
 }

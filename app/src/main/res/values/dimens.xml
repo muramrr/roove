@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 04.12.19 19:13
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 15.03.20 17:27
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,5 +14,5 @@
     <dimen name="general_margin_16">16dp</dimen>
 	<dimen name="card_margin_fix_rview_8">8dp</dimen>
     <dimen name="notifbar_size_24">24dp</dimen>
-	<dimen name="card_content_margin_8">8dp</dimen>
+
 </resources>
