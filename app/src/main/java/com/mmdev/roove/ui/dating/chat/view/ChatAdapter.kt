@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.03.20 19:36
+ * Last modified 16.03.20 15:42
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -110,7 +110,13 @@ class ChatAdapter (private var listMessageItems: List<MessageItem>):
 
 		fun bind(messageItem: MessageItem) {
 			setTextMessage(messageItem.text)
-			messageItem.timestamp?.let { setTvTimestamp(convertTimestamp(it as Date)) }
+			messageItem.timestamp?.let {
+				try {
+					setTvTimestamp(convertTimestamp(it as Date))
+				}catch (e: ClassCastException) {
+					setTvTimestamp("")
+				}
+			}
 			messageItem.photoItem?.let { setIvChatPhoto(it.fileUrl) }
 		}
 

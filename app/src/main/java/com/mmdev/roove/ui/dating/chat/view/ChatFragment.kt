@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 18:25
+ * Last modified 15.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -228,7 +228,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 
 					if (linearLayoutManager.findLastVisibleItemPosition() == totalItemsCount - 4){
 						//Log.wtf(TAG, "load seems to be called")
-						associatedViewModel.loadMessages(currentConversation)
+						associatedViewModel.loadMoreMessages()
 					}
 
 				}

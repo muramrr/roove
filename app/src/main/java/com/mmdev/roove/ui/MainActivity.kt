@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 14.03.20 16:55
+ * Last modified 15.03.20 14:19
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -80,8 +80,8 @@ class MainActivity: AppCompatActivity() {
 				remoteRepoViewModel.fetchUserItem()
 				remoteRepoViewModel.actualCurrentUserItem.observe(this, Observer {
 					actualUserItem -> sharedViewModel.setCurrentUser(actualUserItem)
-					showMainFlowFragment()
 				})
+				showMainFlowFragment()
 			}
 		})
 		authViewModel.showProgress.observe(this, Observer {
