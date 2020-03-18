@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.03.20 16:30
+ * Last modified 18.03.20 20:23
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,17 +44,20 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 	private var countCardsLoaded: Int = 0
 
-	private var generalCardsQuery: Query = firestore.collection(USERS_COLLECTION_REFERENCE)
+	private var specifiedCardsQuery: Query = firestore.collection(USERS_COLLECTION_REFERENCE)
 		.document(currentUser.baseUserInfo.city)
 		.collection(currentUser.baseUserInfo.preferredGender)
+		.orderBy(USERS_FILTER_AGE)
 		.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
 		.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
+		.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
 
 	private lateinit var maleCardsQuery: Query
 	private lateinit var femaleCardsQuery: Query
 	private lateinit var paginateLastLoadedCard: DocumentSnapshot
 
 	companion object {
+		private const val USERS_FILTER_ID = "baseUserInfo.userId"
 		private const val USERS_FILTER_AGE = "baseUserInfo.age"
 		private const val MALE_COLLECTION_PATH = "male"
 		private const val FEMALE_COLLECTION_PATH = "female"
@@ -148,9 +151,8 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		reInit()
 		return Single.zip(getUsersCardsByPreferences(),
 		                  zipLists(),
-		                  BiFunction<List<UserItem>, List<String>, List<UserItem>> {
-			                  userList, ids  -> filterUsers(userList, ids)
-		                  })
+		                  BiFunction<List<UserItem>, List<String>, List<UserItem>>
+		                  { userList, ids  -> filterUsers(userList, ids) })
 			.subscribeOn(Schedulers.computation())
 	}
 
@@ -178,7 +180,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			           { male, female -> mergeLists (male, female) })
 				.observeOn(Schedulers.computation())
 		else Single.create(SingleOnSubscribe<List<UserItem>>{ emitter ->
-			generalCardsQuery
+			specifiedCardsQuery
 				.get()
 				.addOnSuccessListener {
 					if (!it.isEmpty) {
@@ -206,11 +208,12 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 	private fun getAllMaleUsersCards(): Single<List<UserItem>> {
 		maleCardsQuery = firestore.collection(USERS_COLLECTION_REFERENCE)
-					.document(currentUser.baseUserInfo.city)
-					.collection(MALE_COLLECTION_PATH)
-					.orderBy(USERS_FILTER_AGE)
-					.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
-					.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
+			.document(currentUser.baseUserInfo.city)
+			.collection(MALE_COLLECTION_PATH)
+			.orderBy(USERS_FILTER_AGE)
+			.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
+			.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
+			.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
 
 		return Single.create(SingleOnSubscribe<List<UserItem>>{ emitter ->
 			maleCardsQuery
@@ -236,6 +239,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.orderBy(USERS_FILTER_AGE)
 			.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
 			.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
+			.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
 
 		return Single.create(SingleOnSubscribe<List<UserItem>>{ emitter ->
 			femaleCardsQuery
@@ -254,10 +258,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		}).observeOn(Schedulers.io())
 	}
 
-	/* merge 3 lists of type <T> */
-	private fun <T> mergeLists(t1: List<T> = emptyList(),
-	                           t2: List<T> = emptyList(),
-	                           t3: List<T> = emptyList()): List<T> = listOf(t1, t2, t3).flatten()
 
 	/* execute getters and merge lists inside zip stream */
 	private fun zipLists(): Single<List<String>> =
@@ -267,6 +267,11 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		           Function3<List<String>, List<String>, List<String>, List<String>>
 		           { likes, matches, skipped -> mergeLists(likes, matches, skipped) })
 			.observeOn(Schedulers.computation())
+
+	/* merge 3 lists of type <T> */
+	private fun <T> mergeLists(t1: List<T> = emptyList(),
+	                           t2: List<T> = emptyList(),
+	                           t3: List<T> = emptyList()): List<T> = listOf(t1, t2, t3).flatten()
 
 	/*
 	* GET LIKED USERS IDS LIST
@@ -377,12 +382,13 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 	override fun reInit() {
 		super.reInit()
-		generalCardsQuery = firestore.collection(USERS_COLLECTION_REFERENCE)
+		specifiedCardsQuery = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.city)
 			.collection(currentUser.baseUserInfo.preferredGender)
+			.orderBy(USERS_FILTER_AGE)
 			.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
 			.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
-
+			.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
 	}
 
 
