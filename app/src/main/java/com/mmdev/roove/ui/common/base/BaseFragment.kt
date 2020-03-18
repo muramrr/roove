@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:55
+ * Last modified 18.03.20 16:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,15 +26,16 @@ import com.mmdev.roove.utils.showErrorDialog
 abstract class BaseFragment<T: ViewModel> (val isViewModelActivityHosted: Boolean = false,
                                            layoutId: Int = 0) : Fragment(layoutId) {
 
-	val factory = injector.factory()
+	protected val TAG = "mylogs_" + javaClass.simpleName
+	protected val factory = injector.factory()
 
-	internal val sharedViewModel: SharedViewModel by lazy {
+	protected val sharedViewModel: SharedViewModel by lazy {
 		activity?.run {
 			ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 	}
 
-	internal lateinit var associatedViewModel: T
+	protected lateinit var associatedViewModel: T
 
 	private lateinit var callback: OnBackPressedCallback
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.03.20 20:17
+ * Last modified 18.03.20 15:59
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,7 @@ import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentCardsItemBinding
 import com.mmdev.roove.ui.common.ImagePagerAdapter
 
-class CardsStackAdapter (private var usersList: List<UserItem>):
+class CardsStackAdapter (private var usersList: List<UserItem> = emptyList()):
 		RecyclerView.Adapter<CardsStackAdapter.CardsViewHolder>() {
 
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 19:55
+ * Last modified 18.03.20 16:34
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DefaultItemAnimator
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentCardsBinding
@@ -30,17 +31,13 @@ import kotlinx.android.synthetic.main.fragment_cards.*
 
 class CardsFragment: BaseFragment<CardsViewModel>() {
 
-	private val mCardsStackAdapter = CardsStackAdapter(mutableListOf())
+	private val mCardsStackAdapter = CardsStackAdapter()
 
 	private var mCardsList = mutableListOf<UserItem>()
 
 	private lateinit var mAppearedUserItem: UserItem
 	private lateinit var mDisappearedUserItem: UserItem
 
-
-	companion object {
-		private const val TAG = "mylogs_CardsFragment"
-	}
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +47,7 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 
 		associatedViewModel.loadUsersByPreferences()
 		associatedViewModel.usersCardsList.observe(this, Observer {
+			mCardsList.clear()
 			mCardsList.addAll(it)
 			mCardsStackAdapter.setData(it)
 		})
@@ -114,6 +112,11 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 		cardStackView.apply {
 			adapter = mCardsStackAdapter
 			layoutManager = cardStackLayoutManager
+			itemAnimator.apply {
+				if (this is DefaultItemAnimator) {
+					supportsChangeAnimations = false
+				}
+			}
 		}
 
 		mCardsStackAdapter.setOnItemClickListener(object: CardsStackAdapter.OnItemClickListener {
