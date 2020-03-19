@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.03.20 20:23
+ * Last modified 19.03.20 16:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -149,61 +149,55 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	/* return filtered users list as Single */
 	override fun getUsersByPreferences(): Single<List<UserItem>> {
 		reInit()
-		return Single.zip(getUsersCardsByPreferences(),
-		                  zipLists(),
-		                  BiFunction<List<UserItem>, List<String>, List<UserItem>>
-		                  { userList, ids  -> filterUsers(userList, ids) })
+		return zipLists()
+			.flatMap { getUsersCardsByPreferences(it) }
 			.subscribeOn(Schedulers.computation())
+	}
+
+
+
+	/*
+	* GET USER CARDS BY PREFERENCES RELATED TO PREFERREDGENDER
+	*/
+	private fun getUsersCardsByPreferences(excludingIds: List<String>): Single<List<UserItem>> {
+		return if (currentUser.baseUserInfo.preferredGender == "everyone")
+			Single.zip(getAllFemaleUsersCards(),
+			           getAllMaleUsersCards(),
+			           BiFunction<List<UserItem>, List<UserItem>, List<UserItem>>
+			           { male, female -> filterUsers(listOf(male, female).flatten(), excludingIds) })
+				.subscribeOn(Schedulers.computation())
+		else Single.create(SingleOnSubscribe<List<UserItem>>{ emitter ->
+			specifiedCardsQuery
+				.get()
+				.addOnSuccessListener { documents ->
+					if (!documents.isEmpty) {
+						val filteredDocuments = documents
+							.filter { !excludingIds.contains(it.id) && it.id != currentUserId }
+						if (filteredDocuments.isNotEmpty()) {
+							val allUsersList = mutableListOf<UserItem>()
+							for (doc in filteredDocuments) {
+								allUsersList.add(doc.toObject(UserItem::class.java))
+								countCardsLoaded++
+							}
+							emitter.onSuccess(allUsersList.shuffled())
+
+						} else emitter.onSuccess(emptyList())
+
+					} else emitter.onSuccess(emptyList())
+				}
+				.addOnFailureListener { emitter.onError(it) }
+		}).subscribeOn(Schedulers.computation())
 	}
 
 	/* return filtered all users list from already written ids as List<UserItem> */
 	private fun filterUsers(usersItemsList: List<UserItem>, ids: List<String>): List<UserItem> {
 		return if (usersItemsList.isNotEmpty()) {
-			val filteredUsersList = mutableListOf<UserItem>()
-			for (user in usersItemsList)
-				if (!ids.contains(user.baseUserInfo.userId) &&
-				    user.baseUserInfo.userId != currentUser.baseUserInfo.userId)
-					filteredUsersList.add(user)
-			filteredUsersList.shuffled()
+			usersItemsList.filter {
+				!ids.contains(it.baseUserInfo.userId) &&
+				it.baseUserInfo.userId != currentUser.baseUserInfo.userId
+			}.shuffled()
 		}
 		else emptyList()
-	}
-
-	/*
-	* GET USER CARDS BY PREFERENCES RELATED TO PREFERREDGENDER
-	*/
-	private fun getUsersCardsByPreferences(): Single<List<UserItem>> {
-		return if (currentUser.baseUserInfo.preferredGender == "everyone")
-			Single.zip(getAllFemaleUsersCards(),
-			           getAllMaleUsersCards(),
-			           BiFunction<List<UserItem>, List<UserItem>, List<UserItem>>
-			           { male, female -> mergeLists (male, female) })
-				.observeOn(Schedulers.computation())
-		else Single.create(SingleOnSubscribe<List<UserItem>>{ emitter ->
-			specifiedCardsQuery
-				.get()
-				.addOnSuccessListener {
-					if (!it.isEmpty) {
-						val allUsersList = mutableListOf<UserItem>()
-						for (doc in it) {
-							allUsersList.add(doc.toObject(UserItem::class.java))
-							countCardsLoaded++
-						}
-						emitter.onSuccess(allUsersList)
-//						if (countCardsLoaded < 10) {
-//							paginateLastLoadedCard = it.documents[it.size() - 1]
-//							generalCardsQuery = generalCardsQuery.startAfter(paginateLastLoadedCard)
-//							emitter.onSuccess(allUsersList)
-//						}
-//						else {
-//							countCardsLoaded = 0
-//							emitter.onSuccess(allUsersList)
-//						}
-					}
-					else emitter.onSuccess(emptyList())
-				}
-				.addOnFailureListener { emitter.onError(it) }
-		}).observeOn(Schedulers.computation())
 	}
 
 	private fun getAllMaleUsersCards(): Single<List<UserItem>> {
@@ -229,7 +223,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).observeOn(Schedulers.io())
+		}).subscribeOn(Schedulers.io())
 	}
 
 	private fun getAllFemaleUsersCards(): Single<List<UserItem>> {
@@ -255,7 +249,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).observeOn(Schedulers.io())
+		}).subscribeOn(Schedulers.io())
 	}
 
 
@@ -266,7 +260,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		           getSkippedList(),
 		           Function3<List<String>, List<String>, List<String>, List<String>>
 		           { likes, matches, skipped -> mergeLists(likes, matches, skipped) })
-			.observeOn(Schedulers.computation())
+			.subscribeOn(Schedulers.computation())
 
 	/* merge 3 lists of type <T> */
 	private fun <T> mergeLists(t1: List<T> = emptyList(),
@@ -292,7 +286,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					else emitter.onSuccess(likedList)
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).observeOn(Schedulers.io())
+		}).subscribeOn(Schedulers.io())
 
 	/*
 	* GET MATCHED IDS LIST
@@ -312,7 +306,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					}
 					else emitter.onSuccess(matchedList) }
 				.addOnFailureListener { emitter.onError(it) }
-		}).observeOn(Schedulers.io())
+		}).subscribeOn(Schedulers.io())
 
 	/*
 	* GET SKIPPED USERS IDS LIST
@@ -333,7 +327,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					else emitter.onSuccess(skippedList)
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).observeOn(Schedulers.io())
+		}).subscribeOn(Schedulers.io())
 
 
 	/**
@@ -382,6 +376,9 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 	override fun reInit() {
 		super.reInit()
+		likedList.clear()
+		skippedList.clear()
+		matchedList.clear()
 		specifiedCardsQuery = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.city)
 			.collection(currentUser.baseUserInfo.preferredGender)
