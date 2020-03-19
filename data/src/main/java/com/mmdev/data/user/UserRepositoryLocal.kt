@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 15.03.20 14:19
+ * Last modified 19.03.20 15:56
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,7 +54,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 
 		private const val PREF_KEY_CURRENT_USER_P_AGE_MIN = "preferredAgeMin"
 		private const val PREF_KEY_CURRENT_USER_P_AGE_MAX = "preferredAgeMax"
-		private const val TAG = "mylogs_UserRepoImpl"
+		private const val TAG = "mylogs_UserLocalRepoImpl"
 	}
 
 	override fun getSavedUser(): UserItem {
@@ -88,7 +88,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				val preferredAgeMin = prefs.getInt(PREF_KEY_CURRENT_USER_P_AGE_MIN, 18)
 				val preferredAgeMax =  prefs.getInt(PREF_KEY_CURRENT_USER_P_AGE_MAX, 18)
 
-				//Log.wtf(TAG, "retrieved user info from sharedpref successfully")
+				Log.wtf(TAG, "retrieved user info from sharedpref successfully")
 
 				UserItem(baseUserInfo = BaseUserInfo(name,
 				                                     age,
@@ -105,19 +105,13 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 
 			}catch (e: Exception) {
 				Log.wtf(TAG, "read exception, but user is saved")
-				if (auth.currentUser != null) {
-					auth.signOut()
-					fbLogin.logOut()
-				}
+				logOut()
 				prefs.edit().clear().commit()
 				UserItem()
 			}
 		}
 		else {
-			if (auth.currentUser != null) {
-				auth.signOut()
-				fbLogin.logOut()
-			}
+			logOut()
 			Log.wtf(TAG, "User is not saved")
 			UserItem()
 		}
@@ -156,15 +150,11 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		Log.wtf(TAG, "User successfully saved: $userItem")
 	}
 
-	fun updatePhotosField(photoList: List<PhotoItem>) {
-
-		val editor = prefs.edit()
-		val photosList = mutableListOf<String>()
-		for (photo in photoList)
-			photosList.add(gson.toJson(photo))
-		editor.putString(PREF_KEY_CURRENT_USER_PHOTO_URLS, photosList.toString())
-
-		editor.apply()
+	private fun logOut(){
+		if (auth.currentUser != null) {
+			auth.signOut()
+			fbLogin.logOut()
+		}
 	}
 
 }

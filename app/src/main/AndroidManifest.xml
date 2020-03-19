@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.02.20 17:34
+  ~ Last modified 19.03.20 14:52
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	package="com.mmdev.roove">
 
 	<uses-permission android:name="android.permission.CAMERA" />
@@ -31,7 +32,8 @@
 			android:name=".ui.MainActivity"
 			android:label="@string/app_name"
 			android:screenOrientation="portrait"
-			android:windowSoftInputMode="adjustPan">
+			android:windowSoftInputMode="adjustPan"
+			tools:ignore="LockedOrientationActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 

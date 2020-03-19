@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.03.20 15:39
+ * Last modified 19.03.20 16:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,10 +25,12 @@ open class BaseRepositoryImpl constructor(private val firestore: FirebaseFiresto
 	protected var currentUser = userWrapper.getUser()
 	protected var currentUserId: String = currentUser.baseUserInfo.userId
 
-	protected var currentUserDocRef: DocumentReference = firestore.collection(USERS_COLLECTION_REFERENCE)
-		.document(currentUser.baseUserInfo.city)
-		.collection(currentUser.baseUserInfo.gender)
-		.document(currentUser.baseUserInfo.userId)
+	protected var currentUserDocRef: DocumentReference =
+		firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(currentUser.baseUserInfo.city)
+			.collection(currentUser.baseUserInfo.gender)
+			.document(currentUser.baseUserInfo.userId)
+
 
 
 	override fun reInit() {
@@ -64,7 +66,6 @@ open class BaseRepositoryImpl constructor(private val firestore: FirebaseFiresto
 		const val MATCHED_DATE_FIELD = "matchedDate"
 
 		const val USER_ID_FIELD = "userId"
-
 
 	}
 }
