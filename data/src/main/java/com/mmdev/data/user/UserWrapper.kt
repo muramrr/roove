@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.03.20 14:38
+ * Last modified 19.03.20 16:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,7 +44,7 @@ class UserWrapper @Inject constructor(private val localRepo: LocalUserRepository
 	 */
 	fun getUser(): UserItem = user.clone()
 	fun setUser(user: UserItem) {
-		this.user = user
 		localRepo.saveUserInfo(user)
+		this.user = user
 	}
 }
