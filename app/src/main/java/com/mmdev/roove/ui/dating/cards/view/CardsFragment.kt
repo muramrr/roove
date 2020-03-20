@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.03.20 16:34
+ * Last modified 20.03.20 15:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -98,8 +98,7 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 				mDisappearedUserItem = mCardsStackAdapter.getItem(position)
 				//if there is no available user to show - show loading
 				if (position == mCardsStackAdapter.itemCount - 1) {
-					associatedViewModel.showLoading.value = true
-					associatedViewModel.showTextHelper.value = true
+					associatedViewModel.loadUsersByPreferences()
 				}
 				else {
 					mCardsList.remove(mDisappearedUserItem)
