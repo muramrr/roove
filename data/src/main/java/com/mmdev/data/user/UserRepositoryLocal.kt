@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 19.03.20 15:56
+ * Last modified 19.03.20 19:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -88,7 +88,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 				val preferredAgeMin = prefs.getInt(PREF_KEY_CURRENT_USER_P_AGE_MIN, 18)
 				val preferredAgeMax =  prefs.getInt(PREF_KEY_CURRENT_USER_P_AGE_MAX, 18)
 
-				Log.wtf(TAG, "retrieved user info from sharedpref successfully")
+				//Log.wtf(TAG, "retrieved user info from sharedpref successfully")
 
 				UserItem(baseUserInfo = BaseUserInfo(name,
 				                                     age,
@@ -147,7 +147,7 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		editor.putInt(PREF_KEY_CURRENT_USER_P_AGE_MAX, userItem.preferredAgeRange.maxAge)
 
 		editor.commit()
-		Log.wtf(TAG, "User successfully saved: $userItem")
+		//Log.wtf(TAG, "User successfully saved: $userItem")
 	}
 
 	private fun logOut(){

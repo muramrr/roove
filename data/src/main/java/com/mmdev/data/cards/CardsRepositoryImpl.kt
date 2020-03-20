@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 19.03.20 16:37
+ * Last modified 20.03.20 15:07
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.mmdev.business.cards.repository.CardsRepository
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.BaseUserInfo
@@ -42,8 +43,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	private val matchedList = mutableListOf<String>()
 	private val skippedList = mutableListOf<String>()
 
-	private var countCardsLoaded: Int = 0
-
 	private var specifiedCardsQuery: Query = firestore.collection(USERS_COLLECTION_REFERENCE)
 		.document(currentUser.baseUserInfo.city)
 		.collection(currentUser.baseUserInfo.preferredGender)
@@ -52,6 +51,8 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
 		.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
 
+	private val cardsLimit = 19
+	private lateinit var filteredDocuments: MutableSet<QueryDocumentSnapshot>
 	private lateinit var maleCardsQuery: Query
 	private lateinit var femaleCardsQuery: Query
 	private lateinit var paginateLastLoadedCard: DocumentSnapshot
@@ -75,6 +76,9 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.set(mapOf(USER_ID_FIELD to skippedUserItem.baseUserInfo.userId))
 
 		skippedList.add(skippedUserItem.baseUserInfo.userId)
+		filteredDocuments = filteredDocuments.filter {
+			doc -> doc.id != skippedUserItem.baseUserInfo.userId
+		}.toMutableSet()
 	}
 
 	/*
@@ -100,6 +104,9 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 						emitter.onSuccess(true)
 						matchedList.add(likedUserItem.baseUserInfo.userId)
+						filteredDocuments = filteredDocuments.filter {
+							doc -> doc.id != likedUserItem.baseUserInfo.userId
+						}.toMutableSet()
 
 						//create predefined conversation for this match
 						val conversationId = firestore
@@ -138,7 +145,9 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 							.set(mapOf(USER_ID_FIELD to likedUserItem.baseUserInfo.userId))
 
 						likedList.add(likedUserItem.baseUserInfo.userId)
-
+						filteredDocuments = filteredDocuments.filter {
+							doc -> doc.id != likedUserItem.baseUserInfo.userId
+						}.toMutableSet()
 						emitter.onSuccess(false)
 					}
 
@@ -153,7 +162,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 			.flatMap { getUsersCardsByPreferences(it) }
 			.subscribeOn(Schedulers.computation())
 	}
-
 
 
 	/*
@@ -171,16 +179,25 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				.get()
 				.addOnSuccessListener { documents ->
 					if (!documents.isEmpty) {
-						val filteredDocuments = documents
-							.filter { !excludingIds.contains(it.id) && it.id != currentUserId }
+						//filter users which is not in excluding Ids list
+						if (!this::filteredDocuments.isInitialized) {
+							filteredDocuments = documents.filter {
+								!excludingIds.contains(it.id) && it.id != currentUserId
+							}.toMutableSet()
+						}
 						if (filteredDocuments.isNotEmpty()) {
 							val allUsersList = mutableListOf<UserItem>()
+							val usersParsed = mutableListOf<QueryDocumentSnapshot>()
+							//get first 100 users from filteredList
+							var count = 0
 							for (doc in filteredDocuments) {
-								allUsersList.add(doc.toObject(UserItem::class.java))
-								countCardsLoaded++
+								if (count < cardsLimit) {
+									allUsersList.add(doc.toObject(UserItem::class.java))
+									usersParsed.add(doc)
+									count++
+								}
 							}
 							emitter.onSuccess(allUsersList.shuffled())
-
 						} else emitter.onSuccess(emptyList())
 
 					} else emitter.onSuccess(emptyList())
