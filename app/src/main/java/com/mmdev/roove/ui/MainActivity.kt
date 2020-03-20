@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.03.20 16:22
+ * Last modified 20.03.20 16:29
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -81,7 +81,7 @@ class MainActivity: AppCompatActivity() {
 						actualUserItem -> sharedViewModel.setCurrentUser(actualUserItem)
 					})
 				}
-				else -> showToastText("Auth fail")
+				else -> showToastText("Can't get AuthStatus")
 			}
 		})
 		authViewModel.showProgress.observe(this, Observer {
