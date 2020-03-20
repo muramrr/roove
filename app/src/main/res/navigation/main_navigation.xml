@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.03.20 16:11
+  ~ Last modified 20.03.20 15:32
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -150,11 +150,19 @@
 
 		<action
 			android:id="@+id/action_settings_to_settingsEditInfoFragment"
-			app:destination="@id/settingsEditInfoFragmentNav" />
+			app:destination="@id/settingsEditInfoFragmentNav"
+			app:enterAnim="@anim/enter_from_right"
+			app:exitAnim="@anim/exit_to_left"
+			app:popEnterAnim="@anim/enter_from_left"
+			app:popExitAnim="@anim/exit_to_right"/>
 
 		<action
 			android:id="@+id/action_settings_to_placeDetailedFragment"
-			app:destination="@id/placeDetailedFragmentNav" />
+			app:destination="@id/placeDetailedFragmentNav"
+			app:enterAnim="@anim/enter_from_bottom"
+			app:exitAnim="@anim/exit_to_top"
+			app:popEnterAnim="@anim/enter_from_top"
+			app:popExitAnim="@anim/exit_to_bottom" />
 
 	</fragment>
 
@@ -203,7 +211,7 @@
 			app:enterAnim="@anim/enter_from_bottom"
 			app:exitAnim="@anim/exit_to_top"
 			app:popEnterAnim="@anim/enter_from_top"
-			app:popExitAnim="@anim/exit_to_bottom"  >
+			app:popExitAnim="@anim/exit_to_bottom" >
 
 			<argument android:name="PLACE_ID" />
 

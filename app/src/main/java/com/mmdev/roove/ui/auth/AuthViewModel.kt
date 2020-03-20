@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 14.03.20 17:52
+ * Last modified 20.03.20 16:15
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,7 @@ import com.mmdev.business.auth.usecase.SignInUseCase
 import com.mmdev.business.auth.usecase.SignUpUseCase
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
+import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.*
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
@@ -36,16 +37,24 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 	val showProgress: MutableLiveData<Boolean> = MutableLiveData()
 
 	private val baseUserInfo: MutableLiveData<BaseUserInfo> = MutableLiveData()
-	private val isAuthenticatedStatus: MutableLiveData<Boolean> = MutableLiveData()
+	private val authCallbackHandler: MutableLiveData<Boolean> = MutableLiveData()
+	val authenticatedState: MutableLiveData<AuthenticationState> = MutableLiveData()
 
 
 	fun checkIsAuthenticated() {
 		disposables.add(isAuthenticatedExecution()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-	                       if (isAuthenticatedStatus.value != it) isAuthenticatedStatus.value = it
+	                       if (authCallbackHandler.value != it) {
+		                       authCallbackHandler.value = it
+		                       when (it) {
+			                       true -> authenticatedState.value = AUTHENTICATED
+			                       false -> authenticatedState.value = UNAUTHENTICATED
+		                       }
+	                       }
                        },
                        {
+	                       authenticatedState.value = INVALID_AUTHENTICATION
 	                       error.value = MyError(ErrorType.AUTHENTICATING, it)
                        }))
 	}
@@ -75,7 +84,7 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       continueRegistration.value = false
-	                       isAuthenticatedStatus.value = true
+	                       authenticatedState.value = AUTHENTICATED
                        },
                        {
 	                       error.value = MyError(ErrorType.SAVING, it)
@@ -84,7 +93,6 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 
 
 	fun logOut() = logOutExecution()
-	fun getAuthStatus() = isAuthenticatedStatus
 	fun getBaseUserInfo() = baseUserInfo
 
 
@@ -93,4 +101,10 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 	private fun logOutExecution() = logOut.execute()
 	private fun signInExecution(token: String) = signIn.execute(token)
 	private fun signUpExecution(userItem: UserItem) = signUp.execute(userItem)
+
+	enum class AuthenticationState {
+		UNAUTHENTICATED,        // Initial state, the user needs to authenticate
+		AUTHENTICATED  ,        // The user has authenticated successfully
+		INVALID_AUTHENTICATION  // Authentication failed
+	}
 }
