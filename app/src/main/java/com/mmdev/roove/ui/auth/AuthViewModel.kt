@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.03.20 16:15
+ * Last modified 20.03.20 16:29
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,8 @@ import com.mmdev.business.auth.usecase.SignInUseCase
 import com.mmdev.business.auth.usecase.SignUpUseCase
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
-import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.*
+import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.AUTHENTICATED
+import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.UNAUTHENTICATED
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
@@ -26,7 +27,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() {
-
 	private val isAuthenticatedListener = IsAuthenticatedListenerUseCase(repo)
 	private val logOut = LogOutUseCase(repo)
 	private val signIn = SignInUseCase(repo)
@@ -54,7 +54,6 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 	                       }
                        },
                        {
-	                       authenticatedState.value = INVALID_AUTHENTICATION
 	                       error.value = MyError(ErrorType.AUTHENTICATING, it)
                        }))
 	}
@@ -103,8 +102,7 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 	private fun signUpExecution(userItem: UserItem) = signUp.execute(userItem)
 
 	enum class AuthenticationState {
-		UNAUTHENTICATED,        // Initial state, the user needs to authenticate
-		AUTHENTICATED  ,        // The user has authenticated successfully
-		INVALID_AUTHENTICATION  // Authentication failed
+		UNAUTHENTICATED,    // Initial state, the user needs to authenticate
+		AUTHENTICATED,  // The user has authenticated successfully
 	}
 }

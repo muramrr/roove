@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 18:36
+ * Last modified 20.03.20 16:29
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,6 +19,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.mmdev.roove.R
 import com.mmdev.roove.ui.common.base.BaseViewModel
 
 
@@ -61,7 +62,7 @@ fun View.addSystemLeftPadding(targetView: View = this) =
 
 fun Context.ErrorMaterialDialogBuilder(errorText: String) =
 	MaterialAlertDialogBuilder(this)
-		.setTitle("Ошибка")
+		.setTitle(getString(R.string.ErrorTitle))
 		.setMessage(errorText)
 		.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
 
