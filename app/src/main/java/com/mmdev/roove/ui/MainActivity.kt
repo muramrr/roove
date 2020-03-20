@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 19.03.20 16:18
+ * Last modified 20.03.20 16:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,25 +11,23 @@
 package com.mmdev.roove.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.mmdev.roove.R
-import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.ActivityMainBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
-import com.mmdev.roove.ui.auth.view.AuthFlowFragment
+import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.AUTHENTICATED
+import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.UNAUTHENTICATED
 import com.mmdev.roove.ui.common.custom.LoadingDialog
-import com.mmdev.roove.ui.main.MainFlowFragment
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.observeOnce
 import com.mmdev.roove.utils.showToastText
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity: AppCompatActivity() {
 
@@ -60,11 +58,7 @@ class MainActivity: AppCompatActivity() {
 
 		val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-		GlideApp.with(ivMainSplashLogo.context)
-			.asGif()
-			.load(R.drawable.logo_loading)
-			.into(ivMainSplashLogo)
-
+		val navController = findNavController(R.id.flowHostFragment)
 
 		progressDialog = LoadingDialog(this@MainActivity)
 
@@ -73,19 +67,21 @@ class MainActivity: AppCompatActivity() {
 		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
 		authViewModel.checkIsAuthenticated()
-		authViewModel.getAuthStatus().observe(this, Observer {
-			if (it == false) {
-				showAuthFlowFragment()
-			}
-			else {
-				sharedViewModel.getCurrentUser().observeOnce(this, Observer {
-					userInitialized -> if (userInitialized != null) showMainFlowFragment()
-				})
+		authViewModel.authenticatedState.observe(this, Observer { authState ->
+			when (authState){
+				UNAUTHENTICATED -> navController.navigate(R.id.action_global_authFlowFragment)
+				AUTHENTICATED -> {
+					sharedViewModel.getCurrentUser().observeOnce(this, Observer {
+						userInitialized ->
+						if (userInitialized != null) navController.navigate(R.id.action_global_mainFlowFragment)
+					})
 
-				remoteRepoViewModel.fetchUserItem()
-				remoteRepoViewModel.actualCurrentUserItem.observe(this, Observer {
-					actualUserItem -> sharedViewModel.setCurrentUser(actualUserItem)
-				})
+					remoteRepoViewModel.fetchUserItem()
+					remoteRepoViewModel.actualCurrentUserItem.observe(this, Observer {
+						actualUserItem -> sharedViewModel.setCurrentUser(actualUserItem)
+					})
+				}
+				else -> showToastText("Auth fail")
 			}
 		})
 		authViewModel.showProgress.observe(this, Observer {
@@ -104,32 +100,6 @@ class MainActivity: AppCompatActivity() {
 //		}
 
 
-	}
-
-	// show auth fragment
-	private fun showAuthFlowFragment() {
-		Log.wtf(TAG, "USER IS NOT LOGGED IN")
-		supportFragmentManager.beginTransaction().remove(MainFlowFragment()).commitNow()
-		supportFragmentManager.beginTransaction().apply {
-			replace(R.id.main_activity_container,
-			    AuthFlowFragment(),
-			    AuthFlowFragment::class.java.canonicalName)
-			commit()
-		}
-		ivMainSplashLogo.visibility = View.GONE
-	}
-
-	// show main fragment
-	private fun showMainFlowFragment() {
-		Log.wtf(TAG, "USER IS LOGGED IN")
-		supportFragmentManager.beginTransaction().remove(AuthFlowFragment()).commitNow()
-		supportFragmentManager.beginTransaction().apply {
-				replace(R.id.main_activity_container,
-				    MainFlowFragment(),
-				    MainFlowFragment::class.java.canonicalName)
-				commit()
-			}
-		ivMainSplashLogo.visibility = View.GONE
 	}
 
 }

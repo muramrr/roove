@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 20.03.20 15:59
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/flowNavigation"
+	app:startDestination="@id/splashFragment">
+
+	<action android:id="@+id/action_global_authFlowFragment"
+		app:destination="@id/authFlowFragment"/>
+
+	<action android:id="@+id/action_global_mainFlowFragment"
+		app:destination="@id/mainFlowFragment"/>
+
+
+	<fragment
+		android:id="@+id/authFlowFragment"
+		android:name="com.mmdev.roove.ui.auth.view.AuthFlowFragment"
+		android:label="AuthFlowFragment" />
+	<fragment
+		android:id="@+id/mainFlowFragment"
+		android:name="com.mmdev.roove.ui.main.MainFlowFragment"
+		android:label="MainFlowFragment" />
+	<fragment
+		android:id="@+id/splashFragment"
+		android:name="com.mmdev.roove.ui.SplashFragment"
+		android:label="SplashFragment" />
+
+
+</navigation>

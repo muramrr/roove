@@ -2,15 +2,15 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 18:28
+  ~ Last modified 20.03.20 15:59
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
+<layout
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<FrameLayout
@@ -21,12 +21,14 @@
 		app:paddingLeftSystemWindowInsets="@{true}"
 		>
 
-		<ImageView
-			android:id="@+id/ivMainSplashLogo"
+		<fragment
+			android:id="@+id/flowHostFragment"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:src="@drawable/logo_loading"
-			tools:ignore="ContentDescription"/>
+			android:name="androidx.navigation.fragment.NavHostFragment"
+			app:navGraph="@navigation/flow_navigation"
+			app:defaultNavHost="true"
+			/>
 
 	</FrameLayout>
 </layout>
