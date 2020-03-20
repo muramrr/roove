@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.03.20 19:37
+ * Last modified 20.03.20 17:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -271,14 +271,18 @@ class CircleImageView: ImageView {
 			return
 		}
 		mBitmapShader = BitmapShader(mBitmap!!, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
-		mBitmapPaint.isAntiAlias = true
-		mBitmapPaint.isDither = true
-		mBitmapPaint.isFilterBitmap = true
-		mBitmapPaint.shader = mBitmapShader
+		mBitmapPaint.apply {
+			isAntiAlias = true
+			isDither = true
+			isFilterBitmap = true
+			shader = mBitmapShader
+		}
 
-		mCircleBackgroundPaint.style = Paint.Style.FILL
-		mCircleBackgroundPaint.isAntiAlias = true
-		mCircleBackgroundPaint.color = mCircleBackgroundColor
+		mCircleBackgroundPaint.apply {
+			style = Paint.Style.FILL
+			isAntiAlias = true
+			color = mCircleBackgroundColor
+		}
 		mBitmapHeight = mBitmap!!.height
 		mBitmapWidth = mBitmap!!.width
 		mBorderRect.set(calculateBounds())

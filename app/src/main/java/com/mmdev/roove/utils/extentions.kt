@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.03.20 16:29
+ * Last modified 20.03.20 17:17
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,6 +36,8 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
 }
 
 fun Context.dp2px(dpValue: Float): Int = (dpValue * this.resources.displayMetrics.density + 0.5f).toInt()
+fun Context.px2Dp(pxValue: Float): Int = (pxValue / this.resources.displayMetrics.density + 0.5f).toInt()
+
 
 fun View.addSystemTopPadding(targetView: View = this) =
 	doOnApplyWindowInsets { _, insets, initialPadding ->
