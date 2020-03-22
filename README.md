@@ -1,4 +1,4 @@
-# roove  [![GitHub license](https://img.shields.io/github/license/muramrr/roove)](https://github.com/muramrr/roove/blob/master/LICENSE) [![](https://img.shields.io/badge/SDK-v21+-BLUE.svg)](https://shields.io/)
+# roove  [![GitHub license](https://img.shields.io/github/license/muramrr/roove)](https://github.com/muramrr/roove/blob/master/LICENSE) [![](https://img.shields.io/badge/SDK-v21+-BLUE.svg)](https://shields.io/) [![](https://img.shields.io/badge/TargetSDK-29-green)](https://shields.io/)
 
 A simple dating app based on tinder-style cards. WIP 91% done.
 
