@@ -2,18 +2,17 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 17:23
+  ~ Last modified 22.03.20 15:50
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<ImageView
-	android:id="@+id/iv_loading"
+<com.mmdev.roove.ui.common.custom.components.LoadingView
+	android:id="@+id/loadingViewDialog"
 	android:layout_width="120dp"
 	android:layout_height="120dp"
-	android:src="@drawable/loading"
 	tools:ignore="ContentDescription"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools" />

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 20:45
+  ~ Last modified 22.03.20 16:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,11 +15,10 @@
 
 	<data>
 
-		<import type="android.view.View"/>
-
 		<variable
 			name="viewModel"
 			type="com.mmdev.roove.ui.dating.chat.ChatViewModel" />
+
 	</data>
 
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -59,7 +58,8 @@
 			android:focusable="true"
 			android:overScrollMode="never"
 			android:scrollbars="none"
-			android:visibility='@{viewModel.showLoading ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
+
+			app:visibilityInvisible="@{!viewModel.showLoading}"
 
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 			app:layout_constraintStart_toStartOf="parent"
@@ -141,13 +141,12 @@
 			app:layout_constraintTop_toBottomOf="@id/rvMessageList"
 			/>
 
-		<ImageView
-			android:id="@+id/ivChatLoading"
+		<com.mmdev.roove.ui.common.custom.components.LoadingView
+			android:id="@+id/loadingViewChat"
 			android:layout_width="120dp"
 			android:layout_height="120dp"
-			android:visibility='@{viewModel.showLoading ? View.VISIBLE : View.GONE, default = "visible"}'
 
-			app:bindLoadingImage="@{true}"
+			app:visibilityInvisible="@{viewModel.showLoading}"
 
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"

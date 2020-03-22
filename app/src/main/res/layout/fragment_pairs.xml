@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 15:20
+  ~ Last modified 22.03.20 16:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,11 +16,10 @@
 
 	<data>
 
-		<import type="android.view.View"/>
-
 		<variable
 			name="viewModel"
 			type="com.mmdev.roove.ui.dating.pairs.PairsViewModel" />
+
 	</data>
 
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -36,7 +35,7 @@
 			android:layout_marginEnd="@dimen/general_margin_8"
 			android:clipToPadding="false"
 			android:overScrollMode="never"
-			android:visibility='@{viewModel.showTextHelper ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
+			app:visibilityInvisible='@{!viewModel.showTextHelper}'
 
 			app:bindData="@{viewModel.matchedUsersList}"
 			app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
@@ -59,7 +58,7 @@
 
 			android:text="There is no matches...\n\nKeep swiping!"
 			android:textSize="24sp"
-			android:visibility='@{viewModel.showTextHelper ? View.VISIBLE : View.INVISIBLE, default = "invisible"}'
+			app:visibilityInvisible='@{viewModel.showTextHelper}'
 
 			style="@style/regular_text"
 
