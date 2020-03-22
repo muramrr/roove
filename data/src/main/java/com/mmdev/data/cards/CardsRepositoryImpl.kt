@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.03.20 16:45
+ * Last modified 22.03.20 17:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,6 +54,8 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	private var filteredDocuments: MutableSet<QueryDocumentSnapshot>? = null
 	private lateinit var maleCardsQuery: Query
 	private lateinit var femaleCardsQuery: Query
+	private var filteredMaleDocuments: MutableSet<QueryDocumentSnapshot>? = null
+	private var filteredFemaleDocuments: MutableSet<QueryDocumentSnapshot>? = null
 
 	companion object {
 		private const val USERS_FILTER_ID = "baseUserInfo.userId"
@@ -219,16 +221,16 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				.addOnSuccessListener { documents ->
 					if (!documents.isEmpty) {
 						//filter users which is not in excluding Ids list
-						if (filteredDocuments == null) {
-							filteredDocuments = documents.filter {
+						if (filteredMaleDocuments == null) {
+							filteredMaleDocuments = documents.filter {
 								!excludingIds.contains(it.id) && it.id != currentUserId
 							}.toMutableSet()
-							val maleResultList = parseFilteredUsers(filteredDocuments!!)
+							val maleResultList = parseFilteredUsers(filteredMaleDocuments!!)
 							emitter.onSuccess(maleResultList)
 							Log.wtf(TAG, "filtered null male = ${maleResultList.size}")
 						}
 						else {
-							val maleResultList = parseFilteredUsers(filteredDocuments!!)
+							val maleResultList = parseFilteredUsers(filteredMaleDocuments!!)
 							emitter.onSuccess(maleResultList)
 							Log.wtf(TAG, "filtered not null male = ${maleResultList.size}")
 						}
@@ -254,16 +256,16 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 				.addOnSuccessListener { documents ->
 					if (!documents.isEmpty) {
 						//filter users which is not in excluding Ids list
-						if (filteredDocuments == null) {
-							filteredDocuments = documents.filter {
+						if (filteredFemaleDocuments == null) {
+							filteredFemaleDocuments = documents.filter {
 								!excludingIds.contains(it.id) && it.id != currentUserId
 							}.toMutableSet()
-							val femaleResultList = parseFilteredUsers(filteredDocuments!!)
+							val femaleResultList = parseFilteredUsers(filteredFemaleDocuments!!)
 							emitter.onSuccess(femaleResultList)
 							Log.wtf(TAG, "filtered null female = ${femaleResultList.size}")
 						}
 						else {
-							val femaleResultList = parseFilteredUsers(filteredDocuments!!)
+							val femaleResultList = parseFilteredUsers(filteredFemaleDocuments!!)
 							emitter.onSuccess(femaleResultList)
 							Log.wtf(TAG, "filtered not null female = ${femaleResultList.size}")
 						}
@@ -402,6 +404,8 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		skippedList.clear()
 		matchedList.clear()
 		filteredDocuments = null
+		filteredFemaleDocuments = null
+		filteredMaleDocuments = null
 		specifiedCardsQuery = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.city)
 			.collection(currentUser.baseUserInfo.preferredGender)
