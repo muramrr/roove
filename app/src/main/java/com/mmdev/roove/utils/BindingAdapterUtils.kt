@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.03.20 20:33
+ * Last modified 22.03.20 15:49
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,27 +27,23 @@ object BindingAdapterUtils {
 
 
 	@JvmStatic
+	@BindingAdapter("app:visibilityInvisible")
+	fun handleViewInvisibleVisibility(view: View, show: Boolean = false) {
+		view.visibility = if (show) View.VISIBLE else View.INVISIBLE
+	}
+
+	@JvmStatic
+	@BindingAdapter("app:visibilityGone")
+	fun handleViewGoneVisibility(view: View, show: Boolean = false) {
+		view.visibility = if (show) View.VISIBLE else View.GONE
+	}
+
+	@JvmStatic
 	@BindingAdapter("app:bindData")
 	fun <T> setRecyclerViewProperties(recyclerView: RecyclerView, data: T) {
 		if (recyclerView.adapter is BindableAdapter<*>) {
 			(recyclerView.adapter as BindableAdapter<T>).setData(data)
 		}
-	}
-
-	@JvmStatic
-	@BindingAdapter("app:bindLoadingImage")
-	fun loadImage(imageView: ImageView, show: Boolean) {
-		if (show) {
-			imageView.visibility = View.VISIBLE
-			GlideApp.with(imageView.context)
-				.asGif()
-				.load(R.drawable.loading)
-				.centerCrop()
-				.apply(RequestOptions().circleCrop())
-				.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-				.into(imageView)
-		}
-		else imageView.visibility = View.GONE
 	}
 
 	@JvmStatic

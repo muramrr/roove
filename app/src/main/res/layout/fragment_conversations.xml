@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 19:26
+  ~ Last modified 22.03.20 16:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,11 +15,10 @@
 
 	<data>
 
-		<import type="android.view.View"/>
-
 		<variable
 			name="viewModel"
 			type="com.mmdev.roove.ui.dating.conversations.ConversationsViewModel" />
+
 	</data>
 
 
@@ -37,7 +36,7 @@
 			android:overScrollMode="never"
 			android:scrollbars="vertical"
 
-			android:visibility='@{viewModel.showTextHelper ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
+			app:visibilityInvisible='@{!viewModel.showTextHelper}'
 
 			app:bindData="@{viewModel.conversationsList}"
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -62,7 +61,7 @@
 			android:textSize="24sp"
 			style="@style/regular_text"
 
-			android:visibility='@{viewModel.showTextHelper ? View.VISIBLE : View.INVISIBLE, default = "invisible"}'
+			app:visibilityInvisible='@{viewModel.showTextHelper}'
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"

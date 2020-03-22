@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 17:12
+  ~ Last modified 22.03.20 16:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,8 +15,6 @@
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<data>
-
-		<import type="android.view.View"/>
 
 		<variable
 			name="isFabVisible"
@@ -192,7 +190,7 @@
 			android:layout_width="wrap_content"
 			android:layout_margin="@dimen/general_margin_16"
 			android:src="@drawable/ic_profile_send_message_24dp"
-			android:visibility='@{isFabVisible ? View.VISIBLE : View.GONE, default = "gone"}'
+			app:visibilityGone='@{isFabVisible}'
 
 			app:backgroundTint="@color/amethyst"
 

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 20:38
+  ~ Last modified 22.03.20 16:22
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,11 +16,10 @@
 
 	<data>
 
-		<import type="android.view.View"/>
-
 		<variable
 			name="viewModel"
 			type="com.mmdev.roove.ui.dating.cards.CardsViewModel" />
+
 	</data>
 
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -38,7 +37,8 @@
 			android:paddingStart="@dimen/general_margin_16"
 			android:paddingEnd="@dimen/general_margin_16"
 			android:paddingBottom="@dimen/general_margin_8"
-			android:visibility='@{viewModel.showLoading ? View.INVISIBLE : View.VISIBLE, default = "invisible"}'
+
+			app:visibilityInvisible="@{!viewModel.showLoading}"
 
 			app:paddingTopSystemWindowInsets="@{true}"
 
@@ -50,13 +50,14 @@
 			tools:listitem="@layout/fragment_cards_item"
 			/>
 
-	    <ImageView
-	        android:id="@+id/ivCardLoading"
+	    <com.mmdev.roove.ui.common.custom.components.LoadingView
+	        android:id="@+id/loadingViewCards"
 	        android:layout_width="120dp"
 	        android:layout_height="120dp"
-		    app:bindLoadingImage="@{viewModel.showLoading}"
 
-	        app:layout_constraintBottom_toBottomOf="parent"
+			app:visibilityInvisible="@{viewModel.showLoading}"
+
+			app:layout_constraintBottom_toBottomOf="parent"
 	        app:layout_constraintEnd_toEndOf="parent"
 	        app:layout_constraintStart_toStartOf="parent"
 	        app:layout_constraintTop_toTopOf="parent"
@@ -72,11 +73,12 @@
 		    android:textSize="18sp"
 		    style="@style/regular_text"
 
-		    android:visibility='@{viewModel.showTextHelper ? View.VISIBLE : View.INVISIBLE, default = "invisible"}'
-	        app:layout_constraintBottom_toBottomOf="parent"
+			app:visibilityInvisible="@{viewModel.showTextHelper}"
+
+			app:layout_constraintBottom_toBottomOf="parent"
 	        app:layout_constraintEnd_toEndOf="parent"
 	        app:layout_constraintStart_toStartOf="parent"
-		    app:layout_constraintTop_toBottomOf="@id/ivCardLoading"
+		    app:layout_constraintTop_toBottomOf="@id/loadingViewCards"
 		    app:layout_constraintVertical_bias="0.3"
 		    />
 

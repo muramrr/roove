@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.03.20 19:49
+ * Last modified 22.03.20 16:24
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,9 +10,11 @@
 
 package com.mmdev.roove.ui.common.custom.components
 
+import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.RectF
@@ -31,29 +33,43 @@ class LoadingView: View {
 
 	private val mBackgroundOvalRect = RectF()
 	private var mBackgroundOvalRadius = 0f
-	private var mBackgroundColor: Int = ContextCompat.getColor(context, R.color.my_loading_background)
-	private var mParentBoundLeft = 0f
-	private var availableWidth = 0f
+	private var mBackgroundColor: Int = DEFAULT_CONTAINER_BACKGROUND_COLOR
 
+	private var mChildrenOvalRadius = 0f
 
-	private var childPositionX: Float = 0f
-	private var mChildsOvalRadius = 0f
+	//this positions calculated only in onMeasure
+	private var blueChildStartPosition = 0f
+	private var greenChildStartPosition = 0f
+	private var redChildStartPosition = 0f
 
-	private var mOval1Color: Int = ContextCompat.getColor(context, R.color.my_loading_shape1)
-	private var mOval2Color: Int = ContextCompat.getColor(context, R.color.my_loading_shape2)
-	private var mOval3Color: Int = ContextCompat.getColor(context, R.color.my_loading_shape3)
+	//this value respond to position circle during animations
+	private var blueChildFloatingPosition = 0f
+	private var greenChildFloatingPosition = 0f
+	private var redChildFloatingPosition = 0f
 
-	private lateinit var animator: ValueAnimator
+	private val greenColor: Int = ContextCompat.getColor(context, R.color.my_loading_green_oval)
+	private val blueColor: Int = ContextCompat.getColor(context, R.color.my_loading_blue_oval)
+	private val redColor: Int = ContextCompat.getColor(context, R.color.my_loading_red_oval)
+
+	private val animator: AnimatorSet = AnimatorSet()
 
 	private val mCircleBackgroundPaint = Paint(ANTI_ALIAS_FLAG).apply {
 		style = Paint.Style.FILL
 	}
 
+	companion object{
+		private const val DEFAULT_CONTAINER_BACKGROUND_COLOR = Color.TRANSPARENT
+	}
 
 	constructor(context: Context): super(context)
 
 	@JvmOverloads
-	constructor(context: Context, attrs: AttributeSet?, defStyle: Int = 0): super(context, attrs, defStyle)
+	constructor(context: Context, attrs: AttributeSet?, defStyle: Int = 0): super(context, attrs, defStyle){
+		val a = context.obtainStyledAttributes(attrs, R.styleable.LoadingView, defStyle, 0)
+		mBackgroundColor = a.getColor(R.styleable.LoadingView_container_background_color,
+		                              DEFAULT_CONTAINER_BACKGROUND_COLOR)
+		a.recycle()
+	}
 
 
 	override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -66,11 +82,21 @@ class LoadingView: View {
 		                        (minSize - paddingRight).toFloat(),
 		                        (minSize - paddingBottom).toFloat())
 		mBackgroundOvalRadius = min(mBackgroundOvalRect.height() / 2.0f, mBackgroundOvalRect.width() / 2.0f)
-		mChildsOvalRadius = mBackgroundOvalRadius / 2.5f
+		mChildrenOvalRadius = mBackgroundOvalRadius / 2.5f
 		setMeasuredDimension(minSize, minSize)
-		childPositionX = mBackgroundOvalRect.centerX()
 
-		startAnimation()
+		blueChildStartPosition = mBackgroundOvalRect.centerX()*1.3f
+		redChildStartPosition = mBackgroundOvalRect.centerX()/1.4f
+		greenChildStartPosition = mBackgroundOvalRect.centerX()
+
+		blueChildFloatingPosition = blueChildStartPosition
+		redChildFloatingPosition = redChildStartPosition
+		greenChildFloatingPosition = greenChildStartPosition
+
+		animator.playTogether(startAnimationBlue(),
+		                      startAnimationRed(),
+		                      startAnimationGreen())
+		animator.start()
 	}
 
 	override fun onDraw(canvas: Canvas) {
@@ -81,43 +107,72 @@ class LoadingView: View {
 			           mBackgroundOvalRect.centerY(),
 			           mBackgroundOvalRadius,
 			           mCircleBackgroundPaint)
-			//blue circle
-			mCircleBackgroundPaint.color = mOval3Color
-			drawCircle(childPositionX*1.25f,
+			//green circle
+			mCircleBackgroundPaint.color = greenColor
+			drawCircle(greenChildFloatingPosition,
 			           mBackgroundOvalRect.centerY(),
-			           mChildsOvalRadius,
+			           mChildrenOvalRadius,
+			           mCircleBackgroundPaint)
+			//blue circle
+			mCircleBackgroundPaint.color = blueColor
+			drawCircle(blueChildFloatingPosition,
+			           mBackgroundOvalRect.centerY(),
+			           mChildrenOvalRadius,
 			           mCircleBackgroundPaint)
 			//red circle
-			mCircleBackgroundPaint.color = mOval2Color
-			drawCircle(childPositionX/1.5f,
+			mCircleBackgroundPaint.color = redColor
+			drawCircle(redChildFloatingPosition,
 			           mBackgroundOvalRect.centerY(),
-			           mChildsOvalRadius,
-			           mCircleBackgroundPaint)
-			//green circle
-			mCircleBackgroundPaint.color = mOval1Color
-			drawCircle(childPositionX,
-			           mBackgroundOvalRect.centerY(),
-			           mChildsOvalRadius,
+			           mChildrenOvalRadius,
 			           mCircleBackgroundPaint)
 
 		}
 
 	}
 
-	private fun startAnimation() {
-		animator = ValueAnimator.ofFloat(300f,
-		                                 (mBackgroundOvalRect.centerX() +
-		                                  mBackgroundOvalRect.centerX()/2f)).apply {
-			duration = 3000
+	private fun startAnimationBlue(): ValueAnimator {
+		return ValueAnimator.ofFloat(blueChildStartPosition,
+		                             mBackgroundOvalRect.centerX()*0.7f,
+		                             blueChildStartPosition).apply {
+			duration = 2000
 			repeatCount = ValueAnimator.INFINITE
 			repeatMode = ValueAnimator.RESTART
 
 			addUpdateListener { valueAnimator ->
-				childPositionX = valueAnimator.animatedValue as Float
+				blueChildFloatingPosition = valueAnimator.animatedValue as Float
 				invalidate()
 			}
 		}
-		animator.start()
+	}
+
+	private fun startAnimationRed(): ValueAnimator {
+		return ValueAnimator.ofFloat(redChildStartPosition,
+		                             mBackgroundOvalRect.centerX()*1.4f,
+		                             redChildStartPosition).apply {
+			duration = 1800
+			repeatCount = ValueAnimator.INFINITE
+			repeatMode = ValueAnimator.RESTART
+
+			addUpdateListener { valueAnimator ->
+				redChildFloatingPosition = valueAnimator.animatedValue as Float
+				invalidate()
+			}
+		}
+	}
+
+	private fun startAnimationGreen(): ValueAnimator {
+		return ValueAnimator.ofFloat(greenChildStartPosition/2,
+		                             mBackgroundOvalRect.centerX()*1.5f,
+		                             greenChildStartPosition/2).apply {
+			duration = 3500
+			repeatCount = ValueAnimator.INFINITE
+			repeatMode = ValueAnimator.RESTART
+
+			addUpdateListener { valueAnimator ->
+				greenChildFloatingPosition = valueAnimator.animatedValue as Float
+				invalidate()
+			}
+		}
 	}
 
 }
