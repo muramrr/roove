@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 05.03.20 16:16
+ * Last modified 22.03.20 17:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -84,17 +84,16 @@ dependencies {
 	implementation project(':data')
 
 	//core
-	implementation 'androidx.core:core-ktx:1.3.0-alpha01'
+	implementation 'androidx.core:core-ktx:1.3.0-alpha02'
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-	implementation 'androidx.appcompat:appcompat:1.2.0-alpha02'
+	implementation 'androidx.appcompat:appcompat:1.2.0-alpha03'
 	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 	implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
-	implementation 'androidx.drawerlayout:drawerlayout:1.1.0-alpha03'
 	implementation 'com.google.android.material:material:1.2.0-alpha02'
 
 	//custom UI
 	implementation 'com.yuyakaido.android:card-stack-view:2.3.4'
-	implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
+	implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.4.0'
 
 	// Firebase
 	implementation libs.firebaseAuth
@@ -102,10 +101,9 @@ dependencies {
 	implementation libs.firestorage
 	implementation libs.firestore
 	implementation 'com.google.firebase:firebase-analytics:17.2.3'
-	implementation 'com.google.firebase:firebase-messaging:20.1.2'
+	implementation 'com.google.firebase:firebase-messaging:20.1.3'
 
 	//facebook auth
-	//implementation "com.facebook.android:facebook-android-sdk:$facebook_sdk_version"
 	implementation libs.facebookLogin
 
 	//glide
@@ -119,7 +117,10 @@ dependencies {
 	implementation libs.dagger
 	kapt libs.daggerCompiler
 
-	implementation libs.rxJava
+	// Navigation component
+	implementation libs.navigation_fragment
+	implementation libs.navigation_ui
+
 	// RxJava
 	implementation libs.rxJava
 
@@ -130,10 +131,6 @@ dependencies {
 	implementation libs.retrofit
 	implementation libs.retrofitAdapter
 	implementation libs.retrofitConverter
-
-	// Navigation component
-	implementation 'androidx.navigation:navigation-fragment-ktx:2.2.1'
-	implementation 'androidx.navigation:navigation-ui-ktx:2.2.1'
 
 
 	// ViewModel and LiveData
