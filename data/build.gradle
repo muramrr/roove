@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.01.20 13:59
+ * Last modified 23.03.20 15:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,7 +62,6 @@ dependencies {
 	implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
 	//facebook auth
-	//implementation "com.facebook.android:facebook-android-sdk:$facebook_sdk_version"
 	implementation libs.facebookLogin
 
 	// Firebase

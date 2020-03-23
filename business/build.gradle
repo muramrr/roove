@@ -1,3 +1,13 @@
+/*
+ * Created by Andrii Kovalchuk
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 23.03.20 15:54
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 apply plugin: 'kotlin'
 
 
@@ -14,16 +24,3 @@ compileKotlin {
 		jvmTarget = "1.8"
 	}
 }
-
-/*
- * Created by Andrii Kovalchuk
- * Copyright (c) 2020. All rights reserved.
- * Last modified 25.01.20 18:53
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- */
-
-//sourceCompatibility = "1.8"
-////targetCompatibility = "1.8"
