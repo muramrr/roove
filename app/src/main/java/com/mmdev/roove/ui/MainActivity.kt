@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.03.20 16:29
+ * Last modified 23.03.20 18:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -90,7 +90,7 @@ class MainActivity: AppCompatActivity() {
 		})
 
 		remoteRepoViewModel.isUserUpdatedStatus.observe(this, Observer {
-			if (it) { showToastText(getString(R.string.toast_update_success)) }
+			if (it) { showToastText(getString(R.string.toast_text_update_success)) }
 		})
 
 		//creating fake data on remote, do not call this on UI thread

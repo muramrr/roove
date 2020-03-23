@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 22.03.20 16:22
+  ~ Last modified 23.03.20 18:31
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -102,7 +102,7 @@
 					android:layout_height="wrap_content"
 					android:padding="@dimen/general_margin_16"
 
-					android:text="About"
+					android:text="@string/profile_about_header_text"
 					android:textSize="24sp"
 					style="@style/medium_text"
 
@@ -134,7 +134,7 @@
 					android:layout_height="wrap_content"
 					android:padding="@dimen/general_margin_16"
 
-					android:text="Хочу сходить"
+					android:text="@string/want_to_go_text"
 					android:textSize="24sp"
 					style="@style/medium_text"
 

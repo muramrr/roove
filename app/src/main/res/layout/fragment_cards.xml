@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 22.03.20 16:22
+  ~ Last modified 23.03.20 18:31
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,7 +69,7 @@
 	        android:layout_height="wrap_content"
 		    android:gravity="center"
 
-	        android:text="There is no available users matching your preferences"
+	        android:text="@string/fragment_cards_explanation_text"
 		    android:textSize="18sp"
 		    style="@style/regular_text"
 

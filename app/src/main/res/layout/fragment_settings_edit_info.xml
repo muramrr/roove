@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 20:45
+  ~ Last modified 23.03.20 18:31
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,7 +79,7 @@
 				app:boxStrokeColor="@color/text_input_layout"
 				app:boxStrokeWidth="2dp"
 
-				android:hint="Your name"
+				android:hint="@string/hint_name"
 				app:hintEnabled="true"
 				app:hintTextColor="@color/white"
 
@@ -213,7 +213,7 @@
 				app:boxStrokeColor="@color/text_input_layout"
 				app:boxStrokeWidth="2dp"
 
-				android:hint="Your city"
+				android:hint="@string/hint_city"
 				app:hintEnabled="true"
 				app:hintTextColor="@color/white"
 
@@ -259,7 +259,7 @@
 				app:boxStrokeColor="@color/text_input_layout"
 				app:boxStrokeWidth="2dp"
 
-				android:hint="About me"
+				android:hint="@string/profile_about_header_text"
 				app:hintEnabled="true"
 				app:hintTextColor="@color/white"
 
@@ -307,7 +307,7 @@
 
 				android:padding="@dimen/general_margin_16"
 
-				android:text="Сохранить"
+				android:text="@string/btn_done_text"
 				android:textSize="20sp"
 				android:textAllCaps="false"
 

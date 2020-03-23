@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.03.20 17:56
+  ~ Last modified 23.03.20 18:31
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -101,7 +101,7 @@
 		android:alpha="0"
 		android:rotationX="-90"
 
-		android:text="@string/reg_step_2_tv_interested_in"
+		android:text="@string/hint_preferred_gender"
 		android:textSize="40sp"
 		style="@style/medium_text"
 
@@ -193,7 +193,7 @@
 		android:layout_marginTop="@dimen/general_margin_16"
 
 		android:gravity="center"
-		android:text="18"
+		android:text="@string/default_age_text"
 		android:textSize="30sp"
 		style="@style/light_text"
 
@@ -217,7 +217,7 @@
 		android:alpha="0"
 		android:rotationX="90"
 
-		android:text="Ages you prefer"
+		android:text="@string/tv_ages_you_prefer"
 		android:textSize="24sp"
 		style="@style/medium_text"
 
@@ -365,7 +365,7 @@
 
 		app:hintEnabled="true"
 		app:hintTextColor="@color/white"
-		android:hint="Your city"
+		android:hint="@string/hint_city"
 
 		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
 
@@ -428,7 +428,7 @@
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
 
-		android:hint="Your name"
+		android:hint="@string/hint_name"
 		app:hintEnabled="true"
 		app:hintTextColor="@color/white"
 
@@ -472,7 +472,7 @@
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
 
-		android:hint="Your gender"
+		android:hint="@string/hint_gender"
 		app:hintEnabled="true"
 		app:hintTextColor="@color/white"
 
@@ -500,7 +500,7 @@
 			android:imeOptions="actionDone"
 			android:inputType="text"
 
-			android:text="male"
+			android:text="@string/genderMale"
 			android:textColor="@color/white"
 			android:textSize="20sp"
 			style="@style/regular_text" />
@@ -515,7 +515,7 @@
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
 
-		android:hint="Interested in"
+		android:hint="@string/hint_preferred_gender"
 		app:hintEnabled="true"
 		app:hintTextColor="@color/white"
 
@@ -543,7 +543,7 @@
 			android:imeOptions="actionDone"
 			android:inputType="text"
 
-			android:text="everyone"
+			android:text="@string/genderEveryone"
 			android:textColor="@color/white"
 			android:textSize="20sp"
 			style="@style/regular_text" />
@@ -560,7 +560,7 @@
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
 
-		android:hint="Age"
+		android:hint="@string/hint_age"
 		app:hintEnabled="true"
 		app:hintTextColor="@color/white"
 
@@ -586,7 +586,7 @@
 			android:imeOptions="actionDone"
 			android:inputType="number"
 
-			android:text="12"
+			android:text="@string/default_age_text"
 			android:textColor="@color/white"
 			android:textSize="20sp"
 			style="@style/regular_text" />
@@ -602,7 +602,7 @@
 		app:boxStrokeColor="@color/text_input_layout"
 		app:boxStrokeWidth="2dp"
 
-		android:hint="City choosed"
+		android:hint="@string/hint_city"
 		app:hintEnabled="true"
 		app:hintTextColor="@color/white"
 
@@ -628,7 +628,6 @@
 			android:inputType="text"
 			android:maxLines="1"
 
-			android:text="Krasnoyarsk"
 			android:textColor="@color/white"
 			android:textSize="20sp"
 			style="@style/regular_text" />
@@ -642,7 +641,7 @@
 		android:padding="@dimen/general_margin_16"
 
 		android:fontFamily="@font/rubik_medium"
-		android:text="Back"
+		android:text="@string/reg_btn_back_text"
 		android:textColor="@color/material_red_a700"
 		android:textSize="20sp"
 		android:textAllCaps="false"
@@ -670,7 +669,7 @@
 		android:padding="@dimen/general_margin_16"
 
 		android:fontFamily="@font/rubik_medium"
-		android:text="Done"
+		android:text="@string/btn_done_text"
 		android:textColor="@color/white"
 		android:textSize="26sp"
 		android:textAllCaps="false"
@@ -700,7 +699,7 @@
 		android:layout_marginBottom="@dimen/general_margin_16"
 
 		android:fontFamily="@font/rubik_medium"
-		android:text="Back"
+		android:text="@string/reg_btn_back_text"
 		android:textAllCaps="false"
 		android:textColor="@color/white_50"
 		android:textSize="18sp"

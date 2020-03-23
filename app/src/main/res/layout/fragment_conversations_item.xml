@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 19:26
+  ~ Last modified 23.03.20 18:31
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -52,12 +52,12 @@
 
 			app:layout_constraintStart_toEndOf="@id/ivConversationItemUserPhoto"
 			app:layout_constraintTop_toTopOf="@id/ivConversationItemUserPhoto"
-			app:layout_constraintBottom_toTopOf="@id/tvConversationItenLastMessage"
+			app:layout_constraintBottom_toTopOf="@id/tvConversationItemLastMessage"
 
 			style="@style/bold_text" />
 
 		<TextView
-			android:id="@+id/tvConversationItenLastMessage"
+			android:id="@+id/tvConversationItemLastMessage"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="8dp"

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.03.20 17:46
+  ~ Last modified 23.03.20 18:31
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,7 @@
 		android:labelFor="@id/rangeSeekBarAgePicker"
 		android:padding="@dimen/general_margin_8"
 
-		android:text="Show ages:"
+		android:text="@string/tv_ages_you_prefer"
 		android:textSize="24sp"
 		style="@style/medium_text"
 
@@ -81,7 +81,7 @@
 		android:labelFor="@id/toggleButtonPickerPreferredGender"
 		android:padding="@dimen/general_margin_8"
 
-		android:text="Show me:"
+		android:text="@string/tv_gender_showing"
 		android:textSize="24sp"
 		style="@style/medium_text"
 

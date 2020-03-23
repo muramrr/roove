@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 16:42
+  ~ Last modified 23.03.20 18:31
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
   -->
 
 
-<layout
+<layout xmlns:tools="http://schemas.android.com/tools"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -99,7 +99,7 @@
 					android:layout_height="wrap_content"
 					android:padding="@dimen/general_margin_16"
 
-					android:text="Описание"
+					android:text="@string/place_description_header_text"
 					android:textSize="22sp"
 					style="@style/medium_text"
 
@@ -161,7 +161,7 @@
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintTop_toBottomOf="@id/tvPlaceDetailedFullDescription"
-					/>
+					tools:ignore="ContentDescription" />
 
 
 			</androidx.constraintlayout.widget.ConstraintLayout>
@@ -174,7 +174,7 @@
 			android:layout_width="wrap_content"
 			android:layout_margin="@dimen/general_margin_16"
 
-			android:text="Хочу посетить"
+			android:text="@string/want_to_go_text"
 			android:textAlignment="center"
 			android:textAllCaps="false"
 			android:textAppearance="@style/bold_text"

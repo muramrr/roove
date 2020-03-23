@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.03.20 17:17
+ * Last modified 23.03.20 18:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -64,7 +64,7 @@ fun View.addSystemLeftPadding(targetView: View = this) =
 
 fun Context.ErrorMaterialDialogBuilder(errorText: String) =
 	MaterialAlertDialogBuilder(this)
-		.setTitle(getString(R.string.ErrorTitle))
+		.setTitle(getString(R.string.dialog_error_title))
 		.setMessage(errorText)
 		.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
 
