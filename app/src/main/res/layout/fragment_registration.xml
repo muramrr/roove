@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 20:45
+  ~ Last modified 23.03.20 16:25
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -262,6 +262,7 @@
 			android:inputType="textPersonName"
 			android:maxLines="1"
 
+			android:textColor="@color/white"
 			android:textCursorDrawable="@color/lolite"
 			android:textSize="20sp"
 			style="@style/regular_text" />
@@ -326,7 +327,7 @@
 			android:imeOptions="actionDone"
 			android:inputType="text"
 
-
+			android:textColor="@color/white"
 			android:textSize="20sp"
 			style="@style/regular_text"
 			/>
@@ -392,6 +393,7 @@
 			android:inputType="textPersonName"
 
 			android:text="@string/default_name"
+			android:textColor="@color/white"
 			android:textSize="20sp"
 			style="@style/regular_text" />
 
@@ -435,6 +437,7 @@
 			android:inputType="text"
 
 			android:text="male"
+			android:textColor="@color/white"
 			android:textSize="20sp"
 			style="@style/regular_text" />
 
@@ -477,6 +480,7 @@
 			android:inputType="text"
 
 			android:text="everyone"
+			android:textColor="@color/white"
 			android:textSize="20sp"
 			style="@style/regular_text" />
 
@@ -519,6 +523,7 @@
 			android:inputType="number"
 
 			android:text="12"
+			android:textColor="@color/white"
 			android:textSize="20sp"
 			style="@style/regular_text" />
 
@@ -560,6 +565,7 @@
 			android:maxLines="1"
 
 			android:text="Krasnoyarsk"
+			android:textColor="@color/white"
 			android:textSize="20sp"
 			style="@style/regular_text" />
 
