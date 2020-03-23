@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.03.20 18:31
+ * Last modified 23.03.20 18:32
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,7 +56,7 @@ class MainActivity: AppCompatActivity() {
 		
 		super.onCreate(savedInstanceState)
 
-		val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+		DataBindingUtil.setContentView(this, R.layout.activity_main) as ActivityMainBinding
 
 		val navController = findNavController(R.id.flowHostFragment)
 
