@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.03.20 16:25
+  ~ Last modified 23.03.20 17:56
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-	<!-- step 1 -->
+	<!-- step 1 your gender-->
 	<TextView
 		android:id="@+id/tvSelectGender"
 		android:layout_width="0dp"
@@ -91,7 +91,7 @@
 		app:layout_constraintVertical_bias="0.3" />
 
 
-	<!-- step 2 -->
+	<!-- step 2 gender preferred-->
 	<TextView
 		android:id="@+id/tvInterested"
 		android:layout_width="0dp"
@@ -135,7 +135,7 @@
 		app:layout_constraintStart_toStartOf="parent" />
 
 
-	<!-- step 3 -->
+	<!-- step 3 age -->
 	<TextView
 		android:id="@+id/tvSpecifyAge"
 		android:layout_width="0dp"
@@ -152,7 +152,7 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintVertical_bias="0.3"
+		app:layout_constraintVertical_bias="0.2"
 		/>
 
 	<com.google.android.material.slider.Slider
@@ -160,7 +160,8 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="24dp"
-		android:padding="@dimen/general_margin_16"
+		android:layout_marginStart="@dimen/general_margin_8"
+		android:layout_marginEnd="@dimen/general_margin_8"
 
 		android:hapticFeedbackEnabled="true"
 
@@ -182,6 +183,7 @@
 		app:layout_constraintTop_toBottomOf="@id/tvSpecifyAge"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/tvAgeDisplay"
 		/>
 
 	<TextView
@@ -201,11 +203,72 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/sliderAge"
+		app:layout_constraintBottom_toTopOf="@id/tvRegAgePicker"
 		/>
 
+	<TextView
+		android:id="@+id/tvRegAgePicker"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/general_margin_16"
+		android:labelFor="@id/rangeSeekBarRegAgePicker"
+		android:padding="@dimen/general_margin_8"
+
+		android:alpha="0"
+		android:rotationX="90"
+
+		android:text="Ages you prefer"
+		android:textSize="24sp"
+		style="@style/medium_text"
+
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/tvAgeDisplay"
+		app:layout_constraintBottom_toTopOf="@id/cvRegContainerAgePicker"
+		/>
+
+	<androidx.cardview.widget.CardView
+		android:id="@+id/cvRegContainerAgePicker"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+
+		android:alpha="0"
+		android:translationX="-500dp"
+
+		app:cardBackgroundColor="@color/colorPrimary"
+		app:cardCornerRadius="20dp"
+		app:contentPadding="@dimen/general_margin_16"
+		android:elevation="0dp"
+
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/tvRegAgePicker"
+		>
+
+		<org.florescu.android.rangeseekbar.RangeSeekBar
+			android:id="@+id/rangeSeekBarRegAgePicker"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@null"
+
+			app:absoluteMinValue="18"
+			app:absoluteMaxValue="50"
+
+			app:alwaysActive="false"
+
+			app:textAboveThumbsColor="@color/white"
+			app:thumbDisabled="@drawable/custom_slider_thumb"
+			app:thumbNormal="@drawable/custom_slider_thumb"
+			app:thumbPressed="@drawable/custom_slider_thumb"
+
+			app:showLabels="true"
+			app:valuesAboveThumbs="true"
+			/>
+
+	</androidx.cardview.widget.CardView>
 
 
-	<!-- step 4 -->
+	<!-- step 4 name -->
 	<TextView
 		android:id="@+id/tvChangeName"
 		android:layout_width="0dp"
@@ -271,7 +334,7 @@
 	</com.google.android.material.textfield.TextInputLayout>
 
 
-	<!-- step 5-->
+	<!-- step 5 city -->
 	<TextView
 		android:id="@+id/tvChooseYourCity"
 		android:layout_width="0dp"
@@ -379,6 +442,7 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/tvAllCorrect"
+		app:layout_constraintBottom_toTopOf="@id/layoutFinalGender"
 		>
 
 		<com.google.android.material.textfield.TextInputEditText
@@ -595,6 +659,7 @@
 		app:layout_constraintBottom_toTopOf="@id/btnRegistrationDone"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/layoutFinalAge"
 		/>
 
 	<com.google.android.material.button.MaterialButton

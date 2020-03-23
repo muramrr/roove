@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.03.20 16:15
+ * Last modified 23.03.20 18:00
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
+import com.mmdev.business.core.PreferredAgeRange
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.auth.AuthViewModel
@@ -41,10 +42,11 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_
 
 	private var baseUserInfo = BaseUserInfo()
 	private var name = "no name"
-	private var age = 0
+	private var age = 18
 	private var city = ""
 	private var gender = ""
 	private var preferredGender = ""
+	private val preferredAgeRange = PreferredAgeRange(minAge = 18, maxAge = 24)
 
 	private var cityToDisplay = ""
 
@@ -89,7 +91,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_
 
 		disableFab()
 
-		// don't allow to break transitions
+		// prevent to click buttons during transitions
 		containerRegistration.setTransitionListener(object : MotionLayout.TransitionListener {
 
 			override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {}
@@ -109,7 +111,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_
 
 
 
-		//step 1
+		//step 1 your gender
 		btnGenderMale.setOnClickListener {
 			setSelectedMale()
 
@@ -135,7 +137,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_
 		}
 
 
-		//step 2
+		//step 2 gender your prefer
 		btnGenderEveryone.setOnClickListener {
 			setSelectedEveryone()
 			preferredGender = everyone
@@ -143,15 +145,19 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_
 		}
 
 
-		//step 3
-		sliderAge.setOnChangeListener{ _, value ->
+		//step 3 age
+		sliderAge.setOnChangeListener { _, value ->
 			age = value.toInt()
 			tvAgeDisplay.text = age.toString()
-			enableFab()
+		}
+
+		rangeSeekBarRegAgePicker.setOnRangeSeekBarChangeListener { _, number, number2 ->
+			preferredAgeRange.minAge = number.toInt()
+			preferredAgeRange.maxAge = number2.toInt()
 		}
 
 
-		//step 4
+		//step 4 name
 		edInputChangeName.addTextChangedListener(object: TextWatcher {
 			override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
@@ -187,7 +193,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_
 		}
 
 
-		//step 5
+		//step 5 city
 		val cityAdapter = ArrayAdapter(context!!,
 		                               R.layout.drop_text_item,
 		                               cityList.map { it.key })
@@ -216,13 +222,13 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_
 			                                  baseUserInfo.mainPhotoUrl,
 			                                  baseUserInfo.userId)
 
-			associatedViewModel.signUp(UserItem(finalUserModel,
-			                              cityToDisplay = cityToDisplay,
-			                              photoURLs = mutableListOf(
-					                              PhotoItem(fileName = "facebookPhoto",
-					                                        fileUrl = finalUserModel.mainPhotoUrl)
-			                              )
-			))
+			associatedViewModel.signUp(
+					UserItem(finalUserModel,
+					         cityToDisplay = cityToDisplay,
+					         photoURLs = mutableListOf(PhotoItem(fileName = "facebookPhoto",
+					                                             fileUrl = finalUserModel.mainPhotoUrl)),
+					         preferredAgeRange = preferredAgeRange)
+			)
 		}
 
 
@@ -316,13 +322,12 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_
 		else disableFab()
 	}
 
-	private fun restoreStep3State(){
-		if (age != 0) {
-			enableFab()
-			sliderAge.value = age.toFloat()
-			tvAgeDisplay.text = age.toString()
-		}
-		else disableFab()
+	private fun restoreStep3State() {
+		enableFab()
+		sliderAge.value = age.toFloat()
+		tvAgeDisplay.text = age.toString()
+		rangeSeekBarRegAgePicker.selectedMinValue = preferredAgeRange.minAge
+		rangeSeekBarRegAgePicker.selectedMaxValue = preferredAgeRange.maxAge
 	}
 
 	private fun restoreStep4State(){

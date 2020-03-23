@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2019. All rights reserved.
-  ~ Last modified 18.12.19 19:48
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 23.03.20 17:56
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -128,6 +128,7 @@
 
 	</ConstraintSet>
 
+	<!-- step 1 your gender-->
 	<ConstraintSet android:id="@+id/step_1">
 
 		<Constraint
@@ -168,6 +169,7 @@
 
 	</ConstraintSet>
 
+	<!-- step 2 gender preferred-->
 	<ConstraintSet android:id="@+id/step_2">
 
 		<Constraint
@@ -231,6 +233,7 @@
 
 	</ConstraintSet>
 
+	<!-- step 3 age -->
 	<ConstraintSet android:id="@+id/step_3">
 
 		<Constraint
@@ -270,7 +273,7 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_bias="0.3"
+			app:layout_constraintVertical_bias="0.2"
 			/>
 
 		<Constraint
@@ -278,11 +281,13 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="24dp"
-			android:padding="@dimen/general_margin_16"
+			android:layout_marginStart="@dimen/general_margin_8"
+			android:layout_marginEnd="@dimen/general_margin_8"
 
 			app:layout_constraintTop_toBottomOf="@id/tvSpecifyAge"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/tvAgeDisplay"
 			/>
 
 		<Constraint
@@ -294,10 +299,34 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/sliderAge"
+			app:layout_constraintBottom_toTopOf="@id/tvRegAgePicker"
+			/>
+
+		<Constraint
+			android:id="@+id/tvRegAgePicker"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/general_margin_16"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tvAgeDisplay"
+			app:layout_constraintBottom_toTopOf="@id/cvRegContainerAgePicker"
+			/>
+
+		<Constraint
+			android:id="@+id/cvRegContainerAgePicker"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tvRegAgePicker"
 			/>
 
 	</ConstraintSet>
 
+	<!-- step 4 name -->
 	<ConstraintSet android:id="@+id/step_4">
 
 		<Constraint
@@ -341,6 +370,7 @@
 
 	</ConstraintSet>
 
+	<!-- step 5 city -->
 	<ConstraintSet android:id="@+id/step_5">
 
 		<Constraint
@@ -366,6 +396,7 @@
 
 	</ConstraintSet>
 
+	<!-- final step -->
 	<ConstraintSet android:id="@+id/step_final">
 
 		<Constraint
@@ -388,6 +419,7 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/tvAllCorrect"
+			app:layout_constraintBottom_toTopOf="@id/layoutFinalGender"
 			 />
 
 		<Constraint
@@ -445,6 +477,7 @@
 			android:padding="@dimen/general_margin_16"
 
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationDone"
+			app:layout_constraintTop_toBottomOf="@id/layoutFinalAge"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			/>
