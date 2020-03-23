@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.03.20 15:06
+ * Last modified 23.03.20 16:32
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -66,6 +66,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 						db.collection(BASE_COLLECTION_REFERENCE)
 							.document(userItem.baseUserInfo.userId)
 							.set(authUserItem)
+						userWrapper.setUser(userItem)
 						emitter.onComplete()
 					}.addOnFailureListener { emitter.onError(it) }
 			}.addOnFailureListener { emitter.onError(it) }
