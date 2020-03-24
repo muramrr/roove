@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 14:40
+  ~ Last modified 24.03.20 15:20
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,17 +10,15 @@
   -->
 
 <RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-	android:background="@color/colorPrimaryDark"
-	android:paddingEnd="@dimen/general_margin_8"
-	android:paddingStart="@dimen/general_margin_8"
-	android:paddingBottom="2dp"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+
 	android:layout_marginStart="60dp"
 	android:layout_marginEnd="@dimen/general_margin_8"
 	android:layout_marginBottom="4dp"
 	android:layout_marginTop="4dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+
+	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<LinearLayout
 		android:id="@+id/contentMessageChat"
@@ -31,40 +29,25 @@
 		android:background="@drawable/fragment_chat_message_right"
 		android:orientation="vertical">
 
-	    <ImageView
-		    android:id="@+id/ivChatMessagePhoto"
-		    android:layout_width="200dp"
-		    android:layout_height="250dp"
-		    android:layout_margin="10dp"
-	        android:background="@color/colorAccent"
-		    android:contentDescription="@string/chat_message_my_attach_img_description"
-		    android:src="@drawable/default_avatar"
-		    android:visibility="visible"/>
+		<ImageView
+			android:id="@+id/ivChatMessagePhoto"
+			android:layout_width="200dp"
+			android:layout_height="250dp"
+			android:layout_margin="10dp"
+			android:layout_gravity="center"
+			android:contentDescription="@string/chat_message_my_attach_img_description"
+			android:visibility="visible"/>
 
 		<TextView
 			android:id="@+id/tvChatMessageText"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_margin="10dp"
-			android:layout_gravity="end"
+			android:padding="@dimen/general_margin_16"
 			android:text="@string/default_message_text"
 			android:textIsSelectable="true"
 			android:textSize="16sp"
 			style="@style/regular_text"/>
 
 	</LinearLayout>
-
-    <TextView
-	    android:id="@+id/tvChatMessageTimestamp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/contentMessageChat"
-        android:layout_below="@id/contentMessageChat"
-	    android:layout_marginTop="2dp"
-
-        android:text="@string/default_message_date"
-	    android:textColor="@color/white_25"
-	    android:textSize="8sp"
-        style="@style/regular_text" />
 
 </RelativeLayout>

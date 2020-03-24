@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 15.03.20 17:52
+ * Last modified 24.03.20 15:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -120,6 +120,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 
 		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 
+		//init current user id to understand left/right message
 		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			userItemModel = it
 			mChatAdapter.setCurrentUserId(it.baseUserInfo.userId)
@@ -136,23 +137,19 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 
 			sharedViewModel.conversationSelected.value = receivedConversationItem
 		}
-
+		//load partner info
 		remoteRepoViewModel.retrievedUserItem.observeOnce(this, Observer {
 			currentPartner = it
 			setupContentToolbar(it)
 			sharedViewModel.userSelected.value = it
 		})
 
+		//ready? steady? init loading.
 		sharedViewModel.conversationSelected.observeOnce(this, Observer {
 			currentConversation = it
 			remoteRepoViewModel.getFullUserInfo(it.partner)
 			associatedViewModel.loadMessages(it)
 			associatedViewModel.observeNewMessages(it)
-		})
-
-
-		associatedViewModel.getMessagesList().observe(this, Observer {
-			mChatAdapter.updateData(it)
 		})
 
 	}
@@ -175,9 +172,8 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-				btnSendMessage.isActivated = edTextMessageInput.text.isNotEmpty() &&
-				                             edTextMessageInput.text.toString().trim().isNotEmpty()
+			override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+				btnSendMessage.isActivated = s.trim().isNotEmpty()
 			}
 		})
 
@@ -287,8 +283,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 	* else shake animation
 	*/
 	private fun sendMessageClick() {
-		if (edTextMessageInput.text.isNotEmpty() &&
-		    edTextMessageInput.text.toString().trim().isNotEmpty()) {
+		if (edTextMessageInput.text.toString().trim().isNotEmpty()) {
 
 			val message = MessageItem(sender = userItemModel.baseUserInfo,
 			                          recipientId = currentConversation.partner.userId,
@@ -297,9 +292,8 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 			                          conversationId = currentConversation.conversationId)
 
 			associatedViewModel.sendMessage(message)
-			edTextMessageInput.setText("")
 			rvMessageList.scrollToPosition(0)
-
+			edTextMessageInput.text.clear()
 		}
 		else edTextMessageInput.startAnimation(
 				AnimationUtils.loadAnimation(context, R.anim.horizontal_shake))

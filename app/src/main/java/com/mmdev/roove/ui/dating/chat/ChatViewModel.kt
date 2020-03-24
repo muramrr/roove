@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.03.20 15:28
+ * Last modified 24.03.20 15:45
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,16 +33,14 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 	private val sendMessageUC = SendMessageUseCase(repo)
 	private val uploadMessagePhotoUC = UploadMessagePhotoUseCase(repo)
 
-	private val messagesList: MutableLiveData<MutableList<MessageItem>> = MutableLiveData()
+	val messagesList: MutableLiveData<MutableList<MessageItem>> = MutableLiveData()
 	init {
 		messagesList.value = mutableListOf()
 	}
+	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
 
 	private lateinit var selectedConversation: ConversationItem
-
 	private var emptyChat = true
-
-	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
 
 
 	fun loadMessages(conversation: ConversationItem) {
@@ -122,8 +120,6 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
             .subscribe({ /*Log.wtf(TAG, "Photo sent")*/ },
                        { error.value = MyError(ErrorType.SENDING, it) }))
 	}
-
-	fun getMessagesList() = messagesList
 
 
 	private fun loadMessagesExecution(conversation: ConversationItem) =

@@ -2,67 +2,58 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 14:40
+  ~ Last modified 24.03.20 15:24
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<RelativeLayout
-	android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout
+	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:background="@color/colorPrimaryDark"
-	android:paddingEnd="@dimen/general_margin_8"
-	android:paddingStart="@dimen/general_margin_8"
-	android:paddingBottom="2dp"
+	android:background="@drawable/fragment_chat_message_left"
+
+	android:layout_gravity="start"
+	android:layout_marginStart="@dimen/general_margin_8"
 	android:layout_marginEnd="60dp"
 	android:layout_marginBottom="4dp"
 	android:layout_marginTop="4dp"
-	xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<LinearLayout
-		android:id="@+id/contentMessageChat"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentStart="true"
-		android:background="@drawable/fragment_chat_message_left"
-		android:orientation="vertical">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	>
 
-		<ImageView
-			android:id="@+id/ivChatMessagePhoto"
-			android:layout_width="200dp"
-			android:layout_height="250dp"
-			android:layout_margin="10dp"
-			android:background="@color/colorAccentDark"
-			android:contentDescription="@string/chat_message_sender_attach_img_description"
-			android:src="@drawable/placeholder_image"
-			android:visibility="visible"/>
+	<ImageView
+		android:id="@+id/ivChatMessagePhoto"
+		android:layout_width="200dp"
+		android:layout_height="250dp"
+		android:layout_margin="10dp"
+		android:contentDescription="@string/chat_message_sender_attach_img_description"
+		android:visibility="visible"
 
-		<TextView
-			android:id="@+id/tvChatMessageText"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="10dp"
-			android:text="@string/default_message_text"
-			android:textIsSelectable="true"
-			android:textSize="16sp"
-			style="@style/regular_text"/>
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toBottomOf="parent"
+		/>
 
-	</LinearLayout>
 
 	<TextView
-		android:id="@+id/tvChatMessageTimestamp"
+		android:id="@+id/tvChatMessageText"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/contentMessageChat"
-		android:layout_alignStart="@id/contentMessageChat"
-		android:layout_marginTop="2dp"
+		android:padding="@dimen/general_margin_16"
 
-		android:text="@string/default_message_date"
-		android:textColor="@color/white_25"
-		android:textSize="8sp"
-		style="@style/regular_text" />
+		android:text="@string/default_message_text"
+		android:textIsSelectable="true"
+		android:textSize="16sp"
+		style="@style/regular_text"
 
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toBottomOf="parent"
+		/>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

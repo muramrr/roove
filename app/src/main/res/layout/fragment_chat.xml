@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.03.20 18:31
+  ~ Last modified 24.03.20 15:45
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -59,14 +59,15 @@
 			android:scrollbars="none"
 
 			app:visibilityInvisible="@{!viewModel.showLoading}"
+			app:bindData="@{viewModel.messagesList}"
 
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/toolbarChat"
 			app:layout_constraintBottom_toTopOf="@id/edTextMessageInput"
-			tools:itemCount="3"
-			tools:listitem="@layout/fragment_chat_item_left"/>
+			tools:itemCount="2"
+			tools:listitem="@layout/fragment_chat_item_right"/>
 
 		<View
 			android:id="@+id/messageInputContainerBackground"

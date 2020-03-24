@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.03.20 15:39
+ * Last modified 24.03.20 15:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,6 @@ package com.mmdev.data.chat
 import android.net.Uri
 import android.text.format.DateFormat
 import android.util.Log
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.*
 import com.google.firebase.storage.StorageReference
 import com.mmdev.business.chat.entity.MessageItem
@@ -77,7 +76,6 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 						var message: MessageItem
 						for (doc in it) {
 							message = doc.toObject(MessageItem::class.java)
-							message.timestamp = (message.timestamp as Timestamp).toDate()
 							initialMessageList.add(message)
 						}
 						emitter.onSuccess(initialMessageList)
@@ -105,7 +103,6 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 						var message: MessageItem
 						for (doc in it) {
 							message = doc.toObject(MessageItem::class.java)
-							message.timestamp = (message.timestamp as Timestamp).toDate()
 							paginateMessagesList.add(message)
 						}
 						emitter.onSuccess(paginateMessagesList)
@@ -142,8 +139,7 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 							for (dc in snapshots.documentChanges) {
 								if (dc.type == DocumentChange.Type.ADDED) {
 									val message = dc.document.toObject(MessageItem::class.java)
-									message.timestamp = (message.timestamp as Timestamp?)?.toDate()
-									Log.wtf(TAG, "Added: ${dc.document["text"]}")
+									//Log.wtf(TAG, "Added: ${dc.document["text"]}")
 									emitter.onNext(message)
 								}
 							}
@@ -151,9 +147,8 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 						//partner send msg
 						else if (snapshots.documents[0].get("sender.userId") != currentUser.baseUserInfo.userId) {
 							val message = snapshots.documents[0].toObject(MessageItem::class.java)!!
-							message.timestamp = (message.timestamp as Timestamp).toDate()
 							//check if last message was loaded with pagination before
-							Log.wtf(TAG, "mapped message text from partner: ${message.text}")
+							//Log.wtf(TAG, "mapped message text from partner: ${message.text}")
 							emitter.onNext(message)
 						}
 					}

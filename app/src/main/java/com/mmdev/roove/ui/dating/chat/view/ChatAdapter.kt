@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 16.03.20 15:42
+ * Last modified 24.03.20 15:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,11 +21,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
-import java.text.SimpleDateFormat
-import java.util.*
+import com.mmdev.roove.ui.common.base.BaseAdapter
 
 class ChatAdapter (private var listMessageItems: List<MessageItem>):
-	RecyclerView.Adapter<ChatAdapter.ChatViewHolder>(){
+	RecyclerView.Adapter<ChatAdapter.ChatViewHolder>(),
+	BaseAdapter.BindableAdapter<List<MessageItem>>{
 
 	private lateinit var attachedPhotoClickListener: OnItemClickListener
 	private var userId = ""
@@ -72,8 +72,8 @@ class ChatAdapter (private var listMessageItems: List<MessageItem>):
 
 	fun setCurrentUserId(id: String) { userId = id }
 
-	fun updateData(newMessagesItems: List<MessageItem>) {
-		listMessageItems = newMessagesItems
+	override fun setData(data: List<MessageItem>) {
+		listMessageItems = data
 		notifyDataSetChanged()
 	}
 
@@ -90,7 +90,6 @@ class ChatAdapter (private var listMessageItems: List<MessageItem>):
 	inner class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
 		private val tvTextMessage: TextView = itemView.findViewById(R.id.tvChatMessageText)
-		private val tvTimestamp: TextView = itemView.findViewById(R.id.tvChatMessageTimestamp)
 		private val ivChatPhoto: ImageView = itemView.findViewById(R.id.ivChatMessagePhoto)
 
 		init {
@@ -110,21 +109,13 @@ class ChatAdapter (private var listMessageItems: List<MessageItem>):
 
 		fun bind(messageItem: MessageItem) {
 			setTextMessage(messageItem.text)
-			messageItem.timestamp?.let {
-				try {
-					setTvTimestamp(convertTimestamp(it as Date))
-				}catch (e: ClassCastException) {
-					setTvTimestamp("")
-				}
+			messageItem.photoItem?.let {
+				if (ivChatPhoto.visibility != View.GONE) setIvChatPhoto(it.fileUrl)
 			}
-			messageItem.photoItem?.let { setIvChatPhoto(it.fileUrl) }
 		}
 
 		/* sets text message in TxtView binded layout */
 		private fun setTextMessage(message: String?) { tvTextMessage.text = message }
-
-		/* set timestamp in TxtView located below message with time when this message was sent */
-		private fun setTvTimestamp(timestamp: String) { tvTimestamp.text = timestamp }
 
 		/* set photo that user sends in chat */
 		private fun setIvChatPhoto(url: String) {
@@ -137,14 +128,6 @@ class ChatAdapter (private var listMessageItems: List<MessageItem>):
 		}
 
 	}
-
-	/**
-	 * parsing timestamp to display in traditional format
-	 * @param date timestamp made by firestore
-	 * @return string in format hh:mm AM/PM
-	 */
-	private fun convertTimestamp(date: Date) = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(date)
-
 
 	// parent fragment will override this method to respond to click events
 	interface OnItemClickListener {
