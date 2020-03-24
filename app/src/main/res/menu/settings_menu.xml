@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.02.20 17:19
+  ~ Last modified 24.03.20 15:57
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,11 +16,11 @@
 		android:id="@+id/settings_action_preferences"
 		app:showAsAction="ifRoom"
 		android:icon="@drawable/ic_adjust_24dp"
-		android:title="Подбор юзеров"/>
+		android:title="@string/menu_dating_preferences"/>
 
 	<item
 		android:id="@+id/settings_action_log_out"
 		app:showAsAction="ifRoom"
 		android:icon="@drawable/ic_exit_24dp"
-		android:title="Выйти"/>
+		android:title="@string/menu_exit"/>
 </menu>

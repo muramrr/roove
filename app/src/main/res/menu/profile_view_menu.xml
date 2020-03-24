@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 04.12.19 21:56
+  ~ Last modified 24.03.20 15:57
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@
 
 	<item
 		android:id="@+id/action_report"
-		android:title="Жалоба"
+		android:title="@string/menu_report_text"
 		app:showAsAction="never" />
 
 </menu>

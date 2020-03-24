@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.01.20 19:43
+  ~ Last modified 24.03.20 15:56
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,12 +16,12 @@
 	<item
 		android:id="@+id/bottomPlaces"
 		android:icon="@drawable/ic_places_24dp"
-		android:title="Места" />
+		android:title="@string/bottom_navigation_places" />
 
 	<item
 		android:id="@+id/bottomPairs"
 		android:icon="@drawable/ic_pairs_24dp"
-		android:title="Пары" />
+		android:title="@string/bottom_navigation_pairs" />
 
 	<item
 		android:id="@+id/bottomCards"
@@ -32,11 +32,11 @@
 	<item
 		android:id="@+id/bottomConversations"
 		android:icon="@drawable/ic_inbox_24dp"
-		android:title="Чаты" />
+		android:title="@string/bottom_navigation_chats" />
 
 	<item
 		android:id="@+id/bottomSettings"
 		android:icon="@drawable/ic_settings_24dp"
-		android:title="Настройки" />
+		android:title="@string/bottom_navigation_settings" />
 
 </menu>
