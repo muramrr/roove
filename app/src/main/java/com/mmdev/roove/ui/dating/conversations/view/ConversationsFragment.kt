@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 17:22
+ * Last modified 24.03.20 16:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,7 +47,7 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel>(){
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		associatedViewModel = getViewModel()
-		associatedViewModel.loadConversationsList()
+
 		associatedViewModel.getDeleteConversationStatus().observe(this, Observer {
 			if (it) context?.showToastText("successfully deleted")
 		})
@@ -120,4 +120,9 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel>(){
 
 	}
 
+
+	override fun onResume() {
+		super.onResume()
+		associatedViewModel.loadConversationsList()
+	}
 }
