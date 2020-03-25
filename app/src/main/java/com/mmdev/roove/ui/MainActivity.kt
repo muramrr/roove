@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.03.20 18:32
+ * Last modified 25.03.20 16:29
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,6 +28,7 @@ import com.mmdev.roove.ui.common.custom.LoadingDialog
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.observeOnce
 import com.mmdev.roove.utils.showToastText
+
 
 class MainActivity: AppCompatActivity() {
 
@@ -99,6 +100,12 @@ class MainActivity: AppCompatActivity() {
 //			UtilityManager.generateMatchesOnRemote()
 //		}
 
+		//note: debug
+//		val dm = DisplayMetrics()
+//		windowManager.defaultDisplay.getMetrics(dm)
+//		val width = dm.widthPixels.toFloat()
+//		val height = dm.heightPixels.toFloat()
+//		Log.wtf(TAG, "${px2Dp(height)}")
 
 	}
 

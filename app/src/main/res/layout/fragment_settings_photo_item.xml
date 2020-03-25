@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 16:39
+  ~ Last modified 25.03.20 16:12
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,15 +22,15 @@
 	</data>
 
 	<androidx.cardview.widget.CardView
-		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
+		android:layout_width="@dimen/rvSettingsPhotoElementWidth"
+		android:layout_height="@dimen/rvSettingsPhotoElementHeight"
 		app:cardBackgroundColor="@color/transparent"
-		app:cardCornerRadius="15dp">
+		app:cardCornerRadius="16dp">
 
 		<ImageView
 			android:id="@+id/ivUserItemPhoto"
-			android:layout_width="@dimen/rvSettingsPhotoElementWidth"
-			android:layout_height="300dp"
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
 			android:scaleType="center"
 
 			app:bindImageUrl="@{bindItem.fileUrl}"

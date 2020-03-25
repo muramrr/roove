@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 17:02
+  ~ Last modified 25.03.20 16:24
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@
 
 	<data>
 
-		<import type="android.view.View"/>
 		<variable
 			name="bindItem"
 			type="com.mmdev.business.places.PlaceItem" />
@@ -24,7 +23,7 @@
 
 	<androidx.cardview.widget.CardView
 		android:layout_width="match_parent"
-		android:layout_height="300dp"
+		android:layout_height="@dimen/vertical_grid_item_height"
 		android:layout_marginStart="@dimen/card_margin_fix_rview_8"
 		android:layout_marginBottom="@dimen/card_margin_fix_rview_8"
 		app:cardBackgroundColor="@color/transparent"

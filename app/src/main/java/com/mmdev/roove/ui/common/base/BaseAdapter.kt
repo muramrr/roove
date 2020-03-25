@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.03.20 18:02
+ * Last modified 25.03.20 15:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,8 +24,7 @@ import com.mmdev.roove.BR
  * @param <V> The type of the ViewDataBinding</V></T>
  */
 
-abstract class BaseAdapter<T>:
-		RecyclerView.Adapter<BaseAdapter<T>.BaseViewHolder<T>>() {
+abstract class BaseAdapter<T>: RecyclerView.Adapter<BaseAdapter<T>.BaseViewHolder<T>>() {
 
 	private var mClickListener: OnItemClickListener<T>? = null
 

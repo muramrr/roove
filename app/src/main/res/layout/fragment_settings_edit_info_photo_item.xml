@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 20:09
+  ~ Last modified 25.03.20 16:23
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,21 +22,20 @@
 	</data>
 
 	<FrameLayout
-		android:layout_width="wrap_content"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		>
 
 		<androidx.cardview.widget.CardView
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_marginTop="@dimen/general_margin_16"
-			android:layout_marginEnd="@dimen/general_margin_16"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/rvSettingsEditPhotoElementHeight"
+
 			app:cardBackgroundColor="@color/transparent"
-			app:cardCornerRadius="15dp">
+			app:cardCornerRadius="16dp">
 
 			<ImageView
-				android:layout_width="@dimen/rvSettingsEditPhotoElementWidth"
-				android:layout_height="@dimen/rvSettingsEditPhotoElementHeight"
+				android:layout_height="match_parent"
+				android:layout_width="match_parent"
 				android:layout_gravity="center"
 				android:scaleType="centerCrop"
 
@@ -47,9 +46,10 @@
 
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/btnDeletePhoto"
-			android:layout_width="48dp"
-			android:layout_height="48dp"
+			android:layout_width="46dp"
+			android:layout_height="46dp"
 			android:layout_gravity="end|top"
+			android:layout_margin="4dp"
 
 			android:insetTop="0dp"
 			android:insetBottom="0dp"
@@ -58,6 +58,7 @@
 			app:iconSize="24dp"
 			app:icon="@drawable/ic_clear_24dp"
 			app:elevation="0dp"
+			android:elevation="@null"
 			app:shapeAppearanceOverlay="@style/MyAppShapeAppearanceOverlay.Button.Rounded"
 
 			style="@style/Widget.MaterialComponents.Button.Icon"

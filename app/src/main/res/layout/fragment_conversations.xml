@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.03.20 18:31
+  ~ Last modified 25.03.20 15:50
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,8 +33,10 @@
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:clipToPadding="false"
-			android:overScrollMode="never"
+			android:fadeScrollbars="false"
 			android:scrollbars="vertical"
+			android:scrollbarThumbVertical="@color/white"
+
 
 			app:visibilityInvisible='@{!viewModel.showTextHelper}'
 
