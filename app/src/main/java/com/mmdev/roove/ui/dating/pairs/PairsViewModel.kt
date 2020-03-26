@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.03.20 17:33
+ * Last modified 26.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.pairs.PairsRepository
-import com.mmdev.business.pairs.usecase.DeleteMatchUseCase
 import com.mmdev.business.pairs.usecase.GetMatchedUsersUseCase
 import com.mmdev.business.pairs.usecase.GetMoreMatchedUsersListUseCase
 import com.mmdev.roove.ui.common.base.BaseViewModel
@@ -23,14 +22,8 @@ import com.mmdev.roove.ui.common.errors.MyError
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
-
-/**
- * This is the documentation block about the class
- */
-
 class PairsViewModel @Inject constructor(repo: PairsRepository): BaseViewModel() {
 
-	private val deleteMatchUC = DeleteMatchUseCase(repo)
 	private val getMatchedUsersUC = GetMatchedUsersUseCase(repo)
 	private val getMoreMatchedUsersUC = GetMoreMatchedUsersListUseCase(repo)
 
@@ -39,25 +32,8 @@ class PairsViewModel @Inject constructor(repo: PairsRepository): BaseViewModel()
 		matchedUsersList.value = mutableListOf()
 	}
 
-	private val deleteMatchStatus: MutableLiveData<Boolean> = MutableLiveData()
 
 	val showTextHelper: MutableLiveData<Boolean> = MutableLiveData()
-
-
-	fun deleteMatchedUser(matchedUser: MatchedUserItem) {
-		disposables.add(deleteMatchExecution(matchedUser)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-	                       Log.wtf(TAG, "matchedUser ${matchedUser.baseUserInfo.userId} deleted")
-	                       deleteMatchStatus.value = true
-                       },
-                       {
-	                       deleteMatchStatus.value = false
-	                       error.value = MyError(ErrorType.DELETING, it)
-                       }
-            )
-		)
-	}
 
 	fun loadMatchedUsers() {
 		disposables.add(getMatchedUsersExecution()
@@ -96,10 +72,6 @@ class PairsViewModel @Inject constructor(repo: PairsRepository): BaseViewModel()
 		)
 	}
 
-	fun getDeleteMatchStatus() = deleteMatchStatus
-
-
-	private fun deleteMatchExecution(matchedUser: MatchedUserItem) = deleteMatchUC.execute(matchedUser)
 	private fun getMatchedUsersExecution() = getMatchedUsersUC.execute()
 	private fun getMoreMatchedUsersExecution() = getMoreMatchedUsersUC.execute()
 }

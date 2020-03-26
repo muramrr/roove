@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.03.20 18:35
+ * Last modified 26.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.business.remote
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
+import com.mmdev.business.pairs.MatchedUserItem
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -24,11 +25,11 @@ import java.util.*
 
 interface RemoteUserRepository {
 
-	fun createUserOnRemote(userItem: UserItem): Completable
+	fun deleteMatchedUser(matchedUserItem: MatchedUserItem): Completable
 
 	fun deletePhoto(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean): Completable
 
-	fun deleteUser(userItem: UserItem): Completable
+	fun deleteMyself(): Completable
 
 	fun fetchUserInfo(): Single<UserItem>
 

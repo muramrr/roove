@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 13.03.20 14:42
+ * Last modified 26.03.20 19:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.places.BasePlaceInfo
 import com.mmdev.roove.R
@@ -39,12 +38,11 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
-
 	private val userPhotosAdapter = ImagePagerAdapter(listOf())
-
 	private val mPlacesToGoAdapter = PlacesToGoAdapter(listOf())
 
 	private var fabVisible: Boolean = false
+	private var isMatched: Boolean = false
 
 	private var selectedUser: UserItem = UserItem()
 	private var conversationId: String = ""
@@ -52,6 +50,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
 	companion object {
 		private const val FAB_VISIBLE_KEY = "FAB_VISIBLE"
+		private const val MATCHED_KEY = "IS_MATCHED"
 		private const val PLACE_ID_KEY = "PLACE_ID"
 	}
 
@@ -63,6 +62,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
 		arguments?.let {
 			fabVisible = it.getBoolean(FAB_VISIBLE_KEY)
+			isMatched = it.getBoolean(MATCHED_KEY)
 		}
 
 		associatedViewModel.retrievedUserItem.observeOnce(this, Observer {
@@ -71,14 +71,14 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 			userPhotosAdapter.setData(it.photoURLs.map { photoItem -> photoItem.fileUrl })
 		})
 
-		//if true -> seems that we navigates here from pairs fragment
-		if (fabVisible) {
+		//if true -> seems that we navigates here from pairs or chat fragment
+		if (isMatched) {
 			sharedViewModel.matchedUserItemSelected.observeOnce(this, Observer {
 				conversationId = it.conversationId
 				associatedViewModel.getFullUserInfo(it.baseUserInfo)
 			})
 		}
-		//else we navigates here from cards or chat fragment
+		//else we navigates here from cards
 		else {
 			sharedViewModel.userSelected.observeOnce(this, Observer {
 				associatedViewModel.getFullUserInfo(it.baseUserInfo)
@@ -113,10 +113,17 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 			//menu declared directly in xml
 			//no need to inflate menu manually
 			//set only title and actions
+			val deleteItem = menu.findItem(R.id.profile_action_unmatch)
+			deleteItem.isVisible = isMatched
 			setNavigationOnClickListener { findNavController().navigateUp() }
 			setOnMenuItemClickListener { item ->
 				when (item.itemId) {
-					R.id.action_report -> { context.showToastText("Action report clicked") }
+					R.id.profile_action_report -> { context.showToastText("Action report clicked") }
+					R.id.profile_action_unmatch -> {
+						sharedViewModel.matchedUserItemSelected.value?.let {
+							associatedViewModel.deleteMatchedUser(it)
+						}
+					}
 				}
 				return@setOnMenuItemClickListener true
 			}
@@ -134,11 +141,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
 		if (fabVisible) {
 			fabProfileSendMessage.setOnClickListener {
-
 				findNavController().navigate(R.id.action_profile_to_chatFragment)
-				sharedViewModel.conversationSelected.value = ConversationItem(selectedUser.baseUserInfo,
-				                                                              conversationId,
-				                                                              false)
 			}
 		}
 

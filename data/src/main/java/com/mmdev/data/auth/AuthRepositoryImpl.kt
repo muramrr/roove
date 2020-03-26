@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 14.03.20 17:52
+ * Last modified 26.03.20 19:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,11 +14,13 @@ import com.facebook.login.LoginManager
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
 import com.mmdev.business.auth.AuthUserItem
 import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
-import com.mmdev.data.user.UserRepositoryRemoteImpl
+import com.mmdev.data.core.BaseRepositoryImpl
+import com.mmdev.data.user.UserWrapper
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -26,15 +28,12 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
-                                             private val db: FirebaseFirestore,
+                                             private val fInstance: FirebaseInstanceId,
+                                             private val firestore: FirebaseFirestore,
                                              private val fbLogin: LoginManager,
-                                             private val remoteRepo: UserRepositoryRemoteImpl): AuthRepository {
+                                             private val userWrapper: UserWrapper):
+		AuthRepository, BaseRepositoryImpl(firestore, userWrapper) {
 
-	companion object {
-		private const val GENERAL_COLLECTION_REFERENCE = "users"
-		private const val BASE_COLLECTION_REFERENCE = "usersBase"
-		private const val TAG = "mylogs_AuthRepositoryImpl"
-	}
 
 	/**
 	 * Observable which track the auth changes of [FirebaseAuth] to listen when an user is logged or not.
@@ -50,7 +49,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 				}
 				else if (auth.currentUser != null) {
 					//Log.wtf(TAG, "current user is not null")
-					val ref = db.collection(BASE_COLLECTION_REFERENCE)
+					val ref = firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
 						.document(auth.currentUser!!.uid)
 					ref
 						.get()
@@ -76,12 +75,30 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 			.subscribeOn(Schedulers.io())
 
 	/**
-	 * create new [UserItem] document on remote
+	 * create new [UserItem] documents in db
 	 */
 	override fun registerUser(userItem: UserItem): Completable =
-		remoteRepo.createUserOnRemote(userItem)
-			.subscribeOn(Schedulers.io())
-
+		Completable.create { emitter ->
+			val authUserItem = AuthUserItem(userItem.baseUserInfo)
+			val ref = firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(userItem.baseUserInfo.city)
+				.collection(userItem.baseUserInfo.gender)
+				.document(userItem.baseUserInfo.userId)
+			fInstance.instanceId.addOnSuccessListener { instanceResult ->
+				authUserItem.registrationTokens.add(instanceResult.token)
+				ref.set(userItem)
+					.addOnSuccessListener {
+						firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
+							.document(userItem.baseUserInfo.userId)
+							.set(authUserItem)
+							.addOnSuccessListener {
+								userWrapper.setUser(userItem)
+								emitter.onComplete()
+							}
+							.addOnFailureListener { emitter.onError(it) }
+					}.addOnFailureListener { emitter.onError(it) }
+			}.addOnFailureListener { emitter.onError(it) }
+		}.subscribeOn(Schedulers.io())
 
 
 	override fun logOut(){
@@ -115,7 +132,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 
 	private fun checkAndRetrieveFullUser(baseUserInfo: BaseUserInfo): Single<HashMap<Boolean, BaseUserInfo>> =
 		Single.create(SingleOnSubscribe<HashMap<Boolean, BaseUserInfo>> { emitter ->
-			db.collection(BASE_COLLECTION_REFERENCE)
+			firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
 				.document(baseUserInfo.userId)
 				.get()
 				.addOnSuccessListener { baseUserDoc ->
@@ -123,7 +140,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					if (baseUserDoc.exists()) {
 						val userInBase = baseUserDoc.toObject(AuthUserItem::class.java)!!
 						//Log.wtf(TAG, "$userInBase")
-						db.collection(GENERAL_COLLECTION_REFERENCE)
+						firestore.collection(USERS_COLLECTION_REFERENCE)
 							.document(userInBase.baseUserInfo.city)
 							.collection(userInBase.baseUserInfo.gender)
 							.document(userInBase.baseUserInfo.userId)

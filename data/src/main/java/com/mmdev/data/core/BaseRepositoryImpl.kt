@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 19.03.20 16:11
+ * Last modified 26.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,6 +50,7 @@ open class BaseRepositoryImpl constructor(private val firestore: FirebaseFiresto
 	companion object {
 		// firestore users collection references
 		const val USERS_COLLECTION_REFERENCE = "users"
+		const val USERS_BASE_COLLECTION_REFERENCE = "usersBase"
 		const val USER_LIKED_COLLECTION_REFERENCE = "liked"
 		const val USER_MATCHED_COLLECTION_REFERENCE = "matched"
 		const val USER_SKIPPED_COLLECTION_REFERENCE = "skipped"

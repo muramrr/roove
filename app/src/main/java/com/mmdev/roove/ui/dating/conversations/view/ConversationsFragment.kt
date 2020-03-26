@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 24.03.20 16:01
+ * Last modified 26.03.20 19:40
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentConversationsBinding
 import com.mmdev.roove.ui.common.base.BaseAdapter
@@ -111,9 +112,13 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel>(){
 		}
 
 		mConversationsAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<ConversationItem> {
-
 			override fun onItemClick(item: ConversationItem, position: Int) {
+
 				sharedViewModel.conversationSelected.value = item
+				sharedViewModel.matchedUserItemSelected.value =
+					MatchedUserItem(baseUserInfo = item.partner,
+					                conversationId = item.conversationId,
+					                conversationStarted = item.conversationStarted)
 				findNavController().navigate(R.id.action_conversations_to_chatFragment)
 			}
 		})

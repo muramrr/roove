@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.03.20 19:20
+ * Last modified 26.03.20 19:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package com.mmdev.business.pairs
 
-import io.reactivex.Completable
 import io.reactivex.Single
 
 /**
@@ -18,8 +17,6 @@ import io.reactivex.Single
  */
 
 interface PairsRepository {
-
-	fun deleteMatchedUser(matchedUserItem: MatchedUserItem): Completable
 
 	fun getMatchedUsersList(): Single<List<MatchedUserItem>>
 

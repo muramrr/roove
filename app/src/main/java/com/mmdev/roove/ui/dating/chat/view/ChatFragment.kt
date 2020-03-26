@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 24.03.20 15:52
+ * Last modified 26.03.20 19:48
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,6 +21,7 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -42,6 +43,7 @@ import com.mmdev.business.chat.entity.MessageItem
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
+import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
@@ -89,7 +91,6 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 
 	//static fields
 	companion object {
-		private const val TAG = "mylogs_ChatFragment"
 
 		private const val IMAGE_GALLERY_REQUEST = 1
 		private const val IMAGE_CAMERA_REQUEST = 2
@@ -105,6 +106,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		associatedViewModel = getViewModel()
+		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 
 		//deep link from notification
 		arguments?.let {
@@ -118,9 +120,8 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
                 receivedConversationId.isNotEmpty()) isDeepLinkJump = true
 		}
 
-		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 
-		//init current user id to understand left/right message
+		//observe current user id to understand left/right message
 		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			userItemModel = it
 			mChatAdapter.setCurrentUserId(it.baseUserInfo.userId)
@@ -128,24 +129,28 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 
 		//if it was a deep link navigation then create ConversationItem "on a flight"
 		if (isDeepLinkJump) {
-			val receivedConversationItem =
+			sharedViewModel.matchedUserItemSelected.value =
+				MatchedUserItem(baseUserInfo = BaseUserInfo(city = receivedPartnerCity,
+				                                            gender = receivedPartnerGender,
+				                                            userId = receivedPartnerId),
+				                conversationId = receivedConversationId,
+				                conversationStarted = true)
+			sharedViewModel.conversationSelected.value =
 				ConversationItem(partner = BaseUserInfo(city = receivedPartnerCity,
 				                                        gender = receivedPartnerGender,
 				                                        userId = receivedPartnerId),
 				                 conversationId = receivedConversationId,
 				                 conversationStarted = true)
-
-			sharedViewModel.conversationSelected.value = receivedConversationItem
 		}
-		//load partner info
+		//setup observer
 		remoteRepoViewModel.retrievedUserItem.observeOnce(this, Observer {
 			currentPartner = it
 			setupContentToolbar(it)
-			sharedViewModel.userSelected.value = it
 		})
 
 		//ready? steady? init loading.
 		sharedViewModel.conversationSelected.observeOnce(this, Observer {
+			Log.wtf(TAG, it.conversationId)
 			currentConversation = it
 			remoteRepoViewModel.getFullUserInfo(it.partner)
 			associatedViewModel.loadMessages(it)

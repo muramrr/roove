@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.03.20 18:00
+ * Last modified 26.03.20 17:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -222,7 +222,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_
 			                                  baseUserInfo.mainPhotoUrl,
 			                                  baseUserInfo.userId)
 
-			associatedViewModel.signUp(
+			associatedViewModel.register(
 					UserItem(finalUserModel,
 					         cityToDisplay = cityToDisplay,
 					         photoURLs = mutableListOf(PhotoItem(fileName = "facebookPhoto",

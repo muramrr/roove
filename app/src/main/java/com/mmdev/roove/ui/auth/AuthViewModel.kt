@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.03.20 16:29
+ * Last modified 26.03.20 19:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,8 +14,8 @@ import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.auth.usecase.IsAuthenticatedListenerUseCase
 import com.mmdev.business.auth.usecase.LogOutUseCase
+import com.mmdev.business.auth.usecase.RegisterUserUseCase
 import com.mmdev.business.auth.usecase.SignInUseCase
-import com.mmdev.business.auth.usecase.SignUpUseCase
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.AUTHENTICATED
@@ -30,7 +30,7 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 	private val isAuthenticatedListener = IsAuthenticatedListenerUseCase(repo)
 	private val logOut = LogOutUseCase(repo)
 	private val signIn = SignInUseCase(repo)
-	private val signUp = SignUpUseCase(repo)
+	private val registerUser = RegisterUserUseCase(repo)
 
 
 	val continueRegistration: MutableLiveData<Boolean> = MutableLiveData()
@@ -78,8 +78,8 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
             ))
 	}
 
-	fun signUp(userItem: UserItem) {
-		disposables.add(signUpExecution(userItem)
+	fun register(userItem: UserItem) {
+		disposables.add(registrationExecution(userItem)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
 	                       continueRegistration.value = false
@@ -99,7 +99,7 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 	private fun isAuthenticatedExecution() = isAuthenticatedListener.execute()
 	private fun logOutExecution() = logOut.execute()
 	private fun signInExecution(token: String) = signIn.execute(token)
-	private fun signUpExecution(userItem: UserItem) = signUp.execute(userItem)
+	private fun registrationExecution(userItem: UserItem) = registerUser.execute(userItem)
 
 	enum class AuthenticationState {
 		UNAUTHENTICATED,    // Initial state, the user needs to authenticate

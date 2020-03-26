@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 17:52
+ * Last modified 26.03.20 19:28
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,8 +40,4 @@ class SharedViewModel @Inject constructor(): ViewModel() {
 	fun getCurrentUser() = currentUser
 	fun setCurrentUser(userItem: UserItem) { currentUser.value = userItem }
 
-
-	fun setMatchedUserItem(matchedUserItem: MatchedUserItem) {
-		matchedUserItemSelected.value = matchedUserItem
-	}
 }

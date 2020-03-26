@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.03.20 16:32
+ * Last modified 26.03.20 19:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,10 +17,10 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.StorageReference
-import com.mmdev.business.auth.AuthUserItem
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
+import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.remote.RemoteUserRepository
 import com.mmdev.data.core.BaseRepositoryImpl
 import io.reactivex.*
@@ -38,14 +38,12 @@ import javax.inject.Singleton
 
 @Singleton
 class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: FirebaseInstanceId,
-                                                   private val db: FirebaseFirestore,
+                                                   private val firestore: FirebaseFirestore,
                                                    private val storage: StorageReference,
                                                    private val userWrapper: UserWrapper):
-		RemoteUserRepository, BaseRepositoryImpl(db, userWrapper) {
+		RemoteUserRepository, BaseRepositoryImpl(firestore, userWrapper) {
 
 	companion object {
-		private const val BASE_COLLECTION_REFERENCE = "usersBase"
-
 		private const val USER_BASE_INFO_FIELD = "baseUserInfo"
 		private const val USER_MAIN_PHOTO_FIELD = "baseUserInfo.mainPhotoUrl"
 		private const val USER_PHOTOS_LIST_FIELD = "photoURLs"
@@ -55,35 +53,59 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 	}
 
 
-	override fun createUserOnRemote(userItem: UserItem): Completable =
+	override fun deleteMatchedUser(matchedUserItem: MatchedUserItem): Completable =
 		Completable.create { emitter ->
-			val authUserItem = AuthUserItem(userItem.baseUserInfo)
-			val ref = fillUserGeneralRef(userItem.baseUserInfo)
-			fInstance.instanceId.addOnSuccessListener { instanceResult ->
-				authUserItem.registrationTokens.add(instanceResult.token)
-				ref.set(userItem)
-					.addOnSuccessListener {
-						db.collection(BASE_COLLECTION_REFERENCE)
-							.document(userItem.baseUserInfo.userId)
-							.set(authUserItem)
-						userWrapper.setUser(userItem)
-						emitter.onComplete()
-					}.addOnFailureListener { emitter.onError(it) }
-			}.addOnFailureListener { emitter.onError(it) }
-		}.subscribeOn(Schedulers.io())
+			val matchedUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(matchedUserItem.baseUserInfo.city)
+				.collection(matchedUserItem.baseUserInfo.gender)
+				.document(matchedUserItem.baseUserInfo.userId)
+
+			//current user delete from matched list
+			currentUserDocRef
+				.collection(USER_MATCHED_COLLECTION_REFERENCE)
+				.document(matchedUserItem.baseUserInfo.userId)
+				.delete()
+
+			//current user delete from conversations list
+			currentUserDocRef
+				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(matchedUserItem.conversationId)
+				.delete()
+
+			//add to skipped collection
+			currentUserDocRef
+				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
+				.document(matchedUserItem.baseUserInfo.userId)
+				.set(mapOf(USER_ID_FIELD to matchedUserItem.baseUserInfo.userId))
+
+			//partner delete from matched list
+			matchedUserDocRef
+				.collection(USER_MATCHED_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.delete()
+
+			//partner delete from conversations list
+			matchedUserDocRef
+				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(matchedUserItem.conversationId)
+				.delete()
+
+			//add to skipped collection
+			matchedUserDocRef
+				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.set(mapOf(USER_ID_FIELD to currentUserId))
 
 
-	override fun deleteUser(userItem: UserItem): Completable =
-		Completable.create { emitter ->
-			val ref = fillUserGeneralRef(userItem.baseUserInfo)
-			ref.delete()
-				.addOnSuccessListener {
-					db.collection(BASE_COLLECTION_REFERENCE)
-						.document(userItem.baseUserInfo.userId)
-						.delete()
-						.addOnCompleteListener { emitter.onComplete() }
-						.addOnFailureListener { emitter.onError(it)  }
-				}.addOnFailureListener { emitter.onError(it) }
+			//mark that conversation no need to be exists
+			firestore
+				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(matchedUserItem.conversationId)
+				.set(mapOf(CONVERSATION_DELETED_FIELD to true))
+				.addOnSuccessListener { emitter.onComplete() }
+				.addOnFailureListener { emitter.onError(it) }
+
+
 		}.subscribeOn(Schedulers.io())
 
 	override fun deletePhoto(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean): Completable =
@@ -94,7 +116,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 
 			if (isMainPhotoDeleting) {
 				ref.update(USER_MAIN_PHOTO_FIELD, userItem.photoURLs[0].fileUrl)
-				db.collection(BASE_COLLECTION_REFERENCE)
+				firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
 					.document(userItem.baseUserInfo.userId)
 					.update(USER_MAIN_PHOTO_FIELD, userItem.photoURLs[0].fileUrl)
 				userItem.baseUserInfo.mainPhotoUrl = userItem.photoURLs[0].fileUrl
@@ -117,12 +139,25 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 
 		}.subscribeOn(Schedulers.io())
 
+	override fun deleteMyself(): Completable =
+		Completable.create { emitter ->
+			val ref = fillUserGeneralRef(currentUser.baseUserInfo)
+			ref.delete()
+				.addOnSuccessListener {
+					firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
+						.document(currentUser.baseUserInfo.userId)
+						.delete()
+						.addOnCompleteListener { emitter.onComplete() }
+						.addOnFailureListener { emitter.onError(it)  }
+				}.addOnFailureListener { emitter.onError(it) }
+		}.subscribeOn(Schedulers.io())
+
 	override fun fetchUserInfo(): Single<UserItem> {
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
 			val userItem = userWrapper.getInMemoryUser()
 			val refGeneral = fillUserGeneralRef(userItem.baseUserInfo)
 
-			val refBase = db.collection(BASE_COLLECTION_REFERENCE).document(userItem.baseUserInfo.userId)
+			val refBase = firestore.collection(USERS_BASE_COLLECTION_REFERENCE).document(userItem.baseUserInfo.userId)
 			//get general user item first
 			refGeneral.get()
 				.addOnSuccessListener { remoteUser ->
@@ -159,7 +194,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 			val ref = fillUserGeneralRef(userItem.baseUserInfo)
 			ref.set(userItem)
 				.addOnSuccessListener {
-					db.collection(BASE_COLLECTION_REFERENCE)
+					firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
 						.document(userItem.baseUserInfo.userId)
 						.update(USER_BASE_INFO_FIELD, userItem.baseUserInfo)
 						.addOnSuccessListener {
@@ -208,7 +243,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 
 
 	private fun fillUserGeneralRef (baseUserInfo: BaseUserInfo): DocumentReference {
-		return db.collection(USERS_COLLECTION_REFERENCE)
+		return firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(baseUserInfo.city)
 			.collection(baseUserInfo.gender)
 			.document(baseUserInfo.userId)

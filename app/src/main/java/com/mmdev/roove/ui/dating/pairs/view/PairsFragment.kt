@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.03.20 16:29
+ * Last modified 26.03.20 19:40
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentPairsBinding
@@ -75,9 +76,12 @@ class PairsFragment: BaseFragment<PairsViewModel>() {
 		mPairsAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<MatchedUserItem> {
 			override fun onItemClick(item: MatchedUserItem, position: Int) {
 
-				sharedViewModel.setMatchedUserItem(item)
+				sharedViewModel.matchedUserItemSelected.value = item
+				sharedViewModel.conversationSelected.value =
+					ConversationItem(partner = item.baseUserInfo,
+					                 conversationId = item.conversationId,
+					                 conversationStarted = item.conversationStarted)
 				findNavController().navigate(R.id.action_pairs_to_profileFragment)
-
 			}
 		})
 	}

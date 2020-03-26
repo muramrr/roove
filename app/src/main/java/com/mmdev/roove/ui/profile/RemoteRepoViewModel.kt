@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 20:01
+ * Last modified 26.03.20 18:02
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
+import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.remote.RemoteUserRepository
 import com.mmdev.business.remote.usecase.*
 import com.mmdev.roove.ui.common.base.BaseViewModel
@@ -29,8 +30,9 @@ import javax.inject.Inject
 
 class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : BaseViewModel() {
 
+	private val deleteMatchUC = DeleteMatchedUserUseCase(repo)
 	private val deletePhotoUC = DeletePhotoUseCase(repo)
-	private val deleteUserUC = DeleteUserUseCase(repo)
+	private val deleteMyselfUC = DeleteMyselfUseCase(repo)
 	private val fetchUserUC = FetchUserInfoUseCase(repo)
 	private val getFullUserInfoUC = GetFullUserInfoUseCase(repo)
 	private val updateUserItemUC = UpdateUserItemUseCase(repo)
@@ -45,6 +47,18 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 	val photoDeletionStatus: MutableLiveData<Boolean> = MutableLiveData()
 	val photoUrls: MutableLiveData<List<PhotoItem>> = MutableLiveData()
 
+	fun deleteMatchedUser(matchedUser: MatchedUserItem) {
+		disposables.add(deleteMatchExecution(matchedUser)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                           Log.wtf(TAG, "matchedUser ${matchedUser.baseUserInfo.userId} deleted")
+                       },
+                       {
+                           error.value = MyError(ErrorType.DELETING, it)
+                       }
+            )
+		)
+	}
 
 	fun deletePhoto(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean) {
 		disposables.add(deletePhotoExecution(photoItem, userItem, isMainPhotoDeleting)
@@ -111,11 +125,10 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 	}
 
 
-
+	private fun deleteMatchExecution(matchedUser: MatchedUserItem) = deleteMatchUC.execute(matchedUser)
 	private fun deletePhotoExecution(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean) =
 		deletePhotoUC.execute(photoItem, userItem, isMainPhotoDeleting)
-	private fun deleteUserExecution(userItem: UserItem) =
-		deleteUserUC.execute(userItem)
+	private fun deleteMyselfExecution() = deleteMyselfUC.execute()
 	private fun fetchUserInfoExecution() =
 		fetchUserUC.execute()
 	private fun getFullUserInfoExecution(baseUserInfo: BaseUserInfo) =

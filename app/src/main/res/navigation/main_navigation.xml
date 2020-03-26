@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.03.20 15:32
+  ~ Last modified 26.03.20 18:13
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -96,6 +96,10 @@
 			<argument
 				android:defaultValue="true"
 				android:name="FAB_VISIBLE" />
+
+			<argument
+				android:defaultValue="true"
+				android:name="IS_MATCHED" />
 
 		</action>
 
@@ -197,6 +201,11 @@
 			app:argType="boolean"
 			android:defaultValue="false" />
 
+		<argument
+			android:name="IS_MATCHED"
+			app:argType="boolean"
+			android:defaultValue="false" />
+
 		<action
 			android:id="@+id/action_profile_to_chatFragment"
 			app:destination="@id/chatFragmentNav"
@@ -232,6 +241,10 @@
 			app:exitAnim="@anim/exit_to_bottom"
 			app:popEnterAnim="@anim/enter_from_bottom"
 			app:popExitAnim="@anim/exit_to_top" >
+
+			<argument
+				android:defaultValue="true"
+				android:name="IS_MATCHED" />
 
 			<argument
 				android:defaultValue="false"
