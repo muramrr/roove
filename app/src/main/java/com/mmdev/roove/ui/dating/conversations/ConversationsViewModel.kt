@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 16:58
+ * Last modified 27.03.20 19:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package com.mmdev.roove.ui.dating.conversations
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.conversations.repository.ConversationsRepository
@@ -43,7 +42,6 @@ class ConversationsViewModel @Inject constructor(repo: ConversationsRepository):
 		disposables.add(deleteConversationExecution(conversationItem)
             .observeOn(mainThread())
             .subscribe({
-	                       Log.wtf(TAG, "conversation ${conversationItem.conversationId} deleted")
 	                       deleteConversationStatus.value = true
                        },
                        {
@@ -62,7 +60,6 @@ class ConversationsViewModel @Inject constructor(repo: ConversationsRepository):
 		                       showTextHelper.value = false
 	                       }
 	                       else showTextHelper.value = true
-                           Log.wtf(TAG, "initial loaded conversations: ${it.size}")
                        },
                        {
 	                       showTextHelper.value = true
@@ -80,7 +77,6 @@ class ConversationsViewModel @Inject constructor(repo: ConversationsRepository):
 	                           conversationsList.value!!.addAll(it)
 	                           conversationsList.value = conversationsList.value
                            }
-                           Log.wtf(TAG, "loaded more conversations: ${it.size}")
                        },
                        {
 	                       error.value = MyError(ErrorType.LOADING, it)

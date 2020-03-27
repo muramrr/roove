@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 16:58
+ * Last modified 27.03.20 19:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package com.mmdev.roove.ui.dating.pairs
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.pairs.PairsRepository
@@ -43,7 +42,6 @@ class PairsViewModel @Inject constructor(repo: PairsRepository): BaseViewModel()
 		                       showTextHelper.value = false
 	                       }
 	                       else showTextHelper.value = true
-	                       Log.wtf(TAG, "initial loaded pairs: ${it.size}")
                        },
                        {
 	                       showTextHelper.value = true
@@ -62,7 +60,6 @@ class PairsViewModel @Inject constructor(repo: PairsRepository): BaseViewModel()
 	                           matchedUsersList.value!!.addAll(it)
 	                           matchedUsersList.value = matchedUsersList.value
                            }
-                           Log.wtf(TAG, "loaded more pairs: ${it.size}")
                        },
                        {
 	                       error.value = MyError(ErrorType.LOADING, it)
