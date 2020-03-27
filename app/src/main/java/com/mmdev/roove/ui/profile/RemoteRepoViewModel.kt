@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 16:58
+ * Last modified 27.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,14 +32,12 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 	private val deleteMatchUC = DeleteMatchedUserUseCase(repo)
 	private val deletePhotoUC = DeletePhotoUseCase(repo)
 	private val deleteMyselfUC = DeleteMyselfUseCase(repo)
-	private val fetchUserUC = FetchUserInfoUseCase(repo)
-	private val getFullUserInfoUC = GetFullUserInfoUseCase(repo)
+	private val getRequestedUserInfoUC = GetRequestedUserInfoUseCase(repo)
 	private val updateUserItemUC = UpdateUserItemUseCase(repo)
 	private val uploadUserProfilePhotoUC = UploadUserProfilePhotoUseCase(repo)
 
 
-
-	val actualCurrentUserItem: MutableLiveData<UserItem> = MutableLiveData()
+	val updatableCurrentUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	val retrievedUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	val isUserUpdatedStatus: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -72,20 +70,8 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
                        }))
 	}
 
-	fun fetchUserItem() {
-		disposables.add(fetchUserInfoExecution()
-            .observeOn(mainThread())
-            .subscribe({
-	                       actualCurrentUserItem.value = it
-	                       //Log.wtf(TAG, "fetched user: $it")
-                       },
-                       {
-	                       error.value = MyError(ErrorType.SAVING, it)
-                       }))
-	}
-
-	fun getFullUserInfo(baseUserInfo: BaseUserInfo) {
-		disposables.add(getFullUserInfoExecution(baseUserInfo)
+	fun getRequestedUserInfo(baseUserInfo: BaseUserInfo) {
+		disposables.add(getRequestedUserInfoExecution(baseUserInfo)
             .observeOn(mainThread())
             .subscribe({
                             retrievedUserItem.value = it
@@ -101,7 +87,7 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
             .observeOn(mainThread())
             .subscribe({
 	                       isUserUpdatedStatus.value = true
-	                       actualCurrentUserItem.value = userItem
+	                       updatableCurrentUserItem.value = userItem
 	                       Log.wtf(TAG, "update user successful")
                        },
                        {
@@ -119,7 +105,7 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 	                       // done")
                        },
                        {
-	                       error.value = MyError(ErrorType.SENDING, it)
+	                       error.value = MyError(ErrorType.UPLOADING, it)
                        }))
 	}
 
@@ -128,10 +114,8 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 	private fun deletePhotoExecution(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean) =
 		deletePhotoUC.execute(photoItem, userItem, isMainPhotoDeleting)
 	private fun deleteMyselfExecution() = deleteMyselfUC.execute()
-	private fun fetchUserInfoExecution() =
-		fetchUserUC.execute()
-	private fun getFullUserInfoExecution(baseUserInfo: BaseUserInfo) =
-		getFullUserInfoUC.execute(baseUserInfo)
+	private fun getRequestedUserInfoExecution(baseUserInfo: BaseUserInfo) =
+		getRequestedUserInfoUC.execute(baseUserInfo)
 	private fun updateUserItemExecution(userItem: UserItem) =
 		updateUserItemUC.execute(userItem)
 	private fun uploadUserProfilePhotoExecution(photoUri: String, userItem: UserItem) =

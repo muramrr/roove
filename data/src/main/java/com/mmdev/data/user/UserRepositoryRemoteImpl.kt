@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 16:59
+ * Last modified 27.03.20 17:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,9 +31,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- *
- * Remote FireBase structure
- * users -> city -> gender -> userDocument
+ * Current user related access to db to manipulate own data
  */
 
 @Singleton
@@ -47,7 +45,6 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 		private const val USER_BASE_INFO_FIELD = "baseUserInfo"
 		private const val USER_MAIN_PHOTO_FIELD = "baseUserInfo.mainPhotoUrl"
 		private const val USER_PHOTOS_LIST_FIELD = "photoURLs"
-		private const val USER_BASE_REGISTRATION_TOKENS_FIELD = "registrationTokens"
 
 		private const val SECONDARY_FOLDER_STORAGE_IMG = "profilePhotos"
 	}
@@ -152,36 +149,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 				}.addOnFailureListener { emitter.onError(it) }
 		}.subscribeOn(ExecuteSchedulers.io())
 
-	override fun fetchUserInfo(): Single<UserItem> {
-		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
-			val userItem = userWrapper.getInMemoryUser()
-			val refGeneral = fillUserGeneralRef(userItem.baseUserInfo)
-
-			val refBase = firestore.collection(USERS_BASE_COLLECTION_REFERENCE).document(userItem.baseUserInfo.userId)
-			//get general user item first
-			refGeneral.get()
-				.addOnSuccessListener { remoteUser ->
-					if (remoteUser.exists()) {
-						val remoteUserItem = remoteUser.toObject(UserItem::class.java)!!
-						//check if registration token exists
-						fInstance.instanceId
-							.addOnSuccessListener { instanceResult ->
-								//add new token
-								refBase.update(USER_BASE_REGISTRATION_TOKENS_FIELD,
-								               FieldValue.arrayUnion(instanceResult.token))
-
-								userWrapper.setUser(remoteUserItem)
-								emitter.onSuccess(remoteUserItem)
-							}
-							.addOnFailureListener { instanceIdError -> emitter.onError(instanceIdError) }
-					} else emitter.onError(Throwable("User does not exist"))
-
-				}
-				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(ExecuteSchedulers.io())
-	}
-
-	override fun getFullUserItem(baseUserInfo: BaseUserInfo): Single<UserItem> =
+	override fun getRequestedUserItem(baseUserInfo: BaseUserInfo): Single<UserItem> =
 		Single.create(SingleOnSubscribe<UserItem> { emitter ->
 			val ref = fillUserGeneralRef(baseUserInfo)
 			ref.get()

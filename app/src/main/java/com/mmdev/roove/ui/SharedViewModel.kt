@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 19:28
+ * Last modified 27.03.20 17:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,6 +23,8 @@ import javax.inject.Inject
  * as the total space for all saved states is limited on Android.
  * If you need to pass large amounts of data,
  * consider using a ViewModel as described in Share data between fragments.
+ * This [ViewModel] is used in every fragment { @see [com.mmdev.roove.ui.common.base.BaseFragment] }
+ * and owner is [MainActivity]
  *
  * @see https://developer.android.com/guide/navigation/navigation-pass-data
  */

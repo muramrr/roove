@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 20.03.20 15:59
+  ~ Last modified 27.03.20 17:26
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,7 +31,7 @@
 		android:label="MainFlowFragment" />
 	<fragment
 		android:id="@+id/splashFragment"
-		android:name="com.mmdev.roove.ui.SplashFragment"
+		android:name="com.mmdev.roove.ui.splash.SplashFragment"
 		android:label="SplashFragment" />
 
 

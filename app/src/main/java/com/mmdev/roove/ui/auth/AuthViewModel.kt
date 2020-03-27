@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 16:58
+ * Last modified 27.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,10 +12,7 @@ package com.mmdev.roove.ui.auth
 
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.auth.repository.AuthRepository
-import com.mmdev.business.auth.usecase.IsAuthenticatedListenerUseCase
-import com.mmdev.business.auth.usecase.LogOutUseCase
-import com.mmdev.business.auth.usecase.RegisterUserUseCase
-import com.mmdev.business.auth.usecase.SignInUseCase
+import com.mmdev.business.auth.usecase.*
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.AUTHENTICATED
@@ -27,7 +24,9 @@ import javax.inject.Inject
 
 
 class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() {
+
 	private val isAuthenticatedListener = IsAuthenticatedListenerUseCase(repo)
+	private val fetchUserUC = FetchUserInfoUseCase(repo)
 	private val logOut = LogOutUseCase(repo)
 	private val signIn = SignInUseCase(repo)
 	private val registerUser = RegisterUserUseCase(repo)
@@ -39,6 +38,7 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 	private val baseUserInfo: MutableLiveData<BaseUserInfo> = MutableLiveData()
 	private val authCallbackHandler: MutableLiveData<Boolean> = MutableLiveData()
 	val authenticatedState: MutableLiveData<AuthenticationState> = MutableLiveData()
+	val actualCurrentUserItem: MutableLiveData<UserItem> = MutableLiveData()
 
 
 	fun checkIsAuthenticated() {
@@ -58,6 +58,19 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
                        }))
 	}
 
+	fun logOut() = logOutExecution()
+
+	fun fetchUserItem() {
+		disposables.add(fetchUserInfoExecution()
+            .observeOn(mainThread())
+            .subscribe({
+                           actualCurrentUserItem.value = it
+                       },
+                       {
+                           error.value = MyError(ErrorType.FETCHING, it)
+                       }))
+	}
+
 	fun signIn(loginToken: String) {
 		disposables.add(signInExecution(loginToken)
             .observeOn(mainThread())
@@ -73,7 +86,7 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 	                       }
                        },
                        {
-	                       error.value = MyError(ErrorType.SENDING, it)
+	                       error.value = MyError(ErrorType.AUTHENTICATING, it)
                        }
             ))
 	}
@@ -86,17 +99,18 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 	                       authenticatedState.value = AUTHENTICATED
                        },
                        {
-	                       error.value = MyError(ErrorType.SAVING, it)
+	                       error.value = MyError(ErrorType.AUTHENTICATING, it)
                        }))
 	}
 
 
-	fun logOut() = logOutExecution()
+
 	fun getBaseUserInfo() = baseUserInfo
 
 
 
 	private fun isAuthenticatedExecution() = isAuthenticatedListener.execute()
+	private fun fetchUserInfoExecution() = fetchUserUC.execute()
 	private fun logOutExecution() = logOut.execute()
 	private fun signInExecution(token: String) = signIn.execute(token)
 	private fun registrationExecution(userItem: UserItem) = registerUser.execute(userItem)

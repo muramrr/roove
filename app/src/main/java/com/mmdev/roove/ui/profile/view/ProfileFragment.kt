@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 19:53
+ * Last modified 27.03.20 17:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -75,13 +75,13 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 		if (isMatched) {
 			sharedViewModel.matchedUserItemSelected.observeOnce(this, Observer {
 				conversationId = it.conversationId
-				associatedViewModel.getFullUserInfo(it.baseUserInfo)
+				associatedViewModel.getRequestedUserInfo(it.baseUserInfo)
 			})
 		}
 		//else we navigates here from cards
 		else {
 			sharedViewModel.userSelected.observeOnce(this, Observer {
-				associatedViewModel.getFullUserInfo(it.baseUserInfo)
+				associatedViewModel.getRequestedUserInfo(it.baseUserInfo)
 			})
 		}
 

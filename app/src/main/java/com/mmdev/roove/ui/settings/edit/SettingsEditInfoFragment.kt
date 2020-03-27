@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 17:50
+ * Last modified 27.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -116,18 +116,19 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 					val isMainPhotoDeleting = photoToDelete.fileUrl == userItem.baseUserInfo.mainPhotoUrl
 
-					associatedViewModel.deletePhoto(photoToDelete, userItem, isMainPhotoDeleting)
-
+					//deletion observer
 					associatedViewModel.photoDeletionStatus.observeOnce(this@SettingsEditInfoFragment, Observer {
 						if (it) {
 							userItem.photoURLs.remove(photoToDelete)
 							mEditorPhotoAdapter.removeAt(position)
 
-                            if (isMainPhotoDeleting) {
-	                            userItem.baseUserInfo.mainPhotoUrl = userItem.photoURLs[0].fileUrl
-                            }
-                        }
-                    })
+							if (isMainPhotoDeleting) {
+								userItem.baseUserInfo.mainPhotoUrl = userItem.photoURLs[0].fileUrl
+							}
+						}
+					})
+					//execute deleting
+					associatedViewModel.deletePhoto(photoToDelete, userItem, isMainPhotoDeleting)
 				}
 				else context.showToastText("Хотя бы 1 фотка должна быть")
 			}

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 25.03.20 16:29
+ * Last modified 27.03.20 17:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -52,7 +52,7 @@ class MainActivity: AppCompatActivity() {
 			decorView.systemUiVisibility =
 				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
 						View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-			//status bar and navigation bar colors assigned in theme
+			//status bar and navigation bar colors assigned in style file
 		}
 		
 		super.onCreate(savedInstanceState)
@@ -69,17 +69,23 @@ class MainActivity: AppCompatActivity() {
 
 		authViewModel.checkIsAuthenticated()
 		authViewModel.authenticatedState.observe(this, Observer { authState ->
-			when (authState){
+			when (authState) {
 				UNAUTHENTICATED -> navController.navigate(R.id.action_global_authFlowFragment)
 				AUTHENTICATED -> {
+					//init shared observer
 					sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 						userInitialized ->
 						if (userInitialized != null) navController.navigate(R.id.action_global_mainFlowFragment)
 					})
 
-					remoteRepoViewModel.fetchUserItem()
-					remoteRepoViewModel.actualCurrentUserItem.observe(this, Observer {
+					//init auth loading & observer
+					authViewModel.fetchUserItem()
+					authViewModel.actualCurrentUserItem.observeOnce(this, Observer {
 						actualUserItem -> sharedViewModel.setCurrentUser(actualUserItem)
+					})
+
+					remoteRepoViewModel.updatableCurrentUserItem.observe(this, Observer {
+						updatedUser -> sharedViewModel.setCurrentUser(updatedUser)
 					})
 				}
 				else -> showToastText("Can't get AuthStatus")

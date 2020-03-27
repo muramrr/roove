@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 15:41
+ * Last modified 27.03.20 17:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -150,7 +150,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 		//ready? steady? init loading.
 		sharedViewModel.conversationSelected.observeOnce(this, Observer {
 			currentConversation = it
-			remoteRepoViewModel.getFullUserInfo(it.partner)
+			remoteRepoViewModel.getRequestedUserInfo(it.partner)
 			associatedViewModel.loadMessages(it)
 			associatedViewModel.observeNewMessages(it)
 		})

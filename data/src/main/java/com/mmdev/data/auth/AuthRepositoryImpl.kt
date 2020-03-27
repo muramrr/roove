@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 16:59
+ * Last modified 27.03.20 17:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,8 @@ package com.mmdev.data.auth
 import com.facebook.login.LoginManager
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import com.mmdev.business.auth.AuthUserItem
@@ -34,6 +36,10 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
                                              private val userWrapper: UserWrapper):
 		AuthRepository, BaseRepositoryImpl(firestore, userWrapper) {
 
+
+	companion object {
+		private const val USER_BASE_REGISTRATION_TOKENS_FIELD = "registrationTokens"
+	}
 
 	/**
 	 * Observable which track the auth changes of [FirebaseAuth] to listen when an user is logged or not.
@@ -69,6 +75,42 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		}).subscribeOn(ExecuteSchedulers.io())
 	}
 
+	override fun fetchUserInfo(): Single<UserItem> {
+		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
+			val userItem = userWrapper.getInMemoryUser()
+			val refGeneral = fillUserGeneralRef(userItem.baseUserInfo)
+
+			val refBase = firestore.collection(USERS_BASE_COLLECTION_REFERENCE).document(userItem.baseUserInfo.userId)
+			//get general user item first
+			refGeneral.get()
+				.addOnSuccessListener { remoteUser ->
+					if (remoteUser.exists()) {
+						val remoteUserItem = remoteUser.toObject(UserItem::class.java)!!
+						//check if registration token exists
+						fInstance.instanceId
+							.addOnSuccessListener { instanceResult ->
+								//add new token
+								refBase.update(USER_BASE_REGISTRATION_TOKENS_FIELD,
+								               FieldValue.arrayUnion(instanceResult.token))
+
+								userWrapper.setUser(remoteUserItem)
+								emitter.onSuccess(remoteUserItem)
+							}
+							.addOnFailureListener { instanceIdError -> emitter.onError(instanceIdError) }
+					} else emitter.onError(Throwable("User does not exist"))
+
+				}
+				.addOnFailureListener { emitter.onError(it) }
+		}).subscribeOn(ExecuteSchedulers.io())
+	}
+
+	override fun logOut(){
+		if (auth.currentUser != null) {
+			auth.signOut()
+			fbLogin.logOut()
+		}
+	}
+
 	override fun signIn(token: String): Single<HashMap<Boolean, BaseUserInfo>> =
 		signInWithFacebook(token)
 			.flatMap { checkAndRetrieveFullUser(it) }
@@ -80,10 +122,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 	override fun registerUser(userItem: UserItem): Completable =
 		Completable.create { emitter ->
 			val authUserItem = AuthUserItem(userItem.baseUserInfo)
-			val ref = firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(userItem.baseUserInfo.city)
-				.collection(userItem.baseUserInfo.gender)
-				.document(userItem.baseUserInfo.userId)
+			val ref = fillUserGeneralRef(userItem.baseUserInfo)
 			fInstance.instanceId.addOnSuccessListener { instanceResult ->
 				authUserItem.registrationTokens.add(instanceResult.token)
 				ref.set(userItem)
@@ -100,13 +139,6 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 			}.addOnFailureListener { emitter.onError(it) }
 		}.subscribeOn(ExecuteSchedulers.io())
 
-
-	override fun logOut(){
-		if (auth.currentUser != null) {
-			auth.signOut()
-			fbLogin.logOut()
-		}
-	}
 
 	/**
 	 * this fun is called first when user is trying to sign in via facebook
@@ -161,6 +193,13 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(ExecuteSchedulers.io())
+
+	private fun fillUserGeneralRef (baseUserInfo: BaseUserInfo): DocumentReference {
+		return firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(baseUserInfo.city)
+			.collection(baseUserInfo.gender)
+			.document(baseUserInfo.userId)
+	}
 
 }
 
