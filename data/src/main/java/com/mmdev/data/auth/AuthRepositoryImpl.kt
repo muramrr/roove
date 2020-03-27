@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 19:53
+ * Last modified 27.03.20 16:59
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,9 +20,9 @@ import com.mmdev.business.auth.repository.AuthRepository
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
 import com.mmdev.data.core.BaseRepositoryImpl
+import com.mmdev.data.core.schedulers.ExecuteSchedulers
 import com.mmdev.data.user.UserWrapper
-import io.reactivex.*
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.core.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -66,13 +66,13 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 			}
 			auth.addAuthStateListener(authStateListener)
 			emitter.setCancellable { auth.removeAuthStateListener(authStateListener) }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 	}
 
 	override fun signIn(token: String): Single<HashMap<Boolean, BaseUserInfo>> =
 		signInWithFacebook(token)
 			.flatMap { checkAndRetrieveFullUser(it) }
-			.subscribeOn(Schedulers.io())
+			.subscribeOn(ExecuteSchedulers.io())
 
 	/**
 	 * create new [UserItem] documents in db
@@ -98,7 +98,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 							.addOnFailureListener { emitter.onError(it) }
 					}.addOnFailureListener { emitter.onError(it) }
 			}.addOnFailureListener { emitter.onError(it) }
-		}.subscribeOn(Schedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 
 
 	override fun logOut(){
@@ -128,7 +128,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					else emitter.onError(Exception(it.exception))
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).observeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 
 	private fun checkAndRetrieveFullUser(baseUserInfo: BaseUserInfo): Single<HashMap<Boolean, BaseUserInfo>> =
 		Single.create(SingleOnSubscribe<HashMap<Boolean, BaseUserInfo>> { emitter ->
@@ -160,7 +160,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					else emitter.onSuccess(hashMapOf(true to baseUserInfo))
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).observeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 
 }
 

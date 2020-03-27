@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 19:48
+ * Last modified 27.03.20 15:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,6 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -39,7 +38,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mmdev.business.chat.entity.MessageItem
+import com.mmdev.business.chat.MessageItem
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
@@ -150,7 +149,6 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 
 		//ready? steady? init loading.
 		sharedViewModel.conversationSelected.observeOnce(this, Observer {
-			Log.wtf(TAG, it.conversationId)
 			currentConversation = it
 			remoteRepoViewModel.getFullUserInfo(it.partner)
 			associatedViewModel.loadMessages(it)
@@ -290,11 +288,13 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 	private fun sendMessageClick() {
 		if (edTextMessageInput.text.toString().trim().isNotEmpty()) {
 
-			val message = MessageItem(sender = userItemModel.baseUserInfo,
-			                          recipientId = currentConversation.partner.userId,
-			                          text = edTextMessageInput.text.toString().trim(),
-			                          photoItem = null,
-			                          conversationId = currentConversation.conversationId)
+			val message =
+				MessageItem(sender = userItemModel.baseUserInfo,
+				                                                       recipientId = currentConversation.partner.userId,
+				                                                       text = edTextMessageInput.text.toString()
+					                                                       .trim(),
+				                                                       photoItem = null,
+				                                                       conversationId = currentConversation.conversationId)
 
 			associatedViewModel.sendMessage(message)
 			rvMessageList.scrollToPosition(0)

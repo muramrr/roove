@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.03.20 15:52
+ * Last modified 27.03.20 16:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,10 +44,10 @@ android {
 
 	}
 
-	compileOptions {
-		sourceCompatibility = 1.8
-		targetCompatibility = 1.8
+	kotlinOptions {
+		jvmTarget = JavaVersion.VERSION_1_8
 	}
+
 
 	sourceSets {
 		main.java.srcDirs += 'src/main/kotlin'
@@ -75,8 +75,6 @@ dependencies {
 
 	// Retrofit
 	implementation libs.retrofit
-	implementation libs.retrofitAdapter
-	implementation libs.retrofitConverter
 
 	// Dagger
 	implementation libs.dagger

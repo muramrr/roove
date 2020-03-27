@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 24.03.20 15:45
+ * Last modified 27.03.20 16:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ package com.mmdev.roove.ui.dating.chat
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.business.chat.entity.MessageItem
+import com.mmdev.business.chat.MessageItem
 import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.chat.usecase.*
 import com.mmdev.business.conversations.ConversationItem
@@ -20,7 +20,6 @@ import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
-import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(repo: ChatRepository) :
@@ -46,7 +45,7 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 	fun loadMessages(conversation: ConversationItem) {
 		selectedConversation = conversation
 		disposables.add(loadMessagesExecution(conversation)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
 	                       if(it.isNotEmpty()) {
 		                       messagesList.value = it.toMutableList()
@@ -66,7 +65,7 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 
 	fun loadMoreMessages() {
 		disposables.add(loadMoreMessagesExecution()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
                            if(it.isNotEmpty()) {
 	                           messagesList.value!!.addAll(it)
@@ -84,7 +83,7 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 	fun observeNewMessages(conversation: ConversationItem){
 		selectedConversation = conversation
 		disposables.add(observeNewMessagesExecution(conversation)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
 	                       messagesList.value!!.add(0, it)
 	                       messagesList.value = messagesList.value
@@ -100,7 +99,7 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 
 	fun sendMessage(messageItem: MessageItem){
 		disposables.add(sendMessageExecution(messageItem, emptyChat)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({ /*Log.wtf(TAG, "Message sent")*/ },
                        { error.value = MyError(ErrorType.SENDING, it) })
 		)
@@ -110,13 +109,14 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 	fun sendPhoto(photoUri: String, sender: BaseUserInfo, recipient: String) {
 		disposables.add(uploadPhotoExecution(photoUri)
             .flatMapCompletable {
-	            val photoMessage = MessageItem(sender = sender,
-	                                           recipientId = recipient,
-	                                           photoItem = it,
-	                                           conversationId = selectedConversation.conversationId)
+	            val photoMessage =
+		            MessageItem(sender = sender,
+		                                                                   recipientId = recipient,
+		                                                                   photoItem = it,
+		                                                                   conversationId = selectedConversation.conversationId)
 	            sendMessageExecution(photoMessage, emptyChat)
             }
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({ /*Log.wtf(TAG, "Photo sent")*/ },
                        { error.value = MyError(ErrorType.SENDING, it) }))
 	}

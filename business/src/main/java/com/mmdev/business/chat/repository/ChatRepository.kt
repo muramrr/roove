@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 15.03.20 17:52
+ * Last modified 27.03.20 15:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,12 +10,12 @@
 
 package com.mmdev.business.chat.repository
 
-import com.mmdev.business.chat.entity.MessageItem
+import com.mmdev.business.chat.MessageItem
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.PhotoItem
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 interface ChatRepository {
 

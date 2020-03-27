@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 15:53
+ * Last modified 27.03.20 15:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,11 +11,8 @@
 package com.mmdev.business.cards.repository
 
 import com.mmdev.business.core.UserItem
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
-/**
- * This is the documentation block about the class
- */
 
 interface CardsRepository {
 
@@ -24,11 +21,5 @@ interface CardsRepository {
 	fun checkMatch(likedUserItem: UserItem): Single<Boolean>
 
 	fun getUsersByPreferences(): Single<List<UserItem>>
-
-//	fun getLikedList(): Single<List<String>>
-//
-//	fun getMatchedList(): Single<List<String>>
-//
-//	fun getSkippedList(): Single<List<String>>
 
 }

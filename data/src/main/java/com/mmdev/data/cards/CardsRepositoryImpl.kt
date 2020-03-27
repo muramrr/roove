@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.03.20 17:11
+ * Last modified 27.03.20 16:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,12 +20,12 @@ import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.data.core.BaseRepositoryImpl
+import com.mmdev.data.core.schedulers.ExecuteSchedulers
 import com.mmdev.data.user.UserWrapper
-import io.reactivex.Single
-import io.reactivex.SingleOnSubscribe
-import io.reactivex.functions.BiFunction
-import io.reactivex.functions.Function3
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.SingleOnSubscribe
+import io.reactivex.rxjava3.functions.BiFunction
+import io.reactivex.rxjava3.functions.Function3
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -150,7 +150,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					}
 
 			}.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 	}
 
 	/* return filtered users list as Single */
@@ -158,7 +158,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		reInit()
 		return zipLists()
 			.flatMap { getUsersCardsByPreferences(it) }
-			.subscribeOn(Schedulers.computation())
+			.subscribeOn(ExecuteSchedulers.computation())
 	}
 
 	private fun parseFilteredUsers(setOfUsers: MutableSet<QueryDocumentSnapshot>): List<UserItem>{
@@ -182,9 +182,10 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		return if (currentUser.baseUserInfo.preferredGender == "everyone")
 			Single.zip(getAllFemaleUsersCards(excludingIds),
 			           getAllMaleUsersCards(excludingIds),
-			           BiFunction<List<UserItem>, List<UserItem>, List<UserItem>>
-			           { female, male -> return@BiFunction listOf(female, male).flatten() })
-				.subscribeOn(Schedulers.computation())
+			           BiFunction {
+				           female: List<UserItem>,
+				           male: List<UserItem> -> return@BiFunction listOf(female, male).flatten() })
+				.subscribeOn(ExecuteSchedulers.computation())
 		else Single.create(SingleOnSubscribe<List<UserItem>>{ emitter ->
 			specifiedCardsQuery
 				.get()
@@ -203,7 +204,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					} else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.computation())
+		}).subscribeOn(ExecuteSchedulers.computation())
 	}
 
 	private fun getAllMaleUsersCards(excludingIds: List<String>): Single<List<UserItem>> {
@@ -238,7 +239,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					} else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 	}
 
 	private fun getAllFemaleUsersCards(excludingIds: List<String>): Single<List<UserItem>> {
@@ -273,7 +274,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					} else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 	}
 
 
@@ -282,9 +283,12 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		Single.zip(getLikedList(),
 		           getMatchedList(),
 		           getSkippedList(),
-		           Function3<List<String>, List<String>, List<String>, List<String>>
-		           { likes, matches, skipped -> mergeLists(likes, matches, skipped) })
-			.subscribeOn(Schedulers.computation())
+		           Function3 {
+			           likes: List<String>,
+			           matches: List<String>,
+			           skipped: List<String> -> mergeLists(likes, matches, skipped)
+		           }
+		).subscribeOn(ExecuteSchedulers.computation())
 
 	/* merge 3 lists of type <T> */
 	private fun <T> mergeLists(t1: List<T> = emptyList(),
@@ -310,7 +314,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					else emitter.onSuccess(likedList)
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 
 	/*
 	* GET MATCHED IDS LIST
@@ -330,7 +334,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					}
 					else emitter.onSuccess(matchedList) }
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 
 	/*
 	* GET SKIPPED USERS IDS LIST
@@ -351,7 +355,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					else emitter.onSuccess(skippedList)
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 
 
 	/**

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 19:53
+ * Last modified 27.03.20 16:59
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,9 +23,9 @@ import com.mmdev.business.core.UserItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.remote.RemoteUserRepository
 import com.mmdev.data.core.BaseRepositoryImpl
-import io.reactivex.*
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
+import com.mmdev.data.core.schedulers.ExecuteSchedulers
+import io.reactivex.rxjava3.core.*
+import io.reactivex.rxjava3.core.Observable
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -106,7 +106,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 				.addOnFailureListener { emitter.onError(it) }
 
 
-		}.subscribeOn(Schedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 
 	override fun deletePhoto(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean): Completable =
 		Completable.create { emitter ->
@@ -137,7 +137,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 
 			emitter.onComplete()
 
-		}.subscribeOn(Schedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 
 	override fun deleteMyself(): Completable =
 		Completable.create { emitter ->
@@ -150,7 +150,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 						.addOnCompleteListener { emitter.onComplete() }
 						.addOnFailureListener { emitter.onError(it)  }
 				}.addOnFailureListener { emitter.onError(it) }
-		}.subscribeOn(Schedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 
 	override fun fetchUserInfo(): Single<UserItem> {
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
@@ -178,7 +178,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 	}
 
 	override fun getFullUserItem(baseUserInfo: BaseUserInfo): Single<UserItem> =
@@ -187,7 +187,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 			ref.get()
 				.addOnSuccessListener { if (it.exists()) emitter.onSuccess(it.toObject(UserItem::class.java)!!) }
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 
 	override fun updateUserItem(userItem: UserItem): Completable =
 		Completable.create { emitter ->
@@ -204,7 +204,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 						.addOnFailureListener { emitter.onError(it) }
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}.subscribeOn(Schedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 
 
 	override fun uploadUserProfilePhoto(photoUri: String, userItem: UserItem): Observable<HashMap<Double, List<PhotoItem>>> =
@@ -239,7 +239,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 				}
 				.addOnFailureListener { emitter.onError(it) }
 			emitter.setCancellable { uploadTask.cancel() }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 
 
 	private fun fillUserGeneralRef (baseUserInfo: BaseUserInfo): DocumentReference {

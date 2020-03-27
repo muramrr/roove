@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.03.20 15:52
+ * Last modified 27.03.20 16:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,13 +32,13 @@ buildscript {
 		navigation_version = '2.3.0-alpha04'
 
 		//retrofit
-		retrofit_version = '2.7.2'
+		retrofit_version = '2.8.1'
 
-		// RxJava
-		rxjava_version = '2.2.19'
+		// RxJava3
+		rxjava_version = '3.0.1'
 
-		// RxAndroid
-		rxandroid_version = '2.1.1'
+		// RxAndroid3
+		rxandroid_version = '3.0.0'
 
 		// ViewModel and LiveData
 		lifecycle_version = '2.2.0'
@@ -57,10 +57,10 @@ buildscript {
 			navigation_fragment : ('androidx.navigation:navigation-fragment-ktx:' + navigation_version),
 			navigation_ui       : ('androidx.navigation:navigation-ui-ktx:' + navigation_version),
 			retrofit            : ('com.squareup.retrofit2:retrofit:' + retrofit_version),
-			retrofitAdapter     : ('com.squareup.retrofit2:adapter-rxjava2:' + retrofit_version),
+			retrofitAdapter     : ("com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0"), //temporary workaround until official release
 			retrofitConverter   : ('com.squareup.retrofit2:converter-gson:' + retrofit_version),
-			rxJava              : ('io.reactivex.rxjava2:rxjava:' + rxjava_version),
-			rxAndroid           : ('io.reactivex.rxjava2:rxandroid:' + rxandroid_version),
+			rxJava              : ('io.reactivex.rxjava3:rxjava:' + rxjava_version),
+			rxAndroid           : ('io.reactivex.rxjava3:rxandroid:' + rxandroid_version),
 			junit               : ('junit:junit:' + junitVersion),
 		]
 

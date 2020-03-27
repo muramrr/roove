@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 19:53
+ * Last modified 27.03.20 16:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,8 +23,8 @@ import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.UNAUTHENTICATED
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
-import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
+
 
 class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() {
 	private val isAuthenticatedListener = IsAuthenticatedListenerUseCase(repo)
@@ -43,7 +43,7 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 
 	fun checkIsAuthenticated() {
 		disposables.add(isAuthenticatedExecution()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
 	                       if (authCallbackHandler.value != it) {
 		                       authCallbackHandler.value = it
@@ -60,7 +60,7 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 
 	fun signIn(loginToken: String) {
 		disposables.add(signInExecution(loginToken)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .doOnSubscribe { showProgress.value = true }
             .doFinally { showProgress.value = false }
             .subscribe({
@@ -80,7 +80,7 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
 
 	fun register(userItem: UserItem) {
 		disposables.add(registrationExecution(userItem)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
 	                       continueRegistration.value = false
 	                       authenticatedState.value = AUTHENTICATED

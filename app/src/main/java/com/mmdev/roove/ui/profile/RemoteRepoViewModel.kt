@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 18:02
+ * Last modified 27.03.20 16:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,6 @@ import com.mmdev.business.remote.usecase.*
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
-import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 /**
@@ -49,7 +48,7 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 
 	fun deleteMatchedUser(matchedUser: MatchedUserItem) {
 		disposables.add(deleteMatchExecution(matchedUser)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
                            Log.wtf(TAG, "matchedUser ${matchedUser.baseUserInfo.userId} deleted")
                        },
@@ -62,7 +61,7 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 
 	fun deletePhoto(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean) {
 		disposables.add(deletePhotoExecution(photoItem, userItem, isMainPhotoDeleting)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
 	                       photoDeletionStatus.value = true
 	                       Log.wtf(TAG, "photo deleted")
@@ -75,7 +74,7 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 
 	fun fetchUserItem() {
 		disposables.add(fetchUserInfoExecution()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
 	                       actualCurrentUserItem.value = it
 	                       //Log.wtf(TAG, "fetched user: $it")
@@ -87,7 +86,7 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 
 	fun getFullUserInfo(baseUserInfo: BaseUserInfo) {
 		disposables.add(getFullUserInfoExecution(baseUserInfo)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
                             retrievedUserItem.value = it
                        },
@@ -99,7 +98,7 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 
 	fun updateUserItem(userItem: UserItem) {
 		disposables.add(updateUserItemExecution(userItem)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
 	                       isUserUpdatedStatus.value = true
 	                       actualCurrentUserItem.value = userItem
@@ -113,7 +112,7 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 
 	fun uploadUserProfilePhoto(photoUri: String, userItem: UserItem) {
 		disposables.add(uploadUserProfilePhotoExecution(photoUri, userItem)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
 	                       if (it.containsKey(100.00)) photoUrls.value = it.getValue(100.00)
 	                       //else Log.wtf(TAG, "Upload is ${"%.2f".format(it.keys.elementAt(0))}%

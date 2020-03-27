@@ -1,23 +1,26 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.01.20 16:37
+ * Last modified 27.03.20 16:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmdev.business.events.usecase
+package com.mmdev.data.core.schedulers
 
-import com.mmdev.business.events.repository.EventsRepository
+import io.reactivex.rxjava3.core.Scheduler
 
 /**
  * This is the documentation block about the class
  */
 
-class GetEventsUseCase (private val repository: EventsRepository) {
+interface ISchedulers {
 
-	fun execute() = repository.getEvents()
+	fun computation(): Scheduler
+	fun trampoline(): Scheduler
+	fun newThread(): Scheduler
+	fun io(): Scheduler
 
 }

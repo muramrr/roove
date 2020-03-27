@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 17:52
+ * Last modified 27.03.20 16:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,6 @@ import com.mmdev.business.pairs.usecase.GetMoreMatchedUsersListUseCase
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
-import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 class PairsViewModel @Inject constructor(repo: PairsRepository): BaseViewModel() {
@@ -37,7 +36,7 @@ class PairsViewModel @Inject constructor(repo: PairsRepository): BaseViewModel()
 
 	fun loadMatchedUsers() {
 		disposables.add(getMatchedUsersExecution()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
 	                       if (it.isNotEmpty()) {
 		                       matchedUsersList.value = it.toMutableList()
@@ -57,7 +56,7 @@ class PairsViewModel @Inject constructor(repo: PairsRepository): BaseViewModel()
 
 	fun loadMoreMatchedUsers() {
 		disposables.add(getMoreMatchedUsersExecution()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
                            if (it.isNotEmpty()) {
 	                           matchedUsersList.value!!.addAll(it)

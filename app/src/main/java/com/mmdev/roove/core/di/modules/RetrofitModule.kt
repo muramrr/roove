@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 14.03.20 16:20
+ * Last modified 27.03.20 16:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,15 +13,16 @@ package com.mmdev.roove.core.di.modules
 import com.mmdev.data.places.PlacesApi
 import dagger.Module
 import dagger.Provides
-import io.reactivex.schedulers.Schedulers
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
+import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 /**
- * Module which provides all required dependencies about network requests
+ * Module which provides all required dependencies about network requests (not firebase)
  */
+
 @Module
 class RetrofitModule {
 
@@ -50,7 +51,7 @@ class RetrofitModule {
 	@Singleton
 	fun retrofitInterface(): Retrofit = Retrofit.Builder()
 		.baseUrl(KUDAGO_BASE_URL)
-		.addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+		.addCallAdapterFactory(RxJava3CallAdapterFactory.createWithScheduler(Schedulers.io()))
 		.addConverterFactory(GsonConverterFactory.create())
 		.build()
 }

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:10
+ * Last modified 27.03.20 16:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,11 +20,9 @@ import com.mmdev.business.core.UserItem
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
-import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
-class CardsViewModel @Inject constructor(repo: CardsRepository):
-		BaseViewModel(){
+class CardsViewModel @Inject constructor(repo: CardsRepository): BaseViewModel(){
 
 
 	private val addToSkippedUC = AddToSkippedUseCase(repo)
@@ -47,7 +45,7 @@ class CardsViewModel @Inject constructor(repo: CardsRepository):
 
 	fun checkMatch(likedUserItem: UserItem) {
 		disposables.add(checkMatchExecution(likedUserItem)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
                            showMatchDialog.value = it
                            Log.wtf(TAG, "liked card: ${likedUserItem.baseUserInfo.name}")
@@ -60,7 +58,7 @@ class CardsViewModel @Inject constructor(repo: CardsRepository):
 
 	fun loadUsersByPreferences() {
 		disposables.add(getUsersByPreferencesExecution()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .doOnSubscribe { showLoading.value = true }
             .subscribe({
 	                       if(it.isNotEmpty()) {

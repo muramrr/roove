@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 11.03.20 17:33
+ * Last modified 27.03.20 16:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,6 @@ import com.mmdev.business.conversations.usecase.GetMoreConversationsListUseCase
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
-import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 class ConversationsViewModel @Inject constructor(repo: ConversationsRepository): BaseViewModel() {
@@ -42,7 +41,7 @@ class ConversationsViewModel @Inject constructor(repo: ConversationsRepository):
 
 	fun deleteConversation(conversationItem: ConversationItem){
 		disposables.add(deleteConversationExecution(conversationItem)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
 	                       Log.wtf(TAG, "conversation ${conversationItem.conversationId} deleted")
 	                       deleteConversationStatus.value = true
@@ -56,7 +55,7 @@ class ConversationsViewModel @Inject constructor(repo: ConversationsRepository):
 
 	fun loadConversationsList(){
 		disposables.add(getConversationsListExecution()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
 	                       if (it.isNotEmpty()) {
 		                       conversationsList.value = it.toMutableList()
@@ -75,7 +74,7 @@ class ConversationsViewModel @Inject constructor(repo: ConversationsRepository):
 
 	fun loadMoreConversations(){
 		disposables.add(getMoreConversationsListExecution()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThread())
             .subscribe({
                            if (it.isNotEmpty()) {
 	                           conversationsList.value!!.addAll(it)

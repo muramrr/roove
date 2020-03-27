@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 19:04
+ * Last modified 27.03.20 16:54
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,11 +17,11 @@ import com.google.firebase.firestore.Query
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.conversations.repository.ConversationsRepository
 import com.mmdev.data.core.BaseRepositoryImpl
+import com.mmdev.data.core.schedulers.ExecuteSchedulers
 import com.mmdev.data.user.UserWrapper
-import io.reactivex.Completable
-import io.reactivex.Single
-import io.reactivex.SingleOnSubscribe
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.SingleOnSubscribe
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -95,7 +95,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				.addOnSuccessListener { emitter.onComplete() }
 				.addOnFailureListener { emitter.onError(it) }
 
-		}.subscribeOn(Schedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 
 	override fun getConversationsList(): Single<List<ConversationItem>> =
 		Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
@@ -118,7 +118,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 
 	override fun getMoreConversationsList(): Single<List<ConversationItem>> =
 		Single.create(SingleOnSubscribe<List<ConversationItem>> { emitter ->
@@ -140,7 +140,7 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 
 	override fun reInit() {
 		super.reInit()

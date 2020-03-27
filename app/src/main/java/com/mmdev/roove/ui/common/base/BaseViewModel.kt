@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.03.20 20:19
+ * Last modified 27.03.20 16:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,9 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mmdev.roove.ui.common.errors.MyError
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 
 /**
@@ -26,6 +28,8 @@ abstract class BaseViewModel: ViewModel() {
 	internal val error: MutableLiveData<MyError> = MutableLiveData()
 	protected val disposables = CompositeDisposable()
 	protected val TAG = "mylogs_" + javaClass.simpleName
+
+	protected fun mainThread(): Scheduler = AndroidSchedulers.mainThread()
 
 	override fun onCleared() {
 		disposables.clear()

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 19:53
+ * Last modified 27.03.20 16:54
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,10 +16,10 @@ import com.google.firebase.firestore.Query
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.pairs.PairsRepository
 import com.mmdev.data.core.BaseRepositoryImpl
+import com.mmdev.data.core.schedulers.ExecuteSchedulers
 import com.mmdev.data.user.UserWrapper
-import io.reactivex.Single
-import io.reactivex.SingleOnSubscribe
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.SingleOnSubscribe
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -65,7 +65,7 @@ class PairsRepositoryImpl @Inject constructor(firestore: FirebaseFirestore,
 					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 
 	override fun getMoreMatchedUsersList(): Single<List<MatchedUserItem>> =
 		Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
@@ -87,7 +87,7 @@ class PairsRepositoryImpl @Inject constructor(firestore: FirebaseFirestore,
 					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(Schedulers.io())
+		}).subscribeOn(ExecuteSchedulers.io())
 
 	override fun reInit() {
 		super.reInit()
