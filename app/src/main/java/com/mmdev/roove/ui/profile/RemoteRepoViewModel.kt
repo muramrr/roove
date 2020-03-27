@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 18:57
+ * Last modified 27.03.20 19:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package com.mmdev.roove.ui.profile
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
@@ -38,7 +37,7 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 	private val updateUserItemUC = UpdateUserItemUseCase(repo)
 	private val uploadUserProfilePhotoUC = UploadUserProfilePhotoUseCase(repo)
 
-	val reportSubmitionStatus: MutableLiveData<Boolean> = MutableLiveData()
+	val reportSubmittingStatus: MutableLiveData<Boolean> = MutableLiveData()
 	val updatableCurrentUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	val retrievedUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	val isUserUpdatedStatus: MutableLiveData<Boolean> = MutableLiveData()
@@ -50,7 +49,6 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 		disposables.add(deleteMatchExecution(matchedUser)
             .observeOn(mainThread())
             .subscribe({
-                           Log.wtf(TAG, "matchedUser ${matchedUser.baseUserInfo.userId} deleted")
                        },
                        {
                            error.value = MyError(ErrorType.DELETING, it)
@@ -64,7 +62,6 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
             .observeOn(mainThread())
             .subscribe({
 	                       photoDeletionStatus.value = true
-	                       Log.wtf(TAG, "photo deleted")
                        },
                        {
 	                       photoDeletionStatus.value = false
@@ -88,7 +85,7 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 		disposables.add(submitReportExecution(report)
             .observeOn(mainThread())
             .subscribe({
-	                       reportSubmitionStatus.value = true
+	                       reportSubmittingStatus.value = true
                        },
                        {
                            error.value = MyError(ErrorType.SUBMITING, it)
@@ -102,7 +99,6 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
             .subscribe({
 	                       isUserUpdatedStatus.value = true
 	                       updatableCurrentUserItem.value = userItem
-	                       Log.wtf(TAG, "update user successful")
                        },
                        {
 	                       isUserUpdatedStatus.value = false

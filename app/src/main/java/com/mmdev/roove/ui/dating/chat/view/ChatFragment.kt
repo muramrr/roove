@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 19:18
+ * Last modified 27.03.20 19:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -151,7 +151,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 			setupContentToolbar(it)
 		})
 
-		remoteRepoViewModel.reportSubmitionStatus.observeOnce(this, Observer {
+		remoteRepoViewModel.reportSubmittingStatus.observeOnce(this, Observer {
 			isReported = it
 			context?.showToastText(getString(R.string.toast_text_report_success))
 		})
@@ -195,7 +195,8 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 		btnSendAttachment.setOnClickListener {
 			//show attachment dialog picker
 			val materialDialogPicker = MaterialAlertDialogBuilder(it.context)
-				.setItems(arrayOf("Camera", "Gallery")) {
+				.setItems(arrayOf(getString(R.string.material_dialog_picker_camera),
+				                  getString(R.string.material_dialog_picker_gallery))) {
 					_, itemIndex ->
 					if (itemIndex == 0) { photoCameraClick() }
 					else { photoGalleryClick() }
@@ -417,9 +418,9 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 
 	private fun showReportDialog() {
 		val materialDialogPicker = MaterialAlertDialogBuilder(context)
-			.setItems(arrayOf("Ineligible photos",
-			                  "Disrespectful behavior",
-			                  "Seems it is fake")) {
+			.setItems(arrayOf(getString(R.string.report_chooser_photos),
+			                  getString(R.string.report_chooser_behavior),
+			                  getString(R.string.report_chooser_fake))) {
 				_, itemIndex ->
 				when (itemIndex) {
 					0 -> { remoteRepoViewModel.submitReport(Report(INELIGIBLE_PHOTOS,

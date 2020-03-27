@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 19:04
+ * Last modified 27.03.20 19:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -90,7 +90,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 			})
 		}
 
-		associatedViewModel.reportSubmitionStatus.observeOnce(this, Observer {
+		associatedViewModel.reportSubmittingStatus.observeOnce(this, Observer {
 			isReported = it
 			context?.showToastText(getString(R.string.toast_text_report_success))
 			toolbarProfile.apply {
@@ -163,10 +163,9 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
 	private fun showReportDialog() {
 		val materialDialogPicker = MaterialAlertDialogBuilder(context)
-			.setItems(arrayOf("Ineligible photos",
-			                  "Disrespectful behavior",
-			                  "Seems it is fake")) {
-				_, itemIndex ->
+			.setItems(arrayOf(getString(R.string.report_chooser_photos),
+			                  getString(R.string.report_chooser_behavior),
+			                  getString(R.string.report_chooser_fake))) { _, itemIndex ->
 				when (itemIndex) {
 					0 -> { associatedViewModel.submitReport(Report(INELIGIBLE_PHOTOS,
 					                                               selectedUser.baseUserInfo)) }

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 20:33
+ * Last modified 27.03.20 19:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -136,7 +136,8 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 		fabSettingsAddPhoto.setOnClickListener {
 			//show attachment dialog picker
 			val materialDialogPicker = MaterialAlertDialogBuilder(it.context)
-				.setItems(arrayOf("Camera", "Gallery")) {
+				.setItems(arrayOf(getString(R.string.material_dialog_picker_camera),
+				                  getString(R.string.material_dialog_picker_gallery))) {
 					_, itemIndex ->
 					if (itemIndex == 0) { photoCameraClick() }
 					else { photoGalleryClick() }
