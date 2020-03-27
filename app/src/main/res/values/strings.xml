@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.03.20 18:17
+  ~ Last modified 27.03.20 19:00
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -66,7 +66,9 @@
 	<string name="genderEveryone">everyone</string>
 	<string name="genderMale">male</string>
 
+	<string name="toast_text_report_success">Report sent successfully\nThank you!</string>
 	<string name="toast_text_update_success">Successfully updated</string>
+
 	<string name="btn_log_in_with_facebook">Log in with Facebook</string>
 	<string name="dialog_error_title">Error</string>
 	<string name="tv_ages_you_prefer">Ages preferences</string>

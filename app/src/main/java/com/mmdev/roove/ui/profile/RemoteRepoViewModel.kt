@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 17:52
+ * Last modified 27.03.20 18:57
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.remote.RemoteUserRepository
+import com.mmdev.business.remote.entity.Report
 import com.mmdev.business.remote.usecase.*
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
@@ -33,10 +34,11 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 	private val deletePhotoUC = DeletePhotoUseCase(repo)
 	private val deleteMyselfUC = DeleteMyselfUseCase(repo)
 	private val getRequestedUserInfoUC = GetRequestedUserInfoUseCase(repo)
+	private val submitReportUC = SubmitReportUseCase(repo)
 	private val updateUserItemUC = UpdateUserItemUseCase(repo)
 	private val uploadUserProfilePhotoUC = UploadUserProfilePhotoUseCase(repo)
 
-
+	val reportSubmitionStatus: MutableLiveData<Boolean> = MutableLiveData()
 	val updatableCurrentUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	val retrievedUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	val isUserUpdatedStatus: MutableLiveData<Boolean> = MutableLiveData()
@@ -82,6 +84,18 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 
 	}
 
+	fun submitReport(report: Report) {
+		disposables.add(submitReportExecution(report)
+            .observeOn(mainThread())
+            .subscribe({
+	                       reportSubmitionStatus.value = true
+                       },
+                       {
+                           error.value = MyError(ErrorType.SUBMITING, it)
+                       }))
+
+	}
+
 	fun updateUserItem(userItem: UserItem) {
 		disposables.add(updateUserItemExecution(userItem)
             .observeOn(mainThread())
@@ -116,6 +130,7 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 	private fun deleteMyselfExecution() = deleteMyselfUC.execute()
 	private fun getRequestedUserInfoExecution(baseUserInfo: BaseUserInfo) =
 		getRequestedUserInfoUC.execute(baseUserInfo)
+	private fun submitReportExecution(report: Report) = submitReportUC.execute(report)
 	private fun updateUserItemExecution(userItem: UserItem) =
 		updateUserItemUC.execute(userItem)
 	private fun uploadUserProfilePhotoExecution(photoUri: String, userItem: UserItem) =

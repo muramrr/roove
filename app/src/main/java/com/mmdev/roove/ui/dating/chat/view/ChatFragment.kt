@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 17:26
+ * Last modified 27.03.20 19:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,6 +43,8 @@ import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.pairs.MatchedUserItem
+import com.mmdev.business.remote.entity.Report
+import com.mmdev.business.remote.entity.Report.ReportType.*
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
@@ -56,6 +58,7 @@ import com.mmdev.roove.ui.dating.chat.ChatViewModel
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import com.mmdev.roove.utils.observeOnce
+import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_chat.*
 import java.io.File
 import java.util.*
@@ -75,6 +78,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 	private var receivedConversationId = ""
 
 	private var isDeepLinkJump: Boolean = false
+	private var isReported: Boolean = false
 
 	private lateinit var currentConversation: ConversationItem
 	private lateinit var currentPartner: UserItem
@@ -145,6 +149,11 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 		remoteRepoViewModel.retrievedUserItem.observeOnce(this, Observer {
 			currentPartner = it
 			setupContentToolbar(it)
+		})
+
+		remoteRepoViewModel.reportSubmitionStatus.observeOnce(this, Observer {
+			isReported = it
+			context?.showToastText(getString(R.string.toast_text_report_success))
 		})
 
 		//ready? steady? init loading.
@@ -242,10 +251,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 					findNavController().navigate(R.id.action_chat_to_profileFragment)
 				}
 
-				R.id.chat_action_report -> {
-					Toast.makeText(context, "chat report click", Toast.LENGTH_SHORT).show()
-					//chatViewModel.loadMessages(currentConversation)
-				}
+				R.id.chat_action_report -> { if (!isReported) showReportDialog() }
 			}
 			return@setOnMenuItemClickListener true
 		}
@@ -407,6 +413,26 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 						.show()
 			}
 		}
+	}
+
+	private fun showReportDialog() {
+		val materialDialogPicker = MaterialAlertDialogBuilder(context)
+			.setItems(arrayOf("Ineligible photos",
+			                  "Disrespectful behavior",
+			                  "Seems it is fake")) {
+				_, itemIndex ->
+				when (itemIndex) {
+					0 -> { remoteRepoViewModel.submitReport(Report(INELIGIBLE_PHOTOS,
+					                                               currentPartner.baseUserInfo)) }
+					1 -> { remoteRepoViewModel.submitReport(Report(DISRESPECTFUL_BEHAVIOR,
+					                                               currentPartner.baseUserInfo)) }
+					2 -> { remoteRepoViewModel.submitReport(Report(FAKE, currentPartner.baseUserInfo)) }
+				}
+			}
+			.create()
+		val params = materialDialogPicker.window?.attributes
+		params?.gravity = Gravity.CENTER
+		materialDialogPicker.show()
 	}
 
 

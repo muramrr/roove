@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 17:26
+ * Last modified 27.03.20 19:04
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 package com.mmdev.roove.ui.profile.view
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,10 +19,13 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.places.BasePlaceInfo
+import com.mmdev.business.remote.entity.Report
+import com.mmdev.business.remote.entity.Report.ReportType.*
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentProfileBinding
 import com.mmdev.roove.ui.common.ImagePagerAdapter
@@ -41,6 +45,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 	private val userPhotosAdapter = ImagePagerAdapter(listOf())
 	private val mPlacesToGoAdapter = PlacesToGoAdapter(listOf())
 
+	private var isReported: Boolean = false
 	private var fabVisible: Boolean = false
 	private var isMatched: Boolean = false
 
@@ -85,6 +90,15 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 			})
 		}
 
+		associatedViewModel.reportSubmitionStatus.observeOnce(this, Observer {
+			isReported = it
+			context?.showToastText(getString(R.string.toast_text_report_success))
+			toolbarProfile.apply {
+				val reportItem = menu.findItem(R.id.profile_action_report)
+				reportItem.isVisible = !isReported
+			}
+		})
+
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -118,7 +132,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 			setNavigationOnClickListener { findNavController().navigateUp() }
 			setOnMenuItemClickListener { item ->
 				when (item.itemId) {
-					R.id.profile_action_report -> { context.showToastText("Action report clicked") }
+					R.id.profile_action_report -> { showReportDialog() }
 					R.id.profile_action_unmatch -> {
 						sharedViewModel.matchedUserItemSelected.value?.let {
 							associatedViewModel.deleteMatchedUser(it)
@@ -145,6 +159,26 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 			}
 		}
 
+	}
+
+	private fun showReportDialog() {
+		val materialDialogPicker = MaterialAlertDialogBuilder(context)
+			.setItems(arrayOf("Ineligible photos",
+			                  "Disrespectful behavior",
+			                  "Seems it is fake")) {
+				_, itemIndex ->
+				when (itemIndex) {
+					0 -> { associatedViewModel.submitReport(Report(INELIGIBLE_PHOTOS,
+					                                               selectedUser.baseUserInfo)) }
+					1 -> { associatedViewModel.submitReport(Report(DISRESPECTFUL_BEHAVIOR,
+					                                               selectedUser.baseUserInfo)) }
+					2 -> { associatedViewModel.submitReport(Report(FAKE, selectedUser.baseUserInfo)) }
+				}
+			}
+			.create()
+		val params = materialDialogPicker.window?.attributes
+		params?.gravity = Gravity.CENTER
+		materialDialogPicker.show()
 	}
 
 	override fun onBackPressed() {

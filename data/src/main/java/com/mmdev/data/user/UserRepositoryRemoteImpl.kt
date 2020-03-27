@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 17:41
+ * Last modified 27.03.20 19:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,17 +15,18 @@ import android.text.format.DateFormat
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.StorageReference
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.remote.RemoteUserRepository
+import com.mmdev.business.remote.entity.Report
 import com.mmdev.data.core.BaseRepositoryImpl
 import com.mmdev.data.core.schedulers.ExecuteSchedulers
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.internal.operators.completable.CompletableCreate
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,13 +36,14 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: FirebaseInstanceId,
-                                                   private val firestore: FirebaseFirestore,
+class UserRepositoryRemoteImpl @Inject constructor(private val firestore: FirebaseFirestore,
                                                    private val storage: StorageReference,
                                                    private val userWrapper: UserWrapper):
 		RemoteUserRepository, BaseRepositoryImpl(firestore, userWrapper) {
 
 	companion object {
+		private const val REPORTS_COLLECTION_REFERENCE = "reports"
+
 		private const val USER_BASE_INFO_FIELD = "baseUserInfo"
 		private const val USER_MAIN_PHOTO_FIELD = "baseUserInfo.mainPhotoUrl"
 		private const val USER_PHOTOS_LIST_FIELD = "photoURLs"
@@ -156,6 +158,17 @@ class UserRepositoryRemoteImpl @Inject constructor(private val fInstance: Fireba
 				.addOnSuccessListener { if (it.exists()) emitter.onSuccess(it.toObject(UserItem::class.java)!!) }
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(ExecuteSchedulers.io())
+
+	override fun submitReport(report: Report): Completable =
+		CompletableCreate(CompletableOnSubscribe { emitter ->
+			report.reportId = firestore.collection(REPORTS_COLLECTION_REFERENCE).document().id
+			firestore.collection(REPORTS_COLLECTION_REFERENCE)
+				.document(report.reportId)
+				.set(report)
+				.addOnSuccessListener { emitter.onComplete() }
+				.addOnFailureListener { emitter.onError(it) }
+		}).subscribeOn(ExecuteSchedulers.io())
+
 
 	override fun updateUserItem(userItem: UserItem): Completable =
 		Completable.create { emitter ->

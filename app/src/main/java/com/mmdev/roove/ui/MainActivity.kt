@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 17:52
+ * Last modified 27.03.20 18:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,7 +40,7 @@ class MainActivity: AppCompatActivity() {
 
 	private val factory = injector.factory()
 
-	companion object{
+	companion object {
 		private const val TAG = "mylogs_MainActivity"
 	}
 
@@ -67,7 +67,7 @@ class MainActivity: AppCompatActivity() {
 		sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
-		authViewModel.checkIsAuthenticated()
+		//init observer
 		authViewModel.authenticatedState.observe(this, Observer { authState ->
 			when (authState) {
 				UNAUTHENTICATED -> navController.navigate(R.id.action_global_authFlowFragment)
@@ -91,6 +91,7 @@ class MainActivity: AppCompatActivity() {
 				else -> showToastText("Can't get AuthStatus")
 			}
 		})
+
 		authViewModel.showProgress.observe(this, Observer {
 			if (it == true) progressDialog.showDialog()
 			else progressDialog.dismissDialog()
@@ -99,6 +100,9 @@ class MainActivity: AppCompatActivity() {
 		remoteRepoViewModel.isUserUpdatedStatus.observe(this, Observer {
 			if (it) { showToastText(getString(R.string.toast_text_update_success)) }
 		})
+
+		//start to listens auth status
+		authViewModel.checkIsAuthenticated()
 
 		//creating fake data on remote, do not call this on UI thread
 //		for (i in 0 until 50){
