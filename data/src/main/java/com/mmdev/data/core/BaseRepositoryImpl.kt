@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 17:52
+ * Last modified 28.03.20 16:23
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,12 +25,16 @@ open class BaseRepositoryImpl constructor(private val firestore: FirebaseFiresto
 	protected var currentUser = userWrapper.getUser()
 	protected var currentUserId: String = currentUser.baseUserInfo.userId
 
-	protected var currentUserDocRef: DocumentReference =
-		firestore.collection(USERS_COLLECTION_REFERENCE)
+	protected lateinit var currentUserDocRef: DocumentReference
+	init {
+		if (currentUser.baseUserInfo.city.isNotEmpty() &&
+				currentUser.baseUserInfo.gender.isNotEmpty() &&
+				currentUser.baseUserInfo.userId.isNotEmpty())
+		currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.city)
 			.collection(currentUser.baseUserInfo.gender)
 			.document(currentUser.baseUserInfo.userId)
-
+	}
 
 
 	override fun reInit() {

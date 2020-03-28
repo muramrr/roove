@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.01.20 14:49
+ * Last modified 28.03.20 16:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,8 +34,8 @@ class OkHttpProgressResponseBody internal constructor(
 
 	private var bufferedSource: BufferedSource? = null
 
-	override fun contentType(): MediaType {
-		return responseBody.contentType()!!
+	override fun contentType(): MediaType? {
+		return responseBody.contentType()
 	}
 
 
