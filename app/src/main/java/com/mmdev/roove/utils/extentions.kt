@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 23.03.20 18:31
+ * Last modified 29.03.20 19:09
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import android.content.Context
 import android.view.View
 import android.view.WindowInsets
 import android.widget.Toast
-import androidx.core.view.updatePadding
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -39,30 +38,7 @@ fun Context.dp2px(dpValue: Float): Int = (dpValue * this.resources.displayMetric
 fun Context.px2Dp(pxValue: Float): Int = (pxValue / this.resources.displayMetrics.density + 0.5f).toInt()
 
 
-fun View.addSystemTopPadding(targetView: View = this) =
-	doOnApplyWindowInsets { _, insets, initialPadding ->
-		targetView.updatePadding(top = initialPadding.top + insets.systemWindowInsetTop)
-	}
-
-
-fun View.addSystemBottomPadding(targetView: View = this) =
-	doOnApplyWindowInsets { _, insets, initialPadding ->
-		targetView.updatePadding(bottom = initialPadding.bottom + insets.systemWindowInsetBottom)
-	}
-
-fun View.addSystemRightPadding(targetView: View = this) =
-	doOnApplyWindowInsets { _, insets, initialPadding ->
-		targetView.updatePadding(right = initialPadding.right + insets.systemWindowInsetRight)
-	}
-
-
-fun View.addSystemLeftPadding(targetView: View = this) =
-	doOnApplyWindowInsets { _, insets, initialPadding ->
-		targetView.updatePadding(left = initialPadding.left + insets.systemWindowInsetLeft)
-	}
-
-
-fun Context.ErrorMaterialDialogBuilder(errorText: String) =
+fun Context.errorMaterialDialogBuilder(errorText: String) =
 	MaterialAlertDialogBuilder(this)
 		.setTitle(getString(R.string.dialog_error_title))
 		.setMessage(errorText)
@@ -70,7 +46,7 @@ fun Context.ErrorMaterialDialogBuilder(errorText: String) =
 
 fun BaseViewModel.showErrorDialog(lifecycleOwner: LifecycleOwner, context: Context?) {
 	this.error.observe(lifecycleOwner, Observer {
-		context?.ErrorMaterialDialogBuilder(it.getErrorMessage())?.show()
+		context?.errorMaterialDialogBuilder(it.getErrorMessage())?.show()
 	})
 }
 

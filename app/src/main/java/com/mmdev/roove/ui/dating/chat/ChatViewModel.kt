@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 19:30
+ * Last modified 29.03.20 18:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,9 +37,10 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 		messagesList.value = mutableListOf()
 	}
 	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
+	val newMessage: MutableLiveData<MessageItem> = MutableLiveData()
 
 	private lateinit var selectedConversation: ConversationItem
-	private var emptyChat = true
+	val chatIsEmpty: MutableLiveData<Boolean> = MutableLiveData()
 
 
 	fun loadMessages(conversation: ConversationItem) {
@@ -49,13 +50,13 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
             .subscribe({
 	                       if(it.isNotEmpty()) {
 		                       messagesList.value = it.toMutableList()
-		                       emptyChat = false
+		                       chatIsEmpty.value = false
 	                       }
-	                       else emptyChat = true
+	                       else chatIsEmpty.value = true
 	                       Log.wtf(TAG, "initial loaded messages: ${it.size}")
                        },
                        {
-	                       emptyChat = true
+	                       chatIsEmpty.value = true
 	                       error.value = MyError(ErrorType.LOADING, it)
                        }
             )
@@ -85,9 +86,9 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 		disposables.add(observeNewMessagesExecution(conversation)
             .observeOn(mainThread())
             .subscribe({
+	                       newMessage.value = it
 	                       messagesList.value!!.add(0, it)
-	                       messagesList.value = messagesList.value
-	                       emptyChat = false
+	                       chatIsEmpty.value = false
 	                       Log.wtf(TAG, "last received message: ${it.text}")
                        },
                        {
@@ -98,7 +99,7 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 	}
 
 	fun sendMessage(messageItem: MessageItem){
-		disposables.add(sendMessageExecution(messageItem, emptyChat)
+		disposables.add(sendMessageExecution(messageItem, chatIsEmpty.value)
             .observeOn(mainThread())
             .subscribe({ /*Log.wtf(TAG, "Message sent")*/ },
                        { error.value = MyError(ErrorType.SENDING, it) })
@@ -114,7 +115,7 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 		                        recipientId = recipient,
 		                        photoItem = it,
 		                        conversationId = selectedConversation.conversationId)
-	            sendMessageExecution(photoMessage, emptyChat)
+	            sendMessageExecution(photoMessage, chatIsEmpty.value)
             }
             .observeOn(mainThread())
             .subscribe({ /*Log.wtf(TAG, "Photo sent")*/ },

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 19:26
+ * Last modified 29.03.20 18:32
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -68,7 +68,7 @@ import java.util.*
  * This is the documentation block about the class
  */
 
-class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_chat) {
+class ChatFragment : BaseFragment<ChatViewModel>() {
 
 	private lateinit var userItemModel: UserItem
 
@@ -83,7 +83,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 	private lateinit var currentConversation: ConversationItem
 	private lateinit var currentPartner: UserItem
 
-	private val mChatAdapter: ChatAdapter = ChatAdapter(listOf())
+	private val mChatAdapter: ChatAdapter = ChatAdapter()
 
 	// File
 	private lateinit var mFilePathImageCamera: File
@@ -149,6 +149,9 @@ class ChatFragment : BaseFragment<ChatViewModel>(layoutId = R.layout.fragment_ch
 		remoteRepoViewModel.retrievedUserItem.observeOnce(this, Observer {
 			currentPartner = it
 			setupContentToolbar(it)
+		})
+		associatedViewModel.newMessage.observe(this, Observer {
+			mChatAdapter.newMessage()
 		})
 
 		remoteRepoViewModel.reportSubmittingStatus.observeOnce(this, Observer {

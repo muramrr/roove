@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 17:57
+ * Last modified 29.03.20 19:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,9 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -25,10 +27,9 @@ import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.PreferredAgeRange
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
+import com.mmdev.roove.databinding.FragmentRegistrationBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
-import com.mmdev.roove.utils.addSystemBottomPadding
-import com.mmdev.roove.utils.addSystemTopPadding
 import kotlinx.android.synthetic.main.fragment_registration.*
 
 
@@ -36,7 +37,7 @@ import kotlinx.android.synthetic.main.fragment_registration.*
  * This is the documentation block about the class
  */
 
-class RegistrationFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_registration){
+class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 
 	private var registrationStep = 1
 
@@ -82,10 +83,15 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_
 		})
 	}
 
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+	                          savedInstanceState: Bundle?) =
+		FragmentRegistrationBinding.inflate(inflater, container, false)
+			.apply {
+				executePendingBindings()
+			}
+			.root
+
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		containerRegistration.addSystemBottomPadding()
-		tvAllCorrect.addSystemTopPadding()
-		tvInterested.addSystemTopPadding()
 
 		containerRegistration.transitionToState(R.id.step_1)
 

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 24.03.20 15:45
+  ~ Last modified 29.03.20 18:40
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -154,6 +154,21 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			tools:ignore="ContentDescription" />
+
+		<com.google.android.material.textview.MaterialTextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+
+			android:text="@string/chat_no_messages_explanation"
+			android:textSize="16sp"
+			app:visibilityInvisible='@{viewModel.chatIsEmpty}'
+
+			style="@style/light_text"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"/>
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

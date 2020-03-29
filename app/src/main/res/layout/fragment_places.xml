@@ -2,70 +2,75 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 20:45
+  ~ Last modified 29.03.20 18:47
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
-
-<androidx.constraintlayout.widget.ConstraintLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	>
 
-	<com.google.android.material.tabs.TabLayout
-		android:id="@+id/tabLayoutPlaces"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:background="@color/colorPrimaryDark"
-		android:clipToPadding="false"
-		android:overScrollMode="never"
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
-		app:tabIndicator="@color/transparent"
-		app:tabMode="scrollable"
-		app:tabRippleColor="@color/transparent"
-		app:tabSelectedTextColor="@color/white"
-		app:tabTextAppearance="@style/tab_text_36sp"
-
-		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintBottom_toTopOf="@id/viewPagerPlaces"
-		>
-
-		<com.google.android.material.tabs.TabItem
-			android:layout_width="wrap_content"
+		<com.google.android.material.tabs.TabLayout
+			android:id="@+id/tabLayoutPlaces"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:text="Bars" />
+			android:background="@color/colorPrimaryDark"
+			android:clipToPadding="false"
+			android:overScrollMode="never"
 
-		<com.google.android.material.tabs.TabItem
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Restaurants" />
+			app:tabIndicator="@color/transparent"
+			app:tabMode="scrollable"
+			app:tabRippleColor="@color/transparent"
+			app:tabSelectedTextColor="@color/white"
+			app:tabTextAppearance="@style/tab_text_36sp"
 
-		<com.google.android.material.tabs.TabItem
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Clubs" />
+			app:paddingTopSystemWindowInsets="@{true}"
 
-		<com.google.android.material.tabs.TabItem
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Museums" />
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/viewPagerPlaces"
+			>
 
-	</com.google.android.material.tabs.TabLayout>
+			<com.google.android.material.tabs.TabItem
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Bars" />
 
-	<androidx.viewpager2.widget.ViewPager2
-		android:id="@+id/viewPagerPlaces"
-		android:layout_width="0dp"
-		android:layout_height="0dp"
-		android:overScrollMode="never"
+			<com.google.android.material.tabs.TabItem
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Restaurants" />
 
-		app:layout_constraintTop_toBottomOf="@+id/tabLayoutPlaces"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"/>
+			<com.google.android.material.tabs.TabItem
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Clubs" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+			<com.google.android.material.tabs.TabItem
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Museums" />
+
+		</com.google.android.material.tabs.TabLayout>
+
+		<androidx.viewpager2.widget.ViewPager2
+			android:id="@+id/viewPagerPlaces"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:overScrollMode="never"
+
+			app:layout_constraintTop_toBottomOf="@+id/tabLayoutPlaces"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"/>
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
