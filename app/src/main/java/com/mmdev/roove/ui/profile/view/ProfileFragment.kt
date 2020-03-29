@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 18:11
+ * Last modified 29.03.20 20:05
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -76,12 +76,16 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 			userPhotosAdapter.setData(it.photoURLs.map { photoItem -> photoItem.fileUrl })
 		})
 
+
 		//if true -> seems that we navigates here from pairs or chat fragment
 		if (isMatched) {
 			sharedViewModel.matchedUserItemSelected.value?.let {
 				conversationId = it.conversationId
 				associatedViewModel.getRequestedUserInfo(it.baseUserInfo)
 			}
+			associatedViewModel.unmatchStatus.observeOnce(this, Observer {
+				if (it) findNavController().navigateUp()
+			})
 		}
 		//else we navigates here from cards and already have userItem in sharedViewModel
 		else {

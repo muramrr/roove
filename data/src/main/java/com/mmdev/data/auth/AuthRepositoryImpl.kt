@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 18:14
+ * Last modified 29.03.20 20:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -94,6 +94,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 
 								userWrapper.setUser(remoteUserItem)
 								emitter.onSuccess(remoteUserItem)
+								reInit()
 							}
 							.addOnFailureListener { instanceIdError -> emitter.onError(instanceIdError) }
 					} else emitter.onError(Throwable("User does not exist"))
@@ -132,6 +133,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 							.addOnSuccessListener {
 								userWrapper.setUser(userItem)
 								emitter.onComplete()
+								reInit()
 							}
 							.addOnFailureListener { emitter.onError(it) }
 					}.addOnFailureListener { emitter.onError(it) }

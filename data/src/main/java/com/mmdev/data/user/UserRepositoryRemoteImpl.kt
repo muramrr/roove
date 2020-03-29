@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 18:14
+ * Last modified 29.03.20 20:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -142,13 +142,68 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 
 	override fun deleteMyself(): Completable =
 		CompletableCreate { emitter ->
+			reInit()
 			val ref = fillUserGeneralRef(currentUser.baseUserInfo)
+			ref.collection(USER_MATCHED_COLLECTION_REFERENCE)
+				.addSnapshotListener { snapshots, e ->
+					if (e != null) {
+						emitter.onError(e)
+						return@addSnapshotListener
+					}
+					if (snapshots != null && snapshots.documents.isNotEmpty()) {
+						for (doc in snapshots.documents)
+							doc.reference.delete()
+					}
+
+			}
+			ref.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.addSnapshotListener { snapshots, e ->
+					if (e != null) {
+						emitter.onError(e)
+						return@addSnapshotListener
+					}
+					if (snapshots != null && snapshots.documents.isNotEmpty()) {
+						for (doc in snapshots.documents)
+							doc.reference.delete()
+					}
+				}
+			ref.collection(USER_SKIPPED_COLLECTION_REFERENCE)
+				.addSnapshotListener { snapshots, e ->
+					if (e != null) {
+						emitter.onError(e)
+						return@addSnapshotListener
+					}
+					if (snapshots != null && snapshots.documents.isNotEmpty()) {
+						for (doc in snapshots.documents)
+							doc.reference.delete()
+					}
+				}
+			ref.collection(USER_LIKED_COLLECTION_REFERENCE)
+				.addSnapshotListener { snapshots, e ->
+					if (e != null) {
+						emitter.onError(e)
+						return@addSnapshotListener
+					}
+					if (snapshots != null && snapshots.documents.isNotEmpty()) {
+						for (doc in snapshots.documents)
+							doc.reference.delete()
+					}
+				}
 			ref.delete()
 				.addOnSuccessListener {
 					firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
 						.document(currentUser.baseUserInfo.userId)
 						.delete()
-						.addOnCompleteListener { emitter.onComplete() }
+						.addOnSuccessListener {
+							firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
+								.document(currentUserId)
+								.delete()
+								.addOnSuccessListener {
+									userWrapper.clearData()
+									emitter.onComplete()
+								}
+								.addOnFailureListener { emitter.onError(it)  }
+							 }
 						.addOnFailureListener { emitter.onError(it)  }
 				}.addOnFailureListener { emitter.onError(it) }
 		}.subscribeOn(ExecuteSchedulers.io())
@@ -156,10 +211,17 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 
 	override fun getRequestedUserItem(baseUserInfo: BaseUserInfo): Single<UserItem> =
 		SingleCreate<UserItem> { emitter ->
-			val ref = fillUserGeneralRef(baseUserInfo)
-			ref.get()
-				.addOnSuccessListener { if (it.exists() && it != null) emitter.onSuccess(it.toObject(UserItem::class.java)!!) }
-				.addOnFailureListener { emitter.onError(it) }
+			if (baseUserInfo.city.isNotEmpty() &&
+			    baseUserInfo.gender.isNotEmpty() &&
+			    baseUserInfo.userId.isNotEmpty()) {
+				val ref = fillUserGeneralRef(baseUserInfo)
+				ref.get()
+					.addOnSuccessListener {
+						if (it.exists()) emitter.onSuccess(it.toObject(UserItem::class.java)!!)
+						else emitter.onSuccess(UserItem(BaseUserInfo("DELETED")))
+					}
+					.addOnFailureListener { emitter.onError(it) }
+			} else emitter.onSuccess(UserItem(BaseUserInfo("DELETED")))
 		}.subscribeOn(ExecuteSchedulers.io())
 
 	override fun submitReport(report: Report): Completable =

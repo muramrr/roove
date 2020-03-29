@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.03.20 18:31
+  ~ Last modified 29.03.20 19:29
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -318,8 +318,29 @@
 				style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
 				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintBottom_toTopOf="@id/btnSettingsEditDelete"
 				app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditDescription"
+				/>
+
+			<!--delete-->
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/btnSettingsEditDelete"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="48dp"
+				android:padding="@dimen/general_margin_16"
+
+				android:text="DELETE MY ACCOUNT"
+				android:textSize="20sp"
+
+				app:backgroundTint="@color/material_red_a700"
+				android:textAppearance="@style/bold_text"
+
+				style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+				app:layout_constraintStart_toStartOf="@id/guidelineStart"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/btnSettingsEditSave"
 				/>
 
 			<!-- left padding -->

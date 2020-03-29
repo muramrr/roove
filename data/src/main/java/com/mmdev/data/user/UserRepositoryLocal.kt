@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 19.03.20 19:21
+ * Last modified 29.03.20 20:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -105,8 +105,8 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 
 			}catch (e: Exception) {
 				Log.wtf(TAG, "read exception, but user is saved")
+				clear()
 				logOut()
-				prefs.edit().clear().commit()
 				UserItem()
 			}
 		}
@@ -117,6 +117,9 @@ class UserRepositoryLocal @Inject constructor(private val prefs: Preferences,
 		}
 	}
 
+	override fun clear() {
+		prefs.edit().clear().commit()
+	}
 
 	override fun saveUserInfo(userItem: UserItem) {
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 17:52
+ * Last modified 29.03.20 20:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,6 +30,7 @@ import com.mmdev.roove.databinding.FragmentSettingsEditInfoBinding
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.GridItemDecoration
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
+import com.mmdev.roove.ui.profile.RemoteRepoViewModel.DeletingStatus.IN_PROGRESS
 import com.mmdev.roove.utils.observeOnce
 import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_settings_edit_info.*
@@ -43,8 +44,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 	private lateinit var userItem: UserItem
 
-	private val mEditorPhotoAdapter =
-		SettingsEditInfoPhotoAdapter(mutableListOf(), R.layout.fragment_settings_edit_info_photo_item)
+	private val mEditorPhotoAdapter = SettingsEditInfoPhotoAdapter(layoutId = R.layout.fragment_settings_edit_info_photo_item)
 
 	private var name = ""
 	private var age = 0
@@ -60,11 +60,6 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 	private lateinit var male: String
 	private lateinit var female: String
-
-
-	companion object {
-		private const val TAG = "mylogs_SettingsEditFragment"
-	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -117,7 +112,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 					val isMainPhotoDeleting = photoToDelete.fileUrl == userItem.baseUserInfo.mainPhotoUrl
 
 					//deletion observer
-					associatedViewModel.photoDeletionStatus.observeOnce(this@SettingsEditInfoFragment, Observer {
+					associatedViewModel.photoDeletingStatus.observeOnce(this@SettingsEditInfoFragment, Observer {
 						if (it) {
 							userItem.photoURLs.remove(photoToDelete)
 							mEditorPhotoAdapter.removeAt(position)
@@ -158,6 +153,10 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 		btnSettingsEditSave.setOnClickListener {
 			associatedViewModel.updateUserItem(userItem)
+		}
+		btnSettingsEditDelete.setOnClickListener {
+			associatedViewModel.deleteMyAccount()
+			associatedViewModel.selfDeletingStatus.value = IN_PROGRESS
 		}
 	}
 

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:14
+ * Last modified 29.03.20 19:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_settings_edit_info_photo_item.vie
  * This is the documentation block about the class
  */
 
-class SettingsEditInfoPhotoAdapter (private var photosList: MutableList<PhotoItem>,
+class SettingsEditInfoPhotoAdapter (private var photosList: MutableList<PhotoItem> = mutableListOf(),
                                     private val layoutId: Int):
 		RecyclerView.Adapter<SettingsEditInfoPhotoAdapter.SettingsEditPhotoViewHolder>(),
 		BaseAdapter.BindableAdapter<MutableList<PhotoItem>> {

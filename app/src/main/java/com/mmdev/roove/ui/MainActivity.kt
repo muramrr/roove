@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 18:08
+ * Last modified 29.03.20 20:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,13 +26,12 @@ import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.AUTHENTICATED
 import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.UNAUTHENTICATED
 import com.mmdev.roove.ui.common.custom.LoadingDialog
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
+import com.mmdev.roove.ui.profile.RemoteRepoViewModel.DeletingStatus.*
 import com.mmdev.roove.utils.observeOnce
 import com.mmdev.roove.utils.showToastText
 
 
 class MainActivity: AppCompatActivity() {
-
-	private lateinit var progressDialog: LoadingDialog
 
 	private lateinit var authViewModel: AuthViewModel
 	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
@@ -61,7 +60,7 @@ class MainActivity: AppCompatActivity() {
 
 		val navController = findNavController(R.id.flowHostFragment)
 
-		progressDialog = LoadingDialog(this@MainActivity)
+		val progressDialog = LoadingDialog(this@MainActivity)
 
 		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 		sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
@@ -99,6 +98,18 @@ class MainActivity: AppCompatActivity() {
 
 		remoteRepoViewModel.isUserUpdatedStatus.observe(this, Observer {
 			if (it) { showToastText(getString(R.string.toast_text_update_success)) }
+		})
+
+		remoteRepoViewModel.selfDeletingStatus.observe(this, Observer {
+			when(it) {
+				IN_PROGRESS -> progressDialog.showDialog()
+				FAILURE -> progressDialog.dismissDialog()
+				COMPLETED -> {
+					progressDialog.dismissDialog()
+					authViewModel.logOut()
+				}
+				else -> { progressDialog.dismissDialog() }
+			}
 		})
 
 		//start to listens auth status

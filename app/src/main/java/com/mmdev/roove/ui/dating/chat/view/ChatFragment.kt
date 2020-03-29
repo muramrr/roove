@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 18:32
+ * Last modified 29.03.20 19:50
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -276,16 +276,17 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 			//set only title, actions and icon
 
 			val partnerIcon = menu.findItem(R.id.chat_action_user)
-			GlideApp.with(this)
-				.load(partnerUserItem.photoURLs[0].fileUrl)
-				.centerCrop()
-				.apply(RequestOptions().circleCrop())
-				.into(object : CustomTarget<Drawable>(){
-					override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-						partnerIcon.icon = resource
-					}
-					override fun onLoadCleared(placeholder: Drawable?) {}
-				})
+			if (partnerUserItem.photoURLs.isNotEmpty())
+				GlideApp.with(this)
+					.load(partnerUserItem.photoURLs[0].fileUrl)
+					.centerCrop()
+					.apply(RequestOptions().circleCrop())
+					.into(object : CustomTarget<Drawable>(){
+						override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+							partnerIcon.icon = resource
+						}
+						override fun onLoadCleared(placeholder: Drawable?) {}
+					})
 
 			title = partnerUserItem.baseUserInfo.name
 		}
@@ -300,11 +301,10 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 
 			val message =
 				MessageItem(sender = userItemModel.baseUserInfo,
-				                                                       recipientId = currentConversation.partner.userId,
-				                                                       text = edTextMessageInput.text.toString()
-					                                                       .trim(),
-				                                                       photoItem = null,
-				                                                       conversationId = currentConversation.conversationId)
+				            recipientId = currentConversation.partner.userId,
+				            text = edTextMessageInput.text.toString().trim(),
+				            photoItem = null,
+				            conversationId = currentConversation.conversationId)
 
 			associatedViewModel.sendMessage(message)
 			rvMessageList.scrollToPosition(0)

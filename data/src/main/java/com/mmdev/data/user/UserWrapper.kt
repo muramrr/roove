@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 19.03.20 16:11
+ * Last modified 29.03.20 19:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,6 +26,8 @@ class UserWrapper @Inject constructor(private val localRepo: LocalUserRepository
 
 	//get preCached user obj
 	private var user: UserItem = localRepo.getSavedUser()!!
+
+	fun clearData() = localRepo.clear()
 
 	//this fun is used to avoid allocate unused copy of this.user made by getUser() fun
 	//used to compare if user was changed

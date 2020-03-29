@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 19:26
+ * Last modified 29.03.20 20:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,18 +37,22 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 	private val updateUserItemUC = UpdateUserItemUseCase(repo)
 	private val uploadUserProfilePhotoUC = UploadUserProfilePhotoUseCase(repo)
 
+	val isUserUpdatedStatus: MutableLiveData<Boolean> = MutableLiveData()
 	val reportSubmittingStatus: MutableLiveData<Boolean> = MutableLiveData()
+	val photoDeletingStatus: MutableLiveData<Boolean> = MutableLiveData()
+	val unmatchStatus: MutableLiveData<Boolean> = MutableLiveData()
+	val selfDeletingStatus: MutableLiveData<DeletingStatus> = MutableLiveData()
+
 	val updatableCurrentUserItem: MutableLiveData<UserItem> = MutableLiveData()
 	val retrievedUserItem: MutableLiveData<UserItem> = MutableLiveData()
-	val isUserUpdatedStatus: MutableLiveData<Boolean> = MutableLiveData()
 
-	val photoDeletionStatus: MutableLiveData<Boolean> = MutableLiveData()
 	val photoUrls: MutableLiveData<List<PhotoItem>> = MutableLiveData()
 
 	fun deleteMatchedUser(matchedUser: MatchedUserItem) {
 		disposables.add(deleteMatchExecution(matchedUser)
             .observeOn(mainThread())
             .subscribe({
+	                       unmatchStatus.value = true
                        },
                        {
                            error.value = MyError(ErrorType.DELETING, it)
@@ -57,14 +61,26 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 		)
 	}
 
+	fun deleteMyAccount() {
+		disposables.add(deleteMyselfExecution()
+            .observeOn(mainThread())
+            .subscribe({
+	                       selfDeletingStatus.value = DeletingStatus.COMPLETED
+                       },
+                       {
+	                       selfDeletingStatus.value = DeletingStatus.FAILURE
+                           error.value = MyError(ErrorType.DELETING, it)
+                       }))
+	}
+
 	fun deletePhoto(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean) {
 		disposables.add(deletePhotoExecution(photoItem, userItem, isMainPhotoDeleting)
             .observeOn(mainThread())
             .subscribe({
-	                       photoDeletionStatus.value = true
+	                       photoDeletingStatus.value = true
                        },
                        {
-	                       photoDeletionStatus.value = false
+	                       photoDeletingStatus.value = false
 	                       error.value = MyError(ErrorType.DELETING, it)
                        }))
 	}
@@ -133,4 +149,5 @@ class RemoteRepoViewModel @Inject constructor(repo: RemoteUserRepository) : Base
 		uploadUserProfilePhotoUC.execute(photoUri, userItem)
 
 
+	enum class DeletingStatus { IN_PROGRESS, COMPLETED, FAILURE }
 }
