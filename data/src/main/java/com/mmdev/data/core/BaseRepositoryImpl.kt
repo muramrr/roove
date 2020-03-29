@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 28.03.20 16:23
+ * Last modified 29.03.20 14:56
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ package com.mmdev.data.core
 
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.data.user.UserWrapper
 
 
@@ -72,5 +73,11 @@ open class BaseRepositoryImpl constructor(private val firestore: FirebaseFiresto
 
 		const val USER_ID_FIELD = "userId"
 
+	}
+	protected fun fillUserGeneralRef (baseUserInfo: BaseUserInfo): DocumentReference {
+		return firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(baseUserInfo.city)
+			.collection(baseUserInfo.gender)
+			.document(baseUserInfo.userId)
 	}
 }

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 17:41
+ * Last modified 29.03.20 18:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,6 @@ package com.mmdev.data.auth
 import com.facebook.login.LoginManager
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
@@ -193,13 +192,6 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 				}
 				.addOnFailureListener { emitter.onError(it) }
 		}).subscribeOn(ExecuteSchedulers.io())
-
-	private fun fillUserGeneralRef (baseUserInfo: BaseUserInfo): DocumentReference {
-		return firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(baseUserInfo.city)
-			.collection(baseUserInfo.gender)
-			.document(baseUserInfo.userId)
-	}
 
 }
 

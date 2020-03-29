@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.03.20 18:31
+  ~ Last modified 29.03.20 15:28
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@
 	android:layout_height="match_parent"
 	android:background="@color/colorPrimaryDark"
 	android:padding="@dimen/general_margin_8"
-	app:layoutDescription="@xml/motion_registration"
+	app:layoutDescription="@xml/motion_registration_scene"
 
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">

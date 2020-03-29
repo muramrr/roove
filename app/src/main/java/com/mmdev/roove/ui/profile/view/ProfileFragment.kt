@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 19:26
+ * Last modified 29.03.20 18:11
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -78,16 +78,16 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
 		//if true -> seems that we navigates here from pairs or chat fragment
 		if (isMatched) {
-			sharedViewModel.matchedUserItemSelected.observeOnce(this, Observer {
+			sharedViewModel.matchedUserItemSelected.value?.let {
 				conversationId = it.conversationId
 				associatedViewModel.getRequestedUserInfo(it.baseUserInfo)
-			})
+			}
 		}
-		//else we navigates here from cards
+		//else we navigates here from cards and already have userItem in sharedViewModel
 		else {
-			sharedViewModel.userSelected.observeOnce(this, Observer {
-				associatedViewModel.getRequestedUserInfo(it.baseUserInfo)
-			})
+			sharedViewModel.userSelected.value?.let {
+				associatedViewModel.retrievedUserItem.value = it
+			}
 		}
 
 		associatedViewModel.reportSubmittingStatus.observeOnce(this, Observer {

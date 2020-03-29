@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 19:21
+ * Last modified 29.03.20 18:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@ package com.mmdev.data.user
 
 import android.net.Uri
 import android.text.format.DateFormat
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
@@ -24,9 +23,12 @@ import com.mmdev.business.remote.RemoteUserRepository
 import com.mmdev.business.remote.entity.Report
 import com.mmdev.data.core.BaseRepositoryImpl
 import com.mmdev.data.core.schedulers.ExecuteSchedulers
-import io.reactivex.rxjava3.core.*
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.internal.operators.completable.CompletableCreate
+import io.reactivex.rxjava3.internal.operators.observable.ObservableCreate
+import io.reactivex.rxjava3.internal.operators.single.SingleCreate
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -53,7 +55,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 
 
 	override fun deleteMatchedUser(matchedUserItem: MatchedUserItem): Completable =
-		Completable.create { emitter ->
+		CompletableCreate { emitter ->
 			val matchedUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(matchedUserItem.baseUserInfo.city)
 				.collection(matchedUserItem.baseUserInfo.gender)
@@ -108,7 +110,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 		}.subscribeOn(ExecuteSchedulers.io())
 
 	override fun deletePhoto(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean): Completable =
-		Completable.create { emitter ->
+		CompletableCreate { emitter ->
 			val ref = fillUserGeneralRef(userItem.baseUserInfo)
 
 			userItem.photoURLs.remove(photoItem)
@@ -139,7 +141,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 		}.subscribeOn(ExecuteSchedulers.io())
 
 	override fun deleteMyself(): Completable =
-		Completable.create { emitter ->
+		CompletableCreate { emitter ->
 			val ref = fillUserGeneralRef(currentUser.baseUserInfo)
 			ref.delete()
 				.addOnSuccessListener {
@@ -151,27 +153,28 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 				}.addOnFailureListener { emitter.onError(it) }
 		}.subscribeOn(ExecuteSchedulers.io())
 
+
 	override fun getRequestedUserItem(baseUserInfo: BaseUserInfo): Single<UserItem> =
-		Single.create(SingleOnSubscribe<UserItem> { emitter ->
+		SingleCreate<UserItem> { emitter ->
 			val ref = fillUserGeneralRef(baseUserInfo)
 			ref.get()
-				.addOnSuccessListener { if (it.exists()) emitter.onSuccess(it.toObject(UserItem::class.java)!!) }
+				.addOnSuccessListener { if (it.exists() && it != null) emitter.onSuccess(it.toObject(UserItem::class.java)!!) }
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(ExecuteSchedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 
 	override fun submitReport(report: Report): Completable =
-		CompletableCreate(CompletableOnSubscribe { emitter ->
+		CompletableCreate { emitter ->
 			report.reportId = firestore.collection(REPORTS_COLLECTION_REFERENCE).document().id
 			firestore.collection(REPORTS_COLLECTION_REFERENCE)
 				.document(report.reportId)
 				.set(report)
 				.addOnSuccessListener { emitter.onComplete() }
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(ExecuteSchedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 
 
 	override fun updateUserItem(userItem: UserItem): Completable =
-		Completable.create { emitter ->
+		CompletableCreate { emitter ->
 			val ref = fillUserGeneralRef(userItem.baseUserInfo)
 			ref.set(userItem)
 				.addOnSuccessListener {
@@ -189,9 +192,9 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 
 
 	override fun uploadUserProfilePhoto(photoUri: String, userItem: UserItem): Observable<HashMap<Double, List<PhotoItem>>> =
-		Observable.create(ObservableOnSubscribe<HashMap<Double, List<PhotoItem>>> { emitter ->
-			val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString() +
-			                "_user_photo.jpg"
+		ObservableCreate<HashMap<Double, List<PhotoItem>>> { emitter ->
+			val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss",
+			                                  Date()).toString() + "_user_photo.jpg"
 			val storageRef = storage
 				.child(GENERAL_FOLDER_STORAGE_IMG)
 				.child(SECONDARY_FOLDER_STORAGE_IMG)
@@ -220,13 +223,5 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 				}
 				.addOnFailureListener { emitter.onError(it) }
 			emitter.setCancellable { uploadTask.cancel() }
-		}).subscribeOn(ExecuteSchedulers.io())
-
-
-	private fun fillUserGeneralRef (baseUserInfo: BaseUserInfo): DocumentReference {
-		return firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(baseUserInfo.city)
-			.collection(baseUserInfo.gender)
-			.document(baseUserInfo.userId)
-	}
+		}.subscribeOn(ExecuteSchedulers.io())
 }

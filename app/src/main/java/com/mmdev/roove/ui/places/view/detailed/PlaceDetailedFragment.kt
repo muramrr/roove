@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 19:29
+ * Last modified 29.03.20 18:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,7 +40,7 @@ class PlaceDetailedFragment: BaseFragment<PlacesViewModel>() {
 
 	private lateinit var userItem: UserItem
 
-	private val placePhotosAdapter = ImagePagerAdapter(listOf())
+	private val placePhotosAdapter = ImagePagerAdapter()
 
 	private var receivedPlaceId = 0
 

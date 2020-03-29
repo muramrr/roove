@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 17:21
+  ~ Last modified 29.03.20 17:56
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,6 +38,7 @@
 				android:id="@+id/viewPagerCardPhotoList"
 				android:layout_width="0dp"
 				android:layout_height="0dp"
+				app:bindPhotos="@{bindItem.photoURLs}"
 
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"

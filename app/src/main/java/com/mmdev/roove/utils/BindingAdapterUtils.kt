@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 22.03.20 15:49
+ * Last modified 29.03.20 18:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,8 +15,10 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.mmdev.business.core.PhotoItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.core.glide.GlideImageLoader
@@ -44,6 +46,12 @@ object BindingAdapterUtils {
 		if (recyclerView.adapter is BindableAdapter<*>) {
 			(recyclerView.adapter as BindableAdapter<T>).setData(data)
 		}
+	}
+
+	@JvmStatic
+	@BindingAdapter("app:bindPhotos")
+	fun setViewPager2ImageAdapterProperties(viewPager2: ViewPager2, data: List<PhotoItem>) {
+		(viewPager2.adapter as BindableAdapter<List<String>>).setData(data.map { it.fileUrl })
 	}
 
 	@JvmStatic

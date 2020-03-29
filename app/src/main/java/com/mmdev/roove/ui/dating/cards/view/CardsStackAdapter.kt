@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.03.20 15:59
+ * Last modified 29.03.20 17:56
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,7 +79,7 @@ class CardsStackAdapter (private var usersList: List<UserItem> = emptyList()):
 			binding.bindItem = userItem
 
 			vp.apply {
-				adapter = ImagePagerAdapter(userItem.photoURLs.map { it.fileUrl })
+				adapter = ImagePagerAdapter()
 				isUserInputEnabled = false
 			}
 			TabLayoutMediator(tabIndicator, vp) { _: TabLayout.Tab, _: Int ->
