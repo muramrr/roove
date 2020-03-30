@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 27.03.20 17:54
+  ~ Last modified 30.03.20 21:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,7 +31,7 @@
 			android:layout_height="@dimen/rvSettingsEditPhotoElementHeight"
 
 			app:cardBackgroundColor="@color/transparent"
-			app:cardCornerRadius="16dp">
+			app:cardCornerRadius="@dimen/general_size_16dp">
 
 			<ImageView
 				android:layout_height="match_parent"
@@ -49,13 +49,13 @@
 			android:layout_width="48dp"
 			android:layout_height="48dp"
 			android:layout_gravity="end|top"
-			android:layout_margin="4dp"
+			android:layout_margin="@dimen/general_size_4dp"
 
 			android:insetTop="0dp"
 			android:insetBottom="0dp"
 
 			app:backgroundTint="@color/material_red_a700"
-			app:iconSize="24dp"
+			app:iconSize="@dimen/general_size_24dp"
 			app:icon="@drawable/ic_clear_24dp"
 			app:elevation="0dp"
 			android:elevation="@null"

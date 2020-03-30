@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 25.03.20 16:28
+  ~ Last modified 30.03.20 21:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +25,7 @@
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"
-		android:padding="8dp" >
+		android:padding="@dimen/general_size_8dp" >
 
 		<com.mmdev.roove.ui.common.custom.components.CircleImageView
 			android:id="@+id/ivProfilePlaceImage"

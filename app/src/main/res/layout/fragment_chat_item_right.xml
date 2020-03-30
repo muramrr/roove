@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 24.03.20 15:20
+  ~ Last modified 30.03.20 21:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,9 +14,9 @@
 	android:layout_height="wrap_content"
 
 	android:layout_marginStart="60dp"
-	android:layout_marginEnd="@dimen/general_margin_8"
-	android:layout_marginBottom="4dp"
-	android:layout_marginTop="4dp"
+	android:layout_marginEnd="@dimen/general_size_8dp"
+	android:layout_marginBottom="@dimen/general_size_4dp"
+	android:layout_marginTop="@dimen/general_size_4dp"
 
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -42,7 +42,7 @@
 			android:id="@+id/tvChatMessageText"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:padding="@dimen/general_margin_16"
+			android:padding="@dimen/general_size_16dp"
 			android:text="@string/default_message_text"
 			android:textIsSelectable="true"
 			android:textSize="16sp"

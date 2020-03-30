@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 19:03
+ * Last modified 30.03.20 20:45
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,10 +27,10 @@ import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.PreferredAgeRange
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
-import com.mmdev.roove.databinding.FragmentRegistrationBinding
+import com.mmdev.roove.databinding.FragmentAuthRegistrationBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
-import kotlinx.android.synthetic.main.fragment_registration.*
+import kotlinx.android.synthetic.main.fragment_auth_registration.*
 
 
 /**
@@ -50,13 +50,15 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 	private val preferredAgeRange = PreferredAgeRange(minAge = 18, maxAge = 24)
 
 	private var cityToDisplay = ""
+	private var preferredGenderToDisplay = ""
+	private var genderToDisplay = ""
 
 
 	private lateinit var cityList: Map<String, String>
 
-	private lateinit var male: String
-	private lateinit var female: String
-	private lateinit var everyone: String
+	private val male = "male"
+	private val female = "female"
+	private val everyone = "everyone"
 
 
 	override fun onAttach(context: Context) {
@@ -70,9 +72,6 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 		                 getString(R.string.russia_nsk) to "nsk",
 		                 getString(R.string.russia_sochi) to "sochi",
 		                 getString(R.string.russia_spb) to "spb")
-		male = getString(R.string.genderMale)
-		female = getString(R.string.genderFemale)
-		everyone = getString(R.string.genderEveryone)
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +84,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 	                          savedInstanceState: Bundle?) =
-		FragmentRegistrationBinding.inflate(inflater, container, false)
+		FragmentAuthRegistrationBinding.inflate(inflater, container, false)
 			.apply {
 				executePendingBindings()
 			}
@@ -122,8 +121,14 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 			setSelectedMale()
 
 			when (registrationStep) {
-				1 -> gender = male
-				2 -> preferredGender = male
+				1 -> {
+					gender = male
+					genderToDisplay = getString(R.string.genderMale)
+				}
+				2 -> {
+					preferredGender = male
+					preferredGenderToDisplay = getString(R.string.preferredGenderMale)
+				}
 			}
 
 			enableFab()
@@ -134,8 +139,14 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 			setSelectedFemale()
 
 			when (registrationStep){
-				1 -> gender = female
-				2 -> preferredGender = female
+				1 -> {
+					gender = female
+					genderToDisplay = getString(R.string.genderFemale)
+				}
+				2 -> {
+					preferredGender = female
+					preferredGenderToDisplay = getString(R.string.preferredGenderFemale)
+				}
 			}
 
 			enableFab()
@@ -147,6 +158,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 		btnGenderEveryone.setOnClickListener {
 			setSelectedEveryone()
 			preferredGender = everyone
+			preferredGenderToDisplay = getString(R.string.preferredGenderEveryone)
 			enableFab()
 		}
 
@@ -156,7 +168,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 			age = value.toInt()
 			tvAgeDisplay.text = age.toString()
 		}
-
+		//step 3 pref age
 		rangeSeekBarRegAgePicker.setOnRangeSeekBarChangeListener { _, number, number2 ->
 			preferredAgeRange.minAge = number.toInt()
 			preferredAgeRange.maxAge = number2.toInt()
@@ -182,7 +194,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 						disableFab()
 					}
 					else -> {
-						enableFab()
+						if (cityToDisplay.isNotEmpty() && city.isNotEmpty()) enableFab()
 						layoutInputChangeName.error = ""
 						name = s.toString().trim()
 					}
@@ -199,7 +211,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 		}
 
 
-		//step 5 city
+		//step 4 city
 		val cityAdapter = ArrayAdapter(context!!,
 		                               R.layout.drop_text_item,
 		                               cityList.map { it.key })
@@ -208,14 +220,14 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 		dropdownCityChooser.setOnItemClickListener { _, _, position, _ ->
 			city = cityList.map { it.value }[position]
 			cityToDisplay = cityList.map { it.key }[position]
-			enableFab()
+			if (layoutInputChangeName.error.isNullOrEmpty()) enableFab()
 		}
 
 
 		//final step
 		btnFinalBack.setOnClickListener {
-			containerRegistration.transitionToState(R.id.step_5)
-			restoreStep5State()
+			containerRegistration.transitionToState(R.id.step_4)
+			restoreStep4State()
 			registrationStep -= 1
 		}
 
@@ -258,11 +270,6 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 					restoreStep3State()
 				}
 
-				5 -> {
-					containerRegistration.transitionToState(R.id.step_4)
-					restoreStep4State()
-				}
-
 			}
 			registrationStep -= 1
 
@@ -287,11 +294,6 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 				}
 
 				4 -> {
-					containerRegistration.transitionToState(R.id.step_5)
-					restoreStep5State()
-				}
-
-				5 -> {
 					containerRegistration.transitionToState(R.id.step_final)
 					setupFinalForm()
 				}
@@ -303,11 +305,12 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 
 	}
 
-	private fun restoreStep1State(){
+	private fun restoreStep1State() {
 		setUnselectedAllButtons()
+		changeStringsForSelfChoosing()
 		if (gender.isNotEmpty()){
 			enableFab()
-			when (gender){
+			when (gender) {
 				male -> setSelectedMale()
 				female -> setSelectedFemale()
 			}
@@ -315,8 +318,9 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 		else disableFab()
 	}
 
-	private fun restoreStep2State(){
+	private fun restoreStep2State() {
 		setUnselectedAllButtons()
+		changeStringsForPreferred()
 		if (preferredGender.isNotEmpty()){
 			enableFab()
 			when (preferredGender){
@@ -336,7 +340,8 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 		rangeSeekBarRegAgePicker.selectedMaxValue = preferredAgeRange.maxAge
 	}
 
-	private fun restoreStep4State(){
+	private fun restoreStep4State() {
+		disableFab()
 		if (name.isNotEmpty() && name != "no name") {
 			edInputChangeName.setText(name)
 		}
@@ -345,35 +350,41 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 		}
 		else if (edInputChangeName.text.isNullOrEmpty()) {
 			layoutInputChangeName.error = getString(R.string.text_empty_error)
-			disableFab()
 		}
+		else if (city.isNotEmpty() && cityToDisplay.isNotEmpty()) enableFab()
+
 		layoutInputChangeName.isCounterEnabled = false
+
 	}
 
-	private fun restoreStep5State(){
-		if (city.isNotEmpty()) enableFab()
-		else disableFab()
-	}
-
-	private fun setupFinalForm(){
+	private fun setupFinalForm() {
 		edFinalName.setText(name)
-		edFinalGender.setText(gender)
-		edFinalPreferredGender.setText(preferredGender)
+		edFinalGender.setText(genderToDisplay)
+		edFinalPreferredGender.setText(preferredGenderToDisplay)
 		edFinalAge.setText(age.toString())
 		edFinalCity.setText(cityToDisplay)
 	}
 
 
-	private fun enableFab(){
+	private fun enableFab() {
 		if (!btnRegistrationNext.isEnabled) btnRegistrationNext.isEnabled = true
 	}
 
-	private fun disableFab(){
+	private fun disableFab() {
 		if (btnRegistrationNext.isEnabled) btnRegistrationNext.isEnabled = false
 	}
 
+	private fun changeStringsForSelfChoosing() {
+		tvGenderFemale.text = getString(R.string.genderFemale)
+		tvGenderMale.text = getString(R.string.genderMale)
+	}
 
-	private fun setUnselectedAllButtons(){
+	private fun changeStringsForPreferred() {
+		tvGenderFemale.text = getString(R.string.preferredGenderFemale)
+		tvGenderMale.text = getString(R.string.preferredGenderMale)
+	}
+
+	private fun setUnselectedAllButtons() {
 		btnGenderEveryone.isSelected = false
 		btnGenderFemale.isSelected = false
 		btnGenderMale.isSelected = false

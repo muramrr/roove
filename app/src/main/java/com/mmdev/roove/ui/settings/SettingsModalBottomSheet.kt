@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 17:30
+ * Last modified 30.03.20 15:34
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,10 +32,9 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var userItem: UserItem
 
-	private lateinit var male: String
-	private lateinit var female: String
-	private lateinit var everyone: String
-
+	private val male = "male"
+	private val female = "female"
+	private val everyone = "everyone"
 	private var isChanged: Boolean = false
 
 
@@ -50,11 +49,6 @@ class SettingsModalBottomSheet : BottomSheetDialogFragment() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-
-		male = getString(R.string.genderMale)
-		female = getString(R.string.genderFemale)
-		everyone = getString(R.string.genderEveryone)
-
 		activity?.run {
 			sharedViewModel = ViewModelProvider(this, injector.factory())[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")

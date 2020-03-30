@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 19:25
+ * Last modified 30.03.20 21:02
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.core.UserItem
 import com.mmdev.business.places.BasePlaceInfo
 import com.mmdev.roove.BuildConfig
@@ -46,7 +45,9 @@ import com.mmdev.roove.ui.common.custom.CenterFirstLastItemDecoration
 import com.mmdev.roove.ui.common.custom.HorizontalCarouselLayoutManager
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.ui.profile.view.PlacesToGoAdapter
+import com.mmdev.roove.utils.buildMaterialAlertDialog
 import com.mmdev.roove.utils.observeOnce
+import com.mmdev.roove.utils.showMaterialAlertDialogPicker
 import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_settings.*
 import java.io.File
@@ -135,14 +136,9 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 		fabSettingsAddPhoto.setOnClickListener {
 			//show attachment dialog picker
-			val materialDialogPicker = MaterialAlertDialogBuilder(it.context)
-				.setItems(arrayOf(getString(R.string.material_dialog_picker_camera),
-				                  getString(R.string.material_dialog_picker_gallery))) {
-					_, itemIndex ->
-					if (itemIndex == 0) { photoCameraClick() }
-					else { photoGalleryClick() }
-				}
-				.create()
+			val materialDialogPicker =
+				it.context.showMaterialAlertDialogPicker(listOf({ photoCameraClick() },
+				                                                { photoGalleryClick() }))
 			val params = materialDialogPicker.window?.attributes
 			params?.gravity = Gravity.CENTER
 			materialDialogPicker.show()
@@ -170,18 +166,12 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 	* log out pop up
 	*/
 	private fun showSignOutPrompt() {
-		MaterialAlertDialogBuilder(context)
-			.setTitle("Do you wish to log out?")
-			.setMessage("This will permanently log you out.")
-			.setPositiveButton("Log out") { dialog, _ ->
-				authViewModel.logOut()
-				dialog.dismiss()
-			}
-			.setNegativeButton("Cancel") { dialog, _ ->
-				dialog.dismiss()
-			}
-			.show()
-
+		context?.buildMaterialAlertDialog(title = getString(R.string.dialog_exit_title),
+		                                  message = getString(R.string.dialog_exit_message),
+		                                  positiveText = getString(R.string.dialog_exit_positive_btn_text),
+		                                  positiveClick = { authViewModel.logOut() },
+		                                  negativeText = getString(R.string.dialog_exit_negative_btn_text),
+		                                  negativeClick = {} )?.show()
 	}
 
 	private fun showModalBottomSheet() {

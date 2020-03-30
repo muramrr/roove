@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 29.03.20 18:40
+  ~ Last modified 30.03.20 21:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -85,8 +85,8 @@
 			android:id="@+id/btnSendAttachment"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="2dp"
-			android:padding="@dimen/general_margin_16"
+			android:layout_marginTop="@dimen/general_size_2dp"
+			android:padding="@dimen/general_size_16dp"
 
 			app:cornerRadius="50dp"
 			app:icon="@drawable/ic_chat_attachment_24dp"
@@ -109,7 +109,7 @@
 			android:imeOptions="actionSend"
 			android:inputType="text|textMultiLine"
 			android:hint="@string/fragment_chat_ed_hint"
-			android:padding="@dimen/general_margin_16"
+			android:padding="@dimen/general_size_16dp"
 
 			android:textColor="@color/white"
 			android:textColorHint="@color/white_50"
@@ -127,7 +127,7 @@
 			android:id="@+id/btnSendMessage"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:padding="@dimen/general_margin_16"
+			android:padding="@dimen/general_size_16dp"
 
 			app:backgroundTint="@color/chat_send_button_bg_tint"
 			app:cornerRadius="50dp"

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 29.03.20 17:56
+  ~ Last modified 30.03.20 21:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,8 +26,9 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 
-		app:cardCornerRadius="10dp"
-		app:cardBackgroundColor="@color/transparent" >
+		app:cardBackgroundColor="@color/transparent"
+		app:cardCornerRadius="@dimen/general_size_16dp"
+		>
 
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:id="@+id/cardContainer"
@@ -48,9 +49,9 @@
 			<com.google.android.material.tabs.TabLayout
 				android:id="@+id/tlCardPhotosIndicator"
 				android:layout_width="0dp"
-				android:layout_height="2dp"
-				android:layout_marginStart="2dp"
-				android:layout_marginEnd="2dp"
+				android:layout_height="@dimen/general_size_2dp"
+				android:layout_marginStart="@dimen/general_size_2dp"
+				android:layout_marginEnd="@dimen/general_size_2dp"
 				android:layout_gravity="bottom"
 				android:background="@null"
 
@@ -73,7 +74,7 @@
 				android:id="@+id/tvCardUserName"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_margin="@dimen/general_margin_16"
+				android:layout_margin="@dimen/general_size_16dp"
 				android:enabled="false"
 
 				android:text="@{bindItem.baseUserInfo.name, default = @string/default_name}"

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 25.03.20 16:24
+  ~ Last modified 30.03.20 21:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,10 +24,10 @@
 	<androidx.cardview.widget.CardView
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/vertical_grid_item_height"
-		android:layout_marginStart="@dimen/card_margin_fix_rview_8"
-		android:layout_marginBottom="@dimen/card_margin_fix_rview_8"
+		android:layout_marginStart="@dimen/general_size_8dp"
+		android:layout_marginBottom="@dimen/general_size_8dp"
 		app:cardBackgroundColor="@color/transparent"
-		app:cardCornerRadius="10dp">
+		app:cardCornerRadius="@dimen/general_size_16dp">
 
 		<ImageView
 			android:id="@+id/ivImageHolder"
@@ -67,7 +67,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center|bottom"
-			android:layout_margin="@dimen/general_margin_8"
+			android:layout_margin="@dimen/general_size_8dp"
 
 			android:text="@{bindItem.short_title, default = `Place title`}"
 			android:textSize="18sp"

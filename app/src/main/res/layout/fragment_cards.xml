@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.03.20 18:31
+  ~ Last modified 30.03.20 17:59
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,9 +34,9 @@
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:clipToPadding="false"
-			android:paddingStart="@dimen/general_margin_16"
-			android:paddingEnd="@dimen/general_margin_16"
-			android:paddingBottom="@dimen/general_margin_8"
+			android:paddingStart="@dimen/general_size_16dp"
+			android:paddingEnd="@dimen/general_size_16dp"
+			android:paddingBottom="@dimen/general_size_8dp"
 
 			app:visibilityInvisible="@{!viewModel.showLoading}"
 

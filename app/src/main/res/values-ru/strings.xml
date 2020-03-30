@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 30.03.20 18:44
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+<resources>
+	<!-- CAMERA PERMISSIONS -->
+	<string name="permission_camera_explanation">Приложению необходим доступ к Камере, чтобы сделать снимок. Разрешить?</string>
+	<string name="permission_camera_denied">Пожалуйста, разрешите приложению доступ к Камере. Перейдите \nНастройки -> Приложения -> Разрешения</string>
+
+	<!-- GALLERY PERMISSIONS -->
+	<string name="permission_read_ext_storage_explanation">Приложению необходим доступ к Хранилищу, чтобы выбрать фото из галлереи. Разрешить?</string>
+	<string name="permission_read_ext_storage_denied">Пожалуйста, разрешите приложению доступ к Хранилищу. Перейдите \nНастройки -> Приложения -> Разрешения</string>
+
+	<!--Layouts hardcoded strings-->
+	<string name="auth_slogan1">Найди новых\nдрузей</string>
+	<string name="auth_slogan2">Посещайте интересные\nместа вместе!</string>
+	<string name="btn_log_in_with_facebook">Войти через Facebook</string>
+
+	<string name="reg_step_1_tv_select_your_gender">Выбери свой пол</string>
+	<string name="reg_step_3_tv_specify_your_age">Укажи свой возраст</string>
+	<string name="reg_step_4_tv_change_name">Как тебя зовут?</string>
+	<string name="reg_step_5_tv_choose_city">Выбери свой город</string>
+	<string name="reg_step_final_tv_check_is_correct">Проверь все ли правильно</string>
+
+	<!-- partner preferences -->
+	<string name="tv_gender_showing">Тебя интересуют</string>
+	<string name="tv_ages_you_prefer">Возраст партнера</string>
+
+	<string name="hint_city">Твой город</string>
+	<string name="hint_name">Твоё имя</string>
+	<string name="hint_gender">Твой пол</string>
+	<string name="hint_preferred_gender">Предпочтения</string>
+	<string name="hint_age">Возраст</string>
+	<string name="default_age_text">18</string>
+	<string name="reg_btn_back_text">Назад</string>
+	<string name="btn_done_text">Готово</string>
+
+	<!-- Fragment cards strings -->
+	<string name="fragment_cards_explanation_text">К сожалению, мы не нашли пользователей по твоим предпочтениям</string>
+	<string name="fragment_card_skip_img_description">пропустить карточку</string>
+	<string name="fragment_card_like_img_description">лайкнуть карточку</string>
+	<string name="tv_its_a_match">ВОУ ВОУ ВОУ!\nВы образовали пару!</string>
+	<string name="tv_back_to_swiping">Назад к свайпингу</string>
+
+	<!-- Fragment chat strings -->
+	<string name="fragment_chat_ed_hint">Твое сообщение</string>
+	<string name="fragment_chat_send_img_description">отправить сообщение</string>
+	<string name="fragment_chat_attach_img_description">прикрепить фоточку</string>
+	<string name="chat_message_sender_avatar_img_description">аватар отправителя</string>
+	<string name="chat_message_sender_attach_img_description">прикрепленное фото от отправителя</string>
+	<string name="chat_message_my_avatar_img_description">мой аватар</string>
+	<string name="chat_message_my_attach_img_description">мое прикрепленное фото</string>
+	<string name="chat_no_messages_explanation">Нет сообщений</string>
+
+	<string name="fragment_conversations_explanation_text">Нет активных диалогов…\n\nСкорее, напиши кому-нибудь!</string>
+	<string name="fragment_pairs_explanation_text">Пока ещё нет взаимных симпатий…\n\nПродолжай свайпать!</string>
+
+	<string name="description_user_photo">фото пользователя</string>
+
+	<!-- pref genders-->
+	<string name="preferredGenderFemale">Девушки</string>
+	<string name="preferredGenderEveryone">Не имеет значения</string>
+	<string name="preferredGenderMale">Парни</string>
+
+	<!-- my gender -->
+	<string name="genderFemale">Девушка</string>
+	<string name="genderMale">Парень</string>
+
+	<string name="btn_settings_edit_delete_my_account_text">УДАЛИТЬ МОЙ ПРОФИЛЬ</string>
+	<string name="btn_settings_edit_save_text">Сохранить</string>
+	<string name="dialog_error_title">Ошибка</string>
+
+	<string name="place_description_header_text">Описание</string>
+	<string name="profile_about_header_text">Обо мне</string>
+
+	<string name="text_max_length_error">Лимит символов</string>
+	<string name="text_empty_error">Поле должно быть заполнено</string>
+
+	<string name="toast_text_report_success">Жалоба успешно отправлена\nСпасибо тебе!</string>
+	<string name="toast_text_update_success">Изменения сохранены</string>
+
+	<string name="want_to_go_text">Хочу посетить</string>
+
+	<string name="bottom_navigation_places">Места</string>
+	<string name="bottom_navigation_pairs">Пары</string>
+	<string name="bottom_navigation_chats">Чаты</string>
+	<string name="bottom_navigation_settings">Настройки</string>
+
+	<string name="dialog_delete_title">Ты действительно хочешь удалить свой профиль?</string>
+	<string name="dialog_delete_message">Это польностью удалит всю информацию о твоем профиле, а так же все пары и диалоги.</string>
+	<string name="dialog_delete_btn_positive_text">Удалить</string>
+	<string name="dialog_delete_btn_negative_text">Отмена</string>
+
+	<string name="dialog_exit_title">Ты действительно хочешь выйти?</string>
+	<string name="dialog_exit_message">Моментально покинуть приложение.</string>
+	<string name="dialog_exit_positive_btn_text">Выйти</string>
+	<string name="dialog_exit_negative_btn_text">Отмена</string>
+
+	<string name="menu_exit">Выйти</string>
+	<string name="menu_dating_preferences">Твои предпочтения</string>
+	<string name="menu_unmatch_text">Удалить пару</string>
+	<string name="menu_report_text">Жалоба</string>
+
+	<string name="material_dialog_picker_camera">Камера</string>
+	<string name="material_dialog_picker_gallery">Выбрать из галлереи</string>
+
+	<string name="report_chooser_photos">Недопустимые фотографии</string>
+	<string name="report_chooser_behavior">Отвратительное поведение</string>
+	<string name="report_chooser_fake">Похоже на фейк</string>
+
+</resources>

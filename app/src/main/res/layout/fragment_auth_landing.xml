@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.03.20 18:31
+  ~ Last modified 30.03.20 17:59
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,6 +45,7 @@
 	<TextView
 		android:id="@+id/tvAuthSlogan_2"
 		android:text="@string/auth_slogan2"
+		android:textAlignment="center"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +58,7 @@
 		android:id="@+id/btnFacebookLoginDelegate"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:padding="@dimen/general_margin_16"
+		android:padding="@dimen/general_size_16dp"
 
 		android:text="@string/btn_log_in_with_facebook"
 		android:textAllCaps="false"

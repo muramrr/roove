@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 29.03.20 19:29
+  ~ Last modified 30.03.20 21:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -71,13 +71,13 @@
 				android:id="@+id/layoutSettingsEditName"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/general_margin_8"
+				android:layout_marginTop="@dimen/general_size_8dp"
 
 				app:counterMaxLength="30"
 
 				app:boxStrokeErrorColor="@color/colorError"
 				app:boxStrokeColor="@color/text_input_layout"
-				app:boxStrokeWidth="2dp"
+				app:boxStrokeWidth="@dimen/general_size_2dp"
 
 				android:hint="@string/hint_name"
 				app:hintEnabled="true"
@@ -132,7 +132,7 @@
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
-					android:padding="@dimen/general_margin_16"
+					android:padding="@dimen/general_size_16dp"
 
 					android:text="@string/genderMale"
 					android:textSize="20sp"
@@ -149,7 +149,7 @@
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
-					android:padding="@dimen/general_margin_16"
+					android:padding="@dimen/general_size_16dp"
 
 					android:text="@string/genderFemale"
 					android:textSize="20sp"
@@ -168,11 +168,11 @@
 				android:id="@+id/sliderSettingsEditAge"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/general_margin_16"
+				android:layout_marginTop="@dimen/general_size_16dp"
 				app:haloColor="?colorSecondary"
 
 				app:thumbColor="@color/white"
-				app:thumbRadius="14dp"
+				app:thumbRadius="@dimen/general_size_16dp"
 
 				app:activeTrackColor="?colorSecondary"
 				app:inactiveTrackColor="@color/lolite_25"
@@ -208,7 +208,7 @@
 				android:id="@+id/layoutSettingsEditCity"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/general_margin_16"
+				android:layout_marginTop="@dimen/general_size_16dp"
 
 				app:boxStrokeColor="@color/text_input_layout"
 				app:boxStrokeWidth="2dp"
@@ -251,7 +251,7 @@
 				android:id="@+id/layoutSettingsEditDescription"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/general_margin_8"
+				android:layout_marginTop="@dimen/general_size_8dp"
 
 				app:counterMaxLength="200"
 
@@ -305,9 +305,9 @@
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 
-				android:padding="@dimen/general_margin_16"
+				android:padding="@dimen/general_size_16dp"
 
-				android:text="@string/btn_done_text"
+				android:text="@string/btn_settings_edit_save_text"
 				android:textSize="20sp"
 				android:textAllCaps="false"
 
@@ -328,9 +328,9 @@
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="48dp"
-				android:padding="@dimen/general_margin_16"
+				android:padding="@dimen/general_size_16dp"
 
-				android:text="DELETE MY ACCOUNT"
+				android:text="@string/btn_settings_edit_delete_my_account_text"
 				android:textSize="20sp"
 
 				app:backgroundTint="@color/material_red_a700"
@@ -349,7 +349,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:orientation="vertical"
-				app:layout_constraintGuide_begin="@dimen/general_margin_8" />
+				app:layout_constraintGuide_begin="@dimen/general_size_8dp" />
 
 			<!-- right padding -->
 			<androidx.constraintlayout.widget.Guideline
@@ -357,7 +357,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:orientation="vertical"
-				app:layout_constraintGuide_end="@dimen/general_margin_8" />
+				app:layout_constraintGuide_end="@dimen/general_size_8dp" />
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 

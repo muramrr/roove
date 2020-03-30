@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.03.20 18:31
+  ~ Last modified 30.03.20 21:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -59,7 +59,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="10dp"
 					android:layout_gravity="bottom"
-					android:layout_marginBottom="8dp"
+					android:layout_marginBottom="@dimen/general_size_8dp"
 					android:background="@null"
 
 					app:tabBackground="@drawable/tab_dot_unselected_state"
@@ -91,13 +91,13 @@
 			<androidx.constraintlayout.widget.ConstraintLayout
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:paddingBottom="@dimen/general_margin_16">
+				android:paddingBottom="@dimen/general_size_16dp">
 
 				<TextView
 					android:id="@+id/tvPlaceDetailedAboutHeader"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-					android:padding="@dimen/general_margin_16"
+					android:padding="@dimen/general_size_16dp"
 
 					android:text="@string/place_description_header_text"
 					android:textSize="22sp"
@@ -115,8 +115,8 @@
 
 					android:lineSpacingExtra="10sp"
 
-					android:paddingStart="@dimen/general_margin_16"
-					android:paddingEnd="@dimen/general_margin_16"
+					android:paddingStart="@dimen/general_size_16dp"
+					android:paddingEnd="@dimen/general_size_16dp"
 
 					android:text="@{viewModel.placeDetailed.description}"
 					android:textSize="16sp"
@@ -135,8 +135,8 @@
 					android:layout_height="wrap_content"
 					android:lineSpacingExtra="10sp"
 					android:maxLines="1"
-					android:paddingStart="@dimen/general_margin_16"
-					android:paddingEnd="@dimen/general_margin_16"
+					android:paddingStart="@dimen/general_size_16dp"
+					android:paddingEnd="@dimen/general_size_16dp"
 
 					android:text="@{viewModel.placeDetailed.body_text}"
 					android:textSize="16sp"
@@ -172,7 +172,7 @@
 			android:id="@+id/fabPlaceDetailed"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
-			android:layout_margin="@dimen/general_margin_16"
+			android:layout_margin="@dimen/general_size_16dp"
 
 			android:text="@string/want_to_go_text"
 			android:textAlignment="center"

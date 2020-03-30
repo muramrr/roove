@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 20:20
+ * Last modified 30.03.20 17:01
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,6 +31,7 @@ import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.GridItemDecoration
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel.DeletingStatus.IN_PROGRESS
+import com.mmdev.roove.utils.buildMaterialAlertDialog
 import com.mmdev.roove.utils.observeOnce
 import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_settings_edit_info.*
@@ -57,17 +58,13 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 	private lateinit var cityList: Map<String, String>
 
-
-	private lateinit var male: String
-	private lateinit var female: String
+	private val male = "male"
+	private val female = "female"
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		associatedViewModel = getViewModel()
-
-		male = getString(R.string.genderMale)
-		female = getString(R.string.genderFemale)
 
 		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			userItem = it
@@ -155,8 +152,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 			associatedViewModel.updateUserItem(userItem)
 		}
 		btnSettingsEditDelete.setOnClickListener {
-			associatedViewModel.deleteMyAccount()
-			associatedViewModel.selfDeletingStatus.value = IN_PROGRESS
+			showDialogDeleteAttention()
 		}
 	}
 
@@ -272,6 +268,18 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 			return@setOnTouchListener false
 		}
 
+	}
+
+	private fun showDialogDeleteAttention() {
+		context?.buildMaterialAlertDialog(title = getString(R.string.dialog_delete_title),
+		                                  message = getString(R.string.dialog_delete_message),
+		                                  positiveText = getString(R.string.dialog_delete_btn_positive_text),
+		                                  positiveClick = {
+			                                  associatedViewModel.deleteMyAccount()
+			                                  associatedViewModel.selfDeletingStatus.value = IN_PROGRESS
+		                                  },
+		                                  negativeText = getString(R.string.dialog_delete_btn_negative_text),
+		                                  negativeClick = {} )?.show()
 	}
 
 	override fun onBackPressed() {

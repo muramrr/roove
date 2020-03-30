@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.03.20 18:31
+  ~ Last modified 30.03.20 21:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,9 +23,9 @@
 		android:id="@+id/tvAgePicker"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/general_margin_8"
+		android:layout_marginTop="@dimen/general_size_8dp"
 		android:labelFor="@id/rangeSeekBarAgePicker"
-		android:padding="@dimen/general_margin_8"
+		android:padding="@dimen/general_size_8dp"
 
 		android:text="@string/tv_ages_you_prefer"
 		android:textSize="24sp"
@@ -42,8 +42,8 @@
 		android:layout_height="wrap_content"
 
 		app:cardBackgroundColor="@color/colorPrimary"
-		app:cardCornerRadius="20dp"
-		app:contentPadding="@dimen/general_margin_16"
+		app:cardCornerRadius="@dimen/general_size_16dp"
+		app:contentPadding="@dimen/general_size_16dp"
 		android:elevation="0dp"
 
 		app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -77,9 +77,9 @@
 		android:id="@+id/tvPreferredGenderPicker"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/general_margin_8"
+		android:layout_marginTop="@dimen/general_size_8dp"
 		android:labelFor="@id/toggleButtonPickerPreferredGender"
-		android:padding="@dimen/general_margin_8"
+		android:padding="@dimen/general_size_8dp"
 
 		android:text="@string/tv_gender_showing"
 		android:textSize="24sp"
@@ -111,9 +111,9 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:padding="@dimen/general_margin_16"
+			android:padding="@dimen/general_size_16dp"
 
-			android:text="@string/genderMale"
+			android:text="@string/preferredGenderMale"
 			android:textSize="20sp"
 			android:textAllCaps="false"
 			android:textAppearance="@style/light_text"
@@ -129,9 +129,9 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:padding="@dimen/general_margin_16"
+			android:padding="@dimen/general_size_16dp"
 
-			android:text="@string/genderFemale"
+			android:text="@string/preferredGenderFemale"
 			android:textSize="20sp"
 			android:textAppearance="@style/light_text"
 			android:textColor="@color/white_tint_color"
@@ -150,7 +150,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		app:layout_constraintGuide_begin="@dimen/general_margin_8" />
+		app:layout_constraintGuide_begin="@dimen/general_size_8dp" />
 
 	<!-- right padding -->
 	<androidx.constraintlayout.widget.Guideline
@@ -158,6 +158,6 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		app:layout_constraintGuide_end="@dimen/general_margin_8" />
+		app:layout_constraintGuide_end="@dimen/general_size_8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 19:09
+ * Last modified 30.03.20 17:04
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import android.content.Context
 import android.view.View
 import android.view.WindowInsets
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -36,6 +37,32 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
 
 fun Context.dp2px(dpValue: Float): Int = (dpValue * this.resources.displayMetrics.density + 0.5f).toInt()
 fun Context.px2Dp(pxValue: Float): Int = (pxValue / this.resources.displayMetrics.density + 0.5f).toInt()
+
+fun Context.buildMaterialAlertDialog(title: String, message: String,
+                                              positiveText: String,
+                                              positiveClick: () -> Unit,
+                                              negativeText: String,
+                                              negativeClick: () -> Unit): MaterialAlertDialogBuilder =
+	MaterialAlertDialogBuilder(this)
+		.setTitle(title)
+		.setMessage(message)
+		.setPositiveButton(positiveText) { dialog, _ ->
+			positiveClick()
+			dialog.dismiss()
+		}
+		.setNegativeButton(negativeText) { dialog, _ ->
+			negativeClick()
+			dialog.dismiss()
+		}
+
+fun Context.showMaterialAlertDialogPicker(clicks: List<()->Unit>): AlertDialog =
+	MaterialAlertDialogBuilder(this)
+		.setItems(arrayOf(getString(R.string.material_dialog_picker_camera),
+		                  getString(R.string.material_dialog_picker_gallery))) {
+			_, itemIndex ->
+			clicks[itemIndex]()
+		}
+		.create()
 
 
 fun Context.errorMaterialDialogBuilder(errorText: String) =

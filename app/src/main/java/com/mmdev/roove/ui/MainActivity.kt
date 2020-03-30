@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 20:20
+ * Last modified 30.03.20 17:49
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,8 +10,13 @@
 
 package com.mmdev.roove.ui
 
+import android.app.Dialog
+import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -24,7 +29,6 @@ import com.mmdev.roove.databinding.ActivityMainBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.AUTHENTICATED
 import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.UNAUTHENTICATED
-import com.mmdev.roove.ui.common.custom.LoadingDialog
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel.DeletingStatus.*
 import com.mmdev.roove.utils.observeOnce
@@ -60,7 +64,7 @@ class MainActivity: AppCompatActivity() {
 
 		val navController = findNavController(R.id.flowHostFragment)
 
-		val progressDialog = LoadingDialog(this@MainActivity)
+		val progressDialog = setupProgressDialog(this@MainActivity)
 
 		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 		sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
@@ -77,7 +81,7 @@ class MainActivity: AppCompatActivity() {
 						if (userInitialized != null) navController.navigate(R.id.action_global_mainFlowFragment)
 					})
 
-					//init auth loading & observer
+					//init auth dialog_loading & observer
 					authViewModel.fetchUserItem()
 					authViewModel.actualCurrentUserItem.observeOnce(this, Observer {
 						actualUserItem -> sharedViewModel.setCurrentUser(actualUserItem)
@@ -92,8 +96,8 @@ class MainActivity: AppCompatActivity() {
 		})
 
 		authViewModel.showProgress.observe(this, Observer {
-			if (it == true) progressDialog.showDialog()
-			else progressDialog.dismissDialog()
+			if (it == true) progressDialog.show()
+			else progressDialog.dismiss()
 		})
 
 		remoteRepoViewModel.isUserUpdatedStatus.observe(this, Observer {
@@ -102,13 +106,13 @@ class MainActivity: AppCompatActivity() {
 
 		remoteRepoViewModel.selfDeletingStatus.observe(this, Observer {
 			when(it) {
-				IN_PROGRESS -> progressDialog.showDialog()
-				FAILURE -> progressDialog.dismissDialog()
+				IN_PROGRESS -> progressDialog.show()
+				FAILURE -> progressDialog.dismiss()
 				COMPLETED -> {
-					progressDialog.dismissDialog()
+					progressDialog.dismiss()
 					authViewModel.logOut()
 				}
-				else -> { progressDialog.dismissDialog() }
+				else -> { progressDialog.dismiss() }
 			}
 		})
 
@@ -128,6 +132,15 @@ class MainActivity: AppCompatActivity() {
 //		val height = dm.heightPixels.toFloat()
 //		Log.wtf(TAG, "${px2Dp(height)}")
 
+	}
+
+	private fun setupProgressDialog(context: Context): Dialog {
+		val dialog = Dialog(context)
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+		dialog.setCancelable(false)
+		dialog.setContentView(R.layout.dialog_loading)
+		dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+		return dialog
 	}
 
 }

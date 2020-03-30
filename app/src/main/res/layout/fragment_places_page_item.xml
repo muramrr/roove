@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 18:28
+  ~ Last modified 30.03.20 17:59
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,7 +36,7 @@
 			android:clipToPadding="false"
 			android:overScrollMode="never"
 
-			android:layout_marginEnd="@dimen/general_margin_8"
+			android:layout_marginEnd="@dimen/general_size_8dp"
 
 			app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
 			app:spanCount="2"

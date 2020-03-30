@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 19:50
+ * Last modified 30.03.20 17:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -58,6 +58,7 @@ import com.mmdev.roove.ui.dating.chat.ChatViewModel
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import com.mmdev.roove.utils.observeOnce
+import com.mmdev.roove.utils.showMaterialAlertDialogPicker
 import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_chat.*
 import java.io.File
@@ -159,7 +160,7 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 			context?.showToastText(getString(R.string.toast_text_report_success))
 		})
 
-		//ready? steady? init loading.
+		//ready? steady? init dialog_loading.
 		sharedViewModel.conversationSelected.observeOnce(this, Observer {
 			currentConversation = it
 			remoteRepoViewModel.getRequestedUserInfo(it.partner)
@@ -196,15 +197,9 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 
 		//show attachment dialog picker
 		btnSendAttachment.setOnClickListener {
-			//show attachment dialog picker
-			val materialDialogPicker = MaterialAlertDialogBuilder(it.context)
-				.setItems(arrayOf(getString(R.string.material_dialog_picker_camera),
-				                  getString(R.string.material_dialog_picker_gallery))) {
-					_, itemIndex ->
-					if (itemIndex == 0) { photoCameraClick() }
-					else { photoGalleryClick() }
-				}
-				.create()
+			val materialDialogPicker =
+				it.context.showMaterialAlertDialogPicker(listOf({ photoCameraClick() },
+				                                                { photoGalleryClick() }))
 			val params = materialDialogPicker.window?.attributes
 			params?.gravity = Gravity.BOTTOM
 			materialDialogPicker.show()

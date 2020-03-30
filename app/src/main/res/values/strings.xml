@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 29.03.20 18:37
+  ~ Last modified 30.03.20 17:01
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,29 +11,37 @@
 
 <resources>
 	<!--General-->
-	<string name="app_logo">App Logo</string>
+	<string name="app_logo" translatable="false">App Logo</string>
 	<string name="app_name" translatable="false">roove</string>
 
 	<!--Default strings-->
-	<string name="default_name">John Doe</string>
-	<string name="default_city">Anytown</string>
-	<string name="default_message_text">Text another text \n text \n more text maybe more text to test well</string>
+	<string name="default_name" translatable="false">John Doe</string>
+	<string name="default_city" translatable="false">Anytown</string>
+	<string name="default_message_text" translatable="false">Text another text \n text \n more text maybe more text to test well</string>
 
-	<!--Some UI strings-->
-	<string name="navigation_drawer_open">Open navigation drawer</string>
-	<string name="navigation_drawer_close">Close navigation drawer</string>
+	<!-- Notifications -->
+	<string name="notification_channel_id_messages" translatable="false">message_notifications</string>
+	<string name="notification_channel_name_messages" translatable="false">Messages</string>
+	<string name="notification_channel_description_messages" translatable="false">Message notification</string>
+
+	<string name="notification_channel_id_match" translatable="false">match_notifications</string>
+	<string name="notification_channel_name_match" translatable="false">Matches</string>
+	<string name="notification_channel_description_match" translatable="false">Match notification</string>
+
+	<!-- CAMERA PERMISSIONS -->
+	<string name="permission_camera_explanation">Application needs CAMERA PERMISSION in order to capture image. Please, allow permission.</string>
+	<string name="permission_camera_denied">Please enable CAMERA PERMISSION. Go to \nSettings -> Apps -> Permission</string>
+
+	<!-- GALLERY PERMISSIONS -->
+	<string name="permission_read_ext_storage_explanation">Application needs READ EXTERNAL STORAGE PERMISSION in order to access your gallery. Please, allow permission.</string>
+	<string name="permission_read_ext_storage_denied">Please enable READ EXTERNAL STORAGE PERMISSION. Go to \nSettings -> Apps -> Permission</string>
+
+	<string name="test_profile_about_text" translatable="false">Besides, she’s a got a kind personality and she smiles a lot. All in all, she is rather attractive. People say the same about me, but I think that she is more beautiful than me.</string>
 
 	<!--Layouts hardcoded strings-->
 	<string name="auth_slogan1">Find new\nfriends nearby</string>
-	<string name="auth_slogan2">With millions of users\nall around the world</string>
-	<string name="hint_city">Your city</string>
-	<string name="hint_name">Your name</string>
-	<string name="hint_gender">Your gender</string>
-	<string name="hint_preferred_gender">Interested in</string>
-	<string name="hint_age">Age</string>
-	<string name="default_age_text">18</string>
-	<string name="reg_btn_back_text">Back</string>
-	<string name="btn_done_text">Done</string>
+	<string name="auth_slogan2">Visit interesting\nplaces together!</string>
+	<string name="btn_log_in_with_facebook">Log in with Facebook</string>
 
 	<string name="reg_step_1_tv_select_your_gender">Select your gender</string>
 	<string name="reg_step_3_tv_specify_your_age">Specify your age</string>
@@ -40,12 +49,27 @@
 	<string name="reg_step_5_tv_choose_city">Choose your city</string>
 	<string name="reg_step_final_tv_check_is_correct">Check if everything is correct</string>
 
+	<!-- partner preferences -->
+	<string name="tv_ages_you_prefer">Ages you prefer</string>
+	<string name="tv_gender_showing">Showing</string>
+
+	<string name="hint_city">Your city</string>
+	<string name="hint_name">Your name</string>
+	<string name="hint_gender">Your gender</string>
+	<string name="hint_preferred_gender">Interested in</string>
+	<string name="hint_age">Your age</string>
+	<string name="default_age_text">18</string>
+	<string name="reg_btn_back_text">Back</string>
+	<string name="btn_done_text">Done</string>
+
+	<!-- Fragment cards strings -->
 	<string name="fragment_cards_explanation_text">There is no available users matching your preferences</string>
 	<string name="fragment_card_skip_img_description">card skip</string>
 	<string name="fragment_card_like_img_description">card like</string>
 	<string name="tv_its_a_match">ITS A MATCH!</string>
 	<string name="tv_back_to_swiping">Back to swiping</string>
 
+	<!-- Fragment chat strings -->
 	<string name="fragment_chat_ed_hint">Enter message</string>
 	<string name="fragment_chat_send_img_description">send message</string>
 	<string name="fragment_chat_attach_img_description">send attachment</string>
@@ -53,66 +77,63 @@
 	<string name="chat_message_sender_attach_img_description">sender_image</string>
 	<string name="chat_message_my_avatar_img_description">my avatar</string>
 	<string name="chat_message_my_attach_img_description">my image</string>
+	<string name="chat_no_messages_explanation">No messages yet…</string>
 
 	<string name="fragment_conversations_explanation_text">There is no started conversations…\n\nText someone first!</string>
 	<string name="fragment_pairs_explanation_text">There is no matches…\n\nKeep swiping!</string>
 
 	<string name="description_user_photo">user photo</string>
 
+	<!-- pref genders-->
+	<string name="preferredGenderFemale">female</string>
+	<string name="preferredGenderEveryone">everyone</string>
+	<string name="preferredGenderMale">male</string>
+
+	<!-- my gender -->
+	<string name="genderFemale">female</string>
+	<string name="genderMale">male</string>
+
+	<string name="btn_settings_edit_delete_my_account_text">DELETE MY ACCOUNT</string>
+	<string name="btn_settings_edit_save_text">Save</string>
+	<string name="dialog_error_title">Error</string>
+
+	<string name="place_description_header_text">Description</string>
+	<string name="profile_about_header_text">About me</string>
+
 	<string name="text_max_length_error">Max length reached</string>
 	<string name="text_empty_error">Field must not be empty</string>
-
-	<string name="genderFemale">female</string>
-	<string name="genderEveryone">everyone</string>
-	<string name="genderMale">male</string>
 
 	<string name="toast_text_report_success">Report sent successfully\nThank you!</string>
 	<string name="toast_text_update_success">Successfully updated</string>
 
-	<string name="btn_log_in_with_facebook">Log in with Facebook</string>
-	<string name="dialog_error_title">Error</string>
-	<string name="tv_ages_you_prefer">Ages preferences</string>
-	<string name="tv_gender_showing">Showing</string>
-
-	<string name="place_description_header_text">Description</string>
 	<string name="want_to_go_text">Want to go</string>
-	<string name="profile_about_header_text">About me</string>
 
 	<!--city list-->
-	<string name="russia_ekb">Екатеринбург</string>
-	<string name="russia_krasnoyarsk">Красноярск</string>
-	<string name="russia_krd">Краснодар</string>
-	<string name="russia_kzn">Казань</string>
-	<string name="russia_msk">Москва</string>
-	<string name="russia_nnv">Нижний Новгород</string>
-	<string name="russia_nsk">Новосибирск</string>
-	<string name="russia_sochi">Сочи</string>
-	<string name="russia_spb">Санкт-Петербург</string>
-
-
-
-	<string name="notification_channel_id_messages">message_notifications</string>
-	<string name="notification_channel_name_messages">Messages</string>
-	<string name="notification_channel_description_messages">Message notification</string>
-
-	<string name="notification_channel_id_match">match_notifications</string>
-	<string name="notification_channel_name_match">Matches</string>
-	<string name="notification_channel_description_match">Match notification</string>
-
-	<!-- CAMERA PERMISSIONS -->
-	<string name="permission_camera_explanation">Application needs CAMERA_PERMISSION in order to capture image. Please allow permission.</string>
-	<string name="permission_camera_denied">Please enable CAMERA_PERMISSION. Go to \nSettings -> Apps -> Permission</string>
-
-	<!-- GALLERY PERMISSIONS -->
-	<string name="permission_read_ext_storage_explanation">Application needs READ_EXTERNAL_STORAGE_PERMISSION in order to access your gallery. Please allow permission.</string>
-	<string name="permission_read_ext_storage_denied">Please enable READ_EXTERNAL_STORAGE_PERMISSION. Go to \nSettings -> Apps -> Permission</string>
-	<string name="default_profile_about_text">Besides, she’s a got a kind personality and she smiles a lot. All in all, she is rather attractive. People say the same about me, but I think that she is more beautiful than me.</string>
-
+	<string name="russia_ekb" translatable="false">Екатеринбург</string>
+	<string name="russia_krasnoyarsk" translatable="false">Красноярск</string>
+	<string name="russia_krd" translatable="false">Краснодар</string>
+	<string name="russia_kzn" translatable="false">Казань</string>
+	<string name="russia_msk" translatable="false">Москва</string>
+	<string name="russia_nnv" translatable="false">Нижний Новгород</string>
+	<string name="russia_nsk" translatable="false">Новосибирск</string>
+	<string name="russia_sochi" translatable="false">Сочи</string>
+	<string name="russia_spb" translatable="false">Санкт-Петербург</string>
 
 	<string name="bottom_navigation_places">Places</string>
 	<string name="bottom_navigation_pairs">Pairs</string>
 	<string name="bottom_navigation_chats">Chats</string>
 	<string name="bottom_navigation_settings">Settings</string>
+
+	<string name="dialog_delete_title">Do you want to delete your profile?</string>
+	<string name="dialog_delete_message">This will delete your entire account information and also all matches and conversations.</string>
+	<string name="dialog_delete_btn_positive_text">Delete</string>
+	<string name="dialog_delete_btn_negative_text">Cancel</string>
+
+	<string name="dialog_exit_title">Do you wish to log out?</string>
+	<string name="dialog_exit_message">This will permanently log you out.</string>
+	<string name="dialog_exit_positive_btn_text">Log out</string>
+	<string name="dialog_exit_negative_btn_text">Cancel</string>
+
 	<string name="menu_exit">Exit</string>
 	<string name="menu_dating_preferences">Dating Preferences</string>
 	<string name="menu_unmatch_text">Unmatch</string>
@@ -124,6 +145,6 @@
 	<string name="report_chooser_photos">Ineligible photos</string>
 	<string name="report_chooser_behavior">Disrespectful behavior</string>
 	<string name="report_chooser_fake">Seems, it is fake</string>
-	<string name="chat_no_messages_explanation">No messages yet...</string>
+
 
 </resources>
