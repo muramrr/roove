@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.03.20 15:25
+ * Last modified 31.03.20 17:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,10 +32,7 @@ open class BaseRepositoryImpl constructor(private val firestore: FirebaseFiresto
 				currentUser.baseUserInfo.gender.isNotEmpty() &&
 				currentUser.baseUserInfo.userId.isNotEmpty()) {
 
-			currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUser.baseUserInfo.city)
-				.collection(currentUser.baseUserInfo.gender)
-				.document(currentUser.baseUserInfo.userId)
+			currentUserDocRef = fillUserGeneralRef(currentUser.baseUserInfo)
 
 			currentUserId = currentUser.baseUserInfo.userId
 		}
@@ -47,10 +44,7 @@ open class BaseRepositoryImpl constructor(private val firestore: FirebaseFiresto
 		if (currentUser != userWrapper.getInMemoryUser()) {
 			currentUser = userWrapper.getUser()
 
-			currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUser.baseUserInfo.city)
-				.collection(currentUser.baseUserInfo.gender)
-				.document(currentUser.baseUserInfo.userId)
+			currentUserDocRef = fillUserGeneralRef(currentUser.baseUserInfo)
 
 			currentUserId = currentUser.baseUserInfo.userId
 		}

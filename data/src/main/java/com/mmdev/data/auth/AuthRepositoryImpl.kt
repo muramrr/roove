@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 20:18
+ * Last modified 31.03.20 17:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,6 +26,13 @@ import com.mmdev.data.user.UserWrapper
 import io.reactivex.rxjava3.core.*
 import javax.inject.Inject
 import javax.inject.Singleton
+
+/**
+ * login chain: signInWithFacebook => check if exist registered user with same uId =>
+ * handle registration => after all complete fetch last results
+ * fetchUserInfo() always called last no matter is user just registered or not
+ *
+ */
 
 @Singleton
 class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
@@ -76,12 +83,12 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 
 	override fun fetchUserInfo(): Single<UserItem> {
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
-			val userItem = userWrapper.getInMemoryUser()
-			val refGeneral = fillUserGeneralRef(userItem.baseUserInfo)
+			reInit()
 
+			val userItem = userWrapper.getInMemoryUser()
 			val refBase = firestore.collection(USERS_BASE_COLLECTION_REFERENCE).document(userItem.baseUserInfo.userId)
 			//get general user item first
-			refGeneral.get()
+			currentUserDocRef.get()
 				.addOnSuccessListener { remoteUser ->
 					if (remoteUser.exists()) {
 						val remoteUserItem = remoteUser.toObject(UserItem::class.java)!!
@@ -108,6 +115,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		if (auth.currentUser != null) {
 			auth.signOut()
 			fbLogin.logOut()
+			userWrapper.clearData()
 		}
 	}
 
@@ -182,6 +190,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 								//if full user info exists in db => return continue reg flag false
 								if (fullUserDoc.exists()) {
 									val retrievedUser = fullUserDoc.toObject(UserItem::class.java)!!
+									userWrapper.setUser(retrievedUser)
 									emitter.onSuccess(hashMapOf(false to retrievedUser.baseUserInfo))
 								}
 								//auth user exists but full is not => return continue reg flag "true"

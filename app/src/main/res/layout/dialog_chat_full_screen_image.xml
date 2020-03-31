@@ -2,14 +2,14 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 31.03.20 16:12
+  ~ Last modified 31.03.20 17:13
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -24,10 +24,10 @@
 		android:layout_height="match_parent"
 		android:background="@color/black">
 
-		<ImageView
+		<com.github.chrisbanes.photoview.PhotoView
 			android:id="@+id/ivDialogFullScreen"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
 			android:adjustViewBounds="true"
 			android:scaleType="centerInside"
 
@@ -38,7 +38,7 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			tools:ignore="ContentDescription" />
+			/>
 
 		<ProgressBar
 			android:id="@+id/pbImageLoading"
