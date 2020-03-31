@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 14:56
+ * Last modified 31.03.20 15:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,29 +24,35 @@ open class BaseRepositoryImpl constructor(private val firestore: FirebaseFiresto
                                           private val userWrapper: UserWrapper): Reinitable {
 
 	protected var currentUser = userWrapper.getUser()
-	protected var currentUserId: String = currentUser.baseUserInfo.userId
 
+	protected lateinit var currentUserId: String
 	protected lateinit var currentUserDocRef: DocumentReference
 	init {
 		if (currentUser.baseUserInfo.city.isNotEmpty() &&
 				currentUser.baseUserInfo.gender.isNotEmpty() &&
-				currentUser.baseUserInfo.userId.isNotEmpty())
-		currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUser.baseUserInfo.city)
-			.collection(currentUser.baseUserInfo.gender)
-			.document(currentUser.baseUserInfo.userId)
+				currentUser.baseUserInfo.userId.isNotEmpty()) {
+
+			currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(currentUser.baseUserInfo.city)
+				.collection(currentUser.baseUserInfo.gender)
+				.document(currentUser.baseUserInfo.userId)
+
+			currentUserId = currentUser.baseUserInfo.userId
+		}
+
 	}
 
 
 	override fun reInit() {
 		if (currentUser != userWrapper.getInMemoryUser()) {
 			currentUser = userWrapper.getUser()
-			currentUserId = currentUser.baseUserInfo.userId
 
 			currentUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(currentUser.baseUserInfo.city)
 				.collection(currentUser.baseUserInfo.gender)
 				.document(currentUser.baseUserInfo.userId)
+
+			currentUserId = currentUser.baseUserInfo.userId
 		}
 	}
 

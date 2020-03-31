@@ -3,7 +3,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 23.03.20 18:31
+  ~ Last modified 31.03.20 15:14
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,13 +31,13 @@
 		android:background="@color/colorPrimaryDark"
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
-		app:paddingBottomSystemWindowInsets="@{true}"
 		>
 
 		<TextView
 			android:id="@+id/tvItIsMatch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			app:paddingTopSystemWindowInsets="@{true}"
 
 			android:text="@string/tv_its_a_match"
 			android:textSize="24sp"
@@ -60,8 +60,8 @@
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tvItIsMatch"
+			app:layout_constraintBottom_toTopOf="@id/tvMatchedName"
 			app:layout_constraintVertical_bias="0.3"
 			/>
 
@@ -74,8 +74,8 @@
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/matched_photo"
+			app:layout_constraintBottom_toTopOf="@id/tvMatchDialogBack"
 			app:layout_constraintVertical_bias="0.7"
 			style="@style/medium_text"/>
 
@@ -83,6 +83,8 @@
 			android:id="@+id/tvMatchDialogBack"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/general_size_24dp"
+			app:paddingBottomSystemWindowInsets="@{true}"
 
 			android:fontFamily="@font/rubik_bold"
 			android:text="@string/tv_back_to_swiping"
@@ -91,7 +93,7 @@
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tvMatchedName"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintVertical_bias="0.9"
 			/>

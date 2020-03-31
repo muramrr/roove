@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 16:54
+ * Last modified 31.03.20 16:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,6 +22,7 @@ import com.mmdev.data.user.UserWrapper
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.SingleOnSubscribe
+import io.reactivex.rxjava3.internal.operators.completable.CompletableCreate
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -46,12 +47,41 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 
 
 	override fun deleteConversation(conversationItem: ConversationItem): Completable =
-		Completable.create { emitter ->
-			reInit()
+		CompletableCreate { emitter ->
+
 			val partnerDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(conversationItem.partner.city)
 				.collection(conversationItem.partner.gender)
 				.document(conversationItem.partner.userId)
+
+			partnerDocRef
+				.get()
+				.addOnSuccessListener {
+					if (it.exists()) {
+						//partner delete from matched list
+						partnerDocRef.collection(USER_MATCHED_COLLECTION_REFERENCE)
+							.document(currentUserId)
+							.delete()
+
+						//partner delete from conversations list
+						partnerDocRef
+							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+							.document(conversationItem.conversationId)
+							.delete()
+
+						//add to skipped collection
+						partnerDocRef
+							.collection(USER_SKIPPED_COLLECTION_REFERENCE)
+							.document(currentUserId)
+							.set(mapOf(USER_ID_FIELD to currentUserId))
+
+						//add to skipped collection
+						currentUserDocRef
+							.collection(USER_SKIPPED_COLLECTION_REFERENCE)
+							.document(conversationItem.partner.userId)
+							.set(mapOf(USER_ID_FIELD to conversationItem.partner.userId))
+					}
+				}
 
 			//current user delete from matched list
 			currentUserDocRef
@@ -65,28 +95,6 @@ class ConversationsRepositoryImpl @Inject constructor(private val firestore: Fir
 				.document(conversationItem.conversationId)
 				.delete()
 
-			//add to skipped collection
-			currentUserDocRef
-				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
-				.document(conversationItem.partner.userId)
-				.set(mapOf(USER_ID_FIELD to conversationItem.partner.userId))
-
-			//partner delete from matched list
-			partnerDocRef.collection(USER_MATCHED_COLLECTION_REFERENCE)
-				.document(currentUserId)
-				.delete()
-
-			//partner delete from conversations list
-			partnerDocRef
-				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.document(conversationItem.conversationId)
-				.delete()
-
-			//add to skipped collection
-			partnerDocRef
-				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
-				.document(currentUserId)
-				.set(mapOf(USER_ID_FIELD to currentUserId))
 
 			//mark that conversation no need to be exists
 			firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
