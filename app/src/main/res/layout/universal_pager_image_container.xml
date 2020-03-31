@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 19:59
+  ~ Last modified 31.03.20 16:28
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,6 +27,7 @@
 			android:id="@+id/image_container_iv"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
+			android:scaleType="centerCrop"
 
 			app:bindImageUrl="@{bindItem}"
 			app:progressBar="@{pbImageLoading}"

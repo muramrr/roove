@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 30.03.20 17:22
+ * Last modified 31.03.20 16:38
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -153,6 +152,7 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 		})
 		associatedViewModel.newMessage.observe(this, Observer {
 			mChatAdapter.newMessage()
+			rvMessageList.scrollToPosition(0)
 		})
 
 		remoteRepoViewModel.reportSubmittingStatus.observeOnce(this, Observer {
@@ -206,22 +206,24 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 		}
 
 		//if message contains photo then it opens in fullscreen dialog
-		mChatAdapter.setOnAttachedPhotoClickListener(object: ChatAdapter.OnItemClickListener {
-			override fun onItemClick(view: View, position: Int) {
+		mChatAdapter.apply {
+			setOnAttachedPhotoClickListener(object: ChatAdapter.OnItemClickListener {
+				override fun onItemClick(view: View, position: Int) {
 
-				val photoUrl = mChatAdapter.getItem(position).photoItem!!.fileUrl
-				val dialog = FullScreenDialogFragment.newInstance(photoUrl)
-				dialog.show(childFragmentManager, FullScreenDialogFragment::class.java.canonicalName)
+					val photoUrl = mChatAdapter.getItem(position).photoItem!!.fileUrl
+					val dialog = FullScreenDialogFragment.newInstance(photoUrl)
+					dialog.show(childFragmentManager, FullScreenDialogFragment::class.java.canonicalName)
 
-			}
-		})
+				}
+			})
+		}
 
 		val linearLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
 		rvMessageList.apply {
 			adapter = mChatAdapter
 			layoutManager = linearLayoutManager
 			//touch event guarantee that if user want to scroll or touches recycler with messages
-			//keyboard hide and edittext focus clear
+			//keyboard hide and editText focus clear
 			setOnTouchListener { v, _ ->
 				val iMM = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 				iMM.hideSoftInputFromWindow(v.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
@@ -271,9 +273,9 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 			//set only title, actions and icon
 
 			val partnerIcon = menu.findItem(R.id.chat_action_user)
-			if (partnerUserItem.photoURLs.isNotEmpty())
+			if (partnerUserItem.baseUserInfo.mainPhotoUrl.isNotEmpty())
 				GlideApp.with(this)
-					.load(partnerUserItem.photoURLs[0].fileUrl)
+					.load(partnerUserItem.baseUserInfo.mainPhotoUrl)
 					.centerCrop()
 					.apply(RequestOptions().circleCrop())
 					.into(object : CustomTarget<Drawable>(){
@@ -378,10 +380,7 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 					}
 				},
 				onPermissionDenied = {
-					/** show message that permission is denied**/
-					/** show message that permission is denied**/
-
-					//snackbarWithoutAction(it.deniedMessageId)
+					context?.showToastText(getString(it.deniedMessageId))
 				})
 	}
 
@@ -393,8 +392,8 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 
 				val selectedUri = data?.data
 				associatedViewModel.sendPhoto(selectedUri.toString(),
-				                        userItemModel.baseUserInfo,
-				                        currentConversation.partner.userId)
+				                              userItemModel.baseUserInfo,
+				                              currentConversation.partner.userId)
 			}
 		}
 		// send photo taken by camera
@@ -403,13 +402,10 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 
 				if (mFilePathImageCamera.exists()) {
 					associatedViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString(),
-					                        userItemModel.baseUserInfo,
-					                        currentConversation.partner.userId)
+					                              userItemModel.baseUserInfo,
+					                              currentConversation.partner.userId)
 				}
-				else Toast.makeText(context,
-						"filePathImageCamera is null or filePathImageCamera isn't exists",
-						Toast.LENGTH_LONG)
-						.show()
+				else context?.showToastText("filePathImageCamera is null or filePathImageCamera isn't exists")
 			}
 		}
 	}
