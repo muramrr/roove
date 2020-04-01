@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.04.20 17:02
+ * Last modified 01.04.20 17:23
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -86,11 +86,10 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	*/
 	override fun checkMatch(likedUserItem: UserItem): Single<Boolean> {
 		addToExcludingIds(likedUserItem.baseUserInfo.userId)
+		filteredDocuments?.filter {
+			doc -> doc.id != likedUserItem.baseUserInfo.userId
+		}
 		return SingleCreate<Boolean> { emitter ->
-			filteredDocuments?.filter {
-				doc -> doc.id != likedUserItem.baseUserInfo.userId
-			}
-
 			val likedUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(likedUserItem.baseUserInfo.city)
 				.collection(likedUserItem.baseUserInfo.gender)
@@ -105,6 +104,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					//else - add to like collection
 					if (userDoc.exists()) {
 
+						emitter.onSuccess(true)
 						//create predefined conversation for this match
 						val conversationId = firestore
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -116,6 +116,14 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						            MatchedUserItem(currentUser.baseUserInfo, conversationId = conversationId))
 
 
+						likedUserDocRef
+							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+							.document(conversationId)
+							.set(ConversationItem(partner = currentUser.baseUserInfo,
+							                      conversationId = conversationId,
+							                      lastMessageTimestamp = null))
+							.addOnFailureListener { emitter.onError(it) }
+
 						//set conversation for current user
 						currentUserDocRef
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -123,17 +131,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 							.set(ConversationItem(partner = likedUserItem.baseUserInfo,
 							                      conversationId = conversationId,
 							                      lastMessageTimestamp = null))
-
-							.addOnSuccessListener { //set conversation for liked user
-								likedUserDocRef
-									.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-									.document(conversationId)
-									.set(ConversationItem(partner = currentUser.baseUserInfo,
-									                      conversationId = conversationId,
-									                      lastMessageTimestamp = null))
-									.addOnSuccessListener { emitter.onSuccess(true) }
-									.addOnFailureListener { emitter.onError(it) }
-							}
 							.addOnFailureListener { emitter.onError(it) }
 
 					}
