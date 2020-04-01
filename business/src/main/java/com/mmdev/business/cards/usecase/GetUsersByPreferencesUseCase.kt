@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2019. All rights reserved.
- * Last modified 04.12.19 19:13
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 01.04.20 15:54
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,5 +18,5 @@ import com.mmdev.business.cards.repository.CardsRepository
 
 class GetUsersByPreferencesUseCase (private val repository: CardsRepository) {
 
-	fun execute() = repository.getUsersByPreferences()
+	fun execute(initialLoading: Boolean = false) = repository.getUsersByPreferences(initialLoading)
 }

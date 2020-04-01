@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 16:46
+ * Last modified 01.04.20 17:02
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,10 +22,12 @@ import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.data.core.BaseRepositoryImpl
 import com.mmdev.data.core.schedulers.ExecuteSchedulers
 import com.mmdev.data.user.UserWrapper
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.core.SingleOnSubscribe
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3
+import io.reactivex.rxjava3.internal.operators.completable.CompletableCreate
+import io.reactivex.rxjava3.internal.operators.single.SingleCreate
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,10 +40,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
                                               userWrapper: UserWrapper):
 		CardsRepository, BaseRepositoryImpl(firestore, userWrapper) {
 
-	private val likedList = mutableListOf<String>()
-	private val matchedList = mutableListOf<String>()
-	private val skippedList = mutableListOf<String>()
-
 	private var specifiedCardsQuery: Query = firestore.collection(USERS_COLLECTION_REFERENCE)
 		.document(currentUser.baseUserInfo.city)
 		.collection(currentUser.baseUserInfo.preferredGender)
@@ -50,10 +48,9 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
 		.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
 
-	private val cardsLimit = 19
+	private val cardsLimit = 49
+	private val excludingIds = mutableListOf<String>()
 	private var filteredDocuments: MutableSet<QueryDocumentSnapshot>? = null
-	private lateinit var maleCardsQuery: Query
-	private lateinit var femaleCardsQuery: Query
 	private var filteredMaleDocuments: MutableSet<QueryDocumentSnapshot>? = null
 	private var filteredFemaleDocuments: MutableSet<QueryDocumentSnapshot>? = null
 
@@ -68,24 +65,32 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	/*
 	* if swiped left -> add skipped userId to skipped collection
 	*/
-	override fun addToSkipped(skippedUserItem: UserItem) {
-		currentUserDocRef
-			.collection(USER_SKIPPED_COLLECTION_REFERENCE)
-			.document(skippedUserItem.baseUserInfo.userId)
-			.set(mapOf(USER_ID_FIELD to skippedUserItem.baseUserInfo.userId))
+	override fun addToSkipped(skippedUserItem: UserItem): Completable =
+		CompletableCreate { emitter ->
+			addToExcludingIds(skippedUserItem.baseUserInfo.userId)
+			filteredDocuments?.filter {
+				doc -> doc.id != skippedUserItem.baseUserInfo.userId
+			}
+			currentUserDocRef
+				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
+				.document(skippedUserItem.baseUserInfo.userId)
+				.set(mapOf(USER_ID_FIELD to skippedUserItem.baseUserInfo.userId))
+				.addOnSuccessListener { emitter.onComplete() }
+				.addOnFailureListener { emitter.onError(it) }
+		}
 
-		skippedList.add(skippedUserItem.baseUserInfo.userId)
-		filteredDocuments = filteredDocuments?.filter {
-			doc -> doc.id != skippedUserItem.baseUserInfo.userId
-		}?.toMutableSet()
-	}
 
 	/*
 	* if swiped right -> check if there is match
 	* else -> add liked userId to liked collection
 	*/
 	override fun checkMatch(likedUserItem: UserItem): Single<Boolean> {
-		return Single.create(SingleOnSubscribe<Boolean> { emitter ->
+		addToExcludingIds(likedUserItem.baseUserInfo.userId)
+		return SingleCreate<Boolean> { emitter ->
+			filteredDocuments?.filter {
+				doc -> doc.id != likedUserItem.baseUserInfo.userId
+			}
+
 			val likedUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 				.document(likedUserItem.baseUserInfo.city)
 				.collection(likedUserItem.baseUserInfo.gender)
@@ -100,12 +105,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 					//else - add to like collection
 					if (userDoc.exists()) {
 
-						emitter.onSuccess(true)
-						matchedList.add(likedUserItem.baseUserInfo.userId)
-						filteredDocuments = filteredDocuments?.filter {
-							doc -> doc.id != likedUserItem.baseUserInfo.userId
-						}?.toMutableSet()
-
 						//create predefined conversation for this match
 						val conversationId = firestore
 							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -116,13 +115,6 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 						handleMatch(MatchedUserItem(likedUserItem.baseUserInfo, conversationId = conversationId),
 						            MatchedUserItem(currentUser.baseUserInfo, conversationId = conversationId))
 
-						//set conversation for liked user
-						likedUserDocRef
-							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-							.document(conversationId)
-							.set(ConversationItem(partner = currentUser.baseUserInfo,
-							                      conversationId = conversationId,
-							                      lastMessageTimestamp = null))
 
 						//set conversation for current user
 						currentUserDocRef
@@ -132,7 +124,16 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 							                      conversationId = conversationId,
 							                      lastMessageTimestamp = null))
 
-							.addOnSuccessListener { emitter.onSuccess(true) }
+							.addOnSuccessListener { //set conversation for liked user
+								likedUserDocRef
+									.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+									.document(conversationId)
+									.set(ConversationItem(partner = currentUser.baseUserInfo,
+									                      conversationId = conversationId,
+									                      lastMessageTimestamp = null))
+									.addOnSuccessListener { emitter.onSuccess(true) }
+									.addOnFailureListener { emitter.onError(it) }
+							}
 							.addOnFailureListener { emitter.onError(it) }
 
 					}
@@ -141,24 +142,26 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 							.collection(USER_LIKED_COLLECTION_REFERENCE)
 							.document(likedUserItem.baseUserInfo.userId)
 							.set(mapOf(USER_ID_FIELD to likedUserItem.baseUserInfo.userId))
+							.addOnSuccessListener { emitter.onSuccess(false) }
+							.addOnFailureListener { emitter.onError(it) }
 
-						likedList.add(likedUserItem.baseUserInfo.userId)
-						filteredDocuments = filteredDocuments?.filter {
-							doc -> doc.id != likedUserItem.baseUserInfo.userId
-						}?.toMutableSet()
-						emitter.onSuccess(false)
 					}
-
-			}.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(ExecuteSchedulers.io())
+				}
+				.addOnFailureListener { emitter.onError(it) }
+		}.subscribeOn(ExecuteSchedulers.io())
 	}
 
 	/* return filtered users list as Single */
-	override fun getUsersByPreferences(): Single<List<UserItem>> {
-		reInit()
-		return zipLists()
-			.flatMap { getUsersCardsByPreferences(it) }
-			.subscribeOn(ExecuteSchedulers.computation())
+	override fun getUsersByPreferences(initialLoading: Boolean): Single<List<UserItem>> {
+		return if (initialLoading){
+			reInit()
+			zipLists().flatMap { getUsersCardsByPreferences(it) }.subscribeOn(ExecuteSchedulers.computation())
+		}
+		else {
+			getUsersCardsByPreferences(excludingIds)
+				.subscribeOn(ExecuteSchedulers.computation())
+
+		}
 	}
 
 	private fun parseFilteredUsers(setOfUsers: MutableSet<QueryDocumentSnapshot>): List<UserItem>{
@@ -179,102 +182,81 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	* GET USER CARDS BY PREFERENCES RELATED TO PREFERREDGENDER
 	*/
 	private fun getUsersCardsByPreferences(excludingIds: List<String>): Single<List<UserItem>> {
+		this.excludingIds.addAll(excludingIds)
 		return if (currentUser.baseUserInfo.preferredGender == "everyone")
 			Single.zip(getAllFemaleUsersCards(excludingIds),
 			           getAllMaleUsersCards(excludingIds),
 			           BiFunction {
 				           female: List<UserItem>,
-				           male: List<UserItem> -> return@BiFunction listOf(female, male).flatten() })
+				           male: List<UserItem> -> return@BiFunction listOf(female, male).flatten()
+			           })
 				.subscribeOn(ExecuteSchedulers.computation())
-		else Single.create(SingleOnSubscribe<List<UserItem>>{ emitter ->
+
+		else SingleCreate<List<UserItem>> { emitter ->
 			specifiedCardsQuery
 				.get()
 				.addOnSuccessListener { documents ->
 					if (!documents.isEmpty) {
 						//filter users which is not in excluding Ids list
-						if (filteredDocuments == null) {
-							filteredDocuments = documents.filter {
-								!excludingIds.contains(it.id) && it.id != currentUserId
-							}.toMutableSet()
-							val specifiedResultList = parseFilteredUsers(filteredDocuments!!)
-							emitter.onSuccess(specifiedResultList)
-						}
-						else emitter.onSuccess(parseFilteredUsers(filteredDocuments!!))
+						filteredDocuments = documents.filter {
+							!excludingIds.contains(it.id) && it.id != currentUserId
+						}.toMutableSet()
+
+						val specifiedResultList = parseFilteredUsers(filteredDocuments!!)
+						emitter.onSuccess(specifiedResultList)
 
 					} else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(ExecuteSchedulers.computation())
+		}.subscribeOn(ExecuteSchedulers.computation())
 	}
 
 	private fun getAllMaleUsersCards(excludingIds: List<String>): Single<List<UserItem>> {
-		maleCardsQuery = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUser.baseUserInfo.city)
-			.collection(MALE_COLLECTION_PATH)
-			.orderBy(USERS_FILTER_AGE)
-			.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
-			.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
-			.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
-
-		return Single.create(SingleOnSubscribe<List<UserItem>>{ emitter ->
-			maleCardsQuery
+		return SingleCreate<List<UserItem>> { emitter ->
+			firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(currentUser.baseUserInfo.city)
+				.collection(MALE_COLLECTION_PATH)
+				.orderBy(USERS_FILTER_AGE)
+				.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
+				.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
+				.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
 				.get()
 				.addOnSuccessListener { documents ->
 					if (!documents.isEmpty) {
-						//filter users which is not in excluding Ids list
-						if (filteredMaleDocuments == null) {
-							filteredMaleDocuments = documents.filter {
-								!excludingIds.contains(it.id) && it.id != currentUserId
-							}.toMutableSet()
-							val maleResultList = parseFilteredUsers(filteredMaleDocuments!!)
-							emitter.onSuccess(maleResultList)
-							Log.wtf(TAG, "filtered null male = ${maleResultList.size}")
-						}
-						else {
-							val maleResultList = parseFilteredUsers(filteredMaleDocuments!!)
-							emitter.onSuccess(maleResultList)
-							Log.wtf(TAG, "filtered not null male = ${maleResultList.size}")
-						}
+						filteredMaleDocuments = documents.filter {
+							!excludingIds.contains(it.id) && it.id != currentUserId
+						}.toMutableSet()
+						val maleResultList = parseFilteredUsers(filteredMaleDocuments!!)
+						emitter.onSuccess(maleResultList)
 
 					} else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(ExecuteSchedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 	}
 
 	private fun getAllFemaleUsersCards(excludingIds: List<String>): Single<List<UserItem>> {
-		femaleCardsQuery = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUser.baseUserInfo.city)
-			.collection(FEMALE_COLLECTION_PATH)
-			.orderBy(USERS_FILTER_AGE)
-			.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
-			.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
-			.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
-
-		return Single.create(SingleOnSubscribe<List<UserItem>>{ emitter ->
-			femaleCardsQuery
+		return SingleCreate<List<UserItem>> { emitter ->
+			firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(currentUser.baseUserInfo.city)
+				.collection(FEMALE_COLLECTION_PATH)
+				.orderBy(USERS_FILTER_AGE)
+				.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
+				.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
+				.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
 				.get()
 				.addOnSuccessListener { documents ->
 					if (!documents.isEmpty) {
 						//filter users which is not in excluding Ids list
-						if (filteredFemaleDocuments == null) {
-							filteredFemaleDocuments = documents.filter {
-								!excludingIds.contains(it.id) && it.id != currentUserId
-							}.toMutableSet()
-							val femaleResultList = parseFilteredUsers(filteredFemaleDocuments!!)
-							emitter.onSuccess(femaleResultList)
-							Log.wtf(TAG, "filtered null female = ${femaleResultList.size}")
-						}
-						else {
-							val femaleResultList = parseFilteredUsers(filteredFemaleDocuments!!)
-							emitter.onSuccess(femaleResultList)
-							Log.wtf(TAG, "filtered not null female = ${femaleResultList.size}")
-						}
-
+						filteredFemaleDocuments = documents.filter {
+							!excludingIds.contains(it.id) && it.id != currentUserId
+						}.toMutableSet()
+						val femaleResultList = parseFilteredUsers(filteredFemaleDocuments!!)
+						emitter.onSuccess(femaleResultList)
 					} else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(ExecuteSchedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 	}
 
 
@@ -299,64 +281,64 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 	* GET LIKED USERS IDS LIST
 	*/
 	private fun getLikedList(): Single<List<String>> =
-		Single.create(SingleOnSubscribe<List<String>>{ emitter ->
+		SingleCreate<List<String>> { emitter ->
 			currentUserDocRef
 				.collection(USER_LIKED_COLLECTION_REFERENCE)
 				.get()
 				.addOnSuccessListener {
 					if (!it.isEmpty) {
-						for (doc in it){
-							if (!likedList.contains(doc.id))
-								likedList.add(doc.id)
-						}
+						val likedList = mutableListOf<String>()
+						likedList.addAll(it.map { doc -> doc.id })
 						emitter.onSuccess(likedList)
 					}
-					else emitter.onSuccess(likedList)
+					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(ExecuteSchedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 
 	/*
 	* GET MATCHED IDS LIST
 	*/
 	private fun getMatchedList(): Single<List<String>> =
-		Single.create(SingleOnSubscribe<List<String>> { emitter ->
+		SingleCreate<List<String>> { emitter ->
 			currentUserDocRef
 				.collection(USER_MATCHED_COLLECTION_REFERENCE)
 				.get()
 				.addOnSuccessListener {
 					if (!it.isEmpty) {
-						for (doc in it){
-							if (!matchedList.contains(doc.id))
-								matchedList.add(doc.id)
-						}
+						val matchedList = mutableListOf<String>()
+						matchedList.addAll(it.map { doc -> doc.id })
 						emitter.onSuccess(matchedList)
 					}
-					else emitter.onSuccess(matchedList) }
+					else emitter.onSuccess(emptyList())
+				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(ExecuteSchedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 
 	/*
 	* GET SKIPPED USERS IDS LIST
 	*/
 	private fun getSkippedList(): Single<List<String>> =
-		Single.create(SingleOnSubscribe<List<String>> { emitter ->
+		SingleCreate<List<String>> { emitter ->
 			currentUserDocRef
 				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 				.get()
 				.addOnSuccessListener {
 					if (!it.isEmpty) {
-						for (doc in it) {
-							if (!skippedList.contains(doc.id))
-								skippedList.add(doc.id)
-						}
+						val skippedList = mutableListOf<String>()
+						skippedList.addAll(it.map { doc -> doc.id })
 						emitter.onSuccess(skippedList)
 					}
-					else emitter.onSuccess(skippedList)
+					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(ExecuteSchedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 
+
+	private fun addToExcludingIds(id: String) {
+		if (!excludingIds.contains(id))
+			excludingIds.add(id)
+	}
 
 	/**
 	 * 1. add to matches collection for liked user
@@ -404,9 +386,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 
 	override fun reInit() {
 		super.reInit()
-		likedList.clear()
-		skippedList.clear()
-		matchedList.clear()
+		excludingIds.clear()
 		filteredDocuments = null
 		filteredFemaleDocuments = null
 		filteredMaleDocuments = null

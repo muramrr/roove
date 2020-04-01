@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 20.03.20 15:01
+ * Last modified 01.04.20 17:02
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,8 +35,8 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 
 	private var mCardsList = mutableListOf<UserItem>()
 
-	private lateinit var mAppearedUserItem: UserItem
-	private lateinit var mDisappearedUserItem: UserItem
+	private var mAppearedUserItem: UserItem = UserItem()
+	private var mDisappearedUserItem: UserItem = UserItem()
 
 
 
@@ -45,7 +45,7 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 
 		associatedViewModel = getViewModel()
 
-		associatedViewModel.loadUsersByPreferences()
+		associatedViewModel.loadUsersByPreferences(initialLoading = true)
 		associatedViewModel.usersCardsList.observe(this, Observer {
 			mCardsList.clear()
 			mCardsList.addAll(it)
@@ -96,12 +96,9 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 			override fun onCardDisappeared(view: View, position: Int) {
 				//needed to show match
 				mDisappearedUserItem = mCardsStackAdapter.getItem(position)
-				//if there is no available user to show - show loading
+				mCardsList.remove(mDisappearedUserItem)
 				if (position == mCardsStackAdapter.itemCount - 1) {
 					associatedViewModel.loadUsersByPreferences()
-				}
-				else {
-					mCardsList.remove(mDisappearedUserItem)
 				}
 
 			}

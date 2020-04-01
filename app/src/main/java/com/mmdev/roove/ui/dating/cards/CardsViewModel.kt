@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 16:58
+ * Last modified 01.04.20 17:02
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,8 +38,12 @@ class CardsViewModel @Inject constructor(repo: CardsRepository): BaseViewModel()
 
 
 	fun addToSkipped(skippedUserItem: UserItem) {
-		addToSkippedExecution(skippedUserItem)
-		Log.wtf(TAG, "skipped card: ${skippedUserItem.baseUserInfo.name}")
+		disposables.add(addToSkippedExecution(skippedUserItem)
+            .observeOn(mainThread())
+            .subscribe({},
+                       {
+	                       error.value = MyError(ErrorType.SUBMITING, it)
+                       }))
 	}
 
 
@@ -48,16 +52,14 @@ class CardsViewModel @Inject constructor(repo: CardsRepository): BaseViewModel()
             .observeOn(mainThread())
             .subscribe({
                            showMatchDialog.value = it
-                           Log.wtf(TAG, "liked card: ${likedUserItem.baseUserInfo.name}")
-	                       Log.wtf(TAG, "match? + ${showMatchDialog.value}")
                        },
                        {
 	                       error.value = MyError(ErrorType.CHECKING, it)
                        }))
 	}
 
-	fun loadUsersByPreferences() {
-		disposables.add(getUsersByPreferencesExecution()
+	fun loadUsersByPreferences(initialLoading: Boolean = false) {
+		disposables.add(getUsersByPreferencesExecution(initialLoading)
             .observeOn(mainThread())
             .doOnSubscribe { showLoading.value = true }
             .subscribe({
@@ -77,6 +79,6 @@ class CardsViewModel @Inject constructor(repo: CardsRepository): BaseViewModel()
 
 	private fun addToSkippedExecution(skippedUserItem: UserItem) = addToSkippedUC.execute(skippedUserItem)
 	private fun checkMatchExecution(likedUserItem: UserItem) = checkMatchUC.execute(likedUserItem)
-	private fun getUsersByPreferencesExecution() = getUsersByPreferencesUC.execute()
+	private fun getUsersByPreferencesExecution(initialLoading: Boolean) = getUsersByPreferencesUC.execute(initialLoading)
 }
 
