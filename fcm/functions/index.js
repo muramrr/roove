@@ -54,23 +54,23 @@ exports.notifyNewMessage = functions.region('europe-west1')
         const recipientId = message['recipientId'];
         const sender = message['sender'];
         const conversationId = message['conversationId'];
-        const photoAttachmentItem = message['photoAttachmentItem']
+        const photoItem = message['photoItem']
 
         return admin.firestore().doc('usersBase/' + recipientId).get().then(userDoc => {
             const registrationTokens = userDoc.get('registrationTokens');
             var payload;
-            if (photoAttachmentItem === null) {
+            if (photoItem === null) {
               const notificationBody = message['text'];
               payload = {
                   data: {
-                      SENDER_NAME: sender.name,
-                      SENDER_CITY: sender.city,
-                      SENDER_GENDER: sender.gender,
-                      SENDER_PHOTO: sender.mainPhotoUrl,
-                      SENDER_ID: sender.userId,
-                      CONVERSATION_ID: conversationId,
-                      CONTENT: notificationBody,
-                    	TYPE: "NEW_MESSAGE"
+                        SENDER_NAME: sender.name,
+                        SENDER_CITY: sender.city,
+                        SENDER_GENDER: sender.gender,
+                        SENDER_PHOTO: sender.mainPhotoUrl,
+                        SENDER_ID: sender.userId,
+                        CONVERSATION_ID: conversationId,
+                        CONTENT: notificationBody,
+                        TYPE: "NEW_MESSAGE"
                     }
                 }
             }
@@ -78,14 +78,14 @@ exports.notifyNewMessage = functions.region('europe-west1')
               const notificationBody = "Photo";
               payload = {
                   data: {
-                      SENDER_NAME: sender.name,
-                      SENDER_CITY: sender.city,
-                      SENDER_GENDER: sender.gender,
-                      SENDER_PHOTO: sender.mainPhotoUrl,
-                      SENDER_ID: sender.userId,
-                      CONVERSATION_ID: conversationId,
-                      CONTENT: notificationBody,
-                      CONTENT_PHOTO: photoAttachmentItem['fileUrl'],
+                        SENDER_NAME: sender.name,
+                        SENDER_CITY: sender.city,
+                        SENDER_GENDER: sender.gender,
+                        SENDER_PHOTO: sender.mainPhotoUrl,
+                        SENDER_ID: sender.userId,
+                        CONVERSATION_ID: conversationId,
+                        CONTENT: notificationBody,
+                        CONTENT_PHOTO: photoItem['fileUrl'],
                     	TYPE: "NEW_MESSAGE"
                     }
                 }
