@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 19:46
+ * Last modified 01.04.20 18:28
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,12 +20,12 @@ buildscript {
 		dagger_version = '2.27'
 
 		// facebook
-		facebook_sdk_version = '6.2.0'
+		facebook_sdk_version = '6.3.0'
 
 		//firebase
 		firebase_auth_version = '19.3.0'
-		firebase_core_version = '17.2.3'
-		firebase_firestore_version = '21.4.1'
+		firebase_core_version = '17.3.0'
+		firebase_firestore_version = '21.4.2'
 		firebase_storage_version = '19.1.1'
 
 		//navigation component
@@ -68,7 +68,7 @@ buildscript {
 
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.6.1'
+		classpath 'com.android.tools.build:gradle:3.6.2'
 		classpath 'com.google.gms:google-services:4.3.3'
 		classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0'
