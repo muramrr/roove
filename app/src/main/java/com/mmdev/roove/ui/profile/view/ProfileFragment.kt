@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 20:05
+ * Last modified 02.04.20 17:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
@@ -84,7 +83,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 				associatedViewModel.getRequestedUserInfo(it.baseUserInfo)
 			}
 			associatedViewModel.unmatchStatus.observeOnce(this, Observer {
-				if (it) findNavController().navigateUp()
+				if (it) navController.navigateUp()
 			})
 		}
 		//else we navigates here from cards and already have userItem in sharedViewModel
@@ -133,7 +132,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 			//set only title and actions
 			val deleteItem = menu.findItem(R.id.profile_action_unmatch)
 			deleteItem.isVisible = isMatched
-			setNavigationOnClickListener { findNavController().navigateUp() }
+			setNavigationOnClickListener { navController.navigateUp() }
 			setOnMenuItemClickListener { item ->
 				when (item.itemId) {
 					R.id.profile_action_report -> { showReportDialog() }
@@ -153,13 +152,13 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
 			override fun onItemClick(item: BasePlaceInfo, position: Int) {
 				val placeId = bundleOf(PLACE_ID_KEY to item.id)
-				findNavController().navigate(R.id.action_profile_to_placeDetailedFragment, placeId)
+				navController.navigate(R.id.action_profile_to_placeDetailedFragment, placeId)
 			}
 		})
 
 		if (fabVisible) {
 			fabProfileSendMessage.setOnClickListener {
-				findNavController().navigate(R.id.action_profile_to_chatFragment)
+				navController.navigate(R.id.action_profile_to_chatFragment)
 			}
 		}
 
@@ -185,7 +184,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 	}
 
 	override fun onBackPressed() {
-		findNavController().navigateUp()
+		navController.navigateUp()
 	}
 
 }

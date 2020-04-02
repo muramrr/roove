@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 18.03.20 16:33
+ * Last modified 02.04.20 17:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.utils.showErrorDialog
@@ -26,6 +28,7 @@ import com.mmdev.roove.utils.showErrorDialog
 abstract class BaseFragment<T: ViewModel> (val isViewModelActivityHosted: Boolean = false,
                                            layoutId: Int = 0) : Fragment(layoutId) {
 
+	protected lateinit var navController: NavController
 	protected val TAG = "mylogs_" + javaClass.simpleName
 	protected val factory = injector.factory()
 
@@ -41,7 +44,7 @@ abstract class BaseFragment<T: ViewModel> (val isViewModelActivityHosted: Boolea
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-
+		navController = findNavController()
 		setBackButtonDispatcher()
 	}
 

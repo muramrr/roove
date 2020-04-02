@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 19:40
+ * Last modified 02.04.20 17:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.pairs.MatchedUserItem
@@ -81,7 +80,7 @@ class PairsFragment: BaseFragment<PairsViewModel>() {
 					ConversationItem(partner = item.baseUserInfo,
 					                 conversationId = item.conversationId,
 					                 conversationStarted = item.conversationStarted)
-				findNavController().navigate(R.id.action_pairs_to_profileFragment)
+				navController.navigate(R.id.action_pairs_to_profileFragment)
 			}
 		})
 	}

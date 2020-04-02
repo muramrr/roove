@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 26.03.20 19:40
+ * Last modified 02.04.20 17:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -119,7 +118,7 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel>(){
 					MatchedUserItem(baseUserInfo = item.partner,
 					                conversationId = item.conversationId,
 					                conversationStarted = item.conversationStarted)
-				findNavController().navigate(R.id.action_conversations_to_chatFragment)
+				navController.navigate(R.id.action_conversations_to_chatFragment)
 			}
 		})
 

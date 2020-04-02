@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.03.20 16:38
+ * Last modified 02.04.20 17:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,7 +30,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
@@ -244,12 +243,12 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 			})
 		}
 
-		toolbarChat.setNavigationOnClickListener { findNavController().navigateUp() }
+		toolbarChat.setNavigationOnClickListener { navController.navigateUp() }
 
 		toolbarChat.setOnMenuItemClickListener { item ->
 			when (item.itemId) {
 				R.id.chat_action_user -> {
-					findNavController().navigate(R.id.action_chat_to_profileFragment)
+					navController.navigate(R.id.action_chat_to_profileFragment)
 				}
 
 				R.id.chat_action_report -> { if (!isReported) showReportDialog() }
@@ -432,7 +431,7 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 
 
 	override fun onBackPressed() {
-		findNavController().navigateUp()
+		navController.navigateUp()
 	}
 
 

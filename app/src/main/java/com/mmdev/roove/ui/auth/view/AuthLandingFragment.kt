@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 15:02
+ * Last modified 02.04.20 17:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -38,7 +37,7 @@ class AuthLandingFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_a
 		associatedViewModel = getViewModel()
 
 		associatedViewModel.continueRegistration.observe(this, Observer {
-			if (it == true) findNavController().navigate(R.id.action_auth_landing_to_registrationFragment)
+			if (it == true) navController.navigate(R.id.action_auth_landing_to_registrationFragment)
 		})
 
 	}

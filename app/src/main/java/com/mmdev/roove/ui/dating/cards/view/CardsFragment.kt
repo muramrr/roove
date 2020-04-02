@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.04.20 17:02
+ * Last modified 02.04.20 17:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
@@ -119,7 +118,7 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 			override fun onItemClick(item: UserItem, position: Int) {
 
 				sharedViewModel.userSelected.value = item
-				findNavController().navigate(R.id.action_cards_to_profileFragment)
+				navController.navigate(R.id.action_cards_to_profileFragment)
 			}
 		})
 

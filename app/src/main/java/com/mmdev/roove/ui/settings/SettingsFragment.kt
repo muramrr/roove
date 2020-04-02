@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 30.03.20 21:02
+ * Last modified 02.04.20 17:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +25,6 @@ import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
@@ -151,13 +150,13 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 			override fun onItemClick(item: BasePlaceInfo, position: Int) {
 				val placeId = bundleOf(PLACE_ID_KEY to item.id)
-				findNavController().navigate(R.id.action_settings_to_placeDetailedFragment, placeId)
+				navController.navigate(R.id.action_settings_to_placeDetailedFragment, placeId)
 			}
 		})
 
 
 		fabSettingsEdit.setOnClickListener {
-			findNavController().navigate(R.id.action_settings_to_settingsEditInfoFragment)
+			navController.navigate(R.id.action_settings_to_settingsEditInfoFragment)
 		}
 
 	}

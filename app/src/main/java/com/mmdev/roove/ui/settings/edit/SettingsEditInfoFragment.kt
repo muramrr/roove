@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 30.03.20 17:01
+ * Last modified 02.04.20 17:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,6 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mmdev.business.core.UserItem
 import com.mmdev.roove.R
@@ -284,7 +283,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 	override fun onBackPressed() {
 		super.onBackPressed()
-		findNavController().navigateUp()
+		navController.navigateUp()
 	}
 
 }

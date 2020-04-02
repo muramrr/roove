@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 30.03.20 20:45
+ * Last modified 02.04.20 17:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,6 @@ import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
 import com.mmdev.business.core.PreferredAgeRange
@@ -253,7 +252,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 
 		btnRegistrationBack.setOnClickListener {
 			when (registrationStep) {
-				1 -> findNavController().navigateUp()
+				1 -> navController.navigateUp()
 
 				2 -> {
 					containerRegistration.transitionToState(R.id.step_1)

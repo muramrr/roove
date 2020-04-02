@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 16:26
+ * Last modified 02.04.20 17:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -87,7 +86,7 @@ class PlaceDetailedFragment: BaseFragment<PlacesViewModel>() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-		toolbarPlaceDetailed.setNavigationOnClickListener { findNavController().navigateUp() }
+		toolbarPlaceDetailed.setNavigationOnClickListener { navController.navigateUp() }
 
 		viewPagerPlaceDetailedPhotos.apply {
 			(getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
@@ -133,7 +132,7 @@ class PlaceDetailedFragment: BaseFragment<PlacesViewModel>() {
 	}
 
 	override fun onBackPressed() {
-		findNavController().navigateUp()
+		navController.navigateUp()
 	}
 
 

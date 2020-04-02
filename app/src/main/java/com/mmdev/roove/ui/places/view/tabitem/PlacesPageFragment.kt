@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.03.20 20:37
+ * Last modified 02.04.20 17:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mmdev.business.places.PlaceItem
 import com.mmdev.roove.R
@@ -78,7 +77,7 @@ class PlacesPageFragment: BaseFragment<PlacesViewModel>() {
 
 			override fun onItemClick(item: PlaceItem, position: Int) {
 				val placeId = bundleOf(PLACE_ID_KEY to item.id)
-				findNavController().navigate(R.id.action_places_to_placeDetailedFragment, placeId)
+				navController.navigate(R.id.action_places_to_placeDetailedFragment, placeId)
 			}
 		})
 	}
