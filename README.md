@@ -52,12 +52,6 @@ Also, keep in mind, that *business* module should not contain android-based plug
 
 *ViewModel* shoudn't contain any android imports, except androidx.lifecycle. 
 
-*Log* classes in ViewModels for debug purposes only. They will be deleted after release.
-
-MVVM pattern implementation in this project:
-
-![MVVM](https://github.com/muramrr/roove/blob/master/media/arch_diagram.png)
-
 ## License
 
 [GitHub license](https://github.com/muramrr/roove/blob/master/LICENSE)
