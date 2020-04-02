@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 20:15
+  ~ Last modified 02.04.20 17:08
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@
 
 	<dimen name="registration_button_step1_size">160dp</dimen>
 
-	<dimen name="collapseBarHeight">400dp</dimen>
+	<dimen name="collapseBarHeight">500dp</dimen>
 
 	<dimen name="rvSettingsPhotoElementWidth">175dp</dimen>
 	<dimen name="rvSettingsPhotoElementHeight">300dp</dimen>

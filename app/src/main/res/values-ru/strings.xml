@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.04.20 15:43
+  ~ Last modified 02.04.20 17:16
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -92,7 +92,7 @@
 	<string name="bottom_navigation_places">Места</string>
 	<string name="bottom_navigation_pairs">Пары</string>
 	<string name="bottom_navigation_chats">Чаты</string>
-	<string name="bottom_navigation_settings">Настройки</string>
+	<string name="bottom_navigation_settings">Опции</string>
 
 	<string name="dialog_delete_title">Ты действительно хочешь удалить свой профиль?</string>
 	<string name="dialog_delete_message">Это польностью удалит всю информацию о твоем профиле, а так же все пары и диалоги.</string>
