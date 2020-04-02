@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.03.20 15:21
+ * Last modified 02.04.20 16:14
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -273,7 +273,7 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 						.addOnSuccessListener {
 							val uploadedPhotoItem = PhotoItem(fileName = namePhoto,
 							                                  fileUrl = it.toString())
-							fillUserGeneralRef(userItem.baseUserInfo)
+							currentUserDocRef
 								.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayUnion(uploadedPhotoItem))
 
 							userItem.photoURLs.add(uploadedPhotoItem)

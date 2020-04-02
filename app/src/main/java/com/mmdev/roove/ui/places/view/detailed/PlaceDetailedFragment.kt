@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 18:12
+ * Last modified 02.04.20 16:26
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
@@ -30,9 +29,7 @@ import com.mmdev.roove.databinding.FragmentPlaceDetailedBinding
 import com.mmdev.roove.ui.common.ImagePagerAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.places.PlacesViewModel
-import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.observeOnce
-import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_place_detailed.*
 
 
@@ -44,9 +41,8 @@ class PlaceDetailedFragment: BaseFragment<PlacesViewModel>() {
 
 	private var receivedPlaceId = 0
 
+	private lateinit var placeBaseInfo: BasePlaceInfo
 	private lateinit var placeDetailedItem: PlaceDetailedItem
-
-	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
 
 	companion object {
 		private const val PLACE_ID_KEY = "PLACE_ID"
@@ -54,27 +50,30 @@ class PlaceDetailedFragment: BaseFragment<PlacesViewModel>() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+
 		associatedViewModel = getViewModel()
+
 		arguments?.let {
 			receivedPlaceId = it.getInt(PLACE_ID_KEY)
 		}
 
-		activity?.run {
-			remoteRepoViewModel= ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
+		sharedViewModel.getCurrentUser().value?.let {
+			userItem = it
+			associatedViewModel.isAddedToProfile.value =
+				it.placesToGo.map { place -> place.id }.contains(receivedPlaceId)
+		}
+
 
 		associatedViewModel.loadPlaceDetails(receivedPlaceId)
 
 		associatedViewModel.placeDetailed.observeOnce(this, Observer {
 			placeDetailedItem = it
-			val placePhotos = mutableListOf<String>()
-			for (imageItem in it.images)
-				placePhotos.add(imageItem.image)
-
+			val placePhotos = it.images.map { imageItem -> imageItem.image }
 			placePhotosAdapter.setData(placePhotos)
+			placeBaseInfo = BasePlaceInfo(placeDetailedItem.id,
+			                              placeDetailedItem.short_title,
+			                              placeDetailedItem.images[0].image)
 		})
-
-		sharedViewModel.getCurrentUser().value?.let { userItem = it }
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -108,20 +107,15 @@ class PlaceDetailedFragment: BaseFragment<PlacesViewModel>() {
 			cycleTextViewExpansion(tvPlaceDetailedFullDescription)
 		}
 
-		fabPlaceDetailed.setOnClickListener {
-			val placeToGoItem = BasePlaceInfo(
-					placeDetailedItem.id,
-					placeDetailedItem.short_title,
-					placeDetailedItem.images[0].image)
+		fabAddPlaceToWantToGoList.setOnClickListener {
+			if (!userItem.placesToGo.contains(placeBaseInfo))
+				associatedViewModel.addPlaceToProfile(placeBaseInfo)
+		}
 
-			if (!userItem.placesToGo.contains(placeToGoItem)){
-				userItem.placesToGo.add(placeToGoItem)
-				remoteRepoViewModel.updateUserItem(userItem)
-				remoteRepoViewModel.isUserUpdatedStatus.observeOnce(this, Observer {
-					context?.showToastText("Place added to your list successfully")
-				})
-			}
-			//Log.wtf("mylogs", "{${userItem.placesToGo}}")
+		fabRemovePlaceFromWantToGoList.setOnClickListener {
+
+			associatedViewModel.removePlaceFromProfile(placeBaseInfo)
+
 		}
 	}
 

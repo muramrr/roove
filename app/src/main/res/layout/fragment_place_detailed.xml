@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 21:02
+  ~ Last modified 02.04.20 15:57
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -169,12 +169,12 @@
 		</androidx.core.widget.NestedScrollView>
 
 		<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-			android:id="@+id/fabPlaceDetailed"
+			android:id="@+id/fabAddPlaceToWantToGoList"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
 			android:layout_margin="@dimen/general_size_16dp"
 
-			android:text="@string/want_to_go_text"
+			android:text="@string/place_detailed_want_to_go_text"
 			android:textAlignment="center"
 			android:textAllCaps="false"
 			android:textAppearance="@style/bold_text"
@@ -182,6 +182,30 @@
 
 			app:backgroundTint="@color/amethyst"
 			app:elevation="@null"
+
+			app:visibilityGone="@{!viewModel.isAddedToProfile}"
+
+			style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+
+			app:layout_anchor="@id/scrollContainerPlaceDetailed"
+			app:layout_anchorGravity="bottom|end|right" />
+
+		<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+			android:id="@+id/fabRemovePlaceFromWantToGoList"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_margin="@dimen/general_size_16dp"
+
+			android:text="@string/place_detailed_not_interested_text"
+			android:textAlignment="center"
+			android:textAllCaps="false"
+			android:textAppearance="@style/bold_text"
+			android:textSize="14sp"
+
+			app:backgroundTint="@color/material_red_a700"
+			app:elevation="@null"
+
+			app:visibilityGone="@{viewModel.isAddedToProfile}"
 
 			style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
 

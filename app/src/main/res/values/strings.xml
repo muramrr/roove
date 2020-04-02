@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 17:01
+  ~ Last modified 02.04.20 15:43
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@
 	<!--Default strings-->
 	<string name="default_name" translatable="false">John Doe</string>
 	<string name="default_city" translatable="false">Anytown</string>
-	<string name="default_message_text" translatable="false">Text another text \n text \n more text maybe more text to test well</string>
+	<string name="default_message_text" translatable="false">Text another text \n text more text maybe more text \n well</string>
 
 	<!-- Notifications -->
 	<string name="notification_channel_id_messages" translatable="false">message_notifications</string>
@@ -106,7 +106,8 @@
 	<string name="toast_text_report_success">Report sent successfully\nThank you!</string>
 	<string name="toast_text_update_success">Successfully updated</string>
 
-	<string name="want_to_go_text">Want to go</string>
+	<string name="place_detailed_want_to_go_text">Want to go</string>
+	<string name="place_detailed_not_interested_text">Not interested</string>
 
 	<!--city list-->
 	<string name="russia_ekb" translatable="false">Екатеринбург</string>
@@ -145,6 +146,7 @@
 	<string name="report_chooser_photos">Ineligible photos</string>
 	<string name="report_chooser_behavior">Disrespectful behavior</string>
 	<string name="report_chooser_fake">Seems, it is fake</string>
+
 
 
 </resources>

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 18:44
+  ~ Last modified 02.04.20 15:43
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -86,7 +86,8 @@
 	<string name="toast_text_report_success">Жалоба успешно отправлена\nСпасибо тебе!</string>
 	<string name="toast_text_update_success">Изменения сохранены</string>
 
-	<string name="want_to_go_text">Хочу посетить</string>
+	<string name="place_detailed_not_interested_text">Не интересует</string>
+	<string name="place_detailed_want_to_go_text">Хочу посетить</string>
 
 	<string name="bottom_navigation_places">Места</string>
 	<string name="bottom_navigation_pairs">Пары</string>
