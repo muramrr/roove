@@ -33,7 +33,7 @@ Path: *app/src/main/res/values*:
 Path: *%project_root_folder%*
 * **key.properties** containing sensative strings related to your firestorage url and encrypt keys (you can use generator to obtain random enc keys)
 
- *FIREBASE_STORAGE_URL* = "gs:/your url" (your firestorage reference link can be find at console.firebase/.../project/****yourapp****/storage)
+ *FIREBASE_STORAGE_URL* = "gs:/your url" (your firestorage reference link can be find at *console.firebase/.../project/...yourapp.../storage*)
  
  *KEY_ENCRYPTION_KEY* = "32 lenght enc key"
  
