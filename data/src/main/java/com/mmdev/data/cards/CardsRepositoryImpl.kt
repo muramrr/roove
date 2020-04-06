@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.04.20 17:23
+ * Last modified 06.04.20 17:50
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -48,7 +48,7 @@ class CardsRepositoryImpl @Inject constructor(private val firestore: FirebaseFir
 		.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
 		.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
 
-	private val cardsLimit = 49
+	private val cardsLimit = 19
 	private val excludingIds = mutableListOf<String>()
 	private var filteredDocuments: MutableSet<QueryDocumentSnapshot>? = null
 	private var filteredMaleDocuments: MutableSet<QueryDocumentSnapshot>? = null
