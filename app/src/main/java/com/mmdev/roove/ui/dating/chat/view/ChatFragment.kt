@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.04.20 17:56
+ * Last modified 07.04.20 17:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -142,7 +142,7 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 		//setup observer
 		remoteRepoViewModel.retrievedUserItem.observeOnce(this, Observer {
 			currentPartner = it
-			associatedViewModel.partnerName.value = it.baseUserInfo.name
+			associatedViewModel.partnerName.value = it.baseUserInfo.name.split(" ")[0]
 			associatedViewModel.partnerPhoto.value = it.baseUserInfo.mainPhotoUrl
 		})
 
