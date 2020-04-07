@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 16:06
+ * Last modified 07.04.20 14:43
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package com.mmdev.roove.ui.places
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.places.BasePlaceInfo
 import com.mmdev.business.places.PlaceDetailedItem
@@ -39,7 +38,7 @@ class PlacesViewModel @Inject constructor(repo: PlacesRepository): BaseViewModel
 	val placesList: MutableLiveData<List<PlaceItem>> = MutableLiveData()
 	val placeDetailed: MutableLiveData<PlaceDetailedItem> = MutableLiveData()
 	val isAddedToProfile: MutableLiveData<Boolean> = MutableLiveData()
-
+	val showTextHelper: MutableLiveData<Boolean> = MutableLiveData()
 
 	fun addPlaceToProfile(basePlaceInfo: BasePlaceInfo){
 		disposables.add(addPlaceExecution(basePlaceInfo)
@@ -58,8 +57,11 @@ class PlacesViewModel @Inject constructor(repo: PlacesRepository): BaseViewModel
             .retry(3)
             .observeOn(mainThread())
             .subscribe({
-	                       placesList.value = it.results
-	                       Log.wtf(TAG, "$category to display: ${it.results.size}")
+	                       if (it.results.isNotEmpty()){
+		                       placesList.value = it.results
+		                       showTextHelper.value = false
+	                       }
+	                       else showTextHelper.value = true
                        },
                        {
 	                       error.value = MyError(ErrorType.LOADING, it)

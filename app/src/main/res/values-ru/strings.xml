@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.04.20 17:16
+  ~ Last modified 07.04.20 14:43
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -61,6 +61,7 @@
 
 	<string name="fragment_conversations_explanation_text">Нет активных диалогов…\n\nСкорее, напиши кому-нибудь!</string>
 	<string name="fragment_pairs_explanation_text">Пока ещё нет взаимных симпатий…\n\nПродолжай свайпать!</string>
+	<string name="fragment_places_explanation">Не найдено мест в этой категории</string>
 
 	<string name="description_user_photo">фото пользователя</string>
 

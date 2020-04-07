@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.04.20 15:43
+  ~ Last modified 07.04.20 14:43
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -82,6 +82,8 @@
 	<string name="fragment_conversations_explanation_text">There is no started conversations…\n\nText someone first!</string>
 	<string name="fragment_pairs_explanation_text">There is no matches…\n\nKeep swiping!</string>
 
+	<string name="fragment_places_explanation">There is no such places in this category</string>
+
 	<string name="description_user_photo">user photo</string>
 
 	<!-- pref genders-->
@@ -146,7 +148,6 @@
 	<string name="report_chooser_photos">Ineligible photos</string>
 	<string name="report_chooser_behavior">Disrespectful behavior</string>
 	<string name="report_chooser_fake">Seems, it is fake</string>
-
 
 
 </resources>

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 17:59
+  ~ Last modified 07.04.20 14:43
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,10 +43,30 @@
 			tools:listitem="@layout/fragment_places_page_rv_item"
 			app:bindData="@{viewModel.placesList}"
 
+			app:visibilityInvisible='@{!viewModel.showTextHelper}'
+
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/tvPlacesHelperText"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+
+			android:text="@string/fragment_places_explanation"
+			android:textSize="24sp"
+			app:visibilityInvisible='@{viewModel.showTextHelper}'
+
+			style="@style/regular_text"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			/>
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
