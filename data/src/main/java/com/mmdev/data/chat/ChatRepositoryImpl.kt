@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.04.20 14:37
+ * Last modified 07.04.20 17:56
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,8 +22,12 @@ import com.mmdev.business.core.PhotoItem
 import com.mmdev.data.core.BaseRepositoryImpl
 import com.mmdev.data.core.schedulers.ExecuteSchedulers
 import com.mmdev.data.user.UserWrapper
-import io.reactivex.rxjava3.core.*
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableOnSubscribe
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.internal.operators.observable.ObservableCreate
+import io.reactivex.rxjava3.internal.operators.single.SingleCreate
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -40,12 +44,6 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
                                              userWrapper: UserWrapper):
 		ChatRepository, BaseRepositoryImpl(firestore, userWrapper) {
 
-	companion object {
-		private const val MESSAGES_COLLECTION_REFERENCE = "messages"
-		private const val MESSAGE_TIMESTAMP_FIELD = "timestamp"
-		private const val MESSAGE_SENDER_ID_FILED = "sender.userId"
-	}
-
 	private lateinit var partnerDocRef: DocumentReference
 
 	private lateinit var initialChatQuery : Query
@@ -53,6 +51,15 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 	private lateinit var paginateChatQuery: Query
 	private lateinit var paginateLastLoadedMessage: DocumentSnapshot
 
+	private var isPartnerOnline = false
+
+	companion object {
+		private const val CONVERSATION_PARTNER_ONLINE_FIELD = "partnerOnline"
+		private const val CONVERSATION_UNREAD_COUNT_FIELD = "unreadCount"
+		private const val MESSAGES_COLLECTION_REFERENCE = "messages"
+		private const val MESSAGE_TIMESTAMP_FIELD = "timestamp"
+		private const val MESSAGE_SENDER_ID_FILED = "sender.userId"
+	}
 
 	override fun loadMessages(conversation: ConversationItem): Single<List<MessageItem>> {
 		initialChatQuery = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -61,15 +68,24 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 			.orderBy(MESSAGE_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
 			.limit(20)
 
+		//init partner doc reference
 		partnerDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
 			.document(conversation.partner.city)
 			.collection(conversation.partner.gender)
 			.document(conversation.partner.userId)
 
-		return Single.create(SingleOnSubscribe<List<MessageItem>> { emitter ->
+		//reset unread count
+		currentUserDocRef.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+			.document(conversation.conversationId)
+			.update(CONVERSATION_UNREAD_COUNT_FIELD, 0)
+
+		return SingleCreate<List<MessageItem>> { emitter ->
 			initialChatQuery
 				.get()
 				.addOnSuccessListener {
+					partnerDocRef.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+						.document(conversation.conversationId)
+						.update(CONVERSATION_PARTNER_ONLINE_FIELD, true)
 					//check if there is messages first
 					//it will throw exception IndexOutOfRange without this statement
 					if (!it.isEmpty) {
@@ -91,11 +107,11 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 				}
 				.addOnFailureListener { emitter.onError(it) }
 
-		}).subscribeOn(ExecuteSchedulers.io())
+		}.subscribeOn(ExecuteSchedulers.io())
 	}
 
-	override fun loadMoreMessages(): Single<List<MessageItem>> {
-		return Single.create(SingleOnSubscribe<List<MessageItem>> { emitter ->
+	override fun loadMoreMessages(): Single<List<MessageItem>> =
+		SingleCreate<List<MessageItem>> { emitter ->
 			paginateChatQuery
 				.get()
 				.addOnSuccessListener {
@@ -116,11 +132,16 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(ExecuteSchedulers.io())
-	}
+		}.subscribeOn(ExecuteSchedulers.io())
 
 	override fun observeNewMessages(conversation: ConversationItem): Observable<MessageItem> {
 		super.reInit()
+
+		if (!this::partnerDocRef.isInitialized)
+			partnerDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
+				.document(conversation.partner.city)
+				.collection(conversation.partner.gender)
+				.document(conversation.partner.userId)
 
 		return Observable.create(ObservableOnSubscribe<MessageItem> { emitter ->
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
@@ -152,9 +173,38 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 					}
 					else Log.wtf(TAG, "snapshots is null or empty")
 				}
-			emitter.setCancellable { listener.remove() }
+			emitter.setCancellable {
+				partnerDocRef.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+					.document(conversation.conversationId)
+					.update(CONVERSATION_PARTNER_ONLINE_FIELD, false)
+				listener.remove()
+			}
 		}).subscribeOn(ExecuteSchedulers.io())
 	}
+
+	override fun observePartnerOnline(conversationId: String): Observable<Boolean> =
+		ObservableCreate<Boolean> { emitter ->
+
+			val listener = currentUserDocRef
+				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(conversationId)
+				.addSnapshotListener { snapshot, e ->
+					if (e != null) {
+						emitter.onError(e)
+						return@addSnapshotListener
+					}
+					if (snapshot != null && snapshot.exists()) {
+						if (isPartnerOnline != snapshot.getBoolean(CONVERSATION_PARTNER_ONLINE_FIELD)){
+							snapshot.getBoolean(CONVERSATION_PARTNER_ONLINE_FIELD)?.let {
+								isPartnerOnline = it
+							}
+
+						}
+						emitter.onNext(snapshot.getBoolean(CONVERSATION_PARTNER_ONLINE_FIELD))
+					}
+				}
+			emitter.setCancellable { listener.remove() }
+		}.subscribeOn(ExecuteSchedulers.io())
 
 	override fun sendMessage(messageItem: MessageItem, emptyChat: Boolean?): Completable {
 		//Log.wtf("TAG", "is empty recieved? + $emptyChat")
@@ -171,6 +221,7 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 				.addOnSuccessListener {
 					updateLastMessage(messageItem)
 					if (emptyChat != null && emptyChat == true) updateStartedStatus(messageItem)
+					updateUnreadMessagesCount(messageItem.conversationId)
 					emitter.onComplete()
 				}
 				.addOnFailureListener { emitter.onError(it) }
@@ -255,5 +306,16 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 		}
 		//Log.wtf(TAG, "last message updated")
 	}
+
+	private fun updateUnreadMessagesCount(conversationId: String) {
+		if (!isPartnerOnline) {
+			partnerDocRef
+				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+				.document(conversationId)
+				.update(CONVERSATION_UNREAD_COUNT_FIELD, FieldValue.increment(1))
+		}
+
+	}
+
 
 }

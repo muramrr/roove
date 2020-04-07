@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.04.20 14:30
+ * Last modified 07.04.20 17:56
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,6 @@ package com.mmdev.roove.ui.dating.chat.view
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -32,9 +31,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.chat.MessageItem
 import com.mmdev.business.conversations.ConversationItem
@@ -45,7 +41,6 @@ import com.mmdev.business.remote.entity.Report
 import com.mmdev.business.remote.entity.Report.ReportType.*
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
-import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.core.permissions.AppPermission
 import com.mmdev.roove.core.permissions.handlePermission
 import com.mmdev.roove.core.permissions.onRequestPermissionsResultReceived
@@ -147,8 +142,10 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 		//setup observer
 		remoteRepoViewModel.retrievedUserItem.observeOnce(this, Observer {
 			currentPartner = it
-			setupContentToolbar(it)
+			associatedViewModel.partnerName.value = it.baseUserInfo.name
+			associatedViewModel.partnerPhoto.value = it.baseUserInfo.mainPhotoUrl
 		})
+
 		associatedViewModel.newMessage.observe(this, Observer {
 			mChatAdapter.newMessage()
 			rvMessageList.scrollToPosition(0)
@@ -163,8 +160,9 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 		sharedViewModel.conversationSelected.observeOnce(this, Observer {
 			currentConversation = it
 			remoteRepoViewModel.getRequestedUserInfo(it.partner)
-			associatedViewModel.loadMessages(it)
 			associatedViewModel.observeNewMessages(it)
+			associatedViewModel.observePartnerOnline(it.conversationId)
+			associatedViewModel.loadMessages(it)
 		})
 
 	}
@@ -247,44 +245,13 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 
 		toolbarChat.setOnMenuItemClickListener { item ->
 			when (item.itemId) {
-				R.id.chat_action_user -> {
-					navController.navigate(R.id.action_chat_to_profileFragment)
-				}
-
 				R.id.chat_action_report -> { if (!isReported) showReportDialog() }
 			}
 			return@setOnMenuItemClickListener true
 		}
-	}
 
-	override fun onResume() {
-		// returns to fragment from onStop
-		// if user clicks on toolbar partner icon this fragment will not be destroyed
-		// onCreate is no longer being called in this scenario
-		super.onResume()
-		if (this::currentPartner.isInitialized ) { setupContentToolbar(currentPartner) }
-	}
-
-	private fun setupContentToolbar(partnerUserItem: UserItem){
-		toolbarChat.apply {
-			//menu declared directly in xml
-			//no need to inflate menu manually
-			//set only title, actions and icon
-
-			val partnerIcon = menu.findItem(R.id.chat_action_user)
-			if (partnerUserItem.baseUserInfo.mainPhotoUrl.isNotEmpty())
-				GlideApp.with(this)
-					.load(partnerUserItem.baseUserInfo.mainPhotoUrl)
-					.centerCrop()
-					.apply(RequestOptions().circleCrop())
-					.into(object : CustomTarget<Drawable>(){
-						override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-							partnerIcon.icon = resource
-						}
-						override fun onLoadCleared(placeholder: Drawable?) {}
-					})
-
-			title = partnerUserItem.baseUserInfo.name
+		toolbarChat.setOnClickListener {
+			navController.navigate(R.id.action_chat_to_profileFragment)
 		}
 	}
 

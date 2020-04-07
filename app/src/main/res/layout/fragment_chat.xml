@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 21:02
+  ~ Last modified 07.04.20 17:55
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,16 +31,12 @@
 
 		<androidx.appcompat.widget.Toolbar
 			android:id="@+id/toolbarChat"
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:background="@color/colorPrimary"
 
 			app:menu="@menu/chat_menu"
 			app:navigationIcon="@drawable/ic_arrow_back_24dp"
-
-			app:titleTextAppearance="@style/ToolbarTitle"
-			app:titleTextColor="@color/white"
-			app:title="@string/default_name"
 
 			app:paddingTopSystemWindowInsets="@{true}"
 
@@ -48,7 +44,69 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toTopOf="@id/rvMessageList"
-			/>
+			>
+
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+				<com.google.android.material.textview.MaterialTextView
+					android:id="@+id/toolbarChatTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="0dp"
+					android:gravity="center"
+
+					android:maxLength="16"
+					android:ellipsize="end"
+					android:lines="1"
+					android:maxLines="1"
+					android:singleLine="true"
+
+					android:text='@{viewModel.partnerName.split(" ")[0]}'
+					android:textSize="20sp"
+					style="@style/regular_text"
+
+
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					app:layout_constraintBottom_toBottomOf="parent"
+					/>
+
+				<com.mmdev.roove.ui.common.custom.components.CircleImageView
+					android:id="@+id/toolbarChatPartnerOnlineIndicator"
+					android:layout_width="8dp"
+					android:layout_height="8dp"
+					android:layout_marginStart="@dimen/general_size_8dp"
+
+					android:src="@color/gradient1"
+
+					app:visibilityInvisible="@{viewModel.isPartnerOnline}"
+
+					app:layout_constraintHorizontal_chainStyle="spread_inside"
+					app:layout_constraintEnd_toStartOf="@id/toolbarChatPartnerPhoto"
+					app:layout_constraintStart_toEndOf="@id/toolbarChatTitle"
+					app:layout_constraintTop_toTopOf="parent"
+					app:layout_constraintBottom_toBottomOf="parent"
+					/>
+
+				<com.mmdev.roove.ui.common.custom.components.CircleImageView
+					android:id="@+id/toolbarChatPartnerPhoto"
+					android:layout_width="36dp"
+					android:layout_height="36dp"
+					android:layout_margin="@dimen/general_size_4dp"
+
+					app:bindImageUrl="@{viewModel.partnerPhoto}"
+
+					app:layout_constraintHorizontal_chainStyle="spread_inside"
+					app:layout_constraintStart_toEndOf="@id/toolbarChatPartnerOnlineIndicator"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					app:layout_constraintBottom_toBottomOf="parent"
+					/>
+
+			</androidx.constraintlayout.widget.ConstraintLayout>
+
+		</androidx.appcompat.widget.Toolbar>
 
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/rvMessageList"

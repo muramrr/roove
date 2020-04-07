@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.04.20 13:46
+ * Last modified 07.04.20 15:58
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,6 +24,8 @@ interface ChatRepository {
 	fun loadMoreMessages(): Single<List<MessageItem>>
 
 	fun observeNewMessages(conversation: ConversationItem): Observable<MessageItem>
+
+	fun observePartnerOnline(conversationId: String): Observable<Boolean>
 
 	fun sendMessage(messageItem: MessageItem, emptyChat: Boolean? = false): Completable
 

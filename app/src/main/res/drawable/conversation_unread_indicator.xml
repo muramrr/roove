@@ -2,21 +2,21 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 07.04.20 16:22
+  ~ Last modified 07.04.20 15:02
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
-<menu
+
+<shape
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+	android:shape="oval">
 
-	<item
-		android:id="@+id/chat_action_report"
-		android:icon="@drawable/ic_flag_24dp"
-		android:title="@string/menu_report_text"
-		app:showAsAction="ifRoom" />
+	<solid
+		android:color="@color/gradient3"/>
 
-
-</menu>
+	<size
+		android:width="64dp"
+		android:height="64dp"/>
+</shape>

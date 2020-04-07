@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 21:02
+  ~ Last modified 07.04.20 17:53
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,13 +33,14 @@
 			android:id="@+id/ivConversationItemUserPhoto"
 			android:layout_width="64dp"
 			android:layout_height="64dp"
-			android:layout_marginEnd="@dimen/general_size_8dp"
+
 
 			app:bindImageUrl="@{bindItem.partner.mainPhotoUrl}"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintEnd_toStartOf="@id/tvConversationItemUserName"
+			app:layout_constraintEnd_toStartOf="@id/tvConversationItemLastMessage"
+			app:layout_constraintBottom_toBottomOf="parent"
 			tools:ignore="ContentDescription" />
 
 		<TextView
@@ -47,14 +48,38 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/general_size_8dp"
+			android:gravity="center"
+			android:ellipsize="end"
+			android:lines="1"
+			android:maxLines="1"
+			android:maxLength="20"
+			android:singleLine="true"
 			android:text="@{bindItem.partner.name, default = @string/default_name}"
 			android:textSize="16sp"
 
+			app:layout_constraintHorizontal_chainStyle="spread_inside"
+			app:layout_constraintEnd_toStartOf="@id/tvConversationUnreadCount"
 			app:layout_constraintStart_toEndOf="@id/ivConversationItemUserPhoto"
 			app:layout_constraintTop_toTopOf="@id/ivConversationItemUserPhoto"
 			app:layout_constraintBottom_toTopOf="@id/tvConversationItemLastMessage"
 
-			style="@style/bold_text" />
+			style="@style/bold_text"
+			/>
+
+<!--		<com.mmdev.roove.ui.common.custom.components.CircleImageView-->
+<!--			android:id="@+id/viewOnlineIndicator"-->
+<!--			android:layout_width="8dp"-->
+<!--			android:layout_height="8dp"-->
+<!--			android:layout_marginStart="@dimen/general_size_8dp"-->
+<!--			android:src="@color/gradient1"-->
+<!--			-->
+<!--			app:visibilityInvisible="@{bindItem.partnerOnline}"-->
+
+<!--			app:layout_constraintStart_toEndOf="@id/tvConversationItemUserName"-->
+<!--			app:layout_constraintTop_toTopOf="@id/tvConversationItemUserName"-->
+<!--			app:layout_constraintBottom_toBottomOf="@id/tvConversationItemUserName"-->
+
+<!--			style="@style/bold_text" />-->
 
 		<TextView
 			android:id="@+id/tvConversationItemLastMessage"
@@ -75,6 +100,31 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toEndOf="@id/ivConversationItemUserPhoto"
 			app:layout_constraintTop_toBottomOf="@id/tvConversationItemUserName"
+			/>
+
+		<TextView
+			android:id="@+id/tvConversationUnreadCount"
+			android:layout_width="@dimen/general_size_24dp"
+			android:layout_height="@dimen/general_size_24dp"
+			android:layout_marginEnd="@dimen/general_size_8dp"
+			android:background="@drawable/conversation_unread_indicator"
+			android:ellipsize="end"
+			android:gravity="center"
+			android:lines="1"
+			android:maxLines="1"
+			android:singleLine="true"
+
+			android:text="2"
+
+			app:visibilityInvisible="@{bindItem.unreadCount != 0}"
+
+			style="@style/light_text"
+
+			app:layout_constraintHorizontal_chainStyle="spread_inside"
+			app:layout_constraintStart_toEndOf="@id/tvConversationItemUserName"
+			app:layout_constraintTop_toTopOf="@id/tvConversationItemUserName"
+			app:layout_constraintBottom_toBottomOf="@id/tvConversationItemUserName"
+			app:layout_constraintEnd_toEndOf="parent"
 			/>
 
 

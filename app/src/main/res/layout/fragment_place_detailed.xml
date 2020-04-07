@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.04.20 15:57
+  ~ Last modified 07.04.20 17:12
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,6 +26,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@color/colorPrimaryDark"
+		app:paddingBottomSystemWindowInsets="@{true}"
 		>
 
 		<com.google.android.material.appbar.AppBarLayout

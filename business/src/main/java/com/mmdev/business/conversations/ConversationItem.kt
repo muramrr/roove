@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.02.20 16:30
+ * Last modified 07.04.20 14:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,4 +21,6 @@ data class ConversationItem(val partner: BaseUserInfo = BaseUserInfo(),
                             val conversationId: String = "",
                             val conversationStarted: Boolean = false,
                             val lastMessageText: String = "",
-                            val lastMessageTimestamp: Date? = Date())
+                            val lastMessageTimestamp: Date? = Date(),
+                            val partnerOnline: Boolean = false,
+                            val unreadCount: Int = 0)
