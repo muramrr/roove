@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 17:36
+ * Last modified 07.04.20 14:32
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,7 +34,7 @@ import kotlinx.android.synthetic.main.fragment_place_detailed.*
 
 class PlaceDetailedFragment: BaseFragment<PlacesViewModel>() {
 
-	private lateinit var userItem: UserItem
+	private lateinit var currentUser: UserItem
 
 	private val placePhotosAdapter = ImagePagerAdapter()
 
@@ -56,12 +56,11 @@ class PlaceDetailedFragment: BaseFragment<PlacesViewModel>() {
 			receivedPlaceId = it.getInt(PLACE_ID_KEY)
 		}
 
-		sharedViewModel.getCurrentUser().value?.let {
-			userItem = it
+		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
+			currentUser = it
 			associatedViewModel.isAddedToProfile.value =
 				it.placesToGo.map { place -> place.id }.contains(receivedPlaceId)
-		}
-
+		})
 
 		associatedViewModel.loadPlaceDetails(receivedPlaceId)
 
@@ -107,7 +106,7 @@ class PlaceDetailedFragment: BaseFragment<PlacesViewModel>() {
 		}
 
 		fabAddPlaceToWantToGoList.setOnClickListener {
-			if (!userItem.placesToGo.contains(placeBaseInfo))
+			if (!currentUser.placesToGo.contains(placeBaseInfo))
 				associatedViewModel.addPlaceToProfile(placeBaseInfo)
 		}
 

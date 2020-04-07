@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 17:36
+ * Last modified 07.04.20 14:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -59,15 +59,14 @@ import java.util.*
 
 class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
-	private val mSettingsPhotoAdapter =
-		SettingsUserPhotoAdapter(mutableListOf(), R.layout.fragment_settings_photo_item)
+	private lateinit var currentUser: UserItem
+
+	private val mSettingsPhotoAdapter = SettingsUserPhotoAdapter(layoutId = R.layout.fragment_settings_photo_item)
 
 	private val mPlacesToGoAdapter = PlacesToGoAdapter(listOf())
 
 	private lateinit var authViewModel: AuthViewModel
 
-
-	private lateinit var userItem: UserItem
 
 	// File
 	private lateinit var mFilePathImageCamera: File
@@ -87,17 +86,17 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 			authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
-		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
-			userItem = it
-		})
-
 		associatedViewModel.photoUrls.observe(this, Observer {
 			mSettingsPhotoAdapter.setData(it)
 		})
 
+		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
+			currentUser = it
+		})
+
 		sharedViewModel.modalBottomSheetNeedUpdateExecution.observe(this, Observer {
 			if (it) {
-				associatedViewModel.updateUserItem(userItem)
+				associatedViewModel.updateUserItem(currentUser)
 				sharedViewModel.modalBottomSheetNeedUpdateExecution.value = false
 			}
 		})
@@ -193,7 +192,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 	private fun startCameraIntent() {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()
 		mFilePathImageCamera = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-		                            userItem.baseUserInfo.name + namePhoto + "camera.jpg")
+		                            currentUser.baseUserInfo.name + namePhoto + "camera.jpg")
 		val photoURI = FileProvider.getUriForFile(context!!,
 		                                          BuildConfig.APPLICATION_ID + ".provider",
 		                                          mFilePathImageCamera)
@@ -247,7 +246,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 			if (resultCode == Activity.RESULT_OK) {
 
 				val selectedUri = data?.data
-				associatedViewModel.uploadUserProfilePhoto(selectedUri.toString(), userItem)
+				associatedViewModel.uploadUserProfilePhoto(selectedUri.toString(), currentUser)
 			}
 		}
 		// send photo taken by camera
@@ -256,7 +255,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 				if (mFilePathImageCamera.exists()) {
 					associatedViewModel.uploadUserProfilePhoto(Uri.fromFile(mFilePathImageCamera).toString(),
-					                                                                 userItem)
+					                                           currentUser)
 				}
 				else context?.showToastText("filePathImageCamera is null or filePathImageCamera isn't exists")
 

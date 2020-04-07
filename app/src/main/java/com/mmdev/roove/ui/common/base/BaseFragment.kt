@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 17:30
+ * Last modified 07.04.20 14:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,11 +32,11 @@ abstract class BaseFragment<T: ViewModel> (val isViewModelActivityHosted: Boolea
 	protected val TAG = "mylogs_" + javaClass.simpleName
 	protected val factory = injector.factory()
 
-	protected val sharedViewModel: SharedViewModel by lazy {
-		activity?.run {
+	protected val sharedViewModel: SharedViewModel
+		get() = activity?.run {
 			ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
-	}
+
 
 	protected lateinit var associatedViewModel: T
 
@@ -81,7 +81,7 @@ abstract class BaseFragment<T: ViewModel> (val isViewModelActivityHosted: Boolea
 	}
 
 	/**
-	 * Override this method into your fragment to handleBackButton
+	 * Override this method into your fragment to handle backButton
 	 */
 	open fun onBackPressed() {}
 

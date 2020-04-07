@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.03.20 19:11
+ * Last modified 07.04.20 13:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.roove.ui.common.base.BaseAdapter
 
 
-class ConversationsAdapter (private var conversationsList: MutableList<ConversationItem>,
+class ConversationsAdapter (private var conversationsList: MutableList<ConversationItem> = mutableListOf(),
                             private val layoutId: Int):
 		BaseAdapter<ConversationItem>(),
 		BaseAdapter.BindableAdapter<MutableList<ConversationItem>> {

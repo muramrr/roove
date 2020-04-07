@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 17:25
+ * Last modified 07.04.20 14:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,7 +69,7 @@ import java.util.*
 
 class ChatFragment : BaseFragment<ChatViewModel>() {
 
-	private lateinit var userItemModel: UserItem
+	private lateinit var currentUser: UserItem
 
 	private var receivedPartnerCity = ""
 	private var receivedPartnerGender = ""
@@ -122,12 +122,12 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
                 receivedConversationId.isNotEmpty()) isDeepLinkJump = true
 		}
 
-
-		//observe current user id to understand left/right message
 		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
-			userItemModel = it
+			//observe current user id to understand left/right message
 			mChatAdapter.setCurrentUserId(it.baseUserInfo.userId)
+			currentUser = it
 		})
+
 
 		//if it was a deep link navigation then create ConversationItem "on a flight"
 		if (isDeepLinkJump) {
@@ -296,7 +296,7 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 		if (edTextMessageInput.text.toString().trim().isNotEmpty()) {
 
 			val message =
-				MessageItem(sender = userItemModel.baseUserInfo,
+				MessageItem(sender = currentUser.baseUserInfo,
 				            recipientId = currentConversation.partner.userId,
 				            text = edTextMessageInput.text.toString().trim(),
 				            photoItem = null,
@@ -390,9 +390,9 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 			if (resultCode == RESULT_OK) {
 
 				val selectedUri = data?.data
-				associatedViewModel.sendPhoto(selectedUri.toString(),
-				                              userItemModel.baseUserInfo,
-				                              currentConversation.partner.userId)
+				associatedViewModel.sendPhoto(photoUri = selectedUri.toString(),
+				                              conversation = currentConversation,
+				                              sender = currentUser.baseUserInfo)
 			}
 		}
 		// send photo taken by camera
@@ -400,9 +400,9 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 			if (resultCode == RESULT_OK) {
 
 				if (mFilePathImageCamera.exists()) {
-					associatedViewModel.sendPhoto(Uri.fromFile(mFilePathImageCamera).toString(),
-					                              userItemModel.baseUserInfo,
-					                              currentConversation.partner.userId)
+					associatedViewModel.sendPhoto(photoUri = Uri.fromFile(mFilePathImageCamera).toString(),
+					                              conversation = currentConversation,
+					                              sender = currentUser.baseUserInfo)
 				}
 				else context?.showToastText("filePathImageCamera is null or filePathImageCamera isn't exists")
 			}

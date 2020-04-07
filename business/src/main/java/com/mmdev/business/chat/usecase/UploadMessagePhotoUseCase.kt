@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 04.02.20 15:55
+ * Last modified 07.04.20 13:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import com.mmdev.business.chat.repository.ChatRepository
 
 class UploadMessagePhotoUseCase (private val repository: ChatRepository) {
 
-	fun execute(t: String) = repository.uploadMessagePhoto(t)
+	fun execute(t1: String, t2: String) = repository.uploadMessagePhoto(t1, t2)
 
 }
 

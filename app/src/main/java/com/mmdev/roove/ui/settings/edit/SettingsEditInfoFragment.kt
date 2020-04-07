@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 17:36
+ * Last modified 07.04.20 14:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,8 +42,7 @@ import kotlinx.android.synthetic.main.fragment_settings_edit_info.*
 
 class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
-	private lateinit var userItem: UserItem
-
+	private lateinit var currentUser: UserItem
 	private val mEditorPhotoAdapter = SettingsEditInfoPhotoAdapter(layoutId = R.layout.fragment_settings_edit_info_photo_item)
 
 	private var name = ""
@@ -64,12 +63,10 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 		super.onCreate(savedInstanceState)
 
 		associatedViewModel = getViewModel()
-
 		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
-			userItem = it
+			currentUser = it
 			initSettings(it)
 		})
-
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -105,21 +102,22 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 				if (mEditorPhotoAdapter.itemCount > 1) {
 					val photoToDelete = mEditorPhotoAdapter.getItem(position)
 
-					val isMainPhotoDeleting = photoToDelete.fileUrl == userItem.baseUserInfo.mainPhotoUrl
+					val isMainPhotoDeleting = photoToDelete.fileUrl == currentUser.baseUserInfo.mainPhotoUrl
 
 					//deletion observer
 					associatedViewModel.photoDeletingStatus.observeOnce(this@SettingsEditInfoFragment, Observer {
 						if (it) {
-							userItem.photoURLs.remove(photoToDelete)
+							currentUser.photoURLs.remove(photoToDelete)
 							mEditorPhotoAdapter.removeAt(position)
 
 							if (isMainPhotoDeleting) {
-								userItem.baseUserInfo.mainPhotoUrl = userItem.photoURLs[0].fileUrl
+								currentUser.baseUserInfo.mainPhotoUrl = currentUser.photoURLs[0].fileUrl
 							}
 						}
 					})
 					//execute deleting
-					associatedViewModel.deletePhoto(photoToDelete, userItem, isMainPhotoDeleting)
+					associatedViewModel.deletePhoto(photoToDelete,
+					                                currentUser, isMainPhotoDeleting)
 				}
 				else context.showToastText("Хотя бы 1 фотка должна быть")
 			}
@@ -136,19 +134,19 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 		btnSettingsEditGenderMale.setOnClickListener {
 			gender = male
-			userItem.baseUserInfo.gender = gender
+			currentUser.baseUserInfo.gender = gender
 			toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderMale)
 		}
 
 		btnSettingsEditGenderFemale.setOnClickListener {
 			gender = female
-			userItem.baseUserInfo.gender = gender
+			currentUser.baseUserInfo.gender = gender
 			toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderFemale)
 		}
 
 
 		btnSettingsEditSave.setOnClickListener {
-			associatedViewModel.updateUserItem(userItem)
+			associatedViewModel.updateUserItem(currentUser)
 		}
 		btnSettingsEditDelete.setOnClickListener {
 			showDialogDeleteAttention()
@@ -190,7 +188,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 					else -> {
 						layoutSettingsEditName.error = ""
 						name = s.toString().trim()
-						userItem.baseUserInfo.name = name
+						currentUser.baseUserInfo.name = name
 						btnSettingsEditSave.isEnabled = true
 					}
 				}
@@ -209,7 +207,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 	private fun changerAgeSetup() {
 		sliderSettingsEditAge.setOnChangeListener{ _, value ->
 			age = value.toInt()
-			userItem.baseUserInfo.age = age
+			currentUser.baseUserInfo.age = age
 			tvSettingsEditAge.text = "Age: $age"
 		}
 	}
@@ -223,8 +221,8 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 		dropSettingsEditCity.setOnItemClickListener { _, _, position, _ ->
 			city = cityList.map { it.value }[position]
 			cityToDisplay = cityList.map { it.key }[position]
-			userItem.baseUserInfo.city = city
-			userItem.cityToDisplay = cityToDisplay
+			currentUser.baseUserInfo.city = city
+			currentUser.cityToDisplay = cityToDisplay
 		}
 	}
 
@@ -245,7 +243,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 				else {
 					layoutSettingsEditDescription.error = ""
 					descriptionText = s.toString().trim()
-					userItem.aboutText = descriptionText
+					currentUser.aboutText = descriptionText
 					btnSettingsEditSave.isEnabled = true
 				}
 			}

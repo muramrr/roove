@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 18:37
+ * Last modified 07.04.20 13:46
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,12 +39,10 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 	val showLoading: MutableLiveData<Boolean> = MutableLiveData()
 	val newMessage: MutableLiveData<MessageItem> = MutableLiveData()
 
-	private lateinit var selectedConversation: ConversationItem
 	val chatIsEmpty: MutableLiveData<Boolean> = MutableLiveData()
 
 
 	fun loadMessages(conversation: ConversationItem) {
-		selectedConversation = conversation
 		disposables.add(loadMessagesExecution(conversation)
             .observeOn(mainThread())
             .subscribe({
@@ -82,7 +80,6 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 	}
 
 	fun observeNewMessages(conversation: ConversationItem){
-		selectedConversation = conversation
 		disposables.add(observeNewMessagesExecution(conversation)
             .observeOn(mainThread())
             .subscribe({
@@ -107,14 +104,14 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 	}
 
 	//upload photo then send it as message item
-	fun sendPhoto(photoUri: String, sender: BaseUserInfo, recipient: String) {
-		disposables.add(uploadPhotoExecution(photoUri)
+	fun sendPhoto(photoUri: String, conversation: ConversationItem, sender: BaseUserInfo) {
+		disposables.add(uploadPhotoExecution(photoUri, conversation.conversationId)
             .flatMapCompletable {
 	            val photoMessage =
 		            MessageItem(sender = sender,
-		                        recipientId = recipient,
+		                        recipientId = conversation.partner.userId,
 		                        photoItem = it,
-		                        conversationId = selectedConversation.conversationId)
+		                        conversationId = conversation.conversationId)
 	            sendMessageExecution(photoMessage, chatIsEmpty.value)
             }
             .observeOn(mainThread())
@@ -130,6 +127,6 @@ class ChatViewModel @Inject constructor(repo: ChatRepository) :
 		observeNewMessagesUC.execute(conversation)
 	private fun sendMessageExecution(messageItem: MessageItem, emptyChat: Boolean? = false) =
 		sendMessageUC.execute(messageItem, emptyChat)
-	private fun uploadPhotoExecution(photoUri: String) =
-		uploadMessagePhotoUC.execute(photoUri)
+	private fun uploadPhotoExecution(photoUri: String, conversationId: String) =
+		uploadMessagePhotoUC.execute(photoUri, conversationId)
 }

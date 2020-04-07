@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 17:25
+ * Last modified 07.04.20 13:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -117,7 +117,7 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 		mCardsStackAdapter.setOnItemClickListener(object: CardsStackAdapter.OnItemClickListener {
 			override fun onItemClick(item: UserItem, position: Int) {
 
-				sharedViewModel.userSelected.value = item
+				sharedViewModel.userNavigateTo.value = item
 				navController.navigate(R.id.action_cards_to_profileFragment)
 			}
 		})

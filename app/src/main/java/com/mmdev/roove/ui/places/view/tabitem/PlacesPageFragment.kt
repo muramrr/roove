@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 17:36
+ * Last modified 07.04.20 13:59
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,8 +27,7 @@ import kotlinx.android.synthetic.main.fragment_places_page_item.*
 
 class PlacesPageFragment: BaseFragment<PlacesViewModel>() {
 
-	private var mPlacesRecyclerAdapter =
-		PlacesRecyclerAdapter(listOf(), R.layout.fragment_places_page_rv_item)
+	private var mPlacesRecyclerAdapter = PlacesRecyclerAdapter(layoutId =  R.layout.fragment_places_page_rv_item)
 
 	private var receivedCategory = ""
 

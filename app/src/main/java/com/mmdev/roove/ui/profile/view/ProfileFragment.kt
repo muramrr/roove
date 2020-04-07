@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 17:36
+ * Last modified 07.04.20 13:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -88,7 +88,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 		}
 		//else we navigates here from cards and already have userItem in sharedViewModel
 		else {
-			sharedViewModel.userSelected.value?.let {
+			sharedViewModel.userNavigateTo.value?.let {
 				associatedViewModel.retrievedUserItem.value = it
 			}
 		}

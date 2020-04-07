@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 17:25
+ * Last modified 07.04.20 13:52
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,10 +39,7 @@ import kotlinx.android.synthetic.main.fragment_conversations.*
 
 class ConversationsFragment: BaseFragment<ConversationsViewModel>(){
 
-	private val mConversationsAdapter =
-		ConversationsAdapter(mutableListOf(), R.layout.fragment_conversations_item)
-
-
+	private val mConversationsAdapter = ConversationsAdapter(layoutId = R.layout.fragment_conversations_item)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)

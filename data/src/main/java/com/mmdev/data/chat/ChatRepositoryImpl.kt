@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 16:59
+ * Last modified 07.04.20 14:37
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,6 @@ import com.google.firebase.storage.StorageReference
 import com.mmdev.business.chat.MessageItem
 import com.mmdev.business.chat.repository.ChatRepository
 import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.core.BaseUserInfo
 import com.mmdev.business.core.PhotoItem
 import com.mmdev.data.core.BaseRepositoryImpl
 import com.mmdev.data.core.schedulers.ExecuteSchedulers
@@ -44,10 +43,10 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 	companion object {
 		private const val MESSAGES_COLLECTION_REFERENCE = "messages"
 		private const val MESSAGE_TIMESTAMP_FIELD = "timestamp"
+		private const val MESSAGE_SENDER_ID_FILED = "sender.userId"
 	}
 
-	private var conversation = ConversationItem()
-	private var partner = BaseUserInfo()
+	private lateinit var partnerDocRef: DocumentReference
 
 	private lateinit var initialChatQuery : Query
 
@@ -56,14 +55,16 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 
 
 	override fun loadMessages(conversation: ConversationItem): Single<List<MessageItem>> {
-		this.conversation = conversation
-		this.partner = conversation.partner
-
 		initialChatQuery = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 			.document(conversation.conversationId)
 			.collection(MESSAGES_COLLECTION_REFERENCE)
 			.orderBy(MESSAGE_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
 			.limit(20)
+
+		partnerDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(conversation.partner.city)
+			.collection(conversation.partner.gender)
+			.document(conversation.partner.userId)
 
 		return Single.create(SingleOnSubscribe<List<MessageItem>> { emitter ->
 			initialChatQuery
@@ -120,8 +121,7 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 
 	override fun observeNewMessages(conversation: ConversationItem): Observable<MessageItem> {
 		super.reInit()
-		this.conversation = conversation
-		this.partner = conversation.partner
+
 		return Observable.create(ObservableOnSubscribe<MessageItem> { emitter ->
 			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.document(conversation.conversationId)
@@ -145,10 +145,8 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 							}
 						}
 						//partner send msg
-						else if (snapshots.documents[0].get("sender.userId") != currentUser.baseUserInfo.userId) {
+						else if (snapshots.documents[0].get(MESSAGE_SENDER_ID_FILED) != currentUser.baseUserInfo.userId) {
 							val message = snapshots.documents[0].toObject(MessageItem::class.java)!!
-							//check if last message was loaded with pagination before
-							//Log.wtf(TAG, "mapped message text from partner: ${message.text}")
 							emitter.onNext(message)
 						}
 					}
@@ -162,7 +160,7 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 		//Log.wtf("TAG", "is empty recieved? + $emptyChat")
 		val conversation = firestore
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(conversation.conversationId)
+			.document(messageItem.conversationId)
 
 		messageItem.timestamp = FieldValue.serverTimestamp()
 
@@ -172,7 +170,7 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 				.set(messageItem)
 				.addOnSuccessListener {
 					updateLastMessage(messageItem)
-					if (emptyChat != null && emptyChat == true) updateStartedStatus()
+					if (emptyChat != null && emptyChat == true) updateStartedStatus(messageItem)
 					emitter.onComplete()
 				}
 				.addOnFailureListener { emitter.onError(it) }
@@ -180,21 +178,19 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 		}.subscribeOn(ExecuteSchedulers.io())
 	}
 
-	override fun uploadMessagePhoto(photoUri: String): Observable<PhotoItem> {
+	override fun uploadMessagePhoto(photoUri: String, conversationId: String): Observable<PhotoItem> {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()+".jpg"
 		val storageRef = storage
 			.child(GENERAL_FOLDER_STORAGE_IMG)
 			.child(SECONDARY_FOLDER_STORAGE_IMG)
-			.child(conversation.conversationId)
+			.child(conversationId)
 			.child(namePhoto)
 		return Observable.create(ObservableOnSubscribe<PhotoItem> { emitter ->
 			//Log.wtf(TAG, "upload photo observable called")
 			val uploadTask = storageRef.putFile(Uri.parse(photoUri))
 				.addOnSuccessListener {
 					storageRef.downloadUrl.addOnSuccessListener {
-						val photoAttached = PhotoItem(
-								namePhoto,
-								it.toString())
+						val photoAttached = PhotoItem(namePhoto, it.toString())
 						//Log.wtf(TAG, "photo uploaded: $photoAttached")
 						emitter.onNext(photoAttached)
 						emitter.onComplete()
@@ -205,30 +201,26 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 		}).subscribeOn(ExecuteSchedulers.io())
 	}
 
-	private fun updateStartedStatus() {
+	private fun updateStartedStatus(messageItem: MessageItem) {
 		super.reInit()
 		// for current
 		currentUserDocRef
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(conversation.conversationId)
+			.document(messageItem.conversationId)
 			.update(CONVERSATION_STARTED_FIELD, true)
+
 		currentUserDocRef
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
-			.document(partner.userId)
+			.document(messageItem.recipientId)
 			.update(CONVERSATION_STARTED_FIELD, true)
 
 
 		// for partner
-		val partnerUserReference = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(partner.city)
-			.collection(partner.gender)
-			.document(partner.userId)
-
-		partnerUserReference
+		partnerDocRef
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(conversation.conversationId)
+			.document(messageItem.conversationId)
 			.update(CONVERSATION_STARTED_FIELD, true)
-		partnerUserReference
+		partnerDocRef
 			.collection(USER_MATCHED_COLLECTION_REFERENCE)
 			.document(currentUser.baseUserInfo.userId)
 			.update(CONVERSATION_STARTED_FIELD, true)
@@ -239,14 +231,11 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 		super.reInit()
 		val cur = currentUserDocRef
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(conversation.conversationId)
+			.document(messageItem.conversationId)
 
-		val par = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(partner.city)
-			.collection(partner.gender)
-			.document(partner.userId)
+		val par = partnerDocRef
 			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(conversation.conversationId)
+			.document(messageItem.conversationId)
 
 		if (messageItem.photoItem != null) {
 			// for current
