@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 07.04.20 17:58
+  ~ Last modified 08.04.20 16:43
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -78,7 +78,7 @@
 					android:layout_height="8dp"
 					android:layout_marginStart="@dimen/general_size_8dp"
 
-					android:src="@color/gradient1"
+					android:src="@color/lolite"
 
 					app:visibilityInvisible="@{viewModel.isPartnerOnline}"
 

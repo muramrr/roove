@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 07.04.20 17:53
+  ~ Last modified 08.04.20 16:37
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -114,7 +114,7 @@
 			android:maxLines="1"
 			android:singleLine="true"
 
-			android:text="2"
+			android:text="@{Integer.toString(bindItem.unreadCount)}"
 
 			app:visibilityInvisible="@{bindItem.unreadCount != 0}"
 

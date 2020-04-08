@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 20:47
+  ~ Last modified 08.04.20 17:04
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,31 +18,31 @@
 		app:constraintSetStart="@id/base"
 		app:constraintSetEnd="@id/step_1"
 		app:duration="500"
-		app:motionInterpolator="easeIn"/>
+		app:motionInterpolator="linear"/>
 
 	<Transition
 		app:constraintSetStart="@id/step_1"
 		app:constraintSetEnd="@id/step_2"
 		app:duration="500"
-		app:motionInterpolator="easeIn"/>
+		app:motionInterpolator="linear"/>
 
 	<Transition
 		app:constraintSetStart="@id/step_2"
 		app:constraintSetEnd="@id/step_3"
 		app:duration="500"
-		app:motionInterpolator="easeIn"/>
+		app:motionInterpolator="linear"/>
 
 	<Transition
 		app:constraintSetStart="@id/step_3"
 		app:constraintSetEnd="@id/step_4"
 		app:duration="500"
-		app:motionInterpolator="ease"/>
+		app:motionInterpolator="linear"/>
 
 	<Transition
 		app:constraintSetStart="@id/step_4"
 		app:constraintSetEnd="@id/step_final"
 		app:duration="500"
-		app:motionInterpolator="easeIn"/>
+		app:motionInterpolator="linear"/>
 
 
 	<!-- back transition compatibilities -->
@@ -50,25 +50,25 @@
 		app:constraintSetStart="@id/step_2"
 		app:constraintSetEnd="@id/step_1"
 		app:duration="500"
-		app:motionInterpolator="easeOut"/>
+		app:motionInterpolator="linear"/>
 
 	<Transition
 		app:constraintSetStart="@id/step_3"
 		app:constraintSetEnd="@id/step_2"
 		app:duration="500"
-		app:motionInterpolator="easeOut"/>
+		app:motionInterpolator="linear"/>
 
 	<Transition
 		app:constraintSetStart="@id/step_4"
 		app:constraintSetEnd="@id/step_3"
 		app:duration="500"
-		app:motionInterpolator="easeOut"/>
+		app:motionInterpolator="linear"/>
 
 	<Transition
 		app:constraintSetStart="@id/step_final"
 		app:constraintSetEnd="@id/step_4"
 		app:duration="500"
-		app:motionInterpolator="easeOut"/>
+		app:motionInterpolator="linear"/>
 
 
 

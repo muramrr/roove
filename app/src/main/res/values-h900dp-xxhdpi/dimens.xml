@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 20:04
+  ~ Last modified 08.04.20 14:10
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,6 @@
 	<dimen name="rvSettingsPhotoElementWidth">250dp</dimen>
 	<dimen name="rvSettingsPhotoElementHeight">400dp</dimen>
 
-	<dimen name="rvSettingsEditPhotoElementWidth">200dp</dimen>
 	<dimen name="rvSettingsEditPhotoElementHeight">350dp</dimen>
 
 	<dimen name="vertical_grid_item_height">450dp</dimen>

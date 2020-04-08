@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.04.20 17:56
+ * Last modified 08.04.20 16:40
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -51,6 +51,8 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 	private lateinit var paginateChatQuery: Query
 	private lateinit var paginateLastLoadedMessage: DocumentSnapshot
 
+	private var firstMessageItem = MessageItem()
+
 	private var isPartnerOnline = false
 
 	companion object {
@@ -96,7 +98,7 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 							initialMessageList.add(message)
 						}
 						emitter.onSuccess(initialMessageList)
-
+						firstMessageItem = initialMessageList[0]
 						//new cursor position
 						paginateLastLoadedMessage = it.documents[it.size() - 1]
 						//update query with new cursor position
@@ -106,7 +108,6 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 					else emitter.onSuccess(emptyList())
 				}
 				.addOnFailureListener { emitter.onError(it) }
-
 		}.subscribeOn(ExecuteSchedulers.io())
 	}
 
@@ -153,13 +154,13 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 						emitter.onError(e)
 						return@addSnapshotListener
 					}
-
+					var message: MessageItem
 					if (snapshots != null && snapshots.documents.isNotEmpty()) {
 						//if sent from current device
 						if (snapshots.metadata.hasPendingWrites()) {
 							for (dc in snapshots.documentChanges) {
 								if (dc.type == DocumentChange.Type.ADDED) {
-									val message = dc.document.toObject(MessageItem::class.java)
+									message = dc.document.toObject(MessageItem::class.java)
 									//Log.wtf(TAG, "Added: ${dc.document["text"]}")
 									emitter.onNext(message)
 								}
@@ -167,8 +168,10 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 						}
 						//partner send msg
 						else if (snapshots.documents[0].get(MESSAGE_SENDER_ID_FILED) != currentUser.baseUserInfo.userId) {
-							val message = snapshots.documents[0].toObject(MessageItem::class.java)!!
-							emitter.onNext(message)
+							message = snapshots.documents[0].toObject(MessageItem::class.java)!!
+							//remove last duplicated message from initLoad and this snapshot listener
+							if (message != firstMessageItem)
+								emitter.onNext(message)
 						}
 					}
 					else Log.wtf(TAG, "snapshots is null or empty")
@@ -194,13 +197,12 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 						return@addSnapshotListener
 					}
 					if (snapshot != null && snapshot.exists()) {
-						if (isPartnerOnline != snapshot.getBoolean(CONVERSATION_PARTNER_ONLINE_FIELD)){
-							snapshot.getBoolean(CONVERSATION_PARTNER_ONLINE_FIELD)?.let {
+						snapshot.getBoolean(CONVERSATION_PARTNER_ONLINE_FIELD)?.let {
+							if (isPartnerOnline != it)
 								isPartnerOnline = it
-							}
-
+							emitter.onNext(it)
 						}
-						emitter.onNext(snapshot.getBoolean(CONVERSATION_PARTNER_ONLINE_FIELD))
+
 					}
 				}
 			emitter.setCancellable { listener.remove() }

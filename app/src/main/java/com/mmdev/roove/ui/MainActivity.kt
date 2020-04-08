@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 30.03.20 17:49
+ * Last modified 08.04.20 17:44
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -81,7 +81,7 @@ class MainActivity: AppCompatActivity() {
 						if (userInitialized != null) navController.navigate(R.id.action_global_mainFlowFragment)
 					})
 
-					//init auth dialog_loading & observer
+
 					authViewModel.fetchUserItem()
 					authViewModel.actualCurrentUserItem.observeOnce(this, Observer {
 						actualUserItem -> sharedViewModel.setCurrentUser(actualUserItem)
@@ -94,7 +94,7 @@ class MainActivity: AppCompatActivity() {
 				else -> showToastText("Can't get AuthStatus")
 			}
 		})
-
+		//init auth dialog_loading & observer
 		authViewModel.showProgress.observe(this, Observer {
 			if (it == true) progressDialog.show()
 			else progressDialog.dismiss()
@@ -109,8 +109,8 @@ class MainActivity: AppCompatActivity() {
 				IN_PROGRESS -> progressDialog.show()
 				FAILURE -> progressDialog.dismiss()
 				COMPLETED -> {
-					progressDialog.dismiss()
 					authViewModel.logOut()
+					progressDialog.dismiss()
 				}
 				else -> { progressDialog.dismiss() }
 			}

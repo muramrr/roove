@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 16:14
+ * Last modified 08.04.20 17:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ package com.mmdev.data.user
 
 import android.net.Uri
 import android.text.format.DateFormat
+import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
@@ -144,6 +145,8 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 		CompletableCreate { emitter ->
 			reInit()
 			val ref = fillUserGeneralRef(currentUser.baseUserInfo)
+
+			val matchedListener =
 			ref.collection(USER_MATCHED_COLLECTION_REFERENCE)
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
@@ -154,8 +157,11 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 						for (doc in snapshots.documents)
 							doc.reference.delete()
 					}
+					else Log.wtf(TAG, "matched empty or deleted")
 
 			}
+
+			val conversationsListener =
 			ref.collection(CONVERSATIONS_COLLECTION_REFERENCE)
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
@@ -166,7 +172,10 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 						for (doc in snapshots.documents)
 							doc.reference.delete()
 					}
+					else Log.wtf(TAG, "conversation empty or deleted")
 				}
+
+			val skippedListener =
 			ref.collection(USER_SKIPPED_COLLECTION_REFERENCE)
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
@@ -177,7 +186,10 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 						for (doc in snapshots.documents)
 							doc.reference.delete()
 					}
+					else Log.wtf(TAG, "skipped empty or deleted")
 				}
+
+			val likedListener =
 			ref.collection(USER_LIKED_COLLECTION_REFERENCE)
 				.addSnapshotListener { snapshots, e ->
 					if (e != null) {
@@ -188,24 +200,29 @@ class UserRepositoryRemoteImpl @Inject constructor(private val firestore: Fireba
 						for (doc in snapshots.documents)
 							doc.reference.delete()
 					}
+					else Log.wtf(TAG, "liked empty or deleted")
 				}
-			ref.delete()
+
+			//base delete
+			firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
+				.document(currentUserId)
+				.delete()
 				.addOnSuccessListener {
-					firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
-						.document(currentUser.baseUserInfo.userId)
-						.delete()
-						.addOnSuccessListener {
-							firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
-								.document(currentUserId)
-								.delete()
-								.addOnSuccessListener {
-									userWrapper.clearData()
-									emitter.onComplete()
-								}
-								.addOnFailureListener { emitter.onError(it)  }
-							 }
-						.addOnFailureListener { emitter.onError(it)  }
+					//general delete
+					matchedListener.remove()
+					conversationsListener.remove()
+					likedListener.remove()
+					skippedListener.remove()
+					ref.delete()
+					emitter.onComplete()
 				}.addOnFailureListener { emitter.onError(it) }
+
+			emitter.setCancellable {
+				matchedListener.remove()
+				conversationsListener.remove()
+				likedListener.remove()
+				skippedListener.remove()
+			}
 		}.subscribeOn(ExecuteSchedulers.io())
 
 

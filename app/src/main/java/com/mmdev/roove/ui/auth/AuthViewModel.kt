@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 17:52
+ * Last modified 08.04.20 17:12
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -58,7 +58,10 @@ class AuthViewModel @Inject constructor(repo: AuthRepository) : BaseViewModel() 
                        }))
 	}
 
-	fun logOut() = logOutExecution()
+	fun logOut() {
+		logOutExecution()
+		authenticatedState.value = UNAUTHENTICATED
+	}
 
 	fun fetchUserItem() {
 		disposables.add(fetchUserInfoExecution()

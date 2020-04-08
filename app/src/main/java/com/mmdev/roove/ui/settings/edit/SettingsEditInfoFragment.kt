@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.04.20 14:37
+ * Last modified 08.04.20 17:15
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -272,8 +272,8 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 		                                  message = getString(R.string.dialog_delete_message),
 		                                  positiveText = getString(R.string.dialog_delete_btn_positive_text),
 		                                  positiveClick = {
-			                                  associatedViewModel.deleteMyAccount()
 			                                  associatedViewModel.selfDeletingStatus.value = IN_PROGRESS
+			                                  associatedViewModel.deleteMyAccount()
 		                                  },
 		                                  negativeText = getString(R.string.dialog_delete_btn_negative_text),
 		                                  negativeClick = {} )?.show()
