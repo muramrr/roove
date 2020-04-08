@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 07.04.20 14:43
+  ~ Last modified 08.04.20 18:52
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@
 	<!--General-->
 	<string name="app_logo" translatable="false">App Logo</string>
 	<string name="app_name" translatable="false">roove</string>
+	<string name="privacy_policy_url" translatable="false">https://roove.flycricket.io/privacy.html</string>
 
 	<!--Default strings-->
 	<string name="default_name" translatable="false">John Doe</string>
@@ -148,6 +149,7 @@
 	<string name="report_chooser_photos">Ineligible photos</string>
 	<string name="report_chooser_behavior">Disrespectful behavior</string>
 	<string name="report_chooser_fake">Seems, it is fake</string>
+	<string name="text_i_agree_privacy_policy">By logging in I agree with <u>Privacy Policy</u></string>
 
 
 </resources>
