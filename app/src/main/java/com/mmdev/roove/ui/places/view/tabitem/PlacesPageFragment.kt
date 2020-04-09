@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.04.20 13:59
+ * Last modified 09.04.20 13:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,9 +27,9 @@ import kotlinx.android.synthetic.main.fragment_places_page_item.*
 
 class PlacesPageFragment: BaseFragment<PlacesViewModel>() {
 
-	private var mPlacesRecyclerAdapter = PlacesRecyclerAdapter(layoutId =  R.layout.fragment_places_page_rv_item)
+	private var mPlacesRecyclerAdapter = PlacesRecyclerAdapter(layoutId = R.layout.fragment_places_page_rv_item)
 
-	private var receivedCategory = ""
+	private var receivedCategory = 0
 
 
 	companion object {
@@ -37,9 +37,9 @@ class PlacesPageFragment: BaseFragment<PlacesViewModel>() {
 		private const val CATEGORY_KEY = "CATEGORY"
 		private const val PLACE_ID_KEY = "PLACE_ID"
 
-		fun newInstance(category: String) = PlacesPageFragment().apply {
+		fun newInstance(category: Int) = PlacesPageFragment().apply {
 			arguments = Bundle().apply {
-				putString(CATEGORY_KEY, category)
+				putInt(CATEGORY_KEY, category)
 			}
 		}
 	}
@@ -48,10 +48,10 @@ class PlacesPageFragment: BaseFragment<PlacesViewModel>() {
 		super.onCreate(savedInstanceState)
 		associatedViewModel = getViewModel()
 		arguments?.let {
-			receivedCategory = it.getString(CATEGORY_KEY, "")
+			receivedCategory = it.getInt(CATEGORY_KEY, 0)
 		}
 
-		associatedViewModel.loadPlaces(receivedCategory)
+		associatedViewModel.loadPlaces(getString(receivedCategory))
 
 	}
 

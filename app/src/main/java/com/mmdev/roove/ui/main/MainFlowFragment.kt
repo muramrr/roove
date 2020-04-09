@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.04.20 17:10
+ * Last modified 09.04.20 16:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,7 +34,7 @@ class MainFlowFragment: FlowFragment() {
 			.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+		val bottomNavigationHeight = containerBottomNavigation.height
 		//set selected bottom menu item on startup
 		bottomNavigationView.selectedItemId = R.id.bottomCards
 		fabCards.isSelected = true
@@ -48,9 +48,10 @@ class MainFlowFragment: FlowFragment() {
 			                              R.id.profileFragmentNav,
 			                              R.id.settingsEditInfoFragmentNav,
 			                              R.id.placeDetailedFragmentNav)) {
-				bottomNavigationView.visibility = View.GONE
+
+				containerBottomNavigation.visibility = View.GONE
 			}
-			else bottomNavigationView.visibility = View.VISIBLE
+			else containerBottomNavigation.visibility = View.VISIBLE
 		}
 
 		bottomNavigationView.setOnNavigationItemSelectedListener {

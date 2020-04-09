@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 27.03.20 19:20
+  ~ Last modified 09.04.20 16:27
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -71,8 +71,8 @@
 			app:fabSize="auto"
 			app:layout_anchorGravity="top|center"
 
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="@id/containerBottomNavigation"
+			app:layout_constraintEnd_toEndOf="@id/containerBottomNavigation"
 			app:layout_constraintTop_toTopOf="@id/containerBottomNavigation"
 			/>
 

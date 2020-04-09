@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 08.04.20 18:52
+  ~ Last modified 09.04.20 13:51
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -111,6 +111,17 @@
 
 	<string name="place_detailed_want_to_go_text">Want to go</string>
 	<string name="place_detailed_not_interested_text">Not interested</string>
+
+	<string name="places_bars">Bars &amp; pubs</string>
+	<string name="places_entertainment">Entertainment</string>
+	<string name="places_clubs">Clubs</string>
+	<string name="places_restaurants">Restaurants</string>
+
+	<string name="places_api_bars" translatable="false">bar</string>
+	<string name="places_api_entertainment" translatable="false">amusement</string>
+	<string name="places_api_clubs" translatable="false">clubs</string>
+	<string name="places_api_restaurants" translatable="false">restaurants</string>
+
 
 	<!--city list-->
 	<string name="russia_ekb" translatable="false">Екатеринбург</string>

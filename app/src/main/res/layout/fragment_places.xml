@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 29.03.20 18:47
+  ~ Last modified 09.04.20 15:47
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,22 +42,22 @@
 			<com.google.android.material.tabs.TabItem
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Bars" />
+				android:text="@string/places_bars" />
 
 			<com.google.android.material.tabs.TabItem
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Restaurants" />
+				android:text="@string/places_entertainment" />
 
 			<com.google.android.material.tabs.TabItem
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Clubs" />
+				android:text="@string/places_clubs" />
 
 			<com.google.android.material.tabs.TabItem
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Museums" />
+				android:text="@string/places_restaurants" />
 
 		</com.google.android.material.tabs.TabLayout>
 
@@ -67,7 +67,7 @@
 			android:layout_height="0dp"
 			android:overScrollMode="never"
 
-			app:layout_constraintTop_toBottomOf="@+id/tabLayoutPlaces"
+			app:layout_constraintTop_toBottomOf="@id/tabLayoutPlaces"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"/>
