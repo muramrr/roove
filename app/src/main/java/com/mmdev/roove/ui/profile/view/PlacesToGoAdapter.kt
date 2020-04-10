@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 12.03.20 20:33
+ * Last modified 10.04.20 18:17
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import com.mmdev.roove.R
 import com.mmdev.roove.ui.common.base.BaseAdapter
 
 
-class PlacesToGoAdapter (private var mPlacesToGoList: List<BasePlaceInfo>,
+class PlacesToGoAdapter (private var mPlacesToGoList: List<BasePlaceInfo> = emptyList(),
                          private val layoutId: Int = R.layout.fragment_profile_places_rv_item):
 		BaseAdapter<BasePlaceInfo>(),
 		BaseAdapter.BindableAdapter<List<BasePlaceInfo>> {

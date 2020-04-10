@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 09.04.20 15:47
+  ~ Last modified 10.04.20 19:10
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,7 @@
 			app:tabMode="scrollable"
 			app:tabRippleColor="@color/transparent"
 			app:tabSelectedTextColor="@color/white"
-			app:tabTextAppearance="@style/tab_text_36sp"
+			app:tabTextAppearance="@style/tab_text_32sp"
 
 			app:paddingTopSystemWindowInsets="@{true}"
 

@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.03.20 16:36
+  ~ Last modified 10.04.20 19:10
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -167,7 +167,7 @@
 
 
 	<!-- unfocused tabs text -->
-	<style name="tab_text_36sp" parent="TextAppearance.Design.Tab">
+	<style name="tab_text_32sp" parent="TextAppearance.Design.Tab">
 		<item name="android:fontFamily">@font/rubik_regular</item>
 		<item name="textAllCaps">false</item>
 		<item name="android:textColor">@color/white_10</item>
@@ -177,7 +177,7 @@
 	<!-- uncollapsed toolbar profile title -->
 	<style name="CollapsingToolbarExpandedTitleWhite" parent="Widget.AppCompat.TextView">
 		<item name="android:fontFamily">@font/rubik_medium</item>
-		<item name="android:textSize">32sp</item>
+		<item name="android:textSize">30sp</item>
 	</style>
 
 	<!-- toolbar title -->
