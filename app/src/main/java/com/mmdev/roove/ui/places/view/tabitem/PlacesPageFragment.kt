@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.04.20 16:53
+ * Last modified 10.04.20 17:25
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,6 +23,7 @@ import com.mmdev.roove.ui.common.base.BaseAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.GridItemDecoration
 import com.mmdev.roove.ui.places.PlacesViewModel
+import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import kotlinx.android.synthetic.main.fragment_places_page_item.*
 
 
@@ -30,8 +31,8 @@ class PlacesPageFragment: BaseFragment<PlacesViewModel>() {
 
 	private var mPlacesRecyclerAdapter = PlacesRecyclerAdapter(layoutId = R.layout.fragment_places_page_rv_item)
 
-	private var receivedCategory = 0
-
+	private var receivedCategoryResource = 0
+	private var receivedCategoryString = ""
 
 	companion object {
 
@@ -48,9 +49,12 @@ class PlacesPageFragment: BaseFragment<PlacesViewModel>() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		associatedViewModel = getViewModel()
-		arguments?.let { receivedCategory = it.getInt(CATEGORY_KEY, 0) }
+		arguments?.let {
+			receivedCategoryResource = it.getInt(CATEGORY_KEY, 0)
+			receivedCategoryString = getString(receivedCategoryResource)
+		}
 
-		associatedViewModel.loadPlaces(getString(receivedCategory))
+		associatedViewModel.loadFirstPlaces(receivedCategoryString)
 
 	}
 
@@ -64,11 +68,21 @@ class PlacesPageFragment: BaseFragment<PlacesViewModel>() {
 			}.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+		val gridLayoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
 		rvPlacesList.apply {
 			adapter = mPlacesRecyclerAdapter
-			layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+			layoutManager = gridLayoutManager
 			addItemDecoration(GridItemDecoration())
+
+			addOnScrollListener(object: EndlessRecyclerViewScrollListener(gridLayoutManager) {
+				override fun onLoadMore(page: Int, totalItemsCount: Int) {
+
+					if (gridLayoutManager.findLastCompletelyVisibleItemPosition() <= totalItemsCount - 4){
+						associatedViewModel.loadMorePlaces(receivedCategoryString)
+					}
+
+				}
+			})
 		}
 
 		mPlacesRecyclerAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<PlaceItem> {

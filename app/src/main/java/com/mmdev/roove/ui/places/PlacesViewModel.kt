@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.04.20 14:43
+ * Last modified 10.04.20 17:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,10 +15,7 @@ import com.mmdev.business.places.BasePlaceInfo
 import com.mmdev.business.places.PlaceDetailedItem
 import com.mmdev.business.places.PlaceItem
 import com.mmdev.business.places.repository.PlacesRepository
-import com.mmdev.business.places.usecase.AddPlaceToWantToGoListUseCase
-import com.mmdev.business.places.usecase.GetPlaceDetailsUseCase
-import com.mmdev.business.places.usecase.GetPlacesUseCase
-import com.mmdev.business.places.usecase.RemovePlaceFromWantToGoListUseCase
+import com.mmdev.business.places.usecase.*
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
@@ -31,11 +28,12 @@ import javax.inject.Inject
 class PlacesViewModel @Inject constructor(repo: PlacesRepository): BaseViewModel() {
 
 	private val addPlaceUC = AddPlaceToWantToGoListUseCase(repo)
-	private val getPlacesUC = GetPlacesUseCase(repo)
+	private val loadFirstPlacesUC = LoadFirstPlacesUseCase(repo)
+	private val loadMorePlacesUC = LoadMorePlacesUseCase(repo)
 	private val getPlaceDetailsUC = GetPlaceDetailsUseCase(repo)
 	private val removePlaceUC = RemovePlaceFromWantToGoListUseCase(repo)
 
-	val placesList: MutableLiveData<List<PlaceItem>> = MutableLiveData()
+	val placesList: MutableLiveData<MutableList<PlaceItem>> = MutableLiveData(mutableListOf())
 	val placeDetailed: MutableLiveData<PlaceDetailedItem> = MutableLiveData()
 	val isAddedToProfile: MutableLiveData<Boolean> = MutableLiveData()
 	val showTextHelper: MutableLiveData<Boolean> = MutableLiveData()
@@ -52,19 +50,34 @@ class PlacesViewModel @Inject constructor(repo: PlacesRepository): BaseViewModel
 	}
 
 
-	fun loadPlaces(category: String){
-		disposables.add(getPlacesExecution(category)
+	fun loadFirstPlaces(category: String){
+		disposables.add(loadFirstPlacesExecution(category)
             .retry(3)
             .observeOn(mainThread())
             .subscribe({
-	                       if (it.results.isNotEmpty()){
-		                       placesList.value = it.results
+	                       if (it.results.isNotEmpty()) {
+		                       placesList.value = it.results.toMutableList()
 		                       showTextHelper.value = false
 	                       }
 	                       else showTextHelper.value = true
                        },
                        {
 	                       error.value = MyError(ErrorType.LOADING, it)
+                       }))
+	}
+
+	fun loadMorePlaces(category: String){
+		disposables.add(loadMorePlacesExecution(category)
+            .retry(3)
+            .observeOn(mainThread())
+            .subscribe({
+                           if (it.results.isNotEmpty()) {
+	                           placesList.value!!.addAll(it.results)
+	                           placesList.value = placesList.value
+                           }
+                       },
+                       {
+                           error.value = MyError(ErrorType.LOADING, it)
                        }))
 	}
 
@@ -93,7 +106,8 @@ class PlacesViewModel @Inject constructor(repo: PlacesRepository): BaseViewModel
 
 
 	private fun addPlaceExecution(basePlaceInfo: BasePlaceInfo) = addPlaceUC.execute(basePlaceInfo)
-	private fun getPlacesExecution(category: String) = getPlacesUC.execute(category)
+	private fun loadFirstPlacesExecution(category: String) = loadFirstPlacesUC.execute(category)
+	private fun loadMorePlacesExecution(category: String) = loadMorePlacesUC.execute(category)
 	private fun getPlaceDetailsExecution(id: Int) = getPlaceDetailsUC.execute(id)
 	private fun removePlaceExecution(basePlaceInfo: BasePlaceInfo) = removePlaceUC.execute(basePlaceInfo)
 }

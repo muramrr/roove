@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 16:18
+ * Last modified 10.04.20 17:39
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,10 +13,13 @@ package com.mmdev.data.places
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.places.BasePlaceInfo
+import com.mmdev.business.places.PlacesResponse
 import com.mmdev.business.places.repository.PlacesRepository
 import com.mmdev.data.core.BaseRepositoryImpl
+import com.mmdev.data.core.schedulers.ExecuteSchedulers
 import com.mmdev.data.user.UserWrapper
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.internal.operators.completable.CompletableCreate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,6 +36,7 @@ class PlacesRepositoryImpl @Inject constructor(firestore: FirebaseFirestore,
 
 	//current time
 	private val unixTime = System.currentTimeMillis() / 1000L
+	private var page = 1
 
 	companion object {
 		private const val USER_PLACES_LIST_FIELD = "placesToGo"
@@ -50,11 +54,18 @@ class PlacesRepositoryImpl @Inject constructor(firestore: FirebaseFirestore,
 				.addOnFailureListener { emitter.onError(it) }
 		}
 
-	override fun getPlacesList(category: String) =
-		placesApi.getPlacesList(unixTime,
-		                        category,
-		                        currentUser.baseUserInfo.city)
+	override fun loadFirstPlaces(category: String): Single<PlacesResponse> {
+		page = 0
+		return placesApi.getPlacesList(unixTime, category, currentUser.baseUserInfo.city)
+			.subscribeOn(ExecuteSchedulers.io())
+	}
 
+	override fun loadMorePlaces(category: String): Single<PlacesResponse> {
+		page++
+		return placesApi.getPlacesList(unixTime, category, currentUser.baseUserInfo.city, page)
+			.onErrorReturn { PlacesResponse() }
+			.subscribeOn(ExecuteSchedulers.io())
+	}
 
 	override fun getPlaceDetails(id: Int) = placesApi.getPlaceDetails(id)
 

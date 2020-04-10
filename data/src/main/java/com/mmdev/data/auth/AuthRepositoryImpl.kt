@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.03.20 17:33
+ * Last modified 10.04.20 17:35
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -86,7 +86,8 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 			reInit()
 
 			val userItem = userWrapper.getInMemoryUser()
-			val refBase = firestore.collection(USERS_BASE_COLLECTION_REFERENCE).document(userItem.baseUserInfo.userId)
+			val refBase = firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
+				.document(userItem.baseUserInfo.userId)
 			//get general user item first
 			currentUserDocRef.get()
 				.addOnSuccessListener { remoteUser ->
@@ -131,21 +132,18 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		Completable.create { emitter ->
 			val authUserItem = AuthUserItem(userItem.baseUserInfo)
 			val ref = fillUserGeneralRef(userItem.baseUserInfo)
-			fInstance.instanceId.addOnSuccessListener { instanceResult ->
-				authUserItem.registrationTokens.add(instanceResult.token)
-				ref.set(userItem)
-					.addOnSuccessListener {
-						firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
-							.document(userItem.baseUserInfo.userId)
-							.set(authUserItem)
-							.addOnSuccessListener {
-								userWrapper.setUser(userItem)
-								emitter.onComplete()
-								reInit()
-							}
-							.addOnFailureListener { emitter.onError(it) }
-					}.addOnFailureListener { emitter.onError(it) }
-			}.addOnFailureListener { emitter.onError(it) }
+			ref.set(userItem)
+				.addOnSuccessListener {
+					firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
+						.document(userItem.baseUserInfo.userId)
+						.set(authUserItem)
+						.addOnSuccessListener {
+							userWrapper.setUser(userItem)
+							emitter.onComplete()
+							reInit()
+						}
+						.addOnFailureListener { emitter.onError(it) }
+				}.addOnFailureListener { emitter.onError(it) }
 		}.subscribeOn(ExecuteSchedulers.io())
 
 

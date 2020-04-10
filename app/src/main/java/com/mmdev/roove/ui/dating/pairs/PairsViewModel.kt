@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 27.03.20 19:30
+ * Last modified 10.04.20 17:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,11 +25,7 @@ class PairsViewModel @Inject constructor(repo: PairsRepository): BaseViewModel()
 	private val getMatchedUsersUC = GetMatchedUsersUseCase(repo)
 	private val getMoreMatchedUsersUC = GetMoreMatchedUsersListUseCase(repo)
 
-	val matchedUsersList: MutableLiveData<MutableList<MatchedUserItem>> = MutableLiveData()
-	init {
-		matchedUsersList.value = mutableListOf()
-	}
-
+	val matchedUsersList: MutableLiveData<MutableList<MatchedUserItem>> = MutableLiveData(mutableListOf())
 
 	val showTextHelper: MutableLiveData<Boolean> = MutableLiveData()
 
