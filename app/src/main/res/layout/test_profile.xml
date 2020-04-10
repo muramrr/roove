@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 10.04.20 19:30
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--<layout-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:tools="http://schemas.android.com/tools">-->
+
+<!--<data>-->
+
+<!--	<variable-->
+<!--		name="isFabVisible"-->
+<!--		type="Boolean" />-->
+
+<!--	<variable-->
+<!--		name="viewModel"-->
+<!--		type="com.mmdev.roove.ui.profile.RemoteRepoViewModel" />-->
+
+<!--</data>-->
+
+<!--<androidx.constraintlayout.motion.widget.MotionLayout-->
+<!--	android:layout_width="match_parent"-->
+<!--	android:layout_height="match_parent"-->
+<!--	android:background="@color/colorPrimaryDark"-->
+<!--	app:layoutDescription="@xml/motion_profile_scene"-->
+
+<!--	>-->
+
+<!--	<androidx.viewpager2.widget.ViewPager2-->
+<!--		android:id="@+id/viewPagerProfilePhotos"-->
+<!--		android:layout_width="0dp"-->
+<!--		android:layout_height="@dimen/collapseBarHeight"-->
+<!--		android:clipToPadding="false"-->
+
+<!--		app:layout_constraintTop_toTopOf="parent"-->
+<!--		app:layout_constraintStart_toStartOf="parent"-->
+<!--		app:layout_constraintEnd_toEndOf="parent"-->
+<!--		app:layout_constraintBottom_toBottomOf="@id/tlDotsIndicatorProfile"-->
+<!--		/>-->
+
+<!--	<com.google.android.material.tabs.TabLayout-->
+<!--		android:id="@+id/tlDotsIndicatorProfile"-->
+<!--		android:layout_width="0dp"-->
+<!--		android:layout_height="10dp"-->
+<!--		android:layout_marginBottom="@dimen/general_size_8dp"-->
+<!--		android:background="@null"-->
+
+<!--		app:tabBackground="@drawable/tab_dot_unselected_state"-->
+<!--		app:tabIndicator="@drawable/tab_dot_selection_indicator"-->
+<!--		app:tabIndicatorColor="@color/gradient1"-->
+<!--		app:tabIndicatorGravity="center"-->
+<!--		app:tabGravity="center"-->
+<!--		app:tabMaxWidth="12dp"-->
+
+<!--		app:layout_constraintTop_toBottomOf="@id/tvUserName"-->
+<!--		app:layout_constraintStart_toStartOf="parent"-->
+<!--		app:layout_constraintEnd_toEndOf="parent"-->
+<!--		app:layout_constraintBottom_toTopOf="@id/tvProfileAboutHeader"-->
+<!--		/>-->
+
+<!--	&lt;!&ndash; "toolbar" background &ndash;&gt;-->
+<!--	<View-->
+<!--		android:id="@+id/toolbarBackground"-->
+<!--		android:layout_width="0dp"-->
+<!--		android:layout_height="0dp"-->
+<!--		android:background="@color/colorPrimary"-->
+
+<!--		android:alpha="0"-->
+
+<!--		app:layout_constraintTop_toTopOf="@id/tvUserName"-->
+<!--		app:layout_constraintStart_toStartOf="parent"-->
+<!--		app:layout_constraintEnd_toEndOf="parent"-->
+<!--		app:layout_constraintBottom_toBottomOf="@id/tlDotsIndicatorProfile"-->
+<!--		/>-->
+
+<!--	<com.google.android.material.textview.MaterialTextView-->
+<!--		android:id="@+id/tvUserName"-->
+<!--		android:layout_width="wrap_content"-->
+<!--		android:layout_height="wrap_content"-->
+<!--		android:layout_marginStart="@dimen/general_size_16dp"-->
+<!--		android:layout_marginBottom="@dimen/general_size_16dp"-->
+<!--		android:maxLines="1"-->
+
+<!--		android:text="@{viewModel.retrievedUserItem.baseUserInfo.name, default = @string/default_name}"-->
+<!--		android:textAppearance="@style/CollapsingToolbarExpandedTitleWhite"-->
+
+<!--		app:paddingTopSystemWindowInsets="@{true}"-->
+
+<!--		app:layout_constraintVertical_bias="1"-->
+<!--		app:layout_constraintTop_toTopOf="parent"-->
+<!--		app:layout_constraintStart_toStartOf="parent"-->
+<!--		app:layout_constraintBottom_toBottomOf="@id/toolbarBackground"-->
+<!--		/>-->
+
+<!--	<com.google.android.material.textview.MaterialTextView-->
+<!--		android:id="@+id/tvProfileAboutHeader"-->
+<!--		android:layout_width="0dp"-->
+<!--		android:layout_height="wrap_content"-->
+<!--		android:padding="@dimen/general_size_16dp"-->
+
+<!--		android:text="@string/profile_about_header_text"-->
+<!--		android:textSize="24sp"-->
+<!--		android:textAppearance="@style/medium_text"-->
+
+<!--		app:layout_constraintEnd_toEndOf="@id/guidelineEnd"-->
+<!--		app:layout_constraintStart_toStartOf="@id/guidelineStart"-->
+<!--		app:layout_constraintTop_toBottomOf="@id/toolbarBackground"-->
+<!--		/>-->
+
+<!--	<com.google.android.material.textview.MaterialTextView-->
+<!--		android:id="@+id/tvProfileAboutText"-->
+<!--		android:layout_width="0dp"-->
+<!--		android:layout_height="wrap_content"-->
+<!--		android:lineSpacingExtra="10sp"-->
+
+<!--		android:text="@{viewModel.retrievedUserItem.aboutText}"-->
+<!--		android:textSize="18sp"-->
+<!--		android:textAppearance="@style/regular_text"-->
+
+<!--		app:layout_constraintEnd_toEndOf="@id/guidelineEnd"-->
+<!--		app:layout_constraintStart_toStartOf="@id/guidelineStart"-->
+<!--		app:layout_constraintTop_toBottomOf="@id/tvProfileAboutHeader"-->
+
+<!--		/>-->
+
+<!--	<com.google.android.material.textview.MaterialTextView-->
+<!--		android:id="@+id/tvProfileWantToGoHeader"-->
+<!--		android:layout_width="0dp"-->
+<!--		android:layout_height="wrap_content"-->
+<!--		android:padding="@dimen/general_size_16dp"-->
+
+<!--		android:text="@string/place_detailed_want_to_go_text"-->
+<!--		android:textSize="24sp"-->
+<!--		android:textAppearance="@style/medium_text"-->
+
+<!--		app:layout_constraintEnd_toEndOf="@id/guidelineEnd"-->
+<!--		app:layout_constraintStart_toStartOf="@id/guidelineStart"-->
+<!--		app:layout_constraintTop_toBottomOf="@id/tvProfileAboutText"-->
+
+<!--		/>-->
+
+<!--	<androidx.recyclerview.widget.RecyclerView-->
+<!--		android:id="@+id/rvProfileWantToGoList"-->
+<!--		android:layout_width="0dp"-->
+<!--		android:layout_height="wrap_content"-->
+<!--		android:clipToPadding="false"-->
+<!--		android:padding="@dimen/general_size_8dp"-->
+<!--		android:orientation="horizontal"-->
+<!--		android:fadeScrollbars="false"-->
+<!--		android:scrollbars="horizontal"-->
+<!--		android:visibility="visible"-->
+
+<!--		app:bindData="@{viewModel.retrievedUserItem.placesToGo}"-->
+<!--		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+
+<!--		app:layout_constraintStart_toStartOf="parent"-->
+<!--		app:layout_constraintEnd_toEndOf="parent"-->
+<!--		app:layout_constraintTop_toBottomOf="@id/tvProfileWantToGoHeader"-->
+
+<!--		tools:listitem="@layout/fragment_profile_places_rv_item"/>-->
+
+
+<!--	<com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--		android:id="@+id/fabProfileSendMessage"-->
+<!--		android:layout_height="wrap_content"-->
+<!--		android:layout_width="wrap_content"-->
+<!--		android:layout_marginEnd="@dimen/general_size_16dp"-->
+<!--		android:src="@drawable/ic_profile_send_message_24dp"-->
+<!--		app:visibilityGone='@{isFabVisible}'-->
+
+<!--		app:backgroundTint="@color/amethyst"-->
+
+<!--		app:layout_constraintTop_toBottomOf="@id/viewPagerProfilePhotos"-->
+<!--		app:layout_constraintBottom_toBottomOf="@id/viewPagerProfilePhotos"-->
+<!--		app:layout_constraintEnd_toEndOf="@id/viewPagerProfilePhotos"-->
+
+<!--		/>-->
+
+<!--	&lt;!&ndash; catch swipe dispatcher from touch event &ndash;&gt;-->
+<!--	<View-->
+<!--		android:id="@+id/nestedScrollTouchDispatcher"-->
+<!--		android:layout_width="0dp"-->
+<!--		android:layout_height="0dp"-->
+<!--		android:background="@null"-->
+
+<!--		app:layout_constraintBottom_toBottomOf="parent"-->
+<!--		app:layout_constraintEnd_toEndOf="parent"-->
+<!--		app:layout_constraintStart_toStartOf="parent"-->
+<!--		app:layout_constraintTop_toTopOf="@id/tvUserName" />-->
+
+
+<!--	&lt;!&ndash; left padding &ndash;&gt;-->
+<!--	<androidx.constraintlayout.widget.Guideline-->
+<!--		android:id="@+id/guidelineStart"-->
+<!--		android:layout_width="wrap_content"-->
+<!--		android:layout_height="wrap_content"-->
+<!--		android:orientation="vertical"-->
+<!--		app:layout_constraintGuide_begin="@dimen/general_size_8dp" />-->
+
+<!--	&lt;!&ndash; right padding &ndash;&gt;-->
+<!--	<androidx.constraintlayout.widget.Guideline-->
+<!--		android:id="@+id/guidelineEnd"-->
+<!--		android:layout_width="wrap_content"-->
+<!--		android:layout_height="wrap_content"-->
+<!--		android:orientation="vertical"-->
+<!--		app:layout_constraintGuide_end="@dimen/general_size_8dp" />-->
+
+
+<!--</androidx.constraintlayout.motion.widget.MotionLayout>-->
+
+<!--</layout>-->
