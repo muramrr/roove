@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.04.20 13:52
+ * Last modified 10.04.20 16:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -73,7 +73,7 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel>(){
 			addOnScrollListener(object: EndlessRecyclerViewScrollListener(linearLayoutManager) {
 				override fun onLoadMore(page: Int, totalItemsCount: Int) {
 
-					if (linearLayoutManager.findLastVisibleItemPosition() == totalItemsCount - 4){
+					if (linearLayoutManager.findLastCompletelyVisibleItemPosition() <= totalItemsCount - 4){
 						//Log.wtf(TAG, "load seems to be called")
 						associatedViewModel.loadMoreConversations()
 					}

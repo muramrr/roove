@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 17:30
+ * Last modified 10.04.20 16:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,13 +14,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentPairsBinding
 import com.mmdev.roove.ui.common.base.BaseAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
+import com.mmdev.roove.ui.common.custom.GridItemDecoration
 import com.mmdev.roove.ui.dating.pairs.PairsViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import kotlinx.android.synthetic.main.fragment_pairs.*
@@ -32,7 +33,7 @@ import kotlinx.android.synthetic.main.fragment_pairs.*
 
 class PairsFragment: BaseFragment<PairsViewModel>() {
 
-	private val mPairsAdapter = PairsAdapter(listOf(), R.layout.fragment_pairs_item)
+	private val mPairsAdapter = PairsAdapter(layoutId = R.layout.fragment_pairs_item)
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,21 +51,15 @@ class PairsFragment: BaseFragment<PairsViewModel>() {
 			}.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+		val gridLayoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
 		rvPairList.apply {
 			adapter = mPairsAdapter
-			layoutManager = staggeredGridLayoutManager
-			addOnScrollListener(object: EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
+			layoutManager = gridLayoutManager
+			addItemDecoration(GridItemDecoration())
+			addOnScrollListener(object: EndlessRecyclerViewScrollListener(gridLayoutManager) {
 				override fun onLoadMore(page: Int, totalItemsCount: Int) {
-					val visibleItemCount = staggeredGridLayoutManager.childCount
 
-					val pastVisibleItems = staggeredGridLayoutManager
-						.findLastVisibleItemPositions(null)[0]
-					//Log.wtf(TAG, "past visible items = $pastVisibleItems")
-					//Log.wtf(TAG, "totalitems = $totalItemsCount")
-					//Log.wtf(TAG, "visible items = $visibleItemCount")
-					if ((totalItemsCount - visibleItemCount) <= (pastVisibleItems + 4)){
-						//Log.wtf(TAG, "load called ")
+					if (gridLayoutManager.findLastCompletelyVisibleItemPosition() <= totalItemsCount - 4){
 						associatedViewModel.loadMoreMatchedUsers()
 					}
 

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 09.04.20 16:24
+  ~ Last modified 10.04.20 16:40
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,8 +24,6 @@
 	<androidx.cardview.widget.CardView
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/vertical_grid_item_height"
-		android:layout_marginStart="@dimen/general_size_8dp"
-		android:layout_marginBottom="@dimen/general_size_8dp"
 		app:cardBackgroundColor="@color/transparent"
 		app:cardCornerRadius="@dimen/general_size_16dp">
 
@@ -42,8 +40,8 @@
 
 		<ProgressBar
 			android:id="@+id/pbImageLoading"
-			android:layout_width="64dp"
-			android:layout_height="64dp"
+			android:layout_width="120dp"
+			android:layout_height="120dp"
 			android:layout_gravity="center"
 			android:indeterminate="false"
 			android:max="100"
@@ -65,10 +63,10 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center|bottom"
-			android:layout_margin="@dimen/general_size_8dp"
+			android:padding="@dimen/general_size_8dp"
 
 			android:text="@{bindItem.short_title, default = `Place title`}"
-			android:textSize="18sp"
+			android:textSize="20sp"
 			style="@style/regular_text"
 			/>
 

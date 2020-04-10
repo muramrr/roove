@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 07.04.20 14:43
+  ~ Last modified 10.04.20 16:40
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,11 +36,10 @@
 			android:clipToPadding="false"
 			android:overScrollMode="never"
 
-			android:layout_marginEnd="@dimen/general_size_8dp"
-
-			app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+			app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
 			app:spanCount="2"
 			tools:listitem="@layout/fragment_places_page_rv_item"
+
 			app:bindData="@{viewModel.placesList}"
 
 			app:visibilityInvisible='@{!viewModel.showTextHelper}'

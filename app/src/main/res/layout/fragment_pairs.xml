@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 17:59
+  ~ Last modified 10.04.20 16:40
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,19 +26,20 @@
 		android:id="@+id/containerPairs"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/colorPrimaryDark">
+		android:background="@color/colorPrimaryDark"
+		>
 
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/rvPairList"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			android:layout_marginEnd="@dimen/general_size_8dp"
 			android:clipToPadding="false"
 			android:overScrollMode="never"
+
 			app:visibilityInvisible='@{!viewModel.showTextHelper}'
 
 			app:bindData="@{viewModel.matchedUsersList}"
-			app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+			app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
 			app:spanCount="2"
 
 			app:paddingTopSystemWindowInsets="@{true}"

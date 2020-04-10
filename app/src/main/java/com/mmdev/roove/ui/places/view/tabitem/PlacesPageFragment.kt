@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 09.04.20 13:51
+ * Last modified 10.04.20 16:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,12 +15,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.mmdev.business.places.PlaceItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentPlacesPageItemBinding
 import com.mmdev.roove.ui.common.base.BaseAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
+import com.mmdev.roove.ui.common.custom.GridItemDecoration
 import com.mmdev.roove.ui.places.PlacesViewModel
 import kotlinx.android.synthetic.main.fragment_places_page_item.*
 
@@ -47,9 +48,7 @@ class PlacesPageFragment: BaseFragment<PlacesViewModel>() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		associatedViewModel = getViewModel()
-		arguments?.let {
-			receivedCategory = it.getInt(CATEGORY_KEY, 0)
-		}
+		arguments?.let { receivedCategory = it.getInt(CATEGORY_KEY, 0) }
 
 		associatedViewModel.loadPlaces(getString(receivedCategory))
 
@@ -66,10 +65,10 @@ class PlacesPageFragment: BaseFragment<PlacesViewModel>() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-		val staggeredLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 		rvPlacesList.apply {
 			adapter = mPlacesRecyclerAdapter
-			layoutManager = staggeredLayoutManager
+			layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+			addItemDecoration(GridItemDecoration())
 		}
 
 		mPlacesRecyclerAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<PlaceItem> {

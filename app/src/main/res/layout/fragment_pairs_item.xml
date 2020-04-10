@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 21:02
+  ~ Last modified 10.04.20 16:40
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,8 +24,6 @@
 	<androidx.cardview.widget.CardView
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/vertical_grid_item_height"
-		android:layout_marginStart="@dimen/general_size_8dp"
-		android:layout_marginBottom="@dimen/general_size_8dp"
 		app:cardBackgroundColor="@color/transparent"
 		app:cardCornerRadius="@dimen/general_size_16dp">
 
