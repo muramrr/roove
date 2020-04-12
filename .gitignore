@@ -41,8 +41,5 @@ build
 *.ipr
 *~
 *.swp
-*.psd
-/Screenshots
+/store_media
 bfg.jar
-roove_logo_1024.png
-roove_logo_512.png

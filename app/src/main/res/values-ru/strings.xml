@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 09.04.20 13:51
+  ~ Last modified 12.04.20 18:31
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,9 +33,9 @@
 	<string name="tv_gender_showing">Тебя интересуют</string>
 	<string name="tv_ages_you_prefer">Возраст партнера</string>
 
-	<string name="hint_city">Твой город</string>
-	<string name="hint_name">Твоё имя</string>
-	<string name="hint_gender">Твой пол</string>
+	<string name="hint_city">Город</string>
+	<string name="hint_name">Имя</string>
+	<string name="hint_gender">Пол</string>
 	<string name="hint_preferred_gender">Предпочтения</string>
 	<string name="hint_age">Возраст</string>
 	<string name="default_age_text">18</string>
