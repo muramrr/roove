@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 10.04.20 19:24
+  ~ Last modified 12.04.20 14:42
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,12 +22,12 @@
 		app:motionInterpolator="linear"
 		>
 
-		<OnSwipe
-			app:dragDirection="dragUp"
-			app:onTouchUp="autoComplete"
-			app:touchAnchorId="@id/nestedScrollTouchDispatcher"
-			app:moveWhenScrollAtTop="true"
-			/>
+<!--		<OnSwipe-->
+<!--			app:dragDirection="dragUp"-->
+<!--			app:onTouchUp="autoComplete"-->
+<!--			app:touchAnchorId="@id/nestedScrollTouchDispatcher"-->
+<!--			app:moveWhenScrollAtTop="true"-->
+<!--			/>-->
 
 		<!-- on which frame viewPagers alpha start work (overall we have 100 frames) -->
 		<KeyFrameSet>
