@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 12.04.20 14:48
+  ~ Last modified 12.04.20 14:58
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -99,15 +99,14 @@
 					android:id="@+id/tvPlaceDetailedAboutHeader"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-					android:padding="@dimen/general_size_16dp"
 
 					android:text="@string/place_description_header_text"
-					android:textSize="22sp"
-					style="@style/medium_text"
+					style="@style/header_text"
 
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintTop_toTopOf="parent"
+					app:layout_constraintBottom_toTopOf="@id/tvPlaceDetailedDescription"
 					/>
 
 				<TextView
@@ -121,8 +120,8 @@
 					android:paddingEnd="@dimen/general_size_16dp"
 
 					android:text="@{viewModel.placeDetailed.description}"
+					android:textAppearance="@style/regular_text"
 					android:textSize="16sp"
-					style="@style/regular_text"
 
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintEnd_toEndOf="parent"
@@ -141,8 +140,8 @@
 					android:paddingEnd="@dimen/general_size_16dp"
 
 					android:text="@{viewModel.placeDetailed.body_text}"
+					android:textAppearance="@style/regular_text"
 					android:textSize="16sp"
-					style="@style/regular_text"
 
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintEnd_toEndOf="parent"
@@ -215,4 +214,5 @@
 			app:layout_anchorGravity="bottom|end|right" />
 
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </layout>

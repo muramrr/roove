@@ -1,7 +1,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 10.04.20 19:10
+  ~ Last modified 12.04.20 14:55
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -186,6 +186,14 @@
 		<item name="android:textSize">20sp</item>
 	</style>
 
+
+	<!-- header text -->
+	<style name="header_text" parent="Widget.AppCompat.TextView">
+		<item name="android:fontFamily">@font/rubik_medium</item>
+		<item name="android:padding">@dimen/general_size_16dp</item>
+		<item name="android:textSize">24sp</item>
+
+	</style>
 
 	<!-- general text styles -->
 	<style name="bold_text" parent="Widget.AppCompat.TextView">

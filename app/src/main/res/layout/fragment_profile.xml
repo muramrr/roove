@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.04.20 15:43
+  ~ Last modified 12.04.20 14:55
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -100,11 +100,9 @@
 					android:id="@+id/tvProfileAboutHeader"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-					android:padding="@dimen/general_size_16dp"
 
 					android:text="@string/profile_about_header_text"
-					android:textSize="24sp"
-					style="@style/medium_text"
+					style="@style/header_text"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -120,7 +118,7 @@
 
 					android:text="@{viewModel.retrievedUserItem.aboutText}"
 					android:textSize="18sp"
-					style="@style/regular_text"
+					android:textAppearance="@style/regular_text"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -132,11 +130,9 @@
 					android:id="@+id/tvProfileWantToGoHeader"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-					android:padding="@dimen/general_size_16dp"
 
 					android:text="@string/place_detailed_want_to_go_text"
-					android:textSize="24sp"
-					style="@style/medium_text"
+					style="@style/header_text"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
