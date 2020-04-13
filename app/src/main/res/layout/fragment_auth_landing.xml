@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 08.04.20 19:04
+  ~ Last modified 13.04.20 20:21
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -90,7 +90,7 @@
 			android:id="@+id/tvOpenPolicies"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:maxLines="1"
+			android:maxLines="2"
 			android:textColor="@color/colorPrimaryLight"
 
 			android:text="@string/text_i_agree_privacy_policy"

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.04.20 19:48
+  ~ Last modified 13.04.20 20:21
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -116,7 +116,7 @@
 	<string name="report_chooser_photos">Недопустимые фотографии</string>
 	<string name="report_chooser_behavior">Отвратительное поведение</string>
 	<string name="report_chooser_fake">Похоже на фейк</string>
-	<string name="text_i_agree_privacy_policy">Нажимая эту кнопку Вы соглашаетесь с <u>Политикой конфедециальности</u></string>
+	<string name="text_i_agree_privacy_policy">Нажимая эту кнопку \nВы соглашаетесь с <u>Политикой конфедециальности</u></string>
 	<string name="places_bars">Бары</string>
 	<string name="places_entertainment">Развлечения</string>
 	<string name="places_clubs">Клубы</string>
