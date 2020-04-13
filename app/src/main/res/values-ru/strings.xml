@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 12.04.20 18:31
+  ~ Last modified 13.04.20 19:48
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,7 +50,7 @@
 	<string name="tv_back_to_swiping">Назад к свайпингу</string>
 
 	<!-- Fragment chat strings -->
-	<string name="fragment_chat_ed_hint">Твое сообщение</string>
+	<string name="fragment_chat_ed_hint">Cообщение</string>
 	<string name="fragment_chat_send_img_description">отправить сообщение</string>
 	<string name="fragment_chat_attach_img_description">прикрепить фоточку</string>
 	<string name="chat_message_sender_avatar_img_description">аватар отправителя</string>

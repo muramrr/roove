@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 09.04.20 13:51
+  ~ Last modified 13.04.20 19:48
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,11 +54,11 @@
 	<string name="tv_ages_you_prefer">Ages you prefer</string>
 	<string name="tv_gender_showing">Showing</string>
 
-	<string name="hint_city">Your city</string>
-	<string name="hint_name">Your name</string>
-	<string name="hint_gender">Your gender</string>
+	<string name="hint_city">City</string>
+	<string name="hint_name">Name</string>
+	<string name="hint_gender">Gender</string>
 	<string name="hint_preferred_gender">Interested in</string>
-	<string name="hint_age">Your age</string>
+	<string name="hint_age">Age</string>
 	<string name="default_age_text">18</string>
 	<string name="reg_btn_back_text">Back</string>
 	<string name="btn_done_text">Done</string>
@@ -71,7 +71,7 @@
 	<string name="tv_back_to_swiping">Back to swiping</string>
 
 	<!-- Fragment chat strings -->
-	<string name="fragment_chat_ed_hint">Enter message</string>
+	<string name="fragment_chat_ed_hint">Message</string>
 	<string name="fragment_chat_send_img_description">send message</string>
 	<string name="fragment_chat_attach_img_description">send attachment</string>
 	<string name="chat_message_sender_avatar_img_description">sender avatar</string>
