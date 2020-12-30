@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 19:09
+ * Last modified 30.12.20 21:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,11 +21,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.mmdev.business.chat.MessageItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
-import com.mmdev.roove.ui.common.base.BaseAdapter
+import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 
 class ChatAdapter (private var listMessageItems: List<MessageItem> = mutableListOf()):
-	RecyclerView.Adapter<ChatAdapter.ChatViewHolder>(),
-	BaseAdapter.BindableAdapter<List<MessageItem>>{
+		RecyclerView.Adapter<ChatAdapter.ChatViewHolder>(),
+		BaseRecyclerAdapter.BindableAdapter<List<MessageItem>>{
 
 	private lateinit var attachedPhotoClickListener: OnItemClickListener
 	private var userId = ""

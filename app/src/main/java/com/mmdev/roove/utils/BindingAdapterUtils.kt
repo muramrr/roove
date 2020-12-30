@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.06.20 17:07
+ * Last modified 30.12.20 21:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ import com.mmdev.business.core.PhotoItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.core.glide.GlideImageLoader
-import com.mmdev.roove.ui.common.base.BaseAdapter.BindableAdapter
+import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter.BindableAdapter
 
 
 object BindingAdapterUtils {

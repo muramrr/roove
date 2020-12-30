@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 12.04.20 14:55
+  ~ Last modified 30.12.20 21:52
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -63,7 +63,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="10dp"
 					android:layout_gravity="bottom"
-					android:layout_marginBottom="@dimen/general_size_8dp"
+					android:layout_marginBottom="8dp"
 					android:background="@null"
 
 					app:tabBackground="@drawable/tab_dot_unselected_state"
@@ -100,9 +100,9 @@
 					android:id="@+id/tvProfileAboutHeader"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-
+					android:padding="16dp"
 					android:text="@string/profile_about_header_text"
-					style="@style/header_text"
+					android:textSize="24sp"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -118,7 +118,6 @@
 
 					android:text="@{viewModel.retrievedUserItem.aboutText}"
 					android:textSize="18sp"
-					android:textAppearance="@style/regular_text"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -130,9 +129,9 @@
 					android:id="@+id/tvProfileWantToGoHeader"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-
+					android:padding="16dp"
 					android:text="@string/place_detailed_want_to_go_text"
-					style="@style/header_text"
+					android:textSize="24sp"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -145,7 +144,7 @@
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:clipToPadding="false"
-					android:padding="@dimen/general_size_8dp"
+					android:padding="8dp"
 					android:orientation="horizontal"
 					android:visibility="visible"
 
@@ -166,7 +165,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:orientation="vertical"
-					app:layout_constraintGuide_begin="@dimen/general_size_8dp" />
+					app:layout_constraintGuide_begin="8dp" />
 
 				<!-- right padding -->
 				<androidx.constraintlayout.widget.Guideline
@@ -174,7 +173,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:orientation="vertical"
-					app:layout_constraintGuide_end="@dimen/general_size_8dp" />
+					app:layout_constraintGuide_end="8dp" />
 
 			</androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -184,7 +183,7 @@
 			android:id="@+id/fabProfileSendMessage"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
-			android:layout_margin="@dimen/general_size_16dp"
+			android:layout_margin="16dp"
 			android:src="@drawable/ic_profile_send_message_24dp"
 			app:visibilityGone='@{isFabVisible}'
 

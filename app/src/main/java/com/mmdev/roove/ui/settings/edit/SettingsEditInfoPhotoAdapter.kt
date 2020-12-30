@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 29.03.20 19:37
+ * Last modified 30.12.20 21:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mmdev.business.core.PhotoItem
 import com.mmdev.roove.databinding.FragmentSettingsEditInfoPhotoItemBinding
-import com.mmdev.roove.ui.common.base.BaseAdapter
+import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 import kotlinx.android.synthetic.main.fragment_settings_edit_info_photo_item.view.*
 
 /**
@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_settings_edit_info_photo_item.vie
 class SettingsEditInfoPhotoAdapter (private var photosList: MutableList<PhotoItem> = mutableListOf(),
                                     private val layoutId: Int):
 		RecyclerView.Adapter<SettingsEditInfoPhotoAdapter.SettingsEditPhotoViewHolder>(),
-		BaseAdapter.BindableAdapter<MutableList<PhotoItem>> {
+		BaseRecyclerAdapter.BindableAdapter<MutableList<PhotoItem>> {
 
 	private lateinit var mClickListener: OnItemClickListener
 

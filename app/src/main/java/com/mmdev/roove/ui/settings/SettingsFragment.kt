@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.06.20 17:22
+ * Last modified 30.12.20 21:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,19 +35,14 @@ import com.mmdev.roove.R
 import com.mmdev.roove.core.permissions.AppPermission
 import com.mmdev.roove.core.permissions.handlePermission
 import com.mmdev.roove.core.permissions.onRequestPermissionsResultReceived
-import com.mmdev.roove.core.permissions.requestAppPermissions
 import com.mmdev.roove.databinding.FragmentSettingsBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
-import com.mmdev.roove.ui.common.base.BaseAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
+import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 import com.mmdev.roove.ui.common.custom.CenterFirstLastItemDecoration
 import com.mmdev.roove.ui.common.custom.HorizontalCarouselLayoutManager
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.ui.profile.view.PlacesToGoAdapter
-import com.mmdev.roove.utils.buildMaterialAlertDialog
-import com.mmdev.roove.utils.observeOnce
-import com.mmdev.roove.utils.showMaterialAlertDialogPicker
-import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_settings.*
 import java.io.File
 import java.util.*
@@ -82,7 +77,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 		associatedViewModel = getViewModel()
 
-		activity?.run {
+		activity.run {
 			authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 		} ?: throw Exception("Invalid Activity")
 
@@ -137,15 +132,15 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 			val materialDialogPicker =
 				it.context.showMaterialAlertDialogPicker(listOf({ photoCameraClick() },
 				                                                { photoGalleryClick() }))
-			val params = materialDialogPicker.window?.attributes
-			params?.gravity = Gravity.CENTER
+			val params = materialDialogPicker.window.attributes
+			params.gravity = Gravity.CENTER
 			materialDialogPicker.show()
 		}
 
 
 		rvSettingsWantToGoList.apply { adapter = mPlacesToGoAdapter }
 
-		mPlacesToGoAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<BasePlaceInfo> {
+		mPlacesToGoAdapter.setOnItemClickListener(object: BaseRecyclerAdapter.OnItemClickListener<BasePlaceInfo> {
 
 			override fun onItemClick(item: BasePlaceInfo, position: Int) {
 				val placeId = bundleOf(PLACE_ID_KEY to item.id)
@@ -164,12 +159,10 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 	* log out pop up
 	*/
 	private fun showSignOutPrompt() {
-		context?.buildMaterialAlertDialog(title = getString(R.string.dialog_exit_title),
-		                                  message = getString(R.string.dialog_exit_message),
+		context?.buildMaterialAlertDialog(title = getString(R.string.dialog_exit_title), message = getString(R.string.dialog_exit_message),
 		                                  positiveText = getString(R.string.dialog_exit_positive_btn_text),
-		                                  positiveClick = { authViewModel.logOut() },
-		                                  negativeText = getString(R.string.dialog_exit_negative_btn_text),
-		                                  negativeClick = {} )?.show()
+		                                  positiveClick = { authViewModel.logOut() }, negativeText = getString(R.string.dialog_exit_negative_btn_text),
+		                                  negativeClick = {} ).show()
 	}
 
 	private fun showModalBottomSheet() {
@@ -191,7 +184,8 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 	//take photo directly by camera
 	private fun startCameraIntent() {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()
-		mFilePathImageCamera = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+		mFilePathImageCamera = File(
+			context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
 		                            currentUser.baseUserInfo.name + namePhoto + "camera.jpg")
 		val photoURI = FileProvider.getUriForFile(requireContext(),
 		                                          BuildConfig.APPLICATION_ID + ".provider",
@@ -257,7 +251,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 					associatedViewModel.uploadUserProfilePhoto(Uri.fromFile(mFilePathImageCamera).toString(),
 					                                           currentUser)
 				}
-				else context?.showToastText("filePathImageCamera is null or filePathImageCamera isn't exists")
+				else context.showToastText("filePathImageCamera is null or filePathImageCamera isn't exists")
 
 			}
 		}

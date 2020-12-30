@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 12.04.20 14:58
+  ~ Last modified 30.12.20 21:52
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -61,7 +61,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="10dp"
 					android:layout_gravity="bottom"
-					android:layout_marginBottom="@dimen/general_size_8dp"
+					android:layout_marginBottom="8dp"
 					android:background="@null"
 
 					app:tabBackground="@drawable/tab_dot_unselected_state"
@@ -93,16 +93,17 @@
 			<androidx.constraintlayout.widget.ConstraintLayout
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:paddingBottom="@dimen/general_size_16dp">
+				android:paddingBottom="16dp">
 
 				<TextView
 					android:id="@+id/tvPlaceDetailedAboutHeader"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-
+					android:padding="16dp"
+					
 					android:text="@string/place_description_header_text"
-					style="@style/header_text"
-
+					android:textSize="24sp"
+					
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintTop_toTopOf="parent"
@@ -113,14 +114,10 @@
 					android:id="@+id/tvPlaceDetailedDescription"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-
+					android:paddingHorizontal="16dp"
 					android:lineSpacingExtra="10sp"
-
-					android:paddingStart="@dimen/general_size_16dp"
-					android:paddingEnd="@dimen/general_size_16dp"
-
+					
 					android:text="@{viewModel.placeDetailed.description}"
-					android:textAppearance="@style/regular_text"
 					android:textSize="16sp"
 
 					app:layout_constraintStart_toStartOf="parent"
@@ -134,14 +131,11 @@
 					android:id="@+id/tvPlaceDetailedFullDescription"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
+					android:paddingHorizontal="16dp"
 					android:lineSpacingExtra="10sp"
 					android:maxLines="1"
-					android:paddingStart="@dimen/general_size_16dp"
-					android:paddingEnd="@dimen/general_size_16dp"
 
 					android:text="@{viewModel.placeDetailed.body_text}"
-					android:textAppearance="@style/regular_text"
-					android:textSize="16sp"
 
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintEnd_toEndOf="parent"
@@ -173,13 +167,13 @@
 			android:id="@+id/fabAddPlaceToWantToGoList"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
-			android:layout_margin="@dimen/general_size_16dp"
+			android:layout_margin="16dp"
 
 			android:text="@string/place_detailed_want_to_go_text"
 			android:textAlignment="center"
 			android:textAllCaps="false"
-			android:textAppearance="@style/bold_text"
 			android:textSize="14sp"
+			android:textStyle="bold"
 
 			app:backgroundTint="@color/amethyst"
 			app:elevation="@null"
@@ -195,13 +189,11 @@
 			android:id="@+id/fabRemovePlaceFromWantToGoList"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
-			android:layout_margin="@dimen/general_size_16dp"
+			android:layout_margin="16dp"
 
 			android:text="@string/place_detailed_not_interested_text"
 			android:textAlignment="center"
 			android:textAllCaps="false"
-			android:textAppearance="@style/bold_text"
-			android:textSize="14sp"
 
 			app:backgroundTint="@color/material_red_a700"
 			app:elevation="@null"

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 30.12.20 21:36
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+
+<resources>
+	
+	<style name="My.TA.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
+		<item name="fontFamily">@font/rubik_light</item>
+	</style>
+	
+	<style name="My.TA.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
+		<item name="fontFamily">@font/rubik_light</item>
+	</style>
+	
+	<style name="My.TA.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
+		<item name="fontFamily">@font/rubik_regular</item>
+	</style>
+	
+	<style name="My.TA.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
+		<item name="fontFamily">@font/rubik_regular</item>
+	</style>
+	
+	<style name="My.TA.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
+		<item name="fontFamily">@font/rubik_regular</item>
+	</style>
+	
+	<style name="My.TA.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+		<item name="fontFamily">@font/rubik_medium</item>
+	</style>
+	
+	<style name="My.TA.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+		<item name="fontFamily">@font/rubik_regular</item>
+	</style>
+	
+	<style name="My.TA.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
+		<item name="fontFamily">@font/rubik_medium</item>
+	</style>
+	
+	<style name="My.TA.Body1" parent="TextAppearance.MaterialComponents.Body1">
+		<item name="fontFamily">@font/rubik_regular</item>
+	</style>
+	
+	<style name="My.TA.Body2" parent="TextAppearance.MaterialComponents.Body2">
+		<item name="fontFamily">@font/rubik_regular</item>
+	</style>
+	
+	<style name="My.TA.Caption" parent="TextAppearance.MaterialComponents.Caption">
+		<item name="fontFamily">@font/rubik_regular</item>
+	</style>
+	
+	<style name="My.TA.Button" parent="TextAppearance.MaterialComponents.Button">
+		<item name="fontFamily">@font/rubik_medium</item>
+	</style>
+	
+	<style name="My.TA.Overline" parent="TextAppearance.MaterialComponents.Overline">
+		<item name="fontFamily">@font/rubik_regular</item>
+	</style>
+
+</resources>

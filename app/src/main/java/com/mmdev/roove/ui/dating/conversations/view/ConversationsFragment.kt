@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 03.07.20 20:28
+ * Last modified 30.12.20 21:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,12 +25,11 @@ import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentConversationsBinding
-import com.mmdev.roove.ui.common.base.BaseAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
+import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 import com.mmdev.roove.ui.common.custom.SwipeToDeleteCallback
 import com.mmdev.roove.ui.dating.conversations.ConversationsViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
-import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_conversations.*
 
 /**
@@ -46,7 +45,7 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel>(){
 		associatedViewModel = getViewModel()
 
 		associatedViewModel.getDeleteConversationStatus().observe(this, Observer {
-			if (it) context?.showToastText(getString(R.string.toast_text_delete_success))
+			if (it) context.showToastText(getString(R.string.toast_text_delete_success))
 		})
 
 	}
@@ -107,7 +106,7 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel>(){
 
 		}
 
-		mConversationsAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<ConversationItem> {
+		mConversationsAdapter.setOnItemClickListener(object: BaseRecyclerAdapter.OnItemClickListener<ConversationItem> {
 			override fun onItemClick(item: ConversationItem, position: Int) {
 
 				sharedViewModel.conversationSelected.value = item

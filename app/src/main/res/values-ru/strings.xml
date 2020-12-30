@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 10.07.20 19:41
+  ~ Last modified 30.12.20 21:52
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,17 +28,6 @@
 	<string name="reg_step_4_tv_change_name">Как тебя зовут?</string>
 	<string name="reg_step_5_tv_choose_city">Выбери свой город</string>
 	<string name="reg_step_final_tv_check_is_correct">Проверь все ли правильно</string>
-
-	<!--city list-->
-	<string name="russia_ekb">Екатеринбург</string>
-	<string name="russia_krasnoyarsk">Красноярск</string>
-	<string name="russia_krd">Краснодар</string>
-	<string name="russia_kzn">Казань</string>
-	<string name="russia_msk">Москва</string>
-	<string name="russia_nnv">Нижний Новгород</string>
-	<string name="russia_nsk">Новосибирск</string>
-	<string name="russia_sochi">Сочи</string>
-	<string name="russia_spb">Санкт-Петербург</string>
 
 	<!-- partner preferences -->
 	<string name="tv_gender_showing">Тебя интересуют</string>

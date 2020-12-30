@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 10.07.20 19:41
+  ~ Last modified 30.12.20 21:52
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -124,18 +124,6 @@
 	<string name="places_api_clubs" translatable="false">clubs</string>
 	<string name="places_api_restaurants" translatable="false">restaurants</string>
 
-
-	<!--city list-->
-	<string name="russia_ekb">Yekaterinburg</string>
-	<string name="russia_krasnoyarsk">Krasnoyarsk</string>
-	<string name="russia_krd">Krasnodar</string>
-	<string name="russia_kzn">Kazan</string>
-	<string name="russia_msk">Moscow</string>
-	<string name="russia_nnv">Nizhny Novgorod</string>
-	<string name="russia_nsk">Novosibirsk</string>
-	<string name="russia_sochi">Sochi</string>
-	<string name="russia_spb">Saint-Petersburg</string>
-
 	<string name="bottom_navigation_places">Places</string>
 	<string name="bottom_navigation_pairs">Pairs</string>
 	<string name="bottom_navigation_chats">Chats</string>
@@ -166,16 +154,6 @@
 	<string name="report_chooser_behavior">Disrespectful behavior</string>
 	<string name="report_chooser_fake">Seems, it is fake</string>
 	<string name="text_i_agree_privacy_policy">By logging in I agree with <u>Privacy Policy</u></string>
-
-	<!-- api resources -->
-	<string name="city_api_ekb" translatable="false">ekb</string>
-	<string name="city_api_krasnoyarsk" translatable="false">krasnoyarsk</string>
-	<string name="city_api_krd" translatable="false">krd</string>
-	<string name="city_api_kzn" translatable="false">kzn</string>
-	<string name="city_api_msk" translatable="false">msk</string>
-	<string name="city_api_nnv" translatable="false">nnv</string>
-	<string name="city_api_nsk" translatable="false">nsk</string>
-	<string name="city_api_spb" translatable="false">spb</string>
-	<string name="city_api_sochi" translatable="false">sochi</string>
+	
 
 </resources>

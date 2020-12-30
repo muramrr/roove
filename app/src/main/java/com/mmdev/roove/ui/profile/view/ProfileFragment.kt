@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 01.06.20 16:55
+ * Last modified 30.12.20 21:53
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,11 +28,9 @@ import com.mmdev.business.remote.entity.Report.ReportType.*
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentProfileBinding
 import com.mmdev.roove.ui.common.ImagePagerAdapter
-import com.mmdev.roove.ui.common.base.BaseAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
+import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
-import com.mmdev.roove.utils.observeOnce
-import com.mmdev.roove.utils.showToastText
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 /**
@@ -63,8 +61,8 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 		super.onCreate(savedInstanceState)
 
 		associatedViewModel = getViewModel()
-
-		arguments?.let {
+		
+		arguments.let {
 			fabVisible = it.getBoolean(FAB_VISIBLE_KEY)
 			isMatched = it.getBoolean(MATCHED_KEY)
 		}
@@ -78,7 +76,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
 		//if true -> seems that we navigates here from pairs or chat fragment
 		if (isMatched) {
-			sharedViewModel.matchedUserItemSelected.value?.let {
+			sharedViewModel.matchedUserItemSelected.value.let {
 				conversationId = it.conversationId
 				associatedViewModel.getRequestedUserInfo(it.baseUserInfo)
 			}
@@ -88,14 +86,14 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 		}
 		//else we navigates here from cards and already have userItem in sharedViewModel
 		else {
-			sharedViewModel.userNavigateTo.value?.let {
+			sharedViewModel.userNavigateTo.value.let {
 				associatedViewModel.retrievedUserItem.value = it
 			}
 		}
 
 		associatedViewModel.reportSubmittingStatus.observeOnce(this, Observer {
 			isReported = it
-			context?.showToastText(getString(R.string.toast_text_report_success))
+			context.showToastText(getString(R.string.toast_text_report_success))
 			toolbarProfile.apply {
 				val reportItem = menu.findItem(R.id.profile_action_report)
 				reportItem.isVisible = !isReported
@@ -137,7 +135,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 				when (item.itemId) {
 					R.id.profile_action_report -> { showReportDialog() }
 					R.id.profile_action_unmatch -> {
-						sharedViewModel.matchedUserItemSelected.value?.let {
+						sharedViewModel.matchedUserItemSelected.value.let {
 							associatedViewModel.deleteMatchedUser(it)
 						}
 					}
@@ -148,7 +146,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
 		rvProfileWantToGoList.apply { adapter = mPlacesToGoAdapter }
 
-		mPlacesToGoAdapter.setOnItemClickListener(object: BaseAdapter.OnItemClickListener<BasePlaceInfo> {
+		mPlacesToGoAdapter.setOnItemClickListener(object: BaseRecyclerAdapter.OnItemClickListener<BasePlaceInfo> {
 
 			override fun onItemClick(item: BasePlaceInfo, position: Int) {
 				val placeId = bundleOf(PLACE_ID_KEY to item.id)
@@ -178,8 +176,8 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 				}
 			}
 			.create()
-		val params = materialDialogPicker.window?.attributes
-		params?.gravity = Gravity.CENTER
+		val params = materialDialogPicker.window.attributes
+		params.gravity = Gravity.CENTER
 		materialDialogPicker.show()
 	}
 

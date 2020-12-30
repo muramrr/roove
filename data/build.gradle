@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.06.20 17:43
+ * Last modified 30.12.20 21:18
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
 
 android {
 
@@ -64,17 +63,14 @@ dependencies {
 	//facebook auth
 	implementation libs.facebookLogin
 
-	// Firebase
-	implementation libs.firebaseAuth
-	implementation libs.firebaseCore
-	implementation libs.firestorage
-	implementation libs.firestore
+	//firebase
+	implementation platform('com.google.firebase:firebase-bom:26.2.0')
+	implementation 'com.google.firebase:firebase-auth-ktx'
+	implementation 'com.google.firebase:firebase-firestore-ktx'
+	implementation 'com.google.firebase:firebase-storage-ktx'
 
 	// RxJava
 	implementation libs.rxJava
-
-	// Retrofit
-	implementation libs.retrofit
 
 	// Dagger
 	implementation libs.dagger
