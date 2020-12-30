@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:17
+ * Last modified 02.06.20 17:20
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ import kotlin.math.abs
  */
 class HorizontalCarouselLayoutManager: LinearLayoutManager {
 
-	private val mShrinkAmount = 0.15f
+	private val mShrinkAmount = 0.25f
 	private val mShrinkDistance = 0.9f
 
 	constructor(context: Context?): super(context)
@@ -33,17 +33,19 @@ class HorizontalCarouselLayoutManager: LinearLayoutManager {
 	override fun scrollVerticallyBy(dy: Int, recycler: Recycler?, state: RecyclerView.State?): Int {
 		return if (orientation == VERTICAL) {
 			val scrolled = super.scrollVerticallyBy(dy, recycler, state)
-			val midpoint = height / 2f
 			val d0 = 0f
-			val d1 = mShrinkDistance * midpoint
 			val s0 = 1f
 			val s1 = 1f - mShrinkAmount
 			for (i in 0 until childCount) {
 				val child = getChildAt(i)
 				if (child != null) {
+					val midpoint = height / 2f
+					val d1 = mShrinkDistance * midpoint
 					val childMidpoint = (getDecoratedBottom(child) + getDecoratedTop(child)) / 2f
 					val d = d1.coerceAtMost(abs(midpoint - childMidpoint))
-					val scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0)
+					var scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0)
+					if (scale.isNaN()) scale = 0f
+
 					child.scaleX = scale
 					child.scaleY = scale
 				}
@@ -56,18 +58,20 @@ class HorizontalCarouselLayoutManager: LinearLayoutManager {
 	override fun scrollHorizontallyBy(dx: Int, recycler: Recycler?, state: RecyclerView.State?): Int {
 		return if (orientation == HORIZONTAL) {
 			val scrolled = super.scrollHorizontallyBy(dx, recycler, state)
-			val midpoint = width / 2f
 			val d0 = 0f
-			val d1 = mShrinkDistance * midpoint
 			val s0 = 1f
 			val s1 = 1f - mShrinkAmount
 			for (i in 0 until childCount) {
 
 				val child = getChildAt(i)
 				if (child != null) {
+					val midpoint = width / 2f
+					val d1 = mShrinkDistance * midpoint
 					val childMidpoint = (getDecoratedRight(child) + getDecoratedLeft(child)) / 2f
 					val d = d1.coerceAtMost(abs(midpoint - childMidpoint))
-					val scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0)
+					var scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0)
+					if (scale.isNaN()) scale = 0f
+
 					child.scaleX = scale
 					child.scaleY = scale
 				}

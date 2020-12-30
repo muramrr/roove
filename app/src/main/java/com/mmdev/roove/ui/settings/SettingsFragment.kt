@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.04.20 14:37
+ * Last modified 02.06.20 17:22
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -124,9 +124,9 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 
 		rvSettingsUserPhotosList.apply {
 			adapter = mSettingsPhotoAdapter
-			layoutManager = HorizontalCarouselLayoutManager(this.context, HORIZONTAL, false)
 			//item decorator to make first and last item align center
 			addItemDecoration(CenterFirstLastItemDecoration())
+			layoutManager = HorizontalCarouselLayoutManager(this.context, HORIZONTAL, false)
 			//adjust auto swipe to item center
 			val snapHelper: SnapHelper = LinearSnapHelper()
 			snapHelper.attachToRecyclerView(this)
@@ -193,7 +193,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel>(true) {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()
 		mFilePathImageCamera = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
 		                            currentUser.baseUserInfo.name + namePhoto + "camera.jpg")
-		val photoURI = FileProvider.getUriForFile(context!!,
+		val photoURI = FileProvider.getUriForFile(requireContext(),
 		                                          BuildConfig.APPLICATION_ID + ".provider",
 		                                          mFilePathImageCamera)
 		val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {

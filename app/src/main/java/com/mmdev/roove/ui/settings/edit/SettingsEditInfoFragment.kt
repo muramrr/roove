@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.04.20 17:15
+ * Last modified 10.07.20 19:41
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,19 +79,19 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 			}.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		val context = view.context
-		cityList = mapOf(context.getString(R.string.russia_ekb) to "ekb",
-		                 context.getString(R.string.russia_krasnoyarsk) to "krasnoyarsk",
-		                 context.getString(R.string.russia_krd) to "krd",
-		                 context.getString(R.string.russia_kzn) to "kzn",
-		                 context.getString(R.string.russia_msk) to "msk",
-		                 context.getString(R.string.russia_nnv) to "nnv",
-		                 context.getString(R.string.russia_nsk) to "nsk",
-		                 context.getString(R.string.russia_sochi) to "sochi",
-		                 context.getString(R.string.russia_spb) to "spb")
+
+		cityList = mapOf(getString(R.string.russia_ekb) to getString(R.string.city_api_ekb),
+		                 getString(R.string.russia_krasnoyarsk) to getString(R.string.city_api_krasnoyarsk),
+		                 getString(R.string.russia_krd) to getString(R.string.city_api_krd),
+		                 getString(R.string.russia_kzn) to getString(R.string.city_api_kzn),
+		                 getString(R.string.russia_msk) to getString(R.string.city_api_msk),
+		                 getString(R.string.russia_nnv) to getString(R.string.city_api_nnv),
+		                 getString(R.string.russia_nsk) to getString(R.string.city_api_nsk),
+		                 getString(R.string.russia_sochi) to getString(R.string.city_api_sochi),
+		                 getString(R.string.russia_spb) to getString(R.string.city_api_spb))
 
 		rvSettingsEditPhotos.apply {
-			layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+			layoutManager = GridLayoutManager(this.context, 2, GridLayoutManager.VERTICAL, false)
 			adapter =  mEditorPhotoAdapter
 			addItemDecoration(GridItemDecoration())
 		}
@@ -119,16 +119,18 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 					associatedViewModel.deletePhoto(photoToDelete,
 					                                currentUser, isMainPhotoDeleting)
 				}
-				else context.showToastText("Хотя бы 1 фотка должна быть")
+				else requireContext().showToastText(getString(R.string.toast_text_at_least_1_photo_required))
 			}
 		})
 
 		//touch event guarantee that if user want to scroll or touch outside of edit box
-		//keyboard hide and edittext focus clear
+		//keyboard hide and editText focus clear
 		containerScrollSettings.setOnTouchListener { v, _ ->
-			val iMM = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+			v.performClick()
+			val iMM = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 			iMM.hideSoftInputFromWindow(v.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 			edSettingsEditDescription.clearFocus()
+
 			return@setOnTouchListener false
 		}
 
@@ -205,7 +207,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 	}
 
 	private fun changerAgeSetup() {
-		sliderSettingsEditAge.setOnChangeListener{ _, value ->
+		sliderSettingsEditAge.addOnChangeListener { _, value, _ ->
 			age = value.toInt()
 			currentUser.baseUserInfo.age = age
 			tvSettingsEditAge.text = "Age: $age"
@@ -213,7 +215,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 	}
 
 	private fun changerCitySetup() {
-		val cityAdapter = ArrayAdapter(context!!,
+		val cityAdapter = ArrayAdapter(requireContext(),
 		                               R.layout.drop_text_item,
 		                               cityList.map { it.key })
 		dropSettingsEditCity.setAdapter(cityAdapter)
@@ -258,6 +260,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 		}
 
 		edSettingsEditDescription.setOnTouchListener { view, event ->
+			view.performClick()
 			view.parent.requestDisallowInterceptTouchEvent(true)
 			if ((event.action and MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
 				view.parent.requestDisallowInterceptTouchEvent(false)
@@ -268,8 +271,8 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel>(true) {
 	}
 
 	private fun showDialogDeleteAttention() {
-		context?.buildMaterialAlertDialog(title = getString(R.string.dialog_delete_title),
-		                                  message = getString(R.string.dialog_delete_message),
+		context?.buildMaterialAlertDialog(title = getString(R.string.dialog_profile_delete_title),
+		                                  message = getString(R.string.dialog_profile_delete_message),
 		                                  positiveText = getString(R.string.dialog_delete_btn_positive_text),
 		                                  positiveClick = {
 			                                  associatedViewModel.selfDeletingStatus.value = IN_PROGRESS

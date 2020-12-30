@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.04.20 16:51
+ * Last modified 03.07.20 20:28
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -46,7 +46,7 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel>(){
 		associatedViewModel = getViewModel()
 
 		associatedViewModel.getDeleteConversationStatus().observe(this, Observer {
-			if (it) context?.showToastText("successfully deleted")
+			if (it) context?.showToastText(getString(R.string.toast_text_delete_success))
 		})
 
 	}
@@ -88,14 +88,14 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel>(){
 
 					MaterialAlertDialogBuilder(context)
 						.setCancelable(false)
-						.setTitle("Удалить диалог?")
-						.setMessage("Это полностью удалит переписку и пару с пользователем")
-						.setPositiveButton("Удалить") { dialog, _ ->
+						.setTitle(getString(R.string.dialog_conversation_delete_title))
+						.setMessage(getString(R.string.dialog_conversation_delete_message))
+						.setPositiveButton(getString(R.string.dialog_delete_btn_positive_text)) { dialog, _ ->
 							associatedViewModel.deleteConversation(adapter.getItem(itemPosition))
 							adapter.removeAt(itemPosition)
 							dialog.dismiss()
 						}
-						.setNegativeButton("Отмена") { dialog, _ ->
+						.setNegativeButton(getString(R.string.dialog_delete_btn_negative_text)) { dialog, _ ->
 							adapter.notifyItemChanged(itemPosition)
 							dialog.dismiss()
 						}

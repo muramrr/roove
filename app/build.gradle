@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 08.04.20 17:44
+ * Last modified 03.07.20 20:31
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -64,8 +64,8 @@ android {
 		jvmTarget = JavaVersion.VERSION_1_8
 	}
 
-	dataBinding {
-		enabled true
+	buildFeatures {
+		dataBinding = true
 	}
 
 	kapt {
@@ -87,11 +87,11 @@ dependencies {
 	implementation project(':data')
 
 	//core
-	implementation 'androidx.core:core-ktx:1.3.0-beta01'
+	implementation 'androidx.core:core-ktx:1.5.0-alpha01'
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-	implementation 'androidx.appcompat:appcompat:1.2.0-beta01'
-	implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
-	implementation 'com.google.android.material:material:1.2.0-alpha02'
+	implementation 'androidx.appcompat:appcompat:1.3.0-alpha01'
+	implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta6'
+	implementation 'com.google.android.material:material:1.3.0-alpha01'
 
 	//custom UI
 	implementation 'com.yuyakaido.android:card-stack-view:2.3.4'
@@ -103,11 +103,11 @@ dependencies {
 	implementation libs.firebaseCore
 	implementation libs.firestorage
 	implementation libs.firestore
-	implementation 'com.google.firebase:firebase-messaging:20.1.5'
+	implementation 'com.google.firebase:firebase-messaging:20.2.1'
 	//firebase analytics
-	implementation 'com.google.firebase:firebase-analytics:17.3.0'
-	implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta03'
-	implementation 'com.google.firebase:firebase-perf:19.0.5'
+	implementation 'com.google.firebase:firebase-analytics:17.4.3'
+	implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
+	implementation 'com.google.firebase:firebase-perf:19.0.7'
 
 
 	//facebook auth

@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.04.20 17:58
+ * Last modified 02.06.20 17:24
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -222,6 +222,7 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 			//touch event guarantee that if user want to scroll or touches recycler with messages
 			//keyboard hide and editText focus clear
 			setOnTouchListener { v, _ ->
+				v.performClick()
 				val iMM = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 				iMM.hideSoftInputFromWindow(v.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 				edTextMessageInput.clearFocus()
@@ -298,7 +299,7 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()
 		mFilePathImageCamera = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
 		                            namePhoto + "camera.jpg")
-		val photoURI = FileProvider.getUriForFile(context!!,
+		val photoURI = FileProvider.getUriForFile(requireContext(),
 		                                          BuildConfig.APPLICATION_ID + ".provider",
 		                                          mFilePathImageCamera)
 		val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
@@ -377,7 +378,7 @@ class ChatFragment : BaseFragment<ChatViewModel>() {
 	}
 
 	private fun showReportDialog() {
-		val materialDialogPicker = MaterialAlertDialogBuilder(context)
+		val materialDialogPicker = MaterialAlertDialogBuilder(requireContext())
 			.setItems(arrayOf(getString(R.string.report_chooser_photos),
 			                  getString(R.string.report_chooser_behavior),
 			                  getString(R.string.report_chooser_fake))) {

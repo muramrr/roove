@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 21:02
+  ~ Last modified 01.06.20 16:50
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -236,8 +236,8 @@
 				android:valueTo="50"
 				android:stepSize="1"
 
-				app:activeTrackColor="?colorSecondary"
-				app:inactiveTrackColor="@color/lolite_25"
+				app:trackColorActive="?colorSecondary"
+				app:trackColorInactive="@color/lolite_25"
 				app:haloColor="?colorSecondary"
 
 				app:thumbColor="@color/white"
@@ -440,7 +440,7 @@
 				>
 
 
-				<com.google.android.material.textview.MaterialAutoCompleteTextView
+				<com.google.android.material.textfield.MaterialAutoCompleteTextView
 					android:id="@+id/dropdownCityChooser"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"

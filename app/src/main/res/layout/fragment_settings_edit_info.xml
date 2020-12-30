@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 07.04.20 14:33
+  ~ Last modified 01.06.20 16:51
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -174,8 +174,8 @@
 				app:thumbColor="@color/white"
 				app:thumbRadius="@dimen/general_size_16dp"
 
-				app:activeTrackColor="?colorSecondary"
-				app:inactiveTrackColor="@color/lolite_25"
+				app:trackColorActive="?colorSecondary"
+				app:trackColorInactive="@color/lolite_25"
 
 				android:value="@{viewModel.currentUser.baseUserInfo.age}"
 				android:valueFrom="18"
@@ -225,7 +225,7 @@
 				app:layout_constraintBottom_toTopOf="@id/layoutSettingsEditDescription"
 				>
 
-				<com.google.android.material.textview.MaterialAutoCompleteTextView
+				<com.google.android.material.textfield.MaterialAutoCompleteTextView
 					android:id="@+id/dropSettingsEditCity"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"

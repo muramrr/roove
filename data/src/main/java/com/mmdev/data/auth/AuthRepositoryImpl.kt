@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 10.04.20 17:35
+ * Last modified 02.06.20 16:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,6 +47,8 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 		private const val USER_BASE_REGISTRATION_TOKENS_FIELD = "registrationTokens"
 	}
 
+	private lateinit var authUserItem: AuthUserItem
+
 	/**
 	 * Observable which track the auth changes of [FirebaseAuth] to listen when an user is logged or not.
 	 *
@@ -69,6 +71,8 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 							//Log.wtf(TAG, "success get document")
 							if (it.exists()){
 								emitter.onNext(true)
+								currentUserId = auth.currentUser!!.uid
+								authUserItem = it.toObject(AuthUserItem::class.java)!!
 								//Log.wtf(TAG, "document exists")
 							}
 							else emitter.onNext(false)
@@ -83,13 +87,13 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 
 	override fun fetchUserInfo(): Single<UserItem> {
 		return Single.create(SingleOnSubscribe<UserItem> { emitter ->
-			reInit()
 
-			val userItem = userWrapper.getInMemoryUser()
 			val refBase = firestore.collection(USERS_BASE_COLLECTION_REFERENCE)
-				.document(userItem.baseUserInfo.userId)
+				.document(currentUserId)
+
+			val refGeneral = fillUserGeneralRef(authUserItem.baseUserInfo)
 			//get general user item first
-			currentUserDocRef.get()
+			refGeneral.get()
 				.addOnSuccessListener { remoteUser ->
 					if (remoteUser.exists()) {
 						val remoteUserItem = remoteUser.toObject(UserItem::class.java)!!

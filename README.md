@@ -1,9 +1,15 @@
 # roove  [![GitHub license](https://img.shields.io/github/license/muramrr/roove)](https://github.com/muramrr/roove/blob/master/LICENSE) [![](https://img.shields.io/badge/minSDK-21-blue)](https://shields.io/) [![](https://img.shields.io/badge/TargetSDK-29-green)](https://shields.io/)
 
-A simple dating app based on tinder-style cards.
 
 
-Used libraries/patterns:
+**Dating app with tinder-style cards & choosing place for a date.**
+
+*Note: this app doesn't use GPS or other systems to obtain user real physical location*
+
+![Logo](https://github.com/muramrr/roove/blob/master/media/roove_logo_1024_500.png)
+
+
+### Used libraries/patterns:
 * MVVM pattern;
 * Dagger 2;
 * RxJava 2;
@@ -16,7 +22,9 @@ Used libraries/patterns:
 * Facebook SDK to login.
 
 
-![Logo](https://github.com/muramrr/roove/blob/master/media/roove_logo_256.png)
+[![](https://github.com/muramrr/roove/blob/master/media/google-play-badge.png)](https://play.google.com/store/apps/details?id=com.mmdev.roove)
+
+
 
 ### Setup
 

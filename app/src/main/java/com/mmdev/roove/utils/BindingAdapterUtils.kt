@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.03.20 16:34
+ * Last modified 01.06.20 17:07
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,6 +42,7 @@ object BindingAdapterUtils {
 
 	@JvmStatic
 	@BindingAdapter("app:bindData")
+	@Suppress("UNCHECKED_CAST")
 	fun <T> setRecyclerViewProperties(recyclerView: RecyclerView, data: T) {
 		if (recyclerView.adapter is BindableAdapter<*>) {
 			(recyclerView.adapter as BindableAdapter<T>).setData(data)
@@ -50,6 +51,7 @@ object BindingAdapterUtils {
 
 	@JvmStatic
 	@BindingAdapter("app:bindPhotos")
+	@Suppress("UNCHECKED_CAST")
 	fun setViewPager2ImageAdapterProperties(viewPager2: ViewPager2, data: List<PhotoItem>) {
 		(viewPager2.adapter as BindableAdapter<List<String>>).setData(data.map { it.fileUrl })
 	}

@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.04.20 20:21
+  ~ Last modified 10.07.20 19:41
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,6 +28,17 @@
 	<string name="reg_step_4_tv_change_name">Как тебя зовут?</string>
 	<string name="reg_step_5_tv_choose_city">Выбери свой город</string>
 	<string name="reg_step_final_tv_check_is_correct">Проверь все ли правильно</string>
+
+	<!--city list-->
+	<string name="russia_ekb">Екатеринбург</string>
+	<string name="russia_krasnoyarsk">Красноярск</string>
+	<string name="russia_krd">Краснодар</string>
+	<string name="russia_kzn">Казань</string>
+	<string name="russia_msk">Москва</string>
+	<string name="russia_nnv">Нижний Новгород</string>
+	<string name="russia_nsk">Новосибирск</string>
+	<string name="russia_sochi">Сочи</string>
+	<string name="russia_spb">Санкт-Петербург</string>
 
 	<!-- partner preferences -->
 	<string name="tv_gender_showing">Тебя интересуют</string>
@@ -86,6 +97,7 @@
 
 	<string name="toast_text_report_success">Жалоба успешно отправлена\nСпасибо тебе!</string>
 	<string name="toast_text_update_success">Изменения сохранены</string>
+	<string name="toast_text_delete_success">Удалено</string>
 
 	<string name="place_detailed_not_interested_text">Не интересует</string>
 	<string name="place_detailed_want_to_go_text">Хочу посетить</string>
@@ -95,8 +107,11 @@
 	<string name="bottom_navigation_chats">Чаты</string>
 	<string name="bottom_navigation_settings">Опции</string>
 
-	<string name="dialog_delete_title">Ты действительно хочешь удалить свой профиль?</string>
-	<string name="dialog_delete_message">Это польностью удалит всю информацию о твоем профиле, а так же все пары и диалоги.</string>
+	<string name="dialog_conversation_delete_title">Удалить диалог?</string>
+	<string name="dialog_conversation_delete_message">Это полностью удалит переписку и пару с пользователем.</string>
+
+	<string name="dialog_profile_delete_title">Ты действительно хочешь удалить свой профиль?</string>
+	<string name="dialog_profile_delete_message">Это польностью удалит всю информацию о твоем профиле, а так же все пары и диалоги.</string>
 	<string name="dialog_delete_btn_positive_text">Удалить</string>
 	<string name="dialog_delete_btn_negative_text">Отмена</string>
 
@@ -121,5 +136,6 @@
 	<string name="places_entertainment">Развлечения</string>
 	<string name="places_clubs">Клубы</string>
 	<string name="places_restaurants">Рестораны</string>
+	<string name="toast_text_at_least_1_photo_required">Хотя бы 1 фотка должна быть</string>
 
 </resources>

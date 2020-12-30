@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.03.20 17:30
+ * Last modified 02.06.20 16:16
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,6 +50,13 @@ open class BaseRepositoryImpl constructor(private val firestore: FirebaseFiresto
 		}
 	}
 
+	protected fun fillUserGeneralRef (baseUserInfo: BaseUserInfo): DocumentReference {
+		return firestore.collection(USERS_COLLECTION_REFERENCE)
+			.document(baseUserInfo.city)
+			.collection(baseUserInfo.gender)
+			.document(baseUserInfo.userId)
+	}
+
 	internal val TAG = "mylogs_" + javaClass.simpleName
 
 	companion object {
@@ -74,10 +81,5 @@ open class BaseRepositoryImpl constructor(private val firestore: FirebaseFiresto
 		const val USER_ID_FIELD = "userId"
 
 	}
-	protected fun fillUserGeneralRef (baseUserInfo: BaseUserInfo): DocumentReference {
-		return firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(baseUserInfo.city)
-			.collection(baseUserInfo.gender)
-			.document(baseUserInfo.userId)
-	}
+
 }

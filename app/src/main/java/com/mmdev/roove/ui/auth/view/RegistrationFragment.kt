@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 02.04.20 17:36
+ * Last modified 03.07.20 20:30
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,15 +62,15 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
-		cityList = mapOf(getString(R.string.russia_ekb) to "ekb",
-		                 getString(R.string.russia_krasnoyarsk) to "krasnoyarsk",
-		                 getString(R.string.russia_krd) to "krd",
-		                 getString(R.string.russia_kzn) to "kzn",
-		                 getString(R.string.russia_msk) to "msk",
-		                 getString(R.string.russia_nnv) to "nnv",
-		                 getString(R.string.russia_nsk) to "nsk",
-		                 getString(R.string.russia_sochi) to "sochi",
-		                 getString(R.string.russia_spb) to "spb")
+		cityList = mapOf(getString(R.string.russia_ekb) to getString(R.string.city_api_ekb),
+		                 getString(R.string.russia_krasnoyarsk) to getString(R.string.city_api_krasnoyarsk),
+		                 getString(R.string.russia_krd) to getString(R.string.city_api_krd),
+		                 getString(R.string.russia_kzn) to getString(R.string.city_api_kzn),
+		                 getString(R.string.russia_msk) to getString(R.string.city_api_msk),
+		                 getString(R.string.russia_nnv) to getString(R.string.city_api_nnv),
+		                 getString(R.string.russia_nsk) to getString(R.string.city_api_nsk),
+		                 getString(R.string.russia_sochi) to getString(R.string.city_api_sochi),
+		                 getString(R.string.russia_spb) to getString(R.string.city_api_spb))
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -163,7 +163,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 
 
 		//step 3 age
-		sliderAge.setOnChangeListener { _, value ->
+		sliderAge.addOnChangeListener { _, value, _ ->
 			age = value.toInt()
 			tvAgeDisplay.text = age.toString()
 		}
@@ -211,7 +211,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 
 
 		//step 4 city
-		val cityAdapter = ArrayAdapter(context!!,
+		val cityAdapter = ArrayAdapter(requireContext(),
 		                               R.layout.drop_text_item,
 		                               cityList.map { it.key })
 		dropdownCityChooser.setAdapter(cityAdapter)

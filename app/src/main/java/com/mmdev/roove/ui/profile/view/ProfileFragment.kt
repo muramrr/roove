@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 07.04.20 13:52
+ * Last modified 01.06.20 16:55
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,8 +41,8 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
-	private val userPhotosAdapter = ImagePagerAdapter(listOf())
-	private val mPlacesToGoAdapter = PlacesToGoAdapter(listOf())
+	private val userPhotosAdapter = ImagePagerAdapter()
+	private val mPlacesToGoAdapter = PlacesToGoAdapter()
 
 	private var isReported: Boolean = false
 	private var fabVisible: Boolean = false
@@ -165,7 +165,7 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 	}
 
 	private fun showReportDialog() {
-		val materialDialogPicker = MaterialAlertDialogBuilder(context)
+		val materialDialogPicker = MaterialAlertDialogBuilder(requireContext())
 			.setItems(arrayOf(getString(R.string.report_chooser_photos),
 			                  getString(R.string.report_chooser_behavior),
 			                  getString(R.string.report_chooser_fake))) { _, itemIndex ->

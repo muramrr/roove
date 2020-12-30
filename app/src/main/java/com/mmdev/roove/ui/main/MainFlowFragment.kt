@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 09.04.20 16:18
+ * Last modified 01.06.20 17:03
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,7 +34,7 @@ class MainFlowFragment: FlowFragment() {
 			.root
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		val bottomNavigationHeight = containerBottomNavigation.height
+
 		//set selected bottom menu item on startup
 		bottomNavigationView.selectedItemId = R.id.bottomCards
 		fabCards.isSelected = true

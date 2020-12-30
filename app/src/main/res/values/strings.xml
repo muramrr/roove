@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 13.04.20 19:48
+  ~ Last modified 10.07.20 19:41
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -108,6 +108,8 @@
 
 	<string name="toast_text_report_success">Report sent successfully\nThank you!</string>
 	<string name="toast_text_update_success">Successfully updated</string>
+	<string name="toast_text_delete_success">Successfully deleted</string>
+	<string name="toast_text_at_least_1_photo_required">At least one photo required.</string>
 
 	<string name="place_detailed_want_to_go_text">Want to go</string>
 	<string name="place_detailed_not_interested_text">Not interested</string>
@@ -124,23 +126,26 @@
 
 
 	<!--city list-->
-	<string name="russia_ekb" translatable="false">Екатеринбург</string>
-	<string name="russia_krasnoyarsk" translatable="false">Красноярск</string>
-	<string name="russia_krd" translatable="false">Краснодар</string>
-	<string name="russia_kzn" translatable="false">Казань</string>
-	<string name="russia_msk" translatable="false">Москва</string>
-	<string name="russia_nnv" translatable="false">Нижний Новгород</string>
-	<string name="russia_nsk" translatable="false">Новосибирск</string>
-	<string name="russia_sochi" translatable="false">Сочи</string>
-	<string name="russia_spb" translatable="false">Санкт-Петербург</string>
+	<string name="russia_ekb">Yekaterinburg</string>
+	<string name="russia_krasnoyarsk">Krasnoyarsk</string>
+	<string name="russia_krd">Krasnodar</string>
+	<string name="russia_kzn">Kazan</string>
+	<string name="russia_msk">Moscow</string>
+	<string name="russia_nnv">Nizhny Novgorod</string>
+	<string name="russia_nsk">Novosibirsk</string>
+	<string name="russia_sochi">Sochi</string>
+	<string name="russia_spb">Saint-Petersburg</string>
 
 	<string name="bottom_navigation_places">Places</string>
 	<string name="bottom_navigation_pairs">Pairs</string>
 	<string name="bottom_navigation_chats">Chats</string>
 	<string name="bottom_navigation_settings">Settings</string>
 
-	<string name="dialog_delete_title">Do you want to delete your profile?</string>
-	<string name="dialog_delete_message">This will delete your entire account information and also all matches and conversations.</string>
+	<string name="dialog_conversation_delete_title">Delete conversation?</string>
+	<string name="dialog_conversation_delete_message">This will delete all messages and pair with this user.</string>
+
+	<string name="dialog_profile_delete_title">Do you want to delete your profile?</string>
+	<string name="dialog_profile_delete_message">This will delete your entire account information and also all matches and conversations.</string>
 	<string name="dialog_delete_btn_positive_text">Delete</string>
 	<string name="dialog_delete_btn_negative_text">Cancel</string>
 
@@ -162,5 +167,15 @@
 	<string name="report_chooser_fake">Seems, it is fake</string>
 	<string name="text_i_agree_privacy_policy">By logging in I agree with <u>Privacy Policy</u></string>
 
+	<!-- api resources -->
+	<string name="city_api_ekb" translatable="false">ekb</string>
+	<string name="city_api_krasnoyarsk" translatable="false">krasnoyarsk</string>
+	<string name="city_api_krd" translatable="false">krd</string>
+	<string name="city_api_kzn" translatable="false">kzn</string>
+	<string name="city_api_msk" translatable="false">msk</string>
+	<string name="city_api_nnv" translatable="false">nnv</string>
+	<string name="city_api_nsk" translatable="false">nsk</string>
+	<string name="city_api_spb" translatable="false">spb</string>
+	<string name="city_api_sochi" translatable="false">sochi</string>
 
 </resources>
