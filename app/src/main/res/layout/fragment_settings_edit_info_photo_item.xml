@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 31.03.20 16:34
+  ~ Copyright (C) 2020. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 <layout
@@ -17,7 +25,7 @@
 
 		<variable
 			name="bindItem"
-			type="com.mmdev.business.core.PhotoItem" />
+			type="com.mmdev.business.data.PhotoItem" />
 
 	</data>
 
@@ -31,7 +39,7 @@
 			android:layout_height="@dimen/rvSettingsEditPhotoElementHeight"
 
 			app:cardBackgroundColor="@color/transparent"
-			app:cardCornerRadius="@dimen/general_size_16dp">
+			app:cardCornerRadius="16dp">
 
 			<ImageView
 				android:layout_height="match_parent"
@@ -49,13 +57,13 @@
 			android:layout_width="48dp"
 			android:layout_height="48dp"
 			android:layout_gravity="end|top"
-			android:layout_margin="@dimen/general_size_4dp"
+			android:layout_margin="4dp"
 
 			android:insetTop="0dp"
 			android:insetBottom="0dp"
 
 			app:backgroundTint="@color/material_red_a700"
-			app:iconSize="@dimen/general_size_24dp"
+			app:iconSize="24dp"
 			app:icon="@drawable/ic_clear_24dp"
 			app:elevation="0dp"
 			android:elevation="@null"

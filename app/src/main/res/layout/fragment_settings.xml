@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 02.04.20 15:43
+  ~ Copyright (C) 2020. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 <layout
@@ -65,7 +73,7 @@
 					android:id="@+id/rvSettingsUserPhotosList"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-					android:layout_marginTop="@dimen/general_size_16dp"
+					android:layout_marginTop="16dp"
 					android:clipToPadding="false"
 					android:orientation="horizontal"
 					android:overScrollMode="never"
@@ -100,12 +108,10 @@
 					android:id="@+id/tvSettingsNameAge"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginTop="@dimen/general_size_16dp"
+					android:layout_marginTop="16dp"
 
 					android:text="@{viewModel.currentUser.baseUserInfo.name+ `, `+ viewModel.currentUser.baseUserInfo.age, default = @string/default_name}"
 					android:textSize="22sp"
-
-					style="@style/regular_text"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -120,7 +126,6 @@
 					android:text="@{viewModel.currentUser.cityToDisplay, default = @string/default_city}"
 					android:textSize="22sp"
 
-					style="@style/regular_text"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -132,11 +137,10 @@
 					android:id="@+id/tvSettingsWantToGoHeader"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-					android:padding="@dimen/general_size_16dp"
+					android:padding="16dp"
 
 					android:text="@string/place_detailed_want_to_go_text"
 					android:textSize="24sp"
-					style="@style/medium_text"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -149,7 +153,7 @@
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:clipToPadding="false"
-					android:padding="@dimen/general_size_8dp"
+					android:padding="8dp"
 					android:orientation="horizontal"
 					android:visibility="visible"
 
@@ -168,11 +172,10 @@
 					android:id="@+id/tvSettingsAboutHeader"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-					android:padding="@dimen/general_size_16dp"
+					android:padding="16dp"
 
 					android:text="@string/profile_about_header_text"
 					android:textSize="24sp"
-					style="@style/medium_text"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -184,12 +187,9 @@
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_marginBottom="100dp"
-					android:lineSpacingExtra="10sp"
 
 					android:text="@{viewModel.currentUser.aboutText}"
 					android:textSize="18sp"
-
-					style="@style/regular_text"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -204,7 +204,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:orientation="vertical"
-					app:layout_constraintGuide_begin="@dimen/general_size_8dp" />
+					app:layout_constraintGuide_begin="8dp" />
 
 				<!-- right padding -->
 				<androidx.constraintlayout.widget.Guideline
@@ -212,7 +212,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:orientation="vertical"
-					app:layout_constraintGuide_end="@dimen/general_size_8dp" />
+					app:layout_constraintGuide_end="8dp" />
 
 
 			</androidx.constraintlayout.widget.ConstraintLayout>
@@ -224,7 +224,7 @@
 			android:id="@+id/fabSettingsEdit"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/general_size_24dp"
+			android:layout_margin="24dp"
 			android:src="@drawable/ic_create_24dp"
 			app:layout_anchor="@id/containerSettings"
 			app:layout_anchorGravity="bottom|end"

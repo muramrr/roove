@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 08.04.20 16:43
+  ~ Copyright (C) 2020. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,7 +25,7 @@
 
 		<variable
 			name="viewModel"
-			type="com.mmdev.roove.ui.dating.chat.ChatViewModel" />
+			type="com.mmdev.roove.ui.chat.ChatViewModel" />
 
 	</data>
 
@@ -64,7 +72,6 @@
 
 					android:text='@{viewModel.partnerName}'
 					android:textSize="20sp"
-					style="@style/regular_text"
 
 
 					app:layout_constraintStart_toStartOf="parent"
@@ -76,7 +83,7 @@
 					android:id="@+id/toolbarChatPartnerOnlineIndicator"
 					android:layout_width="8dp"
 					android:layout_height="8dp"
-					android:layout_marginStart="@dimen/general_size_8dp"
+					android:layout_marginStart="8dp"
 
 					android:src="@color/lolite"
 
@@ -93,7 +100,7 @@
 					android:id="@+id/toolbarChatPartnerPhoto"
 					android:layout_width="36dp"
 					android:layout_height="36dp"
-					android:layout_margin="@dimen/general_size_4dp"
+					android:layout_margin="4dp"
 
 					app:bindImageUrl="@{viewModel.partnerPhoto}"
 
@@ -143,8 +150,8 @@
 			android:id="@+id/btnSendAttachment"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/general_size_2dp"
-			android:padding="@dimen/general_size_16dp"
+			android:layout_marginTop="2dp"
+			android:padding="16dp"
 
 			app:cornerRadius="50dp"
 			app:icon="@drawable/ic_chat_attachment_24dp"
@@ -158,8 +165,7 @@
 			app:layout_constraintEnd_toStartOf="@id/edTextMessageInput"
 			/>
 
-		<EditText
-			android:id="@+id/edTextMessageInput"
+		<EditText android:id="@+id/edTextMessageInput"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:background="@null"
@@ -167,12 +173,11 @@
 			android:imeOptions="actionSend"
 			android:inputType="text|textMultiLine"
 			android:hint="@string/fragment_chat_ed_hint"
-			android:padding="@dimen/general_size_16dp"
+			android:padding="16dp"
 
 			android:textColor="@color/white"
 			android:textColorHint="@color/white_50"
 			android:textSize="18sp"
-			style="@style/regular_text"
 
 			tools:ignore="Autofill"
 
@@ -185,7 +190,7 @@
 			android:id="@+id/btnSendMessage"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:padding="@dimen/general_size_16dp"
+			android:padding="16dp"
 
 			app:backgroundTint="@color/chat_send_button_bg_tint"
 			app:cornerRadius="50dp"
@@ -219,10 +224,8 @@
 			android:gravity="center"
 
 			android:text="@string/chat_no_messages_explanation"
-			android:textSize="16sp"
 			app:visibilityInvisible='@{viewModel.chatIsEmpty}'
 
-			style="@style/light_text"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"

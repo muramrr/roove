@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 08.04.20 16:37
+  ~ Copyright (C) 2020. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 <layout
@@ -26,7 +34,7 @@
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
-		android:padding="@dimen/general_size_8dp" >
+		android:padding="8dp" >
 
 
 		<com.mmdev.roove.ui.common.custom.components.CircleImageView
@@ -43,27 +51,25 @@
 			app:layout_constraintBottom_toBottomOf="parent"
 			tools:ignore="ContentDescription" />
 
-		<TextView
-			android:id="@+id/tvConversationItemUserName"
+		<TextView android:id="@+id/tvConversationItemUserName"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/general_size_8dp"
+			android:layout_marginStart="8dp"
+			
 			android:gravity="center"
 			android:ellipsize="end"
 			android:lines="1"
 			android:maxLines="1"
 			android:maxLength="20"
-			android:singleLine="true"
+			
 			android:text="@{bindItem.partner.name, default = @string/default_name}"
-			android:textSize="16sp"
+			android:textStyle="bold"
 
 			app:layout_constraintHorizontal_chainStyle="spread_inside"
 			app:layout_constraintEnd_toStartOf="@id/tvConversationUnreadCount"
 			app:layout_constraintStart_toEndOf="@id/ivConversationItemUserPhoto"
 			app:layout_constraintTop_toTopOf="@id/ivConversationItemUserPhoto"
 			app:layout_constraintBottom_toTopOf="@id/tvConversationItemLastMessage"
-
-			style="@style/bold_text"
 			/>
 
 <!--		<com.mmdev.roove.ui.common.custom.components.CircleImageView-->
@@ -81,20 +87,16 @@
 
 <!--			style="@style/bold_text" />-->
 
-		<TextView
-			android:id="@+id/tvConversationItemLastMessage"
+		<TextView android:id="@+id/tvConversationItemLastMessage"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/general_size_8dp"
-			android:layout_marginEnd="@dimen/general_size_8dp"
+			android:layout_marginHorizontal="8dp"
 			android:ellipsize="end"
 			android:lines="1"
 			android:maxLines="1"
 			android:singleLine="true"
 
 			android:text="@{bindItem.lastMessageText, default = `Some text from last message that can only rest of text`}"
-			android:textSize="16sp"
-			style="@style/light_text"
 
 			app:layout_constraintBottom_toBottomOf="@id/ivConversationItemUserPhoto"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -102,11 +104,10 @@
 			app:layout_constraintTop_toBottomOf="@id/tvConversationItemUserName"
 			/>
 
-		<TextView
-			android:id="@+id/tvConversationUnreadCount"
-			android:layout_width="@dimen/general_size_24dp"
-			android:layout_height="@dimen/general_size_24dp"
-			android:layout_marginEnd="@dimen/general_size_8dp"
+		<TextView android:id="@+id/tvConversationUnreadCount"
+			android:layout_width="24dp"
+			android:layout_height="24dp"
+			android:layout_marginEnd="8dp"
 			android:background="@drawable/conversation_unread_indicator"
 			android:ellipsize="end"
 			android:gravity="center"
@@ -117,8 +118,6 @@
 			android:text="@{Integer.toString(bindItem.unreadCount)}"
 
 			app:visibilityInvisible="@{bindItem.unreadCount != 0}"
-
-			style="@style/light_text"
 
 			app:layout_constraintHorizontal_chainStyle="spread_inside"
 			app:layout_constraintStart_toEndOf="@id/tvConversationItemUserName"

@@ -1,31 +1,37 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2020. All rights reserved.
- * Last modified 14.03.20 16:20
+ * Copyright (C) 2020. roove
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
 package com.mmdev.roove.core.di.modules
 
-import com.mmdev.business.auth.repository.AuthRepository
-import com.mmdev.business.cards.repository.CardsRepository
-import com.mmdev.business.chat.repository.ChatRepository
-import com.mmdev.business.conversations.repository.ConversationsRepository
+import com.mmdev.business.auth.AuthRepository
+import com.mmdev.business.cards.CardsRepository
+import com.mmdev.business.chat.ChatRepository
+import com.mmdev.business.conversations.ConversationsRepository
 import com.mmdev.business.local.LocalUserRepository
 import com.mmdev.business.pairs.PairsRepository
-import com.mmdev.business.places.repository.PlacesRepository
 import com.mmdev.business.remote.RemoteUserRepository
-import com.mmdev.data.auth.AuthRepositoryImpl
-import com.mmdev.data.cards.CardsRepositoryImpl
-import com.mmdev.data.chat.ChatRepositoryImpl
-import com.mmdev.data.conversations.ConversationsRepositoryImpl
-import com.mmdev.data.pairs.PairsRepositoryImpl
-import com.mmdev.data.places.PlacesRepositoryImpl
-import com.mmdev.data.user.UserRepositoryLocal
-import com.mmdev.data.user.UserRepositoryRemoteImpl
+import com.mmdev.data.repository.auth.AuthRepositoryImpl
+import com.mmdev.data.repository.cards.CardsRepositoryImpl
+import com.mmdev.data.repository.chat.ChatRepositoryImpl
+import com.mmdev.data.repository.conversations.ConversationsRepositoryImpl
+import com.mmdev.data.repository.pairs.PairsRepositoryImpl
+import com.mmdev.data.repository.user.UserRepositoryLocal
+import com.mmdev.data.repository.user.UserRepositoryRemoteImpl
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -52,10 +58,6 @@ class RepositoryModule {
 	@Provides
 	@Singleton
 	fun pairsRepository(repository: PairsRepositoryImpl): PairsRepository = repository
-
-	@Provides
-	@Singleton
-	fun placesRepository(repository: PlacesRepositoryImpl): PlacesRepository = repository
 
 	@Provides
 	@Singleton

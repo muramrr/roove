@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 09.04.20 16:27
+  ~ Copyright (C) 2020. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 <layout
@@ -19,8 +27,7 @@
 		android:layout_height="match_parent"
 		>
 
-		<fragment
-			android:id="@+id/mainHostFragment"
+		<fragment android:id="@+id/mainHostFragment"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:name="androidx.navigation.fragment.NavHostFragment"
@@ -56,25 +63,6 @@
 				/>
 
 		</androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-		<com.google.android.material.floatingactionbutton.FloatingActionButton
-			android:id="@+id/fabCards"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:scaleType="center"
-			android:src="@drawable/ic_cards_24dp"
-
-			app:backgroundTint="@color/lolite_selected_tint"
-			app:tint="@color/white_tint_selected"
-
-			app:elevation="0dp"
-			app:fabSize="auto"
-			app:layout_anchorGravity="top|center"
-
-			app:layout_constraintStart_toStartOf="@id/containerBottomNavigation"
-			app:layout_constraintEnd_toEndOf="@id/containerBottomNavigation"
-			app:layout_constraintTop_toTopOf="@id/containerBottomNavigation"
-			/>
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

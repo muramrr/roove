@@ -1,11 +1,19 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2020. All rights reserved.
- * Last modified 30.12.20 21:53
+ * Copyright (C) 2020. roove
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
 package com.mmdev.roove.ui.settings.edit
@@ -21,16 +29,16 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.GridLayoutManager
-import com.mmdev.business.core.UserItem
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentSettingsEditInfoBinding
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.GridItemDecoration
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel.DeletingStatus.IN_PROGRESS
-import com.mmdev.roove.utils.buildMaterialAlertDialog
-import com.mmdev.roove.utils.observeOnce
-import com.mmdev.roove.utils.showToastText
+import com.mmdev.roove.utils.extensions.observeOnce
+import com.mmdev.roove.utils.extensions.showToastText
 
 /**
  * This is the documentation block about the class
@@ -238,18 +246,16 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 
 	}
 
-	private fun showDialogDeleteAttention() {
-		context?.buildMaterialAlertDialog(
-			title = getString(R.string.dialog_profile_delete_title),
-			message = getString(R.string.dialog_profile_delete_message),
-			positiveText = getString(R.string.dialog_delete_btn_positive_text),
-			positiveClick = {
-				mViewModel.selfDeletingStatus.value = IN_PROGRESS
-				mViewModel.deleteMyAccount()
-			},
-			negativeText = getString(R.string.dialog_delete_btn_negative_text),
-			negativeClick = {} )?.show()
-	}
+	private fun showDialogDeleteAttention() = MaterialAlertDialogBuilder(requireContext())
+		.setTitle(R.string.dialog_profile_delete_title)
+		.setMessage(R.string.dialog_profile_delete_message)
+		.setPositiveButton(R.string.dialog_delete_btn_positive_text) { dialog, which ->
+			mViewModel.selfDeletingStatus.value = IN_PROGRESS
+			mViewModel.deleteMyAccount()
+		}
+		.setNegativeButton(R.string.dialog_delete_btn_negative_text, null)
+		.create()
+		.show()
 
 	override fun onBackPressed() {
 		super.onBackPressed()

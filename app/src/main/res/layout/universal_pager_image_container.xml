@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 31.03.20 16:28
+  ~ Copyright (C) 2020. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 <layout
@@ -19,42 +27,34 @@
 			type="String" />
 	</data>
 
-	<androidx.constraintlayout.widget.ConstraintLayout
+	<FrameLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
-		<ImageView
-			android:id="@+id/image_container_iv"
-			android:layout_width="0dp"
-			android:layout_height="0dp"
+		<ImageView android:id="@+id/image_container_iv"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
 			android:scaleType="centerCrop"
 
 			app:bindImageUrl="@{bindItem}"
 			app:progressBar="@{pbImageLoading}"
 
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
+			android:contentDescription="@string/description_user_photo"
+			/>
 
-			android:contentDescription="@string/description_user_photo" />
-
-		<ImageView
-			android:id="@+id/pager_container_image_gradient"
-			android:layout_width="0dp"
+		<ImageView android:id="@+id/pager_container_image_gradient"
+			android:layout_width="match_parent"
 			android:layout_height="100dp"
+			android:layout_gravity="bottom"
 			android:src="@drawable/gradient_transparent"
-
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintBottom_toBottomOf="@id/image_container_iv"
-
+			
 			android:contentDescription="@string/description_user_photo" />
 
-		<ProgressBar
-			android:id="@+id/pbImageLoading"
+		<ProgressBar android:id="@+id/pbImageLoading"
 			android:layout_width="150dp"
 			android:layout_height="150dp"
+			android:layout_gravity="center"
+			
 			android:indeterminate="false"
 			android:minHeight="32dp"
 			android:minWidth="32dp"
@@ -62,13 +62,8 @@
 			android:progressDrawable="@drawable/progress_drawable"
 
 			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
 			/>
 
-	</androidx.constraintlayout.widget.ConstraintLayout>
+	</FrameLayout>
 
 </layout>

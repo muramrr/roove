@@ -2,12 +2,20 @@
 
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 31.03.20 15:14
+  ~ Copyright (C) 2020. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 <layout
@@ -33,15 +41,13 @@
 		android:layout_width="match_parent"
 		>
 
-		<TextView
-			android:id="@+id/tvItIsMatch"
+		<TextView android:id="@+id/tvItIsMatch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			app:paddingTopSystemWindowInsets="@{true}"
 
 			android:text="@string/tv_its_a_match"
 			android:textSize="24sp"
-			style="@style/regular_text"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -65,10 +71,10 @@
 			app:layout_constraintVertical_bias="0.3"
 			/>
 
-		<TextView
-			android:id="@+id/tvMatchedName"
+		<TextView android:id="@+id/tvMatchedName"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			
 			android:text="@{name, default = @string/default_name}"
 			android:textSize="28sp"
 
@@ -77,13 +83,12 @@
 			app:layout_constraintTop_toBottomOf="@id/matched_photo"
 			app:layout_constraintBottom_toTopOf="@id/tvMatchDialogBack"
 			app:layout_constraintVertical_bias="0.7"
-			style="@style/medium_text"/>
+			/>
 
-		<TextView
-			android:id="@+id/tvMatchDialogBack"
+		<TextView android:id="@+id/tvMatchDialogBack"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/general_size_24dp"
+			android:layout_marginBottom="24dp"
 			app:paddingBottomSystemWindowInsets="@{true}"
 
 			android:fontFamily="@font/rubik_bold"

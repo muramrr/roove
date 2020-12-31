@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 17:59
+  ~ Copyright (C) 2020. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 <layout
@@ -18,7 +26,7 @@
 
 		<variable
 			name="viewModel"
-			type="com.mmdev.roove.ui.dating.cards.CardsViewModel" />
+			type="com.mmdev.roove.ui.cards.CardsViewModel" />
 
 	</data>
 
@@ -34,9 +42,8 @@
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:clipToPadding="false"
-			android:paddingStart="@dimen/general_size_16dp"
-			android:paddingEnd="@dimen/general_size_16dp"
-			android:paddingBottom="@dimen/general_size_8dp"
+			android:paddingHorizontal="16dp"
+			android:paddingBottom="8dp"
 
 			app:visibilityInvisible="@{!viewModel.showLoading}"
 
@@ -63,15 +70,12 @@
 	        app:layout_constraintTop_toTopOf="parent"
 	        tools:ignore="ContentDescription" />
 
-	    <TextView
-		    android:id="@+id/tvCardHelperText"
+	    <TextView android:id="@+id/tvCardHelperText"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 		    android:gravity="center"
 
 	        android:text="@string/fragment_cards_explanation_text"
-		    android:textSize="18sp"
-		    style="@style/regular_text"
 
 			app:visibilityInvisible="@{viewModel.showTextHelper}"
 

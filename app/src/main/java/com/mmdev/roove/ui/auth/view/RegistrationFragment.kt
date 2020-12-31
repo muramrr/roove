@@ -1,11 +1,19 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2020. All rights reserved.
- * Last modified 03.07.20 20:30
+ * Copyright (C) 2020. roove
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
 package com.mmdev.roove.ui.auth.view
@@ -21,10 +29,10 @@ import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.Observer
-import com.mmdev.business.core.BaseUserInfo
-import com.mmdev.business.core.PhotoItem
-import com.mmdev.business.core.PreferredAgeRange
-import com.mmdev.business.core.UserItem
+import com.mmdev.business.data.PhotoItem
+import com.mmdev.business.user.BaseUserInfo
+import com.mmdev.business.user.PreferredAgeRange
+import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentAuthRegistrationBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
@@ -241,10 +249,12 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 
 			associatedViewModel.register(
 					UserItem(finalUserModel,
-					         cityToDisplay = cityToDisplay,
-					         photoURLs = mutableListOf(PhotoItem(fileName = "facebookPhoto",
-					                                             fileUrl = finalUserModel.mainPhotoUrl)),
-					         preferredAgeRange = preferredAgeRange)
+							 cityToDisplay = cityToDisplay,
+							 photoURLs = mutableListOf(
+								 PhotoItem(fileName = "facebookPhoto",
+										   fileUrl = finalUserModel.mainPhotoUrl)
+							 ),
+							 preferredAgeRange = preferredAgeRange)
 			)
 		}
 

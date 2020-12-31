@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 26.03.20 18:13
+  ~ Copyright (C) 2020. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 <navigation android:id="@+id/mainNavigation"
@@ -15,79 +23,50 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
-	<action
-		android:id="@+id/action_open_placesFragment"
-		app:destination="@id/placesFragmentNav"
-		app:enterAnim="@anim/nav_default_enter_anim"
-		app:exitAnim="@anim/nav_default_exit_anim"
-		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-		app:popExitAnim="@anim/nav_default_pop_exit_anim"
-		/>
-
-	<action
-		android:id="@+id/action_open_pairsFragment"
+	<action android:id="@+id/action_open_pairsFragment"
 		app:destination="@id/pairsFragmentNav"
+		
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+		app:popExitAnim="@anim/nav_default_pop_exit_anim"
 		/>
 
-	<action
-		android:id="@+id/action_open_cardsFragment"
+	<action android:id="@+id/action_open_cardsFragment"
 		app:destination="@id/cardsFragmentNav"
+		
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
 		app:popExitAnim="@anim/nav_default_pop_exit_anim"
 		/>
 
-	<action
-		android:id="@+id/action_open_conversationsFragment"
+	<action android:id="@+id/action_open_conversationsFragment"
 		app:destination="@id/conversationsFragmentNav"
+		
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
 		app:popExitAnim="@anim/nav_default_pop_exit_anim"
 		/>
 
-	<action
-		android:id="@+id/action_open_settingsFragment"
+	<action android:id="@+id/action_open_settingsFragment"
 		app:destination="@id/settingsFragmentNav"
+		
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
 		app:popEnterAnim="@anim/nav_default_pop_enter_anim"
 		app:popExitAnim="@anim/nav_default_pop_exit_anim"
 		/>
-
-	<!-- main places fragment-->
-	<fragment
-		android:id="@+id/placesFragmentNav"
-		android:name="com.mmdev.roove.ui.places.view.PlacesFragment"
-		tools:layout="@layout/fragment_places" >
-
-		<action
-			android:id="@+id/action_places_to_placeDetailedFragment"
-			app:destination="@id/placeDetailedFragmentNav"
-			app:enterAnim="@anim/enter_from_top"
-			app:exitAnim="@anim/exit_to_bottom"
-			app:popEnterAnim="@anim/enter_from_bottom"
-			app:popExitAnim="@anim/exit_to_top" >
-
-			<argument android:name="PLACE_ID" />
-
-		</action>
-
-	</fragment>
 
 	<!-- main pairs fragment-->
-	<fragment
-		android:id="@+id/pairsFragmentNav"
+	<fragment android:id="@+id/pairsFragmentNav"
 		android:name="com.mmdev.roove.ui.dating.pairs.view.PairsFragment"
 		tools:layout="@layout/fragment_pairs" >
 
-		<action
-			android:id="@+id/action_pairs_to_profileFragment"
+		<action android:id="@+id/action_pairs_to_profileFragment"
 			app:destination="@id/profileFragmentNav"
+			
 			app:enterAnim="@anim/enter_from_top"
 			app:exitAnim="@anim/exit_to_bottom"
 			app:popEnterAnim="@anim/enter_from_bottom"
@@ -106,15 +85,14 @@
 	</fragment>
 
 	<!-- main cards fragment-->
-	<fragment
-		android:id="@+id/cardsFragmentNav"
-		android:name="com.mmdev.roove.ui.dating.cards.view.CardsFragment"
+	<fragment android:id="@+id/cardsFragmentNav"
+		android:name="com.mmdev.roove.ui.cards.view.CardsFragment"
 		android:label="Cards"
 		tools:layout="@layout/fragment_cards" >
 
-		<action
-			android:id="@+id/action_cards_to_profileFragment"
+		<action android:id="@+id/action_cards_to_profileFragment"
 			app:destination="@id/profileFragmentNav"
+			
 			app:enterAnim="@anim/enter_from_top"
 			app:exitAnim="@anim/exit_to_bottom"
 			app:popEnterAnim="@anim/enter_from_bottom"
@@ -130,14 +108,13 @@
 	</fragment>
 
 	<!-- main conversations fragment-->
-	<fragment
-		android:id="@+id/conversationsFragmentNav"
-		android:name="com.mmdev.roove.ui.dating.conversations.view.ConversationsFragment"
+	<fragment android:id="@+id/conversationsFragmentNav"
+		android:name="com.mmdev.roove.ui.conversations.view.ConversationsFragment"
 		tools:layout="@layout/fragment_conversations" >
 
-		<action
-			android:id="@+id/action_conversations_to_chatFragment"
+		<action android:id="@+id/action_conversations_to_chatFragment"
 			app:destination="@id/chatFragmentNav"
+			
 			app:enterAnim="@anim/enter_from_top"
 			app:exitAnim="@anim/exit_to_bottom"
 			app:popEnterAnim="@anim/enter_from_bottom"
@@ -146,53 +123,29 @@
 	</fragment>
 
 	<!-- main settings fragment-->
-	<fragment
-		android:id="@+id/settingsFragmentNav"
+	<fragment android:id="@+id/settingsFragmentNav"
 		android:label="Settings"
 		android:name="com.mmdev.roove.ui.settings.SettingsFragment"
 		tools:layout="@layout/fragment_settings" >
 
-		<action
-			android:id="@+id/action_settings_to_settingsEditInfoFragment"
+		<action android:id="@+id/action_settings_to_settingsEditInfoFragment"
 			app:destination="@id/settingsEditInfoFragmentNav"
+			
 			app:enterAnim="@anim/enter_from_right"
 			app:exitAnim="@anim/exit_to_left"
 			app:popEnterAnim="@anim/enter_from_left"
 			app:popExitAnim="@anim/exit_to_right"/>
 
-		<action
-			android:id="@+id/action_settings_to_placeDetailedFragment"
-			app:destination="@id/placeDetailedFragmentNav"
-			app:enterAnim="@anim/enter_from_bottom"
-			app:exitAnim="@anim/exit_to_top"
-			app:popEnterAnim="@anim/enter_from_top"
-			app:popExitAnim="@anim/exit_to_bottom" />
-
 	</fragment>
 
 	<!-- secondary settings edit fragment -->
-	<fragment
-		android:id="@+id/settingsEditInfoFragmentNav"
+	<fragment android:id="@+id/settingsEditInfoFragmentNav"
 		android:label="Edit"
 		android:name="com.mmdev.roove.ui.settings.edit.SettingsEditInfoFragment"
 		tools:layout="@layout/fragment_settings_edit_info" />
 
-	<!-- secondary places detailed fragment-->
-	<fragment
-		android:id="@+id/placeDetailedFragmentNav"
-		android:name="com.mmdev.roove.ui.places.view.detailed.PlaceDetailedFragment"
-		tools:layout="@layout/fragment_place_detailed" >
-
-		<argument
-			android:name="PLACE_ID"
-			app:argType="integer"
-			android:defaultValue="0" />
-
-	</fragment>
-
 	<!-- secondary profile view fragment-->
-	<fragment
-		android:id="@+id/profileFragmentNav"
+	<fragment android:id="@+id/profileFragmentNav"
 		android:name="com.mmdev.roove.ui.profile.view.ProfileFragment"
 		tools:layout="@layout/fragment_profile">
 
@@ -206,37 +159,24 @@
 			app:argType="boolean"
 			android:defaultValue="false" />
 
-		<action
-			android:id="@+id/action_profile_to_chatFragment"
+		<action android:id="@+id/action_profile_to_chatFragment"
 			app:destination="@id/chatFragmentNav"
+			
 			app:enterAnim="@anim/enter_from_top"
 			app:exitAnim="@anim/exit_to_bottom"
 			app:popEnterAnim="@anim/enter_from_bottom"
 			app:popExitAnim="@anim/exit_to_top" />
 
-		<action
-			android:id="@+id/action_profile_to_placeDetailedFragment"
-			app:destination="@id/placeDetailedFragmentNav"
-			app:enterAnim="@anim/enter_from_bottom"
-			app:exitAnim="@anim/exit_to_top"
-			app:popEnterAnim="@anim/enter_from_top"
-			app:popExitAnim="@anim/exit_to_bottom" >
-
-			<argument android:name="PLACE_ID" />
-
-		</action>
-
 	</fragment>
 
 	<!-- secondary conversations chat fragment-->
-	<fragment
-		android:id="@+id/chatFragmentNav"
-		android:name="com.mmdev.roove.ui.dating.chat.view.ChatFragment"
+	<fragment android:id="@+id/chatFragmentNav"
+		android:name="com.mmdev.roove.ui.chat.view.ChatFragment"
 		tools:layout="@layout/fragment_chat">
 
-		<action
-			android:id="@+id/action_chat_to_profileFragment"
+		<action android:id="@+id/action_chat_to_profileFragment"
 			app:destination="@id/profileFragmentNav"
+			
 			app:enterAnim="@anim/enter_from_top"
 			app:exitAnim="@anim/exit_to_bottom"
 			app:popEnterAnim="@anim/enter_from_bottom"
@@ -255,6 +195,7 @@
 		<argument
 			android:name="CONVERSATION_ID"
 			app:argType="string" />
+		
 	</fragment>
 
 </navigation>

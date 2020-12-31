@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 10.04.20 16:40
+  ~ Copyright (C) 2020. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 
@@ -18,7 +26,7 @@
 
 		<variable
 			name="viewModel"
-			type="com.mmdev.roove.ui.dating.pairs.PairsViewModel" />
+			type="com.mmdev.roove.ui.pairs.PairsViewModel" />
 
 	</data>
 
@@ -29,8 +37,7 @@
 		android:background="@color/colorPrimaryDark"
 		>
 
-		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/rvPairList"
+		<androidx.recyclerview.widget.RecyclerView android:id="@+id/rvPairList"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:clipToPadding="false"
@@ -49,10 +56,10 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 
-			tools:listitem="@layout/fragment_pairs_item"/>
+			tools:listitem="@layout/fragment_pairs_item"
+			/>
 
-		<TextView
-			android:id="@+id/tvPairsHelperText"
+		<TextView android:id="@+id/tvPairsHelperText"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:gravity="center"
@@ -61,7 +68,6 @@
 			android:textSize="24sp"
 			app:visibilityInvisible='@{viewModel.showTextHelper}'
 
-			style="@style/regular_text"
 
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"

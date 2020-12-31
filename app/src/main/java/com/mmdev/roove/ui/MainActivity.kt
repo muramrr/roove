@@ -1,26 +1,28 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2020. All rights reserved.
- * Last modified 08.04.20 17:44
+ * Copyright (C) 2020. roove
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
 package com.mmdev.roove.ui
 
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.mmdev.roove.R
@@ -30,9 +32,8 @@ import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.AUTHENTICATED
 import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.UNAUTHENTICATED
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
-import com.mmdev.roove.ui.profile.RemoteRepoViewModel.DeletingStatus.*
-import com.mmdev.roove.utils.observeOnce
-import com.mmdev.roove.utils.showToastText
+import com.mmdev.roove.utils.extensions.observeOnce
+import com.mmdev.roove.utils.extensions.showToastText
 
 
 class MainActivity: AppCompatActivity() {
@@ -63,31 +64,29 @@ class MainActivity: AppCompatActivity() {
 		DataBindingUtil.setContentView(this, R.layout.activity_main) as ActivityMainBinding
 
 		val navController = findNavController(R.id.flowHostFragment)
-
-		val progressDialog = setupProgressDialog(this@MainActivity)
-
+		
 		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 		sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
 		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
 		//init observer
-		authViewModel.authenticatedState.observe(this, Observer { authState ->
+		authViewModel.authenticatedState.observe(this, { authState ->
 			when (authState) {
 				UNAUTHENTICATED -> navController.navigate(R.id.action_global_authFlowFragment)
 				AUTHENTICATED -> {
 					//init shared observer
-					sharedViewModel.getCurrentUser().observeOnce(this, Observer {
+					sharedViewModel.getCurrentUser().observeOnce(this, {
 						userInitialized ->
 						if (userInitialized != null) navController.navigate(R.id.action_global_mainFlowFragment)
 					})
 
 
 					authViewModel.fetchUserItem()
-					authViewModel.actualCurrentUserItem.observeOnce(this, Observer {
+					authViewModel.actualCurrentUserItem.observeOnce(this, {
 						actualUserItem -> sharedViewModel.setCurrentUser(actualUserItem)
 					})
 
-					remoteRepoViewModel.updatableCurrentUserItem.observe(this, Observer {
+					remoteRepoViewModel.updatableCurrentUserItem.observe(this, {
 						updatedUser -> sharedViewModel.setCurrentUser(updatedUser)
 					})
 				}
@@ -95,35 +94,30 @@ class MainActivity: AppCompatActivity() {
 			}
 		})
 		//init auth dialog_loading & observer
-		authViewModel.showProgress.observe(this, Observer {
-			if (it == true) progressDialog.show()
-			else progressDialog.dismiss()
+		authViewModel.showProgress.observe(this, {
+//			if (it == true) progressDialog.show()
+//			else progressDialog.dismiss()
 		})
 
-		remoteRepoViewModel.isUserUpdatedStatus.observe(this, Observer {
+		remoteRepoViewModel.isUserUpdatedStatus.observe(this, {
 			if (it) { showToastText(getString(R.string.toast_text_update_success)) }
 		})
 
-		remoteRepoViewModel.selfDeletingStatus.observe(this, Observer {
-			when(it) {
-				IN_PROGRESS -> progressDialog.show()
-				FAILURE -> progressDialog.dismiss()
-				COMPLETED -> {
-					authViewModel.logOut()
-					progressDialog.dismiss()
-				}
-				else -> { progressDialog.dismiss() }
-			}
+		remoteRepoViewModel.selfDeletingStatus.observe(this, {
+//			when(it) {
+//				IN_PROGRESS -> progressDialog.show()
+//				FAILURE -> progressDialog.dismiss()
+//				COMPLETED -> {
+//					authViewModel.logOut()
+//					progressDialog.dismiss()
+//				}
+//				else -> { progressDialog.dismiss() }
+//			}
 		})
 
 		//start to listens auth status
 		authViewModel.checkIsAuthenticated()
-
-		//creating fake data on remote, do not call this on UI thread
-//		for (i in 0 until 50){
-//			UtilityManager.generateConversationOnRemote()
-//			UtilityManager.generateMatchesOnRemote()
-//		}
+		
 
 		//note: debug
 //		val dm = DisplayMetrics()
@@ -132,15 +126,6 @@ class MainActivity: AppCompatActivity() {
 //		val height = dm.heightPixels.toFloat()
 //		Log.wtf(TAG, "${px2Dp(height)}")
 
-	}
-
-	private fun setupProgressDialog(context: Context): Dialog {
-		val dialog = Dialog(context)
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-		dialog.setCancelable(false)
-		dialog.setContentView(R.layout.dialog_loading)
-		dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-		return dialog
 	}
 
 }

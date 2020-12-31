@@ -1,11 +1,19 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2020. All rights reserved.
- * Last modified 30.12.20 21:53
+ * Copyright (C) 2020. roove
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
 package com.mmdev.roove.ui.profile.view
@@ -21,10 +29,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mmdev.business.core.UserItem
 import com.mmdev.business.places.BasePlaceInfo
-import com.mmdev.business.remote.entity.Report
-import com.mmdev.business.remote.entity.Report.ReportType.*
+import com.mmdev.business.remote.Report
+import com.mmdev.business.remote.Report.ReportType.*
+import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentProfileBinding
 import com.mmdev.roove.ui.common.ImagePagerAdapter
@@ -168,10 +176,14 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 			                  getString(R.string.report_chooser_behavior),
 			                  getString(R.string.report_chooser_fake))) { _, itemIndex ->
 				when (itemIndex) {
-					0 -> { associatedViewModel.submitReport(Report(INELIGIBLE_PHOTOS,
-					                                               selectedUser.baseUserInfo)) }
-					1 -> { associatedViewModel.submitReport(Report(DISRESPECTFUL_BEHAVIOR,
-					                                               selectedUser.baseUserInfo)) }
+					0 -> { associatedViewModel.submitReport(
+						Report(INELIGIBLE_PHOTOS,
+							   selectedUser.baseUserInfo)
+					) }
+					1 -> { associatedViewModel.submitReport(
+						Report(DISRESPECTFUL_BEHAVIOR,
+							   selectedUser.baseUserInfo)
+					) }
 					2 -> { associatedViewModel.submitReport(Report(FAKE, selectedUser.baseUserInfo)) }
 				}
 			}
