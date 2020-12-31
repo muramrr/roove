@@ -1,19 +1,11 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 31.12.20 17:19
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 package com.mmdev.roove.ui.settings.edit
@@ -28,6 +20,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.user.UserItem
@@ -49,7 +42,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 ) {
 
 	private lateinit var currentUser: UserItem
-	private val mEditorPhotoAdapter = SettingsEditInfoPhotoAdapter(layoutId = R.layout.fragment_settings_edit_info_photo_item)
+	private val mEditorPhotoAdapter = SettingsEditInfoPhotoAdapter()
 
 	private var name = ""
 	private var age = 0
@@ -87,32 +80,27 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 			addItemDecoration(GridItemDecoration())
 		}
 
-		mEditorPhotoAdapter.setOnItemClickListener(object: SettingsEditInfoPhotoAdapter.OnItemClickListener {
-
-			override fun onItemClick(view: View, position: Int) {
-				if (mEditorPhotoAdapter.itemCount > 1) {
-					val photoToDelete = mEditorPhotoAdapter.getItem(position)
-
-					val isMainPhotoDeleting = photoToDelete.fileUrl == currentUser.baseUserInfo.mainPhotoUrl
-
-					//deletion observer
-					mViewModel.photoDeletingStatus.observeOnce(this@SettingsEditInfoFragment, {
-						if (it) {
-							currentUser.photoURLs.remove(photoToDelete)
-							mEditorPhotoAdapter.removeAt(position)
-
-							if (isMainPhotoDeleting) {
-								currentUser.baseUserInfo.mainPhotoUrl = currentUser.photoURLs[0].fileUrl
-							}
+		mEditorPhotoAdapter.setOnItemClickListener { item , position ->
+			if (mEditorPhotoAdapter.itemCount > 1) {
+				val isMainPhotoDeleting = item.fileUrl == currentUser.baseUserInfo.mainPhotoUrl
+				
+				//deletion observer
+				mViewModel.photoDeletingStatus.observeOnce(this@SettingsEditInfoFragment, {
+					if (it) {
+						currentUser.photoURLs.remove(item)
+						mEditorPhotoAdapter.removeAt(position)
+						
+						if (isMainPhotoDeleting) {
+							currentUser.baseUserInfo.mainPhotoUrl = currentUser.photoURLs[0].fileUrl
 						}
-					})
-					//execute deleting
-					mViewModel.deletePhoto(photoToDelete,
-					                                currentUser, isMainPhotoDeleting)
-				}
-				else requireContext().showToastText(getString(R.string.toast_text_at_least_1_photo_required))
+					}
+				})
+				//execute deleting
+				mViewModel.deletePhoto(item, currentUser, isMainPhotoDeleting)
 			}
-		})
+			else requireContext().showToastText(getString(R.string.toast_text_at_least_1_photo_required))
+			
+		}
 
 		//touch event guarantee that if user want to scroll or touch outside of edit box
 		//keyboard hide and editText focus clear
@@ -159,33 +147,27 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 	}
 
 	private fun changerNameSetup() {
-		binding.edSettingsEditName.addTextChangedListener(object: TextWatcher {
-			override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-			override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-				binding.layoutSettingsEditName.isCounterEnabled = true
-			}
-
-			override fun afterTextChanged(s: Editable) {
-				when {
-					s.length > binding.layoutSettingsEditName.counterMaxLength -> {
-						binding.layoutSettingsEditName.error = getString(R.string.text_max_length_error)
-						binding.btnSettingsEditSave.isEnabled = false
-					}
-					s.isEmpty() -> {
-						binding.layoutSettingsEditName.error = getString(R.string.text_empty_error)
-						binding.btnSettingsEditSave.isEnabled = false
-
-					}
-					else -> {
-						binding.layoutSettingsEditName.error = ""
-						name = s.toString().trim()
-						currentUser.baseUserInfo.name = name
-						binding.btnSettingsEditSave.isEnabled = true
-					}
+		binding.edSettingsEditName.doAfterTextChanged {
+			when {
+				it.isNullOrBlank() -> {
+					binding.layoutSettingsEditName.error = getString(R.string.text_empty_error)
+					binding.btnSettingsEditSave.isEnabled = false
+					
+				}
+				
+				it.length > binding.layoutSettingsEditName.counterMaxLength -> {
+					binding.layoutSettingsEditName.error = getString(R.string.text_max_length_error)
+					binding.btnSettingsEditSave.isEnabled = false
+				}
+				
+				else -> {
+					binding.layoutSettingsEditName.error = ""
+					name = it.toString().trim()
+					currentUser.baseUserInfo.name = name
+					binding.btnSettingsEditSave.isEnabled = true
 				}
 			}
-		})
+		}
 		
 		binding.edSettingsEditName.setOnEditorActionListener { editText, actionId, _ ->
 			if (actionId == EditorInfo.IME_ACTION_DONE) {

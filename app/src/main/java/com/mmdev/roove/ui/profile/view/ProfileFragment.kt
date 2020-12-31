@@ -1,35 +1,22 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 31.12.20 16:50
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 package com.mmdev.roove.ui.profile.view
 
 import android.os.Bundle
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.os.bundleOf
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mmdev.business.places.BasePlaceInfo
 import com.mmdev.business.remote.Report
 import com.mmdev.business.remote.Report.ReportType.*
 import com.mmdev.business.user.UserItem
@@ -37,18 +24,19 @@ import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentProfileBinding
 import com.mmdev.roove.ui.common.ImagePagerAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
-import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
-import kotlinx.android.synthetic.main.fragment_profile.*
+import com.mmdev.roove.utils.extensions.observeOnce
+import com.mmdev.roove.utils.extensions.showToastText
 
 /**
  * This is the documentation block about the class
  */
 
-class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
+class ProfileFragment: BaseFragment<RemoteRepoViewModel, FragmentProfileBinding>(
+	layoutId = R.layout.fragment_profile
+) {
 
 	private val userPhotosAdapter = ImagePagerAdapter()
-	private val mPlacesToGoAdapter = PlacesToGoAdapter()
 
 	private var isReported: Boolean = false
 	private var fabVisible: Boolean = false
@@ -68,14 +56,14 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		associatedViewModel = getViewModel()
+		mViewModel = getViewModel()
 		
-		arguments.let {
+		arguments?.let {
 			fabVisible = it.getBoolean(FAB_VISIBLE_KEY)
 			isMatched = it.getBoolean(MATCHED_KEY)
 		}
 
-		associatedViewModel.retrievedUserItem.observeOnce(this, Observer {
+		mViewModel.retrievedUserItem.observeOnce(this, {
 			selectedUser = it
 			//ui
 			userPhotosAdapter.setData(it.photoURLs.map { photoItem -> photoItem.fileUrl })
@@ -84,44 +72,34 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
 		//if true -> seems that we navigates here from pairs or chat fragment
 		if (isMatched) {
-			sharedViewModel.matchedUserItemSelected.value.let {
+			sharedViewModel.matchedUserItemSelected.value?.let {
 				conversationId = it.conversationId
-				associatedViewModel.getRequestedUserInfo(it.baseUserInfo)
+				mViewModel.getRequestedUserInfo(it.baseUserInfo)
 			}
-			associatedViewModel.unmatchStatus.observeOnce(this, Observer {
+			mViewModel.unmatchStatus.observeOnce(this, {
 				if (it) navController.navigateUp()
 			})
 		}
 		//else we navigates here from cards and already have userItem in sharedViewModel
 		else {
 			sharedViewModel.userNavigateTo.value.let {
-				associatedViewModel.retrievedUserItem.value = it
+				mViewModel.retrievedUserItem.value = it
 			}
 		}
 
-		associatedViewModel.reportSubmittingStatus.observeOnce(this, Observer {
+	}
+
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
+		mViewModel.reportSubmittingStatus.observeOnce(this@ProfileFragment, {
 			isReported = it
-			context.showToastText(getString(R.string.toast_text_report_success))
+			requireContext().showToastText(getString(R.string.toast_text_report_success))
 			toolbarProfile.apply {
 				val reportItem = menu.findItem(R.id.profile_action_report)
 				reportItem.isVisible = !isReported
 			}
 		})
-
-	}
-
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-	                          savedInstanceState: Bundle?) =
-		FragmentProfileBinding.inflate(inflater, container, false)
-			.apply {
-				lifecycleOwner = this@ProfileFragment
-				isFabVisible = fabVisible
-				viewModel = associatedViewModel
-				executePendingBindings()
-			}.root
-
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+		
+		fabProfileSendMessage.visibility = if (fabVisible) View.VISIBLE else View.GONE
 		viewPagerProfilePhotos.apply {
 			(getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
 			adapter = userPhotosAdapter
@@ -143,25 +121,15 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 				when (item.itemId) {
 					R.id.profile_action_report -> { showReportDialog() }
 					R.id.profile_action_unmatch -> {
-						sharedViewModel.matchedUserItemSelected.value.let {
-							associatedViewModel.deleteMatchedUser(it)
+						sharedViewModel.matchedUserItemSelected.value?.let {
+							mViewModel.deleteMatchedUser(it)
 						}
 					}
 				}
 				return@setOnMenuItemClickListener true
 			}
 		}
-
-		rvProfileWantToGoList.apply { adapter = mPlacesToGoAdapter }
-
-		mPlacesToGoAdapter.setOnItemClickListener(object: BaseRecyclerAdapter.OnItemClickListener<BasePlaceInfo> {
-
-			override fun onItemClick(item: BasePlaceInfo, position: Int) {
-				val placeId = bundleOf(PLACE_ID_KEY to item.id)
-				navController.navigate(R.id.action_profile_to_placeDetailedFragment, placeId)
-			}
-		})
-
+		
 		if (fabVisible) {
 			fabProfileSendMessage.setOnClickListener {
 				navController.navigate(R.id.action_profile_to_chatFragment)
@@ -170,28 +138,27 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel>() {
 
 	}
 
-	private fun showReportDialog() {
-		val materialDialogPicker = MaterialAlertDialogBuilder(requireContext())
-			.setItems(arrayOf(getString(R.string.report_chooser_photos),
-			                  getString(R.string.report_chooser_behavior),
-			                  getString(R.string.report_chooser_fake))) { _, itemIndex ->
-				when (itemIndex) {
-					0 -> { associatedViewModel.submitReport(
-						Report(INELIGIBLE_PHOTOS,
-							   selectedUser.baseUserInfo)
-					) }
-					1 -> { associatedViewModel.submitReport(
-						Report(DISRESPECTFUL_BEHAVIOR,
-							   selectedUser.baseUserInfo)
-					) }
-					2 -> { associatedViewModel.submitReport(Report(FAKE, selectedUser.baseUserInfo)) }
-				}
+	//todo: extract to array res
+	private fun showReportDialog() = MaterialAlertDialogBuilder(requireContext())
+		.setItems(arrayOf(getString(R.string.report_chooser_photos),
+		                  getString(R.string.report_chooser_behavior),
+		                  getString(R.string.report_chooser_fake))) { _, itemIndex ->
+			when (itemIndex) {
+				0 -> { mViewModel.submitReport(
+					Report(INELIGIBLE_PHOTOS,
+						   selectedUser.baseUserInfo)
+				) }
+				1 -> { mViewModel.submitReport(
+					Report(DISRESPECTFUL_BEHAVIOR,
+						   selectedUser.baseUserInfo)
+				) }
+				2 -> { mViewModel.submitReport(Report(FAKE, selectedUser.baseUserInfo)) }
 			}
-			.create()
-		val params = materialDialogPicker.window.attributes
-		params.gravity = Gravity.CENTER
-		materialDialogPicker.show()
-	}
+		}
+		.create()
+		.apply { window?.attributes?.gravity = Gravity.CENTER }
+		.show()
+	
 
 	override fun onBackPressed() {
 		navController.navigateUp()

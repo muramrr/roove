@@ -1,28 +1,18 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 31.12.20 15:53
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 package com.mmdev.roove.ui.cards.view
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.mmdev.business.user.UserItem
@@ -34,10 +24,11 @@ import com.mmdev.roove.ui.common.base.BaseFragment
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
-import kotlinx.android.synthetic.main.fragment_cards.*
 
 
-class CardsFragment: BaseFragment<CardsViewModel>() {
+class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
+	layoutId = R.layout.fragment_cards
+) {
 
 	private val mCardsStackAdapter = CardsStackAdapter()
 
@@ -51,34 +42,24 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		associatedViewModel = getViewModel()
+		mViewModel = getViewModel()
 
-		associatedViewModel.loadUsersByPreferences(initialLoading = true)
-		associatedViewModel.usersCardsList.observe(this, Observer {
+		mViewModel.loadUsersByPreferences(initialLoading = true)
+		mViewModel.usersCardsList.observe(this, Observer {
 			mCardsList.clear()
 			mCardsList.addAll(it)
 			mCardsStackAdapter.setData(it)
 		})
-		associatedViewModel.showMatchDialog.observe(this, Observer {
+		mViewModel.showMatchDialog.observe(this, Observer {
 			if (it) showMatchDialog(mDisappearedUserItem)
 		})
 
 	}
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-	                          savedInstanceState: Bundle?) =
-		FragmentCardsBinding.inflate(inflater, container, false)
-			.apply {
-				lifecycleOwner = this@CardsFragment
-				viewModel = associatedViewModel
-				executePendingBindings()
-			}
-			.root
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-		val cardStackLayoutManager = CardStackLayoutManager(cardStackView.context,
-		                                                    object: CardStackListener {
+		val cardStackLayoutManager = CardStackLayoutManager(
+			cardStackView.context, object: CardStackListener {
 
 			override fun onCardAppeared(view: View, position: Int) {
 				//get current displayed on card profile
@@ -90,11 +71,11 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 			override fun onCardSwiped(direction: Direction) {
 				//if right = add to liked
 				if (direction == Direction.Right) {
-					associatedViewModel.checkMatch(mAppearedUserItem)
+					mViewModel.checkMatch(mAppearedUserItem)
 				}
 				//left = add to skipped
 				if (direction == Direction.Left) {
-					associatedViewModel.addToSkipped(mAppearedUserItem)
+					mViewModel.addToSkipped(mAppearedUserItem)
 				}
 			}
 
@@ -106,7 +87,7 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 				mDisappearedUserItem = mCardsStackAdapter.getItem(position)
 				mCardsList.remove(mDisappearedUserItem)
 				if (position == mCardsStackAdapter.itemCount - 1) {
-					associatedViewModel.loadUsersByPreferences()
+					mViewModel.loadUsersByPreferences()
 				}
 
 			}
@@ -139,12 +120,9 @@ class CardsFragment: BaseFragment<CardsViewModel>() {
 			mCardsStackAdapter.setData(mCardsList.toList())
 	}
 
-	private fun showMatchDialog(userItem: UserItem) {
-		val dialog = MatchDialogFragment.newInstance(
-            userItem.baseUserInfo.name, userItem.baseUserInfo.mainPhotoUrl
-        )
-
-		dialog.show(childFragmentManager, MatchDialogFragment::class.java.canonicalName)
-	}
+	private fun showMatchDialog(userItem: UserItem) = MatchDialogFragment.newInstance(
+		userItem.baseUserInfo.name, userItem.baseUserInfo.mainPhotoUrl
+	).show(childFragmentManager, MatchDialogFragment::class.java.canonicalName)
+	
 
 }

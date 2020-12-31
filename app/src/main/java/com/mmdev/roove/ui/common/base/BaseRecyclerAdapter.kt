@@ -1,19 +1,11 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 31.12.20 16:25
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 package com.mmdev.roove.ui.common.base
@@ -32,10 +24,7 @@ import com.mmdev.roove.BR
  * @param <V> The type of the ViewDataBinding</V></T>
  */
 
-abstract class BaseRecyclerAdapter<T>:
-		RecyclerView.Adapter<BaseRecyclerAdapter<T>.BaseViewHolder<T>>() {
-
-	private var mClickListener: OnItemClickListener<T>? = null
+abstract class BaseRecyclerAdapter<T>: RecyclerView.Adapter<BaseRecyclerAdapter<T>.BaseViewHolder<T>>() {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
 		BaseViewHolder<T>(
@@ -55,9 +44,10 @@ abstract class BaseRecyclerAdapter<T>:
 	abstract fun getItem(position: Int): T
 	abstract fun getLayoutIdForItem(position: Int): Int
 
+	private var mClickListener: ((T, Int) -> Unit)? = null
 	// allows clicks events to be caught
-	open fun setOnItemClickListener(itemClickListener: OnItemClickListener<T>) {
-		mClickListener = itemClickListener
+	open fun setOnItemClickListener(listener: (T, Int) -> Unit) {
+		mClickListener = listener
 	}
 
 	override fun onFailedToRecycleView(holder: BaseViewHolder<T>): Boolean { return true }
@@ -68,7 +58,7 @@ abstract class BaseRecyclerAdapter<T>:
 		init {
 			mClickListener?.let { mClickListener ->
 				itemView.setOnClickListener {
-					mClickListener.onItemClick(getItem(adapterPosition), adapterPosition)
+					mClickListener.invoke(getItem(adapterPosition), adapterPosition)
 				}
 			}
 		}
@@ -77,11 +67,6 @@ abstract class BaseRecyclerAdapter<T>:
 			binding.setVariable(BR.bindItem, item)
 			binding.executePendingBindings()
 		}
-	}
-
-	// parent fragment will override this method to respond to click events
-	interface OnItemClickListener<T> {
-		fun onItemClick(item: T, position: Int)
 	}
 
 	interface BindableAdapter<T> {

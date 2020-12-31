@@ -1,19 +1,11 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 31.12.20 16:07
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 package com.mmdev.roove.ui.chat.view
@@ -35,8 +27,7 @@ import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 class ChatAdapter (private var listMessageItems: List<MessageItem> = mutableListOf()):
         RecyclerView.Adapter<ChatViewHolder>(),
         BaseRecyclerAdapter.BindableAdapter<List<MessageItem>>{
-
-	private lateinit var attachedPhotoClickListener: OnItemClickListener
+	
 	private var userId = ""
 
 	companion object {
@@ -48,15 +39,20 @@ class ChatAdapter (private var listMessageItems: List<MessageItem> = mutableList
 
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-		if (viewType == RIGHT_MSG || viewType == RIGHT_MSG_IMG)
-			ChatViewHolder(LayoutInflater.from(parent.context)
-				               .inflate(R.layout.fragment_chat_item_right,
-				                        parent,
-				                        false))
-			else ChatViewHolder(LayoutInflater.from(parent.context)
-				.inflate(R.layout.fragment_chat_item_left,
-				         parent,
-				         false))
+		if (viewType == RIGHT_MSG || viewType == RIGHT_MSG_IMG) ChatViewHolder(
+			LayoutInflater.from(parent.context).inflate(
+				R.layout.fragment_chat_item_right,
+				parent,
+				false
+			)
+		)
+		else ChatViewHolder(
+			LayoutInflater.from(parent.context).inflate(
+				R.layout.fragment_chat_item_left,
+				parent,
+				false
+			)
+		)
 
 	override fun onBindViewHolder(viewHolder: ChatViewHolder, position: Int) {
 		viewHolder.setMessageType(getItemViewType(position))
@@ -95,10 +91,12 @@ class ChatAdapter (private var listMessageItems: List<MessageItem> = mutableList
 //	fun changeSenderName(name:String){
 //		userId = name
 //	}
-
+	
+	private var clickListener: ((View, Int) -> Unit)? = null
+	
 	// allows clicks events on attached photo
-	fun setOnAttachedPhotoClickListener(itemClickListener: OnItemClickListener) {
-		attachedPhotoClickListener = itemClickListener
+	fun setOnAttachedPhotoClickListener(listener: (View, Int) -> Unit) {
+		clickListener = listener
 	}
 
 	inner class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view){
@@ -108,7 +106,7 @@ class ChatAdapter (private var listMessageItems: List<MessageItem> = mutableList
 
 		init {
 			ivChatPhoto.setOnClickListener {
-				attachedPhotoClickListener.onItemClick(itemView.rootView, adapterPosition)
+				clickListener?.invoke(itemView.rootView, adapterPosition)
 			}
 		}
 
@@ -141,11 +139,6 @@ class ChatAdapter (private var listMessageItems: List<MessageItem> = mutableList
 			}
 		}
 
-	}
-
-	// parent fragment will override this method to respond to click events
-	interface OnItemClickListener {
-		fun onItemClick(view: View, position: Int)
 	}
 
 }

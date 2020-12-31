@@ -1,34 +1,22 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 31.12.20 15:41
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 package com.mmdev.roove.ui.auth.view
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.lifecycle.Observer
 import com.mmdev.business.data.PhotoItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.PreferredAgeRange
@@ -37,14 +25,16 @@ import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentAuthRegistrationBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
-import kotlinx.android.synthetic.main.fragment_auth_registration.*
 
 
 /**
  * This is the documentation block about the class
  */
 
-class RegistrationFragment: BaseFragment<AuthViewModel>(true){
+class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistrationBinding>(
+	isViewModelActivityHosted = true,
+	layoutId = R.layout.fragment_auth_registration
+){
 
 	private var registrationStep = 1
 
@@ -66,38 +56,17 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 	private val male = "male"
 	private val female = "female"
 	private val everyone = "everyone"
-
-
-	override fun onAttach(context: Context) {
-		super.onAttach(context)
-		cityList = mapOf(getString(R.string.russia_ekb) to getString(R.string.city_api_ekb),
-		                 getString(R.string.russia_krasnoyarsk) to getString(R.string.city_api_krasnoyarsk),
-		                 getString(R.string.russia_krd) to getString(R.string.city_api_krd),
-		                 getString(R.string.russia_kzn) to getString(R.string.city_api_kzn),
-		                 getString(R.string.russia_msk) to getString(R.string.city_api_msk),
-		                 getString(R.string.russia_nnv) to getString(R.string.city_api_nnv),
-		                 getString(R.string.russia_nsk) to getString(R.string.city_api_nsk),
-		                 getString(R.string.russia_sochi) to getString(R.string.city_api_sochi),
-		                 getString(R.string.russia_spb) to getString(R.string.city_api_spb))
-	}
+	
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		associatedViewModel = getViewModel()
-		associatedViewModel.getBaseUserInfo().observe(this, Observer {
+		mViewModel = getViewModel()
+		mViewModel.getBaseUserInfo().observe(this, {
 			baseUserInfo = it
 		})
 	}
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-	                          savedInstanceState: Bundle?) =
-		FragmentAuthRegistrationBinding.inflate(inflater, container, false)
-			.apply {
-				executePendingBindings()
-			}
-			.root
-
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
 
 		containerRegistration.transitionToState(R.id.step_1)
 
@@ -247,14 +216,18 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 			                                  baseUserInfo.mainPhotoUrl,
 			                                  baseUserInfo.userId)
 
-			associatedViewModel.register(
-					UserItem(finalUserModel,
-							 cityToDisplay = cityToDisplay,
-							 photoURLs = mutableListOf(
-								 PhotoItem(fileName = "facebookPhoto",
-										   fileUrl = finalUserModel.mainPhotoUrl)
-							 ),
-							 preferredAgeRange = preferredAgeRange)
+			mViewModel.register(
+				UserItem(
+					finalUserModel,
+					cityToDisplay = cityToDisplay,
+					photoURLs = mutableListOf(
+						PhotoItem(
+							fileName = "facebookPhoto",
+							fileUrl = finalUserModel.mainPhotoUrl
+						)
+					),
+					preferredAgeRange = preferredAgeRange
+				)
 			)
 		}
 
@@ -341,7 +314,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 		else disableFab()
 	}
 
-	private fun restoreStep3State() {
+	private fun restoreStep3State() = binding.run {
 		enableFab()
 		sliderAge.value = age.toFloat()
 		tvAgeDisplay.text = age.toString()
@@ -349,7 +322,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 		rangeSeekBarRegAgePicker.selectedMaxValue = preferredAgeRange.maxAge
 	}
 
-	private fun restoreStep4State() {
+	private fun restoreStep4State() = binding.run {
 		disableFab()
 		if (name.isNotEmpty() && name != "no name") {
 			edInputChangeName.setText(name)
@@ -366,7 +339,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 
 	}
 
-	private fun setupFinalForm() {
+	private fun setupFinalForm() = binding.run {
 		edFinalName.setText(name)
 		edFinalGender.setText(genderToDisplay)
 		edFinalPreferredGender.setText(preferredGenderToDisplay)
@@ -376,43 +349,43 @@ class RegistrationFragment: BaseFragment<AuthViewModel>(true){
 
 
 	private fun enableFab() {
-		if (!btnRegistrationNext.isEnabled) btnRegistrationNext.isEnabled = true
+		if (!binding.btnRegistrationNext.isEnabled) binding.btnRegistrationNext.isEnabled = true
 	}
 
 	private fun disableFab() {
-		if (btnRegistrationNext.isEnabled) btnRegistrationNext.isEnabled = false
+		if (binding.btnRegistrationNext.isEnabled) binding.btnRegistrationNext.isEnabled = false
 	}
 
 	private fun changeStringsForSelfChoosing() {
-		tvGenderFemale.text = getString(R.string.genderFemale)
-		tvGenderMale.text = getString(R.string.genderMale)
+		binding.tvGenderFemale.text = getString(R.string.genderFemale)
+		binding.tvGenderMale.text = getString(R.string.genderMale)
 	}
 
 	private fun changeStringsForPreferred() {
-		tvGenderFemale.text = getString(R.string.preferredGenderFemale)
-		tvGenderMale.text = getString(R.string.preferredGenderMale)
+		binding.tvGenderFemale.text = getString(R.string.preferredGenderFemale)
+		binding.tvGenderMale.text = getString(R.string.preferredGenderMale)
 	}
 
-	private fun setUnselectedAllButtons() {
+	private fun setUnselectedAllButtons() = binding.run {
 		btnGenderEveryone.isSelected = false
 		btnGenderFemale.isSelected = false
 		btnGenderMale.isSelected = false
 	}
 
-	private fun setSelectedMale(){
+	private fun setSelectedMale() = binding.run {
 		btnGenderEveryone.isSelected = false
 		btnGenderFemale.isSelected = false
 		btnGenderMale.isSelected = true
 	}
 
-	private fun setSelectedFemale(){
+	private fun setSelectedFemale() = binding.run {
 		btnGenderEveryone.isSelected = false
 		btnGenderFemale.isSelected = true
 		btnGenderMale.isSelected = false
 
 	}
 
-	private fun setSelectedEveryone(){
+	private fun setSelectedEveryone() = binding.run {
 		btnGenderEveryone.isSelected = true
 		btnGenderFemale.isSelected = false
 		btnGenderMale.isSelected = false

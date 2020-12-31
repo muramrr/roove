@@ -1,19 +1,11 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 31.12.20 16:07
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 package com.mmdev.roove.ui.common.base
@@ -37,7 +29,7 @@ import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.utils.extensions.showErrorDialog
 
 /**
- * This is the documentation block about the class
+ * Generic Fragment class
  */
 
 abstract class BaseFragment<T: ViewModel, Binding: ViewDataBinding> (
@@ -73,17 +65,13 @@ abstract class BaseFragment<T: ViewModel, Binding: ViewDataBinding> (
 	}
 	
 	override fun onCreateView(
-		inflater: LayoutInflater,
-		container: ViewGroup?,
-		savedInstanceState: Bundle?
-	): View {
-		return DataBindingUtil.inflate<Binding>(inflater, layoutId, container, false)
-			.apply {
-				lifecycleOwner = viewLifecycleOwner
-				setVariable(BR.viewModel, mViewModel)
-				_binding = this
-			}.root
-	}
+		inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+	): View = DataBindingUtil.inflate<Binding>(inflater, layoutId, container, false).apply {
+		lifecycleOwner = viewLifecycleOwner
+		setVariable(BR.viewModel, mViewModel)
+		_binding = this
+	}.root
+	
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
 		super.onActivityCreated(savedInstanceState)
@@ -121,7 +109,10 @@ abstract class BaseFragment<T: ViewModel, Binding: ViewDataBinding> (
 	 * Override this method into your fragment to handle backButton
 	 */
 	open fun onBackPressed() {}
-
-
-
+	
+	override fun onDestroy() {
+		_binding = null
+		super.onDestroy()
+	}
+	
 }

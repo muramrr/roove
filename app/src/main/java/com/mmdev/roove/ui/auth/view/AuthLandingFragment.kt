@@ -1,19 +1,11 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 31.12.20 15:41
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 package com.mmdev.roove.ui.auth.view
@@ -21,10 +13,7 @@ package com.mmdev.roove.ui.auth.view
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -34,9 +23,11 @@ import com.mmdev.roove.databinding.FragmentAuthLandingBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.utils.extensions.showToastText
-import kotlinx.android.synthetic.main.fragment_auth_landing.*
 
-class AuthLandingFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_auth_landing) {
+class AuthLandingFragment: BaseFragment<AuthViewModel, FragmentAuthLandingBinding>(
+	isViewModelActivityHosted = true,
+	layoutId = R.layout.fragment_auth_landing
+) {
 
 	//Progress dialog for any authentication action
 	private lateinit var mCallbackManager: CallbackManager
@@ -46,26 +37,20 @@ class AuthLandingFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_a
 
 		mCallbackManager = CallbackManager.Factory.create()
 
-		associatedViewModel = getViewModel()
-
-		associatedViewModel.continueRegistration.observe(this, Observer {
+		mViewModel = getViewModel()
+		
+		mViewModel.continueRegistration.observe(this, {
 			if (it == true) navController.navigate(R.id.action_auth_landing_to_registrationFragment)
 		})
 
 	}
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-	                          savedInstanceState: Bundle?) =
-		FragmentAuthLandingBinding.inflate(inflater, container, false)
-			.apply { executePendingBindings() }
-			.root
-
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		btnFacebookLogin.fragment = this
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
+		btnFacebookLogin.fragment = this@AuthLandingFragment
 		btnFacebookLogin.registerCallback(mCallbackManager, object: FacebookCallback<LoginResult> {
 
 			override fun onSuccess(loginResult: LoginResult) {
-				associatedViewModel.signIn(loginResult.accessToken.token)
+				mViewModel.signIn(loginResult.accessToken.token)
 			}
 
 			override fun onCancel() {}
@@ -75,7 +60,7 @@ class AuthLandingFragment: BaseFragment<AuthViewModel>(true, R.layout.fragment_a
 			}
 		})
 		btnFacebookLoginDelegate.setOnClickListener {
-			associatedViewModel.logOut()
+			mViewModel.logOut()
 			btnFacebookLogin.performClick()
 		}
 

@@ -1,19 +1,11 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 31.12.20 16:24
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 package com.mmdev.roove.ui.chat.view
@@ -25,11 +17,19 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.DialogChatFullScreenImageBinding
-import kotlinx.android.synthetic.main.dialog_chat_full_screen_image.*
 
+/**
+ * //todo: replace deprecated calls
+ */
 
 class FullScreenDialogFragment: DialogFragment() {
-
+	
+	private var _binding: DialogChatFullScreenImageBinding? = null
+	private val binding: DialogChatFullScreenImageBinding
+		get() = _binding ?: throw IllegalStateException(
+			"Trying to access the binding outside of the view lifecycle."
+		)
+	
 	private var isHide = false
 	private var receivedPhotoUrl = ""
 
@@ -50,14 +50,18 @@ class FullScreenDialogFragment: DialogFragment() {
 		}
 	}
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-	                          savedInstanceState: Bundle?) =
-		DialogChatFullScreenImageBinding.inflate(inflater, container, false)
-			.apply { this.photoUrl = receivedPhotoUrl }
-			.root
+	override fun onCreateView(
+		inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+	): View = DialogChatFullScreenImageBinding.inflate(inflater, container, false)
+		.apply {
+			this.photoUrl = receivedPhotoUrl
+			_binding = this
+			executePendingBindings()
+		}
+		.root
 
-
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+	
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
 		// Set the content to appear under the system bars so that the
 		// content doesn't resize when the system bars hide and show.
 		ivDialogFullScreen.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
