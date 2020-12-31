@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 31.12.20 19:06
+  ~ Copyright (C) 2020. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 <layout
@@ -61,13 +69,13 @@
 					android:clipToPadding="false"
 					android:orientation="horizontal"
 					android:overScrollMode="never"
-
 					
 					app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
+					tools:itemCount="2"
+					
+					app:layout_constraintTop_toBottomOf="@id/toolbarSettings"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/toolbarSettings"
 
 					tools:listitem="@layout/fragment_settings_photo_item" />
 
@@ -82,9 +90,9 @@
 					app:elevation="@null"
 
 					app:layout_constraintBottom_toBottomOf="@id/rvSettingsUserPhotosList"
-					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-					app:layout_constraintStart_toStartOf="@id/guidelineStart"
 					app:layout_constraintTop_toBottomOf="@id/rvSettingsUserPhotosList"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
 					/>
 
 
@@ -96,101 +104,53 @@
 
 					android:textSize="22sp"
 
-					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-					app:layout_constraintStart_toStartOf="@id/guidelineStart"
 					app:layout_constraintTop_toBottomOf="@id/fabSettingsAddPhoto"
-					app:layout_constraintBottom_toTopOf="@id/tvSettingsCity"/>
+					app:layout_constraintBottom_toTopOf="@id/tvSettingsCity"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					/>
 
 				<com.google.android.material.textview.MaterialTextView
 					android:id="@+id/tvSettingsCity"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-
 					android:textSize="22sp"
 					
-					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-					app:layout_constraintStart_toStartOf="@id/guidelineStart"
 					app:layout_constraintTop_toBottomOf="@id/tvSettingsNameAge"
-					app:layout_constraintBottom_toTopOf="@id/tvSettingsWantToGoHeader"
-					/>
-
-				<com.google.android.material.textview.MaterialTextView
-					android:id="@+id/tvSettingsWantToGoHeader"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:padding="16dp"
-
-					android:text="@string/place_detailed_want_to_go_text"
-					android:textSize="24sp"
-
-					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-					app:layout_constraintStart_toStartOf="@id/guidelineStart"
-					app:layout_constraintTop_toBottomOf="@id/tvSettingsCity"
-					app:layout_constraintBottom_toTopOf="@id/rvSettingsWantToGoList"
-					/>
-
-				<androidx.recyclerview.widget.RecyclerView
-					android:id="@+id/rvSettingsWantToGoList"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:clipToPadding="false"
-					android:padding="8dp"
-					android:orientation="horizontal"
-					android:visibility="visible"
-
-					app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/tvSettingsWantToGoHeader"
 					app:layout_constraintBottom_toTopOf="@id/tvSettingsAboutHeader"
-
-					tools:listitem="@layout/fragment_profile_places_rv_item"/>
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					/>
 
 				<com.google.android.material.textview.MaterialTextView
 					android:id="@+id/tvSettingsAboutHeader"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
+					android:layout_marginHorizontal="8dp"
 					android:padding="16dp"
 
 					android:text="@string/profile_about_header_text"
 					android:textSize="24sp"
 
-					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-					app:layout_constraintStart_toStartOf="@id/guidelineStart"
-					app:layout_constraintTop_toBottomOf="@id/rvSettingsWantToGoList"
+					app:layout_constraintTop_toBottomOf="@id/tvSettingsCity"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
 					/>
 
 				<com.google.android.material.textview.MaterialTextView
 					android:id="@+id/tvSettingsAboutText"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
+					android:layout_marginHorizontal="8dp"
 					android:layout_marginBottom="100dp"
-
+					
 					android:textSize="18sp"
-
-					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-					app:layout_constraintStart_toStartOf="@id/guidelineStart"
+					
 					app:layout_constraintTop_toBottomOf="@id/tvSettingsAboutHeader"
 					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
 					/>
-
-
-				<!-- left padding -->
-				<androidx.constraintlayout.widget.Guideline
-					android:id="@+id/guidelineStart"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:orientation="vertical"
-					app:layout_constraintGuide_begin="8dp" />
-
-				<!-- right padding -->
-				<androidx.constraintlayout.widget.Guideline
-					android:id="@+id/guidelineEnd"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:orientation="vertical"
-					app:layout_constraintGuide_end="8dp" />
 
 
 			</androidx.constraintlayout.widget.ConstraintLayout>

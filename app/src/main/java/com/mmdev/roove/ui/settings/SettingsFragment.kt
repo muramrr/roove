@@ -1,11 +1,19 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 19:08
+ * Copyright (C) 2020. roove
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
 package com.mmdev.roove.ui.settings
@@ -21,7 +29,6 @@ import android.view.Gravity
 import android.view.View
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -74,15 +81,15 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		
-		mViewModel.photoUrls.observe(this, Observer {
+		mViewModel.photoUrls.observe(this, {
 			mSettingsPhotoAdapter.setData(it)
 		})
 		
-		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
+		sharedViewModel.getCurrentUser().observeOnce(this, {
 			currentUser = it
 		})
 		
-		sharedViewModel.modalBottomSheetNeedUpdateExecution.observe(this, Observer {
+		sharedViewModel.modalBottomSheetNeedUpdateExecution.observe(this, {
 			if (it) {
 				mViewModel.updateUserItem(currentUser)
 				sharedViewModel.modalBottomSheetNeedUpdateExecution.value = false
@@ -92,7 +99,8 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
-
+		setupUser()
+		
 		toolbarSettings.setOnMenuItemClickListener { item ->
 			when (item.itemId) {
 				R.id.settings_action_preferences -> showModalBottomSheet()
@@ -134,6 +142,15 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 		}
 
 	}
+	
+	private fun setupUser() = sharedViewModel.getCurrentUser().observeOnce(this, {
+		binding.run {
+			tvSettingsAboutText.text = it.aboutText
+			tvSettingsCity.text = it.cityToDisplay
+			tvSettingsNameAge.text = "${it.baseUserInfo.name} ${it.baseUserInfo.age}"
+			mSettingsPhotoAdapter.setData(it.photoURLs)
+		}
+	})
 
 	/** log out pop up*/
 	private fun showSignOutPrompt() = MaterialAlertDialogBuilder(requireContext())
