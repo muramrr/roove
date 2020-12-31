@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 15:41
+ * Last modified 31.12.20 19:04
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -23,12 +24,15 @@ import com.mmdev.roove.databinding.FragmentAuthLandingBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.utils.extensions.showToastText
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AuthLandingFragment: BaseFragment<AuthViewModel, FragmentAuthLandingBinding>(
-	isViewModelActivityHosted = true,
 	layoutId = R.layout.fragment_auth_landing
 ) {
-
+	
+	override val mViewModel: AuthViewModel by activityViewModels()
+	
 	//Progress dialog for any authentication action
 	private lateinit var mCallbackManager: CallbackManager
 
@@ -37,8 +41,6 @@ class AuthLandingFragment: BaseFragment<AuthViewModel, FragmentAuthLandingBindin
 
 		mCallbackManager = CallbackManager.Factory.create()
 
-		mViewModel = getViewModel()
-		
 		mViewModel.continueRegistration.observe(this, {
 			if (it == true) navController.navigate(R.id.action_auth_landing_to_registrationFragment)
 		})

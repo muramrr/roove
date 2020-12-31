@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 17:12
+ * Last modified 31.12.20 18:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,11 +14,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
-import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.BtmSheetSettingsPreferencesBinding
 import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.utils.extensions.observeOnce
@@ -31,7 +30,7 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 			"Trying to access the binding outside of the view lifecycle."
 		)
 	
-	private lateinit var sharedViewModel: SharedViewModel
+	private val sharedViewModel: SharedViewModel by activityViewModels()
 	private lateinit var userItem: UserItem
 
 	private val male = "male"
@@ -42,9 +41,6 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		activity?.run {
-			sharedViewModel = ViewModelProvider(this, injector.factory())[SharedViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
 
 		sharedViewModel.getCurrentUser().observeOnce(this, {
 			userItem = it

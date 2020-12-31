@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 16:07
+ * Last modified 31.12.20 19:04
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,12 +19,11 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.mmdev.roove.BR
-import com.mmdev.roove.core.injector
 import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.utils.extensions.showErrorDialog
 
@@ -32,9 +31,8 @@ import com.mmdev.roove.utils.extensions.showErrorDialog
  * Generic Fragment class
  */
 
-abstract class BaseFragment<T: ViewModel, Binding: ViewDataBinding> (
-	val isViewModelActivityHosted: Boolean = false,
-	@LayoutRes private val layoutId: Int = 0
+abstract class BaseFragment<T: ViewModel, Binding: ViewDataBinding>(
+	@LayoutRes private val layoutId: Int
 ) : Fragment() {
 	
 	private var _binding: Binding? = null
@@ -46,15 +44,11 @@ abstract class BaseFragment<T: ViewModel, Binding: ViewDataBinding> (
 
 	protected lateinit var navController: NavController
 	protected val TAG = "mylogs_${javaClass.simpleName}"
-	protected val factory = injector.factory()
 
-	protected val sharedViewModel: SharedViewModel
-		get() = activity?.run {
-			ViewModelProvider(this, factory)[SharedViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
+	protected val sharedViewModel: SharedViewModel by activityViewModels()
 
 
-	protected lateinit var mViewModel: T
+	protected abstract val mViewModel: T?
 
 	private lateinit var callback: OnBackPressedCallback
 
@@ -75,24 +69,9 @@ abstract class BaseFragment<T: ViewModel, Binding: ViewDataBinding> (
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
 		super.onActivityCreated(savedInstanceState)
-		(mViewModel as BaseViewModel).showErrorDialog(this, context)
+		(mViewModel as BaseViewModel?)?.showErrorDialog(this, context)
 	}
-
-	protected inline fun <reified T : ViewModel> getViewModel(): T =
-		if (isViewModelActivityHosted) {
-			activity?.run {
-				ViewModelProvider(this, factory)[T::class.java]
-			} ?: throw Exception("Invalid Activity")
-		}
-		else ViewModelProvider(this, factory)[T::class.java]
-
-	//get actual class from parameterized <T>
-	//CAUTION: REFLECTION USED
-	//use at own risk
-//	private fun getTClass(): Class<T> =
-//		(javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<T>
-
-
+	
 	/**
 	 * Adding BackButtonDispatcher callback to activity
 	 */

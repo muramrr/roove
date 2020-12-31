@@ -1,19 +1,11 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 31.12.20 17:44
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 package com.mmdev.data.repository.auth
@@ -23,7 +15,7 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.installations.FirebaseInstallations
 import com.mmdev.business.auth.AuthRepository
 import com.mmdev.business.auth.AuthUserItem
 import com.mmdev.business.user.BaseUserInfo
@@ -31,7 +23,11 @@ import com.mmdev.business.user.UserItem
 import com.mmdev.data.core.BaseRepositoryImpl
 import com.mmdev.data.core.ExecuteSchedulers
 import com.mmdev.data.repository.user.UserWrapper
-import io.reactivex.rxjava3.core.*
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableOnSubscribe
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.SingleOnSubscribe
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,11 +39,12 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
-                                             private val fInstance: FirebaseInstanceId,
-                                             private val firestore: FirebaseFirestore,
-                                             private val fbLogin: LoginManager,
-                                             private val userWrapper: UserWrapper
+class AuthRepositoryImpl @Inject constructor(
+	private val auth: FirebaseAuth,
+	private val fInstance: FirebaseInstallations,
+	private val firestore: FirebaseFirestore,
+	private val fbLogin: LoginManager,
+	private val userWrapper: UserWrapper
 ):
 		AuthRepository, BaseRepositoryImpl(firestore, userWrapper) {
 
@@ -107,12 +104,12 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth,
 					if (remoteUser.exists()) {
 						val remoteUserItem = remoteUser.toObject(UserItem::class.java)!!
 						//check if registration token exists
-						fInstance.instanceId
-							.addOnSuccessListener { instanceResult ->
+						fInstance.id
+							.addOnSuccessListener { instanceToken ->
 								//add new token
 								refBase.update(
 									USER_BASE_REGISTRATION_TOKENS_FIELD,
-									FieldValue.arrayUnion(instanceResult.token))
+									FieldValue.arrayUnion(instanceToken))
 
 								userWrapper.setUser(remoteUserItem)
 								emitter.onSuccess(remoteUserItem)

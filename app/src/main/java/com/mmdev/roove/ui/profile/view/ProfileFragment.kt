@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 16:50
+ * Last modified 31.12.20 18:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package com.mmdev.roove.ui.profile.view
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
@@ -27,14 +28,18 @@ import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.extensions.observeOnce
 import com.mmdev.roove.utils.extensions.showToastText
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * This is the documentation block about the class
  */
 
+@AndroidEntryPoint
 class ProfileFragment: BaseFragment<RemoteRepoViewModel, FragmentProfileBinding>(
 	layoutId = R.layout.fragment_profile
 ) {
+	
+	override val mViewModel: RemoteRepoViewModel by viewModels()
 
 	private val userPhotosAdapter = ImagePagerAdapter()
 
@@ -49,15 +54,12 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel, FragmentProfileBinding>
 	companion object {
 		private const val FAB_VISIBLE_KEY = "FAB_VISIBLE"
 		private const val MATCHED_KEY = "IS_MATCHED"
-		private const val PLACE_ID_KEY = "PLACE_ID"
 	}
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		mViewModel = getViewModel()
-		
 		arguments?.let {
 			fabVisible = it.getBoolean(FAB_VISIBLE_KEY)
 			isMatched = it.getBoolean(MATCHED_KEY)

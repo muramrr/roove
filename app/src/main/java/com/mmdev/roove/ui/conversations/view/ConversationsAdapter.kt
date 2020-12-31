@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 16:46
+ * Last modified 31.12.20 17:51
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@ class ConversationsAdapter(
 
 	override fun getItem(position: Int) = conversationsList[position]
 	override fun getItemCount() = conversationsList.size
-	override fun getLayoutIdForItem(position: Int) = R.layout.fragment_conversations_item
+	override fun getLayoutIdForItem(position: Int) = R.layout.item_conversation
 
 	override fun setData(data: MutableList<ConversationItem>) {
 		conversationsList = data

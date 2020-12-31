@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 15:53
+ * Last modified 31.12.20 18:49
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,23 +13,26 @@ package com.mmdev.roove.ui.cards.view
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentCardsBinding
 import com.mmdev.roove.ui.cards.CardsViewModel
-import com.mmdev.roove.ui.cards.view.CardsStackAdapter.OnItemClickListener
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
 	layoutId = R.layout.fragment_cards
 ) {
-
+	
+	override val mViewModel: CardsViewModel by viewModels()
+	
 	private val mCardsStackAdapter = CardsStackAdapter()
 
 	private var mCardsList = mutableListOf<UserItem>()
@@ -42,15 +45,13 @@ class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		mViewModel = getViewModel()
-
 		mViewModel.loadUsersByPreferences(initialLoading = true)
-		mViewModel.usersCardsList.observe(this, Observer {
+		mViewModel.usersCardsList.observe(this, {
 			mCardsList.clear()
 			mCardsList.addAll(it)
 			mCardsStackAdapter.setData(it)
 		})
-		mViewModel.showMatchDialog.observe(this, Observer {
+		mViewModel.showMatchDialog.observe(this, {
 			if (it) showMatchDialog(mDisappearedUserItem)
 		})
 
@@ -104,13 +105,10 @@ class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
 			}
 		}
 
-		mCardsStackAdapter.setOnItemClickListener(object: OnItemClickListener {
-			override fun onItemClick(item: UserItem, position: Int) {
-
-				sharedViewModel.userNavigateTo.value = item
-				navController.navigate(R.id.action_cards_to_profileFragment)
-			}
-		})
+		mCardsStackAdapter.setOnItemClickListener { item, position ->
+			sharedViewModel.userNavigateTo.value = item
+			navController.navigate(R.id.action_cards_to_profileFragment)
+		}
 
 	}
 

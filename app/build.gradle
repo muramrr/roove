@@ -1,19 +1,11 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 31.12.20 18:58
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 apply plugin: 'com.android.application'
@@ -21,6 +13,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'dagger.hilt.android.plugin'
 
 
 android {
@@ -91,6 +84,12 @@ dependencies {
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.0-alpha2'
 	implementation 'com.google.android.material:material:1.3.0-beta01'
 
+	// dagger hilt
+	implementation "com.google.dagger:hilt-android:2.30.1-alpha"
+	kapt "com.google.dagger:hilt-android-compiler:2.30.1-alpha"
+	implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02'
+	kapt 'androidx.hilt:hilt-compiler:1.0.0-alpha02'
+
 	//custom UI
 	implementation 'com.yuyakaido.android:card-stack-view:2.3.4'
 	implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.4.0'
@@ -116,9 +115,7 @@ dependencies {
 		exclude group: 'glide-parent'
 	}
 
-	// Dagger
-	implementation libs.dagger
-	kapt libs.daggerCompiler
+
 
 	// Navigation component
 	implementation "androidx.navigation:navigation-ui-ktx:2.3.2"

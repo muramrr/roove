@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 15:53
+ * Last modified 31.12.20 18:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 
 package com.mmdev.roove.ui.auth
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.auth.AuthRepository
 import com.mmdev.business.user.BaseUserInfo
@@ -18,10 +19,9 @@ import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.*
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
-import javax.inject.Inject
 
 
-class AuthViewModel @Inject constructor(
+class AuthViewModel @ViewModelInject constructor(
 	private val repo: AuthRepository
 ) : BaseViewModel() {
 	

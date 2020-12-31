@@ -1,19 +1,11 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 31.12.20 18:31
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 package com.mmdev.roove.ui
@@ -21,28 +13,26 @@ package com.mmdev.roove.ui
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.mmdev.roove.R
-import com.mmdev.roove.core.injector
 import com.mmdev.roove.databinding.ActivityMainBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
-import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.AUTHENTICATED
-import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.UNAUTHENTICATED
+import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.*
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.extensions.observeOnce
 import com.mmdev.roove.utils.extensions.showToastText
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
+class MainActivity @Inject constructor() : AppCompatActivity() {
 
-class MainActivity: AppCompatActivity() {
-
-	private lateinit var authViewModel: AuthViewModel
-	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
-	private lateinit var sharedViewModel: SharedViewModel
-
-	private val factory = injector.factory()
+	private val authViewModel: AuthViewModel by viewModels()
+	private val remoteRepoViewModel: RemoteRepoViewModel by viewModels()
+	private val sharedViewModel: SharedViewModel by viewModels()
 
 	companion object {
 		private const val TAG = "mylogs_MainActivity"
@@ -64,10 +54,6 @@ class MainActivity: AppCompatActivity() {
 		DataBindingUtil.setContentView(this, R.layout.activity_main) as ActivityMainBinding
 
 		val navController = findNavController(R.id.flowHostFragment)
-		
-		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
-		sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
-		authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
 		//init observer
 		authViewModel.authenticatedState.observe(this, { authState ->

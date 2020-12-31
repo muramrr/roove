@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 16:24
+ * Last modified 31.12.20 18:33
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,8 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.FileProvider
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -48,6 +49,7 @@ import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import com.mmdev.roove.utils.extensions.observeOnce
 import com.mmdev.roove.utils.extensions.showToastText
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.util.*
 
@@ -56,9 +58,12 @@ import java.util.*
  * This is the documentation block about the class
  */
 
+@AndroidEntryPoint
 class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 	layoutId = R.layout.fragment_chat
 ) {
+	
+	override val mViewModel: ChatViewModel by viewModels()
 
 	private lateinit var currentUser: UserItem
 
@@ -78,7 +83,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 	// File
 	private lateinit var mFilePathImageCamera: File
 
-	private lateinit var remoteRepoViewModel: RemoteRepoViewModel
+	private val remoteRepoViewModel: RemoteRepoViewModel by activityViewModels()
 
 
 
@@ -98,8 +103,6 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		mViewModel = getViewModel()
-		remoteRepoViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
 
 		//deep link from notification
 		arguments?.let {

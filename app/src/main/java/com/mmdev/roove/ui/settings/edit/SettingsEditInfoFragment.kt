@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 17:19
+ * Last modified 31.12.20 19:04
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,6 +21,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.user.UserItem
@@ -38,8 +39,10 @@ import com.mmdev.roove.utils.extensions.showToastText
  */
 
 class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsEditInfoBinding>(
-	isViewModelActivityHosted = true
+	layoutId = R.layout.fragment_settings_edit_info
 ) {
+	
+	override val mViewModel: RemoteRepoViewModel by activityViewModels()
 
 	private lateinit var currentUser: UserItem
 	private val mEditorPhotoAdapter = SettingsEditInfoPhotoAdapter()
@@ -55,8 +58,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-
-		mViewModel = getViewModel()
+		
 		sharedViewModel.getCurrentUser().observeOnce(this, {
 			currentUser = it
 			initSettings(it)

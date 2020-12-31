@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 16:32
+ * Last modified 31.12.20 18:21
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ package com.mmdev.roove.ui.conversations.view
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,22 +27,25 @@ import com.mmdev.roove.ui.common.custom.SwipeToDeleteCallback
 import com.mmdev.roove.ui.conversations.ConversationsViewModel
 import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import com.mmdev.roove.utils.extensions.showToastText
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * This is the documentation block about the class
  */
 
+@AndroidEntryPoint
 class ConversationsFragment: BaseFragment<ConversationsViewModel, FragmentConversationsBinding>(
 	layoutId = R.layout.fragment_conversations
 ){
+	
+	override val mViewModel: ConversationsViewModel by viewModels()
 
 	private val mConversationsAdapter = ConversationsAdapter()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		mViewModel = getViewModel()
-
-		mViewModel.getDeleteConversationStatus().observe(this, Observer {
+		
+		mViewModel.getDeleteConversationStatus().observe(this, {
 			if (it) requireContext().showToastText(getString(R.string.toast_text_delete_success))
 		})
 

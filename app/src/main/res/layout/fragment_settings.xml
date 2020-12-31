@@ -1,34 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (c) 2020. All rights reserved.
+  ~ Last modified 31.12.20 19:06
   ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see https://www.gnu.org/licenses
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
   -->
 
 <layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
-
-	<data>
-
-		<variable
-			name="viewModel"
-			type="com.mmdev.roove.ui.SharedViewModel" />
-
-	</data>
 
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -78,7 +62,7 @@
 					android:orientation="horizontal"
 					android:overScrollMode="never"
 
-					app:bindData="@{viewModel.currentUser.photoURLs}"
+					
 					app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
 					app:layout_constraintEnd_toEndOf="parent"
@@ -110,7 +94,6 @@
 					android:layout_height="wrap_content"
 					android:layout_marginTop="16dp"
 
-					android:text="@{viewModel.currentUser.baseUserInfo.name+ `, `+ viewModel.currentUser.baseUserInfo.age, default = @string/default_name}"
 					android:textSize="22sp"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
@@ -123,10 +106,8 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 
-					android:text="@{viewModel.currentUser.cityToDisplay, default = @string/default_city}"
 					android:textSize="22sp"
-
-
+					
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 					app:layout_constraintStart_toStartOf="@id/guidelineStart"
 					app:layout_constraintTop_toBottomOf="@id/tvSettingsNameAge"
@@ -157,8 +138,6 @@
 					android:orientation="horizontal"
 					android:visibility="visible"
 
-					app:bindData="@{viewModel.currentUser.placesToGo}"
-
 					app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
 					app:layout_constraintEnd_toEndOf="parent"
@@ -188,7 +167,6 @@
 					android:layout_height="wrap_content"
 					android:layout_marginBottom="100dp"
 
-					android:text="@{viewModel.currentUser.aboutText}"
 					android:textSize="18sp"
 
 					app:layout_constraintEnd_toEndOf="@id/guidelineEnd"

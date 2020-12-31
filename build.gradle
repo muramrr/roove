@@ -1,19 +1,11 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 31.12.20 18:58
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 apply plugin: 'com.github.ben-manes.versions'
@@ -23,9 +15,6 @@ buildscript {
 	ext {
 
 		kotlin_version = '1.4.21'
-
-		// Dagger
-		dagger_version = '2.28.1'
 
 		// facebook
 		facebook_sdk_version = '7.1.0'
@@ -40,8 +29,6 @@ buildscript {
 		junitVersion = "4.12"
 
 		libs = [
-			dagger              : ('com.google.dagger:dagger:' + dagger_version),
-			daggerCompiler      : ('com.google.dagger:dagger-compiler:' + dagger_version),
 			facebookLogin       : ('com.facebook.android:facebook-login:' + facebook_sdk_version),
 			rxJava              : ('io.reactivex.rxjava3:rxjava:' + rxjava_version),
 			rxAndroid           : ('io.reactivex.rxjava3:rxandroid:' + rxandroid_version),
@@ -58,6 +45,7 @@ buildscript {
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0'
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 		classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
+		classpath 'com.google.dagger:hilt-android-gradle-plugin:2.30.1-alpha'
 	}
 
 	repositories {

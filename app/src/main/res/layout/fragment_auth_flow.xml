@@ -2,7 +2,7 @@
 <!--
   ~ Created by Andrii Kovalchuk
   ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 31.12.20 15:41
+  ~ Last modified 31.12.20 17:53
   ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,12 +12,18 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	>
-
-	<fragment android:id="@+id/authHostFragment"
+	
+	<FrameLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:name="androidx.navigation.fragment.NavHostFragment"
-		app:navGraph="@navigation/auth_navigation"
-		app:defaultNavHost="true"
-		/>
+		android:layout_height="match_parent">
+	
+		<fragment android:id="@+id/authHostFragment"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:name="androidx.navigation.fragment.NavHostFragment"
+			app:navGraph="@navigation/auth_navigation"
+			app:defaultNavHost="true"
+			/>
+	</FrameLayout>
+	
 </layout>

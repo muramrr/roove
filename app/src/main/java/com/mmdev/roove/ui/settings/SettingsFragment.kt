@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 17:12
+ * Last modified 31.12.20 19:08
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,8 +20,8 @@ import android.text.format.DateFormat
 import android.view.Gravity
 import android.view.View
 import androidx.core.content.FileProvider
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -33,7 +33,6 @@ import com.mmdev.roove.core.permissions.handlePermission
 import com.mmdev.roove.core.permissions.onRequestPermissionsResultReceived
 import com.mmdev.roove.core.permissions.requestAppPermissions
 import com.mmdev.roove.databinding.FragmentSettingsBinding
-import com.mmdev.roove.ui.SharedViewModel
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.CenterFirstLastItemDecoration
@@ -41,6 +40,7 @@ import com.mmdev.roove.ui.common.custom.HorizontalCarouselLayoutManager
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.extensions.observeOnce
 import com.mmdev.roove.utils.extensions.showToastText
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.util.*
 
@@ -49,16 +49,18 @@ import java.util.*
  * This is the documentation block about the class
  */
 
-class SettingsFragment: BaseFragment<SharedViewModel, FragmentSettingsBinding>(
-	isViewModelActivityHosted = true
+@AndroidEntryPoint
+class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBinding>(
+	layoutId = R.layout.fragment_settings
 ) {
-
+	
+	override val mViewModel: RemoteRepoViewModel by activityViewModels()
+	
 	private lateinit var currentUser: UserItem
 
 	private val mSettingsPhotoAdapter = SettingsUserPhotoAdapter()
 
-	private lateinit var authViewModel: AuthViewModel
-	private lateinit var remoteViewModel: RemoteRepoViewModel
+	private val authViewModel: AuthViewModel by activityViewModels()
 
 
 	// File
@@ -71,25 +73,18 @@ class SettingsFragment: BaseFragment<SharedViewModel, FragmentSettingsBinding>(
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-
-		mViewModel = sharedViewModel
-
-		activity?.run {
-			authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
-			remoteViewModel = ViewModelProvider(this, factory)[RemoteRepoViewModel::class.java]
-		} ?: throw Exception("Invalid Activity")
 		
-		remoteViewModel.photoUrls.observe(this, Observer {
+		mViewModel.photoUrls.observe(this, Observer {
 			mSettingsPhotoAdapter.setData(it)
 		})
 		
-		mViewModel.getCurrentUser().observeOnce(this, Observer {
+		sharedViewModel.getCurrentUser().observeOnce(this, Observer {
 			currentUser = it
 		})
 		
-		mViewModel.modalBottomSheetNeedUpdateExecution.observe(this, Observer {
+		sharedViewModel.modalBottomSheetNeedUpdateExecution.observe(this, Observer {
 			if (it) {
-				remoteViewModel.updateUserItem(currentUser)
+				mViewModel.updateUserItem(currentUser)
 				sharedViewModel.modalBottomSheetNeedUpdateExecution.value = false
 			}
 		})
@@ -233,7 +228,7 @@ class SettingsFragment: BaseFragment<SharedViewModel, FragmentSettingsBinding>(
 			if (resultCode == Activity.RESULT_OK) {
 
 				val selectedUri = data?.data
-				remoteViewModel.uploadUserProfilePhoto(selectedUri.toString(), currentUser)
+				mViewModel.uploadUserProfilePhoto(selectedUri.toString(), currentUser)
 			}
 		}
 		// send photo taken by camera
@@ -241,7 +236,7 @@ class SettingsFragment: BaseFragment<SharedViewModel, FragmentSettingsBinding>(
 			if (resultCode == Activity.RESULT_OK) {
 
 				if (mFilePathImageCamera.exists()) {
-					remoteViewModel.uploadUserProfilePhoto(
+					mViewModel.uploadUserProfilePhoto(
 						Uri.fromFile(mFilePathImageCamera).toString(), currentUser
 					)
 				}

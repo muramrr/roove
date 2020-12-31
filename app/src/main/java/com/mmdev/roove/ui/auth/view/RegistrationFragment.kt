@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 15:41
+ * Last modified 31.12.20 19:04
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.fragment.app.activityViewModels
 import com.mmdev.business.data.PhotoItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.PreferredAgeRange
@@ -32,10 +33,11 @@ import com.mmdev.roove.ui.common.base.BaseFragment
  */
 
 class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistrationBinding>(
-	isViewModelActivityHosted = true,
 	layoutId = R.layout.fragment_auth_registration
 ){
-
+	
+	override val mViewModel: AuthViewModel by activityViewModels()
+	
 	private var registrationStep = 1
 
 	private var baseUserInfo = BaseUserInfo()
@@ -60,7 +62,6 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		mViewModel = getViewModel()
 		mViewModel.getBaseUserInfo().observe(this, {
 			baseUserInfo = it
 		})

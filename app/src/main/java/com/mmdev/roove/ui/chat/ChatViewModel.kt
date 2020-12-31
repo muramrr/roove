@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 16:07
+ * Last modified 31.12.20 18:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 
 package com.mmdev.roove.ui.chat
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.chat.ChatRepository
 import com.mmdev.business.chat.MessageItem
@@ -20,14 +21,13 @@ import com.mmdev.roove.core.log.logInfo
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
-import javax.inject.Inject
 
 
 /**
  * [chatIsEmpty] used to mark conversation started or not to move partner out of pairs section
  */
 
-class ChatViewModel @Inject constructor(
+class ChatViewModel @ViewModelInject constructor(
 	private val repo: ChatRepository
 ): BaseViewModel() {
 

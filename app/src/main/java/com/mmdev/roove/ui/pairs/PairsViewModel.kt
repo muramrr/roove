@@ -1,7 +1,7 @@
 /*
  * Created by Andrii Kovalchuk
  * Copyright (c) 2020. All rights reserved.
- * Last modified 31.12.20 16:46
+ * Last modified 31.12.20 18:36
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,15 +10,15 @@
 
 package com.mmdev.roove.ui.pairs
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.pairs.PairsRepository
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
-import javax.inject.Inject
 
-class PairsViewModel @Inject constructor(
+class PairsViewModel @ViewModelInject constructor(
 	private val repo: PairsRepository
 ): BaseViewModel() {
 
