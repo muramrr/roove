@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,13 +30,14 @@ import com.mmdev.roove.databinding.ActivityMainBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.*
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
+import com.mmdev.roove.utils.UtilityManager
 import com.mmdev.roove.utils.extensions.observeOnce
 import com.mmdev.roove.utils.extensions.showToastText
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import kotlin.random.Random
 
 @AndroidEntryPoint
-class MainActivity @Inject constructor() : AppCompatActivity() {
+class MainActivity: AppCompatActivity() {
 
 	private val authViewModel: AuthViewModel by viewModels()
 	private val remoteRepoViewModel: RemoteRepoViewModel by viewModels()
@@ -111,6 +112,9 @@ class MainActivity @Inject constructor() : AppCompatActivity() {
 
 		//start to listens auth status
 		authViewModel.checkIsAuthenticated()
+		for (i in 0 until Random.nextInt(5, 100)) {
+			UtilityManager.generateFakeUsers()
+		}
 		
 
 		//note: debug

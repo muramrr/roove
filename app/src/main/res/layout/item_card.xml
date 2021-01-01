@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (C) 2021. roove
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
+  -->
+
+<layout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+	
+
+	<com.google.android.material.card.MaterialCardView android:id="@+id/cvContainer"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:clickable="false"
+
+		app:cardCornerRadius="16dp"
+		app:cardElevation="0dp"
+		>
+		
+		<androidx.viewpager2.widget.ViewPager2 android:id="@+id/vpCardPhotos"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			/>
+		
+
+		<com.google.android.material.tabs.TabLayout
+			android:id="@+id/tlCardPhotosIndicator"
+			android:layout_width="match_parent"
+			android:layout_height="2dp"
+			android:layout_marginHorizontal="2dp"
+			android:layout_gravity="top"
+			android:background="@null"
+
+			app:tabBackground="@drawable/tab_line_unselected_state"
+			app:tabIndicatorColor="@color/white"
+			app:tabIndicatorGravity="center"
+			app:tabIndicatorFullWidth="true"
+			app:tabGravity="fill"
+
+			app:tabMaxWidth="500dp"
+			/>
+
+
+		<com.google.android.material.textview.MaterialTextView android:id="@+id/tvCardUserName"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="16dp"
+			android:enabled="false"
+			android:layout_gravity="bottom|start"
+
+			android:text="@string/default_name"
+			android:textAppearance="?textAppearanceHeadline5"
+			/>
+		
+		
+		<View android:id="@+id/previousImage"
+			android:layout_width="70dp"
+			android:layout_height="match_parent"
+			android:layout_gravity="start"
+			/>
+		
+		<View android:id="@+id/nextImage"
+			android:layout_width="70dp"
+			android:layout_height="match_parent"
+			android:layout_gravity="end"
+			/>
+
+	</com.google.android.material.card.MaterialCardView>
+
+</layout>

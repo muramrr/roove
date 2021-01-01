@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -97,7 +97,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 				//deletion observer
 				mViewModel.photoDeletingStatus.observeOnce(this@SettingsEditInfoFragment, {
 					if (it) {
-						currentUser.photoURLs.remove(item)
+						currentUser.photoURLs.minus(item)
 						mEditorPhotoAdapter.removeAt(position)
 						
 						if (isMainPhotoDeleting) {

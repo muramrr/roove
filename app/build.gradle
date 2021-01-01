@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -99,7 +99,6 @@ dependencies {
 	kapt 'androidx.hilt:hilt-compiler:1.0.0-alpha02'
 
 	//custom UI
-	implementation 'com.yuyakaido.android:card-stack-view:2.3.4'
 	implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.4.0'
 	implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 

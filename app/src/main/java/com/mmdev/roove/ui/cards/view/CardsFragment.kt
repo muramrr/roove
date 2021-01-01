@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,16 +21,17 @@ package com.mmdev.roove.ui.cards.view
 
 import android.os.Bundle
 import android.view.View
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DefaultItemAnimator
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentCardsBinding
 import com.mmdev.roove.ui.cards.CardsViewModel
+import com.mmdev.roove.ui.cards.CardsViewModel.SwipeAction.*
+import com.mmdev.roove.ui.common.ImagePagerAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
-import com.yuyakaido.android.cardstackview.CardStackLayoutManager
-import com.yuyakaido.android.cardstackview.CardStackListener
-import com.yuyakaido.android.cardstackview.Direction
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -40,92 +41,110 @@ class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
 ) {
 	
 	override val mViewModel: CardsViewModel by viewModels()
-	
-	private val mCardsStackAdapter = CardsStackAdapter()
 
-	private var mCardsList = mutableListOf<UserItem>()
 
 	private var mAppearedUserItem: UserItem = UserItem()
 	private var mDisappearedUserItem: UserItem = UserItem()
-
-
-
+	
+	private val mTopCardImagePagerAdapter = ImagePagerAdapter()
+	private val mBottomCardImagePagerAdapter = ImagePagerAdapter()
+	
+	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-
-		mViewModel.loadUsersByPreferences(initialLoading = true)
-		mViewModel.usersCardsList.observe(this, {
-			mCardsList.clear()
-			mCardsList.addAll(it)
-			mCardsStackAdapter.setData(it)
-		})
-		mViewModel.showMatchDialog.observe(this, {
-			if (it) showMatchDialog(mDisappearedUserItem)
-		})
-
+		
+		observeTopCard()
+		observeBottomCard()
+		observeMatch()
+		observeLoading()
 	}
-
+	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
-
-		val cardStackLayoutManager = CardStackLayoutManager(
-			cardStackView.context, object: CardStackListener {
-
-			override fun onCardAppeared(view: View, position: Int) {
-				//get current displayed on card profile
-				mAppearedUserItem = mCardsStackAdapter.getItem(position)
-			}
-
-			override fun onCardDragging(direction: Direction, ratio: Float) {}
-
-			override fun onCardSwiped(direction: Direction) {
-				//if right = add to liked
-				if (direction == Direction.Right) {
-					mViewModel.checkMatch(mAppearedUserItem)
-				}
-				//left = add to skipped
-				if (direction == Direction.Left) {
-					mViewModel.addToSkipped(mAppearedUserItem)
+		motionLayout.setTransitionListener(object : MotionLayout.TransitionListener {
+			override fun onTransitionTrigger(layout: MotionLayout, triggerId: Int, positive: Boolean, progress: Float) {}
+			override fun onTransitionStarted(layout: MotionLayout, start: Int, end: Int) {}
+			override fun onTransitionChange(layout: MotionLayout, start: Int, end: Int, position: Float) {}
+			
+			override fun onTransitionCompleted(layout: MotionLayout, currentId: Int) {
+				when (currentId) {
+					R.id.topOffScreenSkip -> mViewModel.swipeTop(SKIP)
+					R.id.topOffScreenLike -> mViewModel.swipeBottom(LIKE)
+					
+					R.id.bottomOffScreenSkip -> mViewModel.swipeBottom(SKIP)
+					R.id.bottomOffScreenLike -> mViewModel.swipeBottom(LIKE)
 				}
 			}
-
-			override fun onCardRewound() {}
-			override fun onCardCanceled() {}
-
-			override fun onCardDisappeared(view: View, position: Int) {
-				//needed to show match
-				mDisappearedUserItem = mCardsStackAdapter.getItem(position)
-				mCardsList.remove(mDisappearedUserItem)
-				if (position == mCardsStackAdapter.itemCount - 1) {
-					mViewModel.loadUsersByPreferences()
-				}
-
-			}
-
 		})
-
-		cardStackView.apply {
-			adapter = mCardsStackAdapter
-			layoutManager = cardStackLayoutManager
-			itemAnimator.apply {
-				if (this is DefaultItemAnimator) {
-					supportsChangeAnimations = false
-				}
+	}
+	
+	
+	private fun observeLoading() = mViewModel.showLoading.observe(this, {
+		if (it) binding.loadingView.visibility = View.VISIBLE
+		else binding.loadingView.visibility = View.INVISIBLE
+	})
+	
+	/** top card setup ui*/
+	private fun observeTopCard() = mViewModel.topCard.observe(this, { setTopCard(it) })
+	private fun setTopCard(userItem: UserItem?) = binding.topCard.run {
+		if (userItem == null) cvContainer.visibility = View.INVISIBLE
+		else {
+			mTopCardImagePagerAdapter.setData(userItem.photoURLs.map { it.fileUrl })
+			
+			cvContainer.visibility = View.VISIBLE
+			
+			vpCardPhotos.apply {
+				adapter = mTopCardImagePagerAdapter
+				isUserInputEnabled = false
 			}
+			
+			TabLayoutMediator(tlCardPhotosIndicator, vpCardPhotos) { _: TabLayout.Tab, _: Int ->
+				//do nothing
+			}.attach()
+			
+			nextImage.setOnClickListener {
+				if (vpCardPhotos.currentItem != vpCardPhotos.itemDecorationCount - 1) vpCardPhotos.currentItem++
+			}
+			previousImage.setOnClickListener {
+				if (vpCardPhotos.currentItem != 0) vpCardPhotos.currentItem--
+			}
+			
+			tvCardUserName.text = userItem.baseUserInfo.name
 		}
-
-		mCardsStackAdapter.setOnItemClickListener { item, position ->
-			sharedViewModel.userNavigateTo.value = item
-			navController.navigate(R.id.action_cards_to_profileFragment)
+	}
+	
+	
+	/** bottom card setup ui*/
+	private fun observeBottomCard() = mViewModel.bottomCard.observe(this, { setBottomCard(it) })
+	private fun setBottomCard(userItem: UserItem?) = binding.bottomCard.run {
+		if (userItem == null) cvContainer.visibility = View.INVISIBLE
+		else {
+			mBottomCardImagePagerAdapter.setData(userItem.photoURLs.map { it.fileUrl })
+			
+			cvContainer.visibility = View.VISIBLE
+			
+			vpCardPhotos.apply {
+				adapter = mBottomCardImagePagerAdapter
+				isUserInputEnabled = false
+			}
+			
+			TabLayoutMediator(tlCardPhotosIndicator, vpCardPhotos) { _: TabLayout.Tab, _: Int ->
+				//do nothing
+			}.attach()
+			
+			nextImage.setOnClickListener {
+				if (vpCardPhotos.currentItem != vpCardPhotos.itemDecorationCount - 1) vpCardPhotos.currentItem++
+			}
+			previousImage.setOnClickListener {
+				if (vpCardPhotos.currentItem != 0) vpCardPhotos.currentItem--
+			}
+			
+			tvCardUserName.text = userItem.baseUserInfo.name
 		}
-
 	}
-
-	override fun onStop() {
-		super.onStop()
-		if (mCardsStackAdapter.itemCount != mCardsList.size)
-			mCardsStackAdapter.setData(mCardsList.toList())
-	}
-
+	
+	private fun observeMatch() = mViewModel.showMatchDialog.observe(this, {
+		if (it) showMatchDialog(mDisappearedUserItem)
+	})
 	private fun showMatchDialog(userItem: UserItem) = MatchDialogFragment.newInstance(
 		userItem.baseUserInfo.name, userItem.baseUserInfo.mainPhotoUrl
 	).show(childFragmentManager, MatchDialogFragment::class.java.canonicalName)

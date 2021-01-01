@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -123,7 +123,7 @@ class UserRepositoryRemoteImpl @Inject constructor(
 			reInit()
 			val ref = fillUserGeneralRef(userItem.baseUserInfo)
 
-			userItem.photoURLs.remove(photoItem)
+			userItem.photoURLs.minus(photoItem)
 
 			if (isMainPhotoDeleting) {
 				ref.update(USER_MAIN_PHOTO_FIELD, userItem.photoURLs[0].fileUrl)
@@ -302,7 +302,7 @@ class UserRepositoryRemoteImpl @Inject constructor(
 							currentUserDocRef
 								.update(USER_PHOTOS_LIST_FIELD, FieldValue.arrayUnion(uploadedPhotoItem))
 
-							userItem.photoURLs.add(uploadedPhotoItem)
+							userItem.photoURLs.plus(uploadedPhotoItem)
 							emitter.onNext(hashMapOf(100.00 to userItem.photoURLs))
 							emitter.onComplete()
 							userWrapper.setUser(userItem)

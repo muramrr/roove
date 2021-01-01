@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ data class UserItem(
     val baseUserInfo: BaseUserInfo = BaseUserInfo(),
     var cityToDisplay: String = "",
     var aboutText: String = "",
-    var photoURLs: MutableList<PhotoItem> = mutableListOf(),
+    var photoURLs: List<PhotoItem> = listOf(),
     val placesToGo: MutableList<BasePlaceInfo> = mutableListOf(),
     val preferredAgeRange: PreferredAgeRange = PreferredAgeRange()
 ) {
