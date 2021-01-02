@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,10 @@
 
 package com.mmdev.data.core.firebase
 
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.Query
+import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.log.logDebug
 import com.mmdev.data.core.log.logError
 import com.mmdev.data.core.log.logInfo
@@ -36,8 +38,19 @@ import io.reactivex.rxjava3.internal.operators.single.SingleCreate
 private const val TAG = "mylogs_FirestoreExtensions"
 const val FIRESTORE_NO_DOCUMENT_EXCEPTION = "No such document."
 
+internal fun <TResult> Task<TResult>.asSingle(): Single<TResult> = SingleCreate<TResult> { emitter ->
+	addOnSuccessListener {
+		logDebug(TAG, "TResult is success")
+		emitter.onSuccess(it)
+	}
+	addOnFailureListener {
+		logDebug(TAG, "TResult is failure")
+		emitter.onError(it)
+	}
+}.subscribeOn(MySchedulers.io())
+
 internal fun <T> DocumentReference.getAndDeserializeAsSingle(clazz: Class<T>): Single<T> =
-	SingleCreate { emitter ->
+	SingleCreate<T> { emitter ->
 		get()
 			.addOnSuccessListener { snapshot ->
 				logInfo(TAG, "Document retrieve success")
@@ -59,10 +72,10 @@ internal fun <T> DocumentReference.getAndDeserializeAsSingle(clazz: Class<T>): S
 				logError(TAG, "Failed to retrieve document from backend: $exception")
 				emitter.onError(exception)
 			}
-	}
+	}.subscribeOn(MySchedulers.io())
 
 
-fun <T> Query.executeAndDeserializeSingle(clazz: Class<T>): Single<List<T>> = SingleCreate { emitter ->
+internal fun <T> Query.executeAndDeserializeSingle(clazz: Class<T>): Single<List<T>> = SingleCreate<List<T>> { emitter ->
 	logDebug(TAG, "Trying to execute given query...")
 	get()
 		.addOnSuccessListener { querySnapshot ->
@@ -86,11 +99,13 @@ fun <T> Query.executeAndDeserializeSingle(clazz: Class<T>): Single<List<T>> = Si
 			logError(TAG, "Failed to execute given query: $exception")
 			emitter.onError(exception)
 		}
-}
+}.subscribeOn(MySchedulers.io())
 
 
 
-fun <T> DocumentReference.setAsCompletable(dataClass: T): Completable = CompletableCreate { emitter ->
+
+internal fun <T> DocumentReference.setAsCompletable(dataClass: T): Completable = CompletableCreate {
+	emitter ->
 	set(dataClass!!)
 		.addOnSuccessListener {
 			logInfo(TAG, "Set $dataClass as document successfully")
@@ -101,4 +116,18 @@ fun <T> DocumentReference.setAsCompletable(dataClass: T): Completable = Completa
 			emitter.onError(exception)
 		}
 		
-	}
+	}.subscribeOn(MySchedulers.io())
+
+
+internal fun DocumentReference.updateAsCompletable(field: String, value: Any): Completable = CompletableCreate { emitter ->
+	update(field, value)
+		.addOnSuccessListener {
+			logInfo(TAG, "Field $field updated with $value successfully")
+			emitter.onComplete()
+		}
+		.addOnFailureListener { exception ->
+			logError(TAG, "Field $field updated with $value error: $exception")
+			emitter.onError(exception)
+		}
+	
+}.subscribeOn(MySchedulers.io())

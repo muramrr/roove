@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,313 +20,236 @@ package com.mmdev.data.repository.chat
 
 import android.net.Uri
 import android.text.format.DateFormat
-import android.util.Log
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.storage.StorageReference
 import com.mmdev.business.chat.ChatRepository
 import com.mmdev.business.chat.MessageItem
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.data.PhotoItem
-import com.mmdev.data.core.BaseRepositoryImpl
-import com.mmdev.data.core.ExecuteSchedulers
-import com.mmdev.data.repository.user.UserWrapper
+import com.mmdev.business.user.UserItem
+import com.mmdev.data.core.BaseRepository
+import com.mmdev.data.core.MySchedulers
+import com.mmdev.data.core.firebase.asSingle
+import com.mmdev.data.core.firebase.executeAndDeserializeSingle
+import com.mmdev.data.core.firebase.setAsCompletable
+import com.mmdev.data.core.firebase.updateAsCompletable
+import com.mmdev.data.core.log.logDebug
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.internal.operators.observable.ObservableCreate
-import io.reactivex.rxjava3.internal.operators.single.SingleCreate
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
+ * [ChatRepository] implementation
  * [observeNewMessages] method uses firebase snapshot listener
  * read more about local changes and writing to backend with "latency compensation"
  * @link https://firebase.google.com/docs/firestore/query-data/listen
  */
 
-@Singleton
-class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore,
-                                             private val storage: StorageReference,
-                                             userWrapper: UserWrapper
-):
-		ChatRepository, BaseRepositoryImpl(firestore, userWrapper) {
-
-	private lateinit var partnerDocRef: DocumentReference
-
-	private lateinit var initialChatQuery : Query
-
-	private lateinit var paginateChatQuery: Query
-	private lateinit var paginateLastLoadedMessage: DocumentSnapshot
-
-	private var firstMessageItem = MessageItem()
-
-	private var isPartnerOnline = false
-
+class ChatRepositoryImpl @Inject constructor(
+	private val fs: FirebaseFirestore,
+	private val storage: StorageReference
+): BaseRepository(), ChatRepository {
+	
 	companion object {
 		private const val CONVERSATION_PARTNER_ONLINE_FIELD = "partnerOnline"
 		private const val CONVERSATION_UNREAD_COUNT_FIELD = "unreadCount"
-		private const val MESSAGES_COLLECTION_REFERENCE = "messages"
+		private const val MESSAGES_COLLECTION = "messages"
 		private const val MESSAGE_TIMESTAMP_FIELD = "timestamp"
 		private const val MESSAGE_SENDER_ID_FILED = "sender.userId"
+		
+		private const val SOURCE_SERVER = "Server"
+		private const val SOURCE_LOCAL = "Local"
 	}
-
-	override fun loadMessages(conversation: ConversationItem): Single<List<MessageItem>> {
-		initialChatQuery = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+	
+	private fun messagesQuery(conversation: ConversationItem, cursorPosition: Int): Query =
+		fs.collection(CONVERSATIONS_COLLECTION)
 			.document(conversation.conversationId)
-			.collection(MESSAGES_COLLECTION_REFERENCE)
+			.collection(MESSAGES_COLLECTION)
 			.orderBy(MESSAGE_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
 			.limit(20)
-
-		//init partner doc reference
-		partnerDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(conversation.partner.city)
-			.collection(conversation.partner.gender)
-			.document(conversation.partner.userId)
-
-		//reset unread count
-		currentUserDocRef.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+			.startAfter(cursorPosition)
+	
+	private var isPartnerOnline = false
+	
+	private var isSnapshotInitiated = false
+	
+	override fun loadMessages(
+		conversation: ConversationItem,
+		cursorPosition: Int
+	): Single<List<MessageItem>> = messagesQuery(conversation, cursorPosition)
+		.executeAndDeserializeSingle(MessageItem::class.java)
+	
+	
+	
+	override fun observeNewMessages(
+		user: UserItem,
+		conversation: ConversationItem
+	): Observable<MessageItem> = ObservableCreate<MessageItem> { emitter ->
+		val listener = fs.collection(CONVERSATIONS_COLLECTION)
 			.document(conversation.conversationId)
-			.update(CONVERSATION_UNREAD_COUNT_FIELD, 0)
-
-		return SingleCreate<List<MessageItem>> { emitter ->
-			initialChatQuery
-				.get()
-				.addOnSuccessListener {
-					partnerDocRef.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-						.document(conversation.conversationId)
-						.update(CONVERSATION_PARTNER_ONLINE_FIELD, true)
-					//check if there is messages first
-					//it will throw exception IndexOutOfRange without this statement
-					if (!it.isEmpty) {
-						val initialMessageList = mutableListOf<MessageItem>()
-						var message: MessageItem
-						for (doc in it) {
-							message = doc.toObject(MessageItem::class.java)
-							initialMessageList.add(message)
-						}
-						emitter.onSuccess(initialMessageList)
-						firstMessageItem = initialMessageList[0]
-						//new cursor position
-						paginateLastLoadedMessage = it.documents[it.size() - 1]
-						//update query with new cursor position
-						paginateChatQuery =
-							initialChatQuery.startAfter(paginateLastLoadedMessage)
-					}
-					else emitter.onSuccess(emptyList())
+			.collection(MESSAGES_COLLECTION)
+			.orderBy(MESSAGE_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
+			.limit(1)
+			.addSnapshotListener { snapshot, e ->
+				if (e != null) {
+					emitter.onError(e)
+					return@addSnapshotListener
 				}
-				.addOnFailureListener { emitter.onError(it) }
-		}.subscribeOn(ExecuteSchedulers.io())
-	}
-
-	override fun loadMoreMessages(): Single<List<MessageItem>> =
-		SingleCreate<List<MessageItem>> { emitter ->
-			paginateChatQuery
-				.get()
-				.addOnSuccessListener {
-					if (!it.isEmpty) {
-						val paginateMessagesList = mutableListOf<MessageItem>()
-						var message: MessageItem
-						for (doc in it) {
-							message = doc.toObject(MessageItem::class.java)
-							paginateMessagesList.add(message)
-						}
-						emitter.onSuccess(paginateMessagesList)
-						//new cursor position
-						paginateLastLoadedMessage = it.documents[it.size() - 1]
-						//update query with new cursor position
-						paginateChatQuery =
-							paginateChatQuery.startAfter(paginateLastLoadedMessage)
-					}
-					else emitter.onSuccess(emptyList())
-				}
-				.addOnFailureListener { emitter.onError(it) }
-		}.subscribeOn(ExecuteSchedulers.io())
-
-	override fun observeNewMessages(conversation: ConversationItem): Observable<MessageItem> {
-		super.reInit()
-
-		if (!this::partnerDocRef.isInitialized)
-			partnerDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(conversation.partner.city)
-				.collection(conversation.partner.gender)
-				.document(conversation.partner.userId)
-
-		return Observable.create(ObservableOnSubscribe<MessageItem> { emitter ->
-			val listener = firestore.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.document(conversation.conversationId)
-				.collection(MESSAGES_COLLECTION_REFERENCE)
-				.orderBy(MESSAGE_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
-				.addSnapshotListener { snapshots, e ->
-					if (e != null) {
-						emitter.onError(e)
-						return@addSnapshotListener
-					}
-					var message: MessageItem
-					if (snapshots != null && snapshots.documents.isNotEmpty()) {
-						//if sent from current device
-						if (snapshots.metadata.hasPendingWrites()) {
-							for (dc in snapshots.documentChanges) {
-								if (dc.type == DocumentChange.Type.ADDED) {
-									message = dc.document.toObject(MessageItem::class.java)
-									//Log.wtf(TAG, "Added: ${dc.document["text"]}")
-									emitter.onNext(message)
-								}
+				
+				val source = if (snapshot != null && snapshot.metadata.hasPendingWrites()) SOURCE_LOCAL
+				else SOURCE_SERVER
+				
+				if (!snapshot?.documents.isNullOrEmpty() && source == SOURCE_SERVER) {
+					
+					//documentChanges has various states, parse them
+					snapshot!!.documentChanges.forEach { documentChange ->
+						if (documentChange.type == DocumentChange.Type.ADDED) {
+							
+							val document = snapshot.documents.first()
+							if (document.getField<String>("recipientId") == user.baseUserInfo.userId) {
+								logDebug(TAG, "Message was sent not from this user")
+								
+								if (isSnapshotInitiated)
+									emitter.onNext(document.toObject(MessageItem::class.java))
 							}
-						}
-						//partner send msg
-						else if (snapshots.documents[0].get(MESSAGE_SENDER_ID_FILED) != currentUser.baseUserInfo.userId) {
-							message = snapshots.documents[0].toObject(MessageItem::class.java)!!
-							//remove last duplicated message from initLoad and this snapshot listener
-							if (message != firstMessageItem)
-								emitter.onNext(message)
+							
 						}
 					}
-					else Log.wtf(TAG, "snapshots is null or empty")
 				}
-			emitter.setCancellable {
-				partnerDocRef.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-					.document(conversation.conversationId)
-					.update(CONVERSATION_PARTNER_ONLINE_FIELD, false)
-				listener.remove()
+				else {
+					logDebug(TAG, "Message comes from $source source")
+				}
+				
+				isSnapshotInitiated = true
+				
 			}
-		}).subscribeOn(ExecuteSchedulers.io())
-	}
+		emitter.setCancellable { listener.remove() }
+	}.subscribeOn(MySchedulers.io())
 
-	override fun observePartnerOnline(conversationId: String): Observable<Boolean> =
-		ObservableCreate<Boolean> { emitter ->
-
-			val listener = currentUserDocRef
-				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.document(conversationId)
-				.addSnapshotListener { snapshot, e ->
-					if (e != null) {
-						emitter.onError(e)
-						return@addSnapshotListener
-					}
-					if (snapshot != null && snapshot.exists()) {
-						snapshot.getBoolean(CONVERSATION_PARTNER_ONLINE_FIELD)?.let {
-							if (isPartnerOnline != it)
-								isPartnerOnline = it
-							emitter.onNext(it)
-						}
-
-					}
-				}
-			emitter.setCancellable { listener.remove() }
-		}.subscribeOn(ExecuteSchedulers.io())
+	//override fun observePartnerOnline(conversationId: String): Observable<Boolean> =
+	//	ObservableCreate<Boolean> { emitter ->
+	//
+	//		val listener = currentUserDocRef
+	//			.collection(CONVERSATIONS_COLLECTION)
+	//			.document(conversationId)
+	//			.addSnapshotListener { snapshot, e ->
+	//				if (e != null) {
+	//					emitter.onError(e)
+	//					return@addSnapshotListener
+	//				}
+	//				if (snapshot != null && snapshot.exists()) {
+	//					snapshot.getBoolean(CONVERSATION_PARTNER_ONLINE_FIELD).let {
+	//						if (isPartnerOnline != it) isPartnerOnline = it
+	//						emitter.onNext(it)
+	//					}
+	//
+	//				}
+	//			}
+	//		emitter.setCancellable { listener.remove() }
+	//	}.subscribeOn(MySchedulers.io())
 
 	override fun sendMessage(messageItem: MessageItem, emptyChat: Boolean?): Completable {
-		//Log.wtf("TAG", "is empty recieved? + $emptyChat")
-		val conversation = firestore
-			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
+		
+		val conversation = fs
+			.collection(CONVERSATIONS_COLLECTION)
 			.document(messageItem.conversationId)
 
 		messageItem.timestamp = FieldValue.serverTimestamp()
 
-		return Completable.create { emitter ->
-			conversation.collection(MESSAGES_COLLECTION_REFERENCE)
-				.document()
-				.set(messageItem)
-				.addOnSuccessListener {
-					updateLastMessage(messageItem)
-					if (emptyChat != null && emptyChat == true) updateStartedStatus(messageItem)
-					updateUnreadMessagesCount(messageItem.conversationId)
-					emitter.onComplete()
-				}
-				.addOnFailureListener { emitter.onError(it) }
-
-		}.subscribeOn(ExecuteSchedulers.io())
+		return conversation.collection(MESSAGES_COLLECTION)
+			.document()
+			.setAsCompletable(messageItem)
+			//.concatWith {
+			//	if (emptyChat != null && emptyChat == true) updateStartedStatus(messageItem)
+			//}
+			//.andThen {
+			//	updateUnreadMessagesCount(messageItem.conversationId)
+			//}
+			//.andThen {
+			//	updateLastMessage(messageItem)
+			//}
 	}
 
-	override fun uploadMessagePhoto(photoUri: String, conversationId: String): Observable<PhotoItem> {
+	override fun uploadMessagePhoto(photoUri: String, conversationId: String): Single<PhotoItem> {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()+".jpg"
 		val storageRef = storage
 			.child(GENERAL_FOLDER_STORAGE_IMG)
 			.child(SECONDARY_FOLDER_STORAGE_IMG)
 			.child(conversationId)
 			.child(namePhoto)
-		return Observable.create(ObservableOnSubscribe<PhotoItem> { emitter ->
-			//Log.wtf(TAG, "upload photo observable called")
-			val uploadTask = storageRef.putFile(Uri.parse(photoUri))
-				.addOnSuccessListener {
-					storageRef.downloadUrl.addOnSuccessListener {
-						val photoAttached = PhotoItem(namePhoto, it.toString())
-						//Log.wtf(TAG, "photo uploaded: $photoAttached")
-						emitter.onNext(photoAttached)
-						emitter.onComplete()
-					}
-				}
-				.addOnFailureListener { emitter.onError(it) }
-			emitter.setCancellable { uploadTask.cancel() }
-		}).subscribeOn(ExecuteSchedulers.io())
+			.putFile(Uri.parse(photoUri))
+			
+		return storageRef.asSingle()
+			.flatMap { task ->
+				task.storage
+					.downloadUrl
+					.asSingle()
+					.map { PhotoItem(fileName = namePhoto, fileUrl = it.toString()) }
+			}
 	}
 
-	private fun updateStartedStatus(messageItem: MessageItem) {
-		super.reInit()
-		// for current
-		currentUserDocRef
-			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(messageItem.conversationId)
-			.update(CONVERSATION_STARTED_FIELD, true)
+	//private fun updateStartedStatus(messageItem: MessageItem) {
+	//	// for current
+	//	currentUserDocRef
+	//		.collection(CONVERSATIONS_COLLECTION)
+	//		.document(messageItem.conversationId)
+	//		.update(CONVERSATION_STARTED_FIELD, true)
+	//
+	//	currentUserDocRef
+	//		.collection(USER_MATCHED_COLLECTION)
+	//		.document(messageItem.recipientId)
+	//		.update(CONVERSATION_STARTED_FIELD, true)
+	//
+	//
+	//	// for partner
+	//	partnerDocRef
+	//		.collection(CONVERSATIONS_COLLECTION)
+	//		.document(messageItem.conversationId)
+	//		.update(CONVERSATION_STARTED_FIELD, true)
+	//	partnerDocRef
+	//		.collection(USER_MATCHED_COLLECTION)
+	//		.document(currentUser.baseUserInfo.userId)
+	//		.update(CONVERSATION_STARTED_FIELD, true)
+	//	//Log.wtf(TAG, "convers status updated")
+	//}
 
-		currentUserDocRef
-			.collection(USER_MATCHED_COLLECTION_REFERENCE)
-			.document(messageItem.recipientId)
-			.update(CONVERSATION_STARTED_FIELD, true)
+	//private fun updateLastMessage(user: UserItem, messageItem: MessageItem) {
+	//	val cur = fs.collection(USERS_COLLECTION)
+	//		.document(user.baseUserInfo.userId)
+	//		.collection(CONVERSATIONS_COLLECTION)
+	//		.document(messageItem.conversationId)
+	//
+	//	val par = partnerDocRef
+	//		.collection(CONVERSATIONS_COLLECTION)
+	//		.document(messageItem.conversationId)
+	//
+	//	if (messageItem.photoItem != null) {
+	//		// for current
+	//		cur.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, "Photo")
+	//		cur.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
+	//		// for partner
+	//		par.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, "Photo")
+	//		par.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
+	//	}
+	//	else {
+	//		// for current
+	//		cur.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, messageItem.text)
+	//		cur.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
+	//		// for partner
+	//		par.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, messageItem.text)
+	//		par.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
+	//	}
+	//	//Log.wtf(TAG, "last message updated")
+	//}
 
-
-		// for partner
-		partnerDocRef
-			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(messageItem.conversationId)
-			.update(CONVERSATION_STARTED_FIELD, true)
-		partnerDocRef
-			.collection(USER_MATCHED_COLLECTION_REFERENCE)
-			.document(currentUser.baseUserInfo.userId)
-			.update(CONVERSATION_STARTED_FIELD, true)
-		//Log.wtf(TAG, "convers status updated")
-	}
-
-	private fun updateLastMessage(messageItem: MessageItem) {
-		super.reInit()
-		val cur = currentUserDocRef
-			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(messageItem.conversationId)
-
-		val par = partnerDocRef
-			.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-			.document(messageItem.conversationId)
-
-		if (messageItem.photoItem != null) {
-			// for current
-			cur.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, "Photo")
-			cur.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
-			// for partner
-			par.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, "Photo")
-			par.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
-		}
-		else {
-			// for current
-			cur.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, messageItem.text)
-			cur.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
-			// for partner
-			par.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, messageItem.text)
-			par.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
-		}
-		//Log.wtf(TAG, "last message updated")
-	}
-
-	private fun updateUnreadMessagesCount(conversationId: String) {
-		if (!isPartnerOnline) {
-			partnerDocRef
-				.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-				.document(conversationId)
-				.update(CONVERSATION_UNREAD_COUNT_FIELD, FieldValue.increment(1))
-		}
-
-	}
-
-
+	private fun updateUnreadMessagesCount(conversation: ConversationItem) =
+		fs.collection(USERS_COLLECTION)
+			.document(conversation.partner.userId)
+			.collection(CONVERSATIONS_COLLECTION)
+			.document(conversation.conversationId)
+			.updateAsCompletable(CONVERSATION_UNREAD_COUNT_FIELD, FieldValue.increment(1))
 }

@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ android {
 
 	def globalConfiguration = rootProject.extensions.getByName("ext")
 	compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
+	buildToolsVersion globalConfiguration["androidBuildToolsVersion"]
 
 	def keyPropertiesFile = rootProject.file("key.properties")
 	def keyProperties = new Properties()
@@ -63,13 +64,13 @@ android {
 }
 
 dependencies {
-	implementation project(':business')
+	implementation project(':domain')
 
 	// Kotlin
 	implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
 	//facebook auth
-	implementation libs.facebookLogin
+	implementation 'com.facebook.android:facebook-login:7.1.0'
 
 	//firebase
 	implementation platform('com.google.firebase:firebase-bom:26.2.0')
@@ -79,14 +80,10 @@ dependencies {
 	implementation 'com.google.firebase:firebase-installations-ktx'
 
 	// RxJava
-	implementation libs.rxJava
+	implementation "io.reactivex.rxjava3:rxjava:3.0.8"
 
 	// Dagger hilt
 	implementation "com.google.dagger:hilt-android:2.30.1-alpha"
 	kapt "com.google.dagger:hilt-android-compiler:2.30.1-alpha"
-
-	//binary prefs
-	implementation "com.github.yandextaxitech:binaryprefs:1.0.1"
-	implementation 'com.google.code.gson:gson:2.8.6'
 
 }

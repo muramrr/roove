@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 package com.mmdev.roove.core.notifications
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -34,6 +35,7 @@ import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.ui.MainActivity
 
 
+@SuppressLint("MissingFirebaseInstanceTokenRefresh")
 class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserver {
 
 	private var isAppInForeground = false

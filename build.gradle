@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,41 +16,16 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-apply plugin: 'com.github.ben-manes.versions'
-
 buildscript {
 
 	ext {
-
 		kotlin_version = '1.4.21'
-
-		// facebook
-		facebook_sdk_version = '7.1.0'
-
-		// RxJava3
-		rxjava_version = '3.0.4'
-
-		// RxAndroid3
-		rxandroid_version = '3.0.0'
-
-		//tests
-		junitVersion = "4.12"
-
-		libs = [
-			facebookLogin       : ('com.facebook.android:facebook-login:' + facebook_sdk_version),
-			rxJava              : ('io.reactivex.rxjava3:rxjava:' + rxjava_version),
-			rxAndroid           : ('io.reactivex.rxjava3:rxandroid:' + rxandroid_version),
-			junit               : ('junit:junit:' + junitVersion),
-		]
-
 	}
 
 
 	dependencies {
 		classpath 'com.android.tools.build:gradle:4.1.1'
 		classpath 'com.google.gms:google-services:4.3.4'
-		classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-		classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0'
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 		classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
 		classpath 'com.google.dagger:hilt-android-gradle-plugin:2.30.1-alpha'
@@ -66,12 +41,17 @@ buildscript {
 
 allprojects {
 
+	def majorVersion = 2
+	def minorVersion = 0
+	def patchVersion = 0
+
 	ext {
 		androidCompileSdkVersion = 30
-		androidVersionCode = 2
-		androidVersionName = "1.1.0"
+		androidVersionCode = "$majorVersion$minorVersion$patchVersion".toInteger()
+		androidVersionName = "$majorVersion.$minorVersion.$patchVersion"
 		androidMinSdkVersion = 21
 		androidTargetSdkVersion = 30
+		androidBuildToolsVersion = "30.0.3"
 	}
 
 

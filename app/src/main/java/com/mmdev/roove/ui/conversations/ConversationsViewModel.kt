@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.conversations.ConversationsRepository
+import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
@@ -29,21 +30,19 @@ import com.mmdev.roove.ui.common.errors.MyError
 class ConversationsViewModel @ViewModelInject constructor(
 	private val repo: ConversationsRepository
 ): BaseViewModel() {
-
-
-
+	
 	private val deleteConversationStatus: MutableLiveData<Boolean> = MutableLiveData()
 
-	val conversationsList: MutableLiveData<MutableList<ConversationItem>> = MutableLiveData()
+	val conversationsList = MutableLiveData<List<ConversationItem>>()
+
+	val showTextHelper = MutableLiveData<Boolean>()
+
 	init {
-		conversationsList.value = mutableListOf()
+		loadConversationsList(0)
 	}
 
-	val showTextHelper: MutableLiveData<Boolean> = MutableLiveData()
-
-
 	fun deleteConversation(conversationItem: ConversationItem){
-		disposables.add(repo.deleteConversation(conversationItem)
+		disposables.add(repo.deleteConversation(MainActivity.currentUser!!, conversationItem)
             .observeOn(mainThread())
             .subscribe(
 	            { deleteConversationStatus.value = true },
@@ -56,34 +55,13 @@ class ConversationsViewModel @ViewModelInject constructor(
 	}
 
 
-	fun loadConversationsList(){
-		disposables.add(repo.getConversationsList()
+	fun loadConversationsList(cursor: Int){
+		disposables.add(repo.getConversations(MainActivity.currentUser!!, cursor)
             .observeOn(mainThread())
             .subscribe(
-	            {
-		            if (it.isNotEmpty()) {
-		            	conversationsList.value = it.toMutableList()
-			            showTextHelper.value = false
-		            }
-		            else showTextHelper.value = true
-	            },
-	            {
-		            showTextHelper.value = true
-		            error.value = MyError(ErrorType.LOADING, it)
-	            }
-            )
-		)
-	}
-
-	fun loadMoreConversations(){
-		disposables.add(repo.getMoreConversationsList()
-            .observeOn(mainThread())
-            .subscribe(
-	            {
-		            if (it.isNotEmpty()) {
-		            	conversationsList.value!!.addAll(it)
-			            conversationsList.value = conversationsList.value
-		            }
+	            { conversations ->
+		            conversationsList.postValue(conversations)
+		            showTextHelper.postValue(conversations.isEmpty())
 	            },
 	            { error.value = MyError(ErrorType.LOADING, it) }
             )

@@ -25,11 +25,11 @@ import android.view.View
 import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.mmdev.business.data.PhotoItem
 import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.PreferredAgeRange
 import com.mmdev.business.user.UserItem
+import com.mmdev.business.user.UserItem.PreferredAgeRange
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentAuthRegistrationBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
@@ -44,7 +44,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 	layoutId = R.layout.fragment_auth_registration
 ){
 	
-	override val mViewModel: AuthViewModel by activityViewModels()
+	override val mViewModel: AuthViewModel by viewModels()
 	
 	private var registrationStep = 1
 
@@ -70,7 +70,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		mViewModel.getBaseUserInfo().observe(this, {
+		mViewModel.baseUserInfo.observe(this, {
 			baseUserInfo = it
 		})
 	}
@@ -217,15 +217,17 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 		}
 
 		btnRegistrationDone.setOnClickListener {
-			val finalUserModel = BaseUserInfo(name,
-			                                  age,
-			                                  city,
-			                                  gender,
-			                                  preferredGender,
-			                                  baseUserInfo.mainPhotoUrl,
-			                                  baseUserInfo.userId)
+			val finalUserModel = BaseUserInfo(
+				name,
+				age,
+				city,
+				gender,
+				preferredGender,
+				baseUserInfo.mainPhotoUrl,
+				baseUserInfo.userId
+			)
 
-			mViewModel.register(
+			mViewModel.signUp(
 				UserItem(
 					finalUserModel,
 					cityToDisplay = cityToDisplay,

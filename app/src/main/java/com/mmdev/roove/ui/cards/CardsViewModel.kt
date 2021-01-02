@@ -24,6 +24,7 @@ import com.mmdev.business.cards.CardsRepository
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.core.log.logDebug
 import com.mmdev.roove.core.log.logInfo
+import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.cards.CardsViewModel.SwipeAction.*
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
@@ -31,7 +32,7 @@ import com.mmdev.roove.ui.common.errors.MyError
 
 class CardsViewModel @ViewModelInject constructor(
 	private val repo: CardsRepository
-): BaseViewModel(){
+): BaseViewModel() {
 	
 	enum class SwipeAction {
 		SKIP, LIKE
@@ -40,7 +41,7 @@ class CardsViewModel @ViewModelInject constructor(
 	private val usersCardsList = MutableLiveData<List<UserItem>>()
 
 	val showLoading = MutableLiveData<Boolean>()
-	val showMatchDialog = MutableLiveData<Boolean>()
+	val showMatchDialog = MutableLiveData<UserItem>()
 	val showEmptyIndicator = MutableLiveData<Boolean>()
 	
 	private var cardIndex = 0
@@ -48,31 +49,31 @@ class CardsViewModel @ViewModelInject constructor(
 	val bottomCard = MutableLiveData<UserItem?>(null)
 	
 	init {
-		loadUsersByPreferences(initialLoading = true)
+		loadUsersByPreferences(true)
 	}
 
-	private fun addToSkipped(skippedUserItem: UserItem) {
-		disposables.add(repo.addToSkipped(skippedUserItem)
+	private fun addToSkipped(skippedUser: UserItem) {
+		disposables.add(repo.skipUser(MainActivity.currentUser!!, skippedUser)
             .observeOn(mainThread()).subscribe(
-				{ logDebug(TAG, "Skipped: $skippedUserItem") },
+				{ logDebug(TAG, "Skipped: $skippedUser") },
 				{ error.value = MyError(ErrorType.SUBMITING, it) }
 			)
 		)
 	}
 
 
-	private fun checkMatch(likedUserItem: UserItem) {
-		disposables.add(repo.checkMatch(likedUserItem)
+	private fun checkMatch(likedUser: UserItem) {
+		disposables.add(repo.likeUserAndCheckMatch(MainActivity.currentUser!!, likedUser)
             .observeOn(mainThread())
             .subscribe(
-				{ showMatchDialog.value = it },
-				{ error.value = MyError(ErrorType.CHECKING, it) }
+	            { showMatchDialog.value = likedUser },
+	            { error.value = MyError(ErrorType.CHECKING, it) }
 			)
 		)
 	}
 
 	private fun loadUsersByPreferences(initialLoading: Boolean = false) {
-		disposables.add(repo.getUsersByPreferences(initialLoading)
+		disposables.add(repo.getUsersByPreferences(MainActivity.currentUser!!, initialLoading)
             .observeOn(mainThread())
             .doOnSubscribe { showLoading.value = true }
 			.doOnError { error.value = MyError(ErrorType.LOADING, it) }
@@ -102,7 +103,9 @@ class CardsViewModel @ViewModelInject constructor(
 		if (cardIndex > usersCardsList.value!!.size) loadUsersByPreferences()
 		when (swipeAction) {
 			SKIP -> addToSkipped(topCard.value!!)
-			LIKE -> checkMatch(topCard.value!!).also { logDebug(TAG, "Liked: ${bottomCard.value!!}") }
+			LIKE -> checkMatch(topCard.value!!).also {
+				logDebug(TAG, "Liked: ${bottomCard.value!!}")
+			}
 		}
 		
 		topCard.postValue(usersCardsList.value!!.getOrNull(cardIndex))
@@ -111,7 +114,9 @@ class CardsViewModel @ViewModelInject constructor(
 	fun swipeBottom(swipeAction: SwipeAction) {
 		when (swipeAction) {
 			SKIP -> addToSkipped(bottomCard.value!!)
-			LIKE -> checkMatch(bottomCard.value!!).also { logDebug(TAG, "Liked: ${bottomCard.value!!}") }
+			LIKE -> checkMatch(bottomCard.value!!).also {
+				logDebug(TAG, "Liked: ${bottomCard.value!!}")
+			}
 		}
 		bottomCard.postValue(usersCardsList.value!!.getOrNull(cardIndex + 1))
 	}

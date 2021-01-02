@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,6 +44,10 @@ class PairsFragment: BaseFragment<PairsViewModel, FragmentPairsBinding>(
 	
 	private val mPairsAdapter = PairsAdapter()
 	
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		observePairs()
+	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
 		val gridLayoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
@@ -55,7 +59,7 @@ class PairsFragment: BaseFragment<PairsViewModel, FragmentPairsBinding>(
 				override fun onLoadMore(page: Int, totalItemsCount: Int) {
 
 					if (gridLayoutManager.findLastCompletelyVisibleItemPosition() <= totalItemsCount - 4){
-						mViewModel.loadMoreMatchedUsers()
+						//mViewModel.loadMoreMatchedUsers()
 					}
 
 				}
@@ -72,9 +76,8 @@ class PairsFragment: BaseFragment<PairsViewModel, FragmentPairsBinding>(
 			navController.navigate(R.id.action_pairs_to_profileFragment)
 		}
 	}
-
-	override fun onResume() {
-		super.onResume()
-		mViewModel.loadMatchedUsers()
-	}
+	
+	private fun observePairs() = mViewModel.matchedUsers.observe(this, {
+		mPairsAdapter.setData(it)
+	})
 }

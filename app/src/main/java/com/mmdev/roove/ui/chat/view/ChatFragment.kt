@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.FileProvider
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,9 +39,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.chat.MessageItem
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.pairs.MatchedUserItem
-import com.mmdev.business.remote.Report
-import com.mmdev.business.remote.Report.ReportType.*
 import com.mmdev.business.user.BaseUserInfo
+import com.mmdev.business.user.Report
+import com.mmdev.business.user.Report.ReportType.*
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
@@ -51,6 +50,7 @@ import com.mmdev.roove.core.permissions.handlePermission
 import com.mmdev.roove.core.permissions.onRequestPermissionsResultReceived
 import com.mmdev.roove.core.permissions.requestAppPermissions
 import com.mmdev.roove.databinding.FragmentChatBinding
+import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.chat.ChatViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
@@ -72,8 +72,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 ) {
 	
 	override val mViewModel: ChatViewModel by viewModels()
-
-	private lateinit var currentUser: UserItem
+	private val remoteRepoViewModel: RemoteRepoViewModel by viewModels()
 
 	private var receivedPartnerCity = ""
 	private var receivedPartnerGender = ""
@@ -91,9 +90,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 	// File
 	private lateinit var mFilePathImageCamera: File
 
-	private val remoteRepoViewModel: RemoteRepoViewModel by activityViewModels()
-
-
+	
 
 	//static fields
 	companion object {
@@ -121,11 +118,9 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 			if (receivedPartnerCity.isNotEmpty() && receivedPartnerGender.isNotEmpty() && receivedPartnerId.isNotEmpty() && receivedConversationId.isNotEmpty()) isDeepLinkJump = true
 		}
 
-		sharedViewModel.getCurrentUser().observeOnce(this, {
-			//observe current user id to understand left/right message
-			mChatAdapter.setCurrentUserId(it.baseUserInfo.userId)
-			currentUser = it
-		})
+		//observe current user id to understand left/right message
+		mChatAdapter.setCurrentUserId(MainActivity.currentUser!!.baseUserInfo.userId)
+		
 
 
 		//if it was a deep link navigation then create ConversationItem "on a flight"
@@ -157,25 +152,22 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 			mViewModel.partnerName.value = it.baseUserInfo.name.split(" ")[0]
 			mViewModel.partnerPhoto.value = it.baseUserInfo.mainPhotoUrl
 		})
-
-		//todo: observe new messages
-		//mViewModel.newMessage.observe(this, {
-		//	mChatAdapter.newMessage()
-		//	rvMessageList.scrollToPosition(0)
-		//})
+		
+		mViewModel.newMessage.observe(this, {
+			mChatAdapter.newMessage()
+		})
 
 		remoteRepoViewModel.reportSubmittingStatus.observeOnce(this, {
 			isReported = it
 			requireContext().showToastText(getString(R.string.toast_text_report_success))
 		})
-
-		//ready? steady? init dialog_loading.
+		
 		sharedViewModel.conversationSelected.observeOnce(this, {
 			currentConversation = it
 			remoteRepoViewModel.getRequestedUserInfo(it.partner)
 			mViewModel.observeNewMessages(it)
-			mViewModel.observePartnerOnline(it.conversationId)
-			mViewModel.loadMessages(it)
+			//mViewModel.observePartnerOnline(it.conversationId)
+			mViewModel.loadMessages(it, 0)
 		})
 
 	}
@@ -236,7 +228,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 
 					if (linearLayoutManager.findLastVisibleItemPosition() == totalItemsCount - 4){
 						//Log.wtf(TAG, "load seems to be called")
-						mViewModel.loadMoreMessages()
+					//	mViewModel.loadMoreMessages()
 					}
 
 				}
@@ -265,7 +257,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		if (edTextMessageInput.text.toString().trim().isNotEmpty()) {
 
 			val message = MessageItem(
-				sender = currentUser.baseUserInfo,
+				sender = MainActivity.currentUser!!.baseUserInfo,
 				recipientId = currentConversation.partner.userId,
 				text = edTextMessageInput.text.toString().trim(),
 				photoItem = null,
@@ -362,7 +354,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 				val selectedUri = data?.data
 				mViewModel.sendPhoto(photoUri = selectedUri.toString(),
 				                              conversation = currentConversation,
-				                              sender = currentUser.baseUserInfo)
+				                              sender = MainActivity.currentUser!!.baseUserInfo)
 			}
 		}
 		// send photo taken by camera
@@ -373,7 +365,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 					mViewModel.sendPhoto(
 						photoUri = Uri.fromFile(mFilePathImageCamera).toString(),
 						conversation = currentConversation,
-						sender = currentUser.baseUserInfo
+						sender = MainActivity.currentUser!!.baseUserInfo
 					)
 				}
 				else requireContext().showToastText(
@@ -393,10 +385,14 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		) { _, itemIndex ->
 			when (itemIndex) {
 				0 -> {
-					remoteRepoViewModel.submitReport(Report(INELIGIBLE_PHOTOS, currentPartner.baseUserInfo))
+					remoteRepoViewModel.submitReport(
+						Report(INELIGIBLE_PHOTOS, currentPartner.baseUserInfo)
+					)
 				}
 				1 -> {
-					remoteRepoViewModel.submitReport(Report(DISRESPECTFUL_BEHAVIOR, currentPartner.baseUserInfo))
+					remoteRepoViewModel.submitReport(
+						Report(DISRESPECTFUL_BEHAVIOR, currentPartner.baseUserInfo)
+					)
 				}
 				2 -> {
 					remoteRepoViewModel.submitReport(Report(FAKE, currentPartner.baseUserInfo))

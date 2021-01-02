@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@ import androidx.lifecycle.ViewModel
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.user.UserItem
+import com.mmdev.data.repository.auth.AuthFlowProvider
+import com.mmdev.roove.ui.common.base.BaseViewModel
 
 /**
  * In general, you should strongly prefer passing only the minimal amount of data between destinations.
@@ -37,7 +39,9 @@ import com.mmdev.business.user.UserItem
  * @see https://developer.android.com/guide/navigation/navigation-pass-data
  */
 
-class SharedViewModel @ViewModelInject constructor(): ViewModel() {
+class SharedViewModel @ViewModelInject constructor(
+	private val authFlow: AuthFlowProvider
+): BaseViewModel() {
 
 	val matchedUserItemSelected: MutableLiveData<MatchedUserItem> = MutableLiveData()
 	val userNavigateTo: MutableLiveData<UserItem> = MutableLiveData()
@@ -45,9 +49,14 @@ class SharedViewModel @ViewModelInject constructor(): ViewModel() {
 
 	val modalBottomSheetNeedUpdateExecution: MutableLiveData<Boolean> = MutableLiveData()
 
-	private val currentUser: MutableLiveData<UserItem> = MutableLiveData()
-
-	fun getCurrentUser() = currentUser
-	fun setCurrentUser(userItem: UserItem) { currentUser.value = userItem }
+	val currentUser = MutableLiveData<UserItem?>()
+	
+	init {
+		disposables.add(authFlow.getUser().subscribe {
+			currentUser.value = it
+		})
+	}
+	
+	fun logOut() = authFlow.logOut()
 
 }

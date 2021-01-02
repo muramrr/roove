@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,15 +22,11 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.mmdev.business.data.PhotoItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.core.glide.GlideImageLoader
-import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter.BindableAdapter
 import com.mmdev.roove.utils.extensions.doOnApplyWindowInsets
 
 
@@ -39,30 +35,14 @@ object BindingAdapterUtils {
 
 	@JvmStatic
 	@BindingAdapter("app:visibilityInvisible")
-	fun handleViewInvisibleVisibility(view: View, show: Boolean = false) {
-		view.visibility = if (show) View.VISIBLE else View.INVISIBLE
+	fun setInvisible(view: View, isShow: Boolean = false) {
+		view.visibility = if (isShow) View.VISIBLE else View.INVISIBLE
 	}
 
 	@JvmStatic
 	@BindingAdapter("app:visibilityGone")
-	fun handleViewGoneVisibility(view: View, show: Boolean = false) {
-		view.visibility = if (show) View.VISIBLE else View.GONE
-	}
-
-	@JvmStatic
-	@BindingAdapter("app:bindData")
-	@Suppress("UNCHECKED_CAST")
-	fun <T> setRecyclerViewProperties(recyclerView: RecyclerView, data: T) {
-		if (recyclerView.adapter is BindableAdapter<*>) {
-			(recyclerView.adapter as BindableAdapter<T>).setData(data)
-		}
-	}
-
-	@JvmStatic
-	@BindingAdapter("app:bindPhotos")
-	@Suppress("UNCHECKED_CAST")
-	fun setViewPager2ImageAdapterProperties(viewPager2: ViewPager2, data: List<PhotoItem>) {
-		(viewPager2.adapter as BindableAdapter<List<String>>).setData(data.map { it.fileUrl })
+	fun setGone(view: View, isShow: Boolean = false) {
+		view.visibility = if (isShow) View.VISIBLE else View.GONE
 	}
 
 	@JvmStatic

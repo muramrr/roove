@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.roove.core.log.logDebug
 import com.mmdev.roove.core.log.logInfo
+import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
@@ -42,6 +43,7 @@ class ChatViewModel @ViewModelInject constructor(
 	val messagesList = MutableLiveData<MutableList<MessageItem>>(mutableListOf())
 	val showLoading = MutableLiveData<Boolean>()
 	val chatIsEmpty = MutableLiveData<Boolean>()
+	val newMessage = MutableLiveData<MessageItem>()
 
 	//ui bind values
 	val partnerName = MutableLiveData<String>("")
@@ -49,49 +51,30 @@ class ChatViewModel @ViewModelInject constructor(
 	val isPartnerOnline = MutableLiveData<Boolean>(false)
 
 
-	fun loadMessages(conversation: ConversationItem) {
-		disposables.add(repo.loadMessages(conversation)
+	fun loadMessages(conversation: ConversationItem, cursor: Int) {
+		disposables.add(repo.loadMessages(conversation, cursor)
             .observeOn(mainThread())
             .subscribe(
 				{
+					
 					if(it.isNotEmpty()) {
 					   messagesList.value = it.toMutableList()
-					   chatIsEmpty.value = false
 					}
-					else chatIsEmpty.value = true
+					chatIsEmpty.postValue(it.isEmpty())
 					logInfo(TAG, "initial loaded messages: ${it.size}")
-				},
-				{
-					chatIsEmpty.value = true
-					error.value = MyError(ErrorType.LOADING, it)
-				}
-            )
-		)
-
-	}
-
-	fun loadMoreMessages() {
-		disposables.add(repo.loadMoreMessages()
-            .observeOn(mainThread())
-            .subscribe(
-				{
-					if(it.isNotEmpty()) {
-						messagesList.value!!.addAll(it)
-						messagesList.value = messagesList.value
-					}
-					logDebug(TAG, "pagination loaded messages: ${it.size}")
 				},
 				{ error.value = MyError(ErrorType.LOADING, it) }
             )
 		)
+
 	}
 
-	fun observeNewMessages(conversation: ConversationItem){
-		disposables.add(repo.observeNewMessages(conversation)
+	fun observeNewMessages(conversation: ConversationItem) {
+		disposables.add(repo.observeNewMessages(MainActivity.currentUser!!, conversation)
             .observeOn(mainThread())
             .subscribe(
 				{ message ->
-                    messagesList.value!!.add(0, message)
+                    newMessage.postValue(message)
 					chatIsEmpty.value = false
 					logDebug(TAG, "last received message: ${message.text}")
 				},
@@ -100,15 +83,15 @@ class ChatViewModel @ViewModelInject constructor(
 		)
 	}
 
-	fun observePartnerOnline(conversationId: String){
-		disposables.add(repo.observePartnerOnline(conversationId)
-            .observeOn(mainThread())
-            .subscribe(
-				{ if (isPartnerOnline.value != it) isPartnerOnline.value = it },
-				{ error.value = MyError(ErrorType.RECEIVING, it) }
-            )
-		)
-	}
+	//fun observePartnerOnline(conversationId: String){
+	//	disposables.add(repo.observePartnerOnline(conversationId)
+    //        .observeOn(mainThread())
+    //        .subscribe(
+	//			{ if (isPartnerOnline.value != it) isPartnerOnline.value = it },
+	//			{ error.value = MyError(ErrorType.RECEIVING, it) }
+    //        )
+	//	)
+	//}
 
 	fun sendMessage(messageItem: MessageItem){
 		disposables.add(repo.sendMessage(messageItem, chatIsEmpty.value)

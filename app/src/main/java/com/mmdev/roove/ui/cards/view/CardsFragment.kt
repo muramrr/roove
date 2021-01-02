@@ -18,7 +18,6 @@
 
 package com.mmdev.roove.ui.cards.view
 
-
 import android.os.Bundle
 import android.view.View
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -34,25 +33,18 @@ import com.mmdev.roove.ui.common.ImagePagerAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
 	layoutId = R.layout.fragment_cards
 ) {
 	
 	override val mViewModel: CardsViewModel by viewModels()
-
-
-	private var mAppearedUserItem: UserItem = UserItem()
-	private var mDisappearedUserItem: UserItem = UserItem()
 	
 	private val mTopCardImagePagerAdapter = ImagePagerAdapter()
 	private val mBottomCardImagePagerAdapter = ImagePagerAdapter()
 	
-	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		
 		observeTopCard()
 		observeBottomCard()
 		observeMatch()
@@ -143,7 +135,7 @@ class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
 	}
 	
 	private fun observeMatch() = mViewModel.showMatchDialog.observe(this, {
-		if (it) showMatchDialog(mDisappearedUserItem)
+		if (it != null) showMatchDialog(it)
 	})
 	private fun showMatchDialog(userItem: UserItem) = MatchDialogFragment.newInstance(
 		userItem.baseUserInfo.name, userItem.baseUserInfo.mainPhotoUrl

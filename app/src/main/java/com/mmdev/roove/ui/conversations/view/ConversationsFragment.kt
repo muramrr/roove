@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel, FragmentConver
 
 					if (linearLayoutManager.findLastCompletelyVisibleItemPosition() <= totalItemsCount - 4){
 						//Log.wtf(TAG, "load seems to be called")
-						mViewModel.loadMoreConversations()
+						//mViewModel.loadMoreConversations()
 					}
 				}
 			})
@@ -118,9 +118,4 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel, FragmentConver
 
 	}
 
-
-	override fun onResume() {
-		super.onResume()
-		mViewModel.loadConversationsList()
-	}
 }

@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ class AuthLandingFragment: BaseFragment<AuthViewModel, FragmentAuthLandingBindin
 			}
 		})
 		btnFacebookLoginDelegate.setOnClickListener {
-			mViewModel.logOut()
+			sharedViewModel.logOut()
 			btnFacebookLogin.performClick()
 		}
 

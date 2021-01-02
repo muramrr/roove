@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,92 +18,39 @@
 
 package com.mmdev.data.repository.pairs
 
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.pairs.PairsRepository
-import com.mmdev.data.core.BaseRepositoryImpl
-import com.mmdev.data.core.ExecuteSchedulers
-import com.mmdev.data.repository.user.UserWrapper
+import com.mmdev.business.user.UserItem
+import com.mmdev.data.core.BaseRepository
+import com.mmdev.data.core.firebase.executeAndDeserializeSingle
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.core.SingleOnSubscribe
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
- * This is the documentation block about the class
+ * [PairsRepository] implementation
  */
 
-@Singleton
-class PairsRepositoryImpl @Inject constructor(firestore: FirebaseFirestore,
-                                              userWrapper: UserWrapper
-):
-		PairsRepository, BaseRepositoryImpl(firestore, userWrapper) {
-
-
-	private var initialMatchesQuery: Query = currentUserDocRef
-		.collection(USER_MATCHED_COLLECTION_REFERENCE)
+class PairsRepositoryImpl @Inject constructor(
+	private val fs: FirebaseFirestore
+): BaseRepository(), PairsRepository {
+	
+	companion object {
+		private const val USERS_COLLECTION = "users"
+	}
+	
+	private fun matchesQuery(user: UserItem, cursorPosition: Int): Query = fs.collection(USERS_COLLECTION)
+		.document(user.baseUserInfo.userId)
+		.collection(USER_MATCHED_COLLECTION)
 		.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
 		.orderBy(MATCHED_DATE_FIELD, Query.Direction.DESCENDING)
 		.limit(20)
-
-
-	private lateinit var paginateLastMatchedLoaded: DocumentSnapshot
-	private lateinit var paginateMatchesQuery: Query
-
-
-	override fun getMatchedUsersList(): Single<List<MatchedUserItem>> =
-		Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
-			reInit()
-			initialMatchesQuery
-				.get()
-				.addOnSuccessListener {
-					if (!it.isEmpty) {
-						val matchesList = mutableListOf<MatchedUserItem>()
-						for (doc in it) {
-							matchesList.add(doc.toObject(MatchedUserItem::class.java))
-						}
-						emitter.onSuccess(matchesList)
-						//new cursor position
-						paginateLastMatchedLoaded = it.documents[it.size() - 1]
-						//init pagination query
-						paginateMatchesQuery =
-							initialMatchesQuery.startAfter(paginateLastMatchedLoaded)
-					}
-					else emitter.onSuccess(emptyList())
-				}
-				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(ExecuteSchedulers.io())
-
-	override fun getMoreMatchedUsersList(): Single<List<MatchedUserItem>> =
-		Single.create(SingleOnSubscribe<List<MatchedUserItem>> { emitter ->
-			paginateMatchesQuery
-				.get()
-				.addOnSuccessListener {
-					if (!it.isEmpty) {
-						val paginateMatchesList = ArrayList<MatchedUserItem>()
-						for (doc in it) {
-							paginateMatchesList.add(doc.toObject(MatchedUserItem::class.java))
-						}
-						emitter.onSuccess(paginateMatchesList)
-						//new cursor position
-						paginateLastMatchedLoaded = it.documents[it.size() - 1]
-						//update query with new cursor position
-						paginateMatchesQuery =
-							paginateMatchesQuery.startAfter(paginateLastMatchedLoaded)
-					}
-					else emitter.onSuccess(emptyList())
-				}
-				.addOnFailureListener { emitter.onError(it) }
-		}).subscribeOn(ExecuteSchedulers.io())
-
-	override fun reInit() {
-		super.reInit()
-		initialMatchesQuery = currentUserDocRef
-			.collection(USER_MATCHED_COLLECTION_REFERENCE)
-			.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
-			.orderBy(MATCHED_DATE_FIELD, Query.Direction.DESCENDING)
-			.limit(20)
-	}
+		.startAfter(cursorPosition)
+	
+	override fun getPairs(user: UserItem, cursorPosition: Int): Single<List<MatchedUserItem>> =
+		matchesQuery(user, cursorPosition)
+			.executeAndDeserializeSingle(MatchedUserItem::class.java)
+	
+	
 }

@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,11 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.data.PhotoItem
 import com.mmdev.business.pairs.MatchedUserItem
-import com.mmdev.business.remote.RemoteUserRepository
-import com.mmdev.business.remote.Report
 import com.mmdev.business.user.BaseUserInfo
+import com.mmdev.business.user.IUserRepository
+import com.mmdev.business.user.Report
 import com.mmdev.business.user.UserItem
+import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
@@ -35,7 +36,7 @@ import com.mmdev.roove.ui.common.errors.MyError
  */
 
 class RemoteRepoViewModel @ViewModelInject constructor(
-	private val repo: RemoteUserRepository
+	private val repo: IUserRepository
 ) : BaseViewModel() {
 
 	val isUserUpdatedStatus: MutableLiveData<Boolean> = MutableLiveData()
@@ -43,14 +44,13 @@ class RemoteRepoViewModel @ViewModelInject constructor(
 	val photoDeletingStatus: MutableLiveData<Boolean> = MutableLiveData()
 	val unmatchStatus: MutableLiveData<Boolean> = MutableLiveData()
 	val selfDeletingStatus: MutableLiveData<DeletingStatus> = MutableLiveData()
-
-	val updatableCurrentUserItem: MutableLiveData<UserItem> = MutableLiveData()
+	
 	val retrievedUserItem: MutableLiveData<UserItem> = MutableLiveData()
 
 	val photoUrls: MutableLiveData<List<PhotoItem>> = MutableLiveData()
 
 	fun deleteMatchedUser(matchedUser: MatchedUserItem) {
-		disposables.add(repo.deleteMatchedUser(matchedUser)
+		disposables.add(repo.deleteMatchedUser(MainActivity.currentUser!!, matchedUser)
             .observeOn(mainThread())
             .subscribe(
 	            { unmatchStatus.value = true },
@@ -60,7 +60,7 @@ class RemoteRepoViewModel @ViewModelInject constructor(
 	}
 
 	fun deleteMyAccount() {
-		disposables.add(repo.deleteMyself()
+		disposables.add(repo.deleteMyself(MainActivity.currentUser!!)
             .observeOn(mainThread())
             .subscribe(
 	            { selfDeletingStatus.value = DeletingStatus.COMPLETED },
@@ -72,8 +72,8 @@ class RemoteRepoViewModel @ViewModelInject constructor(
 		)
 	}
 
-	fun deletePhoto(photoItem: PhotoItem, userItem: UserItem, isMainPhotoDeleting: Boolean) {
-		disposables.add(repo.deletePhoto(photoItem, userItem, isMainPhotoDeleting)
+	fun deletePhoto(photoItem: PhotoItem, isMainPhotoDeleting: Boolean) {
+		disposables.add(repo.deletePhoto(MainActivity.currentUser!!, photoItem, isMainPhotoDeleting)
             .observeOn(mainThread())
             .subscribe(
 	            { photoDeletingStatus.value = true },
@@ -105,14 +105,11 @@ class RemoteRepoViewModel @ViewModelInject constructor(
 		)
 	}
 
-	fun updateUserItem(userItem: UserItem) {
-		disposables.add(repo.updateUserItem(userItem)
+	fun updateUserItem() {
+		disposables.add(repo.updateUserItem(MainActivity.currentUser!!)
             .observeOn(mainThread())
             .subscribe(
-	            {
-		            isUserUpdatedStatus.value = true
-		            updatableCurrentUserItem.value = userItem
-	            },
+	            { isUserUpdatedStatus.value = true },
 	            {
 		            isUserUpdatedStatus.value = false
 		            error.value = MyError(ErrorType.SAVING, it)
@@ -121,8 +118,8 @@ class RemoteRepoViewModel @ViewModelInject constructor(
 		)
 	}
 
-	fun uploadUserProfilePhoto(photoUri: String, userItem: UserItem) {
-		disposables.add(repo.uploadUserProfilePhoto(photoUri, userItem)
+	fun uploadUserProfilePhoto(photoUri: String) {
+		disposables.add(repo.uploadUserProfilePhoto(MainActivity.currentUser!!, photoUri)
             .observeOn(mainThread())
             .subscribe(
 	            {

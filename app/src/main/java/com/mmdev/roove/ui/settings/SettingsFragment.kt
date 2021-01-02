@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,11 +28,10 @@ import android.text.format.DateFormat
 import android.view.Gravity
 import android.view.View
 import androidx.core.content.FileProvider
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mmdev.business.user.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.permissions.AppPermission
@@ -40,12 +39,11 @@ import com.mmdev.roove.core.permissions.handlePermission
 import com.mmdev.roove.core.permissions.onRequestPermissionsResultReceived
 import com.mmdev.roove.core.permissions.requestAppPermissions
 import com.mmdev.roove.databinding.FragmentSettingsBinding
-import com.mmdev.roove.ui.auth.AuthViewModel
+import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.CenterFirstLastItemDecoration
 import com.mmdev.roove.ui.common.custom.HorizontalCarouselLayoutManager
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
-import com.mmdev.roove.utils.extensions.observeOnce
 import com.mmdev.roove.utils.extensions.showToastText
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -61,14 +59,9 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 	layoutId = R.layout.fragment_settings
 ) {
 	
-	override val mViewModel: RemoteRepoViewModel by activityViewModels()
-	
-	private lateinit var currentUser: UserItem
+	override val mViewModel: RemoteRepoViewModel by viewModels()
 
 	private val mSettingsPhotoAdapter = SettingsUserPhotoAdapter()
-
-	private val authViewModel: AuthViewModel by activityViewModels()
-
 
 	// File
 	private lateinit var mFilePathImageCamera: File
@@ -85,13 +78,9 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 			mSettingsPhotoAdapter.setData(it)
 		})
 		
-		sharedViewModel.getCurrentUser().observeOnce(this, {
-			currentUser = it
-		})
-		
 		sharedViewModel.modalBottomSheetNeedUpdateExecution.observe(this, {
 			if (it) {
-				mViewModel.updateUserItem(currentUser)
+				//mViewModel.updateUserItem(currentUser)
 				sharedViewModel.modalBottomSheetNeedUpdateExecution.value = false
 			}
 		})
@@ -143,22 +132,19 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 
 	}
 	
-	private fun setupUser() = sharedViewModel.getCurrentUser().observeOnce(this, {
-		binding.run {
-			tvSettingsAboutText.text = it.aboutText
-			tvSettingsCity.text = it.cityToDisplay
-			tvSettingsNameAge.text = "${it.baseUserInfo.name} ${it.baseUserInfo.age}"
-			mSettingsPhotoAdapter.setData(it.photoURLs)
-		}
-	})
+	private fun setupUser() = binding.run {
+		tvSettingsAboutText.text = MainActivity.currentUser!!.aboutText
+		tvSettingsCity.text = MainActivity.currentUser!!.cityToDisplay
+		tvSettingsNameAge.text = "${MainActivity.currentUser!!.baseUserInfo.name} ${MainActivity.currentUser!!.baseUserInfo.age}"
+		mSettingsPhotoAdapter.setData(MainActivity.currentUser!!.photoURLs)
+	}
+	
 
 	/** log out pop up*/
 	private fun showSignOutPrompt() = MaterialAlertDialogBuilder(requireContext())
 		.setTitle(R.string.dialog_exit_title)
 		.setMessage(R.string.dialog_exit_message)
-		.setPositiveButton(R.string.dialog_exit_positive_btn_text) { dialog, which ->
-			authViewModel.logOut()
-		}
+		.setPositiveButton(R.string.dialog_exit_positive_btn_text) { _, _ -> sharedViewModel.logOut() }
 		.setNegativeButton(R.string.dialog_exit_negative_btn_text, null)
 		.create()
 		.show()
@@ -187,7 +173,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()
 		mFilePathImageCamera = File(
 			requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-			currentUser.baseUserInfo.name + namePhoto + "camera.jpg"
+			MainActivity.currentUser!!.baseUserInfo.name + namePhoto + "camera.jpg"
 		)
 		val photoURI = FileProvider.getUriForFile(
 			requireContext(),
@@ -245,7 +231,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 			if (resultCode == Activity.RESULT_OK) {
 
 				val selectedUri = data?.data
-				mViewModel.uploadUserProfilePhoto(selectedUri.toString(), currentUser)
+				mViewModel.uploadUserProfilePhoto(selectedUri.toString())
 			}
 		}
 		// send photo taken by camera
@@ -253,9 +239,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 			if (resultCode == Activity.RESULT_OK) {
 
 				if (mFilePathImageCamera.exists()) {
-					mViewModel.uploadUserProfilePhoto(
-						Uri.fromFile(mFilePathImageCamera).toString(), currentUser
-					)
+					mViewModel.uploadUserProfilePhoto(Uri.fromFile(mFilePathImageCamera).toString(),)
 				}
 				else requireContext().showToastText(
 					"filePathImageCamera is null or filePathImageCamera isn't exists"

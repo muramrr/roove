@@ -25,27 +25,22 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
+import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.ActivityMainBinding
-import com.mmdev.roove.ui.auth.AuthViewModel
-import com.mmdev.roove.ui.auth.AuthViewModel.AuthenticationState.*
-import com.mmdev.roove.ui.profile.RemoteRepoViewModel
-import com.mmdev.roove.utils.UtilityManager
-import com.mmdev.roove.utils.extensions.observeOnce
-import com.mmdev.roove.utils.extensions.showToastText
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class MainActivity: AppCompatActivity() {
-
-	private val authViewModel: AuthViewModel by viewModels()
-	private val remoteRepoViewModel: RemoteRepoViewModel by viewModels()
-	private val sharedViewModel: SharedViewModel by viewModels()
-
+	
 	companion object {
 		private const val TAG = "mylogs_MainActivity"
+		
+		var currentUser: UserItem? = null
 	}
+	
+	private val sharedViewModel: SharedViewModel by viewModels()
+	
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -63,58 +58,16 @@ class MainActivity: AppCompatActivity() {
 		DataBindingUtil.setContentView(this, R.layout.activity_main) as ActivityMainBinding
 
 		val navController = findNavController(R.id.flowHostFragment)
-
-		//init observer
-		authViewModel.authenticatedState.observe(this, { authState ->
-			when (authState) {
-				UNAUTHENTICATED -> navController.navigate(R.id.action_global_authFlowFragment)
-				AUTHENTICATED -> {
-					//init shared observer
-					sharedViewModel.getCurrentUser().observeOnce(this, {
-						userInitialized ->
-						if (userInitialized != null) navController.navigate(R.id.action_global_mainFlowFragment)
-					})
-
-
-					authViewModel.fetchUserItem()
-					authViewModel.actualCurrentUserItem.observeOnce(this, {
-						actualUserItem -> sharedViewModel.setCurrentUser(actualUserItem)
-					})
-
-					remoteRepoViewModel.updatableCurrentUserItem.observe(this, {
-						updatedUser -> sharedViewModel.setCurrentUser(updatedUser)
-					})
-				}
-				else -> showToastText("Can't get AuthStatus")
-			}
-		})
-		//init auth dialog_loading & observer
-		authViewModel.showProgress.observe(this, {
-//			if (it == true) progressDialog.show()
-//			else progressDialog.dismiss()
-		})
-
-		remoteRepoViewModel.isUserUpdatedStatus.observe(this, {
-			if (it) { showToastText(getString(R.string.toast_text_update_success)) }
-		})
-
-		remoteRepoViewModel.selfDeletingStatus.observe(this, {
-//			when(it) {
-//				IN_PROGRESS -> progressDialog.show()
-//				FAILURE -> progressDialog.dismiss()
-//				COMPLETED -> {
-//					authViewModel.logOut()
-//					progressDialog.dismiss()
-//				}
-//				else -> { progressDialog.dismiss() }
-//			}
-		})
-
+		
 		//start to listens auth status
-		authViewModel.checkIsAuthenticated()
-		for (i in 0 until Random.nextInt(5, 100)) {
-			UtilityManager.generateFakeUsers()
-		}
+		sharedViewModel.currentUser.observe(this, {
+			currentUser = it
+			if (it == null) navController.navigate(R.id.action_global_authFlowFragment)
+			else navController.navigate(R.id.action_global_mainFlowFragment)
+		})
+		//for (i in 0 until Random.nextInt(5, 100)) {
+		//	UtilityManager.generateFakeUsers()
+		//}
 		
 
 		//note: debug

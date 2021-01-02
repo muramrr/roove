@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,397 +18,252 @@
 
 package com.mmdev.data.repository.cards
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.mmdev.business.cards.CardsRepository
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
-import com.mmdev.data.core.BaseRepositoryImpl
-import com.mmdev.data.core.ExecuteSchedulers
-import com.mmdev.data.repository.user.UserWrapper
+import com.mmdev.data.core.BaseRepository
+import com.mmdev.data.core.MySchedulers
+import com.mmdev.data.core.firebase.asSingle
+import com.mmdev.data.core.firebase.executeAndDeserializeSingle
+import com.mmdev.data.core.firebase.setAsCompletable
+import com.mmdev.data.core.log.logDebug
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3
-import io.reactivex.rxjava3.internal.operators.completable.CompletableCreate
-import io.reactivex.rxjava3.internal.operators.single.SingleCreate
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
- * This is the documentation block about the class
+ * [CardsRepository] implementation
  */
 
-@Singleton
 class CardsRepositoryImpl @Inject constructor(
-	private val firestore: FirebaseFirestore,
-	userWrapper: UserWrapper
-):
-        CardsRepository, BaseRepositoryImpl(firestore, userWrapper) {
-
-	private var specifiedCardsQuery: Query = firestore.collection(USERS_COLLECTION_REFERENCE)
-		.document(currentUser.baseUserInfo.city)
-		.collection(currentUser.baseUserInfo.preferredGender)
-		.orderBy(USERS_FILTER_AGE)
-		.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
-		.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
-		.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
-
-	private val cardsLimit = 19
-	private val excludingIds = mutableListOf<String>()
-	private var filteredDocuments: MutableSet<QueryDocumentSnapshot>? = null
-	private var filteredMaleDocuments: MutableSet<QueryDocumentSnapshot>? = null
-	private var filteredFemaleDocuments: MutableSet<QueryDocumentSnapshot>? = null
-
+	private val fs: FirebaseFirestore
+): BaseRepository(), CardsRepository {
+	
 	companion object {
-		private const val USERS_FILTER_ID = "baseUserInfo.userId"
+		private const val USERS_FILTER_GENDER = "baseUserInfo.gender"
 		private const val USERS_FILTER_AGE = "baseUserInfo.age"
-		private const val MALE_COLLECTION_PATH = "male"
-		private const val FEMALE_COLLECTION_PATH = "female"
 	}
+	
+	private val cardsLimit: Long = 19
+	private val excludingIds: MutableSet<String> = mutableSetOf()
+	
+	private fun cardsQuery(user: UserItem): Query = fs.collection(USERS_COLLECTION)
+		//only preferred gender, if everyone -> include both genders
+		.whereIn(
+			USERS_FILTER_GENDER,
+			if (user.baseUserInfo.preferredGender != "everyone")
+				listOf(user.baseUserInfo.preferredGender)
+			else listOf("male", "female")
+		)
+		//in ages between minAge and maxAge
+		.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, user.preferredAgeRange.minAge)
+		.whereLessThanOrEqualTo(USERS_FILTER_AGE, user.preferredAgeRange.maxAge)
+		//filtered from excluded
+		.whereNotIn(USER_ID_FIELD, excludingIds.toList())
+		.limit(cardsLimit)
 
 
-	/*
-	* if swiped left -> add skipped userId to skipped collection
-	*/
-	override fun addToSkipped(skippedUserItem: UserItem): Completable =
-		CompletableCreate { emitter ->
-			addToExcludingIds(skippedUserItem.baseUserInfo.userId)
-			filteredDocuments?.filter {
-				doc -> doc.id != skippedUserItem.baseUserInfo.userId
+	/**
+	 * if swiped left -> add skipped userId to skipped collection
+	 */
+	override fun skipUser(user: UserItem, skippedUser: UserItem): Completable =
+		fs.collection(USERS_COLLECTION)
+			.document(user.baseUserInfo.userId)
+			.collection(USER_SKIPPED_COLLECTION)
+			.document(skippedUser.baseUserInfo.userId)
+			.setAsCompletable(mapOf(USER_ID_FIELD to skippedUser.baseUserInfo.userId))
+			.also { excludingIds.add(skippedUser.baseUserInfo.userId) }
+
+	/**
+	 * Get users to show as swipeable cards
+	 */
+	override fun getUsersByPreferences(user: UserItem, initialLoading: Boolean): Single<List<UserItem>> =
+		if (initialLoading) {
+			getExcludedUserIds(user)
+				.flatMap {
+					getUsersCardsByPreferences(user)
+				}
+		}
+		else { getUsersCardsByPreferences(user) }
+			.subscribeOn(MySchedulers.computation())
+
+	/**
+	 * GET USER CARDS BY PREFERENCES
+	 * @see cardsQuery
+	 */
+	private fun getUsersCardsByPreferences(user: UserItem): Single<List<UserItem>> =
+		cardsQuery(user)
+			.executeAndDeserializeSingle(UserItem::class.java)
+	
+	
+	/**
+	 * execute getters and merge lists inside zip stream
+	 */
+	private fun getExcludedUserIds(user: UserItem): Single<List<String>> =
+		Single.zip(
+			getUsersIdsInCollection(user, USER_LIKED_COLLECTION),
+			getUsersIdsInCollection(user, USER_MATCHED_COLLECTION),
+			getUsersIdsInCollection(user, USER_SKIPPED_COLLECTION),
+			Function3 { likes: List<String>, matches: List<String>, skipped: List<String> ->
+				val combinedList = listOf(likes, matches, skipped).flatten()
+				excludingIds.addAll(combinedList)
+				return@Function3 combinedList
 			}
-			currentUserDocRef
-				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
-				.document(skippedUserItem.baseUserInfo.userId)
-				.set(mapOf(USER_ID_FIELD to skippedUserItem.baseUserInfo.userId))
-				.addOnSuccessListener { emitter.onComplete() }
-				.addOnFailureListener { emitter.onError(it) }
-		}
-
-
-	/*
-	* if swiped right -> check if there is match
-	* else -> add liked userId to liked collection
+		).subscribeOn(MySchedulers.computation())
+	
+	/**
+	* GET USERS IDS LIST WHICH ARE LAYING INSIDE SPECIFIED [collection]
 	*/
-	override fun checkMatch(likedUserItem: UserItem): Single<Boolean> {
-		addToExcludingIds(likedUserItem.baseUserInfo.userId)
-		filteredDocuments?.filter {
-			doc -> doc.id != likedUserItem.baseUserInfo.userId
-		}
-		return SingleCreate<Boolean> { emitter ->
-			val likedUserDocRef = firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(likedUserItem.baseUserInfo.city)
-				.collection(likedUserItem.baseUserInfo.gender)
-				.document(likedUserItem.baseUserInfo.userId)
-
-			likedUserDocRef
-				.collection(USER_LIKED_COLLECTION_REFERENCE)
-				.document(currentUser.baseUserInfo.userId)
-				.get()
-				.addOnSuccessListener { userDoc ->
-					//if true - user you've liked likes you too
-					//else - add to like collection
-					if (userDoc.exists()) {
-
-						emitter.onSuccess(true)
-						//create predefined conversation for this match
-						val conversationId = firestore
-							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-							.document()
-							.id
-
-						//execute add and remove documents for each of users
-						handleMatch(MatchedUserItem(likedUserItem.baseUserInfo, conversationId = conversationId),
-						            MatchedUserItem(currentUser.baseUserInfo, conversationId = conversationId))
-
-
-						likedUserDocRef
-							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-							.document(conversationId)
-							.set(
-                                ConversationItem(partner = currentUser.baseUserInfo,
-                                                 conversationId = conversationId,
-                                                 lastMessageTimestamp = null)
-                            )
-							.addOnFailureListener { emitter.onError(it) }
-
-						//set conversation for current user
-						currentUserDocRef
-							.collection(CONVERSATIONS_COLLECTION_REFERENCE)
-							.document(conversationId)
-							.set(
-                                ConversationItem(partner = likedUserItem.baseUserInfo,
-                                                 conversationId = conversationId,
-                                                 lastMessageTimestamp = null)
-                            )
-							.addOnFailureListener { emitter.onError(it) }
-
-					}
-					else {
-						currentUserDocRef
-							.collection(USER_LIKED_COLLECTION_REFERENCE)
-							.document(likedUserItem.baseUserInfo.userId)
-							.set(mapOf(USER_ID_FIELD to likedUserItem.baseUserInfo.userId))
-							.addOnSuccessListener { emitter.onSuccess(false) }
-							.addOnFailureListener { emitter.onError(it) }
-
-					}
+	private fun getUsersIdsInCollection(user: UserItem, collection: String): Single<List<String>> =
+		fs.collection(USERS_COLLECTION)
+			.document(user.baseUserInfo.userId)
+			.collection(collection)
+			.get()
+			.asSingle()
+			.map { query ->
+				if (!query.isEmpty) {
+					query.map { document -> document.id }
 				}
-				.addOnFailureListener { emitter.onError(it) }
-		}.subscribeOn(ExecuteSchedulers.io())
-	}
-
-	/* return filtered users list as Single */
-	override fun getUsersByPreferences(initialLoading: Boolean): Single<List<UserItem>> {
-		return if (initialLoading){
-			reInit()
-			zipLists().flatMap { getUsersCardsByPreferences(it) }.subscribeOn(ExecuteSchedulers.computation())
-		}
-		else {
-			getUsersCardsByPreferences(excludingIds)
-				.subscribeOn(ExecuteSchedulers.computation())
-
-		}
-	}
-
-	private fun parseFilteredUsers(setOfUsers: MutableSet<QueryDocumentSnapshot>): List<UserItem>{
-		return if (setOfUsers.isNotEmpty()) {
-			val resultList = mutableListOf<UserItem>()
-			var count = 0
-			for (doc in setOfUsers) {
-				if (count < cardsLimit) {
-					resultList.add(doc.toObject(UserItem::class.java))
-					count++
+				else emptyList()
+			}
+	
+		
+	
+	
+	/**
+	 * if swiped right -> check if there is match
+	 * else -> add liked userId to liked collection
+	 */
+	override fun likeUserAndCheckMatch(user: UserItem, likedUserItem: UserItem): Single<Boolean> =
+		fs.collection(USERS_COLLECTION)
+			.document(likedUserItem.baseUserInfo.userId)
+			.collection(USER_LIKED_COLLECTION)
+			.document(user.baseUserInfo.userId)
+			.get()
+			.asSingle()
+			.flatMap {
+				val currentUserId = user.baseUserInfo.userId
+				/**
+				 * if your id exists in [likedUserItem] liked collection
+				 * delete it from there and add both to matches collection
+				 */
+				if (it.exists()) {
+					//create conversation for that pair
+					val conversationId = fs
+						.collection(CONVERSATIONS_COLLECTION)
+						.document()
+						.id
+					
+					handleMatch(
+						matchedUserItem = MatchedUserItem(
+							likedUserItem.baseUserInfo,
+							conversationId = conversationId
+						),
+						currentUserMatchedItem = MatchedUserItem(
+							user.baseUserInfo,
+							conversationId = conversationId
+						)
+					).map { true } // match exists
+				}
+				
+				/** if not exists -> add [likedUserItem] to your liked collection */
+				else {
+					fs.collection(USERS_COLLECTION)
+						.document(currentUserId)
+						.collection(USER_LIKED_COLLECTION)
+						.document(likedUserItem.baseUserInfo.userId)
+						.set(mapOf(USER_ID_FIELD to likedUserItem.baseUserInfo.userId))
+						.asSingle()
+						.map { false } // no match
 				}
 			}
-			resultList.shuffled()
-		} else emptyList()
-	}
-
-	/*
-	* GET USER CARDS BY PREFERENCES RELATED TO PREFERREDGENDER
-	*/
-	private fun getUsersCardsByPreferences(excludingIds: List<String>): Single<List<UserItem>> {
-		this.excludingIds.addAll(excludingIds)
-		return if (currentUser.baseUserInfo.preferredGender == "everyone")
-			Single.zip(getAllFemaleUsersCards(excludingIds),
-			           getAllMaleUsersCards(excludingIds),
-			           BiFunction {
-							   female: List<UserItem>,
-							   male: List<UserItem> -> return@BiFunction listOf(female, male).flatten()
-			           })
-				.subscribeOn(ExecuteSchedulers.computation())
-
-		else SingleCreate<List<UserItem>> { emitter ->
-			specifiedCardsQuery
-				.get()
-				.addOnSuccessListener { documents ->
-					if (!documents.isEmpty) {
-						//filter users which is not in excluding Ids list
-						filteredDocuments = documents.filter {
-							!excludingIds.contains(it.id) && it.id != currentUserId
-						}.toMutableSet()
-
-						val specifiedResultList = parseFilteredUsers(filteredDocuments!!)
-						emitter.onSuccess(specifiedResultList)
-
-					} else emitter.onSuccess(emptyList())
-				}
-				.addOnFailureListener { emitter.onError(it) }
-		}.subscribeOn(ExecuteSchedulers.computation())
-	}
-
-	private fun getAllMaleUsersCards(excludingIds: List<String>): Single<List<UserItem>> {
-		return SingleCreate<List<UserItem>> { emitter ->
-			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUser.baseUserInfo.city)
-				.collection(MALE_COLLECTION_PATH)
-				.orderBy(USERS_FILTER_AGE)
-				.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
-				.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
-				.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
-				.get()
-				.addOnSuccessListener { documents ->
-					if (!documents.isEmpty) {
-						filteredMaleDocuments = documents.filter {
-							!excludingIds.contains(it.id) && it.id != currentUserId
-						}.toMutableSet()
-						val maleResultList = parseFilteredUsers(filteredMaleDocuments!!)
-						emitter.onSuccess(maleResultList)
-
-					} else emitter.onSuccess(emptyList())
-				}
-				.addOnFailureListener { emitter.onError(it) }
-		}.subscribeOn(ExecuteSchedulers.io())
-	}
-
-	private fun getAllFemaleUsersCards(excludingIds: List<String>): Single<List<UserItem>> {
-		return SingleCreate<List<UserItem>> { emitter ->
-			firestore.collection(USERS_COLLECTION_REFERENCE)
-				.document(currentUser.baseUserInfo.city)
-				.collection(FEMALE_COLLECTION_PATH)
-				.orderBy(USERS_FILTER_AGE)
-				.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
-				.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
-				.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
-				.get()
-				.addOnSuccessListener { documents ->
-					if (!documents.isEmpty) {
-						//filter users which is not in excluding Ids list
-						filteredFemaleDocuments = documents.filter {
-							!excludingIds.contains(it.id) && it.id != currentUserId
-						}.toMutableSet()
-						val femaleResultList = parseFilteredUsers(filteredFemaleDocuments!!)
-						emitter.onSuccess(femaleResultList)
-					} else emitter.onSuccess(emptyList())
-				}
-				.addOnFailureListener { emitter.onError(it) }
-		}.subscribeOn(ExecuteSchedulers.io())
-	}
-
-
-	/* execute getters and merge lists inside zip stream */
-	private fun zipLists(): Single<List<String>> =
-		Single.zip(getLikedList(),
-		           getMatchedList(),
-		           getSkippedList(),
-		           Function3 {
-			           likes: List<String>,
-			           matches: List<String>,
-			           skipped: List<String> -> mergeLists(likes, matches, skipped)
-		           }
-		).subscribeOn(ExecuteSchedulers.computation())
-
-	/* merge 3 lists of type <T> */
-	private fun <T> mergeLists(t1: List<T> = emptyList(),
-	                           t2: List<T> = emptyList(),
-	                           t3: List<T> = emptyList()): List<T> = listOf(t1, t2, t3).flatten()
-
-	/*
-	* GET LIKED USERS IDS LIST
-	*/
-	private fun getLikedList(): Single<List<String>> =
-		SingleCreate<List<String>> { emitter ->
-			currentUserDocRef
-				.collection(USER_LIKED_COLLECTION_REFERENCE)
-				.get()
-				.addOnSuccessListener {
-					if (!it.isEmpty) {
-						val likedList = mutableListOf<String>()
-						likedList.addAll(it.map { doc -> doc.id })
-						emitter.onSuccess(likedList)
-					}
-					else emitter.onSuccess(emptyList())
-				}
-				.addOnFailureListener { emitter.onError(it) }
-		}.subscribeOn(ExecuteSchedulers.io())
-
-	/*
-	* GET MATCHED IDS LIST
-	*/
-	private fun getMatchedList(): Single<List<String>> =
-		SingleCreate<List<String>> { emitter ->
-			currentUserDocRef
-				.collection(USER_MATCHED_COLLECTION_REFERENCE)
-				.get()
-				.addOnSuccessListener {
-					if (!it.isEmpty) {
-						val matchedList = mutableListOf<String>()
-						matchedList.addAll(it.map { doc -> doc.id })
-						emitter.onSuccess(matchedList)
-					}
-					else emitter.onSuccess(emptyList())
-				}
-				.addOnFailureListener { emitter.onError(it) }
-		}.subscribeOn(ExecuteSchedulers.io())
-
-	/*
-	* GET SKIPPED USERS IDS LIST
-	*/
-	private fun getSkippedList(): Single<List<String>> =
-		SingleCreate<List<String>> { emitter ->
-			currentUserDocRef
-				.collection(USER_SKIPPED_COLLECTION_REFERENCE)
-				.get()
-				.addOnSuccessListener {
-					if (!it.isEmpty) {
-						val skippedList = mutableListOf<String>()
-						skippedList.addAll(it.map { doc -> doc.id })
-						emitter.onSuccess(skippedList)
-					}
-					else emitter.onSuccess(emptyList())
-				}
-				.addOnFailureListener { emitter.onError(it) }
-		}.subscribeOn(ExecuteSchedulers.io())
-
-
-	private fun addToExcludingIds(id: String) {
-		if (!excludingIds.contains(id))
-			excludingIds.add(id)
-	}
-
+			.also { excludingIds.add(likedUserItem.baseUserInfo.userId) }
+	
 	/**
 	 * 1. add to matches collection for liked user
 	 * 2. add to matches collection for CURRENT user
 	 * 3. remove from likes collection for liked user
 	 * 4. remove from likes collection for CURRENT user
 	 */
-	private fun handleMatch(matchedUserItem: MatchedUserItem, currentUserMatchedItem: MatchedUserItem) {
-		addToMatchCollection(userForWhichToAdd = matchedUserItem.baseUserInfo,
-		                     whomToAdd = currentUserMatchedItem)
+	private fun handleMatch(
+		matchedUserItem: MatchedUserItem,
+		currentUserMatchedItem: MatchedUserItem
+	): Single<Unit> {
+		
+		//operations to manipulate collections for matched user
+		val matchedUserCollections = Single.zip(
+			// add current user to matched user MATCHED collection
+			addToMatchCollection(
+				userForWhichToAdd = matchedUserItem.baseUserInfo,
+				whomToAdd = currentUserMatchedItem.baseUserInfo
+			),
+			// delete current user from matched user LIKED collection
+			fs.collection(USERS_COLLECTION)
+				.document(matchedUserItem.baseUserInfo.userId)
+				.collection(USER_LIKED_COLLECTION)
+				.document(currentUserMatchedItem.baseUserInfo.userId)
+				.delete()
+				.asSingle(),
+			//set conversation for matched user
+			setConversation(matchedUserItem.baseUserInfo, currentUserMatchedItem),
+			Function3 { t1, t2, t3 ->
+				return@Function3
+			}
+		).subscribeOn(MySchedulers.io())
 
-		addToMatchCollection(userForWhichToAdd = currentUserMatchedItem.baseUserInfo,
-		                     whomToAdd = matchedUserItem)
-
-		//note:uncomment for release
-		deleteFromLikesCollection(userForWhichDelete = matchedUserItem.baseUserInfo,
-		                          whomToDeleteId = currentUser.baseUserInfo.userId)
-
-		deleteFromLikesCollection(userForWhichDelete = currentUserMatchedItem.baseUserInfo,
-		                          whomToDeleteId = matchedUserItem.baseUserInfo.userId)
-
-		Log.wtf(TAG, "match handle executed")
+		// no need to delete from LIKED collection for current user, because we just liked and
+		// this match checking is in process, which based on liked user collections data
+		val currentUserCollections = addToMatchCollection(
+			userForWhichToAdd = currentUserMatchedItem.baseUserInfo,
+			whomToAdd = matchedUserItem.baseUserInfo
+		).zipWith(
+			//set conversation for current user
+			setConversation(currentUserMatchedItem.baseUserInfo, matchedUserItem),
+			BiFunction { t1, t2 -> return@BiFunction }
+		
+		).subscribeOn(MySchedulers.io())
+		
+		//combine
+		return matchedUserCollections.zipWith(
+			currentUserCollections,
+			BiFunction { t1, t2 ->
+				logDebug(TAG, "match handle executed")
+				return@BiFunction
+			}
+		).subscribeOn(MySchedulers.io())
+		
 	}
 
-	private fun addToMatchCollection(userForWhichToAdd: BaseUserInfo, whomToAdd: MatchedUserItem) {
-		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(userForWhichToAdd.city)
-			.collection(userForWhichToAdd.gender)
-			.document(userForWhichToAdd.userId)
-			.collection(USER_MATCHED_COLLECTION_REFERENCE)
-			.document(whomToAdd.baseUserInfo.userId)
-			.set(whomToAdd)
-
-	}
-
-	private fun deleteFromLikesCollection(userForWhichDelete: BaseUserInfo, whomToDeleteId: String) {
-		firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(userForWhichDelete.city)
-			.collection(userForWhichDelete.gender)
-			.document(userForWhichDelete.userId)
-			.collection(USER_LIKED_COLLECTION_REFERENCE)
-			.document(whomToDeleteId)
-			.delete()
-	}
-
-	override fun reInit() {
-		super.reInit()
-		excludingIds.clear()
-		filteredDocuments = null
-		filteredFemaleDocuments = null
-		filteredMaleDocuments = null
-		specifiedCardsQuery = firestore.collection(USERS_COLLECTION_REFERENCE)
-			.document(currentUser.baseUserInfo.city)
-			.collection(currentUser.baseUserInfo.preferredGender)
-			.orderBy(USERS_FILTER_AGE)
-			.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.minAge)
-			.whereLessThanOrEqualTo(USERS_FILTER_AGE, currentUser.preferredAgeRange.maxAge)
-			.orderBy(USERS_FILTER_ID, Query.Direction.DESCENDING)
-	}
-
+	private fun addToMatchCollection(
+		userForWhichToAdd: BaseUserInfo,
+		whomToAdd: BaseUserInfo
+	) = fs.collection(USERS_COLLECTION)
+		.document(userForWhichToAdd.userId)
+		.collection(USER_MATCHED_COLLECTION)
+		.document(whomToAdd.userId)
+		.set(whomToAdd)
+		.asSingle()
+	
+	private fun setConversation(
+		userForWhichToAdd: BaseUserInfo,
+		whomToAdd: MatchedUserItem
+	) = fs.collection(USERS_COLLECTION)
+		.document(userForWhichToAdd.userId)
+		.collection(CONVERSATIONS_COLLECTION)
+		.document(whomToAdd.conversationId)
+		.set(
+			ConversationItem(
+				partner = whomToAdd.baseUserInfo,
+				conversationId = whomToAdd.conversationId,
+				lastMessageTimestamp = null
+			)
+		)
+		.asSingle()
 
 }

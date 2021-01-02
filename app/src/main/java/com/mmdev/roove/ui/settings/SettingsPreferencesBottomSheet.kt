@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,8 +27,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.BtmSheetSettingsPreferencesBinding
+import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.SharedViewModel
-import com.mmdev.roove.utils.extensions.observeOnce
 
 class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 	
@@ -39,22 +39,12 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 		)
 	
 	private val sharedViewModel: SharedViewModel by activityViewModels()
-	private lateinit var userItem: UserItem
 
 	private val male = "male"
 	private val female = "female"
 	private val everyone = "everyone"
 	private var isChanged: Boolean = false
 	
-
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-
-		sharedViewModel.getCurrentUser().observeOnce(this, {
-			userItem = it
-			initProfile(it)
-		})
-	}
 	
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -67,19 +57,21 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
+		initProfile(MainActivity.currentUser!!)
+		
 		rangeSeekBarAgePicker.setOnRangeSeekBarChangeListener { _, number, number2 ->
-			userItem.preferredAgeRange.minAge = number.toInt()
-			userItem.preferredAgeRange.maxAge = number2.toInt()
+			MainActivity.currentUser!!.preferredAgeRange.minAge = number.toInt()
+			MainActivity.currentUser!!.preferredAgeRange.maxAge = number2.toInt()
 			isChanged = true
 		}
 
 		toggleButtonPickerPreferredGender.addOnButtonCheckedListener { group, _, _ ->
 			if (group.checkedButtonIds.size > 1)
-				userItem.baseUserInfo.preferredGender = everyone
+				MainActivity.currentUser!!.baseUserInfo.preferredGender = everyone
 			if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderMale)
-				userItem.baseUserInfo.preferredGender = male
+				MainActivity.currentUser!!.baseUserInfo.preferredGender = male
 			if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderFemale)
-				userItem.baseUserInfo.preferredGender = female
+				MainActivity.currentUser!!.baseUserInfo.preferredGender = female
 		}
 
 		btnPickerPreferredGenderMale.setOnClickListener { isChanged = true }

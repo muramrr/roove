@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,18 +20,18 @@ package com.mmdev.roove.core.di
 
 import android.app.Application
 import com.mmdev.roove.core.di.modules.AuthModule
+import com.mmdev.roove.core.di.modules.DataSourceModule
 import com.mmdev.roove.core.di.modules.FirebaseModule
 import com.mmdev.roove.core.di.modules.RepositoryModule
-import com.mmdev.roove.core.di.modules.UserModule
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 @Component(modules = [
 	AuthModule::class,
+	DataSourceModule::class,
 	FirebaseModule::class,
-	RepositoryModule::class,
-	UserModule::class
+	RepositoryModule::class
 ])
 @Singleton
 interface AppComponent {

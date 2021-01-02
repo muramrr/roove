@@ -29,7 +29,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.user.UserItem
@@ -50,7 +50,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 	layoutId = R.layout.fragment_settings_edit_info
 ) {
 	
-	override val mViewModel: RemoteRepoViewModel by activityViewModels()
+	override val mViewModel: RemoteRepoViewModel by requireParentFragment().viewModels()
 
 	private lateinit var currentUser: UserItem
 	private val mEditorPhotoAdapter = SettingsEditInfoPhotoAdapter()
@@ -67,8 +67,8 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		
-		sharedViewModel.getCurrentUser().observeOnce(this, {
-			currentUser = it
+		sharedViewModel.currentUser.observeOnce(this, {
+			currentUser = it!!
 			initSettings(it)
 		})
 	}
@@ -106,7 +106,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 					}
 				})
 				//execute deleting
-				mViewModel.deletePhoto(item, currentUser, isMainPhotoDeleting)
+				mViewModel.deletePhoto(item, isMainPhotoDeleting)
 			}
 			else requireContext().showToastText(getString(R.string.toast_text_at_least_1_photo_required))
 			
@@ -136,9 +136,9 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 		}
 		
 		
-		binding.btnSettingsEditSave.setOnClickListener {
-			mViewModel.updateUserItem(currentUser)
-		}
+		//binding.btnSettingsEditSave.setOnClickListener {
+		//	mViewModel.updateUserItem()
+		//}
 		binding.btnSettingsEditDelete.setOnClickListener {
 			showDialogDeleteAttention()
 		}

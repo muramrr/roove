@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (C) 2021. roove
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -47,7 +47,6 @@
 
 			app:visibilityInvisible='@{!viewModel.showTextHelper}'
 
-			app:bindData="@{viewModel.conversationsList}"
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
 			app:paddingTopSystemWindowInsets="@{true}"
