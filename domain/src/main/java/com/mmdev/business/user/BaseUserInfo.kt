@@ -22,10 +22,11 @@ package com.mmdev.business.user
  * This is the documentation block about the class
  */
 
-data class BaseUserInfo(var name: String = "",
-                        var age: Int = 0,
-                        var city: String = "",
-                        var gender: String = "",
-                        var preferredGender: String = "",
-                        var mainPhotoUrl: String = "",
-                        var userId: String = "")
+data class BaseUserInfo(
+    val name: String = "",
+    val age: Int = 0,
+    val gender: String = "",
+    val preferredGender: String = "",
+    val mainPhotoUrl: String = "",
+    val userId: String = ""
+)

@@ -21,7 +21,6 @@ package com.mmdev.roove.ui.auth
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.business.auth.AuthRepository
-import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.core.log.logDebug
 import com.mmdev.roove.ui.common.base.BaseViewModel
@@ -33,11 +32,8 @@ class AuthViewModel @ViewModelInject constructor(
 	private val repo: AuthRepository
 ) : BaseViewModel() {
 	
-	val continueRegistration: MutableLiveData<Boolean> = MutableLiveData()
+	val signUpDone = MutableLiveData<UserItem>()
 	
-	val baseUserInfo = MutableLiveData<BaseUserInfo>()
-	
-
 	fun signIn(loginToken: String) {
 		disposables.add(repo.signIn(loginToken)
             .observeOn(mainThread())
@@ -51,7 +47,7 @@ class AuthViewModel @ViewModelInject constructor(
 		disposables.add(repo.signUp(userItem)
             .observeOn(mainThread())
             .subscribe(
-	            { continueRegistration.value = true },
+	            { signUpDone.postValue(it) },
 	            { error.value = MyError(ErrorType.AUTHENTICATING, it) }
             )
 		)

@@ -26,7 +26,7 @@ import com.google.firebase.storage.StorageReference
 import com.mmdev.business.chat.ChatRepository
 import com.mmdev.business.chat.MessageItem
 import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.data.PhotoItem
+import com.mmdev.business.photo.PhotoItem
 import com.mmdev.business.user.UserItem
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers

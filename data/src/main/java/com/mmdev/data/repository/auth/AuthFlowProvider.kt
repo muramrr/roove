@@ -21,14 +21,19 @@ package com.mmdev.data.repository.auth
 import com.facebook.login.LoginManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.business.auth.IAuthFlowProvider
-import com.mmdev.business.user.UserItem
-import com.mmdev.data.core.firebase.getAndDeserializeAsSingle
+import com.mmdev.business.user.UserState
+import com.mmdev.data.core.firebase.FIRESTORE_NO_DOCUMENT_EXCEPTION
+import com.mmdev.data.core.firebase.toUserItem
 import com.mmdev.data.core.log.logDebug
 import com.mmdev.data.core.log.logError
-import com.mmdev.data.datasource.AuthCollector
+import com.mmdev.data.datasource.UserDataSource
+import com.mmdev.data.datasource.auth.AuthCollector
+import com.mmdev.data.datasource.auth.FirebaseUserState
+import com.mmdev.data.datasource.auth.FirebaseUserState.NotNullUser
+import com.mmdev.data.datasource.location.LocationDataSource
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,41 +45,50 @@ import javax.inject.Singleton
 class AuthFlowProvider @Inject constructor(
 	private val auth: FirebaseAuth,
 	private val fbLogin: LoginManager,
-	private val fs: FirebaseFirestore
+	private val location: LocationDataSource,
+	private val userDataSource: UserDataSource
 ): IAuthFlowProvider {
 	
 	companion object {
-		private const val USERS_COLLECTION = "users"
+		private const val LOCATION_FIELD = "location"
 		private const val TAG = "mylogs_UserProvider"
 	}
 	
-	private val authObservable = AuthCollector(auth).firebaseAuthObservable.map {
-		it.currentUser
+	private val authObservable: Observable<FirebaseUserState> = AuthCollector(auth).firebaseAuthObservable.map {
+		it.currentUser?.reload()
+		FirebaseUserState.pack(it.currentUser)
 	}
 	
-	override fun getUser(): Observable<UserItem?> = authObservable.switchMap { firebaseUser ->
+	override fun getUser(): Observable<UserState> = authObservable.switchMap { firebaseUser ->
 		logDebug(TAG, "Collecting auth information...")
 		
-		if (firebaseUser != null) {
+		if (firebaseUser is NotNullUser) {
 			
-			logDebug(TAG, "Auth info exists: ${firebaseUser.uid}")
+			logDebug(TAG, "Auth info exists: ${firebaseUser.user.uid}")
 			
-			getUserFromRemoteStorage(firebaseUser)
+			getUserFromRemoteStorage(firebaseUser.user)
 		}
 		//not signed in
 		else {
 			logError(TAG, "Auth info does not exists...")
 			
-			null
+			Observable.just(UserState.UNDEFINED)
 		}
 	}
 	
 	
-	private fun getUserFromRemoteStorage(firebaseUser: FirebaseUser): Observable<UserItem?> =
-		fs.collection(USERS_COLLECTION)
-			.document(firebaseUser.uid)
-			.getAndDeserializeAsSingle(UserItem::class.java)
+	private fun getUserFromRemoteStorage(firebaseUser: FirebaseUser) =
+		userDataSource.getFirestoreUser(firebaseUser.uid)
+			.map { UserState.registered(it) }
+			.onErrorResumeNext {
+				logError(TAG, "$it")
+				//if no document stored on backend
+				if (it is NoSuchElementException && it.message == FIRESTORE_NO_DOCUMENT_EXCEPTION)
+					Single.just(UserState.unregistered(firebaseUser.toUserItem()))
+				else Single.just(UserState.UNDEFINED)
+			}
 			.toObservable()
+	
 	
 	
 	override fun logOut(){

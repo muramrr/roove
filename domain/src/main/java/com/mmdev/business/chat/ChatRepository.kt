@@ -19,7 +19,7 @@
 package com.mmdev.business.chat
 
 import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.data.PhotoItem
+import com.mmdev.business.photo.PhotoItem
 import com.mmdev.business.user.UserItem
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable

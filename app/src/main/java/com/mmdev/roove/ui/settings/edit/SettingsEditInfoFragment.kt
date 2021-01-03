@@ -20,12 +20,8 @@ package com.mmdev.roove.ui.settings.edit
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doAfterTextChanged
@@ -35,11 +31,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.business.user.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentSettingsEditInfoBinding
+import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.GridItemDecoration
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel.DeletingStatus.IN_PROGRESS
-import com.mmdev.roove.utils.extensions.observeOnce
 import com.mmdev.roove.utils.extensions.showToastText
 
 /**
@@ -64,26 +60,9 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 	private val male = "male"
 	private val female = "female"
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		
-		sharedViewModel.currentUser.observeOnce(this, {
-			currentUser = it!!
-			initSettings(it)
-		})
-	}
-
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-	                          savedInstanceState: Bundle?) =
-		FragmentSettingsEditInfoBinding.inflate(inflater, container, false)
-			.apply {
-				lifecycleOwner = this@SettingsEditInfoFragment
-				viewModel = sharedViewModel
-				executePendingBindings()
-			}.root
-
+	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		
+		initSettings(MainActivity.currentUser!!)
 		binding.rvSettingsEditPhotos.apply {
 			layoutManager = GridLayoutManager(this.context, 2, GridLayoutManager.VERTICAL, false)
 			adapter =  mEditorPhotoAdapter
@@ -94,17 +73,19 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 			if (mEditorPhotoAdapter.itemCount > 1) {
 				val isMainPhotoDeleting = item.fileUrl == currentUser.baseUserInfo.mainPhotoUrl
 				
-				//deletion observer
-				mViewModel.photoDeletingStatus.observeOnce(this@SettingsEditInfoFragment, {
-					if (it) {
-						currentUser.photoURLs.minus(item)
-						mEditorPhotoAdapter.removeAt(position)
-						
-						if (isMainPhotoDeleting) {
-							currentUser.baseUserInfo.mainPhotoUrl = currentUser.photoURLs[0].fileUrl
-						}
-					}
-				})
+				//deletion observer //todo
+				//mViewModel.photoDeletingStatus.observeOnce(this@SettingsEditInfoFragment, {
+				//	if (it) {
+				//		currentUser.photoURLs.minus(item)
+				//		mEditorPhotoAdapter.removeAt(position)
+				//
+				//		if (isMainPhotoDeleting) {
+				//			currentUser.baseUserInfo.copy(
+				//				mainPhotoUrl = currentUser.photoURLs[0].fileUrl
+				//			)
+				//		}
+				//	}
+				//})
 				//execute deleting
 				mViewModel.deletePhoto(item, isMainPhotoDeleting)
 			}
@@ -123,17 +104,19 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 			return@setOnTouchListener false
 		}
 		
-		binding.btnSettingsEditGenderMale.setOnClickListener {
-			gender = male
-			currentUser.baseUserInfo.gender = gender
-			binding.toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderMale)
-		}
+		//todo
+		//binding.btnSettingsEditGenderMale.setOnClickListener {
+		//	gender = male
+		//	currentUser.baseUserInfo.gender = gender
+		//	binding.toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderMale)
+		//}
 		
-		binding.btnSettingsEditGenderFemale.setOnClickListener {
-			gender = female
-			currentUser.baseUserInfo.gender = gender
-			binding.toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderFemale)
-		}
+		//todo
+		//binding.btnSettingsEditGenderFemale.setOnClickListener {
+		//	gender = female
+		//	currentUser.baseUserInfo.gender = gender
+		//	binding.toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderFemale)
+		//}
 		
 		
 		//binding.btnSettingsEditSave.setOnClickListener {
@@ -162,18 +145,13 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 				it.isNullOrBlank() -> {
 					binding.layoutSettingsEditName.error = getString(R.string.text_empty_error)
 					binding.btnSettingsEditSave.isEnabled = false
-					
-				}
-				
-				it.length > binding.layoutSettingsEditName.counterMaxLength -> {
-					binding.layoutSettingsEditName.error = getString(R.string.text_max_length_error)
-					binding.btnSettingsEditSave.isEnabled = false
 				}
 				
 				else -> {
 					binding.layoutSettingsEditName.error = ""
 					name = it.toString().trim()
-					currentUser.baseUserInfo.name = name
+					//todo
+					//currentUser.baseUserInfo.name = name
 					binding.btnSettingsEditSave.isEnabled = true
 				}
 			}
@@ -188,36 +166,33 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 		}
 	}
 
+	//todo
 	private fun changerAgeSetup() {
 		binding.sliderSettingsEditAge.addOnChangeListener { _, value, _ ->
 			age = value.toInt()
-			currentUser.baseUserInfo.age = age
+			//currentUser.baseUserInfo.age = age
 			binding.tvSettingsEditAge.text = "Age: $age"
 		}
 	}
 
+	//todo
 	private fun changerDescriptionSetup() {
 		
-		binding.edSettingsEditDescription.addTextChangedListener(object: TextWatcher {
-			override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-			override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-				binding.layoutSettingsEditDescription.isCounterEnabled = true
-			}
-
-			override fun afterTextChanged(s: Editable) {
-				if (s.length > binding.layoutSettingsEditDescription.counterMaxLength){
-					binding.layoutSettingsEditDescription.error = getString(R.string.text_max_length_error)
+		binding.edSettingsEditDescription.doAfterTextChanged {
+			when {
+				it.isNullOrBlank() -> {
+					binding.layoutSettingsEditName.error = getString(R.string.text_empty_error)
 					binding.btnSettingsEditSave.isEnabled = false
 				}
-				else {
+				else -> {
 					binding.layoutSettingsEditDescription.error = ""
-					descriptionText = s.toString().trim()
-					currentUser.aboutText = descriptionText
+					descriptionText = it.toString().trim()
+					//currentUser.aboutText = descriptionText
 					binding.btnSettingsEditSave.isEnabled = true
 				}
+				
 			}
-		})
+		}
 		
 		binding.edSettingsEditDescription.setOnEditorActionListener { editText, actionId, _ ->
 			if (actionId == EditorInfo.IME_ACTION_DONE) {

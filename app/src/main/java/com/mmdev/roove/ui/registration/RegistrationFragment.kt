@@ -16,30 +16,30 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.roove.ui.auth.view
+package com.mmdev.roove.ui.registration
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
-import android.widget.ArrayAdapter
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
-import com.mmdev.business.data.PhotoItem
+import com.mmdev.business.photo.PhotoItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mmdev.business.user.UserItem.PreferredAgeRange
+import com.mmdev.business.user.UserState
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentAuthRegistrationBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
-
+import com.mmdev.roove.utils.extensions.observeOnce
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * This is the documentation block about the class
  */
 
+@AndroidEntryPoint
 class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistrationBinding>(
 	layoutId = R.layout.fragment_auth_registration
 ){
@@ -51,17 +51,13 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 	private var baseUserInfo = BaseUserInfo()
 	private var name = "no name"
 	private var age = 18
-	private var city = ""
 	private var gender = ""
 	private var preferredGender = ""
 	private val preferredAgeRange = PreferredAgeRange(minAge = 18, maxAge = 24)
-
-	private var cityToDisplay = ""
+	
 	private var preferredGenderToDisplay = ""
 	private var genderToDisplay = ""
 
-
-	private lateinit var cityList: Map<String, String>
 
 	private val male = "male"
 	private val female = "female"
@@ -70,8 +66,12 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		mViewModel.baseUserInfo.observe(this, {
-			baseUserInfo = it
+		sharedViewModel.userInfoForRegistration.observeOnce(this, {
+			baseUserInfo = it.baseUserInfo
+		})
+		
+		mViewModel.signUpDone.observeOnce(this, {
+			sharedViewModel.userState.postValue(UserState.registered(it))
 		})
 	}
 
@@ -154,60 +154,24 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 			tvAgeDisplay.text = age.toString()
 		}
 		//step 3 pref age
-		rangeSeekBarRegAgePicker.setOnRangeSeekBarChangeListener { _, number, number2 ->
-			preferredAgeRange.minAge = number.toInt()
-			preferredAgeRange.maxAge = number2.toInt()
+		rangeSeekBarRegAgePicker.addOnChangeListener { rangeSlider, value, fromUser ->
+			preferredAgeRange.minAge = rangeSlider.values.first().toInt()
+			preferredAgeRange.maxAge = rangeSlider.values.last().toInt()
 		}
-
-
+		
 		//step 4 name
-		edInputChangeName.addTextChangedListener(object: TextWatcher {
-			override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-			override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-				layoutInputChangeName.isCounterEnabled = true
+		edInputChangeName.doAfterTextChanged {
+			if (it.isNullOrBlank()) {
+				layoutInputChangeName.error = getString(R.string.text_empty_error)
+				disableFab()
 			}
-
-			override fun afterTextChanged(s: Editable) {
-				when {
-					s.length > layoutInputChangeName.counterMaxLength -> {
-						layoutInputChangeName.error = getString(R.string.text_max_length_error)
-						disableFab()
-					}
-					s.isEmpty() -> {
-						layoutInputChangeName.error = getString(R.string.text_empty_error)
-						disableFab()
-					}
-					else -> {
-						if (cityToDisplay.isNotEmpty() && city.isNotEmpty()) enableFab()
-						layoutInputChangeName.error = ""
-						name = s.toString().trim()
-					}
-				}
+			else {
+				enableFab()
+				layoutInputChangeName.error = ""
+				name = it.toString().trim()
 			}
-		})
-
-		edInputChangeName.setOnEditorActionListener { v, actionId, _ ->
-			if (actionId == IME_ACTION_DONE) {
-				v.text = v.text.toString().trim()
-				v.clearFocus()
-			}
-			return@setOnEditorActionListener false
 		}
-
-
-		//step 4 city
-		val cityAdapter = ArrayAdapter(requireContext(),
-		                               R.layout.drop_text_item,
-		                               cityList.map { it.key })
-		dropdownCityChooser.setAdapter(cityAdapter)
-
-		dropdownCityChooser.setOnItemClickListener { _, _, position, _ ->
-			city = cityList.map { it.value }[position]
-			cityToDisplay = cityList.map { it.key }[position]
-			if (layoutInputChangeName.error.isNullOrEmpty()) enableFab()
-		}
-
+		
 
 		//final step
 		btnFinalBack.setOnClickListener {
@@ -217,26 +181,17 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 		}
 
 		btnRegistrationDone.setOnClickListener {
-			val finalUserModel = BaseUserInfo(
-				name,
-				age,
-				city,
-				gender,
-				preferredGender,
-				baseUserInfo.mainPhotoUrl,
-				baseUserInfo.userId
+			val finalUserModel = baseUserInfo.copy(
+				name = name,
+				age = age,
+				gender = preferredGender,
+				preferredGender = preferredGender,
 			)
 
 			mViewModel.signUp(
 				UserItem(
 					finalUserModel,
-					cityToDisplay = cityToDisplay,
-					photoURLs = listOf(
-						PhotoItem(
-							fileName = "facebookPhoto",
-							fileUrl = finalUserModel.mainPhotoUrl
-						)
-					),
+					photoURLs = listOf(PhotoItem.FACEBOOK_PHOTO(finalUserModel.mainPhotoUrl)),
 					preferredAgeRange = preferredAgeRange
 				)
 			)
@@ -329,8 +284,10 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 		enableFab()
 		sliderAge.value = age.toFloat()
 		tvAgeDisplay.text = age.toString()
-		rangeSeekBarRegAgePicker.selectedMinValue = preferredAgeRange.minAge
-		rangeSeekBarRegAgePicker.selectedMaxValue = preferredAgeRange.maxAge
+		rangeSeekBarRegAgePicker.setValues(
+			preferredAgeRange.minAge.toFloat(),
+			preferredAgeRange.maxAge.toFloat()
+		)
 	}
 
 	private fun restoreStep4State() = binding.run {
@@ -344,9 +301,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 		else if (edInputChangeName.text.isNullOrEmpty()) {
 			layoutInputChangeName.error = getString(R.string.text_empty_error)
 		}
-		else if (city.isNotEmpty() && cityToDisplay.isNotEmpty()) enableFab()
-
-		layoutInputChangeName.isCounterEnabled = false
+		else enableFab()
 
 	}
 
@@ -355,7 +310,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 		edFinalGender.setText(genderToDisplay)
 		edFinalPreferredGender.setText(preferredGenderToDisplay)
 		edFinalAge.setText(age.toString())
-		edFinalCity.setText(cityToDisplay)
+		edFinalCity.setText("")
 	}
 
 

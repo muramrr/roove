@@ -19,8 +19,11 @@
 package com.mmdev.roove.utils
 
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -28,6 +31,7 @@ import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.core.glide.GlideImageLoader
 import com.mmdev.roove.utils.extensions.doOnApplyWindowInsets
+import com.mmdev.roove.utils.extensions.hideKeyboard
 
 
 object BindingAdapterUtils {
@@ -65,6 +69,26 @@ object BindingAdapterUtils {
 					.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
 					.into(imageView)
 			}
+	}
+	
+	/**
+	 * Hides keyboard when the [EditText] is focused.
+	 *
+	 * There can only be one [TextView.OnEditorActionListener] on each [EditText] and
+	 * this [BindingAdapter] sets it.
+	 */
+	@JvmStatic
+	@BindingAdapter("app:hideKeyboardOnInputDone")
+	fun hideKeyboardOnInputDone(inputView: EditText, enabled: Boolean) {
+		if (!enabled) return
+		val listener = TextView.OnEditorActionListener { v, actionId, _ ->
+			if (actionId == EditorInfo.IME_ACTION_DONE) {
+				inputView.hideKeyboard(inputView)
+				v.text = v.text.toString().trim()
+			}
+			false
+		}
+		inputView.setOnEditorActionListener(listener)
 	}
 
 	@JvmStatic

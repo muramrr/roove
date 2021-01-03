@@ -18,14 +18,14 @@
 
 package com.mmdev.business.chat
 
-import com.mmdev.business.data.PhotoItem
+import com.mmdev.business.photo.PhotoItem
 import com.mmdev.business.user.BaseUserInfo
 
 data class MessageItem(
-    val sender: BaseUserInfo = BaseUserInfo(),
-    val recipientId: String = "",
-    val text: String = "",
-    var timestamp: Any? = null,
-    val photoItem: PhotoItem? = PhotoItem(),
-    val conversationId: String = ""
+	val sender: BaseUserInfo = BaseUserInfo(),
+	val recipientId: String = "",
+	val text: String = "",
+	var timestamp: Any? = null,
+	val photoItem: PhotoItem? = PhotoItem(),
+	val conversationId: String = ""
 )

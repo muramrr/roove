@@ -16,7 +16,7 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.data.datasource
+package com.mmdev.data.datasource.auth
 
 import com.google.firebase.auth.FirebaseAuth
 import com.mmdev.data.core.log.logDebug
@@ -42,7 +42,6 @@ class AuthCollector(auth: FirebaseAuth) {
 		emitter.setCancellable {
 			logDebug(TAG, "AuthListener removed.")
 			auth.removeAuthStateListener(listener)
-			
 		}
 	}
 	

@@ -1,6 +1,6 @@
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (C) 2021. roove
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -17,6 +17,68 @@
   -->
 
 <resources>
+	
+	<!-- circle button with icon at center -->
+	<style name="MyButtonIconOnly" parent="Widget.MaterialComponents.Button.Icon">
+		
+		<item name="iconPadding">0dp</item>
+		<item name="android:insetTop">0dp</item>
+		<item name="android:insetBottom">0dp</item>
+		<item name="android:insetLeft">0dp</item>
+		<item name="android:insetRight">0dp</item>
+		<item name="android:paddingLeft">12dp</item>
+		<item name="android:paddingRight">12dp</item>
+		<item name="android:minWidth">48dp</item>
+		<item name="android:minHeight">48dp</item>
+	
+	</style>
+	
+	<!-- button with icon at center -->
+	<style name="MyButtonIconOnly.Text" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+		
+		<item name="iconPadding">0dp</item>
+		<item name="android:insetTop">0dp</item>
+		<item name="android:insetBottom">0dp</item>
+		
+		<item name="android:insetLeft">0dp</item>
+		<item name="android:insetRight">0dp</item>
+		<item name="android:paddingLeft">12dp</item>
+		<item name="android:paddingRight">12dp</item>
+		<item name="android:minWidth">48dp</item>
+		<item name="android:minHeight">48dp</item>
+	
+	</style>
+	
+	<!-- button with icon at center -->
+	<style name="MyButtonIconOnly.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
+		
+		<item name="iconPadding">0dp</item>
+		<item name="android:insetTop">0dp</item>
+		<item name="android:insetBottom">0dp</item>
+		<item name="android:insetLeft">0dp</item>
+		<item name="android:insetRight">0dp</item>
+		<item name="android:paddingLeft">12dp</item>
+		<item name="android:paddingRight">12dp</item>
+		<item name="android:minWidth">48dp</item>
+		<item name="android:minHeight">48dp</item>
+	
+	</style>
+	
+	<!-- circle button with icon at center -->
+	<style name="MyButtonIconOnly.Unelevated" parent="Widget.MaterialComponents.Button.UnelevatedButton.Icon">
+		
+		<item name="iconSize">24dp</item>
+		<item name="iconPadding">0dp</item>
+		<item name="android:insetTop">0dp</item>
+		<item name="android:insetBottom">0dp</item>
+		<item name="android:insetLeft">0dp</item>
+		<item name="android:insetRight">0dp</item>
+		<item name="android:paddingLeft">12dp</item>
+		<item name="android:paddingRight">12dp</item>
+		<item name="android:minWidth">48dp</item>
+		<item name="android:minHeight">48dp</item>
+		
+	</style>
 	
 	<style name="My.Widget.TextView" parent="@style/Widget.MaterialComponents.TextView">
 		<item name="android:textAppearance">@style/My.TA.Body1</item>
@@ -36,12 +98,7 @@
 		<item name="android:dropDownVerticalOffset">5dp</item>
 	</style>
 
-
-	<!-- Alert dialog style	-->
-	<style name="MyMaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
-		<item name="buttonBarPositiveButtonStyle">@style/MyMaterialAlertDialog.ButtonPositive</item>
-		<item name="buttonBarNegativeButtonStyle">@style/MyMaterialAlertDialog.ButtonNegative</item>
-	</style>
+	
 
 	<style name="MyMaterialAlertDialog.ButtonPositive" parent="Widget.MaterialComponents.Button.UnelevatedButton">
 		<item name="backgroundTint">@color/material_red_a700</item>
@@ -58,55 +115,6 @@
 		<item name="android:textAllCaps">false</item>
 		<item name="android:textSize">14sp</item>
 		<item name="rippleColor">@color/lolite</item>
-	</style>
-
-	<style name="MyMaterialIconButton" parent="Widget.MaterialComponents.Button.TextButton">
-		<item name="android:minWidth">0dp</item>
-		<item name="android:insetLeft">0dp</item>
-		<item name="android:insetTop">0dp</item>
-		<item name="android:insetRight">0dp</item>
-		<item name="android:insetBottom">0dp</item>
-		<item name="iconGravity">textStart</item>
-		<item name="iconPadding">0dp</item>
-	</style>
-
-	<!-- SPECIFIC STYLES -->
-
-	<!-- auth tv 1 -->
-	<style name="auth_slogan1" parent="Widget.AppCompat.TextView">
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:layout_width">wrap_content</item>
-		<item name="android:fontFamily">@font/rubik_medium</item>
-		<item name="android:textSize">@dimen/auth_tv_slogan1</item>
-	</style>
-
-	<!-- auth tv 2 -->
-	<style name="auth_slogan2" parent="Widget.AppCompat.TextView">
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:layout_width">wrap_content</item>
-		<item name="android:fontFamily">@font/rubik_medium</item>
-		<item name="android:textSize">@dimen/auth_tv_slogan2</item>
-	</style>
-
-
-	<!-- unfocused tabs text -->
-	<style name="tab_text_32sp" parent="TextAppearance.Design.Tab">
-		<item name="android:fontFamily">@font/rubik_regular</item>
-		<item name="textAllCaps">false</item>
-		<item name="android:textColor">@color/white_10</item>
-		<item name="android:textSize">32sp</item>
-	</style>
-
-	<!-- uncollapsed toolbar profile title -->
-	<style name="CollapsingToolbarExpandedTitleWhite" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_medium</item>
-		<item name="android:textSize">30sp</item>
-	</style>
-
-	<!-- toolbar title -->
-	<style name="ToolbarTitle" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_regular</item>
-		<item name="android:textSize">20sp</item>
 	</style>
 
 

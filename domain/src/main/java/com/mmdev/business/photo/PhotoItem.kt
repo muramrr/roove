@@ -16,27 +16,17 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.roove.core.di.modules
+package com.mmdev.business.photo
 
-import com.facebook.login.LoginManager
-import com.google.firebase.auth.FirebaseAuth
-import com.mmdev.data.datasource.auth.AuthCollector
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
-
-@Module
-@InstallIn(SingletonComponent::class)
-class AuthModule{
-
-	@Provides
-	@Singleton
-	fun facebookAuth(): LoginManager = LoginManager.getInstance()
-	
-	@Provides
-	@Singleton
-	fun authCollector(auth: FirebaseAuth): AuthCollector = AuthCollector(auth)
-	
+data class PhotoItem(
+    var fileName: String = "",
+    var fileUrl: String = ""
+) {
+    companion object {
+        const val FACEBOOK_PHOTO_NAME = "FACEBOOK"
+        fun FACEBOOK_PHOTO(url: String) = PhotoItem(
+            fileName = FACEBOOK_PHOTO_NAME,
+            fileUrl = url
+        )
+    }
 }

@@ -18,14 +18,14 @@
 
 package com.mmdev.business.user
 
-import com.mmdev.business.data.PhotoItem
+import com.mmdev.business.photo.PhotoItem
 
 data class UserItem(
-    val baseUserInfo: BaseUserInfo = BaseUserInfo(),
-    var cityToDisplay: String = "",
-    var aboutText: String = "",
-    var photoURLs: List<PhotoItem> = listOf(),
-    val preferredAgeRange: PreferredAgeRange = PreferredAgeRange()
+	val baseUserInfo: BaseUserInfo = BaseUserInfo(),
+	val aboutText: String = "",
+	val photoURLs: List<PhotoItem> = listOf(),
+	val preferredAgeRange: PreferredAgeRange = PreferredAgeRange(),
+	val location: LocationPoint = LocationPoint()
 ) {
     data class PreferredAgeRange(var minAge: Int = 18, var maxAge: Int = 18)
 }

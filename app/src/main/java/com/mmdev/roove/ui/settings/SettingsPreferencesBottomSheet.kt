@@ -59,20 +59,21 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
 		initProfile(MainActivity.currentUser!!)
 		
-		rangeSeekBarAgePicker.setOnRangeSeekBarChangeListener { _, number, number2 ->
-			MainActivity.currentUser!!.preferredAgeRange.minAge = number.toInt()
-			MainActivity.currentUser!!.preferredAgeRange.maxAge = number2.toInt()
+		rangeSeekBarAgePicker.addOnChangeListener { rangeSlider, value, fromUser ->
+			//MainActivity.currentUser!!.preferredAgeRange.minAge = rangeSlider.values.first().toInt()
+			//MainActivity.currentUser!!.preferredAgeRange.maxAge = rangeSlider.values.last().toInt()
 			isChanged = true
 		}
 
-		toggleButtonPickerPreferredGender.addOnButtonCheckedListener { group, _, _ ->
-			if (group.checkedButtonIds.size > 1)
-				MainActivity.currentUser!!.baseUserInfo.preferredGender = everyone
-			if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderMale)
-				MainActivity.currentUser!!.baseUserInfo.preferredGender = male
-			if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderFemale)
-				MainActivity.currentUser!!.baseUserInfo.preferredGender = female
-		}
+		//todo
+		//toggleButtonPickerPreferredGender.addOnButtonCheckedListener { group, _, _ ->
+		//	if (group.checkedButtonIds.size > 1)
+		//		MainActivity.currentUser!!.baseUserInfo.preferredGender = everyone
+		//	if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderMale)
+		//		MainActivity.currentUser!!.baseUserInfo.preferredGender = male
+		//	if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderFemale)
+		//		MainActivity.currentUser!!.baseUserInfo.preferredGender = female
+		//}
 
 		btnPickerPreferredGenderMale.setOnClickListener { isChanged = true }
 		btnPickerPreferredGenderFemale.setOnClickListener { isChanged = true }
@@ -93,8 +94,10 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 				toggleButtonPickerPreferredGender.check(R.id.btnPickerPreferredGenderFemale)
 			}
 		}
-		rangeSeekBarAgePicker.selectedMinValue = userItem.preferredAgeRange.minAge
-		rangeSeekBarAgePicker.selectedMaxValue = userItem.preferredAgeRange.maxAge
+		rangeSeekBarAgePicker.setValues(
+			userItem.preferredAgeRange.minAge.toFloat(),
+			userItem.preferredAgeRange.maxAge.toFloat()
+		)
 	}
 
 	override fun onStop() {

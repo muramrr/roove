@@ -16,9 +16,13 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.business.data
+package com.mmdev.business.user
 
-data class PhotoItem(
-    var fileName: String = "",
-    var fileUrl: String = ""
+/**
+ * Wrapper for two coordinates (latitude and longitude)
+ */
+
+data class LocationPoint(
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0
 )

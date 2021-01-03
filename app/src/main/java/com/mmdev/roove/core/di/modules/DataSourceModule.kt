@@ -21,6 +21,7 @@ package com.mmdev.roove.core.di.modules
 import android.content.Context
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.data.datasource.UserDataSource
+import com.mmdev.data.datasource.location.LocationDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,6 +40,10 @@ class DataSourceModule {
 	@Provides
 	@Singleton
 	fun userDataSource(fs: FirebaseFirestore) = UserDataSource(fs)
+	
+	@Provides
+	@Singleton
+	fun locationDataSource(@ApplicationContext appContext: Context) = LocationDataSource(appContext)
 	
 	@Provides
 	@Singleton

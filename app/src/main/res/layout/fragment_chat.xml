@@ -71,9 +71,8 @@
 					android:singleLine="true"
 
 					android:text='@{viewModel.partnerName}'
-					android:textSize="20sp"
-
-
+					android:textAppearance="?textAppearanceHeadline6"
+					
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toTopOf="parent"
 					app:layout_constraintBottom_toBottomOf="parent"
@@ -118,8 +117,7 @@
 
 		</androidx.appcompat.widget.Toolbar>
 
-		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/rvMessageList"
+		<androidx.recyclerview.widget.RecyclerView android:id="@+id/rvMessageList"
 			android:layout_height="0dp"
 			android:layout_width="0dp"
 			android:focusable="true"
@@ -136,8 +134,7 @@
 			tools:itemCount="2"
 			tools:listitem="@layout/fragment_chat_item_right"/>
 
-		<View
-			android:id="@+id/messageInputContainerBackground"
+		<View android:id="@+id/messageInputContainerBackground"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:background="@color/colorAccentDark"
@@ -152,14 +149,12 @@
 			android:id="@+id/btnSendAttachment"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="2dp"
 			android:padding="16dp"
-
-			app:cornerRadius="50dp"
+			
 			app:icon="@drawable/ic_chat_attachment_24dp"
 			app:iconTint="@color/white_50"
 
-			style="@style/MyMaterialIconButton"
+			style="@style/MyButtonIconOnly.Text"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
@@ -179,7 +174,6 @@
 
 			android:textColor="@color/white"
 			android:textColorHint="@color/white_50"
-			android:textSize="18sp"
 
 			tools:ignore="Autofill"
 
@@ -194,12 +188,10 @@
 			android:layout_height="wrap_content"
 			android:padding="16dp"
 
-			app:backgroundTint="@color/chat_send_button_bg_tint"
-			app:cornerRadius="50dp"
 			app:icon="@drawable/ic_chat_send_24dp"
 			app:iconTint="@color/chat_send_button_icon_tint"
-
-			style="@style/MyMaterialIconButton"
+			
+			style="@style/MyButtonIconOnly.Text"
 
 			app:layout_constraintStart_toEndOf="@id/edTextMessageInput"
 			app:layout_constraintEnd_toEndOf="parent"

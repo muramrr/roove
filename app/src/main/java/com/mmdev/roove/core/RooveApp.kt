@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,21 +50,26 @@ class RooveApp : Application() {
 		injector = DaggerAppComponent.builder()
 			.application(this)
 			.build()
-
+		
+		val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+		// Since android Oreo notification channel is needed.
+		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+			
 			// Create the NotificationChannel
 			val messageNotificationChannel =
-				NotificationChannel(getString(R.string.notification_channel_id_messages),
-				                    getString(R.string.notification_channel_name_messages),
-				                    NotificationManager.IMPORTANCE_DEFAULT)
-				.apply { description = getString(R.string.notification_channel_description_messages) }
+				NotificationChannel(
+					getString(R.string.notification_channel_id_messages),
+					getString(R.string.notification_channel_name_messages),
+					NotificationManager.IMPORTANCE_DEFAULT
+				).apply { description = getString(R.string.notification_channel_description_messages) }
 
 			val matchNotificationChannel =
-				NotificationChannel(getString(R.string.notification_channel_id_match),
-				                    getString(R.string.notification_channel_name_match),
-				                    NotificationManager.IMPORTANCE_DEFAULT)
-				.apply { description = getString(R.string.notification_channel_description_match) }
+				NotificationChannel(
+					getString(R.string.notification_channel_id_match),
+					getString(R.string.notification_channel_name_match),
+					NotificationManager.IMPORTANCE_DEFAULT
+				).apply { description = getString(R.string.notification_channel_description_match) }
 			// Register the channel with the system; you can't change the importance
 			// or other notification behaviors after this
 			notificationManager.createNotificationChannel(messageNotificationChannel)

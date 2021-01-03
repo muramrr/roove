@@ -19,8 +19,12 @@
 package com.mmdev.data.core.firebase
 
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.Query
+import com.mmdev.business.photo.PhotoItem
+import com.mmdev.business.user.BaseUserInfo
+import com.mmdev.business.user.UserItem
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.log.logDebug
 import com.mmdev.data.core.log.logError
@@ -59,7 +63,7 @@ internal fun <T> DocumentReference.getAndDeserializeAsSingle(clazz: Class<T>): S
 					logDebug(TAG, "Data is not null, deserialization in process...")
 					val serializedDoc: T = snapshot.toObject(clazz)!!
 					
-					logInfo(TAG, "Deserialization to ${clazz.simpleName} succeed...")
+					logDebug(TAG, "Deserialization to ${clazz.simpleName} succeed...")
 					emitter.onSuccess(serializedDoc)
 				}
 				else {
@@ -80,13 +84,13 @@ internal fun <T> Query.executeAndDeserializeSingle(clazz: Class<T>): Single<List
 	get()
 		.addOnSuccessListener { querySnapshot ->
 			if (!querySnapshot.isEmpty) {
-				logInfo(TAG, "Query executed successfully, printing first 5 documents...")
+				logDebug(TAG, "Query executed successfully, printing first 5 documents...")
 				querySnapshot.documents.take(5).forEach { logInfo(TAG, it.reference.path) }
 				
 				logDebug(TAG, "Query deserialization to ${clazz.simpleName} in process...")
 				val resultList = querySnapshot.toObjects(clazz)
 				
-				logInfo(TAG, "Deserialization to ${clazz.simpleName} succeed...")
+				logDebug(TAG, "Deserialization to ${clazz.simpleName} succeed...")
 				emitter.onSuccess(resultList)
 			}
 			else {
@@ -104,11 +108,10 @@ internal fun <T> Query.executeAndDeserializeSingle(clazz: Class<T>): Single<List
 
 
 
-internal fun <T> DocumentReference.setAsCompletable(dataClass: T): Completable = CompletableCreate {
-	emitter ->
-	set(dataClass!!)
+internal fun <T> DocumentReference.setAsCompletable(dataClass: T): Completable = CompletableCreate { emitter ->
+	this.set(dataClass!!)
 		.addOnSuccessListener {
-			logInfo(TAG, "Set $dataClass as document successfully")
+			logDebug(TAG, "Set $dataClass as document successfully")
 			emitter.onComplete()
 		}
 		.addOnFailureListener { exception ->
@@ -122,7 +125,7 @@ internal fun <T> DocumentReference.setAsCompletable(dataClass: T): Completable =
 internal fun DocumentReference.updateAsCompletable(field: String, value: Any): Completable = CompletableCreate { emitter ->
 	update(field, value)
 		.addOnSuccessListener {
-			logInfo(TAG, "Field $field updated with $value successfully")
+			logDebug(TAG, "Field $field updated with $value successfully")
 			emitter.onComplete()
 		}
 		.addOnFailureListener { exception ->
@@ -131,3 +134,13 @@ internal fun DocumentReference.updateAsCompletable(field: String, value: Any): C
 		}
 	
 }.subscribeOn(MySchedulers.io())
+
+
+internal fun FirebaseUser.toUserItem(): UserItem =
+	UserItem(
+		baseUserInfo = BaseUserInfo(
+			name = displayName!!,
+			mainPhotoUrl = "${photoUrl}?height=1000",
+			userId = uid
+		), photoURLs = listOf(PhotoItem.FACEBOOK_PHOTO("${photoUrl}?height=1000"))
+	)

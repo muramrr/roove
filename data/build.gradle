@@ -22,9 +22,8 @@ apply plugin: 'kotlin-kapt'
 
 android {
 
-	def globalConfiguration = rootProject.extensions.getByName("ext")
-	compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
-	buildToolsVersion globalConfiguration["androidBuildToolsVersion"]
+	compileSdkVersion 30
+	buildToolsVersion "30.0.3"
 
 	def keyPropertiesFile = rootProject.file("key.properties")
 	def keyProperties = new Properties()
@@ -36,17 +35,17 @@ android {
 		buildConfigField("String", "VALUE_ENCRYPTION_KEY", keyProperties['VALUE_ENCRYPTION_KEY'])
 		buildConfigField("String", "VALUE_ENCRYPTION_VECTOR_KEY", keyProperties['VALUE_ENCRYPTION_VECTOR_KEY'])
 
-		minSdkVersion globalConfiguration["androidMinSdkVersion"]
-		targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
-		versionCode globalConfiguration["androidVersionCode"]
-		versionName globalConfiguration["androidVersionName"]
+		minSdkVersion 21
+		targetSdkVersion 30
+		versionCode "$majorVersion$minorVersion$patchVersion".toInteger()
+		versionName "$majorVersion.$minorVersion.$patchVersion"
 		//testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
 	}
 
 	buildTypes {
 
 		release {
-			minifyEnabled false
+			minifyEnabled true
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 		}
 
@@ -54,11 +53,6 @@ android {
 
 	kotlinOptions {
 		jvmTarget = JavaVersion.VERSION_1_8
-	}
-
-
-	sourceSets {
-		main.java.srcDirs += 'src/main/kotlin'
 	}
 
 }
@@ -70,7 +64,7 @@ dependencies {
 	implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
 	//facebook auth
-	implementation 'com.facebook.android:facebook-login:7.1.0'
+	implementation 'com.facebook.android:facebook-login:8.1.0'
 
 	//firebase
 	implementation platform('com.google.firebase:firebase-bom:26.2.0')
@@ -80,7 +74,7 @@ dependencies {
 	implementation 'com.google.firebase:firebase-installations-ktx'
 
 	// RxJava
-	implementation "io.reactivex.rxjava3:rxjava:3.0.8"
+	implementation "io.reactivex.rxjava3:rxjava:3.0.9"
 
 	// Dagger hilt
 	implementation "com.google.dagger:hilt-android:2.30.1-alpha"

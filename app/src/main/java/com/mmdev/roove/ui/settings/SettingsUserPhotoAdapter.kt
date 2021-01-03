@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 package com.mmdev.roove.ui.settings
 
-import com.mmdev.business.data.PhotoItem
+import com.mmdev.business.photo.PhotoItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 
@@ -28,8 +28,8 @@ import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
  */
 
 class SettingsUserPhotoAdapter(private var photosUrlsList: List<PhotoItem> = emptyList()):
-        BaseRecyclerAdapter<PhotoItem>(),
-        BaseRecyclerAdapter.BindableAdapter<List<PhotoItem>> {
+		BaseRecyclerAdapter<PhotoItem>(),
+		BaseRecyclerAdapter.BindableAdapter<List<PhotoItem>> {
 
 	override fun getItem(position: Int): PhotoItem = photosUrlsList[position]
 	override fun getItemCount() = photosUrlsList.size

@@ -18,14 +18,16 @@
 
 package com.mmdev.data.datasource.location
 
-import android.Manifest.permission
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.provider.Settings
-import androidx.annotation.RequiresPermission
+import com.mmdev.business.user.LocationPoint
+import com.mmdev.data.core.log.logWtf
+import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.cos
@@ -38,12 +40,45 @@ import kotlin.math.cos
  * https://github.com/delight-im/Android-SimpleLocation/blob/master/Source/library/src/main/java/im/delight/android/location/SimpleLocation.java
  */
 
+@SuppressLint("MissingPermission")
 @Singleton
-class LocationDataSource @Inject constructor(
-    context: Context
-) {
+class LocationDataSource @Inject constructor(context: Context): LocationListener {
+    
+    
+    val locationSubject: PublishSubject<LocationPoint> = PublishSubject.create()
+    
+    /**
+     * Creates a new LocationListener instance used internally to listen for location updates
+     *
+     * @return the new LocationListener instance
+     */
+    override fun onLocationChanged(location: Location) {
+        logWtf(TAG, "$location")
+        locationSubject.onNext(
+            LocationPoint(
+            latitude = location.latitude,
+            longitude = location.longitude
+        ))
+        endUpdates()
+    }
+    
+    /** The LocationManager instance used to query the device location  */
+    private val mLocationManager: LocationManager = context.getSystemService(
+        Context.LOCATION_SERVICE
+    ) as LocationManager
+    
+    /** Starts updating the location and requesting new updates after the defined interval  */
+    init {
+        mLocationManager.requestLocationUpdates(
+            getProviderName(),
+            0,
+            0f,
+            this
+        )
+    }
     
     companion object {
+        private const val TAG = "mylogs_LocationSource"
         /** The internal name of the provider for the coarse location  */
         private const val PROVIDER_COARSE = LocationManager.NETWORK_PROVIDER
         
@@ -169,14 +204,11 @@ class LocationDataSource @Inject constructor(
         }
     }
     
-    /** The LocationManager instance used to query the device location  */
-    private val mLocationManager: LocationManager = context.getSystemService(
-        Context.LOCATION_SERVICE
-    ) as LocationManager
+    /** Stops the location updates when they aren't needed anymore so that battery can be saved  */
+    fun endUpdates() = mLocationManager.removeUpdates(this)
     
     /** The current location with latitude, longitude, speed and altitude  */
-    @SuppressLint("MissingPermission")
-    private var mPosition: Location? = getCachedPosition()
+    private var mPosition: Location? = null
     
     /**
      * Whether the device has location access enabled in the settings
@@ -196,45 +228,16 @@ class LocationDataSource @Inject constructor(
      *
      * @return the current location (if any) or `null`
      */
-    val position: LocationPoint? =
-        if (mPosition == null) null
+    val locationPoint: LocationPoint =
+        if (mPosition == null) LocationPoint()
         else LocationPoint(mPosition!!.latitude, mPosition!!.longitude)
     
    
     
-    /**
-     * Returns the latitude of the current location
-     *
-     * @return the current latitude (if any) or `0`
-     */
     fun getLatitude(): Double = mPosition?.latitude ?: 0.0
-    
-    /**
-     * Returns the longitude of the current location
-     *
-     * @return the current longitude (if any) or `0`
-     */
     fun getLongitude(): Double = mPosition?.longitude ?: 0.0
-    
-    /**
-     * Returns the timestamp of the current location as a number of milliseconds since January 1, 1970 (UTC)
-     *
-     * @return the timestamp (if any) or `0`
-     */
     fun getTimestampInMilliseconds(): Long = mPosition?.time ?: 0
-    
-    /**
-     * Returns the elapsed time since system boot of the current location in nanoseconds
-     *
-     * @return the elapsed time (if any) or `0`
-     */
     fun getElapsedTimeInNanoseconds(): Long = mPosition?.elapsedRealtimeNanos ?: 0
-    
-    /**
-     * Returns the current altitude
-     *
-     * @return the current altitude (if detected) or `0`
-     */
     fun getAltitude(): Double = mPosition?.altitude ?: 0.0
     
     /**
@@ -246,55 +249,11 @@ class LocationDataSource @Inject constructor(
      */
     private fun getProviderName(requireFine: Boolean = false): String {
         // if fine location (GPS) is required
-        return if (requireFine) {
-            PROVIDER_FINE
-            // we just have to decide between active and passive mode
-//            if (mPassive) {
-//                PROVIDER_FINE_PASSIVE
-//            }
-//            else {
-//                PROVIDER_FINE
-//            }
-        }
-        else {
-            PROVIDER_COARSE
-            // if we can use coarse location (network)
-//            if (hasLocationEnabled(PROVIDER_COARSE)) {
-//                PROVIDER_COARSE
-//                // if we wanted passive mode
-//                if (mPassive) {
-//                    // throw an exception because this is not possible
-//                    throw RuntimeException("There is no passive provider for the coarse location")
-//                }
-//                else {
-//                    // use coarse location (network)
-//                    PROVIDER_COARSE
-//                }
-//            }
-//            else {
-//                // if we can use fine location (GPS)
-//                if (hasLocationEnabled(PROVIDER_FINE) || hasLocationEnabled(PROVIDER_FINE_PASSIVE)) {
-//                    // we have to use fine location (GPS) because coarse location (network) was not available
-//                    getProviderName(true)
-//                }
-//                else {
-//                    PROVIDER_COARSE
-//                }
-//            }
-        }
+        return if (requireFine) { PROVIDER_FINE }
+        else { PROVIDER_COARSE }
     }
     
-    /**
-     * Returns the last position from the cache
-     *
-     * @return the cached position
-     */
-    @RequiresPermission(anyOf = [permission.ACCESS_COARSE_LOCATION, permission.ACCESS_FINE_LOCATION])
-    private fun getCachedPosition(): Location? = try {
-        mLocationManager.getLastKnownLocation(getProviderName())
-    } catch (e: Exception) {
-        null
-    }
+   
     
-
+    
 }

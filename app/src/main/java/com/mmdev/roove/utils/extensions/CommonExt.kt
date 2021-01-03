@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@
 package com.mmdev.roove.utils.extensions
 
 import android.content.Context
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -38,6 +40,21 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
 			removeObserver(this)
 		}
 	})
+}
+
+/**
+ * Try to hide the keyboard and returns whether it worked
+ * https://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
+ */
+fun View.hideKeyboard(inputViewFocused: View? = null): Boolean {
+	try {
+		val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+		return inputMethodManager.hideSoftInputFromWindow(
+			applicationWindowToken, InputMethodManager.HIDE_NOT_ALWAYS
+		)
+	} catch (ignored: RuntimeException) { }
+	finally { inputViewFocused?.clearFocus() }
+	return false
 }
 
 fun Context.dp2px(dpValue: Float): Int = (dpValue * this.resources.displayMetrics.density + 0.5f).toInt()

@@ -20,8 +20,8 @@ package com.mmdev.roove.ui.profile
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.business.data.PhotoItem
 import com.mmdev.business.pairs.MatchedUserItem
+import com.mmdev.business.photo.PhotoItem
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.IUserRepository
 import com.mmdev.business.user.Report

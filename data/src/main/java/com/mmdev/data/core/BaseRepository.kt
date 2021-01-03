@@ -29,7 +29,6 @@ abstract class BaseRepository {
 	companion object {
 		// firestore users collection references
 		const val USERS_COLLECTION = "users"
-		const val USERS_BASE_COLLECTION = "usersBase"
 		const val USER_LIKED_COLLECTION = "liked"
 		const val USER_MATCHED_COLLECTION = "matched"
 		const val USER_SKIPPED_COLLECTION = "skipped"

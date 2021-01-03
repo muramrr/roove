@@ -20,6 +20,9 @@ buildscript {
 
 	ext {
 		kotlin_version = '1.4.21'
+		majorVersion = 2
+		minorVersion = 0
+		patchVersion = 0
 	}
 
 
@@ -40,20 +43,6 @@ buildscript {
 }
 
 allprojects {
-
-	def majorVersion = 2
-	def minorVersion = 0
-	def patchVersion = 0
-
-	ext {
-		androidCompileSdkVersion = 30
-		androidVersionCode = "$majorVersion$minorVersion$patchVersion".toInteger()
-		androidVersionName = "$majorVersion.$minorVersion.$patchVersion"
-		androidMinSdkVersion = 21
-		androidTargetSdkVersion = 30
-		androidBuildToolsVersion = "30.0.3"
-	}
-
 
 	repositories {
 		jcenter()

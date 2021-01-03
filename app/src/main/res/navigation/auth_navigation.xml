@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (C) 2021. roove
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -24,20 +24,9 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
-	<fragment
-		android:id="@+id/auth_landing"
+	<fragment android:id="@+id/auth_landing"
 		android:name="com.mmdev.roove.ui.auth.view.AuthLandingFragment"
-		tools:layout="@layout/fragment_auth_landing" >
-
-		<action
-			android:id="@+id/action_auth_landing_to_registrationFragment"
-			app:destination="@id/registrationFragment" />
-
-	</fragment>
-
-	<fragment
-		android:id="@+id/registrationFragment"
-		android:name="com.mmdev.roove.ui.auth.view.RegistrationFragment"
-		tools:layout="@layout/fragment_auth_registration" />
+		tools:layout="@layout/fragment_auth_landing" />
+	
 
 </navigation>

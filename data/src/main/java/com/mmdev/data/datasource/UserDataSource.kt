@@ -34,20 +34,17 @@ class UserDataSource(private val fs: FirebaseFirestore) {
 		private const val FS_USERS_COLLECTION = "users"
 	}
 	
-	fun getFirestoreUser(email: String) =
-		fs.collection(FS_USERS_COLLECTION)
-			.document(email)
-			.getAndDeserializeAsSingle(UserItem::class.java)
+	fun getFirestoreUser(id: String) = fs.collection(FS_USERS_COLLECTION)
+		.document(id)
+		.getAndDeserializeAsSingle(UserItem::class.java)
 	
 	fun updateFirestoreUserField(
 		id: String, field: String, value: Any
-	) =
-		fs.collection(FS_USERS_COLLECTION)
-			.document(id)
-			.updateAsCompletable(field, value)
+	) = fs.collection(FS_USERS_COLLECTION)
+		.document(id)
+		.updateAsCompletable(field, value)
 	
-	fun writeFirestoreUser(user: UserItem) =
-		fs.collection(FS_USERS_COLLECTION)
-			.document(user.baseUserInfo.userId)
-			.setAsCompletable(user)
+	fun writeFirestoreUser(user: UserItem) = fs.collection(FS_USERS_COLLECTION)
+		.document(user.baseUserInfo.userId)
+		.setAsCompletable(user)
 }

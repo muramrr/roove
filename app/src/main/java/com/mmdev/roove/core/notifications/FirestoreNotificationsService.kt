@@ -76,10 +76,11 @@ class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserv
 
 	private fun notifyNewMessage(remoteMessage: RemoteMessage){
 		val conversation = bundleOf(
-				"PARTNER_CITY" to remoteMessage.data["SENDER_CITY"],
-				"PARTNER_GENDER" to remoteMessage.data["SENDER_GENDER"],
-				"PARTNER_ID" to remoteMessage.data["SENDER_ID"],
-				"CONVERSATION_ID" to remoteMessage.data["CONVERSATION_ID"])
+			"PARTNER_CITY" to remoteMessage.data["SENDER_CITY"],
+			"PARTNER_GENDER" to remoteMessage.data["SENDER_GENDER"],
+			"PARTNER_ID" to remoteMessage.data["SENDER_ID"],
+			"CONVERSATION_ID" to remoteMessage.data["CONVERSATION_ID"]
+		)
 
 		val pendingIntent = NavDeepLinkBuilder(this)
 			.setComponentName(MainActivity::class.java)
@@ -88,8 +89,9 @@ class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserv
 			.setArguments(conversation)
 			.createPendingIntent()
 
-		val notificationBuilder = NotificationCompat.Builder(this,
-		                                                     getString(R.string.notification_channel_id_messages))
+		val notificationBuilder = NotificationCompat.Builder(
+			this, getString(R.string.notification_channel_id_messages)
+		)
 			.setSmallIcon(R.drawable.ic_notification_message)
 			.setContentTitle(remoteMessage.data["SENDER_NAME"])
 			.setContentText(remoteMessage.data["CONTENT"])
@@ -142,8 +144,7 @@ class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserv
 		notificationBuilder.setLargeIcon(bitmap)
 
 		GlideApp.with(this).clear(futureTarget)
-
-
+		
 
 		val notificationId = System.currentTimeMillis().toInt()
 		// notificationId is a unique int for each notification that you must define

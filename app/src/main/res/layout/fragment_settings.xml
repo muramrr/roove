@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (C) 2021. roove
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -51,7 +51,6 @@
 					app:menu="@menu/settings_menu"
 
 					app:title="@string/bottom_navigation_settings"
-					app:titleTextAppearance="@style/ToolbarTitle"
 					app:titleTextColor="@color/white"
 
 
@@ -85,9 +84,8 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:src="@drawable/ic_add_a_photo_24dp"
-
+					
 					app:backgroundTint="@color/material_orange_a700"
-					app:elevation="@null"
 
 					app:layout_constraintBottom_toBottomOf="@id/rvSettingsUserPhotosList"
 					app:layout_constraintTop_toBottomOf="@id/rvSettingsUserPhotosList"
@@ -105,18 +103,6 @@
 					android:textSize="22sp"
 
 					app:layout_constraintTop_toBottomOf="@id/fabSettingsAddPhoto"
-					app:layout_constraintBottom_toTopOf="@id/tvSettingsCity"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintEnd_toEndOf="parent"
-					/>
-
-				<com.google.android.material.textview.MaterialTextView
-					android:id="@+id/tvSettingsCity"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textSize="22sp"
-					
-					app:layout_constraintTop_toBottomOf="@id/tvSettingsNameAge"
 					app:layout_constraintBottom_toTopOf="@id/tvSettingsAboutHeader"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintEnd_toEndOf="parent"
@@ -130,9 +116,9 @@
 					android:padding="16dp"
 
 					android:text="@string/profile_about_header_text"
-					android:textSize="24sp"
+					android:textAppearance="?textAppearanceHeadline5"
 
-					app:layout_constraintTop_toBottomOf="@id/tvSettingsCity"
+					app:layout_constraintTop_toBottomOf="@id/tvSettingsNameAge"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintEnd_toEndOf="parent"
 					/>
@@ -143,8 +129,6 @@
 					android:layout_height="wrap_content"
 					android:layout_marginHorizontal="8dp"
 					android:layout_marginBottom="100dp"
-					
-					android:textSize="18sp"
 					
 					app:layout_constraintTop_toBottomOf="@id/tvSettingsAboutHeader"
 					app:layout_constraintBottom_toBottomOf="parent"
@@ -167,6 +151,7 @@
 			app:layout_anchor="@id/containerSettings"
 			app:layout_anchorGravity="bottom|end"
 
+			style="@style/Widget.MaterialComponents.FloatingActionButton"
 			app:backgroundTint="@color/amethyst"
 
 			/>

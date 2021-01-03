@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (C) 2021. roove
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -21,26 +21,32 @@
 	
 	<style name="My.TA.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
 		<item name="fontFamily">@font/rubik_light</item>
+		<item name="android:textColor">?colorOnBackground</item>
 	</style>
 	
 	<style name="My.TA.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
 		<item name="fontFamily">@font/rubik_light</item>
+		<item name="android:textColor">?colorOnBackground</item>
 	</style>
 	
 	<style name="My.TA.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
 		<item name="fontFamily">@font/rubik_regular</item>
+		<item name="android:textColor">?colorOnBackground</item>
 	</style>
 	
 	<style name="My.TA.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
 		<item name="fontFamily">@font/rubik_regular</item>
+		<item name="android:textColor">?colorOnBackground</item>
 	</style>
 	
 	<style name="My.TA.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
 		<item name="fontFamily">@font/rubik_regular</item>
+		<item name="android:textColor">?colorOnBackground</item>
 	</style>
 	
 	<style name="My.TA.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
 		<item name="fontFamily">@font/rubik_medium</item>
+		<item name="android:textColor">?colorOnBackground</item>
 	</style>
 	
 	<style name="My.TA.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">

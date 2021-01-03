@@ -127,21 +127,13 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		if (isDeepLinkJump) {
 			sharedViewModel.matchedUserItemSelected.value =
 				MatchedUserItem(
-					baseUserInfo = BaseUserInfo(
-						city = receivedPartnerCity,
-						gender = receivedPartnerGender,
-						userId = receivedPartnerId
-					),
+					baseUserInfo = BaseUserInfo(userId = receivedPartnerId),
 					conversationId = receivedConversationId,
 					conversationStarted = true
 				)
 			sharedViewModel.conversationSelected.value =
 				ConversationItem(
-					partner = BaseUserInfo(
-						city = receivedPartnerCity,
-						gender = receivedPartnerGender,
-						userId = receivedPartnerId
-					),
+					partner = BaseUserInfo(userId = receivedPartnerId),
 					conversationId = receivedConversationId,
 					conversationStarted = true
 				)

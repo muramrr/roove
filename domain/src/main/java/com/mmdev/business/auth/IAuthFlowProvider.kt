@@ -18,7 +18,7 @@
 
 package com.mmdev.business.auth
 
-import com.mmdev.business.user.UserItem
+import com.mmdev.business.user.UserState
 import io.reactivex.rxjava3.core.Observable
 
 /**
@@ -27,7 +27,7 @@ import io.reactivex.rxjava3.core.Observable
 
 interface IAuthFlowProvider {
 	
-	fun getUser(): Observable<UserItem?>
+	fun getUser(): Observable<UserState>
 	
 	fun logOut()
 	

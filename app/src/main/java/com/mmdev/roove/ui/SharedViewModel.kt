@@ -24,7 +24,9 @@ import androidx.lifecycle.ViewModel
 import com.mmdev.business.conversations.ConversationItem
 import com.mmdev.business.pairs.MatchedUserItem
 import com.mmdev.business.user.UserItem
+import com.mmdev.business.user.UserState
 import com.mmdev.data.repository.auth.AuthFlowProvider
+import com.mmdev.roove.core.log.logError
 import com.mmdev.roove.ui.common.base.BaseViewModel
 
 /**
@@ -33,6 +35,7 @@ import com.mmdev.roove.ui.common.base.BaseViewModel
  * as the total space for all saved states is limited on Android.
  * If you need to pass large amounts of data,
  * consider using a ViewModel as described in Share data between fragments.
+ *
  * This [ViewModel] is used in every fragment { @see [com.mmdev.roove.ui.common.base.BaseFragment] }
  * and owner is [MainActivity]
  *
@@ -43,18 +46,23 @@ class SharedViewModel @ViewModelInject constructor(
 	private val authFlow: AuthFlowProvider
 ): BaseViewModel() {
 
-	val matchedUserItemSelected: MutableLiveData<MatchedUserItem> = MutableLiveData()
-	val userNavigateTo: MutableLiveData<UserItem> = MutableLiveData()
-	val conversationSelected: MutableLiveData<ConversationItem> = MutableLiveData()
+	val matchedUserItemSelected = MutableLiveData<MatchedUserItem>()
+	val userNavigateTo = MutableLiveData<UserItem>()
+	val conversationSelected = MutableLiveData<ConversationItem>()
 
-	val modalBottomSheetNeedUpdateExecution: MutableLiveData<Boolean> = MutableLiveData()
+	val modalBottomSheetNeedUpdateExecution = MutableLiveData<Boolean>()
 
-	val currentUser = MutableLiveData<UserItem?>()
+	val userState = MutableLiveData<UserState>()
+	val userInfoForRegistration = MutableLiveData<UserItem>()
 	
 	init {
-		disposables.add(authFlow.getUser().subscribe {
-			currentUser.value = it
-		})
+		disposables.add(
+			authFlow.getUser()
+				.subscribe(
+					{ userState.postValue(it) },
+					{ logError(TAG, "$it") }
+				)
+		)
 	}
 	
 	fun logOut() = authFlow.logOut()

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (C) 2021. roove
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -47,18 +47,20 @@
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/collapseBarHeight"
 
-				app:collapsedTitleTextAppearance="@style/ToolbarTitle"
+				app:collapsedTitleTextAppearance="?textAppearanceHeadline6"
 				app:contentScrim="@color/colorPrimary"
-				app:expandedTitleTextAppearance="@style/CollapsingToolbarExpandedTitleWhite"
+				app:expandedTitleTextAppearance="?textAppearanceHeadline4"
 
 				app:layout_scrollFlags="scroll|exitUntilCollapsed"
-				app:title="@{viewModel.retrievedUserItem.baseUserInfo.name, default = @string/default_name}">
+				app:title="@{viewModel.retrievedUserItem.baseUserInfo.name, default = @string/default_name}"
+				>
 
 
 				<androidx.viewpager2.widget.ViewPager2
 					android:id="@+id/viewPagerProfilePhotos"
 					android:layout_width="match_parent"
-					android:layout_height="match_parent" />
+					android:layout_height="match_parent"
+					/>
 
 				<com.google.android.material.tabs.TabLayout
 					android:id="@+id/tlDotsIndicatorProfile"
@@ -73,7 +75,8 @@
 					app:tabIndicatorColor="@color/gradient1"
 					app:tabIndicatorGravity="center"
 					app:tabGravity="center"
-					app:tabMaxWidth="12dp" />
+					app:tabMaxWidth="12dp"
+					/>
 
 				<androidx.appcompat.widget.Toolbar
 					android:id="@+id/toolbarProfile"
@@ -82,7 +85,8 @@
 					app:layout_collapseMode="pin"
 					app:menu="@menu/profile_view_menu"
 					app:navigationIcon="@drawable/ic_arrow_back_24dp"
-					app:popupTheme="@style/MyMenuPopupStyle" />
+					app:popupTheme="@style/MyMenuPopupStyle"
+					/>
 
 			</com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -94,19 +98,21 @@
 			android:overScrollMode="never"
 			app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-			<androidx.constraintlayout.widget.ConstraintLayout
+			<LinearLayout
 				android:layout_width="match_parent"
-				android:layout_height="match_parent" >
+				android:layout_height="match_parent"
+				android:orientation="vertical"
+				>
 
 				<com.google.android.material.textview.MaterialTextView
 					android:id="@+id/tvProfileAboutHeader"
-					android:layout_width="0dp"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_marginHorizontal="8dp"
 					android:padding="16dp"
 					
 					android:text="@string/profile_about_header_text"
-					android:textSize="24sp"
+					android:textAppearance="?textAppearanceHeadline5"
 
 					app:layout_constraintTop_toTopOf="parent"
 					app:layout_constraintBottom_toTopOf="@id/tvProfileAboutText"
@@ -116,12 +122,11 @@
 
 				<com.google.android.material.textview.MaterialTextView
 					android:id="@+id/tvProfileAboutText"
-					android:layout_width="0dp"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_marginHorizontal="8dp"
 
 					android:text="@{viewModel.retrievedUserItem.aboutText}"
-					android:textSize="18sp"
 
 					app:layout_constraintTop_toBottomOf="@id/tvProfileAboutHeader"
 					app:layout_constraintBottom_toBottomOf="parent"
@@ -129,7 +134,7 @@
 					app:layout_constraintEnd_toEndOf="parent"
 					/>
 
-			</androidx.constraintlayout.widget.ConstraintLayout>
+			</LinearLayout>
 
 		</androidx.core.widget.NestedScrollView>
 

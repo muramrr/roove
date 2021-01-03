@@ -18,8 +18,8 @@
 
 package com.mmdev.business.user
 
-import com.mmdev.business.data.PhotoItem
 import com.mmdev.business.pairs.MatchedUserItem
+import com.mmdev.business.photo.PhotoItem
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single

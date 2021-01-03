@@ -25,7 +25,7 @@ import com.mmdev.business.chat.ChatRepository
 import com.mmdev.business.conversations.ConversationsRepository
 import com.mmdev.business.pairs.PairsRepository
 import com.mmdev.business.user.IUserRepository
-import com.mmdev.data.datasource.AuthCollector
+import com.mmdev.data.datasource.auth.AuthCollector
 import com.mmdev.data.repository.auth.AuthRepositoryImpl
 import com.mmdev.data.repository.cards.CardsRepositoryImpl
 import com.mmdev.data.repository.chat.ChatRepositoryImpl

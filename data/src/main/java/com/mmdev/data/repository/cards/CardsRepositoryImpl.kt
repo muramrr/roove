@@ -54,6 +54,9 @@ class CardsRepositoryImpl @Inject constructor(
 	private val excludingIds: MutableSet<String> = mutableSetOf()
 	
 	private fun cardsQuery(user: UserItem): Query = fs.collection(USERS_COLLECTION)
+		//in ages between minAge and maxAge
+		.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, user.preferredAgeRange.minAge)
+		.whereLessThanOrEqualTo(USERS_FILTER_AGE, user.preferredAgeRange.maxAge)
 		//only preferred gender, if everyone -> include both genders
 		.whereIn(
 			USERS_FILTER_GENDER,
@@ -61,9 +64,6 @@ class CardsRepositoryImpl @Inject constructor(
 				listOf(user.baseUserInfo.preferredGender)
 			else listOf("male", "female")
 		)
-		//in ages between minAge and maxAge
-		.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, user.preferredAgeRange.minAge)
-		.whereLessThanOrEqualTo(USERS_FILTER_AGE, user.preferredAgeRange.maxAge)
 		//filtered from excluded
 		.whereNotIn(USER_ID_FIELD, excludingIds.toList())
 		.limit(cardsLimit)
@@ -130,7 +130,9 @@ class CardsRepositoryImpl @Inject constructor(
 				if (!query.isEmpty) {
 					query.map { document -> document.id }
 				}
-				else emptyList()
+				else {
+					emptyList()
+				}.plus(user.baseUserInfo.userId)
 			}
 	
 		

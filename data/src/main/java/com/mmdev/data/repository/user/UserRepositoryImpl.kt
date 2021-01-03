@@ -23,8 +23,9 @@ import android.text.format.DateFormat
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
-import com.mmdev.business.data.PhotoItem
 import com.mmdev.business.pairs.MatchedUserItem
+import com.mmdev.business.photo.PhotoItem
+import com.mmdev.business.photo.PhotoItem.Companion.FACEBOOK_PHOTO_NAME
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.IUserRepository
 import com.mmdev.business.user.Report
@@ -132,7 +133,9 @@ class UserRepositoryImpl @Inject constructor(
 			)
 		}
 	}.andThen {
-		if (photoItem.fileName != "facebookPhoto")
+		// if we are deleting not a facebook-provided photo -> delete also on storage
+		
+		if (photoItem.fileName != FACEBOOK_PHOTO_NAME)
 			storage
 				.child(GENERAL_FOLDER_STORAGE_IMG)
 				.child(SECONDARY_FOLDER_STORAGE_IMG)

@@ -16,27 +16,19 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.roove.core.di.modules
+package com.mmdev.data.datasource.auth
 
-import com.facebook.login.LoginManager
-import com.google.firebase.auth.FirebaseAuth
-import com.mmdev.data.datasource.auth.AuthCollector
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import com.google.firebase.auth.FirebaseUser
 
-@Module
-@InstallIn(SingletonComponent::class)
-class AuthModule{
+/**
+ *
+ */
 
-	@Provides
-	@Singleton
-	fun facebookAuth(): LoginManager = LoginManager.getInstance()
+sealed class FirebaseUserState {
+	data class NotNullUser(val user: FirebaseUser): FirebaseUserState()
+	object NullUser: FirebaseUserState()
 	
-	@Provides
-	@Singleton
-	fun authCollector(auth: FirebaseAuth): AuthCollector = AuthCollector(auth)
-	
+	companion object {
+		fun pack(user: FirebaseUser?) = if (user == null) NullUser else NotNullUser(user)
+	}
 }

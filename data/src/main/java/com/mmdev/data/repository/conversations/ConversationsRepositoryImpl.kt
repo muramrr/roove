@@ -101,8 +101,6 @@ class ConversationsRepositoryImpl @Inject constructor(
 			}
 	
 	private fun deleteFromPartner(user: UserItem, conversation: ConversationItem) = fs.collection(USERS_COLLECTION)
-		.document(conversation.partner.city)
-		.collection(conversation.partner.gender)
 		.document(conversation.partner.userId)
 		.get()
 		.asSingle()

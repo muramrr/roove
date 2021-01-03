@@ -60,10 +60,22 @@ class MainActivity: AppCompatActivity() {
 		val navController = findNavController(R.id.flowHostFragment)
 		
 		//start to listens auth status
-		sharedViewModel.currentUser.observe(this, {
-			currentUser = it
-			if (it == null) navController.navigate(R.id.action_global_authFlowFragment)
-			else navController.navigate(R.id.action_global_mainFlowFragment)
+		sharedViewModel.userState.observe(this, { userState ->
+			userState.fold(
+				authenticated = {
+					currentUser = it
+					navController.navigate(R.id.action_global_mainFlowFragment)
+				},
+				unauthenticated = {
+					currentUser = null
+					navController.navigate(R.id.action_global_authFlowFragment)
+				},
+				unregistered = {
+					currentUser = null
+					sharedViewModel.userInfoForRegistration.postValue(it)
+					navController.navigate(R.id.action_global_registrationFlowFragment)
+				}
+			)
 		})
 		//for (i in 0 until Random.nextInt(5, 100)) {
 		//	UtilityManager.generateFakeUsers()

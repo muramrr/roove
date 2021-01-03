@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (C) 2021. roove
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -46,9 +46,13 @@
 
 
 		<com.google.android.material.textview.MaterialTextView android:id="@+id/tvAuthSlogan_1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
 			android:maxLines="2"
 			android:text="@string/auth_slogan1"
-
+			android:textAppearance="?textAppearanceHeadline4"
+			
 			app:paddingTopSystemWindowInsets="@{true}"
 
 			app:layout_constraintBottom_toBottomOf="parent"
@@ -56,7 +60,6 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintVertical_bias="0.1"
-			style="@style/auth_slogan1"
 			/>
 		
 
@@ -100,13 +103,14 @@
 
 			/>
 
-		<com.facebook.login.widget.LoginButton
-			android:id="@+id/btnFacebookLogin"
+		<com.facebook.login.widget.LoginButton android:id="@+id/btnFacebookLogin"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:visibility="gone"
+			
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+			app:layout_constraintTop_toTopOf="parent"
+			/>
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

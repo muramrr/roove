@@ -80,6 +80,7 @@
 				android:layout_marginTop="8dp"
 
 				app:counterMaxLength="30"
+				app:counterEnabled="true"
 
 				app:boxStrokeErrorColor="@color/colorError"
 				app:boxStrokeColor="@color/text_input_layout"
@@ -106,11 +107,12 @@
 					android:background="@null"
 
 					android:gravity="center"
+					android:maxLength="30"
 					android:maxLines="1"
 					android:imeOptions="actionDone"
 					android:inputType="textPersonName"
 
-					android:text="@{viewModel.currentUser.baseUserInfo.name, default = @string/default_name}"
+					android:text="@string/default_name"
 					android:textColor="@color/white"
 					android:textCursorDrawable="@color/lolite"
 					android:textSize="20sp"
@@ -141,7 +143,7 @@
 					android:padding="16dp"
 
 					android:text="@string/genderMale"
-					android:textSize="20sp"
+					android:textAllCaps="false"
 					android:textColor="@color/white_tint_color"
 
 					app:backgroundTint="@color/lolite_checked_tint"
@@ -157,7 +159,7 @@
 					android:padding="16dp"
 
 					android:text="@string/genderFemale"
-					android:textSize="20sp"
+					android:textAllCaps="false"
 					android:textColor="@color/white_tint_color"
 
 					app:backgroundTint="@color/lolite_checked_tint"
@@ -168,8 +170,7 @@
 			</com.google.android.material.button.MaterialButtonToggleGroup>
 
 			<!--age-->
-			<com.google.android.material.slider.Slider
-				android:id="@+id/sliderSettingsEditAge"
+			<com.google.android.material.slider.Slider android:id="@+id/sliderSettingsEditAge"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="16dp"
@@ -180,8 +181,7 @@
 
 				app:trackColorActive="?colorSecondary"
 				app:trackColorInactive="@color/lolite_25"
-
-				android:value="@{viewModel.currentUser.baseUserInfo.age}"
+				
 				android:valueFrom="18"
 				android:valueTo="50"
 
@@ -197,56 +197,14 @@
 				android:layout_height="wrap_content"
 
 				android:gravity="center"
-				android:text="@{`Age: ` + viewModel.currentUser.baseUserInfo.age}"
+				android:text="@{`Age: `}"
 				android:textSize="30sp"
-
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
+				
 				app:layout_constraintTop_toBottomOf="@id/sliderSettingsEditAge"
-				app:layout_constraintBottom_toTopOf="@id/layoutSettingsEditCity"
-				/>
-
-			<!--city-->
-			<com.google.android.material.textfield.TextInputLayout
-				android:id="@+id/layoutSettingsEditCity"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="16dp"
-
-				app:boxStrokeColor="@color/text_input_layout"
-				app:boxStrokeWidth="2dp"
-
-				android:hint="@string/hint_city"
-				app:hintEnabled="true"
-				app:hintTextColor="@color/white"
-
-				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-
+				app:layout_constraintBottom_toTopOf="@id/layoutSettingsEditDescription"
 				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/tvSettingsEditAge"
-				app:layout_constraintBottom_toTopOf="@id/layoutSettingsEditDescription"
-				>
-
-				<com.google.android.material.textfield.MaterialAutoCompleteTextView
-					android:id="@+id/dropSettingsEditCity"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-
-					android:background="@null"
-					android:cursorVisible="false"
-					android:drawablePadding="-24dp"
-					android:focusable="false"
-					android:gravity="center"
-					android:imeOptions="actionDone"
-					android:inputType="text"
-
-					android:text="@{viewModel.currentUser.cityToDisplay}"
-					android:textColor="@color/white"
-					android:textSize="20sp"
-					/>
-
-			</com.google.android.material.textfield.TextInputLayout>
+				/>
 
 			<!-- description -->
 			<com.google.android.material.textfield.TextInputLayout
@@ -256,6 +214,7 @@
 				android:layout_marginTop="8dp"
 
 				app:counterMaxLength="200"
+				app:counterEnabled="true"
 
 				app:boxStrokeErrorColor="@color/colorError"
 				app:boxStrokeColor="@color/text_input_layout"
@@ -267,34 +226,33 @@
 
 				app:errorEnabled="true"
 				app:errorTextColor="@color/colorError"
-				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
 
 				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
 				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditCity"
+				app:layout_constraintTop_toBottomOf="@id/tvSettingsEditAge"
 				app:layout_constraintBottom_toTopOf="@id/btnSettingsEditSave"
 				>
 
 				<com.google.android.material.textfield.TextInputEditText
 					android:id="@+id/edSettingsEditDescription"
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
+					android:layout_height="match_parent"
 					android:background="@null"
 
 					android:imeOptions="actionDone"
 					android:inputType="text|textMultiLine"
-					android:lineSpacingExtra="10sp"
+					
+					android:maxLength="200"
 					android:maxLines="6"
 
 					android:overScrollMode="never"
 					android:scrollbars="vertical"
 					android:scrollbarThumbVertical="@color/white"
 
-					android:text="@{viewModel.currentUser.aboutText}"
 					android:textAlignment="textStart"
 					android:textColor="@color/white"
 					android:textCursorDrawable="@color/lolite"
-					android:textSize="18sp"
 					/>
 
 

@@ -22,17 +22,15 @@ import android.content.Context
 import android.provider.Settings.Secure
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.installations.FirebaseInstallations
 import com.mmdev.business.auth.AuthRepository
 import com.mmdev.business.user.BaseUserInfo
 import com.mmdev.business.user.UserItem
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.firebase.asSingle
-import com.mmdev.data.core.firebase.setAsCompletable
 import com.mmdev.data.datasource.UserDataSource
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 /**
@@ -44,7 +42,6 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
 	private val auth: FirebaseAuth,
-	private val fs: FirebaseFirestore,
 	private val userDataSource: UserDataSource,
 	context: Context
 ): BaseRepository(), AuthRepository {
@@ -66,9 +63,12 @@ class AuthRepositoryImpl @Inject constructor(
 	/**
 	 * create new [UserItem] documents in db
 	 */
-	override fun signUp(userItem: UserItem): Completable = fs.collection(USERS_COLLECTION)
-		.document(userItem.baseUserInfo.userId)
-		.setAsCompletable(userItem)
+	override fun signUp(userItem: UserItem): Single<UserItem> =
+		userDataSource.writeFirestoreUser(userItem).doOnComplete {
+			updateInstallations(userItem.baseUserInfo.userId)
+		}.toSingle {
+			userItem
+		}
 	
 	/**
 	 * this fun is called first when user is trying to sign in via facebook
@@ -80,16 +80,18 @@ class AuthRepositoryImpl @Inject constructor(
 			.concatMapCompletable {
 				if (it.user != null) {
 					val firebaseUser = it.user!!
-					updateInstallations(firebaseUser)
+					updateInstallations(firebaseUser.uid)
 				}
 				else Completable.error(IllegalStateException("User is not authenticated"))
 			}
 	
-	private fun updateInstallations(firebaseUser: FirebaseUser) = FirebaseInstallations.getInstance().id
+	private fun updateInstallations(id: String) = FirebaseInstallations
+		.getInstance()
+		.id
 		.asSingle()
 		.concatMapCompletable { token ->
 			userDataSource.updateFirestoreUserField(
-				firebaseUser.uid,
+				id,
 				FS_INSTALLATIONS_FIELD,
 				mapOf(androidId to token)
 			)

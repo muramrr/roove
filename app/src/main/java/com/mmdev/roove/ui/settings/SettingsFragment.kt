@@ -134,7 +134,6 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 	
 	private fun setupUser() = binding.run {
 		tvSettingsAboutText.text = MainActivity.currentUser!!.aboutText
-		tvSettingsCity.text = MainActivity.currentUser!!.cityToDisplay
 		tvSettingsNameAge.text = "${MainActivity.currentUser!!.baseUserInfo.name} ${MainActivity.currentUser!!.baseUserInfo.age}"
 		mSettingsPhotoAdapter.setData(MainActivity.currentUser!!.photoURLs)
 	}

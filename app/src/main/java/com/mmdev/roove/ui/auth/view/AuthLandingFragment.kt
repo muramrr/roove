@@ -22,7 +22,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -39,7 +39,7 @@ class AuthLandingFragment: BaseFragment<AuthViewModel, FragmentAuthLandingBindin
 	layoutId = R.layout.fragment_auth_landing
 ) {
 	
-	override val mViewModel: AuthViewModel by activityViewModels()
+	override val mViewModel: AuthViewModel by viewModels()
 	
 	//Progress dialog for any authentication action
 	private lateinit var mCallbackManager: CallbackManager
@@ -48,10 +48,6 @@ class AuthLandingFragment: BaseFragment<AuthViewModel, FragmentAuthLandingBindin
 		super.onCreate(savedInstanceState)
 
 		mCallbackManager = CallbackManager.Factory.create()
-
-		mViewModel.continueRegistration.observe(this, {
-			if (it == true) navController.navigate(R.id.action_auth_landing_to_registrationFragment)
-		})
 
 	}
 

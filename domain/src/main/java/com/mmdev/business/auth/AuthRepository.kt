@@ -20,11 +20,12 @@ package com.mmdev.business.auth
 
 import com.mmdev.business.user.UserItem
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 
 
 interface AuthRepository {
 
-	fun signUp(userItem: UserItem): Completable
+	fun signUp(userItem: UserItem): Single<UserItem>
 
 	fun signIn(token: String): Completable
 
