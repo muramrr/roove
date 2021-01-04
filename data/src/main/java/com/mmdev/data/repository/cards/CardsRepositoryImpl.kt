@@ -20,17 +20,17 @@ package com.mmdev.data.repository.cards
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.mmdev.business.cards.CardsRepository
-import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.pairs.MatchedUserItem
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.UserItem
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.firebase.asSingle
 import com.mmdev.data.core.firebase.executeAndDeserializeSingle
 import com.mmdev.data.core.firebase.setAsCompletable
 import com.mmdev.data.core.log.logDebug
+import com.mmdev.domain.cards.CardsRepository
+import com.mmdev.domain.conversations.ConversationItem
+import com.mmdev.domain.pairs.MatchedUserItem
+import com.mmdev.domain.user.data.BaseUserInfo
+import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.BiFunction
@@ -48,27 +48,38 @@ class CardsRepositoryImpl @Inject constructor(
 	companion object {
 		private const val USERS_FILTER_GENDER = "baseUserInfo.gender"
 		private const val USERS_FILTER_AGE = "baseUserInfo.age"
-	}
+		private const val USERS_FILTER_LOCATION_LAT = "location.latitude"
+		private const val USERS_FILTER_LOCATION_LON = "location.longitude"
+ 	}
 	
 	private val cardsLimit: Long = 19
 	private val excludingIds: MutableSet<String> = mutableSetOf()
 	
-	private fun cardsQuery(user: UserItem): Query = fs.collection(USERS_COLLECTION)
-		//in ages between minAge and maxAge
-		.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, user.preferredAgeRange.minAge)
-		.whereLessThanOrEqualTo(USERS_FILTER_AGE, user.preferredAgeRange.maxAge)
-		//only preferred gender, if everyone -> include both genders
-		.whereIn(
-			USERS_FILTER_GENDER,
-			if (user.baseUserInfo.preferredGender != "everyone")
-				listOf(user.baseUserInfo.preferredGender)
-			else listOf("male", "female")
-		)
-		//filtered from excluded
-		.whereNotIn(USER_ID_FIELD, excludingIds.toList())
-		.limit(cardsLimit)
-
-
+	private fun cardsQuery(user: UserItem): Query = with(user.location.getBounds(user.preferences.radius)) {
+		fs.collection(USERS_COLLECTION)
+			//in preferred radius around user location
+			.whereGreaterThanOrEqualTo(USERS_FILTER_LOCATION_LAT, minPoint.latitude)
+			.whereLessThanOrEqualTo(USERS_FILTER_LOCATION_LAT, maxPoint.latitude)
+			.whereGreaterThanOrEqualTo(USERS_FILTER_LOCATION_LON, minPoint.longitude)
+			.whereLessThanOrEqualTo(USERS_FILTER_LOCATION_LON, maxPoint.longitude)
+			//filter by preferred age
+			.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, user.preferences.ageRange.minAge)
+			.whereLessThanOrEqualTo(USERS_FILTER_AGE, user.preferences.ageRange.maxAge)
+			//only preferred gender, if everyone -> include both genders
+			//todo filter by gender
+//			.whereIn(
+//				USERS_FILTER_GENDER,
+//				if (user.baseUserInfo.preferredGender != "everyone")
+//					listOf(user.baseUserInfo.preferredGender)
+//				else listOf("male", "female")
+//			)
+			//filtered from excluded
+			.whereNotIn(USER_ID_FIELD, excludingIds.toList())
+			.limit(cardsLimit)
+		}
+		
+		
+		
 	/**
 	 * if swiped left -> add skipped userId to skipped collection
 	 */
@@ -79,7 +90,7 @@ class CardsRepositoryImpl @Inject constructor(
 			.document(skippedUser.baseUserInfo.userId)
 			.setAsCompletable(mapOf(USER_ID_FIELD to skippedUser.baseUserInfo.userId))
 			.also { excludingIds.add(skippedUser.baseUserInfo.userId) }
-
+	
 	/**
 	 * Get users to show as swipeable cards
 	 */
@@ -92,7 +103,7 @@ class CardsRepositoryImpl @Inject constructor(
 		}
 		else { getUsersCardsByPreferences(user) }
 			.subscribeOn(MySchedulers.computation())
-
+	
 	/**
 	 * GET USER CARDS BY PREFERENCES
 	 * @see cardsQuery
@@ -118,8 +129,8 @@ class CardsRepositoryImpl @Inject constructor(
 		).subscribeOn(MySchedulers.computation())
 	
 	/**
-	* GET USERS IDS LIST WHICH ARE LAYING INSIDE SPECIFIED [collection]
-	*/
+	 * GET USERS IDS LIST WHICH ARE LAYING INSIDE SPECIFIED [collection]
+	 */
 	private fun getUsersIdsInCollection(user: UserItem, collection: String): Single<List<String>> =
 		fs.collection(USERS_COLLECTION)
 			.document(user.baseUserInfo.userId)
@@ -135,7 +146,7 @@ class CardsRepositoryImpl @Inject constructor(
 				}.plus(user.baseUserInfo.userId)
 			}
 	
-		
+	
 	
 	
 	/**
@@ -218,7 +229,7 @@ class CardsRepositoryImpl @Inject constructor(
 				return@Function3
 			}
 		).subscribeOn(MySchedulers.io())
-
+		
 		// no need to delete from LIKED collection for current user, because we just liked and
 		// this match checking is in process, which based on liked user collections data
 		val currentUserCollections = addToMatchCollection(
@@ -241,7 +252,7 @@ class CardsRepositoryImpl @Inject constructor(
 		).subscribeOn(MySchedulers.io())
 		
 	}
-
+	
 	private fun addToMatchCollection(
 		userForWhichToAdd: BaseUserInfo,
 		whomToAdd: BaseUserInfo

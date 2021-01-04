@@ -21,13 +21,13 @@ package com.mmdev.data.repository.conversations
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.conversations.ConversationsRepository
-import com.mmdev.business.user.UserItem
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.firebase.asSingle
 import com.mmdev.data.core.firebase.executeAndDeserializeSingle
+import com.mmdev.domain.conversations.ConversationItem
+import com.mmdev.domain.conversations.ConversationsRepository
+import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3

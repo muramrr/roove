@@ -24,7 +24,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.mmdev.business.user.UserItem
+import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender
+import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender.EVERYONE
+import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender.FEMALE
+import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender.MALE
+import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.BtmSheetSettingsPreferencesBinding
 import com.mmdev.roove.ui.MainActivity
@@ -39,11 +43,11 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 		)
 	
 	private val sharedViewModel: SharedViewModel by activityViewModels()
-
-	private val male = "male"
-	private val female = "female"
-	private val everyone = "everyone"
-	private var isChanged: Boolean = false
+	
+	
+	private var newPreferredGender: PreferredGender? = null
+	private var newPreferredMinAge: Float? = 0f
+	private var newPreferredMaxAge: Float? = 0f
 	
 	
 	override fun onCreateView(
@@ -60,48 +64,42 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 		initProfile(MainActivity.currentUser!!)
 		
 		rangeSeekBarAgePicker.addOnChangeListener { rangeSlider, value, fromUser ->
-			//MainActivity.currentUser!!.preferredAgeRange.minAge = rangeSlider.values.first().toInt()
-			//MainActivity.currentUser!!.preferredAgeRange.maxAge = rangeSlider.values.last().toInt()
-			isChanged = true
+			newPreferredMinAge = rangeSlider.values.first()
+			newPreferredMaxAge = rangeSlider.values.last()
 		}
 
-		//todo
-		//toggleButtonPickerPreferredGender.addOnButtonCheckedListener { group, _, _ ->
-		//	if (group.checkedButtonIds.size > 1)
-		//		MainActivity.currentUser!!.baseUserInfo.preferredGender = everyone
-		//	if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderMale)
-		//		MainActivity.currentUser!!.baseUserInfo.preferredGender = male
-		//	if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderFemale)
-		//		MainActivity.currentUser!!.baseUserInfo.preferredGender = female
-		//}
-
-		btnPickerPreferredGenderMale.setOnClickListener { isChanged = true }
-		btnPickerPreferredGenderFemale.setOnClickListener { isChanged = true }
+		
+		toggleButtonPickerPreferredGender.addOnButtonCheckedListener { group, checkedId, isChecked ->
+			if (group.checkedButtonIds.size > 1)
+				newPreferredGender = EVERYONE
+			
+			if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderMale)
+				newPreferredGender = MALE
+			
+			if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderFemale)
+				newPreferredGender = FEMALE
+		}
 	}
 
 	private fun initProfile(userItem: UserItem) = binding.run {
-		when (userItem.baseUserInfo.preferredGender) {
-			male -> {
+		when (userItem.preferences.gender) {
+			MALE -> {
 				toggleButtonPickerPreferredGender.clearChecked()
 				toggleButtonPickerPreferredGender.check(R.id.btnPickerPreferredGenderMale)
 			}
-			female -> {
+			FEMALE -> {
 				toggleButtonPickerPreferredGender.clearChecked()
 				toggleButtonPickerPreferredGender.check(R.id.btnPickerPreferredGenderFemale)
 			}
-			everyone -> {
+			EVERYONE -> {
 				toggleButtonPickerPreferredGender.check(R.id.btnPickerPreferredGenderMale)
 				toggleButtonPickerPreferredGender.check(R.id.btnPickerPreferredGenderFemale)
 			}
 		}
 		rangeSeekBarAgePicker.setValues(
-			userItem.preferredAgeRange.minAge.toFloat(),
-			userItem.preferredAgeRange.maxAge.toFloat()
+			userItem.preferences.ageRange.minAge.toFloat(),
+			userItem.preferences.ageRange.maxAge.toFloat()
 		)
 	}
-
-	override fun onStop() {
-		sharedViewModel.modalBottomSheetNeedUpdateExecution.value = isChanged
-		super.onStop()
-	}
+ 
 }

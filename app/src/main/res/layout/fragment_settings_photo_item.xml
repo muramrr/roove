@@ -25,11 +25,11 @@
 
 		<variable
 			name="bindItem"
-			type="com.mmdev.business.photo.PhotoItem" />
+			type="com.mmdev.domain.photo.PhotoItem" />
 
 	</data>
 
-	<androidx.cardview.widget.CardView
+	<com.google.android.material.card.MaterialCardView
 		android:layout_width="@dimen/rvSettingsPhotoElementWidth"
 		android:layout_height="@dimen/rvSettingsPhotoElementHeight"
 		app:cardBackgroundColor="@color/transparent"
@@ -43,7 +43,8 @@
 			app:bindImageUrl="@{bindItem.fileUrl}"
 			app:progressBar="@{pbImageLoading}"
 
-			android:contentDescription="@string/description_user_photo" />
+			android:contentDescription="@string/description_user_photo"
+			/>
 
 		<ProgressBar android:id="@+id/pbImageLoading"
 			android:layout_width="100dp"
@@ -56,13 +57,8 @@
 			android:progressDrawable="@drawable/progress_drawable"
 
 			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
 			/>
 
 
-	</androidx.cardview.widget.CardView>
+	</com.google.android.material.card.MaterialCardView>
 </layout>

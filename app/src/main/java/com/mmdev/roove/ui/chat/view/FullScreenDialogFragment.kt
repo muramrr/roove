@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,16 +18,20 @@
 
 package com.mmdev.roove.ui.chat.view
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.DialogFragment
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.DialogChatFullScreenImageBinding
 
 /**
- * //todo: replace deprecated calls
+ * Dialog to display photo from chat in full screen mode
  */
 
 class FullScreenDialogFragment: DialogFragment() {
@@ -44,9 +48,7 @@ class FullScreenDialogFragment: DialogFragment() {
 	companion object {
 		private const val PHOTO_KEY = "PHOTO_URL"
 		fun newInstance(photoUrl: String) = FullScreenDialogFragment().apply {
-			arguments = Bundle().apply {
-				putString(PHOTO_KEY, photoUrl)
-			}
+			arguments = Bundle().apply { putString(PHOTO_KEY, photoUrl) }
 		}
 	}
 
@@ -72,24 +74,32 @@ class FullScreenDialogFragment: DialogFragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
 		// Set the content to appear under the system bars so that the
 		// content doesn't resize when the system bars hide and show.
-		ivDialogFullScreen.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-				View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-
+		WindowCompat.setDecorFitsSystemWindows(dialog!!.window!!, false)
 		ivDialogFullScreen.setOnClickListener { fullScreenCall() }
 	}
 
 	//hide bottom navigation to see fullscreen image
 	private fun fullScreenCall() {
-		//for new api versions >= 19
-		val decorView = dialog?.window!!.decorView
-		if (!isHide) {
-			decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
-			isHide = true
-		}
-		else {
-			decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-			isHide = false
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			dialog?.window!!.setDecorFitsSystemWindows(false)
+			val controller = dialog?.window!!.insetsController
+			if (controller != null) {
+				controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+				controller.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+			}
+		} else {
+			//for api versions >= 19
+			val decorView = dialog?.window!!.decorView
+			if (!isHide) {
+				decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE or
+						View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+						View.SYSTEM_UI_FLAG_FULLSCREEN
+				isHide = true
+			}
+			else {
+				decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+				isHide = false
+			}
 		}
 
 	}

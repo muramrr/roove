@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,9 +75,5 @@ abstract class BaseRecyclerAdapter<T>: RecyclerView.Adapter<BaseRecyclerAdapter<
 			binding.setVariable(BR.bindItem, item)
 			binding.executePendingBindings()
 		}
-	}
-
-	interface BindableAdapter<T> {
-		fun setData(data: T)
 	}
 }

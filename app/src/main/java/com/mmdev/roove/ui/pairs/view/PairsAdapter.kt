@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,22 +18,22 @@
 
 package com.mmdev.roove.ui.pairs.view
 
-import com.mmdev.business.pairs.MatchedUserItem
+import com.mmdev.domain.pairs.MatchedUserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 
 
 class PairsAdapter(
-	private var mPairsList: List<MatchedUserItem> = emptyList()
-): BaseRecyclerAdapter<MatchedUserItem>(),
-   BaseRecyclerAdapter.BindableAdapter<List<MatchedUserItem>> {
+	private var data: MutableList<MatchedUserItem> = mutableListOf()
+): BaseRecyclerAdapter<MatchedUserItem>() {
 
-	override fun getItem(position: Int) = mPairsList[position]
-	override fun getItemCount() = mPairsList.size
+	override fun getItem(position: Int) = data[position]
+	override fun getItemCount() = data.size
 	override fun getLayoutIdForItem(position: Int) = R.layout.fragment_pairs_item
 
-	override fun setData(data: List<MatchedUserItem>) {
-		mPairsList = data
+	fun setNewData(newData: List<MatchedUserItem>) {
+		data.clear()
+		data.addAll(newData)
 		notifyDataSetChanged()
 	}
 }

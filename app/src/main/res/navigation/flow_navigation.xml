@@ -24,21 +24,20 @@
 	app:startDestination="@id/splashFragment"
 	>
 
-	<action android:id="@+id/action_global_authFlowFragment"
-		app:destination="@id/authFlowFragment"/>
+	<action android:id="@+id/action_global_authFragment"
+		app:destination="@id/authLandingFragment"/>
 
 	<action android:id="@+id/action_global_mainFlowFragment"
 		app:destination="@id/mainFlowFragment"/>
 	
-	<action android:id="@+id/action_global_registrationFlowFragment"
+	<action android:id="@+id/action_global_registrationFragment"
 		app:destination="@id/registrationFlowFragment" />
-
-
-	<fragment android:id="@+id/authFlowFragment"
-		android:name="com.mmdev.roove.ui.auth.view.AuthFlowFragment"
-		android:label="AuthFlowFragment"
-		tools:layout="@layout/fragment_auth_flow"
-		/>
+	
+	
+	<fragment android:id="@+id/authLandingFragment"
+		android:name="com.mmdev.roove.ui.auth.AuthLandingFragment"
+		android:label="AuthLandingFragment"
+		tools:layout="@layout/fragment_auth_landing" />
 	
 	<fragment android:id="@+id/mainFlowFragment"
 		android:name="com.mmdev.roove.ui.main.MainFlowFragment"
@@ -55,6 +54,6 @@
 	
 	<fragment android:id="@+id/registrationFlowFragment"
 		android:name="com.mmdev.roove.ui.registration.RegistrationFragment"
-		tools:layout="@layout/fragment_auth_registration" />
+		tools:layout="@layout/fragment_registration" />
 
 </navigation>

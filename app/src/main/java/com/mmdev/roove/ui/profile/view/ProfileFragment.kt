@@ -26,9 +26,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mmdev.business.user.Report
-import com.mmdev.business.user.Report.ReportType.*
-import com.mmdev.business.user.UserItem
+import com.mmdev.domain.user.data.ReportType.DISRESPECTFUL_BEHAVIOR
+import com.mmdev.domain.user.data.ReportType.FAKE
+import com.mmdev.domain.user.data.ReportType.INELIGIBLE_PHOTOS
+import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentProfileBinding
 import com.mmdev.roove.ui.common.ImagePagerAdapter
@@ -154,9 +155,9 @@ class ProfileFragment: BaseFragment<RemoteRepoViewModel, FragmentProfileBinding>
 		                  getString(R.string.report_chooser_behavior),
 		                  getString(R.string.report_chooser_fake))) { _, itemIndex ->
 			when (itemIndex) {
-				0 -> mViewModel.submitReport(Report(INELIGIBLE_PHOTOS, selectedUser.baseUserInfo))
-				1 -> mViewModel.submitReport(Report(DISRESPECTFUL_BEHAVIOR, selectedUser.baseUserInfo))
-				2 -> mViewModel.submitReport(Report(FAKE, selectedUser.baseUserInfo))
+				0 -> mViewModel.submitReport(INELIGIBLE_PHOTOS, selectedUser.baseUserInfo)
+				1 -> mViewModel.submitReport(DISRESPECTFUL_BEHAVIOR, selectedUser.baseUserInfo)
+				2 -> mViewModel.submitReport(FAKE, selectedUser.baseUserInfo)
 			}
 		}
 		.create()

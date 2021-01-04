@@ -18,7 +18,7 @@
 
 package com.mmdev.roove.ui.settings
 
-import com.mmdev.business.photo.PhotoItem
+import com.mmdev.domain.photo.PhotoItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 
@@ -27,16 +27,16 @@ import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
  * but bug with custom layout manager exists
  */
 
-class SettingsUserPhotoAdapter(private var photosUrlsList: List<PhotoItem> = emptyList()):
-		BaseRecyclerAdapter<PhotoItem>(),
-		BaseRecyclerAdapter.BindableAdapter<List<PhotoItem>> {
+class SettingsUserPhotoAdapter(
+	private var data: List<PhotoItem> = emptyList()
+): BaseRecyclerAdapter<PhotoItem>(){
 
-	override fun getItem(position: Int): PhotoItem = photosUrlsList[position]
-	override fun getItemCount() = photosUrlsList.size
+	override fun getItem(position: Int): PhotoItem = data[position]
+	override fun getItemCount() = data.size
 	override fun getLayoutIdForItem(position: Int) = R.layout.fragment_settings_photo_item
 
-	override fun setData(data: List<PhotoItem>) {
-		photosUrlsList = data
+	fun setData(newData: List<PhotoItem>) {
+		data = newData
 		notifyDataSetChanged()
 	}
 }

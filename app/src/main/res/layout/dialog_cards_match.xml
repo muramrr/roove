@@ -2,7 +2,7 @@
 
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (C) 2021. roove
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -34,76 +34,62 @@
 
 	</data>
 
-	<androidx.constraintlayout.widget.ConstraintLayout
+	<LinearLayout
 		android:id="@+id/dialogMatchContainer"
 		android:background="@color/colorPrimaryDark"
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
+		android:orientation="vertical"
 		>
 
-		<TextView android:id="@+id/tvItIsMatch"
-			android:layout_width="wrap_content"
+		<com.google.android.material.textview.MaterialTextView android:id="@+id/tvItIsMatch"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="32dp"
 			app:paddingTopSystemWindowInsets="@{true}"
 
 			android:text="@string/tv_its_a_match"
-			android:textSize="24sp"
+			android:textAlignment="center"
+			android:textAppearance="?textAppearanceHeadline4"
 
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintVertical_bias="0.1"
 			/>
 
 		<com.google.android.material.imageview.ShapeableImageView
 			android:id="@+id/matched_photo"
 			android:layout_width="300dp"
 			android:layout_height="300dp"
+			android:layout_marginTop="16dp"
 			android:contentDescription="@string/description_user_photo"
+			android:layout_gravity="center"
 
 			app:bindImageUrl="@{photoUrl}"
 			app:shapeAppearanceOverlay="@style/MyAppShapeAppearanceOverlay.Circle"
 
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/tvItIsMatch"
-			app:layout_constraintBottom_toTopOf="@id/tvMatchedName"
-			app:layout_constraintVertical_bias="0.3"
 			/>
 
-		<TextView android:id="@+id/tvMatchedName"
-			android:layout_width="wrap_content"
+		<com.google.android.material.textview.MaterialTextView android:id="@+id/tvMatchedName"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="16dp"
 			
 			android:text="@{name, default = @string/default_name}"
-			android:textSize="28sp"
+			android:textAlignment="center"
+			android:textAppearance="?textAppearanceHeadline4"
 
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/matched_photo"
-			app:layout_constraintBottom_toTopOf="@id/tvMatchDialogBack"
-			app:layout_constraintVertical_bias="0.7"
 			/>
-
-		<TextView android:id="@+id/tvMatchDialogBack"
-			android:layout_width="wrap_content"
+		
+		<com.google.android.material.button.MaterialButton android:id="@+id/tvMatchDialogBack"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="24dp"
-			app:paddingBottomSystemWindowInsets="@{true}"
-
-			android:fontFamily="@font/rubik_bold"
+			android:layout_marginTop="32dp"
+			android:layout_marginHorizontal="16dp"
+			
 			android:text="@string/tv_back_to_swiping"
 			android:textColor="@color/gradient1"
-			android:textSize="28sp"
-
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/tvMatchedName"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintVertical_bias="0.9"
+			
+			style="@style/Widget.MaterialComponents.Button.OutlinedButton"
 			/>
 
 
-	</androidx.constraintlayout.widget.ConstraintLayout>
+	</LinearLayout>
 </layout>

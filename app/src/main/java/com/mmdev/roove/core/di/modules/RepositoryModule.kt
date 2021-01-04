@@ -19,12 +19,6 @@
 package com.mmdev.roove.core.di.modules
 
 import com.google.firebase.auth.FirebaseAuth
-import com.mmdev.business.auth.AuthRepository
-import com.mmdev.business.cards.CardsRepository
-import com.mmdev.business.chat.ChatRepository
-import com.mmdev.business.conversations.ConversationsRepository
-import com.mmdev.business.pairs.PairsRepository
-import com.mmdev.business.user.IUserRepository
 import com.mmdev.data.datasource.auth.AuthCollector
 import com.mmdev.data.repository.auth.AuthRepositoryImpl
 import com.mmdev.data.repository.cards.CardsRepositoryImpl
@@ -32,6 +26,12 @@ import com.mmdev.data.repository.chat.ChatRepositoryImpl
 import com.mmdev.data.repository.conversations.ConversationsRepositoryImpl
 import com.mmdev.data.repository.pairs.PairsRepositoryImpl
 import com.mmdev.data.repository.user.UserRepositoryImpl
+import com.mmdev.domain.auth.AuthRepository
+import com.mmdev.domain.cards.CardsRepository
+import com.mmdev.domain.chat.ChatRepository
+import com.mmdev.domain.conversations.ConversationsRepository
+import com.mmdev.domain.pairs.PairsRepository
+import com.mmdev.domain.user.IUserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

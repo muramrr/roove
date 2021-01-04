@@ -22,14 +22,14 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.Query
-import com.mmdev.business.photo.PhotoItem
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.UserItem
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.log.logDebug
 import com.mmdev.data.core.log.logError
 import com.mmdev.data.core.log.logInfo
 import com.mmdev.data.core.log.logWarn
+import com.mmdev.domain.photo.PhotoItem
+import com.mmdev.domain.user.data.BaseUserInfo
+import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.internal.operators.completable.CompletableCreate
@@ -138,7 +138,7 @@ internal fun DocumentReference.updateAsCompletable(field: String, value: Any): C
 
 internal fun FirebaseUser.toUserItem(): UserItem =
 	UserItem(
-		baseUserInfo = BaseUserInfo(
+        baseUserInfo = BaseUserInfo(
 			name = displayName!!,
 			mainPhotoUrl = "${photoUrl}?height=1000",
 			userId = uid

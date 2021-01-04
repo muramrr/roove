@@ -20,12 +20,12 @@ package com.mmdev.roove.ui.profile
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.business.pairs.MatchedUserItem
-import com.mmdev.business.photo.PhotoItem
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.IUserRepository
-import com.mmdev.business.user.Report
-import com.mmdev.business.user.UserItem
+import com.mmdev.domain.pairs.MatchedUserItem
+import com.mmdev.domain.photo.PhotoItem
+import com.mmdev.domain.user.IUserRepository
+import com.mmdev.domain.user.data.BaseUserInfo
+import com.mmdev.domain.user.data.ReportType
+import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
@@ -95,8 +95,8 @@ class RemoteRepoViewModel @ViewModelInject constructor(
 		)
 	}
 
-	fun submitReport(report: Report) {
-		disposables.add(repo.submitReport(report)
+	fun submitReport(reportType: ReportType, baseUserInfo: BaseUserInfo) {
+		disposables.add(repo.submitReport(reportType, baseUserInfo)
             .observeOn(mainThread())
             .subscribe(
 	            { reportSubmittingStatus.value = true },

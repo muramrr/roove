@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,26 +18,26 @@
 
 package com.mmdev.roove.ui.conversations.view
 
-import com.mmdev.business.conversations.ConversationItem
+import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.roove.R
 import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 
 class ConversationsAdapter(
-	private var conversationsList: MutableList<ConversationItem> = mutableListOf()
-): BaseRecyclerAdapter<ConversationItem>(),
-   BaseRecyclerAdapter.BindableAdapter<MutableList<ConversationItem>> {
+	private var data: MutableList<ConversationItem> = mutableListOf()
+): BaseRecyclerAdapter<ConversationItem>() {
 
-	override fun getItem(position: Int) = conversationsList[position]
-	override fun getItemCount() = conversationsList.size
+	override fun getItem(position: Int) = data[position]
+	override fun getItemCount() = data.size
 	override fun getLayoutIdForItem(position: Int) = R.layout.item_conversation
 
-	override fun setData(data: MutableList<ConversationItem>) {
-		conversationsList = data
+	fun setNewData(newData: List<ConversationItem>) {
+		data.clear()
+		data.addAll(newData)
 		notifyDataSetChanged()
 	}
 
 	fun removeAt(position: Int) {
-		conversationsList.removeAt(position)
+		data.removeAt(position)
 		notifyItemRemoved(position)
 	}
 }

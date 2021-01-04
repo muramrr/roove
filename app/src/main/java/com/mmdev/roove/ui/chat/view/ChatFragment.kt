@@ -19,7 +19,6 @@
 package com.mmdev.roove.ui.chat.view
 
 import android.app.Activity.RESULT_OK
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -29,20 +28,20 @@ import android.text.format.DateFormat
 import android.view.Gravity
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.view.inputmethod.InputMethodManager
 import androidx.core.content.FileProvider
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mmdev.business.chat.MessageItem
-import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.pairs.MatchedUserItem
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.Report
-import com.mmdev.business.user.Report.ReportType.*
-import com.mmdev.business.user.UserItem
+import com.mmdev.domain.chat.MessageItem
+import com.mmdev.domain.conversations.ConversationItem
+import com.mmdev.domain.pairs.MatchedUserItem
+import com.mmdev.domain.user.data.BaseUserInfo
+import com.mmdev.domain.user.data.ReportType.DISRESPECTFUL_BEHAVIOR
+import com.mmdev.domain.user.data.ReportType.FAKE
+import com.mmdev.domain.user.data.ReportType.INELIGIBLE_PHOTOS
+import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.permissions.AppPermission
@@ -54,7 +53,7 @@ import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.chat.ChatViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
-import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
+import com.mmdev.roove.utils.extensions.hideKeyboard
 import com.mmdev.roove.utils.extensions.observeOnce
 import com.mmdev.roove.utils.extensions.showToastText
 import dagger.hilt.android.AndroidEntryPoint
@@ -78,14 +77,16 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 	private var receivedPartnerGender = ""
 	private var receivedPartnerId = ""
 	private var receivedConversationId = ""
-
-	private var isDeepLinkJump: Boolean = false
+	
 	private var isReported: Boolean = false
 
 	private lateinit var currentConversation: ConversationItem
 	private lateinit var currentPartner: UserItem
 
-	private val mChatAdapter: ChatAdapter = ChatAdapter()
+	private val mChatAdapter: ChatAdapter = ChatAdapter().apply {
+		//set current user id to understand left/right message
+		setCurrentUserId(MainActivity.currentUser!!.baseUserInfo.userId)
+	}
 
 	// File
 	private lateinit var mFilePathImageCamera: File
@@ -98,7 +99,6 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		private const val IMAGE_GALLERY_REQUEST = 1
 		private const val IMAGE_CAMERA_REQUEST = 2
 
-
 		private const val PARTNER_CITY_KEY = "PARTNER_CITY"
 		private const val PARTNER_GENDER_KEY = "PARTNER_GENDER"
 		private const val PARTNER_ID_KEY = "PARTNER_ID"
@@ -110,34 +110,8 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		super.onCreate(savedInstanceState)
 
 		//deep link from notification
-		arguments?.let {
-			receivedPartnerCity = it.getString(PARTNER_CITY_KEY, "")
-			receivedPartnerGender = it.getString(PARTNER_GENDER_KEY, "")
-			receivedPartnerId = it.getString(PARTNER_ID_KEY, "")
-			receivedConversationId = it.getString(CONVERSATION_ID_KEY, "")
-			if (receivedPartnerCity.isNotEmpty() && receivedPartnerGender.isNotEmpty() && receivedPartnerId.isNotEmpty() && receivedConversationId.isNotEmpty()) isDeepLinkJump = true
-		}
-
-		//observe current user id to understand left/right message
-		mChatAdapter.setCurrentUserId(MainActivity.currentUser!!.baseUserInfo.userId)
+		arguments?.let { handleDeepLink(it) }
 		
-
-
-		//if it was a deep link navigation then create ConversationItem "on a flight"
-		if (isDeepLinkJump) {
-			sharedViewModel.matchedUserItemSelected.value =
-				MatchedUserItem(
-					baseUserInfo = BaseUserInfo(userId = receivedPartnerId),
-					conversationId = receivedConversationId,
-					conversationStarted = true
-				)
-			sharedViewModel.conversationSelected.value =
-				ConversationItem(
-					partner = BaseUserInfo(userId = receivedPartnerId),
-					conversationId = receivedConversationId,
-					conversationStarted = true
-				)
-		}
 		//setup
 		remoteRepoViewModel.retrievedUserItem.observeOnce(this, {
 			currentPartner = it
@@ -146,7 +120,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		})
 		
 		mViewModel.newMessage.observe(this, {
-			mChatAdapter.newMessage()
+			mChatAdapter.newMessage(it)
 		})
 
 		remoteRepoViewModel.reportSubmittingStatus.observeOnce(this, {
@@ -163,9 +137,42 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		})
 
 	}
+	
+	private fun handleDeepLink(bundle: Bundle) {
+		receivedPartnerCity = bundle.getString(PARTNER_CITY_KEY, "")
+		receivedPartnerGender = bundle.getString(PARTNER_GENDER_KEY, "")
+		receivedPartnerId = bundle.getString(PARTNER_ID_KEY, "")
+		receivedConversationId = bundle.getString(CONVERSATION_ID_KEY, "")
+		if (receivedPartnerCity.isNotEmpty() &&
+			receivedPartnerGender.isNotEmpty() &&
+			receivedPartnerId.isNotEmpty() &&
+			receivedConversationId.isNotEmpty()
+		) {
+			//if it was a deep link navigation then create ConversationItem "on a flight"
+			
+			sharedViewModel.matchedUserItemSelected.value =
+				MatchedUserItem(
+					baseUserInfo = BaseUserInfo(userId = receivedPartnerId),
+					conversationId = receivedConversationId,
+					conversationStarted = true
+				)
+			sharedViewModel.conversationSelected.value =
+				ConversationItem(
+					partner = BaseUserInfo(userId = receivedPartnerId),
+					conversationId = receivedConversationId,
+					conversationStarted = true
+				)
+		}
+		
+	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
 
+		root.setOnTouchListener { v, _ ->
+			v.performClick()
+			v.hideKeyboard(edTextMessageInput)
+		}
+		
 		edTextMessageInput.doOnTextChanged { text, start, before, count ->
 			btnSendMessage.isActivated = text?.trim().isNullOrBlank()
 		}
@@ -192,39 +199,20 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		}
 
 		//if message contains photo then it opens in fullscreen dialog
-		mChatAdapter.setOnAttachedPhotoClickListener { view, position ->
-			val photoUrl = mChatAdapter.getItem(position).photoItem!!.fileUrl
-			FullScreenDialogFragment
-				.newInstance(photoUrl)
-				.show(childFragmentManager, FullScreenDialogFragment::class.java.canonicalName)
+		mChatAdapter.setOnAttachedPhotoClickListener { view, position, photoItem ->
+			photoItem?.fileUrl?.let {
+				FullScreenDialogFragment
+					.newInstance(it)
+					.show(childFragmentManager, FullScreenDialogFragment::class.java.canonicalName)
+			}
 		}
 		
-
-		val linearLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
+		
 		rvMessageList.apply {
 			adapter = mChatAdapter
-			layoutManager = linearLayoutManager
-			//touch event guarantee that if user want to scroll or touches recycler with messages
-			//keyboard hide and editText focus clear
-			setOnTouchListener { v, _ ->
-				v.performClick()
-				val iMM = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-				iMM.hideSoftInputFromWindow(v.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-				edTextMessageInput.clearFocus()
-
-				return@setOnTouchListener false
-			}
-			//load more messages on scroll
-			addOnScrollListener(object: EndlessRecyclerViewScrollListener(linearLayoutManager) {
-				override fun onLoadMore(page: Int, totalItemsCount: Int) {
-
-					if (linearLayoutManager.findLastVisibleItemPosition() == totalItemsCount - 4){
-						//Log.wtf(TAG, "load seems to be called")
-					//	mViewModel.loadMoreMessages()
-					}
-
-				}
-			})
+			layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
+			
+			//todo load more messages on scroll
 		}
 
 		toolbarChat.setNavigationOnClickListener { navController.navigateUp() }
@@ -236,15 +224,15 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 			return@setOnMenuItemClickListener true
 		}
 
-		toolbarChat.setOnClickListener {
+		toolbarInnerContainer.setOnClickListener {
 			navController.navigate(R.id.action_chat_to_profileFragment)
 		}
 	}
 
-	/*
-	* Send plain text msg to chat if editText is not empty
-	* else shake animation
-	*/
+	/**
+	 * Send plain text msg to chat if editText is not empty
+	 * else shake animation
+	 */
 	private fun sendMessageClick() = binding.run {
 		if (edTextMessageInput.text.toString().trim().isNotEmpty()) {
 
@@ -257,14 +245,15 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 			)
 
 			mViewModel.sendMessage(message)
+			mChatAdapter.newMessage(message)
 			rvMessageList.scrollToPosition(0)
-			edTextMessageInput.text.clear()
+			edTextMessageInput.text?.clear()
 		}
 		else edTextMessageInput.startAnimation(AnimationUtils.loadAnimation(context, R.anim.horizontal_shake))
 
 	}
 
-	/*
+	/**
 	 * Checks if the app has permissions to OPEN CAMERA and take photos
 	 * If the app does not has permission then the user will be prompted to grant permissions
 	 * else open camera intent
@@ -294,7 +283,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		startActivityForResult(intent, IMAGE_CAMERA_REQUEST)
 	}
 
-	/*
+	/**
 	 * Checks if the app has permissions to READ user files
 	 * If the app does not has permission then the user will be prompted to grant permissions
 	 * else open gallery to choose photo
@@ -344,9 +333,11 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 			if (resultCode == RESULT_OK) {
 
 				val selectedUri = data?.data
-				mViewModel.sendPhoto(photoUri = selectedUri.toString(),
-				                              conversation = currentConversation,
-				                              sender = MainActivity.currentUser!!.baseUserInfo)
+				mViewModel.sendPhoto(
+					photoUri = selectedUri.toString(),
+					conversation = currentConversation,
+					sender = MainActivity.currentUser!!.baseUserInfo
+				)
 			}
 		}
 		// send photo taken by camera
@@ -376,19 +367,10 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 			)
 		) { _, itemIndex ->
 			when (itemIndex) {
-				0 -> {
-					remoteRepoViewModel.submitReport(
-						Report(INELIGIBLE_PHOTOS, currentPartner.baseUserInfo)
-					)
-				}
-				1 -> {
-					remoteRepoViewModel.submitReport(
-						Report(DISRESPECTFUL_BEHAVIOR, currentPartner.baseUserInfo)
-					)
-				}
-				2 -> {
-					remoteRepoViewModel.submitReport(Report(FAKE, currentPartner.baseUserInfo))
-				}
+				0 -> remoteRepoViewModel.submitReport(INELIGIBLE_PHOTOS, currentPartner.baseUserInfo)
+				1 -> remoteRepoViewModel.submitReport(DISRESPECTFUL_BEHAVIOR, currentPartner.baseUserInfo)
+				2 -> remoteRepoViewModel.submitReport(FAKE, currentPartner.baseUserInfo)
+				
 			}
 		}
 		.create()

@@ -20,8 +20,8 @@ package com.mmdev.roove.ui.pairs
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.business.pairs.MatchedUserItem
-import com.mmdev.business.pairs.PairsRepository
+import com.mmdev.domain.pairs.MatchedUserItem
+import com.mmdev.domain.pairs.PairsRepository
 import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType

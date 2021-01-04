@@ -20,8 +20,8 @@ package com.mmdev.roove.ui.conversations
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.conversations.ConversationsRepository
+import com.mmdev.domain.conversations.ConversationItem
+import com.mmdev.domain.conversations.ConversationsRepository
 import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType

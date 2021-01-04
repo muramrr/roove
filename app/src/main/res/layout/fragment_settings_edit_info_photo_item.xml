@@ -25,7 +25,7 @@
 
 		<variable
 			name="bindItem"
-			type="com.mmdev.business.photo.PhotoItem" />
+			type="com.mmdev.domain.photo.PhotoItem" />
 
 	</data>
 
@@ -53,22 +53,18 @@
 		</androidx.cardview.widget.CardView>
 
 		<com.google.android.material.button.MaterialButton android:id="@+id/btnDeletePhoto"
-			android:layout_width="48dp"
-			android:layout_height="48dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
 			android:layout_gravity="end|top"
 			android:layout_margin="4dp"
 
-			android:insetTop="0dp"
-			android:insetBottom="0dp"
-
 			app:backgroundTint="@color/material_red_a700"
-			app:iconSize="24dp"
+			app:rippleColor="@color/material_red_a700"
 			app:icon="@drawable/ic_clear_24dp"
-			app:elevation="0dp"
-			android:elevation="@null"
+			
 			app:shapeAppearanceOverlay="@style/MyAppShapeAppearanceOverlay.Circle"
 
-			style="@style/Widget.MaterialComponents.Button.Icon"
+			style="@style/MyButtonIconOnly.Unelevated"
 			/>
 	</FrameLayout>
 

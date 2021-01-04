@@ -25,8 +25,8 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.provider.Settings
-import com.mmdev.business.user.LocationPoint
 import com.mmdev.data.core.log.logWtf
+import com.mmdev.domain.user.data.LocationPoint
 import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -58,7 +58,8 @@ class LocationDataSource @Inject constructor(context: Context): LocationListener
             LocationPoint(
             latitude = location.latitude,
             longitude = location.longitude
-        ))
+        )
+        )
         endUpdates()
     }
     
@@ -85,8 +86,6 @@ class LocationDataSource @Inject constructor(context: Context): LocationListener
         /** The internal name of the provider for the fine location  */
         private const val PROVIDER_FINE = LocationManager.GPS_PROVIDER
         
-        /** The factor for conversion from kilometers to meters  */
-        private const val KILOMETER_TO_METER = 1000.0f
         
         /** The factor for conversion from latitude to kilometers  */
         private const val LATITUDE_TO_KILOMETER = 111.133f
@@ -100,9 +99,7 @@ class LocationDataSource @Inject constructor(context: Context): LocationListener
          * @param context the Context reference to start the Intent from
          */
         fun openSettings(context: Context) = context.startActivity(
-            Intent(
-                Settings.ACTION_LOCATION_SOURCE_SETTINGS
-            )
+            Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
         )
         
         /**
@@ -120,20 +117,6 @@ class LocationDataSource @Inject constructor(context: Context): LocationListener
          */
         fun kilometerToLatitude(kilometer: Double): Double = kilometer / latitudeToKilometer(1.0)
         
-        /**
-         * Converts a difference in latitude to a difference in meters (rough estimation)
-         *
-         * @param latitude the latitude (difference)
-         * @return the meters (difference)
-         */
-        fun latitudeToMeter(latitude: Double): Double = latitudeToKilometer(latitude) * KILOMETER_TO_METER
-        
-        /**
-         * Converts a difference in meters to a difference in latitude (rough estimation)
-         * @param meter the meters (difference)
-         * @return the latitude (difference)
-         */
-        fun meterToLatitude(meter: Double): Double = meter / latitudeToMeter(1.0)
         
         /**
          * Converts a difference in longitude to a difference in kilometers (rough estimation)
@@ -153,55 +136,6 @@ class LocationDataSource @Inject constructor(context: Context): LocationListener
          */
         fun kilometerToLongitude(kilometer: Double, latitude: Double): Double =
             kilometer / longitudeToKilometer(1.0, latitude)
-        
-        /**
-         * Converts a difference in longitude to a difference in meters (rough estimation)
-         *
-         * @param longitude the longitude (difference)
-         * @param latitude the latitude (absolute)
-         * @return the meters (difference)
-         */
-        fun longitudeToMeter(longitude: Double, latitude: Double): Double =
-            longitudeToKilometer(longitude, latitude) * KILOMETER_TO_METER
-        
-        /**
-         * Converts a difference in meters to a difference in longitude (rough estimation)
-         * @param meter the meters (difference)
-         * @param latitude the latitude (absolute)
-         * @return the longitude (difference)
-         */
-        fun meterToLongitude(meter: Double, latitude: Double): Double =
-            meter / longitudeToMeter(1.0, latitude)
-        
-        /**
-         * Calculates the difference from the start position to the end position (in meters)
-         *
-         * @param start the start position
-         * @param end the end position
-         * @return the distance in meters
-         */
-        fun calculateDistance(start: LocationPoint, end: LocationPoint): Double {
-            return calculateDistance(start.latitude, start.longitude, end.latitude, end.longitude)
-        }
-        
-        /**
-         * Calculates the difference from the start position to the end position (in meters)
-         *
-         * @param startLatitude the latitude of the start position
-         * @param startLongitude the longitude of the start position
-         * @param endLatitude the latitude of the end position
-         * @param endLongitude the longitude of the end position
-         * @return the distance in meters
-         */
-        fun calculateDistance(
-            startLatitude: Double, startLongitude: Double, endLatitude: Double, endLongitude: Double
-        ): Double {
-            val results = FloatArray(3)
-            Location.distanceBetween(
-                startLatitude, startLongitude, endLatitude, endLongitude, results
-            )
-            return results[0].toDouble()
-        }
     }
     
     /** Stops the location updates when they aren't needed anymore so that battery can be saved  */

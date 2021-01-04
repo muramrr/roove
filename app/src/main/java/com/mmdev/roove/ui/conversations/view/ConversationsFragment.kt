@@ -27,18 +27,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mmdev.business.pairs.MatchedUserItem
+import com.mmdev.domain.pairs.MatchedUserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentConversationsBinding
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.SwipeToDeleteCallback
 import com.mmdev.roove.ui.conversations.ConversationsViewModel
-import com.mmdev.roove.utils.EndlessRecyclerViewScrollListener
 import com.mmdev.roove.utils.extensions.showToastText
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
- * This is the documentation block about the class
+ * Fragment for displaying active conversations
+ * //todo: load more conversations on scroll
  */
 
 @AndroidEntryPoint
@@ -56,26 +56,19 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel, FragmentConver
 		mViewModel.getDeleteConversationStatus().observe(this, {
 			if (it) requireContext().showToastText(getString(R.string.toast_text_delete_success))
 		})
-
+		
+		mViewModel.conversationsList.observe(this, {
+			mConversationsAdapter.setNewData(it)
+		})
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
-		val linearLayoutManager = LinearLayoutManager(context, VERTICAL, false)
 		rvConversationList.apply {
+			setHasFixedSize(true)
+			
 			adapter = mConversationsAdapter
-			layoutManager = linearLayoutManager
+			layoutManager = LinearLayoutManager(context)
 			addItemDecoration(DividerItemDecoration(this.context, VERTICAL))
-
-			//load more conversations on scroll
-			addOnScrollListener(object: EndlessRecyclerViewScrollListener(linearLayoutManager) {
-				override fun onLoadMore(page: Int, totalItemsCount: Int) {
-
-					if (linearLayoutManager.findLastCompletelyVisibleItemPosition() <= totalItemsCount - 4){
-						//Log.wtf(TAG, "load seems to be called")
-						//mViewModel.loadMoreConversations()
-					}
-				}
-			})
 
 			val swipeHandler = object : SwipeToDeleteCallback(context) {
 				override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {

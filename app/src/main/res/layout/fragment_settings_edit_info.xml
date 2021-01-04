@@ -33,7 +33,6 @@
 
 
 	<androidx.core.widget.NestedScrollView
-		android:id="@+id/containerScrollSettings"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:clipToPadding="false"
@@ -41,18 +40,18 @@
 		android:overScrollMode="never"
 		>
 
-		<androidx.constraintlayout.widget.ConstraintLayout
-			android:id="@+id/containerSettingsContent"
-			android:layout_height="match_parent"
+		<LinearLayout
+			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
 			android:background="@color/colorPrimaryDark"
+			android:orientation="vertical"
 
 			app:paddingBottomSystemWindowInsets="@{true}"
 			android:animateLayoutChanges="true">
 
 			<androidx.recyclerview.widget.RecyclerView
 				android:id="@+id/rvSettingsEditPhotos"
-				android:layout_width="0dp"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:clipToPadding="false"
 				android:orientation="vertical"
@@ -63,11 +62,6 @@
 
 				app:paddingTopSystemWindowInsets="@{true}"
 
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toTopOf="parent"
-				app:layout_constraintBottom_toTopOf="@id/layoutSettingsEditName"
-
 				tools:listitem="@layout/fragment_settings_edit_info_photo_item"
 				tools:itemCount="2"
 				/>
@@ -75,30 +69,19 @@
 			<!--name-->
 			<com.google.android.material.textfield.TextInputLayout
 				android:id="@+id/layoutSettingsEditName"
-				android:layout_width="0dp"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="8dp"
+				android:layout_marginHorizontal="16dp"
 
 				app:counterMaxLength="30"
 				app:counterEnabled="true"
-
-				app:boxStrokeErrorColor="@color/colorError"
-				app:boxStrokeColor="@color/text_input_layout"
-				app:boxStrokeWidth="2dp"
-
+				
 				android:hint="@string/hint_name"
-				app:hintEnabled="true"
-				app:hintTextColor="@color/white"
 
 				app:errorEnabled="true"
-				app:errorTextColor="@color/colorError"
-				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/rvSettingsEditPhotos"
-				app:layout_constraintBottom_toTopOf="@id/toggleButtonSettingsEditGender"
-				>
+				
+				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
 				<com.google.android.material.textfield.TextInputEditText
 					android:id="@+id/edSettingsEditName"
@@ -113,28 +96,22 @@
 					android:inputType="textPersonName"
 
 					android:text="@string/default_name"
-					android:textColor="@color/white"
-					android:textCursorDrawable="@color/lolite"
-					android:textSize="20sp"
+					app:hideKeyboardOnInputDone="@{true}"
 					/>
 
 			</com.google.android.material.textfield.TextInputLayout>
 
 			<com.google.android.material.button.MaterialButtonToggleGroup
 				android:id="@+id/toggleButtonSettingsEditGender"
-				android:layout_width="0dp"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="16dp"
 				android:gravity="center"
 
 				app:selectionRequired="true"
 				app:singleSelection="true"
 				app:checkedButton="@id/btnSettingsEditGenderMale"
-
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditName"
-				app:layout_constraintBottom_toTopOf="@id/sliderSettingsEditAge">
-
+				>
 				<com.google.android.material.button.MaterialButton
 					android:id="@+id/btnSettingsEditGenderMale"
 					android:layout_width="0dp"
@@ -148,7 +125,6 @@
 
 					app:backgroundTint="@color/lolite_checked_tint"
 
-					style="@style/Widget.MaterialComponents.Button.OutlinedButton"
 					/>
 
 				<com.google.android.material.button.MaterialButton
@@ -163,17 +139,21 @@
 					android:textColor="@color/white_tint_color"
 
 					app:backgroundTint="@color/lolite_checked_tint"
-
-					style="@style/Widget.MaterialComponents.Button.OutlinedButton"
 					/>
 
 			</com.google.android.material.button.MaterialButtonToggleGroup>
 
 			<!--age-->
 			<com.google.android.material.slider.Slider android:id="@+id/sliderSettingsEditAge"
-				android:layout_width="0dp"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="16dp"
 				android:layout_marginTop="16dp"
+				
+				android:stepSize="1"
+				android:valueFrom="18"
+				android:valueTo="100"
+				
 				app:haloColor="?colorSecondary"
 
 				app:thumbColor="@color/white"
@@ -181,57 +161,34 @@
 
 				app:trackColorActive="?colorSecondary"
 				app:trackColorInactive="@color/lolite_25"
-				
-				android:valueFrom="18"
-				android:valueTo="50"
-
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/toggleButtonSettingsEditGender"
-				app:layout_constraintBottom_toTopOf="@id/tvSettingsEditAge"
 				/>
 
 			<com.google.android.material.textview.MaterialTextView
 				android:id="@+id/tvSettingsEditAge"
-				android:layout_width="0dp"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:labelFor="@id/sliderSettingsEditAge"
 
 				android:gravity="center"
-				android:text="@{`Age: `}"
-				android:textSize="30sp"
-				
-				app:layout_constraintTop_toBottomOf="@id/sliderSettingsEditAge"
-				app:layout_constraintBottom_toTopOf="@id/layoutSettingsEditDescription"
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
+				android:text="18"
+				android:textAppearance="?textAppearanceHeadline5"
 				/>
 
 			<!-- description -->
 			<com.google.android.material.textfield.TextInputLayout
 				android:id="@+id/layoutSettingsEditDescription"
-				android:layout_width="0dp"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="16dp"
 				android:layout_marginTop="8dp"
 
 				app:counterMaxLength="200"
 				app:counterEnabled="true"
-
-				app:boxStrokeErrorColor="@color/colorError"
-				app:boxStrokeColor="@color/text_input_layout"
-				app:boxStrokeWidth="2dp"
-
+				
 				android:hint="@string/profile_about_header_text"
-				app:hintEnabled="true"
-				app:hintTextColor="@color/white"
 
-				app:errorEnabled="true"
-				app:errorTextColor="@color/colorError"
-				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintTop_toBottomOf="@id/tvSettingsEditAge"
-				app:layout_constraintBottom_toTopOf="@id/btnSettingsEditSave"
+				app:errorEnabled="false"
+				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 				>
 
 				<com.google.android.material.textfield.TextInputEditText
@@ -244,7 +201,7 @@
 					android:inputType="text|textMultiLine"
 					
 					android:maxLength="200"
-					android:maxLines="6"
+					android:maxLines="10"
 
 					android:overScrollMode="never"
 					android:scrollbars="vertical"
@@ -253,6 +210,7 @@
 					android:textAlignment="textStart"
 					android:textColor="@color/white"
 					android:textCursorDrawable="@color/lolite"
+					app:hideKeyboardOnInputDone="@{true}"
 					/>
 
 
@@ -261,63 +219,39 @@
 			<!--save-->
 			<com.google.android.material.button.MaterialButton
 				android:id="@+id/btnSettingsEditSave"
-				android:layout_width="0dp"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="16dp"
 
 				android:padding="16dp"
 
 				android:text="@string/btn_settings_edit_save_text"
-				android:textSize="20sp"
-				android:textAllCaps="false"
 
 				app:backgroundTint="@color/amethyst_tint_enabled"
-				app:rippleColor="@color/black_50"
-				android:textStyle="bold"
+				app:rippleColor="@color/amethyst"
 
 				style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintBottom_toTopOf="@id/btnSettingsEditDelete"
-				app:layout_constraintTop_toBottomOf="@id/layoutSettingsEditDescription"
 				/>
 
 			<!--delete-->
 			<com.google.android.material.button.MaterialButton
 				android:id="@+id/btnSettingsEditDelete"
-				android:layout_width="0dp"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="16dp"
 				android:layout_marginTop="500dp"
 				android:padding="16dp"
 
 				android:text="@string/btn_settings_edit_delete_my_account_text"
-				android:textSize="20sp"
+				
 
 				app:backgroundTint="@color/material_red_a700"
 
 				style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-				app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-				app:layout_constraintStart_toStartOf="@id/guidelineStart"
-				app:layout_constraintBottom_toBottomOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/btnSettingsEditSave"
 				/>
 
-			<!-- left padding -->
-			<androidx.constraintlayout.widget.Guideline
-				android:id="@+id/guidelineStart"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:orientation="vertical"
-				app:layout_constraintGuide_begin="8dp" />
 
-			<!-- right padding -->
-			<androidx.constraintlayout.widget.Guideline
-				android:id="@+id/guidelineEnd"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:orientation="vertical"
-				app:layout_constraintGuide_end="8dp" />
-
-		</androidx.constraintlayout.widget.ConstraintLayout>
+		</LinearLayout>
 
 	</androidx.core.widget.NestedScrollView>
 </layout>

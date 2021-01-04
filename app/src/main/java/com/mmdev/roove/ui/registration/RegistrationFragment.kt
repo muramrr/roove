@@ -23,13 +23,19 @@ import android.view.View
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
-import com.mmdev.business.photo.PhotoItem
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.UserItem
-import com.mmdev.business.user.UserItem.PreferredAgeRange
-import com.mmdev.business.user.UserState
+import com.mmdev.domain.photo.PhotoItem
+import com.mmdev.domain.user.UserState
+import com.mmdev.domain.user.data.BaseUserInfo
+import com.mmdev.domain.user.data.Gender
+import com.mmdev.domain.user.data.SelectionPreferences
+import com.mmdev.domain.user.data.SelectionPreferences.PreferredAgeRange
+import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender
+import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender.EVERYONE
+import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender.FEMALE
+import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender.MALE
+import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.R
-import com.mmdev.roove.databinding.FragmentAuthRegistrationBinding
+import com.mmdev.roove.databinding.FragmentRegistrationBinding
 import com.mmdev.roove.ui.auth.AuthViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.utils.extensions.observeOnce
@@ -40,8 +46,8 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 
 @AndroidEntryPoint
-class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistrationBinding>(
-	layoutId = R.layout.fragment_auth_registration
+class RegistrationFragment: BaseFragment<AuthViewModel, FragmentRegistrationBinding>(
+	layoutId = R.layout.fragment_registration
 ){
 	
 	override val mViewModel: AuthViewModel by viewModels()
@@ -51,17 +57,13 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 	private var baseUserInfo = BaseUserInfo()
 	private var name = "no name"
 	private var age = 18
-	private var gender = ""
-	private var preferredGender = ""
-	private val preferredAgeRange = PreferredAgeRange(minAge = 18, maxAge = 24)
+	private var gender: Gender? = null
+	private var preferredGender: PreferredGender? = null
+	private var preferredAgeMin = 18f
+	private var preferredAgeMax = 24f
 	
 	private var preferredGenderToDisplay = ""
 	private var genderToDisplay = ""
-
-
-	private val male = "male"
-	private val female = "female"
-	private val everyone = "everyone"
 	
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,11 +109,11 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 
 			when (registrationStep) {
 				1 -> {
-					gender = male
+					gender = Gender.MALE
 					genderToDisplay = getString(R.string.genderMale)
 				}
 				2 -> {
-					preferredGender = male
+					preferredGender = MALE
 					preferredGenderToDisplay = getString(R.string.preferredGenderMale)
 				}
 			}
@@ -125,11 +127,11 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 
 			when (registrationStep){
 				1 -> {
-					gender = female
+					gender = Gender.FEMALE
 					genderToDisplay = getString(R.string.genderFemale)
 				}
 				2 -> {
-					preferredGender = female
+					preferredGender = FEMALE
 					preferredGenderToDisplay = getString(R.string.preferredGenderFemale)
 				}
 			}
@@ -142,7 +144,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 		//step 2 gender your prefer
 		btnGenderEveryone.setOnClickListener {
 			setSelectedEveryone()
-			preferredGender = everyone
+			preferredGender = EVERYONE
 			preferredGenderToDisplay = getString(R.string.preferredGenderEveryone)
 			enableFab()
 		}
@@ -155,8 +157,8 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 		}
 		//step 3 pref age
 		rangeSeekBarRegAgePicker.addOnChangeListener { rangeSlider, value, fromUser ->
-			preferredAgeRange.minAge = rangeSlider.values.first().toInt()
-			preferredAgeRange.maxAge = rangeSlider.values.last().toInt()
+			preferredAgeMin = rangeSlider.values.first()
+			preferredAgeMax = rangeSlider.values.last()
 		}
 		
 		//step 4 name
@@ -184,15 +186,20 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 			val finalUserModel = baseUserInfo.copy(
 				name = name,
 				age = age,
-				gender = preferredGender,
-				preferredGender = preferredGender,
+				gender = gender!!
 			)
 
 			mViewModel.signUp(
 				UserItem(
 					finalUserModel,
 					photoURLs = listOf(PhotoItem.FACEBOOK_PHOTO(finalUserModel.mainPhotoUrl)),
-					preferredAgeRange = preferredAgeRange
+					preferences = SelectionPreferences(
+						gender = preferredGender ?: EVERYONE,
+						ageRange = PreferredAgeRange(
+							minAge = preferredAgeMin.toInt(),
+							maxAge = preferredAgeMax.toInt()
+						)
+					)
 				)
 			)
 		}
@@ -256,11 +263,11 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 	private fun restoreStep1State() {
 		setUnselectedAllButtons()
 		changeStringsForSelfChoosing()
-		if (gender.isNotEmpty()){
+		if (gender != null){
 			enableFab()
 			when (gender) {
-				male -> setSelectedMale()
-				female -> setSelectedFemale()
+				Gender.MALE -> setSelectedMale()
+				Gender.FEMALE -> setSelectedFemale()
 			}
 		}
 		else disableFab()
@@ -269,12 +276,12 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 	private fun restoreStep2State() {
 		setUnselectedAllButtons()
 		changeStringsForPreferred()
-		if (preferredGender.isNotEmpty()){
+		if (preferredGender != null){
 			enableFab()
 			when (preferredGender){
-				male -> setSelectedMale()
-				female -> setSelectedFemale()
-				everyone -> setSelectedEveryone()
+				MALE -> setSelectedMale()
+				FEMALE -> setSelectedFemale()
+				EVERYONE -> setSelectedEveryone()
 			}
 		}
 		else disableFab()
@@ -284,10 +291,7 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 		enableFab()
 		sliderAge.value = age.toFloat()
 		tvAgeDisplay.text = age.toString()
-		rangeSeekBarRegAgePicker.setValues(
-			preferredAgeRange.minAge.toFloat(),
-			preferredAgeRange.maxAge.toFloat()
-		)
+		rangeSeekBarRegAgePicker.setValues(preferredAgeMin, preferredAgeMax)
 	}
 
 	private fun restoreStep4State() = binding.run {
@@ -310,7 +314,6 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentAuthRegistration
 		edFinalGender.setText(genderToDisplay)
 		edFinalPreferredGender.setText(preferredGenderToDisplay)
 		edFinalAge.setText(age.toString())
-		edFinalCity.setText("")
 	}
 
 

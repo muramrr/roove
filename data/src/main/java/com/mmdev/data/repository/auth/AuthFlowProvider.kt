@@ -21,8 +21,6 @@ package com.mmdev.data.repository.auth
 import com.facebook.login.LoginManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.mmdev.business.auth.IAuthFlowProvider
-import com.mmdev.business.user.UserState
 import com.mmdev.data.core.firebase.FIRESTORE_NO_DOCUMENT_EXCEPTION
 import com.mmdev.data.core.firebase.toUserItem
 import com.mmdev.data.core.log.logDebug
@@ -32,6 +30,8 @@ import com.mmdev.data.datasource.auth.AuthCollector
 import com.mmdev.data.datasource.auth.FirebaseUserState
 import com.mmdev.data.datasource.auth.FirebaseUserState.NotNullUser
 import com.mmdev.data.datasource.location.LocationDataSource
+import com.mmdev.domain.auth.IAuthFlowProvider
+import com.mmdev.domain.user.UserState
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject

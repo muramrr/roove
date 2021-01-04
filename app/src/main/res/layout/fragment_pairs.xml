@@ -30,16 +30,15 @@
 
 	</data>
 
-	<androidx.constraintlayout.widget.ConstraintLayout
-		android:id="@+id/containerPairs"
+	<FrameLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@color/colorPrimaryDark"
 		>
 
 		<androidx.recyclerview.widget.RecyclerView android:id="@+id/rvPairList"
-			android:layout_width="0dp"
-			android:layout_height="0dp"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
 			android:clipToPadding="false"
 			android:overScrollMode="never"
 
@@ -50,29 +49,20 @@
 
 			app:paddingTopSystemWindowInsets="@{true}"
 
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-
 			tools:listitem="@layout/fragment_pairs_item"
 			/>
 
-		<TextView android:id="@+id/tvPairsHelperText"
+		<com.google.android.material.textview.MaterialTextView android:id="@+id/tvPairsHelperText"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:gravity="center"
+			android:layout_gravity="center"
 
 			android:text="@string/fragment_pairs_explanation_text"
+			android:textAlignment="center"
 			android:textAppearance="?textAppearanceHeadline5"
 			
 			app:visibilityInvisible="@{viewModel.showTextHelper}"
-
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
 			/>
 
-	</androidx.constraintlayout.widget.ConstraintLayout>
+	</FrameLayout>
 </layout>

@@ -18,17 +18,17 @@
 
 package com.mmdev.roove.ui.settings.edit
 
-import android.content.Context
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mmdev.business.user.UserItem
+import com.mmdev.domain.user.data.Gender
+import com.mmdev.domain.user.data.Gender.FEMALE
+import com.mmdev.domain.user.data.Gender.MALE
+import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentSettingsEditInfoBinding
 import com.mmdev.roove.ui.MainActivity
@@ -36,10 +36,11 @@ import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.GridItemDecoration
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel.DeletingStatus.IN_PROGRESS
+import com.mmdev.roove.utils.extensions.hideKeyboard
 import com.mmdev.roove.utils.extensions.showToastText
 
 /**
- * This is the documentation block about the class
+ * This fragment allow you to edit your profile
  */
 
 class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsEditInfoBinding>(
@@ -47,31 +48,27 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 ) {
 	
 	override val mViewModel: RemoteRepoViewModel by requireParentFragment().viewModels()
-
-	private lateinit var currentUser: UserItem
+	
 	private val mEditorPhotoAdapter = SettingsEditInfoPhotoAdapter()
 
-	private var name = ""
-	private var age = 0
-	private var gender = ""
-
-	private var descriptionText = ""
-
-	private val male = "male"
-	private val female = "female"
+	private var newName: String? = null
+	private var newAge: Int? = null
+	private var newGender: Gender? = null
+	private var newDescription: String? = null
 
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		initSettings(MainActivity.currentUser!!)
+		initProfile(MainActivity.currentUser!!)
+		
 		binding.rvSettingsEditPhotos.apply {
-			layoutManager = GridLayoutManager(this.context, 2, GridLayoutManager.VERTICAL, false)
+			layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
 			adapter =  mEditorPhotoAdapter
 			addItemDecoration(GridItemDecoration())
 		}
 
 		mEditorPhotoAdapter.setOnItemClickListener { item , position ->
 			if (mEditorPhotoAdapter.itemCount > 1) {
-				val isMainPhotoDeleting = item.fileUrl == currentUser.baseUserInfo.mainPhotoUrl
+				val isMainPhotoDeleting = item.fileUrl == MainActivity.currentUser!!.baseUserInfo.mainPhotoUrl
 				
 				//deletion observer //todo
 				//mViewModel.photoDeletingStatus.observeOnce(this@SettingsEditInfoFragment, {
@@ -95,41 +92,31 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 
 		//touch event guarantee that if user want to scroll or touch outside of edit box
 		//keyboard hide and editText focus clear
-		binding.containerScrollSettings.setOnTouchListener { v, _ ->
+		binding.root.setOnTouchListener { v, _ ->
 			v.performClick()
-			val iMM = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-			iMM.hideSoftInputFromWindow(v.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-			binding.edSettingsEditDescription.clearFocus()
-
+			v.hideKeyboard(binding.edSettingsEditDescription)
 			return@setOnTouchListener false
 		}
 		
-		//todo
-		//binding.btnSettingsEditGenderMale.setOnClickListener {
-		//	gender = male
-		//	currentUser.baseUserInfo.gender = gender
-		//	binding.toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderMale)
-		//}
+		binding.toggleButtonSettingsEditGender.addOnButtonCheckedListener { _, checkedId, isChecked ->
+			when {
+				checkedId == binding.btnSettingsEditGenderMale.id && isChecked -> { newGender = MALE }
+				checkedId == binding.btnSettingsEditGenderFemale.id && isChecked -> { newGender = FEMALE }
+			}
+		}
 		
 		//todo
-		//binding.btnSettingsEditGenderFemale.setOnClickListener {
-		//	gender = female
-		//	currentUser.baseUserInfo.gender = gender
-		//	binding.toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderFemale)
-		//}
-		
-		
-		//binding.btnSettingsEditSave.setOnClickListener {
-		//	mViewModel.updateUserItem()
-		//}
+		binding.btnSettingsEditSave.setOnClickListener {
+			//mViewModel.updateUserItem()
+		}
 		binding.btnSettingsEditDelete.setOnClickListener {
 			showDialogDeleteAttention()
 		}
 	}
 
 
-	private fun initSettings(userItem: UserItem) {
-		if (userItem.baseUserInfo.gender == male)
+	private fun initProfile(userItem: UserItem) {
+		if (userItem.baseUserInfo.gender == MALE)
 			binding.toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderMale)
 		else binding.toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderFemale)
 
@@ -139,8 +126,8 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 
 	}
 
-	private fun changerNameSetup() {
-		binding.edSettingsEditName.doAfterTextChanged {
+	private fun changerNameSetup() = binding.edSettingsEditName.run {
+		doAfterTextChanged {
 			when {
 				it.isNullOrBlank() -> {
 					binding.layoutSettingsEditName.error = getString(R.string.text_empty_error)
@@ -149,67 +136,36 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 				
 				else -> {
 					binding.layoutSettingsEditName.error = ""
-					name = it.toString().trim()
-					//todo
-					//currentUser.baseUserInfo.name = name
+					newName = it.toString().trim()
 					binding.btnSettingsEditSave.isEnabled = true
 				}
 			}
-		}
-		
-		binding.edSettingsEditName.setOnEditorActionListener { editText, actionId, _ ->
-			if (actionId == EditorInfo.IME_ACTION_DONE) {
-				editText.text = editText.text.toString().trim()
-				editText.clearFocus()
-			}
-			return@setOnEditorActionListener false
 		}
 	}
 
 	//todo
 	private fun changerAgeSetup() {
 		binding.sliderSettingsEditAge.addOnChangeListener { _, value, _ ->
-			age = value.toInt()
+			newAge = value.toInt()
 			//currentUser.baseUserInfo.age = age
-			binding.tvSettingsEditAge.text = "Age: $age"
+			binding.tvSettingsEditAge.text = "Age: $newAge"
 		}
 	}
-
-	//todo
-	private fun changerDescriptionSetup() {
+	
+	private fun changerDescriptionSetup() = binding.edSettingsEditDescription.run {
 		
-		binding.edSettingsEditDescription.doAfterTextChanged {
-			when {
-				it.isNullOrBlank() -> {
-					binding.layoutSettingsEditName.error = getString(R.string.text_empty_error)
-					binding.btnSettingsEditSave.isEnabled = false
-				}
-				else -> {
-					binding.layoutSettingsEditDescription.error = ""
-					descriptionText = it.toString().trim()
-					//currentUser.aboutText = descriptionText
-					binding.btnSettingsEditSave.isEnabled = true
-				}
-				
-			}
+		doOnTextChanged { text, start, before, count ->
+			newDescription = text.toString().trim()
 		}
 		
-		binding.edSettingsEditDescription.setOnEditorActionListener { editText, actionId, _ ->
-			if (actionId == EditorInfo.IME_ACTION_DONE) {
-				editText.text = editText.text.toString().trim()
-				editText.clearFocus()
-			}
-			return@setOnEditorActionListener false
-		}
-		
-		binding.edSettingsEditDescription.setOnTouchListener { view, event ->
-			view.performClick()
-			view.parent.requestDisallowInterceptTouchEvent(true)
-			if ((event.action and MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
-				view.parent.requestDisallowInterceptTouchEvent(false)
-			}
-			return@setOnTouchListener false
-		}
+//		setOnTouchListener { view, event ->
+//			view.performClick()
+//			view.parent.requestDisallowInterceptTouchEvent(true)
+//			if ((event.action and MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+//				view.parent.requestDisallowInterceptTouchEvent(false)
+//			}
+//			return@setOnTouchListener false
+//		}
 
 	}
 

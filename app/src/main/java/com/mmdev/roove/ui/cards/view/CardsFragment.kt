@@ -24,11 +24,12 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.viewModels
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mmdev.business.user.UserItem
+import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentCardsBinding
 import com.mmdev.roove.ui.cards.CardsViewModel
-import com.mmdev.roove.ui.cards.CardsViewModel.SwipeAction.*
+import com.mmdev.roove.ui.cards.CardsViewModel.SwipeAction.LIKE
+import com.mmdev.roove.ui.cards.CardsViewModel.SwipeAction.SKIP
 import com.mmdev.roove.ui.common.ImagePagerAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint

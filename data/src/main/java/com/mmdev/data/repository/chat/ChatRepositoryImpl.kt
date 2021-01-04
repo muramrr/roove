@@ -23,11 +23,6 @@ import android.text.format.DateFormat
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.storage.StorageReference
-import com.mmdev.business.chat.ChatRepository
-import com.mmdev.business.chat.MessageItem
-import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.photo.PhotoItem
-import com.mmdev.business.user.UserItem
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.firebase.asSingle
@@ -35,6 +30,11 @@ import com.mmdev.data.core.firebase.executeAndDeserializeSingle
 import com.mmdev.data.core.firebase.setAsCompletable
 import com.mmdev.data.core.firebase.updateAsCompletable
 import com.mmdev.data.core.log.logDebug
+import com.mmdev.domain.chat.ChatRepository
+import com.mmdev.domain.chat.MessageItem
+import com.mmdev.domain.conversations.ConversationItem
+import com.mmdev.domain.photo.PhotoItem
+import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -86,8 +86,8 @@ class ChatRepositoryImpl @Inject constructor(
 	
 	
 	override fun observeNewMessages(
-		user: UserItem,
-		conversation: ConversationItem
+        user: UserItem,
+        conversation: ConversationItem
 	): Observable<MessageItem> = ObservableCreate<MessageItem> { emitter ->
 		val listener = fs.collection(CONVERSATIONS_COLLECTION)
 			.document(conversation.conversationId)

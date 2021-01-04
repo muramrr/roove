@@ -23,12 +23,12 @@ import android.provider.Settings.Secure
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.installations.FirebaseInstallations
-import com.mmdev.business.auth.AuthRepository
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.UserItem
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.firebase.asSingle
 import com.mmdev.data.datasource.UserDataSource
+import com.mmdev.domain.auth.AuthRepository
+import com.mmdev.domain.user.data.BaseUserInfo
+import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject

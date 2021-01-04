@@ -19,10 +19,10 @@
 package com.mmdev.data.datasource
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mmdev.business.user.UserItem
 import com.mmdev.data.core.firebase.getAndDeserializeAsSingle
 import com.mmdev.data.core.firebase.setAsCompletable
 import com.mmdev.data.core.firebase.updateAsCompletable
+import com.mmdev.domain.user.data.UserItem
 
 /**
  *

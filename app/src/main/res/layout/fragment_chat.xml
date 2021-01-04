@@ -37,7 +37,7 @@
 		app:paddingBottomSystemWindowInsets="@{true}"
 		>
 
-		<androidx.appcompat.widget.Toolbar
+		<com.google.android.material.appbar.MaterialToolbar
 			android:id="@+id/toolbarChat"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
@@ -55,6 +55,7 @@
 			>
 
 			<androidx.constraintlayout.widget.ConstraintLayout
+				android:id="@+id/toolbarInnerContainer"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent">
 
@@ -115,7 +116,7 @@
 
 			</androidx.constraintlayout.widget.ConstraintLayout>
 
-		</androidx.appcompat.widget.Toolbar>
+		</com.google.android.material.appbar.MaterialToolbar>
 
 		<androidx.recyclerview.widget.RecyclerView android:id="@+id/rvMessageList"
 			android:layout_height="0dp"
@@ -132,7 +133,8 @@
 			app:layout_constraintTop_toBottomOf="@id/toolbarChat"
 			app:layout_constraintBottom_toTopOf="@id/edTextMessageInput"
 			tools:itemCount="2"
-			tools:listitem="@layout/fragment_chat_item_right"/>
+			tools:listitem="@layout/fragment_chat_item_right"
+			/>
 
 		<View android:id="@+id/messageInputContainerBackground"
 			android:layout_width="0dp"
@@ -162,25 +164,24 @@
 			app:layout_constraintEnd_toStartOf="@id/edTextMessageInput"
 			/>
 
-		<EditText android:id="@+id/edTextMessageInput"
+		<com.google.android.material.textfield.TextInputEditText android:id="@+id/edTextMessageInput"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:background="@null"
+			android:padding="16dp"
 
 			android:imeOptions="actionSend"
 			android:inputType="text|textMultiLine"
 			android:hint="@string/fragment_chat_ed_hint"
-			android:padding="16dp"
+			android:maxLength="200"
 
 			android:textColor="@color/white"
-			android:textColorHint="@color/white_50"
-
-			tools:ignore="Autofill"
 
 			app:layout_constraintTop_toBottomOf="@id/rvMessageList"
 			app:layout_constraintStart_toEndOf="@id/btnSendAttachment"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toStartOf="@id/btnSendMessage"/>
+			app:layout_constraintEnd_toStartOf="@id/btnSendMessage"
+			/>
 
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/btnSendMessage"
@@ -210,7 +211,8 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			tools:ignore="ContentDescription" />
+			
+			/>
 
 		<com.google.android.material.textview.MaterialTextView
 			android:layout_width="wrap_content"
@@ -223,7 +225,8 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"/>
+			app:layout_constraintBottom_toBottomOf="parent"
+			/>
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (C) 2021. roove
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -236,7 +236,7 @@
 			android:layout_height="0dp"
 
 			android:alpha="0"
-			android:translationX="-600dp"
+			android:translationX="-500dp"
 
 			app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -250,7 +250,7 @@
 			android:layout_marginTop="8dp"
 
 			android:alpha="0"
-			android:translationX="-600dp"
+			android:translationX="-500dp"
 
 			app:layout_constraintBottom_toTopOf="@id/btnGenderEveryone"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -264,7 +264,7 @@
 			android:layout_marginBottom="24dp"
 
 			android:alpha="0"
-			android:translationX="-600dp"
+			android:translationX="-500dp"
 
 			app:layout_constraintTop_toBottomOf="@id/btnGenderMale"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -294,7 +294,7 @@
 			android:layout_height="0dp"
 
 			android:alpha="0"
-			android:translationX="-600dp"
+			android:translationX="-500dp"
 
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -337,7 +337,7 @@
 			android:layout_height="0dp"
 
 			android:alpha="0"
-			android:translationX="-600dp"
+			android:translationX="-500dp"
 
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
 			app:layout_constraintEnd_toEndOf="parent"

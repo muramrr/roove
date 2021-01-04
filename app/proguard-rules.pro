@@ -20,9 +20,7 @@
 # hide the original source fileModel Name.
 #-renamesourcefileattribute SourceFile
 -keepattributes *Annotation*, Signature
--keepclassmembers class com.mmdev.business.** {
-      *;
-    }
+-keep class com.mmdev.domain.*
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.module.AppGlideModule
 -keep public enum com.bumptech.glide.load.ImageHeaderParser$** {

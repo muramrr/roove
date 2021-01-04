@@ -21,11 +21,11 @@ package com.mmdev.roove.ui
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.pairs.MatchedUserItem
-import com.mmdev.business.user.UserItem
-import com.mmdev.business.user.UserState
 import com.mmdev.data.repository.auth.AuthFlowProvider
+import com.mmdev.domain.conversations.ConversationItem
+import com.mmdev.domain.pairs.MatchedUserItem
+import com.mmdev.domain.user.UserState
+import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.core.log.logError
 import com.mmdev.roove.ui.common.base.BaseViewModel
 

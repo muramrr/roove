@@ -23,19 +23,19 @@ import android.text.format.DateFormat
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
-import com.mmdev.business.pairs.MatchedUserItem
-import com.mmdev.business.photo.PhotoItem
-import com.mmdev.business.photo.PhotoItem.Companion.FACEBOOK_PHOTO_NAME
-import com.mmdev.business.user.BaseUserInfo
-import com.mmdev.business.user.IUserRepository
-import com.mmdev.business.user.Report
-import com.mmdev.business.user.UserItem
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.firebase.asSingle
 import com.mmdev.data.core.firebase.setAsCompletable
 import com.mmdev.data.core.log.logDebug
 import com.mmdev.data.datasource.UserDataSource
+import com.mmdev.domain.pairs.MatchedUserItem
+import com.mmdev.domain.photo.PhotoItem
+import com.mmdev.domain.photo.PhotoItem.Companion.FACEBOOK_PHOTO_NAME
+import com.mmdev.domain.user.IUserRepository
+import com.mmdev.domain.user.data.BaseUserInfo
+import com.mmdev.domain.user.data.ReportType
+import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -68,8 +68,8 @@ class UserRepositoryImpl @Inject constructor(
 
 
 	override fun deleteMatchedUser(
-		user: UserItem,
-		matchedUserItem: MatchedUserItem
+        user: UserItem,
+        matchedUserItem: MatchedUserItem
 	): Single<Unit> = deleteFromMatch(
 		userForWhichDelete = user.baseUserInfo,
 		userWhomToDelete = matchedUserItem.baseUserInfo,
@@ -84,9 +84,9 @@ class UserRepositoryImpl @Inject constructor(
 	).subscribeOn(MySchedulers.io())
 	
 	private fun deleteFromMatch(
-		userForWhichDelete: BaseUserInfo,
-		userWhomToDelete: BaseUserInfo,
-		conversationId: String
+        userForWhichDelete: BaseUserInfo,
+        userWhomToDelete: BaseUserInfo,
+        conversationId: String
 	) = Single.zip(
 		// delete from matches
 		fs.collection(USERS_COLLECTION)
@@ -117,9 +117,9 @@ class UserRepositoryImpl @Inject constructor(
 	
 
 	override fun deletePhoto(
-		userItem: UserItem,
-		photoItem: PhotoItem,
-		isMainPhotoDeleting: Boolean
+        userItem: UserItem,
+        photoItem: PhotoItem,
+        isMainPhotoDeleting: Boolean
 	): Completable = userDataSource.updateFirestoreUserField(
 		id = userItem.baseUserInfo.userId,
 		field = USER_PHOTOS_LIST_FIELD,
@@ -236,9 +236,10 @@ class UserRepositoryImpl @Inject constructor(
 			}
 
 	
-	override fun submitReport(report: Report): Completable = fs.collection(REPORTS_COLLECTION)
-		.document(report.reportId)
-		.setAsCompletable(report)
+	override fun submitReport(type: ReportType, baseUserInfo: BaseUserInfo): Completable =
+		fs.collection(REPORTS_COLLECTION)
+			.document()
+			.setAsCompletable(Report(reportType = type, reportedUser = baseUserInfo))
 
 
 	override fun updateUserItem(userItem: UserItem): Completable =
@@ -246,8 +247,8 @@ class UserRepositoryImpl @Inject constructor(
 
 
 	override fun uploadUserProfilePhoto(
-		userItem: UserItem,
-		photoUri: String
+        userItem: UserItem,
+        photoUri: String
 	): Observable<HashMap<Double, List<PhotoItem>>> =
 		ObservableCreate<HashMap<Double, List<PhotoItem>>> { emitter ->
 			val namePhoto = DateFormat.format(

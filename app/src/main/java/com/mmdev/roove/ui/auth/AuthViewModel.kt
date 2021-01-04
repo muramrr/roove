@@ -20,8 +20,8 @@ package com.mmdev.roove.ui.auth
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.business.auth.AuthRepository
-import com.mmdev.business.user.UserItem
+import com.mmdev.domain.auth.AuthRepository
+import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.core.log.logDebug
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType

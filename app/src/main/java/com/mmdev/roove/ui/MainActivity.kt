@@ -19,13 +19,13 @@
 package com.mmdev.roove.ui
 
 import android.os.Bundle
-import android.view.View
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
-import com.mmdev.business.user.UserItem
+import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,14 +44,10 @@ class MainActivity: AppCompatActivity() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 
-		window.apply {
-			clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-			addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-			decorView.systemUiVisibility =
-				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-						View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-			//status bar and navigation bar colors assigned in style file
-		}
+		WindowCompat.setDecorFitsSystemWindows(
+			window.apply { addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS) },
+			false
+		)
 		
 		super.onCreate(savedInstanceState)
 
@@ -68,12 +64,12 @@ class MainActivity: AppCompatActivity() {
 				},
 				unauthenticated = {
 					currentUser = null
-					navController.navigate(R.id.action_global_authFlowFragment)
+					navController.navigate(R.id.action_global_authFragment)
 				},
 				unregistered = {
 					currentUser = null
 					sharedViewModel.userInfoForRegistration.postValue(it)
-					navController.navigate(R.id.action_global_registrationFlowFragment)
+					navController.navigate(R.id.action_global_registrationFragment)
 				}
 			)
 		})

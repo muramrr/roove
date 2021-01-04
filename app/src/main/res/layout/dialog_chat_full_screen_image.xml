@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (C) 2021. roove
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -27,24 +27,20 @@
 			type="String" />
 	</data>
 
-	<androidx.constraintlayout.widget.ConstraintLayout
+	<FrameLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@color/black">
 
 		<com.github.chrisbanes.photoview.PhotoView android:id="@+id/ivDialogFullScreen"
-			android:layout_width="0dp"
-			android:layout_height="0dp"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
 			android:adjustViewBounds="true"
 			android:scaleType="centerInside"
 
 			app:bindImageUrl="@{photoUrl}"
 			app:progressBar="@{pbImageLoading}"
 
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
 			/>
 
 		<ProgressBar android:id="@+id/pbImageLoading"
@@ -58,12 +54,7 @@
 			android:progressDrawable="@drawable/progress_drawable"
 
 			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
 			/>
 
-	</androidx.constraintlayout.widget.ConstraintLayout>
+	</FrameLayout>
 </layout>

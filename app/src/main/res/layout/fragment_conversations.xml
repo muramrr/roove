@@ -30,20 +30,18 @@
 	</data>
 
 
-	<androidx.constraintlayout.widget.ConstraintLayout
-		android:id="@+id/containerConversations"
+	<FrameLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@color/colorPrimaryDark">
 
 		<androidx.recyclerview.widget.RecyclerView android:id="@+id/rvConversationList"
-			android:layout_width="0dp"
-			android:layout_height="0dp"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
 			android:clipToPadding="false"
 			android:fadeScrollbars="false"
 			android:scrollbars="vertical"
 			android:scrollbarThumbVertical="@color/white"
-
 
 			app:visibilityInvisible='@{!viewModel.showTextHelper}'
 
@@ -51,29 +49,22 @@
 
 			app:paddingTopSystemWindowInsets="@{true}"
 
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
-
 			tools:itemCount="5"
-			tools:listitem="@layout/item_conversation" />
-
-		<TextView android:id="@+id/tvConversationsHelperText"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-
-			android:text="@string/fragment_conversations_explanation_text"
-			android:textSize="24sp"
-
-			app:visibilityInvisible='@{viewModel.showTextHelper}'
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
+			tools:listitem="@layout/item_conversation"
 			/>
 
-	</androidx.constraintlayout.widget.ConstraintLayout>
+		<com.google.android.material.textview.MaterialTextView android:id="@+id/tvConversationsHelperText"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+
+			android:text="@string/fragment_conversations_explanation_text"
+			android:textAlignment="center"
+			android:textAppearance="?textAppearanceHeadline6"
+
+			app:visibilityInvisible='@{viewModel.showTextHelper}'
+			/>
+
+	</FrameLayout>
 
 </layout>

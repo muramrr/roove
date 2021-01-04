@@ -20,11 +20,11 @@ package com.mmdev.data.repository.pairs
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.mmdev.business.pairs.MatchedUserItem
-import com.mmdev.business.pairs.PairsRepository
-import com.mmdev.business.user.UserItem
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.firebase.executeAndDeserializeSingle
+import com.mmdev.domain.pairs.MatchedUserItem
+import com.mmdev.domain.pairs.PairsRepository
+import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 

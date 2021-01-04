@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,15 +26,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.mmdev.business.chat.MessageItem
+import com.mmdev.domain.chat.MessageItem
+import com.mmdev.domain.photo.PhotoItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.ui.chat.view.ChatAdapter.ChatViewHolder
-import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 
-class ChatAdapter (private var listMessageItems: List<MessageItem> = mutableListOf()):
-        RecyclerView.Adapter<ChatViewHolder>(),
-        BaseRecyclerAdapter.BindableAdapter<List<MessageItem>>{
+class ChatAdapter(
+	private val data: MutableList<MessageItem> = mutableListOf()
+): RecyclerView.Adapter<ChatViewHolder>() {
 	
 	private var userId = ""
 
@@ -64,11 +64,11 @@ class ChatAdapter (private var listMessageItems: List<MessageItem> = mutableList
 
 	override fun onBindViewHolder(viewHolder: ChatViewHolder, position: Int) {
 		viewHolder.setMessageType(getItemViewType(position))
-		viewHolder.bind(listMessageItems[position])
+		viewHolder.bind(data[position])
 	}
 
 	override fun getItemViewType(position: Int): Int {
-		val message = listMessageItems[position]
+		val message = data[position]
 		return if (message.photoItem != null) {
 			if (message.sender.userId == userId) RIGHT_MSG_IMG
 			else LEFT_MSG_IMG
@@ -79,19 +79,18 @@ class ChatAdapter (private var listMessageItems: List<MessageItem> = mutableList
 		}
 	}
 
-	override fun getItemCount() = listMessageItems.size
+	override fun getItemCount() = data.size
 
-	fun newMessage(position: Int = 0){
-		//listMessageItems.add(position, messageItem)
-		notifyItemInserted(position)
+	fun newMessage(message: MessageItem) {
+		data.add(0, message)
+		notifyItemInserted(0)
 	}
-
-	fun getItem(position: Int) = listMessageItems[position]
 
 	fun setCurrentUserId(id: String) { userId = id }
 
-	override fun setData(data: List<MessageItem>) {
-		listMessageItems = data
+	fun setNewData(newData: List<MessageItem>) {
+		data.clear()
+		data.addAll(newData)
 		notifyDataSetChanged()
 	}
 
@@ -100,10 +99,10 @@ class ChatAdapter (private var listMessageItems: List<MessageItem> = mutableList
 //		userId = name
 //	}
 	
-	private var clickListener: ((View, Int) -> Unit)? = null
+	private var clickListener: ((View, Int, PhotoItem?) -> Unit)? = null
 	
 	// allows clicks events on attached photo
-	fun setOnAttachedPhotoClickListener(listener: (View, Int) -> Unit) {
+	fun setOnAttachedPhotoClickListener(listener: (View, Int, PhotoItem?) -> Unit) {
 		clickListener = listener
 	}
 
@@ -114,7 +113,7 @@ class ChatAdapter (private var listMessageItems: List<MessageItem> = mutableList
 
 		init {
 			ivChatPhoto.setOnClickListener {
-				clickListener?.invoke(itemView.rootView, adapterPosition)
+				clickListener?.invoke(itemView.rootView, adapterPosition, data[adapterPosition].photoItem)
 			}
 		}
 

@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,17 +22,16 @@ import com.mmdev.roove.R
 import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 
 
-class ImagePagerAdapter (private var imagesUrlList: List<String> = emptyList(),
-						 private val layoutId: Int = R.layout.universal_pager_image_container):
-		BaseRecyclerAdapter<String>(),
-		BaseRecyclerAdapter.BindableAdapter<List<String>> {
+class ImagePagerAdapter(
+	private var data: List<String> = emptyList()
+): BaseRecyclerAdapter<String>() {
 
-	override fun getItem(position: Int) = imagesUrlList[position]
-	override fun getItemCount() = imagesUrlList.size
-	override fun getLayoutIdForItem(position: Int) = layoutId
+	override fun getItem(position: Int) = data[position]
+	override fun getItemCount() = data.size
+	override fun getLayoutIdForItem(position: Int) = R.layout.universal_pager_image_container
 
-	override fun setData(data: List<String>) {
-		imagesUrlList = data
+	fun setData(newData: List<String>) {
+		data = newData
 		notifyDataSetChanged()
 	}
 }

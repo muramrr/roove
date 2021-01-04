@@ -76,7 +76,7 @@
 			app:backgroundTint="@color/myFacebookColor"
 			app:icon="@drawable/ic_facebook_logo"
 			app:cornerRadius="8dp"
-			app:rippleColor="@color/black_50"
+			app:rippleColor="@color/myFacebookColor"
 
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toStartOf="parent"

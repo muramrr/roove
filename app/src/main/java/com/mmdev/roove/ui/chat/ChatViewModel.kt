@@ -20,10 +20,10 @@ package com.mmdev.roove.ui.chat
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.business.chat.ChatRepository
-import com.mmdev.business.chat.MessageItem
-import com.mmdev.business.conversations.ConversationItem
-import com.mmdev.business.user.BaseUserInfo
+import com.mmdev.domain.chat.ChatRepository
+import com.mmdev.domain.chat.MessageItem
+import com.mmdev.domain.conversations.ConversationItem
+import com.mmdev.domain.user.data.BaseUserInfo
 import com.mmdev.roove.core.log.logDebug
 import com.mmdev.roove.core.log.logInfo
 import com.mmdev.roove.ui.MainActivity
