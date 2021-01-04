@@ -29,7 +29,6 @@ import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.log.logInfo
 import com.mmdev.roove.databinding.ActivityMainBinding
-import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -42,8 +41,6 @@ class MainActivity: AppCompatActivity() {
 	}
 	
 	private val sharedViewModel: SharedViewModel by viewModels()
-	
-	private val remoteViewModel: RemoteRepoViewModel by viewModels()
 	
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +65,7 @@ class MainActivity: AppCompatActivity() {
 					navController.navigate(R.id.action_global_mainFlowFragment)
 					
 					//for (i in 0 until Random.nextInt(5, 100)) {
-					//	remoteViewModel.updateUserItem(UtilityManager.generateFakeUserNearby(it))
+					//	sharedViewModel.updateUserItem(UtilityManager.generateFakeUserNearby(it))
 					//}
 				},
 				unauthenticated = {

@@ -39,8 +39,6 @@ interface IUserRepository {
 
 	fun submitReport(type: ReportType, baseUserInfo: BaseUserInfo): Completable
 
-	fun updateUserItem(userItem: UserItem): Completable
-
 	fun uploadUserProfilePhoto(
         userItem: UserItem,
         photoUri: String

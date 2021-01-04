@@ -109,7 +109,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 		}
 		
 		binding.btnSettingsEditSave.setOnClickListener {
-			mViewModel.updateUserItem(
+			sharedViewModel.updateUser(
 				MainActivity.currentUser!!.apply {
 					copy(
 						baseUserInfo = baseUserInfo.copy(
@@ -119,8 +119,6 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 						),
 						aboutText = newDescription ?: aboutText
 					)
-				}.also {
-					MainActivity.currentUser = it
 				}
 			)
 		}

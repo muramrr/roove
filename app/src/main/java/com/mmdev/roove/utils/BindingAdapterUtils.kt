@@ -38,15 +38,15 @@ object BindingAdapterUtils {
 
 
 	@JvmStatic
-	@BindingAdapter("app:visibilityInvisible")
-	fun setInvisible(view: View, isShow: Boolean = false) {
-		view.visibility = if (isShow) View.VISIBLE else View.INVISIBLE
+	@BindingAdapter("app:invisibleIf")
+	fun setInvisible(view: View, condition: Boolean = false) {
+		view.visibility = if (condition) View.INVISIBLE else View.VISIBLE
 	}
 
 	@JvmStatic
-	@BindingAdapter("app:visibilityGone")
-	fun setGone(view: View, isShow: Boolean = false) {
-		view.visibility = if (isShow) View.VISIBLE else View.GONE
+	@BindingAdapter("app:goneIf")
+	fun setGone(view: View, condition: Boolean = false) {
+		view.visibility = if (condition) View.GONE else View.VISIBLE
 	}
 
 	@JvmStatic
@@ -92,16 +92,20 @@ object BindingAdapterUtils {
 	}
 
 	@JvmStatic
-	@BindingAdapter("app:paddingLeftSystemWindowInsets",
-	                "app:paddingTopSystemWindowInsets",
-	                "app:paddingRightSystemWindowInsets",
-	                "app:paddingBottomSystemWindowInsets",
-	                requireAll = false)
-	fun applySystemWindowInsets(view: View,
-	                            applyLeft: Boolean,
-	                            applyTop: Boolean,
-	                            applyRight: Boolean,
-	                            applyBottom: Boolean) {
+	@BindingAdapter(
+		"app:paddingLeftSystemWindowInsets",
+		"app:paddingTopSystemWindowInsets",
+		"app:paddingRightSystemWindowInsets",
+		"app:paddingBottomSystemWindowInsets",
+		requireAll = false
+	)
+	fun applySystemWindowInsets(
+		view: View,
+		applyLeft: Boolean,
+		applyTop: Boolean,
+		applyRight: Boolean,
+		applyBottom: Boolean
+	) {
 		view.doOnApplyWindowInsets { targetView, insets, padding ->
 
 			val left = if (applyLeft) insets.systemWindowInsetLeft else 0
@@ -109,10 +113,12 @@ object BindingAdapterUtils {
 			val right = if (applyRight) insets.systemWindowInsetRight else 0
 			val bottom = if (applyBottom) insets.systemWindowInsetBottom else 0
 
-			targetView.setPadding(padding.left + left,
-			                      padding.top + top,
-			                      padding.right + right,
-			                      padding.bottom + bottom)
+			targetView.setPadding(
+				padding.left + left,
+				padding.top + top,
+				padding.right + right,
+				padding.bottom + bottom
+			)
 		}
 	}
 }

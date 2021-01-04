@@ -42,7 +42,7 @@
 			android:clipToPadding="false"
 			android:overScrollMode="never"
 
-			app:visibilityInvisible="@{!viewModel.showTextHelper}"
+			app:invisibleIf="@{viewModel.showTextHelper}"
 
 			app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
 			app:spanCount="2"
@@ -61,7 +61,7 @@
 			android:textAlignment="center"
 			android:textAppearance="?textAppearanceHeadline5"
 			
-			app:visibilityInvisible="@{viewModel.showTextHelper}"
+			app:invisibleIf="@{!viewModel.showTextHelper}"
 			/>
 
 	</FrameLayout>

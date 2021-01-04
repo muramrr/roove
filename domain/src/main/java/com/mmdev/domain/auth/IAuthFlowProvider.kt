@@ -19,6 +19,8 @@
 package com.mmdev.domain.auth
 
 import com.mmdev.domain.user.UserState
+import com.mmdev.domain.user.data.UserItem
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 
 /**
@@ -27,7 +29,9 @@ import io.reactivex.rxjava3.core.Observable
 
 interface IAuthFlowProvider {
 	
-	fun getUser(): Observable<UserState>
+	fun getUserAuthState(): Observable<UserState>
+	
+	fun updateUserItem(user: UserItem): Completable
 	
 	fun logOut()
 	

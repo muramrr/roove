@@ -89,7 +89,7 @@
 					android:src="@color/lolite"
 
 					app:shapeAppearanceOverlay="@style/MyAppShapeAppearanceOverlay.Circle"
-					app:visibilityInvisible="@{viewModel.isPartnerOnline}"
+					app:invisibleIf="@{!viewModel.isPartnerOnline}"
 
 					app:layout_constraintHorizontal_chainStyle="spread_inside"
 					app:layout_constraintEnd_toStartOf="@id/toolbarChatPartnerPhoto"
@@ -126,7 +126,7 @@
 			android:overScrollMode="never"
 			android:scrollbars="none"
 
-			app:visibilityInvisible="@{!viewModel.showLoading}"
+			app:invisibleIf="@{viewModel.showLoading}"
 
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 			app:layout_constraintStart_toStartOf="parent"
@@ -140,7 +140,7 @@
 		<View android:id="@+id/messageInputContainerBackground"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			android:background="?colorPrimaryDark"
+			android:background="?colorSurface"
 			android:focusable="false"
 			android:clickable="false"
 			app:layout_constraintStart_toStartOf="parent"
@@ -176,8 +176,6 @@
 			android:hint="@string/fragment_chat_ed_hint"
 			android:maxLength="200"
 
-			android:textColor="@color/white"
-
 			app:layout_constraintTop_toBottomOf="@id/rvMessageList"
 			app:layout_constraintStart_toEndOf="@id/btnSendAttachment"
 			app:layout_constraintBottom_toBottomOf="parent"
@@ -201,18 +199,17 @@
 			app:layout_constraintTop_toBottomOf="@id/rvMessageList"
 			/>
 
-		<com.mmdev.roove.ui.common.custom.components.LoadingView
-			android:id="@+id/loadingViewChat"
-			android:layout_width="120dp"
-			android:layout_height="120dp"
-
-			app:visibilityInvisible="@{viewModel.showLoading}"
-
+		<include android:id="@+id/loadingViewChat"
+			layout="@layout/loading"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			
+			app:invisibleIf="@{!viewModel.showLoading}"
+			
+			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			
 			/>
 
 		<com.google.android.material.textview.MaterialTextView
@@ -221,7 +218,9 @@
 			android:gravity="center"
 
 			android:text="@string/chat_no_messages_explanation"
-			app:visibilityInvisible='@{viewModel.chatIsEmpty}'
+			android:textAppearance="?textAppearanceHeadline5"
+			
+			app:invisibleIf='@{!viewModel.chatIsEmpty}'
 
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"

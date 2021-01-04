@@ -55,7 +55,7 @@ class SharedViewModel @ViewModelInject constructor(
 	
 	init {
 		disposables.add(
-			authFlow.getUser()
+			authFlow.getUserAuthState()
 				.subscribe(
 					{ userState.postValue(it) },
 					{ logError(TAG, "$it") }
@@ -64,5 +64,19 @@ class SharedViewModel @ViewModelInject constructor(
 	}
 	
 	fun logOut() = authFlow.logOut()
+	
+	fun updateUser(user: UserItem) {
+		disposables.add(
+			authFlow.updateUserItem(user)
+				.subscribe(
+					{
+						MainActivity.currentUser = user
+					},
+					{
+						logError(TAG, "$it")
+					}
+				)
+		)
+	}
 
 }

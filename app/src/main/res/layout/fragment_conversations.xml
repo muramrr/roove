@@ -43,7 +43,7 @@
 			android:scrollbars="vertical"
 			android:scrollbarThumbVertical="@color/white"
 
-			app:visibilityInvisible='@{!viewModel.showTextHelper}'
+			app:invisibleIf='@{viewModel.showTextHelper}'
 
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
@@ -60,9 +60,9 @@
 
 			android:text="@string/fragment_conversations_explanation_text"
 			android:textAlignment="center"
-			android:textAppearance="?textAppearanceHeadline6"
-
-			app:visibilityInvisible='@{viewModel.showTextHelper}'
+			android:textAppearance="?textAppearanceHeadline5"
+			
+			app:invisibleIf='@{!viewModel.showTextHelper}'
 			/>
 
 	</FrameLayout>

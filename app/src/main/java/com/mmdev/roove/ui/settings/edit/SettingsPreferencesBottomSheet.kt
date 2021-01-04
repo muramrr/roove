@@ -16,7 +16,7 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.roove.ui.settings
+package com.mmdev.roove.ui.settings.edit
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,9 +25,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender
-import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender.EVERYONE
-import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender.FEMALE
-import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender.MALE
+import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender.*
 import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.BtmSheetSettingsPreferencesBinding
@@ -46,8 +44,8 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 	
 	
 	private var newPreferredGender: PreferredGender? = null
-	private var newPreferredMinAge: Float? = 0f
-	private var newPreferredMaxAge: Float? = 0f
+	private var newPreferredMinAge: Float? = null
+	private var newPreferredMaxAge: Float? = null
 	
 	
 	override fun onCreateView(
@@ -101,5 +99,23 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 			userItem.preferences.ageRange.maxAge.toFloat()
 		)
 	}
- 
+	
+	override fun onStop() {
+		if (newPreferredGender != null || newPreferredMaxAge != null || newPreferredMinAge != null)
+			with(MainActivity.currentUser!!.preferences) {
+				sharedViewModel.updateUser(
+					MainActivity.currentUser!!.copy(
+						preferences = copy(
+							gender = newPreferredGender ?: gender,
+							ageRange = ageRange.copy(
+								minAge = newPreferredMinAge?.toInt() ?: ageRange.minAge,
+								maxAge = newPreferredMaxAge?.toInt() ?: ageRange.maxAge
+							)
+						)
+					)
+				)
+			}
+			
+		super.onStop()
+	}
 }

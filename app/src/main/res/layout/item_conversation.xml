@@ -99,7 +99,7 @@
 
 			android:text="@{bindItem.unreadCount + ``}"
 
-			app:visibilityInvisible="@{bindItem.unreadCount != 0}"
+			app:invisibleIf="@{bindItem.unreadCount == 0}"
 
 			app:layout_constraintHorizontal_chainStyle="spread_inside"
 			app:layout_constraintStart_toEndOf="@id/tvConversationItemUserName"

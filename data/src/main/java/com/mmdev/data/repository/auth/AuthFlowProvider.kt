@@ -32,6 +32,8 @@ import com.mmdev.data.datasource.auth.FirebaseUserState.NotNullUser
 import com.mmdev.data.datasource.location.LocationDataSource
 import com.mmdev.domain.auth.IAuthFlowProvider
 import com.mmdev.domain.user.UserState
+import com.mmdev.domain.user.data.UserItem
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.functions.BiFunction
 import javax.inject.Inject
@@ -60,7 +62,7 @@ class AuthFlowProvider @Inject constructor(
 		FirebaseUserState.pack(it.currentUser)
 	}
 	
-	override fun getUser(): Observable<UserState> = authObservable.switchMap { firebaseUser ->
+	override fun getUserAuthState(): Observable<UserState> = authObservable.switchMap { firebaseUser ->
 		logDebug(TAG, "Collecting auth information...")
 		
 		if (firebaseUser is NotNullUser) {
@@ -104,9 +106,10 @@ class AuthFlowProvider @Inject constructor(
 					Observable.just(UserState.unregistered(firebaseUser.toUserItem()))
 				else Observable.just(UserState.UNDEFINED)
 			}
-			
 	
 	
+	override fun updateUserItem(user: UserItem): Completable =
+		userDataSource.writeFirestoreUser(user)
 	
 	
 	override fun logOut(){

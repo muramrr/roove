@@ -134,7 +134,6 @@ class UserRepositoryImpl @Inject constructor(
 		}
 	}.andThen {
 		// if we are deleting not a facebook-provided photo -> delete also on storage
-		
 		if (photoItem.fileName != FACEBOOK_PHOTO_NAME)
 			storage
 				.child(GENERAL_FOLDER_STORAGE_IMG)
@@ -240,10 +239,6 @@ class UserRepositoryImpl @Inject constructor(
 		fs.collection(REPORTS_COLLECTION)
 			.document()
 			.setAsCompletable(Report(reportType = type, reportedUser = baseUserInfo))
-
-
-	override fun updateUserItem(userItem: UserItem): Completable =
-		userDataSource.writeFirestoreUser(userItem)
 
 
 	override fun uploadUserProfilePhoto(

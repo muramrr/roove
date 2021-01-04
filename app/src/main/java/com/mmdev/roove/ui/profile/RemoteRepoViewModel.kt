@@ -105,19 +105,6 @@ class RemoteRepoViewModel @ViewModelInject constructor(
 		)
 	}
 
-	fun updateUserItem(userItem: UserItem) {
-		disposables.add(repo.updateUserItem(userItem)
-            .observeOn(mainThread())
-            .subscribe(
-	            { isUserUpdatedStatus.value = true },
-	            {
-		            isUserUpdatedStatus.value = false
-		            error.value = MyError(ErrorType.SAVING, it)
-	            }
-            )
-		)
-	}
-
 	fun uploadUserProfilePhoto(photoUri: String) {
 		disposables.add(repo.uploadUserProfilePhoto(MainActivity.currentUser!!, photoUri)
             .observeOn(mainThread())

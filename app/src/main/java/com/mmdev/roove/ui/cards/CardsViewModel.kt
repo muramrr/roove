@@ -37,14 +37,15 @@ class CardsViewModel @ViewModelInject constructor(
 	enum class SwipeAction {
 		SKIP, LIKE
 	}
-
+	
+	private var cardIndex = 0
 	private val usersCardsList = MutableLiveData<List<UserItem>>()
 
 	val showLoading = MutableLiveData<Boolean>()
 	val showMatchDialog = MutableLiveData<UserItem>()
 	val showEmptyIndicator = MutableLiveData<Boolean>()
 	
-	private var cardIndex = 0
+	
 	val topCard = MutableLiveData<UserItem?>(null)
 	val bottomCard = MutableLiveData<UserItem?>(null)
 	
@@ -76,8 +77,11 @@ class CardsViewModel @ViewModelInject constructor(
 		disposables.add(repo.getUsersByPreferences(MainActivity.currentUser!!, initialLoading)
             .observeOn(mainThread())
             .doOnSubscribe { showLoading.value = true }
+			.doFinally { showLoading.value = false }
             .subscribe(
 				{ cards ->
+					showEmptyIndicator.postValue(cards.isNullOrEmpty())
+					
 					if (cards.isNotEmpty()) {
 						cardIndex = 0
 						
@@ -88,10 +92,7 @@ class CardsViewModel @ViewModelInject constructor(
 						topCard.postValue(genericList.firstOrNull())
 						bottomCard.postValue(genericList.drop(1).firstOrNull())
 						
-						showLoading.postValue(genericList.isNullOrEmpty())
-						showEmptyIndicator.postValue(genericList.isNullOrEmpty())
 					}
-					
 					
 					logInfo(TAG, "loaded cards: ${cards.size}")
 				},

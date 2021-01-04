@@ -199,6 +199,8 @@
 			android:layout_marginEnd="200dp"
 			android:layout_marginBottom="80dp"
 			
+			android:rotation="-10"
+			
 			app:layout_constraintWidth_percent="0.7"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
@@ -212,6 +214,7 @@
 			android:layout_height="0dp"
 			
 			android:alpha="1"
+			android:rotation="-10"
 			
 			app:layout_constraintTop_toTopOf="@id/topCard"
 			app:layout_constraintBottom_toBottomOf="@id/topCard"
@@ -274,6 +277,8 @@
 			android:layout_marginEnd="50dp"
 			android:layout_marginBottom="80dp"
 			
+			android:rotation="10"
+			
 			app:layout_constraintWidth_percent="0.7"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
@@ -287,6 +292,7 @@
 			android:layout_height="0dp"
 			
 			android:alpha="1"
+			android:rotation="10"
 			
 			app:layout_constraintTop_toTopOf="@id/topCard"
 			app:layout_constraintBottom_toBottomOf="@id/topCard"
@@ -392,6 +398,8 @@
 			android:layout_marginEnd="200dp"
 			android:layout_marginBottom="80dp"
 			
+			android:rotation="-10"
+			
 			app:layout_constraintWidth_percent="0.7"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
@@ -405,6 +413,7 @@
 			android:layout_height="0dp"
 			
 			android:alpha="1"
+			android:rotation="-10"
 			
 			app:layout_constraintTop_toTopOf="@id/bottomCard"
 			app:layout_constraintBottom_toBottomOf="@id/bottomCard"
@@ -467,6 +476,8 @@
 			android:layout_marginEnd="50dp"
 			android:layout_marginBottom="80dp"
 			
+			android:rotation="10"
+			
 			app:layout_constraintWidth_percent="0.7"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
@@ -480,6 +491,7 @@
 			android:layout_height="0dp"
 			
 			android:alpha="1"
+			android:rotation="10"
 			
 			app:layout_constraintTop_toTopOf="@id/bottomCard"
 			app:layout_constraintBottom_toBottomOf="@id/bottomCard"
