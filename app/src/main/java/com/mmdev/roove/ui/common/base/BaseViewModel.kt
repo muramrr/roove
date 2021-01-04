@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 abstract class BaseViewModel: ViewModel() {
 
-	internal val error: MutableLiveData<MyError> = MutableLiveData()
+	internal val error = MutableLiveData<MyError>()
 	protected val disposables = CompositeDisposable()
 	protected val TAG = "mylogs_${javaClass.simpleName}"
 

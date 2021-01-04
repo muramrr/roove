@@ -18,23 +18,30 @@
 
 package com.mmdev.data.repository.cards
 
+import com.firebase.geofire.GeoFireUtils
+import com.firebase.geofire.GeoLocation
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.firebase.asSingle
-import com.mmdev.data.core.firebase.executeAndDeserializeSingle
 import com.mmdev.data.core.firebase.setAsCompletable
 import com.mmdev.data.core.log.logDebug
+import com.mmdev.data.core.log.logError
 import com.mmdev.domain.cards.CardsRepository
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.domain.pairs.MatchedUserItem
 import com.mmdev.domain.user.data.BaseUserInfo
+import com.mmdev.domain.user.data.Gender
+import com.mmdev.domain.user.data.Gender.*
+import com.mmdev.domain.user.data.SelectionPreferences.PreferredGender.EVERYONE
 import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3
+import io.reactivex.rxjava3.internal.operators.single.SingleCreate
 import javax.inject.Inject
 
 /**
@@ -47,36 +54,39 @@ class CardsRepositoryImpl @Inject constructor(
 	
 	companion object {
 		private const val USERS_FILTER_GENDER = "baseUserInfo.gender"
-		private const val USERS_FILTER_AGE = "baseUserInfo.age"
-		private const val USERS_FILTER_LOCATION_LAT = "location.latitude"
-		private const val USERS_FILTER_LOCATION_LON = "location.longitude"
+		private const val USERS_FILTER_LOCATION_HASH = "location.hash"
+		private const val cardsLimit: Long = 20
  	}
 	
-	private val cardsLimit: Long = 19
 	private val excludingIds: MutableSet<String> = mutableSetOf()
 	
-	private fun cardsQuery(user: UserItem): Query = with(user.location.getBounds(user.preferences.radius)) {
-		fs.collection(USERS_COLLECTION)
-			//in preferred radius around user location
-			.whereGreaterThanOrEqualTo(USERS_FILTER_LOCATION_LAT, minPoint.latitude)
-			.whereLessThanOrEqualTo(USERS_FILTER_LOCATION_LAT, maxPoint.latitude)
-			.whereGreaterThanOrEqualTo(USERS_FILTER_LOCATION_LON, minPoint.longitude)
-			.whereLessThanOrEqualTo(USERS_FILTER_LOCATION_LON, maxPoint.longitude)
-			//filter by preferred age
-			.whereGreaterThanOrEqualTo(USERS_FILTER_AGE, user.preferences.ageRange.minAge)
-			.whereLessThanOrEqualTo(USERS_FILTER_AGE, user.preferences.ageRange.maxAge)
-			//only preferred gender, if everyone -> include both genders
-			//todo filter by gender
-//			.whereIn(
-//				USERS_FILTER_GENDER,
-//				if (user.baseUserInfo.preferredGender != "everyone")
-//					listOf(user.baseUserInfo.preferredGender)
-//				else listOf("male", "female")
-//			)
-			//filtered from excluded
-			.whereNotIn(USER_ID_FIELD, excludingIds.toList())
-			.limit(cardsLimit)
+	private fun cardsQuery(user: UserItem) = with(user.location) {
+		excludingIds.add(user.baseUserInfo.userId)
+		// Find cities within 50km of London
+		val center = GeoLocation(latitude, longitude)
+		val radiusInMeters = user.preferences.radius * 1000
+		
+		// Each item in 'bounds' represents a startAt/endAt pair. We have to issue
+		// a separate query for each pair. There can be up to 9 pairs of bounds
+		// depending on overlap, but in most cases there are 4.
+		val bounds = GeoFireUtils.getGeoHashQueryBounds(center, radiusInMeters)
+		bounds.map {
+			fs.collection(USERS_COLLECTION)
+				//people nearby
+				.orderBy(USERS_FILTER_LOCATION_HASH)
+				.startAt(it.startHash)
+				.endAt(it.endHash)
+				//filter by gender
+				.whereIn(
+					USERS_FILTER_GENDER,
+					if (user.preferences.gender != EVERYONE) listOf(user.preferences.gender)
+					else Gender.values().asList()
+				)
+				.get()
+			//todo: is limit needed? or how to implement pagination?
 		}
+		
+	}
 		
 		
 		
@@ -96,10 +106,25 @@ class CardsRepositoryImpl @Inject constructor(
 	 */
 	override fun getUsersByPreferences(user: UserItem, initialLoading: Boolean): Single<List<UserItem>> =
 		if (initialLoading) {
-			getExcludedUserIds(user)
-				.flatMap {
-					getUsersCardsByPreferences(user)
+			getExcludedUserIds(user).zipWith(
+				getUsersCardsByPreferences(user),
+				BiFunction { excludingIds, users ->
+					return@BiFunction users
+						//filter from excludingIds
+						.filterNot {
+							//logDebug(TAG, "Users retrieved by location and gender: $it")
+							excludingIds.contains(it.baseUserInfo.userId)
+						}
+						//filter by age preferences
+						.filter {
+							//logDebug(TAG, "Filtered users from excluding set: $it")
+							IntRange(
+								user.preferences.ageRange.minAge,
+								user.preferences.ageRange.maxAge
+							).contains(it.baseUserInfo.age)
+						}
 				}
+			)
 		}
 		else { getUsersCardsByPreferences(user) }
 			.subscribeOn(MySchedulers.computation())
@@ -109,8 +134,24 @@ class CardsRepositoryImpl @Inject constructor(
 	 * @see cardsQuery
 	 */
 	private fun getUsersCardsByPreferences(user: UserItem): Single<List<UserItem>> =
-		cardsQuery(user)
-			.executeAndDeserializeSingle(UserItem::class.java)
+		SingleCreate<List<UserItem>> { emitter ->
+			val queries = cardsQuery(user)
+			Tasks.whenAllComplete(queries)
+				.addOnSuccessListener { tasks ->
+					tasks
+						.map { task -> task.result }
+						.map { taskResult ->
+							emitter.onSuccess(
+								(taskResult as QuerySnapshot?)?.toObjects(UserItem::class.java)
+								?: emptyList()
+							)
+						}
+				}
+				.addOnFailureListener {
+					logError(TAG, "$it")
+					emitter.onError(it)
+				}
+		}.subscribeOn(MySchedulers.computation())
 	
 	
 	/**

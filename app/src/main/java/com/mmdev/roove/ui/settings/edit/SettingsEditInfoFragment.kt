@@ -26,8 +26,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.domain.user.data.Gender
-import com.mmdev.domain.user.data.Gender.FEMALE
-import com.mmdev.domain.user.data.Gender.MALE
+import com.mmdev.domain.user.data.Gender.*
 import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentSettingsEditInfoBinding
@@ -38,16 +37,20 @@ import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel.DeletingStatus.IN_PROGRESS
 import com.mmdev.roove.utils.extensions.hideKeyboard
 import com.mmdev.roove.utils.extensions.showToastText
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * This fragment allow you to edit your profile
  */
 
+@AndroidEntryPoint
 class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsEditInfoBinding>(
 	layoutId = R.layout.fragment_settings_edit_info
 ) {
 	
-	override val mViewModel: RemoteRepoViewModel by requireParentFragment().viewModels()
+	override val mViewModel: RemoteRepoViewModel by viewModels(
+		ownerProducer = { requireParentFragment() }
+	)
 	
 	private val mEditorPhotoAdapter = SettingsEditInfoPhotoAdapter()
 
@@ -105,9 +108,21 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 			}
 		}
 		
-		//todo
 		binding.btnSettingsEditSave.setOnClickListener {
-			//mViewModel.updateUserItem()
+			mViewModel.updateUserItem(
+				MainActivity.currentUser!!.apply {
+					copy(
+						baseUserInfo = baseUserInfo.copy(
+							name = newName ?: baseUserInfo.name,
+							age = newAge ?: baseUserInfo.age,
+							gender = newGender ?: baseUserInfo.gender
+						),
+						aboutText = newDescription ?: aboutText
+					)
+				}.also {
+					MainActivity.currentUser = it
+				}
+			)
 		}
 		binding.btnSettingsEditDelete.setOnClickListener {
 			showDialogDeleteAttention()
@@ -119,6 +134,8 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 		if (userItem.baseUserInfo.gender == MALE)
 			binding.toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderMale)
 		else binding.toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderFemale)
+		
+		mEditorPhotoAdapter.setNewData(userItem.photoURLs)
 
 		changerNameSetup()
 		changerAgeSetup()
@@ -142,13 +159,11 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 			}
 		}
 	}
-
-	//todo
+	
 	private fun changerAgeSetup() {
 		binding.sliderSettingsEditAge.addOnChangeListener { _, value, _ ->
 			newAge = value.toInt()
-			//currentUser.baseUserInfo.age = age
-			binding.tvSettingsEditAge.text = "Age: $newAge"
+			binding.tvSettingsEditAge.text = getString(R.string.fragment_settings_age_formatter).format(newAge)
 		}
 	}
 	

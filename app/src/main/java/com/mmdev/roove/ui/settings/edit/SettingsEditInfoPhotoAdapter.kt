@@ -53,7 +53,7 @@ class SettingsEditInfoPhotoAdapter(
 		notifyItemRemoved(position)
 	}
 	
-	fun setNewData(newData: MutableList<PhotoItem>) {
+	fun setNewData(newData: List<PhotoItem>) {
 		data.clear()
 		data.addAll(newData)
 		notifyDataSetChanged()

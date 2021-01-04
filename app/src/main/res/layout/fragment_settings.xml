@@ -26,7 +26,7 @@
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/colorPrimaryDark">
+		android:background="@color/colorBackground">
 
 		<androidx.core.widget.NestedScrollView
 			android:layout_width="match_parent"
@@ -45,13 +45,13 @@
 				<com.google.android.material.appbar.MaterialToolbar
 					android:id="@+id/toolbarSettings"
 					android:layout_width="0dp"
-					android:layout_height="?actionBarSize"
-					android:background="@color/colorPrimary"
+					android:layout_height="wrap_content"
 
 					app:menu="@menu/settings_menu"
 
 					app:title="@string/bottom_navigation_settings"
-					app:titleTextColor="@color/white"
+					
+					style="@style/Widget.MaterialComponents.Toolbar.Surface"
 
 					app:layout_constraintBottom_toTopOf="@id/rvSettingsUserPhotosList"
 					app:layout_constraintEnd_toEndOf="parent"
@@ -83,8 +83,6 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:src="@drawable/ic_add_a_photo_24dp"
-					
-					app:backgroundTint="@color/material_orange_a700"
 
 					app:layout_constraintBottom_toBottomOf="@id/rvSettingsUserPhotosList"
 					app:layout_constraintTop_toBottomOf="@id/rvSettingsUserPhotosList"
@@ -147,12 +145,11 @@
 			android:layout_height="wrap_content"
 			android:layout_margin="24dp"
 			android:src="@drawable/ic_create_24dp"
+			
 			app:layout_anchor="@id/containerSettings"
 			app:layout_anchorGravity="bottom|end"
-
-			style="@style/Widget.MaterialComponents.FloatingActionButton"
-			app:backgroundTint="@color/amethyst"
-
+			app:backgroundTint="?colorPrimary"
 			/>
+		
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

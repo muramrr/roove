@@ -36,7 +36,7 @@
 
 	<LinearLayout
 		android:id="@+id/dialogMatchContainer"
-		android:background="@color/colorPrimaryDark"
+		android:background="@color/colorBackground"
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
 		android:orientation="vertical"
@@ -83,9 +83,10 @@
 			android:layout_height="wrap_content"
 			android:layout_marginTop="32dp"
 			android:layout_marginHorizontal="16dp"
+			android:padding="16dp"
 			
 			android:text="@string/tv_back_to_swiping"
-			android:textColor="@color/gradient1"
+			android:textColor="?colorSecondary"
 			
 			style="@style/Widget.MaterialComponents.Button.OutlinedButton"
 			/>

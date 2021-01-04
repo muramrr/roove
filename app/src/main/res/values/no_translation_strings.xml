@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (C) 2021. roove
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
+  -->
+
+<resources>
+	
+	<!--General-->
+	<string name="app_logo" translatable="false">App Logo</string>
+	<string name="app_name" translatable="false">roove</string>
+	<string name="privacy_policy_url" translatable="false">https://roove.flycricket.io/privacy.html</string>
+	
+	<!--Default strings-->
+	<string name="default_name" translatable="false">John Doe</string>
+	<string name="default_city" translatable="false">Anytown</string>
+	<string name="default_message_text" translatable="false">Text another text \n text more text maybe more text \n well</string>
+	
+	<!-- Notifications -->
+	<string name="notification_channel_id_messages" translatable="false">message_notifications</string>
+	<string name="notification_channel_name_messages" translatable="false">Messages</string>
+	<string name="notification_channel_description_messages" translatable="false">Message notification</string>
+	
+	<string name="notification_channel_id_match" translatable="false">match_notifications</string>
+	<string name="notification_channel_name_match" translatable="false">Matches</string>
+	<string name="notification_channel_description_match" translatable="false">Match notification</string>
+	
+	
+	<string name="test_profile_about_text" translatable="false">Besides, she’s a got a kind personality and she smiles a lot. All in all, she is rather attractive. People say the same about me, but I think that she is more beautiful than me.</string>
+
+	<string name="concat" translatable="false">%s %s</string>
+	<string name="name_age_formatter" translatable="false">%s, %d</string>
+
+</resources>

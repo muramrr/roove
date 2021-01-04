@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (C) 2021. roove
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -19,25 +19,24 @@
 
 <resources>
 
-	<color name="colorPrimary">#1A1A25</color>
-	<color name="colorPrimaryLight">#41404d</color>
-	<color name="colorPrimaryDark">#12121A</color>
-	<color name="colorOnPrimary">#ffffff</color>
+	<color name="colorPrimary">#9191E9</color>
+	<color name="colorPrimaryLight">#BD90E8</color>
+	<color name="colorPrimaryDark">#0404DF</color>
+	<color name="colorOnPrimary">#000000</color>
 
-	<color name="colorSecondary">#6236ff</color>
-	<color name="colorSecondaryLight">#884eff</color>
-	<color name="colorSecondaryDark">#0000ca</color>
+	<color name="colorSecondary">#FF6D00</color>
+	<color name="colorSecondaryLight">#FEAC5E</color>
+	<color name="colorSecondaryDark">#A44700</color>
 	<color name="colorOnSecondary">#ffffff</color>
-
-	<color name="colorAccent">#6b6b99</color>
-	<color name="colorAccentDark">#323248</color>
 
 	<color name="colorError">#F50057</color>
 	<color name="colorOnError">#ffffff</color>
 
-
-	<color name="colorSurface">#1A1A25</color>
-	<color name="colorOnSurface">#d8ffffff</color>
+	<color name="colorSurface">#121220</color>
+	<color name="colorOnSurface">#F5F5F5</color>
+	
+	<color name="colorBackground">#000000</color>
+	<color name="colorOnBackground">#F0F0F0</color>
 
 	<color name="myFacebookColor">#577cc1</color>
 

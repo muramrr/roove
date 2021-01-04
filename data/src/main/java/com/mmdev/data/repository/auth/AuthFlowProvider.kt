@@ -33,7 +33,7 @@ import com.mmdev.data.datasource.location.LocationDataSource
 import com.mmdev.domain.auth.IAuthFlowProvider
 import com.mmdev.domain.user.UserState
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.functions.BiFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -49,9 +49,10 @@ class AuthFlowProvider @Inject constructor(
 	private val userDataSource: UserDataSource
 ): IAuthFlowProvider {
 	
+	private val TAG = "mylogs_${javaClass.simpleName}"
+	
 	companion object {
 		private const val LOCATION_FIELD = "location"
-		private const val TAG = "mylogs_UserProvider"
 	}
 	
 	private val authObservable: Observable<FirebaseUserState> = AuthCollector(auth).firebaseAuthObservable.map {
@@ -79,15 +80,32 @@ class AuthFlowProvider @Inject constructor(
 	
 	private fun getUserFromRemoteStorage(firebaseUser: FirebaseUser) =
 		userDataSource.getFirestoreUser(firebaseUser.uid)
-			.map { UserState.registered(it) }
+			.toObservable()
+			.withLatestFrom(
+				location.locationSubject,
+				BiFunction { user, location ->
+					return@BiFunction user.copy(location = location)
+				}
+			)
+			.map {
+				userDataSource.updateFirestoreUserField(
+					it.baseUserInfo.userId,
+					LOCATION_FIELD,
+					it.location
+				).subscribe {
+					logDebug(TAG, "Location was updated")
+				}
+				UserState.registered(it)
+			}
 			.onErrorResumeNext {
 				logError(TAG, "$it")
 				//if no document stored on backend
 				if (it is NoSuchElementException && it.message == FIRESTORE_NO_DOCUMENT_EXCEPTION)
-					Single.just(UserState.unregistered(firebaseUser.toUserItem()))
-				else Single.just(UserState.UNDEFINED)
+					Observable.just(UserState.unregistered(firebaseUser.toUserItem()))
+				else Observable.just(UserState.UNDEFINED)
 			}
-			.toObservable()
+			
+	
 	
 	
 	

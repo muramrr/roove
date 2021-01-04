@@ -25,8 +25,7 @@ import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.core.log.logDebug
 import com.mmdev.roove.core.log.logInfo
 import com.mmdev.roove.ui.MainActivity
-import com.mmdev.roove.ui.cards.CardsViewModel.SwipeAction.LIKE
-import com.mmdev.roove.ui.cards.CardsViewModel.SwipeAction.SKIP
+import com.mmdev.roove.ui.cards.CardsViewModel.SwipeAction.*
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
@@ -77,20 +76,22 @@ class CardsViewModel @ViewModelInject constructor(
 		disposables.add(repo.getUsersByPreferences(MainActivity.currentUser!!, initialLoading)
             .observeOn(mainThread())
             .doOnSubscribe { showLoading.value = true }
-			.doOnError { error.value = MyError(ErrorType.LOADING, it) }
             .subscribe(
 				{ cards ->
-					cardIndex = 0
+					if (cards.isNotEmpty()) {
+						cardIndex = 0
+						
+						val genericList = List(20) { cards.first() }
+						
+						usersCardsList.postValue(genericList)
+						
+						topCard.postValue(genericList.firstOrNull())
+						bottomCard.postValue(genericList.drop(1).firstOrNull())
+						
+						showLoading.postValue(genericList.isNullOrEmpty())
+						showEmptyIndicator.postValue(genericList.isNullOrEmpty())
+					}
 					
-					val genericList = List(20) { cards.first() }
-					
-					usersCardsList.postValue(genericList)
-					
-					topCard.postValue(genericList.firstOrNull())
-					bottomCard.postValue(genericList.drop(1).firstOrNull())
-					
-					showLoading.postValue(genericList.isNullOrEmpty())
-					showEmptyIndicator.postValue(genericList.isNullOrEmpty())
 					
 					logInfo(TAG, "loaded cards: ${cards.size}")
 				},

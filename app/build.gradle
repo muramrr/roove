@@ -108,7 +108,7 @@ dependencies {
 
 
 	//facebook auth
-	implementation 'com.facebook.android:facebook-login:8.1.0'
+	implementation 'com.facebook.android:facebook-login:8.2.0'
 
 	//glide
 	implementation 'com.github.bumptech.glide:glide:4.11.0'

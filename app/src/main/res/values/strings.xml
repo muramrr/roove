@@ -18,25 +18,7 @@
   -->
 
 <resources>
-	<!--General-->
-	<string name="app_logo" translatable="false">App Logo</string>
-	<string name="app_name" translatable="false">roove</string>
-	<string name="privacy_policy_url" translatable="false">https://roove.flycricket.io/privacy.html</string>
-
-	<!--Default strings-->
-	<string name="default_name" translatable="false">John Doe</string>
-	<string name="default_city" translatable="false">Anytown</string>
-	<string name="default_message_text" translatable="false">Text another text \n text more text maybe more text \n well</string>
-
-	<!-- Notifications -->
-	<string name="notification_channel_id_messages" translatable="false">message_notifications</string>
-	<string name="notification_channel_name_messages" translatable="false">Messages</string>
-	<string name="notification_channel_description_messages" translatable="false">Message notification</string>
-
-	<string name="notification_channel_id_match" translatable="false">match_notifications</string>
-	<string name="notification_channel_name_match" translatable="false">Matches</string>
-	<string name="notification_channel_description_match" translatable="false">Match notification</string>
-
+	
 	<!-- CAMERA PERMISSIONS -->
 	<string name="permission_camera_explanation">Application needs CAMERA PERMISSION in order to capture image. Please, allow permission.</string>
 	<string name="permission_camera_denied">Please enable CAMERA PERMISSION. Go to \nSettings -> Apps -> Permission</string>
@@ -45,24 +27,19 @@
 	<string name="permission_read_ext_storage_explanation">Application needs READ EXTERNAL STORAGE PERMISSION in order to access your gallery. Please, allow permission.</string>
 	<string name="permission_read_ext_storage_denied">Please enable READ EXTERNAL STORAGE PERMISSION. Go to \nSettings -> Apps -> Permission</string>
 
-	<string name="test_profile_about_text" translatable="false">Besides, she’s a got a kind personality and she smiles a lot. All in all, she is rather attractive. People say the same about me, but I think that she is more beautiful than me.</string>
-
 	<!--Layouts hardcoded strings-->
 	<string name="auth_slogan1">Find new\nfriends nearby</string>
-	<string name="auth_slogan2">Visit interesting\nplaces together!</string>
 	<string name="btn_log_in_with_facebook">Log in with Facebook</string>
 
 	<string name="reg_step_1_tv_select_your_gender">Select your gender</string>
 	<string name="reg_step_3_tv_specify_your_age">Specify your age</string>
 	<string name="reg_step_4_tv_change_name">Do you want to change your name?</string>
-	<string name="reg_step_5_tv_choose_city">Choose your city</string>
 	<string name="reg_step_final_tv_check_is_correct">Check if everything is correct</string>
 
 	<!-- partner preferences -->
 	<string name="tv_ages_you_prefer">Ages you prefer</string>
 	<string name="tv_gender_showing">Showing</string>
-
-	<string name="hint_city">City</string>
+	
 	<string name="hint_name">Name</string>
 	<string name="hint_gender">Gender</string>
 	<string name="hint_preferred_gender">Interested in</string>
@@ -94,6 +71,8 @@
 	<string name="fragment_places_explanation">There is no such places in this category</string>
 
 	<string name="description_user_photo">user photo</string>
+	
+	<string name="fragment_settings_age_formatter">Age: %s</string>
 
 	<!-- pref genders-->
 	<string name="preferredGenderFemale">female</string>
@@ -117,19 +96,6 @@
 	<string name="toast_text_update_success">Successfully updated</string>
 	<string name="toast_text_delete_success">Successfully deleted</string>
 	<string name="toast_text_at_least_1_photo_required">At least one photo required.</string>
-
-	<string name="place_detailed_want_to_go_text">Want to go</string>
-	<string name="place_detailed_not_interested_text">Not interested</string>
-
-	<string name="places_bars">Bars &amp; pubs</string>
-	<string name="places_entertainment">Entertainment</string>
-	<string name="places_clubs">Clubs</string>
-	<string name="places_restaurants">Restaurants</string>
-
-	<string name="places_api_bars" translatable="false">bar</string>
-	<string name="places_api_entertainment" translatable="false">amusement</string>
-	<string name="places_api_clubs" translatable="false">clubs</string>
-	<string name="places_api_restaurants" translatable="false">restaurants</string>
 
 	<string name="bottom_navigation_cards">Explore</string>
 	<string name="bottom_navigation_pairs">Pairs</string>

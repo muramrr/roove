@@ -27,7 +27,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.R
+import com.mmdev.roove.core.log.logInfo
 import com.mmdev.roove.databinding.ActivityMainBinding
+import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,6 +42,8 @@ class MainActivity: AppCompatActivity() {
 	}
 	
 	private val sharedViewModel: SharedViewModel by viewModels()
+	
+	private val remoteViewModel: RemoteRepoViewModel by viewModels()
 	
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,8 +63,13 @@ class MainActivity: AppCompatActivity() {
 		sharedViewModel.userState.observe(this, { userState ->
 			userState.fold(
 				authenticated = {
+					logInfo(TAG, "$it")
 					currentUser = it
 					navController.navigate(R.id.action_global_mainFlowFragment)
+					
+					//for (i in 0 until Random.nextInt(5, 100)) {
+					//	remoteViewModel.updateUserItem(UtilityManager.generateFakeUserNearby(it))
+					//}
 				},
 				unauthenticated = {
 					currentUser = null
@@ -73,11 +82,8 @@ class MainActivity: AppCompatActivity() {
 				}
 			)
 		})
-		//for (i in 0 until Random.nextInt(5, 100)) {
-		//	UtilityManager.generateFakeUsers()
-		//}
 		
-
+		
 		//note: debug
 //		val dm = DisplayMetrics()
 //		windowManager.defaultDisplay.getMetrics(dm)

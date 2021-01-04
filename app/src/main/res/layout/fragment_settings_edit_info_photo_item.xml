@@ -34,7 +34,7 @@
 		android:layout_height="wrap_content"
 		>
 
-		<androidx.cardview.widget.CardView
+		<com.google.android.material.card.MaterialCardView
 			android:layout_width="match_parent"
 			android:layout_height="@dimen/rvSettingsEditPhotoElementHeight"
 
@@ -50,7 +50,7 @@
 				app:bindImageUrl="@{bindItem.fileUrl}"
 				android:contentDescription="@string/description_user_photo" />
 
-		</androidx.cardview.widget.CardView>
+		</com.google.android.material.card.MaterialCardView>
 
 		<com.google.android.material.button.MaterialButton android:id="@+id/btnDeletePhoto"
 			android:layout_width="wrap_content"
@@ -61,6 +61,7 @@
 			app:backgroundTint="@color/material_red_a700"
 			app:rippleColor="@color/material_red_a700"
 			app:icon="@drawable/ic_clear_24dp"
+			app:iconTint="@color/white"
 			
 			app:shapeAppearanceOverlay="@style/MyAppShapeAppearanceOverlay.Circle"
 

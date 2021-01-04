@@ -28,20 +28,17 @@
 
 	<!--Layouts hardcoded strings-->
 	<string name="auth_slogan1">Найди новых\nдрузей</string>
-	<string name="auth_slogan2">Посещайте интересные\nместа вместе!</string>
 	<string name="btn_log_in_with_facebook">Войти через Facebook</string>
 
 	<string name="reg_step_1_tv_select_your_gender">Выбери свой пол</string>
 	<string name="reg_step_3_tv_specify_your_age">Укажи свой возраст</string>
 	<string name="reg_step_4_tv_change_name">Как тебя зовут?</string>
-	<string name="reg_step_5_tv_choose_city">Выбери свой город</string>
 	<string name="reg_step_final_tv_check_is_correct">Проверь все ли правильно</string>
 
 	<!-- partner preferences -->
 	<string name="tv_gender_showing">Тебя интересуют</string>
 	<string name="tv_ages_you_prefer">Возраст партнера</string>
-
-	<string name="hint_city">Город</string>
+	
 	<string name="hint_name">Имя</string>
 	<string name="hint_gender">Пол</string>
 	<string name="hint_preferred_gender">Предпочтения</string>
@@ -72,6 +69,8 @@
 	<string name="fragment_places_explanation">Не найдено мест в этой категории</string>
 
 	<string name="description_user_photo">фото пользователя</string>
+	
+	<string name="fragment_settings_age_formatter">Возраст: %s</string>
 
 	<!-- pref genders-->
 	<string name="preferredGenderFemale">Девушки</string>
@@ -94,9 +93,6 @@
 	<string name="toast_text_report_success">Жалоба успешно отправлена\nСпасибо тебе!</string>
 	<string name="toast_text_update_success">Изменения сохранены</string>
 	<string name="toast_text_delete_success">Удалено</string>
-
-	<string name="place_detailed_not_interested_text">Не интересует</string>
-	<string name="place_detailed_want_to_go_text">Хочу посетить</string>
 
 	<string name="bottom_navigation_cards">Люди</string>
 	<string name="bottom_navigation_pairs">Пары</string>
@@ -128,10 +124,6 @@
 	<string name="report_chooser_behavior">Отвратительное поведение</string>
 	<string name="report_chooser_fake">Похоже на фейк</string>
 	<string name="text_i_agree_privacy_policy">Нажимая эту кнопку \nВы соглашаетесь с <u>Политикой конфедециальности</u></string>
-	<string name="places_bars">Бары</string>
-	<string name="places_entertainment">Развлечения</string>
-	<string name="places_clubs">Клубы</string>
-	<string name="places_restaurants">Рестораны</string>
 	<string name="toast_text_at_least_1_photo_required">Хотя бы 1 фотка должна быть</string>
 
 </resources>

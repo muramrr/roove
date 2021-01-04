@@ -31,7 +31,7 @@
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/colorPrimaryDark"
+		android:background="@color/colorBackground"
 		>
 
 		<com.google.android.material.appbar.AppBarLayout
@@ -48,7 +48,7 @@
 				android:layout_height="@dimen/collapseBarHeight"
 
 				app:collapsedTitleTextAppearance="?textAppearanceHeadline6"
-				app:contentScrim="@color/colorPrimary"
+				app:contentScrim="?colorPrimaryDark"
 				app:expandedTitleTextAppearance="?textAppearanceHeadline4"
 
 				app:layout_scrollFlags="scroll|exitUntilCollapsed"
@@ -147,10 +147,9 @@
 			android:src="@drawable/ic_profile_send_message_24dp"
 			android:visibility="gone"
 
-			app:backgroundTint="@color/amethyst"
-
 			app:layout_anchor="@id/appBarProfile"
-			app:layout_anchorGravity="bottom|right|end" />
+			app:layout_anchorGravity="bottom|right|end"
+			/>
 
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

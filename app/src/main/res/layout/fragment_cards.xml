@@ -32,7 +32,7 @@
 	<androidx.constraintlayout.motion.widget.MotionLayout android:id="@+id/motionLayout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/colorPrimaryDark"
+		android:background="@color/colorBackground"
 		android:clipChildren="false"
 		app:paddingTopSystemWindowInsets="@{true}"
 		

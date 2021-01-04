@@ -33,7 +33,7 @@
 		android:id="@+id/containerChat"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/colorPrimaryDark"
+		android:background="@color/colorBackground"
 		app:paddingBottomSystemWindowInsets="@{true}"
 		>
 
@@ -41,12 +41,13 @@
 			android:id="@+id/toolbarChat"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:background="@color/colorPrimary"
 
 			app:menu="@menu/chat_menu"
 			app:navigationIcon="@drawable/ic_arrow_back_24dp"
 
 			app:paddingTopSystemWindowInsets="@{true}"
+			
+			style="@style/ThemeOverlay.MaterialComponents.Toolbar.Surface"
 
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
@@ -139,7 +140,7 @@
 		<View android:id="@+id/messageInputContainerBackground"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			android:background="@color/colorAccentDark"
+			android:background="?colorPrimaryDark"
 			android:focusable="false"
 			android:clickable="false"
 			app:layout_constraintStart_toStartOf="parent"

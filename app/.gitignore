@@ -2,5 +2,5 @@
 /google-services.json
 /src/main/res/values/font_certs.xml
 /src/main/res/values/misc.xml
-/src/main/java/com/mmdev/roove/utils/UtilityManager.kt
+/com/mmdev/data/repository/user/UtilityManager.kt
 

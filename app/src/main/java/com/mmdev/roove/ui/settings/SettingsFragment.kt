@@ -49,7 +49,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.util.*
 
-
 /**
  * This is the documentation block about the class
  */
@@ -76,13 +75,6 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 		
 		mViewModel.photoUrls.observe(this, {
 			mSettingsPhotoAdapter.setData(it)
-		})
-		
-		sharedViewModel.modalBottomSheetNeedUpdateExecution.observe(this, {
-			if (it) {
-				//mViewModel.updateUserItem(currentUser)
-				sharedViewModel.modalBottomSheetNeedUpdateExecution.value = false
-			}
 		})
 
 	}
@@ -134,12 +126,15 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 	
 	private fun setupUser() = binding.run {
 		tvSettingsAboutText.text = MainActivity.currentUser!!.aboutText
-		tvSettingsNameAge.text = "${MainActivity.currentUser!!.baseUserInfo.name} ${MainActivity.currentUser!!.baseUserInfo.age}"
+		tvSettingsNameAge.text = getString(R.string.name_age_formatter).format(
+			MainActivity.currentUser!!.baseUserInfo.name,
+			MainActivity.currentUser!!.baseUserInfo.age
+		)
 		mSettingsPhotoAdapter.setData(MainActivity.currentUser!!.photoURLs)
 	}
 	
 
-	/** log out pop up*/
+	/** log out pop up */
 	private fun showSignOutPrompt() = MaterialAlertDialogBuilder(requireContext())
 		.setTitle(R.string.dialog_exit_title)
 		.setMessage(R.string.dialog_exit_message)
@@ -155,7 +150,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 	)
 	
 
-	/*
+	/**
 	 * Checks if the app has permissions to OPEN CAMERA and take photos
 	 * If the app does not has permission then the user will be prompted to grant permissions
 	 * else open camera intent
@@ -185,7 +180,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 		startActivityForResult(intent, IMAGE_CAMERA_REQUEST)
 	}
 
-	/*
+	/**
 	 * Checks if the app has permissions to READ user files
 	 * If the app does not has permission then the user will be prompted to grant permissions
 	 * else open gallery to choose photo

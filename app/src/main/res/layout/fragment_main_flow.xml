@@ -47,12 +47,15 @@
 			android:id="@+id/bottomNavigationView"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-
+			
+			app:elevation="0dp"
 			app:itemIconTint="@color/white_tint_checked"
 			app:itemTextColor="@color/white_tint_checked"
 			app:labelVisibilityMode="labeled"
 			app:menu="@menu/bottom_navigation_menu"
 			app:paddingBottomSystemWindowInsets="@{true}"
+			
+			style="@style/Widget.MaterialComponents.BottomNavigationView"
 			
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"

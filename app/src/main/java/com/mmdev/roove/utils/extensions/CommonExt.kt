@@ -66,6 +66,7 @@ fun BaseViewModel.showErrorDialog(lifecycleOwner: LifecycleOwner, context: Conte
 			MaterialAlertDialogBuilder(it)
 				.setTitle(R.string.dialog_error_title)
 				.setMessage(myError.getErrorMessage())
+				.setPositiveButton("OK", null)
 				.create()
 				.show()
 		}

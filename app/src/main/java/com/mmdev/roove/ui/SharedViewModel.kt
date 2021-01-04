@@ -50,8 +50,6 @@ class SharedViewModel @ViewModelInject constructor(
 	val userNavigateTo = MutableLiveData<UserItem>()
 	val conversationSelected = MutableLiveData<ConversationItem>()
 
-	val modalBottomSheetNeedUpdateExecution = MutableLiveData<Boolean>()
-
 	val userState = MutableLiveData<UserState>()
 	val userInfoForRegistration = MutableLiveData<UserItem>()
 	

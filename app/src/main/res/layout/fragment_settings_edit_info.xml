@@ -23,14 +23,6 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
-	<data>
-
-		<variable
-			name="viewModel"
-			type="com.mmdev.roove.ui.SharedViewModel" />
-
-	</data>
-
 
 	<androidx.core.widget.NestedScrollView
 		android:layout_width="match_parent"
@@ -43,7 +35,7 @@
 		<LinearLayout
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
-			android:background="@color/colorPrimaryDark"
+			android:background="@color/colorBackground"
 			android:orientation="vertical"
 
 			app:paddingBottomSystemWindowInsets="@{true}"
@@ -121,10 +113,7 @@
 
 					android:text="@string/genderMale"
 					android:textAllCaps="false"
-					android:textColor="@color/white_tint_color"
-
-					app:backgroundTint="@color/lolite_checked_tint"
-
+					style="@style/Widget.MaterialComponents.Button.OutlinedButton"
 					/>
 
 				<com.google.android.material.button.MaterialButton
@@ -136,9 +125,7 @@
 
 					android:text="@string/genderFemale"
 					android:textAllCaps="false"
-					android:textColor="@color/white_tint_color"
-
-					app:backgroundTint="@color/lolite_checked_tint"
+					style="@style/Widget.MaterialComponents.Button.OutlinedButton"
 					/>
 
 			</com.google.android.material.button.MaterialButtonToggleGroup>
@@ -154,13 +141,11 @@
 				android:valueFrom="18"
 				android:valueTo="100"
 				
-				app:haloColor="?colorSecondary"
-
-				app:thumbColor="@color/white"
+				app:trackColorActive="?colorSecondary"
+				
+				app:thumbColor="?colorSecondary"
 				app:thumbRadius="16dp"
 
-				app:trackColorActive="?colorSecondary"
-				app:trackColorInactive="@color/lolite_25"
 				/>
 
 			<com.google.android.material.textview.MaterialTextView
@@ -170,7 +155,7 @@
 				android:labelFor="@id/sliderSettingsEditAge"
 
 				android:gravity="center"
-				android:text="18"
+				android:text=""
 				android:textAppearance="?textAppearanceHeadline5"
 				/>
 
@@ -221,16 +206,14 @@
 				android:id="@+id/btnSettingsEditSave"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_marginTop="16dp"
 				android:layout_marginHorizontal="16dp"
 
 				android:padding="16dp"
 
 				android:text="@string/btn_settings_edit_save_text"
-
-				app:backgroundTint="@color/amethyst_tint_enabled"
-				app:rippleColor="@color/amethyst"
-
-				style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+				android:textColor="?colorOnBackground"
+				app:backgroundTint="?colorPrimaryDark"
 				/>
 
 			<!--delete-->
@@ -243,7 +226,6 @@
 				android:padding="16dp"
 
 				android:text="@string/btn_settings_edit_delete_my_account_text"
-				
 
 				app:backgroundTint="@color/material_red_a700"
 
