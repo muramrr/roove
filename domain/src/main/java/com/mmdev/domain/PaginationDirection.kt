@@ -16,22 +16,12 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.domain.pairs
-
-import com.mmdev.domain.PaginationDirection
-import com.mmdev.domain.user.data.UserItem
-import io.reactivex.rxjava3.core.Single
+package com.mmdev.domain
 
 /**
- * This is the documentation block about the class
+ *
  */
 
-interface PairsRepository {
-	
-	fun getPairs(
-		user: UserItem,
-		matchedUserId: String,
-		direction: PaginationDirection
-	): Single<List<MatchedUserItem>>
-
+enum class PaginationDirection {
+    INITIAL, PREVIOUS, NEXT
 }

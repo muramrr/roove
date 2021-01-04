@@ -19,12 +19,17 @@
 package com.mmdev.data.repository.conversations
 
 
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.firebase.asSingle
 import com.mmdev.data.core.firebase.executeAndDeserializeSingle
+import com.mmdev.domain.PaginationDirection
+import com.mmdev.domain.PaginationDirection.INITIAL
+import com.mmdev.domain.PaginationDirection.NEXT
+import com.mmdev.domain.PaginationDirection.PREVIOUS
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.domain.conversations.ConversationsRepository
 import com.mmdev.domain.user.data.UserItem
@@ -41,14 +46,24 @@ class ConversationsRepositoryImpl @Inject constructor(
 	private val fs: FirebaseFirestore
 ): BaseRepository(), ConversationsRepository {
 	
-	private fun conversationsQuery(user: UserItem, cursorPosition: Int): Query =
+	private fun startAfterReference(user: UserItem, id: String): DocumentReference = fs
+		.collection(USERS_COLLECTION)
+		.document(user.baseUserInfo.userId)
+		.collection(CONVERSATIONS_COLLECTION)
+		.document(id)
+	
+	private fun endBeforeReference(user: UserItem, id: String): DocumentReference = fs
+		.collection(USERS_COLLECTION)
+		.document(user.baseUserInfo.userId)
+		.collection(CONVERSATIONS_COLLECTION)
+		.document(id)
+	
+	private fun conversationsQuery(user: UserItem): Query =
 		fs.collection(USERS_COLLECTION)
 			.document(user.baseUserInfo.userId)
 			.collection(CONVERSATIONS_COLLECTION)
 			.orderBy(CONVERSATION_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
 			.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
-			.limit(20)
-			.startAfter(cursorPosition)
 		
 
 	override fun deleteConversation(user: UserItem, conversation: ConversationItem): Single<Unit> =
@@ -59,8 +74,6 @@ class ConversationsRepositoryImpl @Inject constructor(
 				return@BiFunction
 			}
 		).subscribeOn(MySchedulers.io())
-	
-		
 	
 	private fun deleteFromMySelf(user: UserItem, conversation: ConversationItem) =
 		fs.collection(CONVERSATIONS_COLLECTION)
@@ -100,45 +113,60 @@ class ConversationsRepositoryImpl @Inject constructor(
 				).subscribeOn(MySchedulers.io())
 			}
 	
-	private fun deleteFromPartner(user: UserItem, conversation: ConversationItem) = fs.collection(USERS_COLLECTION)
-		.document(conversation.partner.userId)
-		.get()
-		.asSingle()
-		.map {
-			if (it.exists()) {
-				Single.zip(
-					//partner delete from matched list
-					it.reference
-						.collection(USER_MATCHED_COLLECTION)
-						.document(user.baseUserInfo.userId)
-						.delete()
-						.asSingle(),
+	private fun deleteFromPartner(user: UserItem, conversation: ConversationItem) =
+		fs.collection(USERS_COLLECTION)
+			.document(conversation.partner.userId)
+			.get()
+			.asSingle()
+			.map {
+				if (it.exists()) {
+					Single.zip(
+						//partner delete from matched list
+						it.reference
+							.collection(USER_MATCHED_COLLECTION)
+							.document(user.baseUserInfo.userId)
+							.delete()
+							.asSingle(),
+							
+						//partner delete from conversations list
+						it.reference
+							.collection(CONVERSATIONS_COLLECTION)
+							.document(conversation.conversationId)
+							.delete()
+							.asSingle(),
+							
+						//add to skipped collection
+						it.reference
+							.collection(USER_SKIPPED_COLLECTION)
+							.document(user.baseUserInfo.userId)
+							.set(mapOf(USER_ID_FIELD to user.baseUserInfo.userId))
+							.asSingle(),
 						
-					//partner delete from conversations list
-					it.reference
-						.collection(CONVERSATIONS_COLLECTION)
-						.document(conversation.conversationId)
-						.delete()
-						.asSingle(),
-						
-					//add to skipped collection
-					it.reference
-						.collection(USER_SKIPPED_COLLECTION)
-						.document(user.baseUserInfo.userId)
-						.set(mapOf(USER_ID_FIELD to user.baseUserInfo.userId))
-						.asSingle(),
+						Function3 { t1, t2, t3 ->
+							return@Function3
+						}
+					)
 					
-					Function3 { t1, t2, t3 ->
-						return@Function3
-					}
-				)
-				
+				}
+				else Single.just(Unit)
 			}
-			else Single.just(Unit)
-		}
 	
-	override fun getConversations(user: UserItem, cursorPosition: Int): Single<List<ConversationItem>> =
-		conversationsQuery(user, cursorPosition)
-			.executeAndDeserializeSingle(ConversationItem::class.java)
+	override fun getConversations(
+		user: UserItem,
+		conversationId: String,
+		direction: PaginationDirection
+	): Single<List<ConversationItem>> = when(direction) {
+		
+		INITIAL -> conversationsQuery(user).limit(40)
+		
+		NEXT -> conversationsQuery(user)
+			.startAfter(startAfterReference(user, conversationId))
+			.limit(40)
+		
+		PREVIOUS -> conversationsQuery(user)
+			.endBefore(endBeforeReference(user, conversationId))
+			.limitToLast(40)
+		
+	}.executeAndDeserializeSingle(ConversationItem::class.java)
 	
 }

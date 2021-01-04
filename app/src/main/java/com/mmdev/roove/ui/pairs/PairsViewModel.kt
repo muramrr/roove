@@ -20,6 +20,9 @@ package com.mmdev.roove.ui.pairs
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
+import com.mmdev.domain.PaginationDirection.INITIAL
+import com.mmdev.domain.PaginationDirection.NEXT
+import com.mmdev.domain.PaginationDirection.PREVIOUS
 import com.mmdev.domain.pairs.MatchedUserItem
 import com.mmdev.domain.pairs.PairsRepository
 import com.mmdev.roove.ui.MainActivity
@@ -31,24 +34,46 @@ class PairsViewModel @ViewModelInject constructor(
 	private val repo: PairsRepository
 ): BaseViewModel() {
 
-	val matchedUsers = MutableLiveData<List<MatchedUserItem>>()
+	val initPairs = MutableLiveData<List<MatchedUserItem>>()
+	val nextPairs = MutableLiveData<List<MatchedUserItem>>()
+	val prevPairs = MutableLiveData<List<MatchedUserItem>>()
 
 	val showTextHelper = MutableLiveData<Boolean>()
 	
 	init {
-		loadMatchedUsers(0)
+		loadInitMatchedUsers()
 	}
 
-	fun loadMatchedUsers(cursor: Int) {
-		disposables.add(repo.getPairs(MainActivity.currentUser!!, cursor)
+	private fun loadInitMatchedUsers() {
+		disposables.add(repo.getPairs(MainActivity.currentUser!!, "", INITIAL)
             .observeOn(mainThread())
             .subscribe(
 	            { pairs ->
-		            matchedUsers.postValue(pairs)
+		            initPairs.postValue(pairs)
 		            showTextHelper.postValue(pairs.isEmpty())
 	            },
 	            { error.value = MyError(ErrorType.LOADING, it) }
             )
+		)
+	}
+	
+	fun loadNextMatchedUsers(matchedUserId: String) {
+		disposables.add(repo.getPairs(MainActivity.currentUser!!, matchedUserId, NEXT)
+			.observeOn(mainThread())
+			.subscribe(
+				{ nextPairs.postValue(it) },
+				{ error.value = MyError(ErrorType.LOADING, it) }
+			)
+		)
+	}
+	
+	fun loadPrevMatchedUsers(matchedUserId: String) {
+		disposables.add(repo.getPairs(MainActivity.currentUser!!, matchedUserId, PREVIOUS)
+			.observeOn(mainThread())
+			.subscribe(
+				{ prevPairs.postValue(it) },
+				{ error.value = MyError(ErrorType.LOADING, it) }
+			)
 		)
 	}
 	

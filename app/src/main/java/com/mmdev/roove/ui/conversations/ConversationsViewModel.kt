@@ -20,6 +20,9 @@ package com.mmdev.roove.ui.conversations
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
+import com.mmdev.domain.PaginationDirection.INITIAL
+import com.mmdev.domain.PaginationDirection.NEXT
+import com.mmdev.domain.PaginationDirection.PREVIOUS
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.domain.conversations.ConversationsRepository
 import com.mmdev.roove.ui.MainActivity
@@ -33,12 +36,14 @@ class ConversationsViewModel @ViewModelInject constructor(
 	
 	private val deleteConversationStatus: MutableLiveData<Boolean> = MutableLiveData()
 
-	val conversationsList = MutableLiveData<List<ConversationItem>>()
+	val initConversations = MutableLiveData<List<ConversationItem>>()
+	val nextConversations = MutableLiveData<List<ConversationItem>>()
+	val prevConversations = MutableLiveData<List<ConversationItem>>()
 
 	val showTextHelper = MutableLiveData<Boolean>()
 
 	init {
-		loadConversationsList(0)
+		loadInitConversations()
 	}
 
 	fun deleteConversation(conversationItem: ConversationItem){
@@ -55,16 +60,36 @@ class ConversationsViewModel @ViewModelInject constructor(
 	}
 
 
-	fun loadConversationsList(cursor: Int){
-		disposables.add(repo.getConversations(MainActivity.currentUser!!, cursor)
+	private fun loadInitConversations() {
+		disposables.add(repo.getConversations(MainActivity.currentUser!!, "", INITIAL)
             .observeOn(mainThread())
             .subscribe(
 	            { conversations ->
-		            conversationsList.postValue(conversations)
+		            initConversations.postValue(conversations)
 		            showTextHelper.postValue(conversations.isEmpty())
 	            },
 	            { error.value = MyError(ErrorType.LOADING, it) }
             )
+		)
+	}
+	
+	fun loadPrevConversations(conversationId: String) {
+		disposables.add(repo.getConversations(MainActivity.currentUser!!, conversationId, PREVIOUS)
+			.observeOn(mainThread())
+			.subscribe(
+				{ prevConversations.postValue(it) },
+				{ error.value = MyError(ErrorType.LOADING, it) }
+			)
+		)
+	}
+	
+	fun loadNextConversations(conversationId: String) {
+		disposables.add(repo.getConversations(MainActivity.currentUser!!, conversationId, NEXT)
+			.observeOn(mainThread())
+			.subscribe(
+				{ nextConversations.postValue(it) },
+				{ error.value = MyError(ErrorType.LOADING, it) }
+			)
 		)
 	}
 

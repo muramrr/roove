@@ -18,17 +18,22 @@
 
 package com.mmdev.domain.conversations
 
+import com.mmdev.domain.PaginationDirection
 import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Single
 
 /**
- * This is the documentation block about the class
+ * Repository responsible for manipulating conversations
  */
 
 interface ConversationsRepository {
 
 	fun deleteConversation(user: UserItem, conversation: ConversationItem): Single<Unit>
 	
-	fun getConversations(user: UserItem, cursorPosition: Int): Single<List<ConversationItem>>
+	fun getConversations(
+		user: UserItem,
+		conversationId: String,
+		direction: PaginationDirection
+	): Single<List<ConversationItem>>
 
 }

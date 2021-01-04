@@ -32,7 +32,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Fragment to display your active pairs
- * //todo load more pairs on scroll
  */
 
 @AndroidEntryPoint
@@ -42,24 +41,17 @@ class PairsFragment: BaseFragment<PairsViewModel, FragmentPairsBinding>(
 	
 	override val mViewModel: PairsViewModel by viewModels()
 	
-	private val mPairsAdapter = PairsAdapter()
-	
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		observePairs()
-	}
-	
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
-		val gridLayoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-		rvPairList.apply {
-			setHasFixedSize(true)
-			
-			adapter = mPairsAdapter
-			layoutManager = gridLayoutManager
-			addItemDecoration(GridItemDecoration())
+	private val mPairsAdapter = PairsAdapter().apply {
+		
+		setLoadNextListener { matchedUserId ->
+			mViewModel.loadNextMatchedUsers(matchedUserId)
 		}
-
-		mPairsAdapter.setOnItemClickListener { item, position ->
+		
+		setLoadPrevListener { matchedUserId ->
+			mViewModel.loadPrevMatchedUsers(matchedUserId)
+		}
+		
+		setOnItemClickListener { item, position ->
 			sharedViewModel.matchedUserItemSelected.value = item
 			sharedViewModel.conversationSelected.value = ConversationItem(
 				partner = item.baseUserInfo,
@@ -70,7 +62,33 @@ class PairsFragment: BaseFragment<PairsViewModel, FragmentPairsBinding>(
 		}
 	}
 	
-	private fun observePairs() = mViewModel.matchedUsers.observe(this, {
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		
+		observeInitPairs()
+		observeNextPairs()
+		observePrevPairs()
+		
+	}
+	
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.rvPairList.run {
+		setHasFixedSize(true)
+		
+		adapter = mPairsAdapter
+		layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+		addItemDecoration(GridItemDecoration())
+	}
+	
+	
+	private fun observeInitPairs() = mViewModel.initPairs.observe(this, {
 		mPairsAdapter.setNewData(it)
+	})
+	
+	private fun observeNextPairs() = mViewModel.nextPairs.observe(this, {
+		mPairsAdapter.insertNextData(it)
+	})
+	
+	private fun observePrevPairs() = mViewModel.prevPairs.observe(this, {
+		mPairsAdapter.insertPreviousData(it)
 	})
 }

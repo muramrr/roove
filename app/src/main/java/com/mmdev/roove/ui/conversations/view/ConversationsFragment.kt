@@ -38,7 +38,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Fragment for displaying active conversations
- * //todo: load more conversations on scroll
  */
 
 @AndroidEntryPoint
@@ -48,7 +47,25 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel, FragmentConver
 	
 	override val mViewModel: ConversationsViewModel by viewModels()
 
-	private val mConversationsAdapter = ConversationsAdapter()
+	private val mConversationsAdapter = ConversationsAdapter().apply {
+		setLoadNextListener { conversationId ->
+			mViewModel.loadNextConversations(conversationId)
+		}
+		
+		setLoadPrevListener { conversationId ->
+			mViewModel.loadPrevConversations(conversationId)
+		}
+		
+		setOnItemClickListener { item, position ->
+			sharedViewModel.conversationSelected.value = item
+			sharedViewModel.matchedUserItemSelected.value = MatchedUserItem(
+				baseUserInfo = item.partner,
+				conversationId = item.conversationId,
+				conversationStarted = item.conversationStarted
+			)
+			navController.navigate(R.id.action_conversations_to_chatFragment)
+		}
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -57,58 +74,58 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel, FragmentConver
 			if (it) requireContext().showToastText(getString(R.string.toast_text_delete_success))
 		})
 		
-		mViewModel.conversationsList.observe(this, {
-			mConversationsAdapter.setNewData(it)
-		})
+		observeInitConversations()
+		observeNextConversations()
+		observePrevConversations()
+		
 	}
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
-		rvConversationList.apply {
-			setHasFixedSize(true)
-			
-			adapter = mConversationsAdapter
-			layoutManager = LinearLayoutManager(context)
-			addItemDecoration(DividerItemDecoration(this.context, VERTICAL))
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.rvConversationList.run {
+		
+		setHasFixedSize(true)
+		
+		adapter = mConversationsAdapter
+		layoutManager = LinearLayoutManager(context)
+		addItemDecoration(DividerItemDecoration(this.context, VERTICAL))
 
-			val swipeHandler = object : SwipeToDeleteCallback(context) {
-				override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+		val swipeHandler = object : SwipeToDeleteCallback(context) {
+			override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+				
+				val itemPosition = viewHolder.adapterPosition
 
-					val adapter = rvConversationList.adapter as ConversationsAdapter
-					val itemPosition = viewHolder.adapterPosition
-
-					MaterialAlertDialogBuilder(context)
-						.setCancelable(false)
-						.setTitle(getString(R.string.dialog_conversation_delete_title))
-						.setMessage(getString(R.string.dialog_conversation_delete_message))
-						.setPositiveButton(getString(R.string.dialog_delete_btn_positive_text)) { dialog, _ ->
-							mViewModel.deleteConversation(adapter.getItem(itemPosition))
-							adapter.removeAt(itemPosition)
-							dialog.dismiss()
-						}
-						.setNegativeButton(getString(R.string.dialog_delete_btn_negative_text)) { dialog, _ ->
-							adapter.notifyItemChanged(itemPosition)
-							dialog.dismiss()
-						}
-						.show()
-				}
+				MaterialAlertDialogBuilder(context)
+					.setCancelable(false)
+					.setTitle(getString(R.string.dialog_conversation_delete_title))
+					.setMessage(getString(R.string.dialog_conversation_delete_message))
+					.setPositiveButton(getString(R.string.dialog_delete_btn_positive_text)) { dialog, _ ->
+						mViewModel.deleteConversation(mConversationsAdapter.getItem(itemPosition))
+						mConversationsAdapter.removeAt(itemPosition)
+						
+					}
+					.setNegativeButton(getString(R.string.dialog_delete_btn_negative_text)) { dialog, _ ->
+						//dismiss animation
+						mConversationsAdapter.notifyItemChanged(itemPosition)
+					}
+					.create()
+					.show()
 			}
-			val itemTouchHelper = ItemTouchHelper(swipeHandler)
-			itemTouchHelper.attachToRecyclerView(this)
-
 		}
+		val itemTouchHelper = ItemTouchHelper(swipeHandler)
+		itemTouchHelper.attachToRecyclerView(this)
 
-		mConversationsAdapter.setOnItemClickListener { item, position ->
-			
-			sharedViewModel.conversationSelected.value = item
-			sharedViewModel.matchedUserItemSelected.value = MatchedUserItem(
-				baseUserInfo = item.partner,
-				conversationId = item.conversationId,
-				conversationStarted = item.conversationStarted
-			)
-			navController.navigate(R.id.action_conversations_to_chatFragment)
-			
-		}
 
 	}
 
+	private fun observeInitConversations() = mViewModel.initConversations.observe(this, {
+		mConversationsAdapter.setNewData(it)
+	})
+	
+	private fun observeNextConversations() = mViewModel.nextConversations.observe(this, {
+		mConversationsAdapter.insertNextData(it)
+	})
+	
+	private fun observePrevConversations() = mViewModel.prevConversations.observe(this, {
+		mConversationsAdapter.insertPreviousData(it)
+	})
+	
 }

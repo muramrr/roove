@@ -49,7 +49,7 @@
 
 			app:paddingTopSystemWindowInsets="@{true}"
 
-			tools:listitem="@layout/fragment_pairs_item"
+			tools:listitem="@layout/item_pair"
 			/>
 
 		<com.google.android.material.textview.MaterialTextView android:id="@+id/tvPairsHelperText"
