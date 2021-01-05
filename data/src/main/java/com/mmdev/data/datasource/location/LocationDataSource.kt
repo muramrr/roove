@@ -20,13 +20,16 @@ package com.mmdev.data.datasource.location
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
+import com.mmdev.data.core.MySchedulers
+import com.mmdev.data.core.log.logDebug
+import com.mmdev.data.core.log.logWarn
 import com.mmdev.domain.user.data.LocationPoint
-import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.internal.operators.observable.ObservableCreate
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,69 +40,52 @@ import javax.inject.Singleton
 
 @SuppressLint("MissingPermission")
 @Singleton
-class LocationDataSource @Inject constructor(context: Context): LocationListener {
+class LocationDataSource @Inject constructor(context: Context) {
     
-    
-    val locationSubject: BehaviorSubject<LocationPoint> = BehaviorSubject.create()
-    
-    /**
-     * Creates a new LocationListener instance used internally to listen for location updates
-     *
-     * @return the new LocationListener instance
-     */
-    override fun onLocationChanged(location: Location) {
-        val hash = GeoFireUtils.getGeoHashForLocation(GeoLocation(location.latitude, location.longitude))
+    companion object {
+        private const val TAG = "mylogs_LocationSource"
         
-        locationSubject.onNext(LocationPoint(location.latitude, location.longitude, hash))
-        locationSubject.onComplete()
-        endUpdates()
+        /** The internal name of the provider for the coarse location */
+        private const val PROVIDER_COARSE = LocationManager.NETWORK_PROVIDER
+        
+        /** The internal name of the provider for the fine location */
+        private const val PROVIDER_FINE = LocationManager.GPS_PROVIDER
+        
     }
-    
-    /** The LocationManager instance used to query the device location  */
+    /** The LocationManager instance used to query the device location */
     private val mLocationManager: LocationManager = context.getSystemService(
         Context.LOCATION_SERVICE
     ) as LocationManager
     
-    /** Starts updating the location and requesting new updates after the defined interval  */
-    init {
+    val locationSubject: Observable<LocationPoint> = ObservableCreate<LocationPoint> { emitter ->
         mLocationManager.getLastKnownLocation(getProviderName())?.let {
             val hash = GeoFireUtils.getGeoHashForLocation(GeoLocation(it.latitude, it.longitude))
-            locationSubject.onNext(LocationPoint(it.latitude, it.longitude, hash))
+            emitter.onNext(LocationPoint(it.latitude, it.longitude, hash))
+            logDebug(TAG, "Location emitted")
         }
+        val locationListener = LocationListener { location ->
+            val hash = GeoFireUtils.getGeoHashForLocation(GeoLocation(location.latitude, location.longitude))
+            emitter.onNext(LocationPoint(location.latitude, location.longitude, hash))
+            logDebug(TAG, "Location emitted")
+            emitter.onComplete()
+        }
+    
+        logWarn(TAG, "Location listener attached")
         mLocationManager.requestLocationUpdates(
             getProviderName(),
             0,
             0f,
-            this
+            locationListener
         )
-    }
+        
+        emitter.setCancellable {
+            logWarn(TAG, "Location listener detached")
+            endUpdates(locationListener)
+        }
+    }.subscribeOn(MySchedulers.trampoline())
     
-    companion object {
-        private const val TAG = "mylogs_LocationSource"
-    
-        /** The internal name of the provider for the coarse location  */
-        private const val PROVIDER_COARSE = LocationManager.NETWORK_PROVIDER
-    
-        /** The internal name of the provider for the fine location  */
-        private const val PROVIDER_FINE = LocationManager.GPS_PROVIDER
-    
-    }
-    
-    /** Stops the location updates when they aren't needed anymore so that battery can be saved  */
-    fun endUpdates() = mLocationManager.removeUpdates(this)
-    
-    /**
-     * Whether the device has location access enabled in the settings
-     *
-     * @return whether location access is enabled or not
-     */
-    fun hasLocationEnabled(): Boolean = hasLocationEnabled(getProviderName())
-    
-    private fun hasLocationEnabled(providerName: String): Boolean = try {
-        mLocationManager.isProviderEnabled(providerName)
-    } catch (e: Exception) {
-        false
-    }
+    /** Stops the location updates when they aren't needed anymore so that battery can be saved */
+    private fun endUpdates(locationListener: LocationListener) = mLocationManager.removeUpdates(locationListener)
     
     /**
      * Returns the name of the location provider that matches the specified settings
@@ -113,8 +99,5 @@ class LocationDataSource @Inject constructor(context: Context): LocationListener
         return if (requireFine) { PROVIDER_FINE }
         else { PROVIDER_COARSE }
     }
-    
-   
-    
     
 }

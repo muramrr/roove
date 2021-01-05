@@ -69,7 +69,7 @@
 				app:counterMaxLength="30"
 				app:counterEnabled="true"
 				
-				android:hint="@string/hint_name"
+				android:hint="@string/reg_hint_name"
 
 				app:errorEnabled="true"
 				

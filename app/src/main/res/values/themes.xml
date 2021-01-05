@@ -40,8 +40,6 @@
 		<item name="android:colorBackground">@color/colorBackground</item>
 		<item name="colorOnBackground">@color/colorOnBackground</item>
 		
-		<item name="android:textColor">@color/white</item>
-		
 		<!-- display menu popup under toolbar -->
 		<item name="actionOverflowMenuStyle">@style/MyOverFlowMenuStyle</item>
 		
@@ -49,8 +47,6 @@
 		<item name="android:navigationBarColor">@android:color/transparent</item>
 		<item name="android:statusBarColor">@android:color/transparent</item>
 		<item name="android:windowBackground">@null</item>
-		
-		<item name="materialAlertDialogTheme">@style/MyMaterialAlertDialog</item>
 		
 		<item name="shapeAppearanceSmallComponent">@style/MyAppShapeAppearance.SmallComponent</item>
 		<item name="shapeAppearanceMediumComponent">@style/MyAppShapeAppearance.MediumComponent</item>
@@ -89,9 +85,10 @@
 	</style>
 	
 	<!-- Alert dialog style	-->
-	<style name="MyMaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
-		<item name="buttonBarPositiveButtonStyle">@style/MyMaterialAlertDialog.ButtonPositive</item>
-		<item name="buttonBarNegativeButtonStyle">@style/MyMaterialAlertDialog.ButtonNegative</item>
+	<style name="MyConfirmationMaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+		<item name="buttonBarPositiveButtonStyle">@style/MyConfirmationAlertDialog.ButtonPositive</item>
+		<item name="buttonBarNegativeButtonStyle">@style/MyConfirmationAlertDialog.ButtonNegative</item>
 	</style>
+	
 
 </resources>

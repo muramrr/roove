@@ -72,10 +72,12 @@
 
 			android:text="@string/btn_log_in_with_facebook"
 			android:textAllCaps="false"
+			android:textColor="@color/white"
 
 			app:backgroundTint="@color/myFacebookColor"
-			app:icon="@drawable/ic_facebook_logo"
 			app:cornerRadius="8dp"
+			app:icon="@drawable/ic_facebook_logo"
+			app:iconTint="@color/white"
 			app:rippleColor="@color/myFacebookColor"
 
 			app:layout_constraintBottom_toBottomOf="parent"

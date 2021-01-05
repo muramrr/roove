@@ -20,7 +20,6 @@ package com.mmdev.roove.ui
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.mmdev.data.repository.auth.AuthFlowProvider
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.domain.pairs.MatchedUserItem
@@ -36,9 +35,6 @@ import com.mmdev.roove.ui.common.base.BaseViewModel
  * If you need to pass large amounts of data,
  * consider using a ViewModel as described in Share data between fragments.
  *
- * This [ViewModel] is used in every fragment { @see [com.mmdev.roove.ui.common.base.BaseFragment] }
- * and owner is [MainActivity]
- *
  * @see https://developer.android.com/guide/navigation/navigation-pass-data
  */
 
@@ -53,7 +49,8 @@ class SharedViewModel @ViewModelInject constructor(
 	val userState = MutableLiveData<UserState>()
 	val userInfoForRegistration = MutableLiveData<UserItem>()
 	
-	init {
+	
+	fun listenUserFlow() {
 		disposables.add(
 			authFlow.getUserAuthState()
 				.subscribe(

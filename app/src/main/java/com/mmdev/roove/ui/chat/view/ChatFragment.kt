@@ -38,13 +38,12 @@ import com.mmdev.domain.chat.MessageItem
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.domain.pairs.MatchedUserItem
 import com.mmdev.domain.user.data.BaseUserInfo
-import com.mmdev.domain.user.data.ReportType.DISRESPECTFUL_BEHAVIOR
-import com.mmdev.domain.user.data.ReportType.FAKE
-import com.mmdev.domain.user.data.ReportType.INELIGIBLE_PHOTOS
+import com.mmdev.domain.user.data.ReportType.*
 import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.permissions.AppPermission
+import com.mmdev.roove.core.permissions.AppPermission.PermissionCode
 import com.mmdev.roove.core.permissions.handlePermission
 import com.mmdev.roove.core.permissions.onRequestPermissionsResultReceived
 import com.mmdev.roove.core.permissions.requestAppPermissions
@@ -95,10 +94,6 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 
 	//static fields
 	companion object {
-
-		private const val IMAGE_GALLERY_REQUEST = 1
-		private const val IMAGE_CAMERA_REQUEST = 2
-
 		private const val PARTNER_CITY_KEY = "PARTNER_CITY"
 		private const val PARTNER_GENDER_KEY = "PARTNER_GENDER"
 		private const val PARTNER_ID_KEY = "PARTNER_ID"
@@ -148,6 +143,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 			receivedPartnerId.isNotEmpty() &&
 			receivedConversationId.isNotEmpty()
 		) {
+			
 			//if it was a deep link navigation then create ConversationItem "on a flight"
 			
 			sharedViewModel.matchedUserItemSelected.value =
@@ -262,9 +258,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		AppPermission.CAMERA,
 		onGranted = { startCameraIntent() },
 		onDenied = { requestAppPermissions(it) },
-		onExplanationNeeded = {
-			/** Additional explanation for permission usage needed **/
-		}
+		onExplanationNeeded = { it.explanationMessageId }
 	)
 
 	//take photo directly by camera
@@ -280,7 +274,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
 			putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
 		}
-		startActivityForResult(intent, IMAGE_CAMERA_REQUEST)
+		startActivityForResult(intent, PermissionCode.REQUEST_CODE_CAMERA.code)
 	}
 
 	/**
@@ -292,9 +286,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		AppPermission.GALLERY,
 		onGranted = { startGalleryIntent() },
 		onDenied = { requestAppPermissions(it) },
-		onExplanationNeeded = {
-			/** Additional explanation for permission usage needed **/
-		}
+		onExplanationNeeded = { it.explanationMessageId }
 	)
 	
 
@@ -304,7 +296,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 			action = Intent.ACTION_GET_CONTENT
 			type = "image/*"
 		}
-		startActivityForResult(Intent.createChooser(intent, "Select image"), IMAGE_GALLERY_REQUEST)
+		startActivityForResult(Intent.createChooser(intent, "Select image"), PermissionCode.REQUEST_CODE_GALLERY.code)
 	}
 
 	// start after permissions was granted
@@ -312,24 +304,25 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 		onRequestPermissionsResultReceived(
-				requestCode,
-				grantResults,
-				onPermissionGranted = {
-					when (it) {
-						AppPermission.CAMERA -> startCameraIntent()
-						AppPermission.GALLERY -> startGalleryIntent()
-					}
-				},
-				onPermissionDenied = {
-					requireContext().showToastText(getString(it.deniedMessageId))
+			requestCode,
+			grantResults,
+			onPermissionGranted = {
+				when (it) {
+					AppPermission.CAMERA -> startCameraIntent()
+					AppPermission.GALLERY -> startGalleryIntent()
+					else -> {}
 				}
+			},
+			onPermissionDenied = {
+				requireContext().showToastText(getString(it.deniedMessageId))
+			}
 		)
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 		// send photo from gallery
-		if (requestCode == IMAGE_GALLERY_REQUEST) {
+		if (requestCode == PermissionCode.REQUEST_CODE_GALLERY.code) {
 			if (resultCode == RESULT_OK) {
 
 				val selectedUri = data?.data
@@ -341,7 +334,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 			}
 		}
 		// send photo taken by camera
-		if (requestCode == IMAGE_CAMERA_REQUEST) {
+		if (requestCode == PermissionCode.REQUEST_CODE_CAMERA.code) {
 			if (resultCode == RESULT_OK) {
 
 				if (mFilePathImageCamera.exists()) {

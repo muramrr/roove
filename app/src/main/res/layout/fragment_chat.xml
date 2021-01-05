@@ -217,7 +217,7 @@
 			android:layout_height="wrap_content"
 			android:gravity="center"
 
-			android:text="@string/chat_no_messages_explanation"
+			android:text="@string/fragment_chat_no_messages_explanation"
 			android:textAppearance="?textAppearanceHeadline5"
 			
 			app:invisibleIf='@{!viewModel.chatIsEmpty}'

@@ -148,7 +148,7 @@
 			android:alpha="0"
 			android:rotationX="-90"
 
-			android:text="@string/hint_preferred_gender"
+			android:text="@string/reg_hint_preferred_gender"
 			android:textAppearance="?textAppearanceHeadline5"
 
 			app:paddingTopSystemWindowInsets="@{true}"
@@ -255,7 +255,7 @@
 				android:labelFor="@id/sliderAge"
 
 				android:gravity="center"
-				android:text="@string/default_age_text"
+				android:text="@string/reg_default_age_text"
 				android:textAppearance="?textAppearanceHeadline4"
 				/>
 
@@ -415,7 +415,7 @@
 				android:layout_marginTop="16dp"
 				android:enabled="false"
 				
-				android:hint="@string/hint_name"
+				android:hint="@string/reg_hint_name"
 				
 				app:errorEnabled="false"
 				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -446,7 +446,7 @@
 				android:layout_marginEnd="16dp"
 				android:enabled="false"
 
-				android:hint="@string/hint_gender"
+				android:hint="@string/reg_hint_gender"
 				
 				app:errorEnabled="false"
 				
@@ -477,7 +477,7 @@
 				android:layout_height="wrap_content"
 				android:enabled="false"
 
-				android:hint="@string/hint_preferred_gender"
+				android:hint="@string/reg_hint_preferred_gender"
 				
 				app:errorEnabled="false"
 				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -509,7 +509,7 @@
 				android:layout_marginBottom="16dp"
 				android:enabled="false"
 
-				android:hint="@string/hint_age"
+				android:hint="@string/reg_hint_age"
 				app:errorEnabled="false"
 
 				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -528,7 +528,7 @@
 					
 					android:gravity="center"
 
-					android:text="@string/default_age_text"
+					android:text="@string/reg_default_age_text"
 					/>
 
 			</com.google.android.material.textfield.TextInputLayout>
@@ -562,7 +562,7 @@
 				android:layout_marginTop="16dp"
 				android:padding="16dp"
 				
-				android:text="@string/btn_done_text"
+				android:text="@string/reg_btn_done_text"
 				android:textColor="?colorOnBackground"
 				android:textAllCaps="false"
 

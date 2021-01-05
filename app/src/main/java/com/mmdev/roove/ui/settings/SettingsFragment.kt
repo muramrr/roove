@@ -35,6 +35,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.permissions.AppPermission
+import com.mmdev.roove.core.permissions.AppPermission.PermissionCode
 import com.mmdev.roove.core.permissions.handlePermission
 import com.mmdev.roove.core.permissions.onRequestPermissionsResultReceived
 import com.mmdev.roove.core.permissions.requestAppPermissions
@@ -65,11 +66,6 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 
 	// File
 	private lateinit var mFilePathImageCamera: File
-
-	companion object {
-		private const val IMAGE_GALLERY_REQUEST = 1
-		private const val IMAGE_CAMERA_REQUEST = 2
-	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -136,7 +132,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 	
 
 	/** log out pop up */
-	private fun showSignOutPrompt() = MaterialAlertDialogBuilder(requireContext())
+	private fun showSignOutPrompt() = MaterialAlertDialogBuilder(requireContext(), R.style.MyConfirmationMaterialAlertDialog)
 		.setTitle(R.string.dialog_exit_title)
 		.setMessage(R.string.dialog_exit_message)
 		.setPositiveButton(R.string.dialog_exit_positive_btn_text) { _, _ -> sharedViewModel.logOut() }
@@ -178,7 +174,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 		val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
 			putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
 		}
-		startActivityForResult(intent, IMAGE_CAMERA_REQUEST)
+		startActivityForResult(intent, PermissionCode.REQUEST_CODE_CAMERA.code)
 	}
 
 	/**
@@ -199,7 +195,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 			action = Intent.ACTION_GET_CONTENT
 			type = "image/*"
 		}, "Select image")
-		startActivityForResult(intent, IMAGE_GALLERY_REQUEST)
+		startActivityForResult(intent, PermissionCode.REQUEST_CODE_GALLERY.code)
 	}
 
 	// start after permissions was granted
@@ -213,6 +209,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 				when (it) {
 					AppPermission.CAMERA -> startCameraIntent()
 					AppPermission.GALLERY -> startGalleryIntent()
+					else -> {}
 				}
 			},
 			onPermissionDenied = { it.deniedMessageId })
@@ -222,7 +219,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 		// send photo from gallery
-		if (requestCode == IMAGE_GALLERY_REQUEST) {
+		if (requestCode == PermissionCode.REQUEST_CODE_GALLERY.code) {
 			if (resultCode == Activity.RESULT_OK) {
 
 				val selectedUri = data?.data
@@ -230,7 +227,7 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 			}
 		}
 		// send photo taken by camera
-		if (requestCode == IMAGE_CAMERA_REQUEST) {
+		if (requestCode == PermissionCode.REQUEST_CODE_CAMERA.code) {
 			if (resultCode == Activity.RESULT_OK) {
 
 				if (mFilePathImageCamera.exists()) {

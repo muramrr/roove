@@ -26,28 +26,41 @@
 	<!-- GALLERY PERMISSIONS -->
 	<string name="permission_read_ext_storage_explanation">Application needs READ EXTERNAL STORAGE PERMISSION in order to access your gallery. Please, allow permission.</string>
 	<string name="permission_read_ext_storage_denied">Please enable READ EXTERNAL STORAGE PERMISSION. Go to \nSettings -> Apps -> Permission</string>
+	
+	<!-- Location PERMISSIONS -->
+	<string name="permission_location_explanation">Application needs LOCATION PERMISSION in order to access your current position. Please, allow permission.</string>
+	<string name="permission_location_denied">Please enable LOCATION PERMISSION. Go to \nSettings -> Apps -> Permission</string>
+	
+	<!-- activity_main -->
+	<string name="dialog_location_disabled_title">Cannot access location…</string>
+	<string name="dialog_location_disabled_message">Is location enabled on phone?</string>
+	<string name="dialog_location_btn_pos">Open settings</string>
+	<string name="dialog_location_btn_neg">Cancel</string>
 
-	<!--Layouts hardcoded strings-->
+	<!-- fragment_auth -->
 	<string name="auth_slogan1">Find new\nfriends nearby</string>
 	<string name="btn_log_in_with_facebook">Log in with Facebook</string>
-
+	
+	<!-- fragment_registration -->
 	<string name="reg_step_1_tv_select_your_gender">Select your gender</string>
 	<string name="reg_step_3_tv_specify_your_age">Specify your age</string>
 	<string name="reg_step_4_tv_change_name">Do you want to change your name?</string>
 	<string name="reg_step_final_tv_check_is_correct">Check if everything is correct</string>
-
-	<!-- partner preferences -->
-	<string name="tv_ages_you_prefer">Ages you prefer</string>
-	<string name="tv_gender_showing">Showing</string>
 	
-	<string name="hint_name">Name</string>
-	<string name="hint_gender">Gender</string>
-	<string name="hint_preferred_gender">Interested in</string>
-	<string name="hint_age">Age</string>
-	<string name="default_age_text">18</string>
+	<string name="reg_hint_name">Name</string>
+	<string name="reg_hint_gender">Gender</string>
+	<string name="reg_hint_preferred_gender">Interested in</string>
+	<string name="reg_hint_age">Age</string>
+	<string name="reg_default_age_text">18</string>
 	<string name="reg_btn_back_text">Back</string>
-	<string name="btn_done_text">Done</string>
-
+	<string name="reg_btn_done_text">Done</string>
+	
+	<!-- fragment_main_flow -->
+	<string name="bottom_navigation_cards">Explore</string>
+	<string name="bottom_navigation_pairs">Pairs</string>
+	<string name="bottom_navigation_chats">Chats</string>
+	<string name="bottom_navigation_settings">Settings</string>
+	
 	<!-- Fragment cards strings -->
 	<string name="fragment_cards_explanation_text">There is no available users matching your preferences</string>
 	<string name="fragment_card_skip_img_description">card skip</string>
@@ -55,24 +68,42 @@
 	<string name="tv_its_a_match">ITS A MATCH!</string>
 	<string name="tv_back_to_swiping">Back to swiping</string>
 
-	<!-- Fragment chat strings -->
+	<!-- fragment_chat -->
 	<string name="fragment_chat_ed_hint">Message</string>
+	<string name="fragment_chat_no_messages_explanation">No messages yet…</string>
+	
 	<string name="fragment_chat_send_img_description">send message</string>
 	<string name="fragment_chat_attach_img_description">send attachment</string>
 	<string name="chat_message_sender_avatar_img_description">sender avatar</string>
 	<string name="chat_message_sender_attach_img_description">sender_image</string>
 	<string name="chat_message_my_avatar_img_description">my avatar</string>
 	<string name="chat_message_my_attach_img_description">my image</string>
-	<string name="chat_no_messages_explanation">No messages yet…</string>
+	
 
 	<string name="fragment_conversations_explanation_text">There is no started conversations…\n\nText someone first!</string>
+	<string name="dialog_conversation_delete_title">Delete conversation?</string>
+	<string name="dialog_conversation_delete_message">This will delete all messages and pair with this user.</string>
+	
 	<string name="fragment_pairs_explanation_text">There is no matches…\n\nKeep swiping!</string>
 
-	<string name="fragment_places_explanation">There is no such places in this category</string>
 
 	<string name="description_user_photo">user photo</string>
 	
+	<!-- fragment_settings -->
 	<string name="fragment_settings_age_formatter">Age: %s</string>
+	<string name="btn_settings_edit_delete_my_account_text">DELETE MY ACCOUNT</string>
+	<string name="btn_settings_edit_save_text">Save</string>
+	<string name="menu_dating_preferences">Dating Preferences</string>
+	
+	<string name="menu_exit">Exit</string>
+	<string name="dialog_profile_delete_title">Do you want to delete your profile?</string>
+	<string name="dialog_profile_delete_message">This will delete your entire account information and also all matches and conversations.</string>
+	<string name="dialog_delete_btn_positive_text">Delete</string>
+	<string name="dialog_delete_btn_negative_text">Cancel</string>
+	<string name="dialog_exit_title">Do you wish to log out?</string>
+	<string name="dialog_exit_message">This will permanently log you out.</string>
+	<string name="dialog_exit_positive_btn_text">Log out</string>
+	<string name="dialog_exit_negative_btn_text">Cancel</string>
 
 	<!-- pref genders-->
 	<string name="preferredGenderFemale">female</string>
@@ -82,50 +113,34 @@
 	<!-- my gender -->
 	<string name="genderFemale">female</string>
 	<string name="genderMale">male</string>
-
-	<string name="btn_settings_edit_delete_my_account_text">DELETE MY ACCOUNT</string>
-	<string name="btn_settings_edit_save_text">Save</string>
+	
+	<string name="tv_ages_you_prefer">Ages you prefer</string>
+	<string name="tv_gender_showing">Showing</string>
+	
+	
 	<string name="dialog_error_title">Error</string>
 
-	<string name="place_description_header_text">Description</string>
 	<string name="profile_about_header_text">About me</string>
 
 	<string name="text_empty_error">Field must not be empty</string>
-
-	<string name="toast_text_report_success">Report sent successfully\nThank you!</string>
+	
 	<string name="toast_text_update_success">Successfully updated</string>
 	<string name="toast_text_delete_success">Successfully deleted</string>
 	<string name="toast_text_at_least_1_photo_required">At least one photo required.</string>
-
-	<string name="bottom_navigation_cards">Explore</string>
-	<string name="bottom_navigation_pairs">Pairs</string>
-	<string name="bottom_navigation_chats">Chats</string>
-	<string name="bottom_navigation_settings">Settings</string>
-
-	<string name="dialog_conversation_delete_title">Delete conversation?</string>
-	<string name="dialog_conversation_delete_message">This will delete all messages and pair with this user.</string>
-
-	<string name="dialog_profile_delete_title">Do you want to delete your profile?</string>
-	<string name="dialog_profile_delete_message">This will delete your entire account information and also all matches and conversations.</string>
-	<string name="dialog_delete_btn_positive_text">Delete</string>
-	<string name="dialog_delete_btn_negative_text">Cancel</string>
-
-	<string name="dialog_exit_title">Do you wish to log out?</string>
-	<string name="dialog_exit_message">This will permanently log you out.</string>
-	<string name="dialog_exit_positive_btn_text">Log out</string>
-	<string name="dialog_exit_negative_btn_text">Cancel</string>
-
-	<string name="menu_exit">Exit</string>
-	<string name="menu_dating_preferences">Dating Preferences</string>
+	
+	
 	<string name="menu_unmatch_text">Unmatch</string>
-	<string name="menu_report_text">Report</string>
+	
 
 	<string name="material_dialog_picker_camera">Camera</string>
 	<string name="material_dialog_picker_gallery">Gallery</string>
-
+	
+	<string name="menu_report_text">Report</string>
 	<string name="report_chooser_photos">Ineligible photos</string>
 	<string name="report_chooser_behavior">Disrespectful behavior</string>
 	<string name="report_chooser_fake">Seems, it is fake</string>
+	<string name="toast_text_report_success">Report sent successfully\nThank you!</string>
+	
 	<string name="text_i_agree_privacy_policy">By logging in I agree with <u>Privacy Policy</u></string>
 	
 

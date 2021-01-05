@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.firebase.executeAndDeserializeSingle
+import com.mmdev.domain.PaginationDirection
 import com.mmdev.domain.pairs.MatchedUserItem
 import com.mmdev.domain.pairs.PairsRepository
 import com.mmdev.domain.user.data.UserItem
@@ -40,17 +41,20 @@ class PairsRepositoryImpl @Inject constructor(
 		private const val USERS_COLLECTION = "users"
 	}
 	
-	private fun matchesQuery(user: UserItem, cursorPosition: Int): Query = fs.collection(USERS_COLLECTION)
+	private fun matchesQuery(user: UserItem): Query = fs.collection(USERS_COLLECTION)
 		.document(user.baseUserInfo.userId)
 		.collection(USER_MATCHED_COLLECTION)
 		.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
 		.orderBy(MATCHED_DATE_FIELD, Query.Direction.DESCENDING)
 		.limit(20)
-		.startAfter(cursorPosition)
+		//.startAfter(cursorPosition)
 	
-	override fun getPairs(user: UserItem, cursorPosition: Int): Single<List<MatchedUserItem>> =
-		matchesQuery(user, cursorPosition)
-			.executeAndDeserializeSingle(MatchedUserItem::class.java)
+	override fun getPairs(
+		user: UserItem,
+		matchedUserId: String,
+		direction: PaginationDirection
+	): Single<List<MatchedUserItem>> =
+		matchesQuery(user).executeAndDeserializeSingle(MatchedUserItem::class.java)
 	
 	
 }

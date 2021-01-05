@@ -57,7 +57,7 @@ internal fun <T> DocumentReference.getAndDeserializeAsSingle(clazz: Class<T>): S
 	SingleCreate<T> { emitter ->
 		get()
 			.addOnSuccessListener { snapshot ->
-				logInfo(TAG, "Document retrieve success")
+				logDebug(TAG, "Document retrieve success")
 				if (snapshot.exists() && snapshot.data != null) {
 					
 					logDebug(TAG, "Data is not null, deserialization in process...")
@@ -136,11 +136,10 @@ internal fun DocumentReference.updateAsCompletable(field: String, value: Any): C
 }.subscribeOn(MySchedulers.io())
 
 
-internal fun FirebaseUser.toUserItem(): UserItem =
-	UserItem(
-        baseUserInfo = BaseUserInfo(
-			name = displayName!!,
-			mainPhotoUrl = "${photoUrl}?height=1000",
-			userId = uid
-		), photoURLs = listOf(PhotoItem.FACEBOOK_PHOTO("${photoUrl}?height=1000"))
-	)
+internal fun FirebaseUser.toUserItem(): UserItem = UserItem(
+    baseUserInfo = BaseUserInfo(
+		name = displayName!!,
+		mainPhotoUrl = "${photoUrl}?height=1000",
+		userId = uid
+	), photoURLs = listOf(PhotoItem.FACEBOOK_PHOTO("${photoUrl}?height=1000"))
+)
