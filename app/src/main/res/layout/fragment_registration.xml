@@ -59,7 +59,7 @@
 		<com.google.android.material.card.MaterialCardView android:id="@+id/btnGenderFemale"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			android:layout_marginEnd="8dp"
+			android:layout_marginEnd="4dp"
 
 			android:alpha="0"
 			android:rotationY="90"
@@ -73,18 +73,22 @@
 			app:layout_constraintEnd_toStartOf="@id/btnGenderMale"
 			app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
-			app:layout_constraintVertical_bias="0.3"
 			>
 
 			<com.google.android.material.textview.MaterialTextView
 				android:id="@+id/tvGenderFemale"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center|bottom"
 				android:padding="8dp"
 				
 				android:text="@string/genderFemale"
+				android:textAlignment="center"
 				android:textAppearance="?textAppearanceHeadline6"
+				
+				app:autoSizeTextType="uniform"
+				app:autoSizeMaxTextSize="20sp"
+				app:autoSizeMinTextSize="14sp"
 				/>
 
 			<ImageView
@@ -102,6 +106,7 @@
 		<com.google.android.material.card.MaterialCardView android:id="@+id/btnGenderMale"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
+			android:layout_marginStart="4dp"
 
 			android:alpha="0"
 			android:rotationY="90"
@@ -115,17 +120,22 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
-			app:layout_constraintVertical_bias="0.3" >
+			>
 
 			<com.google.android.material.textview.MaterialTextView
 				android:id="@+id/tvGenderMale"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center|bottom"
 				android:padding="8dp"
 
 				android:text="@string/genderMale"
+				android:textAlignment="center"
 				android:textAppearance="?textAppearanceHeadline6"
+				
+				app:autoSizeTextType="uniform"
+				app:autoSizeMaxTextSize="20sp"
+				app:autoSizeMinTextSize="14sp"
 				/>
 
 			<ImageView
@@ -183,12 +193,13 @@
 
 			<com.google.android.material.textview.MaterialTextView
 				android:id="@+id/tvGenderEveryone"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_gravity="bottom|center"
 				android:padding="8dp"
 
 				android:text="@string/preferredGenderEveryone"
+				android:textAlignment="center"
 				android:textAppearance="?textAppearanceHeadline6"
 				/>
 
@@ -231,8 +242,7 @@
 
 				/>
 			
-			<com.google.android.material.card.MaterialCardView
-				android:id="@+id/cvContainerAgePicker"
+			<com.google.android.material.card.MaterialCardView android:id="@+id/cvContainerAgePicker"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="24dp"
@@ -266,13 +276,13 @@
 			</com.google.android.material.card.MaterialCardView>
 
 			<com.google.android.material.textview.MaterialTextView android:id="@+id/tvAgeDisplay"
-				android:layout_width="0dp"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="16dp"
 				android:labelFor="@id/sliderAge"
 
-				android:gravity="center"
 				android:text="@string/reg_default_age_text"
+				android:textAlignment="center"
 				android:textAppearance="?textAppearanceHeadline4"
 				/>
 
@@ -291,17 +301,27 @@
 				android:id="@+id/cvRegContainerAgePicker"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="16dp"
+				android:layout_marginTop="8dp"
 
 				app:cardElevation="0dp"
 				app:cardCornerRadius="16dp"
 				app:contentPadding="16dp"
 				>
 				
+				<com.google.android.material.textview.MaterialTextView android:id="@+id/tvPickedAgeMin"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="start|center_vertical"
+					
+					android:textColor="?colorOnBackground"
+					android:textAppearance="?textAppearanceCaption"
+					/>
+				
 				<com.google.android.material.slider.RangeSlider
 					android:id="@+id/rangeSeekBarRegAgePicker"
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
+					android:layout_marginHorizontal="16dp"
 					
 					android:valueFrom="18"
 					android:valueTo="100"
@@ -312,6 +332,15 @@
 					app:thumbColor="?colorSecondary"
 					app:thumbRadius="16dp"
 					
+					/>
+				
+				<com.google.android.material.textview.MaterialTextView android:id="@+id/tvPickedAgeMax"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="end|center_vertical"
+					
+					android:textColor="?colorOnBackground"
+					android:textAppearance="?textAppearanceCaption"
 					/>
 
 			</com.google.android.material.card.MaterialCardView>
@@ -431,6 +460,7 @@
 				app:errorEnabled="false"
 				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
 				
+				app:layout_constraintVertical_bias="0.2"
 				app:layout_constraintTop_toBottomOf="@id/tvAllCorrect"
 				app:layout_constraintBottom_toTopOf="@id/btnFinalBack"
 				app:layout_constraintEnd_toEndOf="parent"
@@ -604,7 +634,6 @@
 			app:cornerRadius="10dp"
 			app:icon="@drawable/ic_arrow_back_24dp"
 			app:iconTint="@color/white_50"
-			app:rippleColor="@color/black"
 
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"

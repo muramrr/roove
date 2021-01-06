@@ -158,7 +158,10 @@ class RegistrationFragment: BaseFragment<AuthViewModel, FragmentRegistrationBind
 		//step 3 pref age
 		rangeSeekBarRegAgePicker.addOnChangeListener { rangeSlider, value, fromUser ->
 			preferredAgeMin = rangeSlider.values.first()
+			tvPickedAgeMin.text = "${preferredAgeMin.toInt()}"
+			
 			preferredAgeMax = rangeSlider.values.last()
+			tvPickedAgeMax.text = "${preferredAgeMax.toInt()}"
 		}
 		
 		//step 4 name

@@ -26,11 +26,15 @@ import com.google.firebase.installations.FirebaseInstallations
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.firebase.asSingle
 import com.mmdev.data.datasource.UserDataSource
+import com.mmdev.data.datasource.location.LocationDataSource
 import com.mmdev.domain.auth.AuthRepository
 import com.mmdev.domain.user.data.BaseUserInfo
 import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.functions.BiFunction
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
 
 /**
@@ -43,11 +47,13 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
 	private val auth: FirebaseAuth,
 	private val userDataSource: UserDataSource,
+	private val locationDataSource: LocationDataSource,
 	context: Context
 ): BaseRepository(), AuthRepository {
 	
 	companion object {
 		private const val FS_INSTALLATIONS_FIELD = "installations"
+		private const val LOCATION_FIELD = "location"
 	}
 	
 	/**
@@ -63,12 +69,17 @@ class AuthRepositoryImpl @Inject constructor(
 	/**
 	 * create new [UserItem] documents in db
 	 */
-	override fun signUp(userItem: UserItem): Single<UserItem> =
-		userDataSource.writeFirestoreUser(userItem).doOnComplete {
-			updateInstallations(userItem.baseUserInfo.userId)
-		}.toSingle {
-			userItem
-		}
+	override fun signUp(userItem: UserItem): Single<UserItem> = locationDataSource.locationSubject
+		.zipWith(
+			Observable.just(userItem),
+			BiFunction { location, user ->
+				return@BiFunction user.copy(location = location)
+			}
+		)
+		.concatMapCompletable { userDataSource.writeFirestoreUser(it) }
+		.andThen(updateInstallations(userItem.baseUserInfo.userId))
+		.delay(500, MILLISECONDS)
+		.andThen(userDataSource.getFirestoreUser(userItem.baseUserInfo.userId))
 	
 	/**
 	 * this fun is called first when user is trying to sign in via facebook
