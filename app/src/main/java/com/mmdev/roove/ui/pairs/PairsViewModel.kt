@@ -20,15 +20,14 @@ package com.mmdev.roove.ui.pairs
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.domain.PaginationDirection.INITIAL
-import com.mmdev.domain.PaginationDirection.NEXT
-import com.mmdev.domain.PaginationDirection.PREVIOUS
+import com.mmdev.domain.PaginationDirection.*
 import com.mmdev.domain.pairs.MatchedUserItem
 import com.mmdev.domain.pairs.PairsRepository
 import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
+import java.util.*
 
 class PairsViewModel @ViewModelInject constructor(
 	private val repo: PairsRepository
@@ -45,7 +44,7 @@ class PairsViewModel @ViewModelInject constructor(
 	}
 
 	private fun loadInitMatchedUsers() {
-		disposables.add(repo.getPairs(MainActivity.currentUser!!, "", INITIAL)
+		disposables.add(repo.getPairs(MainActivity.currentUser!!, Date(), 0, INITIAL)
             .observeOn(mainThread())
             .subscribe(
 	            { pairs ->
@@ -57,8 +56,8 @@ class PairsViewModel @ViewModelInject constructor(
 		)
 	}
 	
-	fun loadNextMatchedUsers(matchedUserId: String) {
-		disposables.add(repo.getPairs(MainActivity.currentUser!!, matchedUserId, NEXT)
+	fun loadNextMatchedUsers(matchDate: Date, page: Int) {
+		disposables.add(repo.getPairs(MainActivity.currentUser!!, matchDate, page, NEXT)
 			.observeOn(mainThread())
 			.subscribe(
 				{ nextPairs.postValue(it) },
@@ -67,8 +66,8 @@ class PairsViewModel @ViewModelInject constructor(
 		)
 	}
 	
-	fun loadPrevMatchedUsers(matchedUserId: String) {
-		disposables.add(repo.getPairs(MainActivity.currentUser!!, matchedUserId, PREVIOUS)
+	fun loadPrevMatchedUsers(page: Int) {
+		disposables.add(repo.getPairs(MainActivity.currentUser!!, Date(), page, PREVIOUS)
 			.observeOn(mainThread())
 			.subscribe(
 				{ prevPairs.postValue(it) },

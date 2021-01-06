@@ -24,6 +24,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.roove.R
+import com.mmdev.roove.core.log.logWtf
 import com.mmdev.roove.databinding.FragmentPairsBinding
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.GridItemDecoration
@@ -43,12 +44,14 @@ class PairsFragment: BaseFragment<PairsViewModel, FragmentPairsBinding>(
 	
 	private val mPairsAdapter = PairsAdapter().apply {
 		
-		setLoadNextListener { matchedUserId ->
-			mViewModel.loadNextMatchedUsers(matchedUserId)
+		setLoadNextListener { matchDate, page ->
+			logWtf(TAG, "$page")
+			mViewModel.loadNextMatchedUsers(matchDate, page)
 		}
 		
-		setLoadPrevListener { matchedUserId ->
-			mViewModel.loadPrevMatchedUsers(matchedUserId)
+		setLoadPrevListener { page ->
+			logWtf(TAG, "$page")
+			mViewModel.loadPrevMatchedUsers(page)
 		}
 		
 		setOnItemClickListener { item, position ->

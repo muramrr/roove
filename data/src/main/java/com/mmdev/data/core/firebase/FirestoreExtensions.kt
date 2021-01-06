@@ -25,7 +25,6 @@ import com.google.firebase.firestore.Query
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.log.logDebug
 import com.mmdev.data.core.log.logError
-import com.mmdev.data.core.log.logInfo
 import com.mmdev.data.core.log.logWarn
 import com.mmdev.domain.photo.PhotoItem
 import com.mmdev.domain.user.data.BaseUserInfo
@@ -86,9 +85,9 @@ internal fun <T> Query.executeAndDeserializeSingle(clazz: Class<T>): Single<List
 			if (!querySnapshot.isEmpty) {
 				logDebug(TAG, "Query executed successfully, printing first and last doc...")
 				querySnapshot.documents.run {
-					logInfo(TAG, first().reference.path)
-					logInfo(TAG, last().reference.path)
-					logInfo(TAG, "Query size = $size")
+					logDebug(TAG, first().reference.path)
+					logDebug(TAG, last().reference.path)
+					logDebug(TAG, "Query size = $size")
 				}
 				
 				logDebug(TAG, "Query deserialization to ${clazz.simpleName} in process...")

@@ -25,7 +25,6 @@ import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.firebase.asSingle
 import com.mmdev.data.core.firebase.executeAndDeserializeSingle
-import com.mmdev.data.core.log.logWtf
 import com.mmdev.domain.PaginationDirection
 import com.mmdev.domain.PaginationDirection.*
 import com.mmdev.domain.conversations.ConversationItem
@@ -45,40 +44,16 @@ class ConversationsRepositoryImpl @Inject constructor(
 	private val fs: FirebaseFirestore
 ): BaseRepository(), ConversationsRepository {
 	
-	//init {
-	//	for (i in 0..200) {
-	//		val conversation = UtilityManager.generateConversation(i = i)
-	//		fs.collection(USERS_COLLECTION)
-	//			.document("v2tqQttLfdT21tNdQDJIfbjiVYn1")
-	//			.collection(CONVERSATIONS_COLLECTION)
-	//			.document(i.toString())
-	//			.set(conversation)
-	//	}
-	//}
+	
 	
 	private val pages = ArrayMap<Int, Query>()
-	
-	//offset cursor position, also represents how many items we've loaded
-	private var bottomLimitPage = 0
-		@Synchronized set(value) {
-			field = value
-			if (field > 1) topLimitPage = field - 1
-			logWtf(TAG, "$topLimitPage, $field")
-		}
-	private var topLimitPage = 0
-		@Synchronized set(value) {
-			if (value == 0) bottomLimitPage = 1
-			field = if (value < 0) 0
-			else value
-		}
 		
 	
-	private fun conversationsQuery(user: UserItem): Query =
-		fs.collection(USERS_COLLECTION)
-			.document(user.baseUserInfo.userId)
-			.collection(CONVERSATIONS_COLLECTION)
-			.orderBy(CONVERSATION_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
-			.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
+	private fun conversationsQuery(user: UserItem): Query = fs.collection(USERS_COLLECTION)
+		.document(user.baseUserInfo.userId)
+		.collection(CONVERSATIONS_COLLECTION)
+		.orderBy(CONVERSATION_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
+		.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
 		
 
 	override fun deleteConversation(user: UserItem, conversation: ConversationItem): Single<Unit> =
@@ -169,34 +144,29 @@ class ConversationsRepositoryImpl @Inject constructor(
 	override fun getConversations(
 		user: UserItem,
 		conversationTimestamp: Date,
+		page: Int,
 		direction: PaginationDirection
 	): Single<List<ConversationItem>> = when(direction) {
 		
 		INITIAL -> conversationsQuery(user).limit(20).also { pages[0] = it }
 		
 		NEXT -> {
-			
-			conversationsQuery(user)
-				.startAfter(conversationTimestamp)
-				.limit(20)
-				.also {
-					bottomLimitPage++
-					
-					if (!pages.containsKey(bottomLimitPage)) {
-						pages[bottomLimitPage] = it
+			if (pages.containsKey(page)) {
+				pages[page]
+			}
+			else {
+				conversationsQuery(user)
+					.startAfter(conversationTimestamp)
+					.limit(20)
+					.also {
+						pages[page] = it
 					}
-				}
-		}
-		
-		
-		PREVIOUS -> {
-			bottomLimitPage--
-			topLimitPage--
+			}
 			
-			if (topLimitPage <= 0) pages[0]!!
-			else pages[topLimitPage]!!
 		}
 		
-	}.executeAndDeserializeSingle(ConversationItem::class.java)
+		PREVIOUS -> pages[page]
+		
+	}!!.executeAndDeserializeSingle(ConversationItem::class.java)
 	
 }

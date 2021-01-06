@@ -48,12 +48,12 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel, FragmentConver
 	override val mViewModel: ConversationsViewModel by viewModels()
 
 	private val mConversationsAdapter = ConversationsAdapter().apply {
-		setLoadNextListener { conversationTimestamp ->
-			mViewModel.loadNextConversations(conversationTimestamp)
+		setLoadNextListener { conversationTimestamp, page ->
+			mViewModel.loadNextConversations(conversationTimestamp, page)
 		}
 		
-		setLoadPrevListener { conversationTimestamp ->
-			mViewModel.loadPrevConversations(conversationTimestamp)
+		setLoadPrevListener { page ->
+			mViewModel.loadPrevConversations(page)
 		}
 		
 		setOnItemClickListener { item, position ->

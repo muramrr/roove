@@ -24,7 +24,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.roove.BR
-import com.mmdev.roove.core.log.logWtf
 import com.mmdev.roove.databinding.ItemConversationBinding
 import java.util.*
 
@@ -39,7 +38,17 @@ class ConversationsAdapter(
 	}
 	private var startPos = 0
 	private var itemsLoaded = 0
-	
+	private var pageTop = 0
+		set(value) {
+			field = if (value < 0) 0
+			else value
+		}
+	private var pageBottom = 0
+		set(value) {
+			if (value > 1) pageTop = value - 1
+			field = value
+		}
+	private var isLastPage = false
 	
 	
 	
@@ -58,11 +67,11 @@ class ConversationsAdapter(
 	fun setOnItemClickListener(listener: (ConversationItem, Int) -> Unit) { mClickListener = listener }
 	
 	
-	private var loadPrevListener: ((Date) -> Unit)? = null
-	private var loadNextListener: ((Date) -> Unit)? = null
+	private var loadPrevListener: ((Int) -> Unit)? = null
+	private var loadNextListener: ((Date, Int) -> Unit)? = null
 	
-	fun setLoadPrevListener(listener: (Date) -> Unit) { loadPrevListener = listener }
-	fun setLoadNextListener(listener: (Date) -> Unit) { loadNextListener = listener }
+	fun setLoadPrevListener(listener: (Int) -> Unit) { loadPrevListener = listener }
+	fun setLoadNextListener(listener: (Date, Int) -> Unit) { loadNextListener = listener }
 
 	fun setNewData(newData: List<ConversationItem>) {
 		data.clear()
@@ -71,6 +80,10 @@ class ConversationsAdapter(
 	}
 	
 	fun insertPreviousData(topData: List<ConversationItem>) {
+		//update offsets
+		isLastPage = false
+		if (topData.size == ITEMS_PER_PAGE) pageBottom = pageTop
+		
 		data.addAll(FIRST_POS, topData)
 		notifyItemRangeInserted(FIRST_POS, topData.size)
 		
@@ -84,17 +97,17 @@ class ConversationsAdapter(
 	
 	
 	fun insertNextData(bottomData: List<ConversationItem>) {
+		//update offsets
+		pageBottom++
+		isLastPage = bottomData.size != ITEMS_PER_PAGE
+		
 		startPos = data.size
 		data.addAll(bottomData)
 		itemsLoaded += bottomData.size
 		notifyItemRangeInserted(startPos, bottomData.size)
 		if (data.size > OPTIMAL_ITEMS_COUNT) {
-			val shouldBeRemovedCount = data.size - OPTIMAL_ITEMS_COUNT
-			data = data.drop(
-				if (shouldBeRemovedCount < ITEMS_PER_PAGE) shouldBeRemovedCount - 1
-				else shouldBeRemovedCount
-			).toMutableList()
-			notifyItemRangeRemoved(FIRST_POS, shouldBeRemovedCount)
+			data = data.drop(ITEMS_PER_PAGE).toMutableList()
+			notifyItemRangeRemoved(FIRST_POS, ITEMS_PER_PAGE)
 		}
 	}
 
@@ -115,13 +128,12 @@ class ConversationsAdapter(
 		}
 		
 		fun bind(item: ConversationItem) {
-			if (adapterPosition > 9 && adapterPosition == (data.size - 10))
-				loadNextListener?.invoke(data.last().lastMessageTimestamp!!)
+			if (adapterPosition > 9 && adapterPosition == (data.size - 5) && !isLastPage)
+				loadNextListener?.invoke(data.last().lastMessageTimestamp!!, pageBottom + 1)
 			
-			if (itemsLoaded >= data.size && adapterPosition == 10) {
-				loadPrevListener?.invoke(data.first().lastMessageTimestamp!!)
-				logWtf("mylogs_adapter", "invoked load prev with $itemsLoaded, ${data.size}")
-			}
+			if (itemsLoaded >= data.size && adapterPosition == 1)
+				loadPrevListener?.invoke(pageTop - 1)
+			
 			
 			
 			binding.setVariable(BR.bindItem, item)

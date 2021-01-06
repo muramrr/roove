@@ -20,9 +20,7 @@ package com.mmdev.roove.ui.conversations
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
-import com.mmdev.domain.PaginationDirection.INITIAL
-import com.mmdev.domain.PaginationDirection.NEXT
-import com.mmdev.domain.PaginationDirection.PREVIOUS
+import com.mmdev.domain.PaginationDirection.*
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.domain.conversations.ConversationsRepository
 import com.mmdev.roove.ui.MainActivity
@@ -62,7 +60,7 @@ class ConversationsViewModel @ViewModelInject constructor(
 
 
 	private fun loadInitConversations() {
-		disposables.add(repo.getConversations(MainActivity.currentUser!!, Date(), INITIAL)
+		disposables.add(repo.getConversations(MainActivity.currentUser!!, Date(), 0, INITIAL)
             .observeOn(mainThread())
             .subscribe(
 	            { conversations ->
@@ -74,8 +72,8 @@ class ConversationsViewModel @ViewModelInject constructor(
 		)
 	}
 	
-	fun loadPrevConversations(conversationTimestamp: Date) {
-		disposables.add(repo.getConversations(MainActivity.currentUser!!, conversationTimestamp, PREVIOUS)
+	fun loadPrevConversations(page: Int) {
+		disposables.add(repo.getConversations(MainActivity.currentUser!!, Date(), page, PREVIOUS)
 			.observeOn(mainThread())
 			.subscribe(
 				{ prevConversations.postValue(it) },
@@ -84,8 +82,8 @@ class ConversationsViewModel @ViewModelInject constructor(
 		)
 	}
 	
-	fun loadNextConversations(conversationTimestamp: Date) {
-		disposables.add(repo.getConversations(MainActivity.currentUser!!, conversationTimestamp, NEXT)
+	fun loadNextConversations(conversationTimestamp: Date, page: Int) {
+		disposables.add(repo.getConversations(MainActivity.currentUser!!, conversationTimestamp, page, NEXT)
 			.observeOn(mainThread())
 			.subscribe(
 				{ nextConversations.postValue(it) },

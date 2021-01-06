@@ -34,6 +34,7 @@ interface ConversationsRepository {
 	fun getConversations(
 		user: UserItem,
 		conversationTimestamp: Date,
+		page: Int,
 		direction: PaginationDirection
 	): Single<List<ConversationItem>>
 

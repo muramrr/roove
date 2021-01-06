@@ -18,15 +18,18 @@
 
 package com.mmdev.data.repository.pairs
 
+import android.util.ArrayMap
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.firebase.executeAndDeserializeSingle
 import com.mmdev.domain.PaginationDirection
+import com.mmdev.domain.PaginationDirection.*
 import com.mmdev.domain.pairs.MatchedUserItem
 import com.mmdev.domain.pairs.PairsRepository
 import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Single
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -37,24 +40,55 @@ class PairsRepositoryImpl @Inject constructor(
 	private val fs: FirebaseFirestore
 ): BaseRepository(), PairsRepository {
 	
-	companion object {
-		private const val USERS_COLLECTION = "users"
-	}
+	
+	//init {
+	//	for (i in 0..159) {
+	//		val matchedUserItem = UtilityManager.generateMatch(i = i)
+	//		fs.collection(USERS_COLLECTION)
+	//			.document("v2tqQttLfdT21tNdQDJIfbjiVYn1")
+	//			.collection(USER_MATCHED_COLLECTION)
+	//			.document(i.toString())
+	//			.set(matchedUserItem)
+	//	}
+	//}
+	
+	
+	private val pages = ArrayMap<Int, Query>()
 	
 	private fun matchesQuery(user: UserItem): Query = fs.collection(USERS_COLLECTION)
 		.document(user.baseUserInfo.userId)
 		.collection(USER_MATCHED_COLLECTION)
-		.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
 		.orderBy(MATCHED_DATE_FIELD, Query.Direction.DESCENDING)
-		.limit(20)
-		//.startAfter(cursorPosition)
+		.whereEqualTo(CONVERSATION_STARTED_FIELD, false)
+	
 	
 	override fun getPairs(
 		user: UserItem,
-		matchedUserId: String,
+		conversationTimestamp: Date,
+		page: Int,
 		direction: PaginationDirection
-	): Single<List<MatchedUserItem>> =
-		matchesQuery(user).executeAndDeserializeSingle(MatchedUserItem::class.java)
+	): Single<List<MatchedUserItem>> = when(direction) {
+		
+		INITIAL -> matchesQuery(user).limit(10).also { pages[0] = it }
+		
+		NEXT -> {
+			if (pages.containsKey(page)) {
+				pages[page]
+			}
+			else {
+				matchesQuery(user)
+					.startAfter(conversationTimestamp)
+					.limit(10)
+					.also {
+						pages[page] = it
+					}
+			}
+			
+		}
+		
+		PREVIOUS -> pages[page]
+		
+	}!!.executeAndDeserializeSingle(MatchedUserItem::class.java)
 	
 	
 }
