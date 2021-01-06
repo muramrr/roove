@@ -18,8 +18,11 @@
 
 package com.mmdev.roove.ui.settings
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.mmdev.domain.photo.PhotoItem
 import com.mmdev.roove.R
+import com.mmdev.roove.databinding.ItemSettingsPhotoBinding
 import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 
 /**
@@ -30,11 +33,25 @@ import com.mmdev.roove.ui.common.base.BaseRecyclerAdapter
 class SettingsUserPhotoAdapter(
 	private var data: List<PhotoItem> = emptyList()
 ): BaseRecyclerAdapter<PhotoItem>(){
-
+	
 	override fun getItem(position: Int): PhotoItem = data[position]
 	override fun getItemCount() = data.size
-	override fun getLayoutIdForItem(position: Int) = R.layout.fragment_settings_photo_item
-
+	override fun getLayoutIdForItem(position: Int) = R.layout.item_settings_photo
+	
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<PhotoItem> {
+		val binding = ItemSettingsPhotoBinding.inflate(
+			LayoutInflater.from(parent.context),
+			parent,
+			false
+		)
+		binding.root.post {
+			binding.root.layoutParams.width = parent.width / 2
+			binding.root.requestLayout()
+		}
+		return BaseViewHolder(binding)
+	}
+	
+	
 	fun setData(newData: List<PhotoItem>) {
 		data = newData
 		notifyDataSetChanged()

@@ -21,135 +21,153 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
+	
 
-
-	<androidx.coordinatorlayout.widget.CoordinatorLayout
+	<androidx.core.widget.NestedScrollView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/colorBackground">
+		android:background="@color/colorBackground"
+		android:clipToPadding="false"
+		android:overScrollMode="never"
+		android:fillViewport="true"
+		>
 
-		<androidx.core.widget.NestedScrollView
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/containerSettings"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:clipToPadding="false"
-			android:overScrollMode="never"
-			android:fillViewport="true">
+			android:animateLayoutChanges="true"
+			app:paddingTopSystemWindowInsets="@{true}">
 
-			<androidx.constraintlayout.widget.ConstraintLayout
-				android:id="@+id/containerSettings"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:animateLayoutChanges="true"
-				app:paddingTopSystemWindowInsets="@{true}">
+			<com.google.android.material.appbar.MaterialToolbar
+				android:id="@+id/toolbarSettings"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
 
-				<com.google.android.material.appbar.MaterialToolbar
-					android:id="@+id/toolbarSettings"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
+				app:menu="@menu/settings_menu"
 
-					app:menu="@menu/settings_menu"
+				app:title="@string/bottom_navigation_settings"
+				
+				style="@style/Widget.MaterialComponents.Toolbar.Surface"
 
-					app:title="@string/bottom_navigation_settings"
-					
-					style="@style/Widget.MaterialComponents.Toolbar.Surface"
+				app:layout_constraintBottom_toTopOf="@id/rvSettingsUserPhotosList"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				/>
 
-					app:layout_constraintBottom_toTopOf="@id/rvSettingsUserPhotosList"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toTopOf="parent"
-					/>
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/rvSettingsUserPhotosList"
+				android:layout_width="0dp"
+				android:layout_height="0dp"
+				
+				android:clipToPadding="false"
+				android:orientation="horizontal"
+				android:overScrollMode="never"
+				
+				app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+				tools:itemCount="2"
+				
+				app:layout_constraintHeight_percent="0.5"
+				app:layout_constraintTop_toBottomOf="@id/toolbarSettings"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
 
-				<androidx.recyclerview.widget.RecyclerView
-					android:id="@+id/rvSettingsUserPhotosList"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_marginTop="16dp"
-					android:clipToPadding="false"
-					android:orientation="horizontal"
-					android:overScrollMode="never"
-					
-					app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-					tools:itemCount="2"
-					
-					app:layout_constraintTop_toBottomOf="@id/toolbarSettings"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
+				tools:listitem="@layout/item_settings_photo"
+				/>
 
-					tools:listitem="@layout/fragment_settings_photo_item" />
+			<!-- add a photo -->
+			<com.google.android.material.floatingactionbutton.FloatingActionButton
+				android:id="@+id/fabSettingsAddPhoto"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_add_a_photo_24dp"
 
-				<!-- add a photo -->
-				<com.google.android.material.floatingactionbutton.FloatingActionButton
-					android:id="@+id/fabSettingsAddPhoto"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:src="@drawable/ic_add_a_photo_24dp"
-
-					app:layout_constraintBottom_toBottomOf="@id/rvSettingsUserPhotosList"
-					app:layout_constraintTop_toBottomOf="@id/rvSettingsUserPhotosList"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintEnd_toEndOf="parent"
-					/>
+				app:layout_constraintBottom_toBottomOf="@id/rvSettingsUserPhotosList"
+				app:layout_constraintTop_toBottomOf="@id/rvSettingsUserPhotosList"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				/>
 
 
-				<com.google.android.material.textview.MaterialTextView
-					android:id="@+id/tvSettingsNameAge"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginTop="16dp"
+			<com.google.android.material.textview.MaterialTextView
+				android:id="@+id/tvSettingsNameAge"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="16dp"
 
-					android:textSize="22sp"
+				android:maxLines="1"
+				android:textAppearance="?textAppearanceHeadline5"
 
-					app:layout_constraintTop_toBottomOf="@id/fabSettingsAddPhoto"
-					app:layout_constraintBottom_toTopOf="@id/tvSettingsAboutHeader"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintEnd_toEndOf="parent"
-					/>
+				app:layout_constraintTop_toBottomOf="@id/fabSettingsAddPhoto"
+				app:layout_constraintBottom_toTopOf="@id/tvSettingsAboutHeader"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				/>
 
-				<com.google.android.material.textview.MaterialTextView
-					android:id="@+id/tvSettingsAboutHeader"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_marginHorizontal="8dp"
-					android:padding="16dp"
+			<com.google.android.material.textview.MaterialTextView
+				android:id="@+id/tvSettingsAboutHeader"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="8dp"
+				android:padding="16dp"
 
-					android:text="@string/profile_about_header_text"
-					android:textAppearance="?textAppearanceHeadline5"
+				android:text="@string/profile_about_header_text"
+				android:textAppearance="?textAppearanceHeadline5"
 
-					app:layout_constraintTop_toBottomOf="@id/tvSettingsNameAge"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintEnd_toEndOf="parent"
-					/>
+				app:layout_constraintTop_toBottomOf="@id/tvSettingsNameAge"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				/>
 
-				<com.google.android.material.textview.MaterialTextView
-					android:id="@+id/tvSettingsAboutText"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_marginHorizontal="8dp"
-					android:layout_marginBottom="100dp"
-					
-					app:layout_constraintTop_toBottomOf="@id/tvSettingsAboutHeader"
-					app:layout_constraintBottom_toBottomOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintEnd_toEndOf="parent"
-					/>
-
-
-			</androidx.constraintlayout.widget.ConstraintLayout>
-
-		</androidx.core.widget.NestedScrollView>
-
-		<!-- edit -->
-		<com.google.android.material.floatingactionbutton.FloatingActionButton
-			android:id="@+id/fabSettingsEdit"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="24dp"
-			android:src="@drawable/ic_create_24dp"
+			<com.google.android.material.textview.MaterialTextView
+				android:id="@+id/tvSettingsAboutText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="8dp"
+				android:layout_marginBottom="100dp"
+				
+				app:layout_constraintTop_toBottomOf="@id/tvSettingsAboutHeader"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				/>
 			
-			app:layout_anchor="@id/containerSettings"
-			app:layout_anchorGravity="bottom|end"
-			app:backgroundTint="?colorPrimary"
-			/>
-		
-	</androidx.coordinatorlayout.widget.CoordinatorLayout>
+			<com.google.android.material.textview.MaterialTextView
+				android:id="@+id/tvSettingsNoAboutText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="24dp"
+				
+				android:text="@string/fragment_settings_no_description"
+				android:textAppearance="?textAppearanceCaption"
+				android:textSize="14sp"
+				android:textStyle="italic"
+				
+				android:visibility="invisible"
+				
+				app:layout_constraintTop_toBottomOf="@id/tvSettingsAboutHeader"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				/>
+			
+			<!-- edit -->
+			<com.google.android.material.floatingactionbutton.FloatingActionButton
+				android:id="@+id/fabSettingsEdit"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="24dp"
+				android:src="@drawable/ic_create_24dp"
+				
+				app:backgroundTint="?colorPrimary"
+				
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintBottom_toBottomOf="parent"
+				/>
+			
+		</androidx.constraintlayout.widget.ConstraintLayout>
+
+	</androidx.core.widget.NestedScrollView>
+
+	
+	
 </layout>

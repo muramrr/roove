@@ -30,35 +30,40 @@
 	</data>
 
 	<com.google.android.material.card.MaterialCardView
-		android:layout_width="@dimen/rvSettingsPhotoElementWidth"
-		android:layout_height="@dimen/rvSettingsPhotoElementHeight"
-		app:cardBackgroundColor="@color/transparent"
-		app:cardCornerRadius="16dp">
+		android:layout_width="match_parent"
+		android:layout_height="300dp"
 
-		<ImageView android:id="@+id/ivUserItemPhoto"
+		app:cardBackgroundColor="@color/transparent"
+		app:cardCornerRadius="16dp"
+		app:cardElevation="0dp"
+		>
+
+		<ImageView
 			android:layout_height="match_parent"
 			android:layout_width="match_parent"
+			android:layout_gravity="center"
 			android:scaleType="center"
 
 			app:bindImageUrl="@{bindItem.fileUrl}"
-			app:progressBar="@{pbImageLoading}"
-
 			android:contentDescription="@string/description_user_photo"
 			/>
-
-		<ProgressBar android:id="@+id/pbImageLoading"
-			android:layout_width="100dp"
-			android:layout_height="100dp"
-			android:layout_gravity="center"
-			android:indeterminate="false"
-			android:minHeight="32dp"
-			android:minWidth="32dp"
-			android:max="100"
-			android:progressDrawable="@drawable/progress_drawable"
-
-			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+		
+		<com.google.android.material.button.MaterialButton android:id="@+id/btnDeletePhoto"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="end|top"
+			android:layout_margin="4dp"
+			
+			app:backgroundTint="@color/material_red_a700"
+			app:rippleColor="@color/material_red_a700"
+			app:icon="@drawable/ic_clear_24dp"
+			app:iconTint="@color/white"
+			app:cornerRadius="16dp"
+			
+			style="@style/MyButtonIconOnly"
 			/>
 
-
 	</com.google.android.material.card.MaterialCardView>
+
+	
 </layout>

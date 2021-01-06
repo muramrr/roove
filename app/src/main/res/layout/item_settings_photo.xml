@@ -18,45 +18,39 @@
   -->
 
 <layout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<data>
 
 		<variable
 			name="bindItem"
-			type="com.mmdev.domain.pairs.MatchedUserItem" />
+			type="com.mmdev.domain.photo.PhotoItem" />
 
 	</data>
 
 	<com.google.android.material.card.MaterialCardView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:layout_marginVertical="8dp"
 		app:cardBackgroundColor="@color/transparent"
-		app:cardCornerRadius="16dp">
+		app:cardCornerRadius="16dp"
+		>
 
-		<ImageView
-			android:layout_width="match_parent"
+		<ImageView android:id="@+id/ivUserItemPhoto"
 			android:layout_height="match_parent"
-			android:contentDescription="@string/description_user_photo"
-			android:scaleType="centerCrop"
-
-			app:bindImageUrl="@{bindItem.baseUserInfo.mainPhotoUrl}"
-			app:progressBar="@{pbImageLoading}"
-			/>
-
-		<ImageView android:id="@+id/pager_container_image_gradient"
 			android:layout_width="match_parent"
-			android:layout_height="50dp"
-			android:layout_gravity="bottom"
-			android:scaleType="centerCrop"
-			android:src="@drawable/gradient_transparent"
+			android:scaleType="center"
+
+			app:bindImageUrl="@{bindItem.fileUrl}"
+			app:progressBar="@{pbImageLoading}"
+
 			android:contentDescription="@string/description_user_photo"
 			/>
 
 		<ProgressBar android:id="@+id/pbImageLoading"
-			android:layout_width="120dp"
-			android:layout_height="120dp"
+			android:layout_width="100dp"
+			android:layout_height="100dp"
 			android:layout_gravity="center"
 			android:indeterminate="false"
 			android:minHeight="32dp"
@@ -65,16 +59,6 @@
 			android:progressDrawable="@drawable/progress_drawable"
 
 			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-			/>
-
-		<com.google.android.material.textview.MaterialTextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center|bottom"
-			android:padding="8dp"
-
-			android:text="@{bindItem.baseUserInfo.name, default = @string/default_name}"
-			android:textAppearance="?textAppearanceHeadline6"
 			/>
 
 

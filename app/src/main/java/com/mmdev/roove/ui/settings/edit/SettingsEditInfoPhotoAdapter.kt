@@ -23,7 +23,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mmdev.domain.photo.PhotoItem
 import com.mmdev.roove.BR
-import com.mmdev.roove.databinding.FragmentSettingsEditInfoPhotoItemBinding
+import com.mmdev.roove.databinding.ItemSettingsEditInfoPhotoBinding
 
 /**
  * This is the documentation block about the class
@@ -31,19 +31,17 @@ import com.mmdev.roove.databinding.FragmentSettingsEditInfoPhotoItemBinding
 
 class SettingsEditInfoPhotoAdapter(
 	private var data: MutableList<PhotoItem> = mutableListOf()
-): RecyclerView.Adapter<SettingsEditInfoPhotoAdapter.SettingsEditPhotoViewHolder>() {
+): RecyclerView.Adapter<SettingsEditInfoPhotoAdapter.ViewHolder>() {
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-		SettingsEditPhotoViewHolder(
-			FragmentSettingsEditInfoPhotoItemBinding.inflate(
-				LayoutInflater.from(parent.context),
-				parent,
-				false
-			)
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+		val binding = ItemSettingsEditInfoPhotoBinding.inflate(
+			LayoutInflater.from(parent.context), parent, false
 		)
-
-
-	override fun onBindViewHolder(holder: SettingsEditPhotoViewHolder, position: Int) =
+		return ViewHolder(binding)
+	}
+	
+	
+	override fun onBindViewHolder(holder: ViewHolder, position: Int) =
 		holder.bind(data[position])
 
 	override fun getItemCount() = data.size
@@ -67,7 +65,7 @@ class SettingsEditInfoPhotoAdapter(
 	}
 
 
-	inner class SettingsEditPhotoViewHolder(private val binding: FragmentSettingsEditInfoPhotoItemBinding):
+	inner class ViewHolder(private val binding: ItemSettingsEditInfoPhotoBinding):
 			RecyclerView.ViewHolder(binding.root) {
 
 		fun bind(bindItem: PhotoItem) = binding.run {

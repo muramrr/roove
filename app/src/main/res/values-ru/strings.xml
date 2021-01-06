@@ -91,6 +91,7 @@
 	
 	
 	<!-- fragment_settings -->
+	<string name="fragment_settings_no_description">Нет описания :(</string>
 	<string name="fragment_settings_age_formatter">Возраст: %s</string>
 	<string name="btn_settings_edit_delete_my_account_text">УДАЛИТЬ МОЙ ПРОФИЛЬ</string>
 	<string name="btn_settings_edit_save_text">Сохранить</string>

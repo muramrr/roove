@@ -47,12 +47,13 @@ import com.mmdev.roove.ui.common.custom.HorizontalCarouselLayoutManager
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.ui.settings.edit.SettingsPreferencesBottomSheet
 import com.mmdev.roove.utils.extensions.showToastText
+import com.mmdev.roove.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.util.*
 
 /**
- * This is the documentation block about the class
+ * Shows your profile, allows to edit preferences or signOut
  */
 
 @AndroidEntryPoint
@@ -77,7 +78,8 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
-		setupUser()
+		
+		mSettingsPhotoAdapter.setData(MainActivity.currentUser!!.photoURLs)
 		
 		toolbarSettings.setOnMenuItemClickListener { item ->
 			when (item.itemId) {
@@ -87,17 +89,41 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 			return@setOnMenuItemClickListener true
 		}
 
-		rvSettingsUserPhotosList.apply {
+		rvSettingsUserPhotosList.run {
 			adapter = mSettingsPhotoAdapter
-			//item decorator to make first and last item align center
-			addItemDecoration(CenterFirstLastItemDecoration())
 			layoutManager = HorizontalCarouselLayoutManager(context, false)
 			//adjust auto swipe to item center
 			val snapHelper: SnapHelper = LinearSnapHelper()
 			snapHelper.attachToRecyclerView(this)
+			
+			//item decorator to make first and last item align center
+			addItemDecoration(CenterFirstLastItemDecoration(rootView.width / 2))
+		}
+		
+		fabSettingsEdit.setOnClickListener {
+			navController.navigate(R.id.action_settings_to_settingsEditInfoFragment)
 		}
 
-		fabSettingsAddPhoto.setOnClickListener {
+	}
+	
+	override fun onStart() {
+		super.onStart()
+		//refresh each time when user moves back from edit page
+		setupUser()
+	}
+	
+	private fun setupUser() = binding.run {
+		if (MainActivity.currentUser!!.aboutText.isBlank()) tvSettingsNoAboutText.visible()
+		tvSettingsAboutText.text = MainActivity.currentUser!!.aboutText
+		tvSettingsNameAge.text = getString(R.string.name_age_formatter).format(
+			MainActivity.currentUser!!.baseUserInfo.name,
+			MainActivity.currentUser!!.baseUserInfo.age
+		)
+		if (MainActivity.currentUser!!.photoURLs.size != mSettingsPhotoAdapter.itemCount)
+			mSettingsPhotoAdapter.setData(MainActivity.currentUser!!.photoURLs)
+		
+		//allow only 6 photos
+		if (MainActivity.currentUser!!.photoURLs.size < 6) fabSettingsAddPhoto.setOnClickListener {
 			MaterialAlertDialogBuilder(requireContext())
 				.setItems(
 					arrayOf(
@@ -114,20 +140,6 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 				.apply { window?.attributes?.gravity = Gravity.CENTER }
 				.show()
 		}
-		
-		fabSettingsEdit.setOnClickListener {
-			navController.navigate(R.id.action_settings_to_settingsEditInfoFragment)
-		}
-
-	}
-	
-	private fun setupUser() = binding.run {
-		tvSettingsAboutText.text = MainActivity.currentUser!!.aboutText
-		tvSettingsNameAge.text = getString(R.string.name_age_formatter).format(
-			MainActivity.currentUser!!.baseUserInfo.name,
-			MainActivity.currentUser!!.baseUserInfo.age
-		)
-		mSettingsPhotoAdapter.setData(MainActivity.currentUser!!.photoURLs)
 	}
 	
 

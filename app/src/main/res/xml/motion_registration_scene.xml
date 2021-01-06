@@ -82,8 +82,7 @@
 
 	<ConstraintSet android:id="@+id/base">
 
-		<Constraint
-			android:id="@+id/tvSelectGender"
+		<Constraint android:id="@+id/tvSelectGender"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 
@@ -95,35 +94,39 @@
 			app:layout_constraintHorizontal_bias="0.1"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_bias="0.2" />
+			app:layout_constraintVertical_bias="0.2"
+			/>
 
 		<Constraint android:id="@+id/btnGenderFemale"
 			android:layout_width="0dp"
-			android:layout_height="@dimen/registration_button_step1_size"
+			android:layout_height="0dp"
 			android:layout_marginEnd="8dp"
 
 			android:alpha="0"
 			android:rotationY="90"
-
+			
+			app:layout_constraintHeight_percent="0.3"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toStartOf="@id/btnGenderMale"
 			app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
-			app:layout_constraintVertical_bias="0.3" />
+			app:layout_constraintVertical_bias="0.3"
+			/>
 
-		<Constraint
-			android:id="@+id/btnGenderMale"
+		<Constraint android:id="@+id/btnGenderMale"
 			android:layout_width="0dp"
-			android:layout_height="@dimen/registration_button_step1_size"
+			android:layout_height="0dp"
 
 			android:alpha="0"
 			android:rotationY="90"
-
+			
+			app:layout_constraintHeight_percent="0.3"
 			app:layout_constraintStart_toEndOf="@id/btnGenderFemale"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
-			app:layout_constraintVertical_bias="0.3" />
+			app:layout_constraintVertical_bias="0.3"
+			/>
 
 	</ConstraintSet>
 
@@ -140,28 +143,33 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_bias="0.2" />
+			app:layout_constraintVertical_bias="0.2"
+			/>
 
 		<Constraint android:id="@+id/btnGenderFemale"
 			android:layout_width="0dp"
-			android:layout_height="@dimen/registration_button_step1_size"
+			android:layout_height="0dp"
 			android:layout_marginEnd="8dp"
-
+			
+			app:layout_constraintHeight_percent="0.3"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toStartOf="@id/btnGenderMale"
 			app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
-			app:layout_constraintVertical_bias="0.3" />
+			app:layout_constraintVertical_bias="0.3"
+			/>
 
 		<Constraint android:id="@+id/btnGenderMale"
 			android:layout_width="0dp"
-			android:layout_height="@dimen/registration_button_step1_size"
-
+			android:layout_height="0dp"
+			
+			app:layout_constraintHeight_percent="0.3"
 			app:layout_constraintStart_toEndOf="@id/btnGenderFemale"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
-			app:layout_constraintVertical_bias="0.3" />
+			app:layout_constraintVertical_bias="0.3"
+			/>
 
 	</ConstraintSet>
 
@@ -177,7 +185,8 @@
 			app:layout_constraintBottom_toTopOf="@id/btnGenderFemale"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+			app:layout_constraintTop_toTopOf="parent"
+			/>
 
 		<Constraint android:id="@+id/btnGenderFemale"
 			android:layout_width="0dp"
@@ -223,7 +232,8 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintHorizontal_bias="0.8" />
+			app:layout_constraintHorizontal_bias="0.8"
+			/>
 
 	</ConstraintSet>
 
@@ -255,7 +265,8 @@
 			app:layout_constraintBottom_toTopOf="@id/btnGenderEveryone"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/btnGenderFemale" />
+			app:layout_constraintTop_toBottomOf="@id/btnGenderFemale"
+			/>
 
 		<Constraint android:id="@+id/btnGenderEveryone"
 			android:layout_width="0dp"
@@ -324,7 +335,8 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintHorizontal_bias="0.8" />
+			app:layout_constraintHorizontal_bias="0.8"
+			/>
 
 	</ConstraintSet>
 
@@ -366,7 +378,8 @@
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintHorizontal_bias="0.1"
-			app:layout_constraintStart_toStartOf="parent" />
+			app:layout_constraintStart_toStartOf="parent"
+			/>
 
 		<Constraint android:id="@+id/btnRegistrationNext"
 			android:layout_width="wrap_content"
@@ -378,7 +391,8 @@
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintHorizontal_bias="0.8"
-			app:layout_constraintStart_toStartOf="parent" />
+			app:layout_constraintStart_toStartOf="parent"
+			/>
 
 
 	</ConstraintSet>

@@ -45,10 +45,9 @@
 			<com.google.android.material.appbar.CollapsingToolbarLayout
 				android:id="@+id/collapseBarProfile"
 				android:layout_width="match_parent"
-				android:layout_height="@dimen/collapseBarHeight"
+				android:layout_height="match_parent"
 
 				app:collapsedTitleTextAppearance="?textAppearanceHeadline6"
-				app:contentScrim="?colorPrimaryDark"
 				app:expandedTitleTextAppearance="?textAppearanceHeadline4"
 
 				app:layout_scrollFlags="scroll|exitUntilCollapsed"
@@ -59,7 +58,7 @@
 				<androidx.viewpager2.widget.ViewPager2
 					android:id="@+id/viewPagerProfilePhotos"
 					android:layout_width="match_parent"
-					android:layout_height="match_parent"
+					android:layout_height="500dp"
 					/>
 
 				<com.google.android.material.tabs.TabLayout
@@ -78,10 +77,10 @@
 					app:tabMaxWidth="12dp"
 					/>
 
-				<androidx.appcompat.widget.Toolbar
+				<com.google.android.material.appbar.MaterialToolbar
 					android:id="@+id/toolbarProfile"
 					android:layout_width="match_parent"
-					android:layout_height="?attr/actionBarSize"
+					android:layout_height="?actionBarSize"
 					app:layout_collapseMode="pin"
 					app:menu="@menu/profile_view_menu"
 					app:navigationIcon="@drawable/ic_arrow_back_24dp"

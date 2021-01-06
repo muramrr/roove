@@ -90,6 +90,7 @@
 	<string name="description_user_photo">user photo</string>
 	
 	<!-- fragment_settings -->
+	<string name="fragment_settings_no_description">No description</string>
 	<string name="fragment_settings_age_formatter">Age: %s</string>
 	<string name="btn_settings_edit_delete_my_account_text">DELETE MY ACCOUNT</string>
 	<string name="btn_settings_edit_save_text">Save</string>
@@ -120,7 +121,7 @@
 	
 	<string name="dialog_error_title">Error</string>
 
-	<string name="profile_about_header_text">About me</string>
+	<string name="profile_about_header_text">About</string>
 
 	<string name="text_empty_error">Field must not be empty</string>
 	

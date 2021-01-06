@@ -33,16 +33,15 @@
 		>
 
 		<LinearLayout
-			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
 			android:background="@color/colorBackground"
 			android:orientation="vertical"
 
 			app:paddingBottomSystemWindowInsets="@{true}"
 			android:animateLayoutChanges="true">
 
-			<androidx.recyclerview.widget.RecyclerView
-				android:id="@+id/rvSettingsEditPhotos"
+			<androidx.recyclerview.widget.RecyclerView android:id="@+id/rvSettingsEditPhotos"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:clipToPadding="false"
@@ -54,7 +53,7 @@
 
 				app:paddingTopSystemWindowInsets="@{true}"
 
-				tools:listitem="@layout/fragment_settings_edit_info_photo_item"
+				tools:listitem="@layout/item_settings_edit_info_photo"
 				tools:itemCount="2"
 				/>
 
