@@ -24,7 +24,9 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.roove.BR
+import com.mmdev.roove.core.log.logWtf
 import com.mmdev.roove.databinding.ItemConversationBinding
+import java.util.*
 
 class ConversationsAdapter(
 	private var data: MutableList<ConversationItem> = mutableListOf()
@@ -32,13 +34,13 @@ class ConversationsAdapter(
 	
 	private companion object{
 		private const val FIRST_POS = 0
-		private const val OPTIMAL_ITEMS_COUNT = 40
+		private const val ITEMS_PER_PAGE = 20
+		private const val OPTIMAL_ITEMS_COUNT = ITEMS_PER_PAGE * 2
 	}
 	private var startPos = 0
 	private var itemsLoaded = 0
 	
-	private var loadPrevListener: ((String) -> Unit)? = null
-	private var loadNextListener: ((String) -> Unit)? = null
+	
 	
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
@@ -55,8 +57,12 @@ class ConversationsAdapter(
 	// allows clicks events to be caught
 	fun setOnItemClickListener(listener: (ConversationItem, Int) -> Unit) { mClickListener = listener }
 	
-	fun setLoadPrevListener(listener: (String) -> Unit) { loadPrevListener = listener }
-	fun setLoadNextListener(listener: (String) -> Unit) { loadNextListener = listener }
+	
+	private var loadPrevListener: ((Date) -> Unit)? = null
+	private var loadNextListener: ((Date) -> Unit)? = null
+	
+	fun setLoadPrevListener(listener: (Date) -> Unit) { loadPrevListener = listener }
+	fun setLoadNextListener(listener: (Date) -> Unit) { loadNextListener = listener }
 
 	fun setNewData(newData: List<ConversationItem>) {
 		data.clear()
@@ -84,7 +90,10 @@ class ConversationsAdapter(
 		notifyItemRangeInserted(startPos, bottomData.size)
 		if (data.size > OPTIMAL_ITEMS_COUNT) {
 			val shouldBeRemovedCount = data.size - OPTIMAL_ITEMS_COUNT
-			data = data.drop(shouldBeRemovedCount).toMutableList()
+			data = data.drop(
+				if (shouldBeRemovedCount < ITEMS_PER_PAGE) shouldBeRemovedCount - 1
+				else shouldBeRemovedCount
+			).toMutableList()
 			notifyItemRangeRemoved(FIRST_POS, shouldBeRemovedCount)
 		}
 	}
@@ -107,10 +116,13 @@ class ConversationsAdapter(
 		
 		fun bind(item: ConversationItem) {
 			if (adapterPosition > 9 && adapterPosition == (data.size - 10))
-				loadNextListener?.invoke(data[adapterPosition].conversationId)
+				loadNextListener?.invoke(data.last().lastMessageTimestamp!!)
 			
-			if (itemsLoaded > data.size && adapterPosition == 10)
-				loadPrevListener?.invoke(data[adapterPosition].conversationId)
+			if (itemsLoaded >= data.size && adapterPosition == 10) {
+				loadPrevListener?.invoke(data.first().lastMessageTimestamp!!)
+				logWtf("mylogs_adapter", "invoked load prev with $itemsLoaded, ${data.size}")
+			}
+			
 			
 			binding.setVariable(BR.bindItem, item)
 			binding.executePendingBindings()

@@ -21,6 +21,7 @@ package com.mmdev.domain.conversations
 import com.mmdev.domain.PaginationDirection
 import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Single
+import java.util.*
 
 /**
  * Repository responsible for manipulating conversations
@@ -32,7 +33,7 @@ interface ConversationsRepository {
 	
 	fun getConversations(
 		user: UserItem,
-		conversationId: String,
+		conversationTimestamp: Date,
 		direction: PaginationDirection
 	): Single<List<ConversationItem>>
 

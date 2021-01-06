@@ -226,27 +226,40 @@
 				android:textAppearance="?textAppearanceHeadline5"
 
 				/>
-
-			<com.google.android.material.slider.Slider
-				android:id="@+id/sliderAge"
+			
+			<com.google.android.material.card.MaterialCardView
+				android:id="@+id/cvContainerAgePicker"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="24dp"
-				android:layout_marginStart="8dp"
-				android:layout_marginEnd="8dp"
-
-				android:value="18"
-				android:valueFrom="18"
-				android:valueTo="50"
-				android:stepSize="1"
-
-				app:trackColorActive="?colorSecondary"
-				app:trackColorInactive="@color/lolite_25"
-				app:haloColor="?colorSecondary"
-
-				app:thumbColor="@color/white"
-				app:thumbRadius="16dp"
-				/>
+				android:layout_marginHorizontal="8dp"
+				
+				app:cardElevation="0dp"
+				app:cardCornerRadius="16dp"
+				app:contentPadding="16dp"
+				
+				>
+				
+				<com.google.android.material.slider.Slider
+					android:id="@+id/sliderAge"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					
+					android:value="18"
+					android:valueFrom="18"
+					android:valueTo="50"
+					android:stepSize="1"
+					
+					app:tickVisible="true"
+					app:labelBehavior="floating"
+					
+					app:trackColorActive="?colorSecondary"
+					
+					app:thumbColor="?colorSecondary"
+					app:thumbRadius="16dp"
+					/>
+			
+			</com.google.android.material.card.MaterialCardView>
 
 			<com.google.android.material.textview.MaterialTextView android:id="@+id/tvAgeDisplay"
 				android:layout_width="0dp"
@@ -267,7 +280,7 @@
 				android:padding="8dp"
 
 				android:text="@string/tv_ages_you_prefer"
-				android:textAppearance="?textAppearanceHeadline6"
+				android:textAppearance="?textAppearanceHeadline5"
 				/>
 
 			<com.google.android.material.card.MaterialCardView
@@ -277,7 +290,6 @@
 				android:layout_marginTop="16dp"
 
 				app:cardElevation="0dp"
-				app:cardBackgroundColor="@color/colorPrimary"
 				app:cardCornerRadius="16dp"
 				app:contentPadding="16dp"
 				>
@@ -292,10 +304,8 @@
 					android:stepSize="1"
 					
 					app:trackColorActive="?colorSecondary"
-					app:trackColorInactive="@color/lolite_25"
-					app:haloColor="?colorSecondary"
 					
-					app:thumbColor="@color/white"
+					app:thumbColor="?colorSecondary"
 					app:thumbRadius="16dp"
 					
 					/>
@@ -380,7 +390,7 @@
 			android:layout_height="0dp"
 
 			android:alpha="0"
-			android:translationX="600dp"
+			android:translationX="500dp"
 
 			app:paddingTopSystemWindowInsets="@{true}"
 
@@ -405,25 +415,22 @@
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
-				app:layout_constraintBottom_toTopOf="@id/layoutFinalChangeName"
 				/>
 
-			<com.google.android.material.textfield.TextInputLayout
-				android:id="@+id/layoutFinalChangeName"
+			<com.google.android.material.textfield.TextInputLayout android:id="@+id/layoutFinalName"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="16dp"
-				android:enabled="false"
 				
 				android:hint="@string/reg_hint_name"
 				
 				app:errorEnabled="false"
 				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-
+				
+				app:layout_constraintTop_toBottomOf="@id/tvAllCorrect"
+				app:layout_constraintBottom_toTopOf="@id/btnFinalBack"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/tvAllCorrect"
-				app:layout_constraintBottom_toTopOf="@id/layoutFinalGender"
 				>
 
 				<com.google.android.material.textfield.TextInputEditText
@@ -431,6 +438,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
 					android:background="@null"
+					android:focusable="false"
 					
 					android:gravity="center"
 
@@ -438,24 +446,52 @@
 					/>
 
 			</com.google.android.material.textfield.TextInputLayout>
-
-			<com.google.android.material.textfield.TextInputLayout
-				android:id="@+id/layoutFinalGender"
+			
+			<com.google.android.material.textfield.TextInputLayout android:id="@+id/layoutFinalAge"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginEnd="16dp"
-				android:enabled="false"
+				android:layout_marginTop="8dp"
+				android:layout_marginBottom="16dp"
+				
+				android:hint="@string/reg_hint_age"
+				app:errorEnabled="false"
+				
+				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+				
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/layoutFinalName"
+				>
+				
+				<com.google.android.material.textfield.TextInputEditText
+					android:id="@+id/edFinalAge"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:background="@null"
+					android:focusable="false"
+					
+					android:gravity="center"
+					
+					android:text="@string/reg_default_age_text"
+					/>
+			
+			</com.google.android.material.textfield.TextInputLayout>
+			
+			<com.google.android.material.textfield.TextInputLayout android:id="@+id/layoutFinalGender"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+				android:layout_marginEnd="4dp"
 
 				android:hint="@string/reg_hint_gender"
 				
 				app:errorEnabled="false"
 				
 				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-
+				
+				app:layout_constraintTop_toBottomOf="@id/layoutFinalAge"
 				app:layout_constraintEnd_toStartOf="@id/layoutFinalPreferredGender"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/layoutFinalChangeName"
-				app:layout_constraintBottom_toTopOf="@id/layoutFinalAge"
 				>
 
 				<com.google.android.material.textfield.TextInputEditText
@@ -463,6 +499,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
 					android:background="@null"
+					android:focusable="false"
 					
 					android:gravity="center"
 
@@ -471,21 +508,20 @@
 
 			</com.google.android.material.textfield.TextInputLayout>
 
-			<com.google.android.material.textfield.TextInputLayout
-				android:id="@+id/layoutFinalPreferredGender"
+			<com.google.android.material.textfield.TextInputLayout android:id="@+id/layoutFinalPreferredGender"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:enabled="false"
+				android:layout_marginTop="8dp"
+				android:layout_marginStart="4dp"
 
 				android:hint="@string/reg_hint_preferred_gender"
 				
 				app:errorEnabled="false"
 				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-
+				
+				app:layout_constraintTop_toBottomOf="@id/layoutFinalAge"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toEndOf="@id/layoutFinalGender"
-				app:layout_constraintTop_toBottomOf="@id/layoutFinalChangeName"
-				app:layout_constraintBottom_toTopOf="@id/layoutFinalPreferredGender"
 				>
 
 				<com.google.android.material.textfield.TextInputEditText
@@ -493,6 +529,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
 					android:background="@null"
+					android:focusable="false"
 					
 					android:gravity="center"
 
@@ -501,42 +538,12 @@
 
 			</com.google.android.material.textfield.TextInputLayout>
 
-			<com.google.android.material.textfield.TextInputLayout
-				android:id="@+id/layoutFinalAge"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_marginHorizontal="16dp"
-				android:layout_marginBottom="16dp"
-				android:enabled="false"
-
-				android:hint="@string/reg_hint_age"
-				app:errorEnabled="false"
-
-				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/layoutFinalGender"
-				app:layout_constraintBottom_toTopOf="@id/btnFinalBack"
-				>
-
-				<com.google.android.material.textfield.TextInputEditText
-					android:id="@+id/edFinalAge"
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"
-					android:background="@null"
-					
-					android:gravity="center"
-
-					android:text="@string/reg_default_age_text"
-					/>
-
-			</com.google.android.material.textfield.TextInputLayout>
 			
-			<com.google.android.material.button.MaterialButton
-				android:id="@+id/btnFinalBack"
+			
+			<com.google.android.material.button.MaterialButton android:id="@+id/btnFinalBack"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
+				android:layout_marginBottom="16dp"
 				android:padding="16dp"
 
 				android:text="@string/reg_btn_back_text"
@@ -552,14 +559,12 @@
 				app:layout_constraintBottom_toTopOf="@id/btnRegistrationDone"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/layoutFinalAge"
 				/>
 
-			<com.google.android.material.button.MaterialButton
-				android:id="@+id/btnRegistrationDone"
+			<com.google.android.material.button.MaterialButton android:id="@+id/btnRegistrationDone"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="16dp"
+				android:layout_marginBottom="16dp"
 				android:padding="16dp"
 				
 				android:text="@string/reg_btn_done_text"
@@ -571,18 +576,17 @@
 				app:strokeWidth="2dp"
 
 				style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-
+				
+				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/btnFinalBack"
 				/>
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
-		<com.google.android.material.button.MaterialButton
-			android:id="@+id/btnRegistrationBack"
+		<com.google.android.material.button.MaterialButton android:id="@+id/btnRegistrationBack"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="16dp"
@@ -604,8 +608,7 @@
 			app:layout_constraintStart_toStartOf="parent"
 			/>
 
-		<com.google.android.material.floatingactionbutton.FloatingActionButton
-			android:id="@+id/btnRegistrationNext"
+		<com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/btnRegistrationNext"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="16dp"

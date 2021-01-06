@@ -29,6 +29,7 @@ import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
+import java.util.*
 
 class ConversationsViewModel @ViewModelInject constructor(
 	private val repo: ConversationsRepository
@@ -61,7 +62,7 @@ class ConversationsViewModel @ViewModelInject constructor(
 
 
 	private fun loadInitConversations() {
-		disposables.add(repo.getConversations(MainActivity.currentUser!!, "", INITIAL)
+		disposables.add(repo.getConversations(MainActivity.currentUser!!, Date(), INITIAL)
             .observeOn(mainThread())
             .subscribe(
 	            { conversations ->
@@ -73,8 +74,8 @@ class ConversationsViewModel @ViewModelInject constructor(
 		)
 	}
 	
-	fun loadPrevConversations(conversationId: String) {
-		disposables.add(repo.getConversations(MainActivity.currentUser!!, conversationId, PREVIOUS)
+	fun loadPrevConversations(conversationTimestamp: Date) {
+		disposables.add(repo.getConversations(MainActivity.currentUser!!, conversationTimestamp, PREVIOUS)
 			.observeOn(mainThread())
 			.subscribe(
 				{ prevConversations.postValue(it) },
@@ -83,8 +84,8 @@ class ConversationsViewModel @ViewModelInject constructor(
 		)
 	}
 	
-	fun loadNextConversations(conversationId: String) {
-		disposables.add(repo.getConversations(MainActivity.currentUser!!, conversationId, NEXT)
+	fun loadNextConversations(conversationTimestamp: Date) {
+		disposables.add(repo.getConversations(MainActivity.currentUser!!, conversationTimestamp, NEXT)
 			.observeOn(mainThread())
 			.subscribe(
 				{ nextConversations.postValue(it) },

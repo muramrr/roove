@@ -84,8 +84,12 @@ internal fun <T> Query.executeAndDeserializeSingle(clazz: Class<T>): Single<List
 	get()
 		.addOnSuccessListener { querySnapshot ->
 			if (!querySnapshot.isEmpty) {
-				logDebug(TAG, "Query executed successfully, printing first 5 documents...")
-				querySnapshot.documents.take(5).forEach { logInfo(TAG, it.reference.path) }
+				logDebug(TAG, "Query executed successfully, printing first and last doc...")
+				querySnapshot.documents.run {
+					logInfo(TAG, first().reference.path)
+					logInfo(TAG, last().reference.path)
+					logInfo(TAG, "Query size = $size")
+				}
 				
 				logDebug(TAG, "Query deserialization to ${clazz.simpleName} in process...")
 				val resultList = querySnapshot.toObjects(clazz)

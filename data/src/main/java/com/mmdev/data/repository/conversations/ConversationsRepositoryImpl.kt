@@ -18,24 +18,23 @@
 
 package com.mmdev.data.repository.conversations
 
-
-import com.google.firebase.firestore.DocumentReference
+import android.util.ArrayMap
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.firebase.asSingle
 import com.mmdev.data.core.firebase.executeAndDeserializeSingle
+import com.mmdev.data.core.log.logWtf
 import com.mmdev.domain.PaginationDirection
-import com.mmdev.domain.PaginationDirection.INITIAL
-import com.mmdev.domain.PaginationDirection.NEXT
-import com.mmdev.domain.PaginationDirection.PREVIOUS
+import com.mmdev.domain.PaginationDirection.*
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.domain.conversations.ConversationsRepository
 import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Function3
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -46,17 +45,33 @@ class ConversationsRepositoryImpl @Inject constructor(
 	private val fs: FirebaseFirestore
 ): BaseRepository(), ConversationsRepository {
 	
-	private fun startAfterReference(user: UserItem, id: String): DocumentReference = fs
-		.collection(USERS_COLLECTION)
-		.document(user.baseUserInfo.userId)
-		.collection(CONVERSATIONS_COLLECTION)
-		.document(id)
+	//init {
+	//	for (i in 0..200) {
+	//		val conversation = UtilityManager.generateConversation(i = i)
+	//		fs.collection(USERS_COLLECTION)
+	//			.document("v2tqQttLfdT21tNdQDJIfbjiVYn1")
+	//			.collection(CONVERSATIONS_COLLECTION)
+	//			.document(i.toString())
+	//			.set(conversation)
+	//	}
+	//}
 	
-	private fun endBeforeReference(user: UserItem, id: String): DocumentReference = fs
-		.collection(USERS_COLLECTION)
-		.document(user.baseUserInfo.userId)
-		.collection(CONVERSATIONS_COLLECTION)
-		.document(id)
+	private val pages = ArrayMap<Int, Query>()
+	
+	//offset cursor position, also represents how many items we've loaded
+	private var bottomLimitPage = 0
+		@Synchronized set(value) {
+			field = value
+			if (field > 1) topLimitPage = field - 1
+			logWtf(TAG, "$topLimitPage, $field")
+		}
+	private var topLimitPage = 0
+		@Synchronized set(value) {
+			if (value == 0) bottomLimitPage = 1
+			field = if (value < 0) 0
+			else value
+		}
+		
 	
 	private fun conversationsQuery(user: UserItem): Query =
 		fs.collection(USERS_COLLECTION)
@@ -153,19 +168,34 @@ class ConversationsRepositoryImpl @Inject constructor(
 	
 	override fun getConversations(
 		user: UserItem,
-		conversationId: String,
+		conversationTimestamp: Date,
 		direction: PaginationDirection
 	): Single<List<ConversationItem>> = when(direction) {
 		
-		INITIAL -> conversationsQuery(user).limit(40)
+		INITIAL -> conversationsQuery(user).limit(20).also { pages[0] = it }
 		
-		NEXT -> conversationsQuery(user)
-			.startAfter(startAfterReference(user, conversationId))
-			.limit(40)
+		NEXT -> {
+			
+			conversationsQuery(user)
+				.startAfter(conversationTimestamp)
+				.limit(20)
+				.also {
+					bottomLimitPage++
+					
+					if (!pages.containsKey(bottomLimitPage)) {
+						pages[bottomLimitPage] = it
+					}
+				}
+		}
 		
-		PREVIOUS -> conversationsQuery(user)
-			.endBefore(endBeforeReference(user, conversationId))
-			.limitToLast(40)
+		
+		PREVIOUS -> {
+			bottomLimitPage--
+			topLimitPage--
+			
+			if (topLimitPage <= 0) pages[0]!!
+			else pages[topLimitPage]!!
+		}
 		
 	}.executeAndDeserializeSingle(ConversationItem::class.java)
 	

@@ -95,7 +95,7 @@ class MainActivity: AppCompatActivity() {
 				navController.navigate(R.id.action_global_mainFlowFragment)
 				
 				//for (i in 0 until Random.nextInt(5, 100)) {
-				//	sharedViewModel.updateUserItem(UtilityManager.generateFakeUserNearby(it))
+				//	sharedViewModel.updateUserItem(UtilityManager.generateFakeUser(user = it))
 				//}
 			},
 			unauthenticated = {
