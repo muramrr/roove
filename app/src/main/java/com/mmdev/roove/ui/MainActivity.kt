@@ -55,6 +55,7 @@ class MainActivity: AppCompatActivity() {
 		private const val PROVIDER_FINE = LocationManager.GPS_PROVIDER
 	}
 	private val providersList = arrayOf(PROVIDER_COARSE, PROVIDER_FINE)
+	private var isStarted = false
 	
 	/** The LocationManager instance used to query the device location  */
 	private val mLocationManager: LocationManager by lazy {
@@ -82,8 +83,10 @@ class MainActivity: AppCompatActivity() {
 	}
 	
 	override fun onStart() {
-		if (!hasLocationEnabled()) showLocationIsNotEnabled()
-		else handleLocationPermission()
+		if (!isStarted) {
+			if (!hasLocationEnabled()) showLocationIsNotEnabled()
+			else handleLocationPermission()
+		}
 		super.onStart()
 	}
 	
@@ -132,7 +135,7 @@ class MainActivity: AppCompatActivity() {
 		onGranted = { sharedViewModel.listenUserFlow() },
 		onDenied = { requestAppPermissions(it) },
 		onExplanationNeeded = { it.explanationMessageId }
-	)
+	).also { isStarted = true }
 	
 	private fun showLocationIsNotEnabled() = MaterialAlertDialogBuilder(this)
 		.setTitle(R.string.dialog_location_disabled_title)

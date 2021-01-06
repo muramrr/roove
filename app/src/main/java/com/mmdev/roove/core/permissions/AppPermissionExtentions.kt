@@ -23,7 +23,9 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
-import com.mmdev.roove.core.permissions.AppPermission.PermissionCode.*
+import com.mmdev.roove.core.permissions.AppPermission.PermissionCode.REQUEST_CODE_CAMERA
+import com.mmdev.roove.core.permissions.AppPermission.PermissionCode.REQUEST_CODE_GALLERY
+import com.mmdev.roove.core.permissions.AppPermission.PermissionCode.REQUEST_CODE_LOCATION
 
 inline fun onRequestPermissionsResultReceived(
 	requestCode: Int,
@@ -32,23 +34,23 @@ inline fun onRequestPermissionsResultReceived(
 	onPermissionDenied: (AppPermission) -> Unit
 ) = when (requestCode) {
 	REQUEST_CODE_CAMERA.code -> {
-		if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+		if (grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED)
 			onPermissionGranted(AppPermission.CAMERA)
 		else onPermissionDenied(AppPermission.CAMERA)
 	}
 	
 	REQUEST_CODE_GALLERY.code -> {
-		if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+		if (grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED)
 			onPermissionGranted(AppPermission.GALLERY)
 		else onPermissionDenied(AppPermission.GALLERY)
 	}
 	
 	REQUEST_CODE_LOCATION.code -> {
-		if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+		if (grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED)
 			onPermissionGranted(AppPermission.LOCATION)
 		else onPermissionDenied(AppPermission.LOCATION)
 	}
-	else -> { throw NoSuchElementException()}
+	else -> { }
 }
 
 
