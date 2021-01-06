@@ -26,6 +26,7 @@ import com.google.firebase.storage.StorageReference
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.firebase.asSingle
+import com.mmdev.data.core.firebase.deleteAsCompletable
 import com.mmdev.data.core.firebase.setAsCompletable
 import com.mmdev.data.core.log.logDebug
 import com.mmdev.data.datasource.UserDataSource
@@ -120,11 +121,14 @@ class UserRepositoryImpl @Inject constructor(
         userItem: UserItem,
         photoItem: PhotoItem,
         isMainPhotoDeleting: Boolean
-	): Completable = userDataSource.updateFirestoreUserField(
-		id = userItem.baseUserInfo.userId,
-		field = USER_PHOTOS_LIST_FIELD,
-		value = FieldValue.arrayRemove(photoItem)
-	).concatWith {
+	): Completable = Completable.concatArray(
+		//update list field
+		userDataSource.updateFirestoreUserField(
+			id = userItem.baseUserInfo.userId,
+			field = USER_PHOTOS_LIST_FIELD,
+			value = FieldValue.arrayRemove(photoItem)
+		),
+		//update mainPhoto url field
 		if (isMainPhotoDeleting) {
 			userDataSource.updateFirestoreUserField(
 				id = userItem.baseUserInfo.userId,
@@ -132,16 +136,18 @@ class UserRepositoryImpl @Inject constructor(
 				value = userItem.photoURLs.minus(photoItem)[0].fileUrl
 			)
 		}
-	}.andThen {
-		// if we are deleting not a facebook-provided photo -> delete also on storage
+		else Completable.complete(),
+		//delete photo from storage if it is not a facebook provided
 		if (photoItem.fileName != FACEBOOK_PHOTO_NAME)
 			storage
 				.child(GENERAL_FOLDER_STORAGE_IMG)
 				.child(SECONDARY_FOLDER_STORAGE_IMG)
 				.child(userItem.baseUserInfo.userId)
 				.child(photoItem.fileName)
-				.delete()
-	}
+				.deleteAsCompletable()
+		else Completable.complete()
+	)
+	
 
 	override fun deleteMyself(user: UserItem): Completable = CompletableCreate { emitter ->
 		

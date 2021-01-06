@@ -83,10 +83,10 @@ object BindingAdapterUtils {
 		if (!enabled) return
 		val listener = TextView.OnEditorActionListener { v, actionId, _ ->
 			if (actionId == EditorInfo.IME_ACTION_DONE) {
-				inputView.hideKeyboard(inputView)
 				v.text = v.text.toString().trim()
+				v.hideKeyboard(v)
 			}
-			false
+			true
 		}
 		inputView.setOnEditorActionListener(listener)
 	}

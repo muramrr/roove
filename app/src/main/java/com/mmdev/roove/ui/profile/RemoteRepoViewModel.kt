@@ -38,10 +38,8 @@ import com.mmdev.roove.ui.common.errors.MyError
 class RemoteRepoViewModel @ViewModelInject constructor(
 	private val repo: IUserRepository
 ) : BaseViewModel() {
-
-	val isUserUpdatedStatus: MutableLiveData<Boolean> = MutableLiveData()
+	
 	val reportSubmittingStatus: MutableLiveData<Boolean> = MutableLiveData()
-	val photoDeletingStatus: MutableLiveData<Boolean> = MutableLiveData()
 	val unmatchStatus: MutableLiveData<Boolean> = MutableLiveData()
 	val selfDeletingStatus: MutableLiveData<DeletingStatus> = MutableLiveData()
 	
@@ -74,13 +72,27 @@ class RemoteRepoViewModel @ViewModelInject constructor(
 
 	fun deletePhoto(photoItem: PhotoItem, isMainPhotoDeleting: Boolean) {
 		disposables.add(repo.deletePhoto(MainActivity.currentUser!!, photoItem, isMainPhotoDeleting)
-            .observeOn(mainThread())
             .subscribe(
-	            { photoDeletingStatus.value = true },
 	            {
-		            photoDeletingStatus.value = false
-		            error.value = MyError(ErrorType.DELETING, it)
-	            }
+		            //make new list by deleting requested photo
+		            val newUrls = MainActivity.currentUser!!.photoURLs.minus(photoItem)
+		            
+		            //update current user with new photo list
+		            MainActivity.currentUser = MainActivity.currentUser!!.copy(
+			            photoURLs = newUrls
+		            )
+		            
+		            //also update mainPhotoUrl if such delete operation was occured
+		            if (isMainPhotoDeleting) {
+		            	val newBaseUserInfo = MainActivity.currentUser!!.baseUserInfo.copy(
+				            mainPhotoUrl = newUrls[0].fileUrl
+		            	)
+			            MainActivity.currentUser = MainActivity.currentUser!!.copy(
+				            baseUserInfo = newBaseUserInfo
+			            )
+		            }
+	            },
+	            { error.value = MyError(ErrorType.DELETING, it) }
             )
 		)
 	}

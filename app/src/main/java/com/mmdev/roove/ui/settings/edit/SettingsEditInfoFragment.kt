@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mmdev.domain.user.data.Gender
 import com.mmdev.domain.user.data.Gender.*
-import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentSettingsEditInfoBinding
 import com.mmdev.roove.ui.MainActivity
@@ -60,55 +59,45 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 	private var newDescription: String? = null
 
 	
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		initProfile(MainActivity.currentUser!!)
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
 		
-		binding.rvSettingsEditPhotos.apply {
+		initProfile()
+		
+		//touch event guarantee that if user want to scroll or touch outside of edit box
+		//keyboard hide and editText focus clear
+		root.setOnTouchListener { v, _ ->
+			v.performClick()
+			v.hideKeyboard(binding.edSettingsEditDescription)
+			return@setOnTouchListener true
+		}
+		
+		rvSettingsEditPhotos.run {
+			
 			layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-			adapter =  mEditorPhotoAdapter
+			adapter = mEditorPhotoAdapter.apply {
+				setOnItemClickListener { item , position ->
+					if (mEditorPhotoAdapter.itemCount > 1) {
+						val isMainPhotoDeleting = item.fileUrl == MainActivity.currentUser!!.baseUserInfo.mainPhotoUrl
+						
+						mViewModel.deletePhoto(item, isMainPhotoDeleting)
+						mEditorPhotoAdapter.removeAt(position)
+					}
+					else context.showToastText(getString(R.string.toast_text_at_least_1_photo_required))
+					
+				}
+			}
 			addItemDecoration(GridItemDecoration())
 		}
 
-		mEditorPhotoAdapter.setOnItemClickListener { item , position ->
-			if (mEditorPhotoAdapter.itemCount > 1) {
-				val isMainPhotoDeleting = item.fileUrl == MainActivity.currentUser!!.baseUserInfo.mainPhotoUrl
-				
-				//deletion observer //todo
-				//mViewModel.photoDeletingStatus.observeOnce(this@SettingsEditInfoFragment, {
-				//	if (it) {
-				//		currentUser.photoURLs.minus(item)
-				//		mEditorPhotoAdapter.removeAt(position)
-				//
-				//		if (isMainPhotoDeleting) {
-				//			currentUser.baseUserInfo.copy(
-				//				mainPhotoUrl = currentUser.photoURLs[0].fileUrl
-				//			)
-				//		}
-				//	}
-				//})
-				//execute deleting
-				mViewModel.deletePhoto(item, isMainPhotoDeleting)
-			}
-			else requireContext().showToastText(getString(R.string.toast_text_at_least_1_photo_required))
-			
-		}
-
-		//touch event guarantee that if user want to scroll or touch outside of edit box
-		//keyboard hide and editText focus clear
-		binding.root.setOnTouchListener { v, _ ->
-			v.performClick()
-			v.hideKeyboard(binding.edSettingsEditDescription)
-			return@setOnTouchListener false
-		}
 		
-		binding.toggleButtonSettingsEditGender.addOnButtonCheckedListener { _, checkedId, isChecked ->
+		toggleButtonSettingsEditGender.addOnButtonCheckedListener { _, checkedId, isChecked ->
 			when {
 				checkedId == binding.btnSettingsEditGenderMale.id && isChecked -> { newGender = MALE }
 				checkedId == binding.btnSettingsEditGenderFemale.id && isChecked -> { newGender = FEMALE }
 			}
 		}
 		
-		binding.btnSettingsEditSave.setOnClickListener {
+		btnSettingsEditSave.setOnClickListener {
 			sharedViewModel.updateUser(
 				MainActivity.currentUser!!.apply {
 					copy(
@@ -122,18 +111,16 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 				}
 			)
 		}
-		binding.btnSettingsEditDelete.setOnClickListener {
-			showDialogDeleteAttention()
-		}
+		btnSettingsEditDelete.setOnClickListener { showDialogDeleteAttention() }
 	}
 
 
-	private fun initProfile(userItem: UserItem) {
-		if (userItem.baseUserInfo.gender == MALE)
+	private fun initProfile() {
+		if (MainActivity.currentUser!!.baseUserInfo.gender == MALE)
 			binding.toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderMale)
 		else binding.toggleButtonSettingsEditGender.check(R.id.btnSettingsEditGenderFemale)
 		
-		mEditorPhotoAdapter.setNewData(userItem.photoURLs)
+		mEditorPhotoAdapter.setNewData(MainActivity.currentUser!!.photoURLs)
 
 		changerNameSetup()
 		changerAgeSetup()
@@ -142,6 +129,8 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 	}
 
 	private fun changerNameSetup() = binding.edSettingsEditName.run {
+		setText(MainActivity.currentUser!!.baseUserInfo.name)
+		
 		doAfterTextChanged {
 			when {
 				it.isNullOrBlank() -> {
@@ -158,27 +147,23 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 		}
 	}
 	
-	private fun changerAgeSetup() {
-		binding.sliderSettingsEditAge.addOnChangeListener { _, value, _ ->
+	private fun changerAgeSetup() = binding.sliderSettingsEditAge.run {
+		value = MainActivity.currentUser!!.baseUserInfo.age.toFloat()
+		
+		addOnChangeListener { _, value, _ ->
 			newAge = value.toInt()
-			binding.tvSettingsEditAge.text = getString(R.string.fragment_settings_age_formatter).format(newAge)
+			binding.tvSettingsEditAge.text =
+				getString(R.string.fragment_settings_age_formatter).format(newAge)
 		}
 	}
 	
+	
 	private fun changerDescriptionSetup() = binding.edSettingsEditDescription.run {
+		setText(MainActivity.currentUser!!.aboutText)
 		
 		doOnTextChanged { text, start, before, count ->
 			newDescription = text.toString().trim()
 		}
-		
-//		setOnTouchListener { view, event ->
-//			view.performClick()
-//			view.parent.requestDisallowInterceptTouchEvent(true)
-//			if ((event.action and MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
-//				view.parent.requestDisallowInterceptTouchEvent(false)
-//			}
-//			return@setOnTouchListener false
-//		}
 
 	}
 

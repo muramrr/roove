@@ -47,6 +47,7 @@ class MainActivity: AppCompatActivity() {
 		private const val TAG = "mylogs_MainActivity"
 		
 		var currentUser: UserItem? = null
+			@Synchronized set
 		
 		/** The internal name of the provider for the coarse location  */
 		private const val PROVIDER_COARSE = LocationManager.NETWORK_PROVIDER

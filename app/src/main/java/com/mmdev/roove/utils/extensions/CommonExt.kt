@@ -19,6 +19,7 @@
 package com.mmdev.roove.utils.extensions
 
 import android.content.Context
+import android.content.res.Resources
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -57,8 +58,8 @@ fun View.hideKeyboard(inputViewFocused: View? = null): Boolean {
 	return false
 }
 
-fun Context.dp2px(dpValue: Float): Int = (dpValue * this.resources.displayMetrics.density + 0.5f).toInt()
-fun Context.px2Dp(pxValue: Float): Int = (pxValue / this.resources.displayMetrics.density + 0.5f).toInt()
+fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
 
 fun BaseViewModel.showErrorDialog(lifecycleOwner: LifecycleOwner, context: Context?) {
 	this.error.observe(lifecycleOwner, { myError ->
