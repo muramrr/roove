@@ -30,6 +30,8 @@ import com.mmdev.data.core.firebase.executeAndDeserializeSingle
 import com.mmdev.data.core.firebase.setAsCompletable
 import com.mmdev.data.core.firebase.updateAsCompletable
 import com.mmdev.data.core.log.logDebug
+import com.mmdev.domain.PaginationDirection
+import com.mmdev.domain.PaginationDirection.NEXT
 import com.mmdev.domain.chat.ChatRepository
 import com.mmdev.domain.chat.MessageItem
 import com.mmdev.domain.conversations.ConversationItem
@@ -61,28 +63,35 @@ class ChatRepositoryImpl @Inject constructor(
 		private const val MESSAGE_TIMESTAMP_FIELD = "timestamp"
 		private const val MESSAGE_SENDER_ID_FILED = "sender.userId"
 		
+		private const val LAST_MESSAGE_PHOTO = "Photo"
+		
 		private const val SOURCE_SERVER = "Server"
 		private const val SOURCE_LOCAL = "Local"
 	}
 	
-	private fun messagesQuery(conversation: ConversationItem, cursorPosition: Int): Query =
+	private fun messagesQuery(conversation: ConversationItem): Query =
 		fs.collection(CONVERSATIONS_COLLECTION)
 			.document(conversation.conversationId)
 			.collection(MESSAGES_COLLECTION)
 			.orderBy(MESSAGE_TIMESTAMP_FIELD, Query.Direction.DESCENDING)
 			.limit(20)
-			.startAfter(cursorPosition)
 	
 	private var isPartnerOnline = false
 	
+	/**
+	 * this flag won't allow observable to emit new messages on initial loading
+	 * for initial loading see [loadMessages] method
+	 */
 	private var isSnapshotInitiated = false
 	
 	override fun loadMessages(
 		conversation: ConversationItem,
-		cursorPosition: Int
-	): Single<List<MessageItem>> = messagesQuery(conversation, cursorPosition)
-		.executeAndDeserializeSingle(MessageItem::class.java)
-	
+		lastMessage: MessageItem,
+		direction: PaginationDirection
+	): Single<List<MessageItem>> = (
+		if (direction == NEXT) messagesQuery(conversation).startAfter(lastMessage.timestamp)
+		else messagesQuery(conversation)
+	).executeAndDeserializeSingle(MessageItem::class.java)
 	
 	
 	override fun observeNewMessages(
@@ -152,7 +161,7 @@ class ChatRepositoryImpl @Inject constructor(
 	//		emitter.setCancellable { listener.remove() }
 	//	}.subscribeOn(MySchedulers.io())
 
-	override fun sendMessage(messageItem: MessageItem, emptyChat: Boolean?): Completable {
+	override fun sendMessage(messageItem: MessageItem, emptyChat: Boolean): Completable {
 		
 		val conversation = fs
 			.collection(CONVERSATIONS_COLLECTION)
@@ -160,20 +169,51 @@ class ChatRepositoryImpl @Inject constructor(
 
 		messageItem.timestamp = FieldValue.serverTimestamp()
 
-		return conversation.collection(MESSAGES_COLLECTION)
-			.document()
-			.setAsCompletable(messageItem)
-			//.concatWith {
-			//	if (emptyChat != null && emptyChat == true) updateStartedStatus(messageItem)
-			//}
+		return Completable.concatArray(
+			//send message to server
+			conversation.collection (MESSAGES_COLLECTION)
+				.document()
+				.setAsCompletable(messageItem),
+			
+			//update started status or skip
+			if (emptyChat) updateStartedStatus(messageItem)
+			else Completable.complete()
+		).andThen(updateLastMessage(messageItem))
 			//.andThen {
 			//	updateUnreadMessagesCount(messageItem.conversationId)
 			//}
-			//.andThen {
-			//	updateLastMessage(messageItem)
-			//}
 	}
-
+	
+	private fun updateStartedStatus(message: MessageItem) = Completable.concatArray(
+		// for current
+		fs.collection(USERS_COLLECTION)
+			.document(message.sender.userId)
+			.collection(CONVERSATIONS_COLLECTION)
+			.document(message.conversationId)
+			.updateAsCompletable(CONVERSATION_STARTED_FIELD, true),
+		
+		fs.collection(USERS_COLLECTION)
+			.document(message.sender.userId)
+			.collection(USER_MATCHED_COLLECTION)
+			.document(message.recipientId)
+			.updateAsCompletable(CONVERSATION_STARTED_FIELD, true),
+		
+		// for partner
+		fs.collection(USERS_COLLECTION)
+			.document(message.recipientId)
+			.collection(CONVERSATIONS_COLLECTION)
+			.document(message.conversationId)
+			.updateAsCompletable(CONVERSATION_STARTED_FIELD, true),
+		
+		fs.collection(USERS_COLLECTION)
+			.document(message.recipientId)
+			.collection(USER_MATCHED_COLLECTION)
+			.document(message.sender.userId)
+			.updateAsCompletable(CONVERSATION_STARTED_FIELD, true)
+	
+	).subscribeOn(MySchedulers.io())
+	
+	
 	override fun uploadMessagePhoto(photoUri: String, conversationId: String): Single<PhotoItem> {
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()+".jpg"
 		val storageRef = storage
@@ -191,65 +231,54 @@ class ChatRepositoryImpl @Inject constructor(
 					.map { PhotoItem(fileName = namePhoto, fileUrl = it.toString()) }
 			}
 	}
-
-	//private fun updateStartedStatus(messageItem: MessageItem) {
-	//	// for current
-	//	currentUserDocRef
-	//		.collection(CONVERSATIONS_COLLECTION)
-	//		.document(messageItem.conversationId)
-	//		.update(CONVERSATION_STARTED_FIELD, true)
-	//
-	//	currentUserDocRef
-	//		.collection(USER_MATCHED_COLLECTION)
-	//		.document(messageItem.recipientId)
-	//		.update(CONVERSATION_STARTED_FIELD, true)
-	//
-	//
-	//	// for partner
-	//	partnerDocRef
-	//		.collection(CONVERSATIONS_COLLECTION)
-	//		.document(messageItem.conversationId)
-	//		.update(CONVERSATION_STARTED_FIELD, true)
-	//	partnerDocRef
-	//		.collection(USER_MATCHED_COLLECTION)
-	//		.document(currentUser.baseUserInfo.userId)
-	//		.update(CONVERSATION_STARTED_FIELD, true)
-	//	//Log.wtf(TAG, "convers status updated")
-	//}
-
-	//private fun updateLastMessage(user: UserItem, messageItem: MessageItem) {
-	//	val cur = fs.collection(USERS_COLLECTION)
-	//		.document(user.baseUserInfo.userId)
-	//		.collection(CONVERSATIONS_COLLECTION)
-	//		.document(messageItem.conversationId)
-	//
-	//	val par = partnerDocRef
-	//		.collection(CONVERSATIONS_COLLECTION)
-	//		.document(messageItem.conversationId)
-	//
-	//	if (messageItem.photoItem != null) {
-	//		// for current
-	//		cur.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, "Photo")
-	//		cur.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
-	//		// for partner
-	//		par.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, "Photo")
-	//		par.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
-	//	}
-	//	else {
-	//		// for current
-	//		cur.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, messageItem.text)
-	//		cur.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
-	//		// for partner
-	//		par.update(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, messageItem.text)
-	//		par.update(CONVERSATION_TIMESTAMP_FIELD, messageItem.timestamp)
-	//	}
-	//	//Log.wtf(TAG, "last message updated")
-	//}
-
-	private fun updateUnreadMessagesCount(conversation: ConversationItem) =
-		fs.collection(USERS_COLLECTION)
-			.document(conversation.partner.userId)
+	
+	
+	/**
+	 * update last messages in collections
+	 * this last message directly relates to conversations
+	 * when user enters a conversations fragment and see conversations list the last message is
+	 * visible as last one received
+	 * Updates can be called from both sides of chat participants, so here we can see a problem:
+	 * when one user have bad internet connection and other sends message a collision expected
+	 */
+	private fun updateLastMessage(message: MessageItem): Completable {
+		val cur = fs.collection(USERS_COLLECTION)
+			.document(message.sender.userId)
 			.collection(CONVERSATIONS_COLLECTION)
-			.document(conversation.conversationId)
+			.document(message.conversationId)
+
+		val par = fs.collection(USERS_COLLECTION)
+			.document(message.recipientId)
+			.collection(CONVERSATIONS_COLLECTION)
+			.document(message.conversationId)
+		
+		return if (message.photoItem != null) {
+			Completable.concatArray(
+				// for current
+				cur.updateAsCompletable(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, LAST_MESSAGE_PHOTO),
+				cur.updateAsCompletable(CONVERSATION_TIMESTAMP_FIELD, message.timestamp),
+				// for partner
+				par.updateAsCompletable(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, LAST_MESSAGE_PHOTO),
+				par.updateAsCompletable(CONVERSATION_TIMESTAMP_FIELD, message.timestamp)
+			)
+		}
+		else {
+			Completable.concatArray(
+				// for current
+				cur.updateAsCompletable(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, message.text),
+				cur.updateAsCompletable(CONVERSATION_TIMESTAMP_FIELD, message.timestamp),
+				// for partner
+				par.updateAsCompletable(CONVERSATION_LAST_MESSAGE_TEXT_FIELD, message.text),
+				par.updateAsCompletable(CONVERSATION_TIMESTAMP_FIELD, message.timestamp),
+			)
+		}
+	}
+
+	//update unread count if partner is not online in chat
+	private fun updateUnreadMessagesCount(message: MessageItem) =
+		fs.collection(USERS_COLLECTION)
+			.document(message.recipientId)
+			.collection(CONVERSATIONS_COLLECTION)
+			.document(message.conversationId)
 			.updateAsCompletable(CONVERSATION_UNREAD_COUNT_FIELD, FieldValue.increment(1))
 }
