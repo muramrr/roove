@@ -43,6 +43,8 @@ class ChatAdapter(
 		private const val LEFT_MSG = 1
 		private const val RIGHT_MSG_IMG = 2
 		private const val LEFT_MSG_IMG = 3
+		
+		private const val MESSAGES_PER_LOAD = 20
 	}
 
 
@@ -85,6 +87,13 @@ class ChatAdapter(
 		data.add(0, message)
 		notifyItemInserted(0)
 	}
+	
+	//insert paginated messages list
+	fun insertPrev(prevData: List<MessageItem>) {
+		val prevCursor = data.size - 1
+		data.addAll(prevData)
+		notifyItemRangeChanged(prevCursor, prevData.size)
+	}
 
 	fun setCurrentUserId(id: String) { userId = id }
 
@@ -93,6 +102,9 @@ class ChatAdapter(
 		data.addAll(newData)
 		notifyDataSetChanged()
 	}
+	
+	private var loadPrevListener: ((MessageItem) -> Unit)? = null
+	fun setLoadPrevListener(listener: (MessageItem) -> Unit) { loadPrevListener = listener }
 
 	/* note: USE FOR -DEBUG ONLY */
 //	fun changeSenderName(name:String){
@@ -113,7 +125,7 @@ class ChatAdapter(
 
 		init {
 			ivChatPhoto.setOnClickListener {
-				clickListener?.invoke(itemView.rootView, adapterPosition, data[adapterPosition].photoItem)
+				clickListener?.invoke(it, adapterPosition, data[adapterPosition].photoItem)
 			}
 		}
 
@@ -126,9 +138,13 @@ class ChatAdapter(
 			}
 		}
 
-		fun bind(messageItem: MessageItem) {
-			setTextMessage(messageItem.text)
-			messageItem.photoItem?.let {
+		fun bind(bindItem: MessageItem) {
+			
+			if (adapterPosition == data.size - 5 && data.size >= MESSAGES_PER_LOAD)
+				loadPrevListener?.invoke(bindItem)
+			
+			setTextMessage(bindItem.text)
+			bindItem.photoItem?.let {
 				if (ivChatPhoto.visibility != View.GONE) setIvChatPhoto(it.fileUrl)
 			}
 		}

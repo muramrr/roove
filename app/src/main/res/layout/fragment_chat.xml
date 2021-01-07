@@ -125,6 +125,9 @@
 			android:focusable="true"
 			android:overScrollMode="never"
 			android:scrollbars="none"
+			
+			tools:itemCount="2"
+			tools:listitem="@layout/fragment_chat_item_right"
 
 			app:invisibleIf="@{viewModel.showLoading}"
 
@@ -133,8 +136,7 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/toolbarChat"
 			app:layout_constraintBottom_toTopOf="@id/edTextMessageInput"
-			tools:itemCount="2"
-			tools:listitem="@layout/fragment_chat_item_right"
+			
 			/>
 
 		<View android:id="@+id/messageInputContainerBackground"

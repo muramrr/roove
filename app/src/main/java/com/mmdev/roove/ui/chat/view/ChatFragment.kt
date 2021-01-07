@@ -34,6 +34,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.mmdev.domain.PaginationDirection.*
 import com.mmdev.domain.chat.MessageItem
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.domain.pairs.MatchedUserItem
@@ -85,6 +86,10 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 	private val mChatAdapter: ChatAdapter = ChatAdapter().apply {
 		//set current user id to understand left/right message
 		setCurrentUserId(MainActivity.currentUser!!.baseUserInfo.userId)
+		
+		setLoadPrevListener { message ->
+			mViewModel.loadMessages(currentConversation, message, NEXT)
+		}
 	}
 
 	// File
@@ -126,12 +131,24 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		sharedViewModel.conversationSelected.observeOnce(this, {
 			currentConversation = it
 			remoteRepoViewModel.getRequestedUserInfo(it.partner)
+			//start listening for new messages
 			mViewModel.observeNewMessages(it)
 			//mViewModel.observePartnerOnline(it.conversationId)
-			mViewModel.loadMessages(it, 0)
+			//init loading chat messages
+			mViewModel.loadMessages(it, MessageItem(), INITIAL)
 		})
-
+		//set init messages list in adapter
+		observeInitMessages()
+		observePrevMessages()
 	}
+	
+	private fun observeInitMessages() = mViewModel.initMessages.observeOnce(this, {
+		mChatAdapter.setNewData(it)
+	})
+	
+	private fun observePrevMessages() = mViewModel.nextMessages.observe(this, {
+		mChatAdapter.insertPrev(it)
+	})
 	
 	private fun handleDeepLink(bundle: Bundle) {
 		receivedPartnerCity = bundle.getString(PARTNER_CITY_KEY, "")
@@ -163,11 +180,6 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
-
-		root.setOnTouchListener { v, _ ->
-			v.performClick()
-			v.hideKeyboard(edTextMessageInput)
-		}
 		
 		edTextMessageInput.doOnTextChanged { text, start, before, count ->
 			btnSendMessage.isActivated = text?.trim().isNullOrBlank()
@@ -207,8 +219,10 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		rvMessageList.apply {
 			adapter = mChatAdapter
 			layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
-			
-			//todo load more messages on scroll
+			setOnTouchListener { v, _ ->
+				v.performClick()
+				v.hideKeyboard(edTextMessageInput)
+			}
 		}
 
 		toolbarChat.setNavigationOnClickListener { navController.navigateUp() }

@@ -20,6 +20,8 @@ package com.mmdev.roove.ui.chat
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
+import com.mmdev.domain.PaginationDirection
+import com.mmdev.domain.PaginationDirection.*
 import com.mmdev.domain.chat.ChatRepository
 import com.mmdev.domain.chat.MessageItem
 import com.mmdev.domain.conversations.ConversationItem
@@ -39,11 +41,13 @@ import com.mmdev.roove.ui.common.errors.MyError
 class ChatViewModel @ViewModelInject constructor(
 	private val repo: ChatRepository
 ): BaseViewModel() {
-
-	val messagesList = MutableLiveData<MutableList<MessageItem>>(mutableListOf())
+	
+	val newMessage = MutableLiveData<MessageItem>()
+	val initMessages = MutableLiveData<List<MessageItem>>()
+	val nextMessages = MutableLiveData<List<MessageItem>>()
+	
 	val showLoading = MutableLiveData<Boolean>()
 	val chatIsEmpty = MutableLiveData<Boolean>()
-	val newMessage = MutableLiveData<MessageItem>()
 
 	//ui bind values
 	val partnerName = MutableLiveData<String>("")
@@ -51,16 +55,21 @@ class ChatViewModel @ViewModelInject constructor(
 	val isPartnerOnline = MutableLiveData<Boolean>(false)
 
 
-	fun loadMessages(conversation: ConversationItem, cursor: Int) {
-		disposables.add(repo.loadMessages(conversation, cursor)
+	fun loadMessages(
+		conversation: ConversationItem,
+		lastMessage: MessageItem,
+		direction: PaginationDirection
+	) {
+		disposables.add(repo.loadMessages(conversation, lastMessage, direction)
             .observeOn(mainThread())
             .subscribe(
 				{
-					
-					if(it.isNotEmpty()) {
-					   messagesList.value = it.toMutableList()
-					}
 					chatIsEmpty.postValue(it.isEmpty())
+					when (direction) {
+						INITIAL -> initMessages.postValue(it)
+						NEXT -> nextMessages.postValue(it)
+						else -> {}
+					}
 					logInfo(TAG, "initial loaded messages: ${it.size}")
 				},
 				{ error.value = MyError(ErrorType.LOADING, it) }
@@ -75,7 +84,7 @@ class ChatViewModel @ViewModelInject constructor(
             .subscribe(
 				{ message ->
                     newMessage.postValue(message)
-					chatIsEmpty.value = false
+					chatIsEmpty.postValue(false)
 					logDebug(TAG, "last received message: ${message.text}")
 				},
 				{ error.value = MyError(ErrorType.RECEIVING, it) }
@@ -94,10 +103,10 @@ class ChatViewModel @ViewModelInject constructor(
 	//}
 
 	fun sendMessage(messageItem: MessageItem){
-		disposables.add(repo.sendMessage(messageItem, chatIsEmpty.value)
+		disposables.add(repo.sendMessage(messageItem, chatIsEmpty.value!!)
             .observeOn(mainThread())
             .subscribe(
-				{ /*Log.wtf(TAG, "Message sent")*/ },
+				{ chatIsEmpty.postValue(false) },
 				{ error.value = MyError(ErrorType.SENDING, it) }
 			)
 		)
@@ -113,11 +122,11 @@ class ChatViewModel @ViewModelInject constructor(
 		            photoItem = it,
 		            conversationId = conversation.conversationId
 	            )
-	            repo.sendMessage(photoMessage, chatIsEmpty.value)
+	            repo.sendMessage(photoMessage, chatIsEmpty.value!!)
             }
             .observeOn(mainThread())
             .subscribe(
-				{ /*Log.wtf(TAG, "Photo sent")*/ },
+				{ chatIsEmpty.postValue(false) },
 				{ error.value = MyError(ErrorType.SENDING, it) }
 			)
 		)

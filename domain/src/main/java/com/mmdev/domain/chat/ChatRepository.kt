@@ -18,6 +18,7 @@
 
 package com.mmdev.domain.chat
 
+import com.mmdev.domain.PaginationDirection
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.domain.photo.PhotoItem
 import com.mmdev.domain.user.data.UserItem
@@ -29,7 +30,8 @@ interface ChatRepository {
 	
 	fun loadMessages(
 		conversation: ConversationItem,
-		cursorPosition: Int
+		lastMessage: MessageItem,
+		direction: PaginationDirection
 	): Single<List<MessageItem>>
 
 	fun observeNewMessages(
@@ -39,7 +41,7 @@ interface ChatRepository {
 
 	//fun observePartnerOnline(conversationId: String): Observable<Boolean>
 
-	fun sendMessage(messageItem: MessageItem, emptyChat: Boolean? = false): Completable
+	fun sendMessage(messageItem: MessageItem, emptyChat: Boolean): Completable
 	
 	fun uploadMessagePhoto(photoUri: String, conversationId: String): Single<PhotoItem>
 

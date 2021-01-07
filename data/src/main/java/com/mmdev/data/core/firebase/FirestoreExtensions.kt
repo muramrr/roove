@@ -125,8 +125,8 @@ internal fun <T> DocumentReference.setAsCompletable(dataClass: T): Completable =
 	}.subscribeOn(MySchedulers.io())
 
 
-internal fun DocumentReference.updateAsCompletable(field: String, value: Any): Completable = CompletableCreate { emitter ->
-	update(field, value)
+internal fun DocumentReference.updateAsCompletable(field: String, value: Any?): Completable = CompletableCreate { emitter ->
+	update(mapOf(field to value))
 		.addOnSuccessListener {
 			logDebug(TAG, "Field $field updated with $value successfully")
 			emitter.onComplete()

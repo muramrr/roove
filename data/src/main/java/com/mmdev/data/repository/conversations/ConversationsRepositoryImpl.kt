@@ -45,6 +45,14 @@ class ConversationsRepositoryImpl @Inject constructor(
 ): BaseRepository(), ConversationsRepository {
 	
 	
+	//init {
+	//	val conversation = UtilityManager.generateConversation(i = 0)
+	//	fs.collection(USERS_COLLECTION)
+	//		.document("v2tqQttLfdT21tNdQDJIfbjiVYn1")
+	//		.collection(CONVERSATIONS_COLLECTION)
+	//		.document(conversation.conversationId)
+	//		.set(conversation)
+	//}
 	
 	private val pages = SparseArray<Query>()
 		
