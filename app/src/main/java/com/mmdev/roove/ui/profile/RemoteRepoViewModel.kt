@@ -21,7 +21,6 @@ package com.mmdev.roove.ui.profile
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.domain.pairs.MatchedUserItem
-import com.mmdev.domain.photo.PhotoItem
 import com.mmdev.domain.user.IUserRepository
 import com.mmdev.domain.user.data.BaseUserInfo
 import com.mmdev.domain.user.data.ReportType
@@ -41,57 +40,15 @@ class RemoteRepoViewModel @ViewModelInject constructor(
 	
 	val reportSubmittingStatus: MutableLiveData<Boolean> = MutableLiveData()
 	val unmatchStatus: MutableLiveData<Boolean> = MutableLiveData()
-	val selfDeletingStatus: MutableLiveData<DeletingStatus> = MutableLiveData()
 	
 	val retrievedUserItem: MutableLiveData<UserItem> = MutableLiveData()
-
-	val photoUrls: MutableLiveData<List<PhotoItem>> = MutableLiveData()
+	
 
 	fun deleteMatchedUser(matchedUser: MatchedUserItem) {
 		disposables.add(repo.deleteMatchedUser(MainActivity.currentUser!!, matchedUser)
             .observeOn(mainThread())
             .subscribe(
 	            { unmatchStatus.value = true },
-	            { error.value = MyError(ErrorType.DELETING, it) }
-            )
-		)
-	}
-
-	fun deleteMyAccount() {
-		disposables.add(repo.deleteMyself(MainActivity.currentUser!!)
-            .observeOn(mainThread())
-            .subscribe(
-	            { selfDeletingStatus.value = DeletingStatus.COMPLETED },
-	            {
-		            selfDeletingStatus.value = DeletingStatus.FAILURE
-		            error.value = MyError(ErrorType.DELETING, it)
-	            }
-            )
-		)
-	}
-
-	fun deletePhoto(photoItem: PhotoItem, isMainPhotoDeleting: Boolean) {
-		disposables.add(repo.deletePhoto(MainActivity.currentUser!!, photoItem, isMainPhotoDeleting)
-            .subscribe(
-	            {
-		            //make new list by deleting requested photo
-		            val newUrls = MainActivity.currentUser!!.photoURLs.minus(photoItem)
-		            
-		            //update current user with new photo list
-		            MainActivity.currentUser = MainActivity.currentUser!!.copy(
-			            photoURLs = newUrls
-		            )
-		            
-		            //also update mainPhotoUrl if such delete operation was occured
-		            if (isMainPhotoDeleting) {
-		            	val newBaseUserInfo = MainActivity.currentUser!!.baseUserInfo.copy(
-				            mainPhotoUrl = newUrls[0].fileUrl
-		            	)
-			            MainActivity.currentUser = MainActivity.currentUser!!.copy(
-				            baseUserInfo = newBaseUserInfo
-			            )
-		            }
-	            },
 	            { error.value = MyError(ErrorType.DELETING, it) }
             )
 		)
@@ -116,20 +73,5 @@ class RemoteRepoViewModel @ViewModelInject constructor(
             )
 		)
 	}
-
-	fun uploadUserProfilePhoto(photoUri: String) {
-		disposables.add(repo.uploadUserProfilePhoto(MainActivity.currentUser!!, photoUri)
-            .observeOn(mainThread())
-            .subscribe(
-	            {
-		            if (it.containsKey(100.00)) photoUrls.value = it.getValue(100.00)
-	            // else Log.wtf(TAG, "Upload is ${"%.2f".format(it.keys.elementAt(0))}%
-	            // done")
-	            },
-	            { error.value = MyError(ErrorType.UPLOADING, it) }
-            )
-		)
-	}
-
-	enum class DeletingStatus { IN_PROGRESS, COMPLETED, FAILURE }
+	
 }

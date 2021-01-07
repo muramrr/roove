@@ -44,7 +44,6 @@ import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.CenterFirstLastItemDecoration
 import com.mmdev.roove.ui.common.custom.HorizontalCarouselLayoutManager
-import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.ui.settings.edit.SettingsPreferencesBottomSheet
 import com.mmdev.roove.utils.extensions.showToastText
 import com.mmdev.roove.utils.extensions.visible
@@ -57,11 +56,11 @@ import java.util.*
  */
 
 @AndroidEntryPoint
-class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBinding>(
+class SettingsFragment: BaseFragment<SettingsViewModel, FragmentSettingsBinding>(
 	layoutId = R.layout.fragment_settings
 ) {
 	
-	override val mViewModel: RemoteRepoViewModel by viewModels()
+	override val mViewModel: SettingsViewModel by viewModels()
 
 	private val mSettingsPhotoAdapter = SettingsUserPhotoAdapter()
 
@@ -71,8 +70,8 @@ class SettingsFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsBindin
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		
-		mViewModel.photoUrls.observe(this, {
-			mSettingsPhotoAdapter.setData(it)
+		mViewModel.newPhoto.observe(this, {
+			mSettingsPhotoAdapter.newAdded(it)
 		})
 
 	}

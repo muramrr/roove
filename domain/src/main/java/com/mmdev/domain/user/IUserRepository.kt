@@ -19,29 +19,18 @@
 package com.mmdev.domain.user
 
 import com.mmdev.domain.pairs.MatchedUserItem
-import com.mmdev.domain.photo.PhotoItem
 import com.mmdev.domain.user.data.BaseUserInfo
 import com.mmdev.domain.user.data.ReportType
 import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 
 interface IUserRepository {
 
 	fun deleteMatchedUser(user: UserItem, matchedUserItem: MatchedUserItem): Single<Unit>
 
-	fun deletePhoto(userItem: UserItem, photoItem: PhotoItem, isMainPhotoDeleting: Boolean): Completable
-
-	fun deleteMyself(user: UserItem): Completable
-
 	fun getRequestedUserItem(baseUserInfo: BaseUserInfo): Single<UserItem>
 
 	fun submitReport(type: ReportType, baseUserInfo: BaseUserInfo): Completable
-
-	fun uploadUserProfilePhoto(
-        userItem: UserItem,
-        photoUri: String
-	): Observable<HashMap<Double, List<PhotoItem>>>
 
 }

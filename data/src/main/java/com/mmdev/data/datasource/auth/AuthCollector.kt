@@ -32,7 +32,7 @@ class AuthCollector(auth: FirebaseAuth) {
 	private val TAG = "mylogs_${javaClass.simpleName}"
 	
 	
-	val firebaseAuthObservable: Observable<FirebaseAuth> = ObservableCreate { emitter ->
+	internal val firebaseAuthObservable: Observable<FirebaseAuth> = ObservableCreate { emitter ->
 		
 		val listener = FirebaseAuth.AuthStateListener { emitter.onNext(it) }
 		

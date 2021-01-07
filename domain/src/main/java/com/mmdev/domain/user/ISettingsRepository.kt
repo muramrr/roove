@@ -16,21 +16,26 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.data.core
+package com.mmdev.domain.user
 
-import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.schedulers.Schedulers
+import com.mmdev.domain.photo.PhotoItem
+import com.mmdev.domain.user.data.UserItem
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 
 /**
- * app related schedulers class that used in repositoriesImpl to avoid direct dependencies on
- * RxJava library values and imports
+ * Repository for editing information about yourself
  */
 
-internal object MySchedulers {
-
-	fun computation(): Scheduler = Schedulers.computation()
-	fun trampoline(): Scheduler = Schedulers.trampoline()
-	fun newThread(): Scheduler = Schedulers.newThread()
-	fun io(): Scheduler = Schedulers.io()
-
+interface ISettingsRepository {
+	
+	fun uploadUserProfilePhoto(
+		userItem: UserItem,
+		photoUri: String
+	): Observable<Array<PhotoItem>>
+	
+	fun deletePhoto(userItem: UserItem, photoItem: PhotoItem, isMainPhotoDeleting: Boolean): Completable
+	
+	fun deleteMyself(user: UserItem): Completable
+	
 }

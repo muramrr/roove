@@ -94,7 +94,7 @@ class LocationDataSource @Inject constructor(context: Context) {
      * @param requireFine whether to require fine location or use coarse location
      * @return the provider's name
      */
-    private fun getProviderName(requireFine: Boolean = false): String {
+    private fun getProviderName(requireFine: Boolean = true): String {
         // if fine location (GPS) is required
         return if (requireFine) { PROVIDER_FINE }
         else { PROVIDER_COARSE }

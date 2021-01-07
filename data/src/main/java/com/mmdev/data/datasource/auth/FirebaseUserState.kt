@@ -24,7 +24,7 @@ import com.google.firebase.auth.FirebaseUser
  *
  */
 
-sealed class FirebaseUserState {
+internal sealed class FirebaseUserState {
 	data class NotNullUser(val user: FirebaseUser): FirebaseUserState()
 	object NullUser: FirebaseUserState()
 	

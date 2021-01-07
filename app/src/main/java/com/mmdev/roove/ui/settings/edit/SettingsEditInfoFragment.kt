@@ -32,8 +32,7 @@ import com.mmdev.roove.databinding.FragmentSettingsEditInfoBinding
 import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.GridItemDecoration
-import com.mmdev.roove.ui.profile.RemoteRepoViewModel
-import com.mmdev.roove.ui.profile.RemoteRepoViewModel.DeletingStatus.IN_PROGRESS
+import com.mmdev.roove.ui.settings.SettingsViewModel
 import com.mmdev.roove.utils.extensions.hideKeyboard
 import com.mmdev.roove.utils.extensions.showToastText
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,11 +42,11 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 
 @AndroidEntryPoint
-class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettingsEditInfoBinding>(
+class SettingsEditInfoFragment: BaseFragment<SettingsViewModel, FragmentSettingsEditInfoBinding>(
 	layoutId = R.layout.fragment_settings_edit_info
 ) {
 	
-	override val mViewModel: RemoteRepoViewModel by viewModels(
+	override val mViewModel: SettingsViewModel by viewModels(
 		ownerProducer = { requireParentFragment() }
 	)
 	
@@ -157,7 +156,6 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 		}
 	}
 	
-	
 	private fun changerDescriptionSetup() = binding.edSettingsEditDescription.run {
 		setText(MainActivity.currentUser!!.aboutText)
 		
@@ -170,10 +168,7 @@ class SettingsEditInfoFragment: BaseFragment<RemoteRepoViewModel, FragmentSettin
 	private fun showDialogDeleteAttention() = MaterialAlertDialogBuilder(requireContext())
 		.setTitle(R.string.dialog_profile_delete_title)
 		.setMessage(R.string.dialog_profile_delete_message)
-		.setPositiveButton(R.string.dialog_delete_btn_positive_text) { dialog, which ->
-			mViewModel.selfDeletingStatus.value = IN_PROGRESS
-			mViewModel.deleteMyAccount()
-		}
+		.setPositiveButton(R.string.dialog_delete_btn_positive_text) { _, _ -> mViewModel.deleteMyAccount() }
 		.setNegativeButton(R.string.dialog_delete_btn_negative_text, null)
 		.create()
 		.show()

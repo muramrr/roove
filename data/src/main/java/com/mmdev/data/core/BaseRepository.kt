@@ -26,7 +26,7 @@ abstract class BaseRepository {
 	
 	internal val TAG = "mylogs_${javaClass.simpleName}"
 
-	companion object {
+	protected companion object {
 		// firestore users collection references
 		const val USERS_COLLECTION = "users"
 		const val USER_LIKED_COLLECTION = "liked"
@@ -42,7 +42,7 @@ abstract class BaseRepository {
 		
 		// Firebase Storage references
 		const val GENERAL_FOLDER_STORAGE_IMG = "images"
-		const val SECONDARY_FOLDER_STORAGE_IMG = "conversations"
+		const val CONVERSATIONS_FOLDER_STORAGE_IMG = "conversations"
 
 		const val MATCHED_DATE_FIELD = "matchedDate"
 

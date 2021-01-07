@@ -39,7 +39,7 @@ import io.reactivex.rxjava3.internal.operators.single.SingleCreate
  */
 
 private const val TAG = "mylogs_FirestoreExtensions"
-const val FIRESTORE_NO_DOCUMENT_EXCEPTION = "No such document."
+internal const val FIRESTORE_NO_DOCUMENT_EXCEPTION = "No such document."
 
 internal fun <TResult> Task<TResult>.asSingle(): Single<TResult> = SingleCreate<TResult> { emitter ->
 	addOnSuccessListener {

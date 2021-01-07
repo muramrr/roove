@@ -178,7 +178,7 @@ class ChatRepositoryImpl @Inject constructor(
 		val namePhoto = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()+".jpg"
 		val storageRef = storage
 			.child(GENERAL_FOLDER_STORAGE_IMG)
-			.child(SECONDARY_FOLDER_STORAGE_IMG)
+			.child(CONVERSATIONS_FOLDER_STORAGE_IMG)
 			.child(conversationId)
 			.child(namePhoto)
 			.putFile(Uri.parse(photoUri))

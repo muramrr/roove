@@ -18,7 +18,7 @@
 
 package com.mmdev.data.repository.conversations
 
-import android.util.ArrayMap
+import android.util.SparseArray
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.mmdev.data.core.BaseRepository
@@ -46,7 +46,7 @@ class ConversationsRepositoryImpl @Inject constructor(
 	
 	
 	
-	private val pages = ArrayMap<Int, Query>()
+	private val pages = SparseArray<Query>()
 		
 	
 	private fun conversationsQuery(user: UserItem): Query = fs.collection(USERS_COLLECTION)
@@ -148,10 +148,10 @@ class ConversationsRepositoryImpl @Inject constructor(
 		direction: PaginationDirection
 	): Single<List<ConversationItem>> = when(direction) {
 		
-		INITIAL -> conversationsQuery(user).limit(20).also { pages[0] = it }
+		INITIAL -> conversationsQuery(user).limit(20).also { pages.put(0, it) }
 		
 		NEXT -> {
-			if (pages.containsKey(page)) {
+			if (pages.contains(page)) {
 				pages[page]
 			}
 			else {
@@ -159,7 +159,7 @@ class ConversationsRepositoryImpl @Inject constructor(
 					.startAfter(conversationTimestamp)
 					.limit(20)
 					.also {
-						pages[page] = it
+						pages.put(page, it)
 					}
 			}
 			

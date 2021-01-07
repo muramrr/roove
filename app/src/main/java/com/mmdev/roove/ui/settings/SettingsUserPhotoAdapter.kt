@@ -51,6 +51,10 @@ class SettingsUserPhotoAdapter(
 		return BaseViewHolder(binding)
 	}
 	
+	fun newAdded(newData: PhotoItem) {
+		data = data.plus(newData)
+		notifyDataSetChanged()
+	}
 	
 	fun setData(newData: List<PhotoItem>) {
 		data = newData
