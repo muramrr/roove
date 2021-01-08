@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.firebase.asSingle
+import com.mmdev.data.core.firebase.deleteAsCompletable
 import com.mmdev.data.core.firebase.setAsCompletable
 import com.mmdev.domain.pairs.MatchedUserItem
 import com.mmdev.domain.user.IUserRepository
@@ -30,9 +31,6 @@ import com.mmdev.domain.user.data.ReportType
 import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.functions.BiFunction
-import io.reactivex.rxjava3.functions.Function3
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -51,49 +49,46 @@ class UserRepositoryImpl @Inject constructor(
 	override fun deleteMatchedUser(
         user: UserItem,
         matchedUserItem: MatchedUserItem
-	): Single<Unit> = deleteFromMatch(
-		userForWhichDelete = user.baseUserInfo,
-		userWhomToDelete = matchedUserItem.baseUserInfo,
-		conversationId = matchedUserItem.conversationId
-	).zipWith(
+	): Completable = Completable.concatArray(
+		deleteFromMatch(
+			userForWhichDelete = user.baseUserInfo,
+			userWhomToDelete = matchedUserItem.baseUserInfo,
+			conversationId = matchedUserItem.conversationId
+		),
+		
 		deleteFromMatch(
 			userForWhichDelete = matchedUserItem.baseUserInfo,
 			userWhomToDelete = user.baseUserInfo,
 			conversationId = matchedUserItem.conversationId
-		),
-		BiFunction { t1, t2 -> return@BiFunction }
+		)
 	).subscribeOn(MySchedulers.io())
 	
 	private fun deleteFromMatch(
         userForWhichDelete: BaseUserInfo,
         userWhomToDelete: BaseUserInfo,
         conversationId: String
-	) = Single.zip(
+	) = Completable.concatArray(
 		// delete from matches
 		fs.collection(USERS_COLLECTION)
 			.document(userForWhichDelete.userId)
 			.collection(USER_MATCHED_COLLECTION)
 			.document(userWhomToDelete.userId)
-			.delete()
-			.asSingle(),
+			.deleteAsCompletable(),
 			
 		// delete from conversations
 		fs.collection(USERS_COLLECTION)
 			.document(userForWhichDelete.userId)
 			.collection(CONVERSATIONS_COLLECTION)
 			.document(conversationId)
-			.delete()
-			.asSingle(),
+			.deleteAsCompletable(),
 			
 		// add to skipped collection
 		fs.collection(USERS_COLLECTION)
 			.document(userForWhichDelete.userId)
 			.collection(USER_SKIPPED_COLLECTION)
 			.document(userWhomToDelete.userId)
-			.set(mapOf(USER_ID_FIELD to userWhomToDelete.userId))
-			.asSingle(),
-		Function3 { t1, t2, t3 -> return@Function3 }
-	)
+			.setAsCompletable(mapOf(USER_ID_FIELD to userWhomToDelete.userId))
+	).subscribeOn(MySchedulers.io())
 	
 
 	override fun getRequestedUserItem(baseUserInfo: BaseUserInfo): Single<UserItem> =

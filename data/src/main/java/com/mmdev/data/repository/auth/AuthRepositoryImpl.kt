@@ -31,7 +31,6 @@ import com.mmdev.domain.auth.AuthRepository
 import com.mmdev.domain.user.data.BaseUserInfo
 import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.BiFunction
 import java.util.concurrent.TimeUnit.MILLISECONDS
@@ -69,10 +68,10 @@ class AuthRepositoryImpl @Inject constructor(
 	/**
 	 * create new [UserItem] documents in db
 	 */
-	override fun signUp(userItem: UserItem): Single<UserItem> = locationDataSource.locationSubject
+	override fun signUp(userItem: UserItem): Single<UserItem> = Single.just(userItem)
 		.zipWith(
-			Observable.just(userItem),
-			BiFunction { location, user ->
+			locationDataSource.locationSubject(),
+			BiFunction { user, location  ->
 				return@BiFunction user.copy(location = location)
 			}
 		)

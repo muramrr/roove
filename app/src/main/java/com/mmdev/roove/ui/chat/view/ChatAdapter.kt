@@ -141,7 +141,7 @@ class ChatAdapter(
 		fun bind(bindItem: MessageItem) {
 			
 			if (adapterPosition == data.size - 5 && data.size >= MESSAGES_PER_LOAD)
-				loadPrevListener?.invoke(bindItem)
+				loadPrevListener?.invoke(data.last())
 			
 			setTextMessage(bindItem.text)
 			bindItem.photoItem?.let {

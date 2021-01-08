@@ -27,7 +27,7 @@ import io.reactivex.rxjava3.core.Single
 
 interface IUserRepository {
 
-	fun deleteMatchedUser(user: UserItem, matchedUserItem: MatchedUserItem): Single<Unit>
+	fun deleteMatchedUser(user: UserItem, matchedUserItem: MatchedUserItem): Completable
 
 	fun getRequestedUserItem(baseUserInfo: BaseUserInfo): Single<UserItem>
 

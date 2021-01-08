@@ -64,13 +64,18 @@ class ChatViewModel @ViewModelInject constructor(
             .observeOn(mainThread())
             .subscribe(
 				{
-					chatIsEmpty.postValue(it.isEmpty())
 					when (direction) {
-						INITIAL -> initMessages.postValue(it)
-						NEXT -> nextMessages.postValue(it)
+						INITIAL -> {
+							initMessages.postValue(it)
+							chatIsEmpty.postValue(it.isEmpty())
+							logInfo(TAG, "initial loaded messages: ${it.size}")
+						}
+						NEXT -> {
+							nextMessages.postValue(it)
+							logInfo(TAG, "paginated loaded messages: ${it.size}")
+						}
 						else -> {}
 					}
-					logInfo(TAG, "initial loaded messages: ${it.size}")
 				},
 				{ error.value = MyError(ErrorType.LOADING, it) }
             )

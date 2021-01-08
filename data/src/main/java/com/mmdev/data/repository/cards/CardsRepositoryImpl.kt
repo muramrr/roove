@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.firebase.asSingle
+import com.mmdev.data.core.firebase.deleteAsCompletable
 import com.mmdev.data.core.firebase.setAsCompletable
 import com.mmdev.data.core.log.logDebug
 import com.mmdev.data.core.log.logError
@@ -79,8 +80,8 @@ class CardsRepositoryImpl @Inject constructor(
 				//filter by gender
 				.whereIn(
 					USERS_FILTER_GENDER,
-					if (user.preferences.gender != EVERYONE) listOf(user.preferences.gender)
-					else Gender.values().asList()
+					if (user.preferences.gender != EVERYONE) listOf(user.preferences.gender.name)
+					else Gender.values().map { it.name }
 				)
 				.get()
 			//todo: is limit needed? or how to implement pagination?
@@ -138,20 +139,20 @@ class CardsRepositoryImpl @Inject constructor(
 			val queries = cardsQuery(user)
 			Tasks.whenAllComplete(queries)
 				.addOnSuccessListener { tasks ->
-					tasks
-						.map { task -> task.result }
-						.map { taskResult ->
-							emitter.onSuccess(
-								(taskResult as QuerySnapshot?)?.toObjects(UserItem::class.java)
-								?: emptyList()
-							)
-						}
+					emitter.onSuccess(
+						tasks
+							.map { task -> task.result }
+							.map { taskResult -> (taskResult as QuerySnapshot?)?.toObjects(UserItem::class.java) ?: emptyList() }
+							.flatten()
+					)
 				}
 				.addOnFailureListener {
 					logError(TAG, "$it")
 					emitter.onError(it)
 				}
 		}.subscribeOn(MySchedulers.computation())
+	
+	private fun zipQueryResults() {}
 	
 	
 	/**
@@ -214,16 +215,20 @@ class CardsRepositoryImpl @Inject constructor(
 						.document()
 						.id
 					
-					handleMatch(
-						matchedUserItem = MatchedUserItem(
-							likedUserItem.baseUserInfo,
-							conversationId = conversationId
-						),
-						currentUserMatchedItem = MatchedUserItem(
-							user.baseUserInfo,
-							conversationId = conversationId
-						)
-					).map { true } // match exists
+					Single.just(true)
+						.doAfterSuccess {
+							handleMatch(
+								matchedUserItem = MatchedUserItem(
+									likedUserItem.baseUserInfo,
+									conversationId = conversationId
+								),
+								currentUserMatchedItem = MatchedUserItem(
+									user.baseUserInfo,
+									conversationId = conversationId
+								)
+							).subscribe { logDebug(TAG, "match handled") }
+						}
+					
 				}
 				
 				/** if not exists -> add [likedUserItem] to your liked collection */
@@ -232,9 +237,8 @@ class CardsRepositoryImpl @Inject constructor(
 						.document(currentUserId)
 						.collection(USER_LIKED_COLLECTION)
 						.document(likedUserItem.baseUserInfo.userId)
-						.set(mapOf(USER_ID_FIELD to likedUserItem.baseUserInfo.userId))
-						.asSingle()
-						.map { false } // no match
+						.setAsCompletable(mapOf(USER_ID_FIELD to likedUserItem.baseUserInfo.userId))
+						.toSingle { false } // no match
 				}
 			}
 			.also { excludingIds.add(likedUserItem.baseUserInfo.userId) }
@@ -248,61 +252,42 @@ class CardsRepositoryImpl @Inject constructor(
 	private fun handleMatch(
 		matchedUserItem: MatchedUserItem,
 		currentUserMatchedItem: MatchedUserItem
-	): Single<Unit> {
-		
-		//operations to manipulate collections for matched user
-		val matchedUserCollections = Single.zip(
-			// add current user to matched user MATCHED collection
-			addToMatchCollection(
-				userForWhichToAdd = matchedUserItem.baseUserInfo,
-				whomToAdd = currentUserMatchedItem.baseUserInfo
-			),
-			// delete current user from matched user LIKED collection
-			fs.collection(USERS_COLLECTION)
-				.document(matchedUserItem.baseUserInfo.userId)
-				.collection(USER_LIKED_COLLECTION)
-				.document(currentUserMatchedItem.baseUserInfo.userId)
-				.delete()
-				.asSingle(),
-			//set conversation for matched user
-			setConversation(matchedUserItem.baseUserInfo, currentUserMatchedItem),
-			Function3 { t1, t2, t3 ->
-				return@Function3
-			}
-		).subscribeOn(MySchedulers.io())
+	): Completable = Completable.concatArray(
+		// add current user to matched user MATCHED collection
+		addToMatchCollection(
+			userForWhichToAdd = matchedUserItem,
+			whomToAdd = currentUserMatchedItem
+		),
+		// delete current user from matched user LIKED collection
+		fs.collection(USERS_COLLECTION)
+			.document(matchedUserItem.baseUserInfo.userId)
+			.collection(USER_LIKED_COLLECTION)
+			.document(currentUserMatchedItem.baseUserInfo.userId)
+			.deleteAsCompletable(),
+		//set conversation for matched user
+		setConversation(matchedUserItem.baseUserInfo, currentUserMatchedItem),
 		
 		// no need to delete from LIKED collection for current user, because we just liked and
 		// this match checking is in process, which based on liked user collections data
-		val currentUserCollections = addToMatchCollection(
-			userForWhichToAdd = currentUserMatchedItem.baseUserInfo,
-			whomToAdd = matchedUserItem.baseUserInfo
-		).zipWith(
+		addToMatchCollection(
+			userForWhichToAdd = currentUserMatchedItem,
+			whomToAdd = matchedUserItem
+		).andThen(
 			//set conversation for current user
 			setConversation(currentUserMatchedItem.baseUserInfo, matchedUserItem),
-			BiFunction { t1, t2 -> return@BiFunction }
+		)
 		
-		).subscribeOn(MySchedulers.io())
-		
-		//combine
-		return matchedUserCollections.zipWith(
-			currentUserCollections,
-			BiFunction { t1, t2 ->
-				logDebug(TAG, "match handle executed")
-				return@BiFunction
-			}
-		).subscribeOn(MySchedulers.io())
-		
-	}
+	).subscribeOn(MySchedulers.io())
+	
 	
 	private fun addToMatchCollection(
-		userForWhichToAdd: BaseUserInfo,
-		whomToAdd: BaseUserInfo
+		userForWhichToAdd: MatchedUserItem,
+		whomToAdd: MatchedUserItem
 	) = fs.collection(USERS_COLLECTION)
-		.document(userForWhichToAdd.userId)
+		.document(userForWhichToAdd.baseUserInfo.userId)
 		.collection(USER_MATCHED_COLLECTION)
-		.document(whomToAdd.userId)
-		.set(whomToAdd)
-		.asSingle()
+		.document(whomToAdd.baseUserInfo.userId)
+		.setAsCompletable(whomToAdd)
 	
 	private fun setConversation(
 		userForWhichToAdd: BaseUserInfo,
@@ -311,13 +296,12 @@ class CardsRepositoryImpl @Inject constructor(
 		.document(userForWhichToAdd.userId)
 		.collection(CONVERSATIONS_COLLECTION)
 		.document(whomToAdd.conversationId)
-		.set(
+		.setAsCompletable(
 			ConversationItem(
 				partner = whomToAdd.baseUserInfo,
 				conversationId = whomToAdd.conversationId,
 				lastMessageTimestamp = null
 			)
 		)
-		.asSingle()
 
 }

@@ -82,13 +82,13 @@ class AuthFlowProvider @Inject constructor(
 	
 	private fun getUserFromRemoteStorage(firebaseUser: FirebaseUser) =
 		userDataSource.getFirestoreUser(firebaseUser.uid)
-			.toObservable()
 			.zipWith(
-				location.locationSubject,
+				location.locationSubject(),
 				BiFunction { user, location ->
 					return@BiFunction user.copy(location = location)
 				}
 			)
+			.toObservable()
 			.map {
 				userDataSource.updateFirestoreUserField(
 					it.baseUserInfo.userId,

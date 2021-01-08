@@ -20,6 +20,7 @@ package com.mmdev.domain.conversations
 
 import com.mmdev.domain.PaginationDirection
 import com.mmdev.domain.user.data.UserItem
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import java.util.*
 
@@ -29,7 +30,7 @@ import java.util.*
 
 interface ConversationsRepository {
 
-	fun deleteConversation(user: UserItem, conversation: ConversationItem): Single<Unit>
+	fun deleteConversation(user: UserItem, conversation: ConversationItem): Completable
 	
 	fun getConversations(
 		user: UserItem,

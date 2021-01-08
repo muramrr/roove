@@ -67,7 +67,7 @@ class CardsViewModel @ViewModelInject constructor(
 		disposables.add(repo.likeUserAndCheckMatch(MainActivity.currentUser!!, likedUser)
             .observeOn(mainThread())
             .subscribe(
-	            { showMatchDialog.value = likedUser },
+	            { if (it) showMatchDialog.value = likedUser },
 	            { error.value = MyError(ErrorType.CHECKING, it) }
 			)
 		)

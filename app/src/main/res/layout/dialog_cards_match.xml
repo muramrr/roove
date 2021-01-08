@@ -34,12 +34,12 @@
 
 	</data>
 
-	<LinearLayout
-		android:id="@+id/dialogMatchContainer"
+	<LinearLayout android:id="@+id/dialogMatchContainer"
 		android:background="@color/colorBackground"
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
 		android:orientation="vertical"
+		android:gravity="center"
 		>
 
 		<com.google.android.material.textview.MaterialTextView android:id="@+id/tvItIsMatch"
@@ -50,20 +50,20 @@
 
 			android:text="@string/tv_its_a_match"
 			android:textAlignment="center"
-			android:textAppearance="?textAppearanceHeadline4"
+			android:textAppearance="?textAppearanceHeadline5"
 
 			/>
 
-		<com.google.android.material.imageview.ShapeableImageView
+		<ImageView
 			android:id="@+id/matched_photo"
-			android:layout_width="300dp"
-			android:layout_height="300dp"
+			android:layout_width="250dp"
+			android:layout_height="250dp"
 			android:layout_marginTop="16dp"
+			android:scaleType="centerCrop"
 			android:contentDescription="@string/description_user_photo"
 			android:layout_gravity="center"
 
 			app:bindImageUrl="@{photoUrl}"
-			app:shapeAppearanceOverlay="@style/MyAppShapeAppearanceOverlay.Circle"
 
 			/>
 
@@ -74,15 +74,15 @@
 			
 			android:text="@{name, default = @string/default_name}"
 			android:textAlignment="center"
-			android:textAppearance="?textAppearanceHeadline4"
+			android:textAppearance="?textAppearanceHeadline6"
 
 			/>
 		
 		<com.google.android.material.button.MaterialButton android:id="@+id/tvMatchDialogBack"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="32dp"
-			android:layout_marginHorizontal="16dp"
+			android:layout_marginTop="16dp"
+			android:layout_marginHorizontal="32dp"
 			android:padding="16dp"
 			
 			android:text="@string/tv_back_to_swiping"

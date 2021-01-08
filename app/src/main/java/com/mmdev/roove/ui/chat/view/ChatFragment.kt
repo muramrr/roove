@@ -38,10 +38,10 @@ import com.mmdev.domain.PaginationDirection.*
 import com.mmdev.domain.chat.MessageItem
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.domain.pairs.MatchedUserItem
+import com.mmdev.domain.photo.PhotoItem
 import com.mmdev.domain.user.data.BaseUserInfo
 import com.mmdev.domain.user.data.ReportType.*
 import com.mmdev.domain.user.data.UserItem
-import com.mmdev.roove.BuildConfig
 import com.mmdev.roove.R
 import com.mmdev.roove.core.permissions.AppPermission
 import com.mmdev.roove.core.permissions.AppPermission.PermissionCode
@@ -57,6 +57,7 @@ import com.mmdev.roove.utils.extensions.hideKeyboard
 import com.mmdev.roove.utils.extensions.observeOnce
 import com.mmdev.roove.utils.extensions.showToastText
 import dagger.hilt.android.AndroidEntryPoint
+import io.grpc.android.BuildConfig
 import java.io.File
 import java.util.*
 
@@ -119,10 +120,6 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 			mViewModel.partnerPhoto.value = it.baseUserInfo.mainPhotoUrl
 		})
 		
-		mViewModel.newMessage.observe(this, {
-			mChatAdapter.newMessage(it)
-		})
-
 		remoteRepoViewModel.reportSubmittingStatus.observeOnce(this, {
 			isReported = it
 			requireContext().showToastText(getString(R.string.toast_text_report_success))
@@ -140,6 +137,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		//set init messages list in adapter
 		observeInitMessages()
 		observePrevMessages()
+		observeNewMessage()
 	}
 	
 	private fun observeInitMessages() = mViewModel.initMessages.observeOnce(this, {
@@ -148,6 +146,11 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 	
 	private fun observePrevMessages() = mViewModel.nextMessages.observe(this, {
 		mChatAdapter.insertPrev(it)
+	})
+	
+	private fun observeNewMessage() = mViewModel.newMessage.observe(this, {
+		mChatAdapter.newMessage(it)
+		binding.rvMessageList.scrollToPosition(0)
 	})
 	
 	private fun handleDeepLink(bundle: Bundle) {
@@ -255,6 +258,8 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 			)
 
 			mViewModel.sendMessage(message)
+			
+			//update local appearance (to avoid back pressure)
 			mChatAdapter.newMessage(message)
 			rvMessageList.scrollToPosition(0)
 			edTextMessageInput.text?.clear()
@@ -335,34 +340,56 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
-		// send photo from gallery
-		if (requestCode == PermissionCode.REQUEST_CODE_GALLERY.code) {
-			if (resultCode == RESULT_OK) {
-
-				val selectedUri = data?.data
-				mViewModel.sendPhoto(
-					photoUri = selectedUri.toString(),
-					conversation = currentConversation,
-					sender = MainActivity.currentUser!!.baseUserInfo
-				)
-			}
-		}
-		// send photo taken by camera
-		if (requestCode == PermissionCode.REQUEST_CODE_CAMERA.code) {
-			if (resultCode == RESULT_OK) {
-
-				if (mFilePathImageCamera.exists()) {
+		//check if response with status 'OK'
+		if (resultCode == RESULT_OK) {
+			
+			//check which request that was
+			val localUri = when (requestCode) {
+				PermissionCode.REQUEST_CODE_GALLERY.code -> {
+					
+					val galleryUri = data?.data.toString()
+					// send photo from gallery
 					mViewModel.sendPhoto(
-						photoUri = Uri.fromFile(mFilePathImageCamera).toString(),
+						photoUri = galleryUri,
 						conversation = currentConversation,
 						sender = MainActivity.currentUser!!.baseUserInfo
 					)
+					galleryUri
 				}
-				else requireContext().showToastText(
-					"filePathImageCamera is null or filePathImageCamera isn't exists"
-				)
+				
+				PermissionCode.REQUEST_CODE_CAMERA.code -> {
+					if (mFilePathImageCamera.exists()) {
+						val cameraUri = Uri.fromFile(mFilePathImageCamera).toString()
+						// send photo taken by camera
+						mViewModel.sendPhoto(
+							photoUri = cameraUri,
+							conversation = currentConversation,
+							sender = MainActivity.currentUser!!.baseUserInfo
+						)
+						cameraUri
+					}
+					else { requireContext().showToastText("filePathImageCamera is null or filePathImageCamera isn't exists")
+						""
+					}
+					
+				}
+				else -> { "" }
+			}
+			
+			val photoMessage = MessageItem(
+				sender = MainActivity.currentUser!!.baseUserInfo,
+				recipientId = currentConversation.partner.userId,
+				photoItem = PhotoItem(fileUrl = localUri),
+				conversationId = currentConversation.conversationId
+			)
+			mChatAdapter.newMessage(photoMessage).also {
+				binding.rvMessageList.scrollToPosition(0)
 			}
 		}
+		else {
+			requireContext().showToastText(resultCode.toString())
+		}
+		
 	}
 
 	private fun showReportDialog() = MaterialAlertDialogBuilder(requireContext())

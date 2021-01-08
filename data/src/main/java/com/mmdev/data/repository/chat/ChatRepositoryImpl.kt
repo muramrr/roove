@@ -61,7 +61,6 @@ class ChatRepositoryImpl @Inject constructor(
 		private const val CONVERSATION_UNREAD_COUNT_FIELD = "unreadCount"
 		private const val MESSAGES_COLLECTION = "messages"
 		private const val MESSAGE_TIMESTAMP_FIELD = "timestamp"
-		private const val MESSAGE_SENDER_ID_FILED = "sender.userId"
 		
 		private const val LAST_MESSAGE_PHOTO = "Photo"
 		
@@ -177,8 +176,11 @@ class ChatRepositoryImpl @Inject constructor(
 			
 			//update started status or skip
 			if (emptyChat) updateStartedStatus(messageItem)
-			else Completable.complete()
-		).andThen(updateLastMessage(messageItem))
+			else Completable.complete(),
+			
+			//update last message for both users
+			updateLastMessage(messageItem)
+		)
 			//.andThen {
 			//	updateUnreadMessagesCount(messageItem.conversationId)
 			//}

@@ -24,15 +24,16 @@ import com.google.firebase.firestore.Query
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.firebase.asSingle
+import com.mmdev.data.core.firebase.deleteAsCompletable
 import com.mmdev.data.core.firebase.executeAndDeserializeSingle
+import com.mmdev.data.core.firebase.setAsCompletable
 import com.mmdev.domain.PaginationDirection
 import com.mmdev.domain.PaginationDirection.*
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.domain.conversations.ConversationsRepository
 import com.mmdev.domain.user.data.UserItem
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.functions.BiFunction
-import io.reactivex.rxjava3.functions.Function3
 import java.util.*
 import javax.inject.Inject
 
@@ -64,89 +65,72 @@ class ConversationsRepositoryImpl @Inject constructor(
 		.whereEqualTo(CONVERSATION_STARTED_FIELD, true)
 		
 
-	override fun deleteConversation(user: UserItem, conversation: ConversationItem): Single<Unit> =
-		Single.zip(
+	override fun deleteConversation(user: UserItem, conversation: ConversationItem): Completable =
+		Completable.concatArray(
 			deleteFromPartner(user, conversation),
-			deleteFromMySelf(user, conversation),
-			BiFunction { t1, t2 ->
-				return@BiFunction
-			}
+			deleteFromMySelf(user, conversation)
 		).subscribeOn(MySchedulers.io())
 	
-	private fun deleteFromMySelf(user: UserItem, conversation: ConversationItem) =
+	private fun deleteFromMySelf(user: UserItem, conversation: ConversationItem): Completable =
 		fs.collection(CONVERSATIONS_COLLECTION)
 			.document(conversation.conversationId)
 			//mark that conversation no need to be exists
-			.set(mapOf(CONVERSATION_DELETED_FIELD to true))
-			.asSingle()
-			.map {
-				Single.zip(
-					//delete from current user conversations list
+			//this need for cloud functions to delete whole chat room (not implemented)
+			.setAsCompletable(mapOf(CONVERSATION_DELETED_FIELD to true))
+			.andThen(
+				Completable.concatArray(
 					fs.collection(USERS_COLLECTION)
 						.document(user.baseUserInfo.userId)
 						.collection(CONVERSATIONS_COLLECTION)
 						.document(conversation.conversationId)
-						.delete()
-						.asSingle(),
+						.deleteAsCompletable(),
 					
 					//current user delete from matched list
 					fs.collection(USERS_COLLECTION)
 						.document(user.baseUserInfo.userId)
 						.collection(USER_MATCHED_COLLECTION)
 						.document(conversation.partner.userId)
-						.delete()
-						.asSingle(),
+						.deleteAsCompletable(),
 					
 					//add to skipped collection
 					fs.collection(USERS_COLLECTION)
 						.document(user.baseUserInfo.userId)
 						.collection(USER_SKIPPED_COLLECTION)
 						.document(conversation.partner.userId)
-						.set(mapOf(USER_ID_FIELD to conversation.partner.userId))
-						.asSingle(),
-					
-					Function3 { t1, t2, t3 ->
-						return@Function3
-					}
+						.setAsCompletable(mapOf(USER_ID_FIELD to conversation.partner.userId))
 				).subscribeOn(MySchedulers.io())
-			}
+			).subscribeOn(MySchedulers.io())
+			
 	
-	private fun deleteFromPartner(user: UserItem, conversation: ConversationItem) =
+	private fun deleteFromPartner(user: UserItem, conversation: ConversationItem): Completable =
 		fs.collection(USERS_COLLECTION)
 			.document(conversation.partner.userId)
 			.get()
 			.asSingle()
-			.map {
+			.concatMapCompletable {
 				if (it.exists()) {
-					Single.zip(
+					Completable.concatArray(
 						//partner delete from matched list
 						it.reference
 							.collection(USER_MATCHED_COLLECTION)
 							.document(user.baseUserInfo.userId)
-							.delete()
-							.asSingle(),
+							.deleteAsCompletable(),
 							
 						//partner delete from conversations list
 						it.reference
 							.collection(CONVERSATIONS_COLLECTION)
 							.document(conversation.conversationId)
-							.delete()
-							.asSingle(),
+							.deleteAsCompletable(),
 							
 						//add to skipped collection
 						it.reference
 							.collection(USER_SKIPPED_COLLECTION)
 							.document(user.baseUserInfo.userId)
-							.set(mapOf(USER_ID_FIELD to user.baseUserInfo.userId))
-							.asSingle(),
-						
-						Function3 { t1, t2, t3 ->
-							return@Function3
-						}
-					)
+							.setAsCompletable(mapOf(USER_ID_FIELD to user.baseUserInfo.userId))
+					).subscribeOn(MySchedulers.io())
 					
 				}
-				else Single.just(Unit)
+				else Completable.complete()
 			}
 	
 	override fun getConversations(

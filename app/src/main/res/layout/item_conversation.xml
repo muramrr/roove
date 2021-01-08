@@ -41,6 +41,7 @@
 			android:id="@+id/ivConversationItemUserPhoto"
 			android:layout_width="64dp"
 			android:layout_height="64dp"
+			android:scaleType="centerCrop"
 
 			app:shapeAppearanceOverlay="@style/MyAppShapeAppearanceOverlay.Circle"
 			app:bindImageUrl="@{bindItem.partner.mainPhotoUrl}"

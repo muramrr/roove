@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mmdev.domain.PaginationDirection.*
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.domain.conversations.ConversationsRepository
+import com.mmdev.roove.core.log.logError
 import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
@@ -51,6 +52,7 @@ class ConversationsViewModel @ViewModelInject constructor(
             .subscribe(
 	            { deleteConversationStatus.value = true },
 	            {
+		            logError(TAG, "$it")
 		            deleteConversationStatus.value = false
 		            error.value = MyError(ErrorType.DELETING, it)
 	            }

@@ -41,6 +41,14 @@ import io.reactivex.rxjava3.internal.operators.single.SingleCreate
 private const val TAG = "mylogs_FirestoreExtensions"
 internal const val FIRESTORE_NO_DOCUMENT_EXCEPTION = "No such document."
 
+
+/**
+ * CAUTION
+ * DON'T USE THIS METHOD IF RESULT WILL BE <<VOID>>
+ *
+ * If you know that TResult expected VOID -> use completable instead
+ * otherwise exception that rx operators are not allow emit null values will be thrown
+ */
 internal fun <TResult> Task<TResult>.asSingle(): Single<TResult> = SingleCreate<TResult> { emitter ->
 	addOnSuccessListener {
 		logDebug(TAG, "TResult is success")
@@ -50,32 +58,33 @@ internal fun <TResult> Task<TResult>.asSingle(): Single<TResult> = SingleCreate<
 		logDebug(TAG, "TResult is failure")
 		emitter.onError(it)
 	}
+	emitter.setCancellable {  }
 }.subscribeOn(MySchedulers.io())
 
-internal fun <T> DocumentReference.getAndDeserializeAsSingle(clazz: Class<T>): Single<T> =
-	SingleCreate<T> { emitter ->
-		get()
-			.addOnSuccessListener { snapshot ->
-				logDebug(TAG, "Document retrieve success")
-				if (snapshot.exists() && snapshot.data != null) {
-					
-					logDebug(TAG, "Data is not null, deserialization in process...")
-					val serializedDoc: T = snapshot.toObject(clazz)!!
-					
-					logDebug(TAG, "Deserialization to ${clazz.simpleName} succeed...")
-					emitter.onSuccess(serializedDoc)
-				}
-				else {
-					logError(TAG, FIRESTORE_NO_DOCUMENT_EXCEPTION)
-					emitter.onError(NoSuchElementException(FIRESTORE_NO_DOCUMENT_EXCEPTION))
-				}
+internal fun <T> DocumentReference.getAndDeserializeAsSingle(clazz: Class<T>): Single<T> = SingleCreate<T> { emitter ->
+	get()
+		.addOnSuccessListener { snapshot ->
+			logDebug(TAG, "Document retrieve success")
+			if (snapshot.exists() && snapshot.data != null) {
 				
+				logDebug(TAG, "Data is not null, deserialization in process...")
+				val serializedDoc: T = snapshot.toObject(clazz)!!
+				
+				logDebug(TAG, "Deserialization to ${clazz.simpleName} succeed...")
+				emitter.onSuccess(serializedDoc)
 			}
-			.addOnFailureListener { exception ->
-				logError(TAG, "Failed to retrieve document from backend: $exception")
-				emitter.onError(exception)
+			else {
+				logError(TAG, FIRESTORE_NO_DOCUMENT_EXCEPTION)
+				emitter.onError(NoSuchElementException(FIRESTORE_NO_DOCUMENT_EXCEPTION))
 			}
-	}.subscribeOn(MySchedulers.io())
+			
+		}
+		.addOnFailureListener { exception ->
+			logError(TAG, "Failed to retrieve document from backend: $exception")
+			emitter.onError(exception)
+		}
+	emitter.setCancellable {  }
+}.subscribeOn(MySchedulers.io())
 
 
 internal fun <T> Query.executeAndDeserializeSingle(clazz: Class<T>): Single<List<T>> = SingleCreate<List<T>> { emitter ->
@@ -106,6 +115,8 @@ internal fun <T> Query.executeAndDeserializeSingle(clazz: Class<T>): Single<List
 			logError(TAG, "Failed to execute given query: $exception")
 			emitter.onError(exception)
 		}
+	
+	emitter.setCancellable {  }
 }.subscribeOn(MySchedulers.io())
 
 
@@ -121,8 +132,8 @@ internal fun <T> DocumentReference.setAsCompletable(dataClass: T): Completable =
 			logError(TAG, "set $dataClass as document error: $exception")
 			emitter.onError(exception)
 		}
-		
-	}.subscribeOn(MySchedulers.io())
+	emitter.setCancellable {  }
+}.subscribeOn(MySchedulers.io())
 
 
 internal fun DocumentReference.updateAsCompletable(field: String, value: Any?): Completable = CompletableCreate { emitter ->
@@ -135,8 +146,22 @@ internal fun DocumentReference.updateAsCompletable(field: String, value: Any?): 
 			logError(TAG, "Field $field updated with $value error: $exception")
 			emitter.onError(exception)
 		}
+	emitter.setCancellable {  }
+}.subscribeOn(MySchedulers.io())
+
+internal fun DocumentReference.deleteAsCompletable(): Completable = CompletableCreate { emitter ->
+	delete()
+		.addOnSuccessListener {
+			logDebug(TAG, "Document with $path deleted successfully")
+			emitter.onComplete()
+		}.addOnFailureListener { exception ->
+			logError(TAG, "Document with $path deleting error: $exception")
+			emitter.onError(exception)
+		}
+	emitter.setCancellable { }
 	
 }.subscribeOn(MySchedulers.io())
+	
 
 
 internal fun FirebaseUser.toUserItem(): UserItem = UserItem(
