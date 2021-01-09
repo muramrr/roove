@@ -36,6 +36,7 @@ import com.mmdev.domain.user.data.UserItem
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.functions.BiFunction
+import java.util.concurrent.TimeUnit.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -83,7 +84,8 @@ class AuthFlowProvider @Inject constructor(
 	private fun getUserFromRemoteStorage(firebaseUser: FirebaseUser) =
 		userDataSource.getFirestoreUser(firebaseUser.uid)
 			.zipWith(
-				location.locationSubject(),
+				//timeout if no location emitted
+				location.locationSingle().timeout(30, SECONDS),
 				BiFunction { user, location ->
 					return@BiFunction user.copy(location = location)
 				}

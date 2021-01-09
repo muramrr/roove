@@ -38,6 +38,7 @@ import com.mmdev.roove.core.permissions.handlePermission
 import com.mmdev.roove.core.permissions.onRequestPermissionsResultReceived
 import com.mmdev.roove.core.permissions.requestAppPermissions
 import com.mmdev.roove.databinding.ActivityMainBinding
+import com.mmdev.roove.utils.extensions.showErrorDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -79,7 +80,7 @@ class MainActivity: AppCompatActivity() {
 		DataBindingUtil.setContentView(this, R.layout.activity_main) as ActivityMainBinding
 		
 		observeUser()
-		
+		sharedViewModel.showErrorDialog(this, this)
 	}
 	
 	override fun onStart() {

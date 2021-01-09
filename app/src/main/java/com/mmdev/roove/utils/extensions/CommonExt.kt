@@ -27,7 +27,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mmdev.roove.R
 import com.mmdev.roove.ui.common.base.BaseViewModel
 
 
@@ -65,7 +64,7 @@ fun BaseViewModel.showErrorDialog(lifecycleOwner: LifecycleOwner, context: Conte
 	this.error.observe(lifecycleOwner, { myError ->
 		context?.let {
 			MaterialAlertDialogBuilder(it)
-				.setTitle(R.string.dialog_error_title)
+				.setTitle(myError.errorType.name)
 				.setMessage(myError.getErrorMessage())
 				.setPositiveButton("OK", null)
 				.create()

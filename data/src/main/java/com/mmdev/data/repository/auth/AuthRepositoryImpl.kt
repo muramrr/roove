@@ -70,7 +70,7 @@ class AuthRepositoryImpl @Inject constructor(
 	 */
 	override fun signUp(userItem: UserItem): Single<UserItem> = Single.just(userItem)
 		.zipWith(
-			locationDataSource.locationSubject(),
+			locationDataSource.locationSingle(),
 			BiFunction { user, location  ->
 				return@BiFunction user.copy(location = location)
 			}

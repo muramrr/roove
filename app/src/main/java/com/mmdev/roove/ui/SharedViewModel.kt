@@ -27,6 +27,10 @@ import com.mmdev.domain.user.UserState
 import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.core.log.logError
 import com.mmdev.roove.ui.common.base.BaseViewModel
+import com.mmdev.roove.ui.common.errors.ErrorType.AUTHENTICATING
+import com.mmdev.roove.ui.common.errors.MyError
+import java.util.concurrent.TimeUnit.*
+import java.util.concurrent.TimeoutException
 
 /**
  * In general, you should strongly prefer passing only the minimal amount of data between destinations.
@@ -55,8 +59,23 @@ class SharedViewModel @ViewModelInject constructor(
 			authFlow.getUserAuthState()
 				.subscribe(
 					{ userState.postValue(it) },
-					{ logError(TAG, "$it") }
+					{
+						if (it is TimeoutException)
+							error.postValue(
+								MyError(
+									AUTHENTICATING,
+									Exception(
+										"Timeout occurred." +
+										"\nThere might be a server error or your location could not be determined." +
+										"\n Take into consideration that we can't retrieve your location from GPS if you are in the building." +
+										"\nPlease, enable full location access in settings."
+									)
+								)
+							)
+						else error.postValue(MyError(AUTHENTICATING, it))
+					}
 				)
+		
 		)
 	}
 	

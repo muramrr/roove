@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2020. roove
+ * Copyright (C) 2021. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,8 @@ package com.mmdev.roove.ui.common.errors
  * Custom class that holds error, which probably comes from data request
  */
 
-data class MyError(private val errorType: ErrorType, private val error: Throwable) {
+data class MyError(val errorType: ErrorType, val error: Throwable) {
 
-	private val errorText: String = "${errorType.name} ERROR: ${error.message}"
-
-	fun getErrorMessage() = errorText
+	fun getErrorMessage() = error.localizedMessage ?: "Unknown error"
 
 }

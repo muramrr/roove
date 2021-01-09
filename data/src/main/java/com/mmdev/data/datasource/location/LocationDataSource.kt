@@ -18,16 +18,22 @@
 
 package com.mmdev.data.datasource.location
 
+import android.Manifest.permission
 import android.content.Context
+import android.content.pm.PackageManager
+import android.location.LocationListener
+import android.location.LocationManager
+import androidx.core.app.ActivityCompat
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.mmdev.data.core.MySchedulers
+import com.mmdev.data.core.log.logDebug
 import com.mmdev.data.core.log.logWarn
-import com.mmdev.data.core.log.logWtf
 import com.mmdev.domain.user.data.LocationPoint
-import im.delight.android.location.SimpleLocation
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.internal.operators.single.SingleCreate
+import java.security.NoSuchProviderException
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,54 +49,91 @@ class LocationDataSource @Inject constructor(
     
     companion object {
         private const val TAG = "mylogs_LocationSource"
+    
+        /** The internal name of the provider for the coarse location  */
+        private const val PROVIDER_COARSE = LocationManager.NETWORK_PROVIDER
+        /** The internal name of the provider for the fine location  */
+        private const val PROVIDER_FINE = LocationManager.GPS_PROVIDER
+        private const val PROVIDER_PASSIVE = LocationManager.PASSIVE_PROVIDER
     }
+    private val providers = arrayOf(PROVIDER_COARSE, PROVIDER_FINE, PROVIDER_PASSIVE)
     
-    //private val mLocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    private val mLocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     
-    fun locationSubject(): Single<LocationPoint> = SingleCreate<LocationPoint> { emitter ->
+    fun locationSingle(): Single<LocationPoint> = SingleCreate<LocationPoint> { emitter ->
     
-        //val locationListener = LocationListener { location ->
-        //    logWarn(TAG, "Location listener attached")
-        //    val hash = GeoFireUtils.getGeoHashForLocation(GeoLocation(location.latitude, location.longitude))
-        //    emitter.onSuccess(LocationPoint(location.latitude, location.longitude, hash))
-        //    logDebug(TAG, "Location emitted from listener")
-        //}
-        
-        //val bestProvider = mLocationManager.getBestProvider(Criteria(), true)
-        
-        //logDebug(TAG, "best provider = $bestProvider")
-    
-        val location = SimpleLocation(context).apply {
-            setListener {
-                logWtf(TAG, "location changed: $latitude, $longitude")
-                val hash = GeoFireUtils.getGeoHashForLocation(GeoLocation(latitude, longitude))
-                emitter.onSuccess(LocationPoint(latitude, longitude, hash))
-            }
+        val locationListener = LocationListener { location ->
+            logWarn(TAG, "Location listener attached")
+            val hash = GeoFireUtils.getGeoHashForLocation(GeoLocation(location.latitude, location.longitude))
+            emitter.onSuccess(LocationPoint(location.latitude, location.longitude, hash))
+            logDebug(TAG, "Location emitted from listener")
         }
-        location.beginUpdates()
         
-        //if (bestProvider.isNullOrBlank()){
-        //    emitter.onError(NoSuchProviderException())
-        //}
-        //else {
-        //
-        //        mLocationManager.getLastKnownLocation(bestProvider)?.let {
-        //            val hash = GeoFireUtils.getGeoHashForLocation(GeoLocation(it.latitude, it.longitude))
-        //            emitter.onSuccess(LocationPoint(it.latitude, it.longitude, hash))
-        //            logDebug(TAG, "Location emitted from cache")
-        //        } ?: mLocationManager.requestLocationUpdates(
-        //            bestProvider,
-        //            0,
-        //            0f,
-        //            locationListener
-        //        )
-        //
-        //
-        //}
+        val availableProviders = providers.filter { mLocationManager.isProviderEnabled(it) }
+        
+        logDebug(TAG, "available = $availableProviders")
+        
+        
+        
+        if (availableProviders.isNullOrEmpty()){
+            emitter.onError(NoSuchProviderException())
+        }
+        else {
+            if (ActivityCompat.checkSelfPermission(
+                        context, permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        context, permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED) {
+        
+                emitter.onError(NoSuchProviderException())
+            }
+            else {
+                
+                availableProviders.forEach { availableProvider ->
+                    
+                    if (mLocationManager.getLastKnownLocation(availableProvider) != null) {
+                        logDebug(TAG, "location from cache available for $availableProvider")
+                        
+                        val lastLocation = mLocationManager.getLastKnownLocation(availableProvider)!!
+                        
+                        //check if location is old
+                        if (System.currentTimeMillis() - lastLocation.time > TimeUnit.HOURS.toMillis(1)) {
+                            val hash = GeoFireUtils.getGeoHashForLocation(
+                                GeoLocation(lastLocation.latitude, lastLocation.longitude)
+                            )
+                            emitter.onSuccess(LocationPoint(lastLocation.latitude, lastLocation.longitude, hash))
+                            logDebug(TAG, "Location emitted from cache")
+                            return@SingleCreate
+                        }
+                        
+                        else {
+                            mLocationManager.requestLocationUpdates(
+                                availableProvider,
+                                0,
+                                0f,
+                                locationListener
+                            )
+                        }
+                      
+                    }
+                    else {
+                        logDebug(TAG, "last location is null, listener attached for $availableProvider")
+                        
+                        mLocationManager.requestLocationUpdates(
+                            availableProvider,
+                            0,
+                            0f,
+                            locationListener
+                        )
+                    }
+                }
+            }
+            
+        }
         
         emitter.setCancellable {
             logWarn(TAG, "Location listener detached")
-            location.endUpdates()
+            mLocationManager.removeUpdates(locationListener)
         }
     }.subscribeOn(MySchedulers.trampoline())
     

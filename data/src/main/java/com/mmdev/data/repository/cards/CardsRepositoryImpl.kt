@@ -59,7 +59,7 @@ class CardsRepositoryImpl @Inject constructor(
 		private const val cardsLimit: Long = 20
  	}
 	
-	private val excludingIds: MutableSet<String> = mutableSetOf()
+	private val excludingIds: HashSet<String> = hashSetOf()
 	
 	private fun cardsQuery(user: UserItem) = with(user.location) {
 		excludingIds.add(user.baseUserInfo.userId)
@@ -71,12 +71,14 @@ class CardsRepositoryImpl @Inject constructor(
 		// a separate query for each pair. There can be up to 9 pairs of bounds
 		// depending on overlap, but in most cases there are 4.
 		val bounds = GeoFireUtils.getGeoHashQueryBounds(center, radiusInMeters)
-		bounds.map {
+		
+		//map calculated bounds for 'ready to execute' queries
+		bounds.map { bound ->
 			fs.collection(USERS_COLLECTION)
 				//people nearby
 				.orderBy(USERS_FILTER_LOCATION_HASH)
-				.startAt(it.startHash)
-				.endAt(it.endHash)
+				.startAt(bound.startHash)
+				.endAt(bound.endHash)
 				//filter by gender
 				.whereIn(
 					USERS_FILTER_GENDER,
