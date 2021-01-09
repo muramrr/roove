@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (C) 2021. roove
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -18,13 +18,13 @@
   -->
 
 <navigation android:id="@+id/mainNavigation"
-	app:startDestination="@id/cardsFragmentNav"
+	app:startDestination="@id/cardsFragment"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<action android:id="@+id/action_open_pairsFragment"
-		app:destination="@id/pairsFragmentNav"
+		app:destination="@id/pairsFragment"
 		
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
@@ -33,7 +33,7 @@
 		/>
 
 	<action android:id="@+id/action_open_cardsFragment"
-		app:destination="@id/cardsFragmentNav"
+		app:destination="@id/cardsFragment"
 		
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
@@ -42,7 +42,7 @@
 		/>
 
 	<action android:id="@+id/action_open_conversationsFragment"
-		app:destination="@id/conversationsFragmentNav"
+		app:destination="@id/conversationsFragment"
 		
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
@@ -51,7 +51,7 @@
 		/>
 
 	<action android:id="@+id/action_open_settingsFragment"
-		app:destination="@id/settingsFragmentNav"
+		app:destination="@id/settingsFragment"
 		
 		app:enterAnim="@anim/nav_default_enter_anim"
 		app:exitAnim="@anim/nav_default_exit_anim"
@@ -60,12 +60,12 @@
 		/>
 
 	<!-- main pairs fragment-->
-	<fragment android:id="@+id/pairsFragmentNav"
+	<fragment android:id="@+id/pairsFragment"
 		android:name="com.mmdev.roove.ui.pairs.view.PairsFragment"
 		tools:layout="@layout/fragment_pairs" >
 
 		<action android:id="@+id/action_pairs_to_profileFragment"
-			app:destination="@id/profileFragmentNav"
+			app:destination="@id/profileFragment"
 			
 			app:enterAnim="@anim/enter_from_top"
 			app:exitAnim="@anim/exit_to_bottom"
@@ -85,13 +85,13 @@
 	</fragment>
 
 	<!-- main cards fragment-->
-	<fragment android:id="@+id/cardsFragmentNav"
+	<fragment android:id="@+id/cardsFragment"
 		android:name="com.mmdev.roove.ui.cards.view.CardsFragment"
 		android:label="Cards"
 		tools:layout="@layout/fragment_cards" >
 
 		<action android:id="@+id/action_cards_to_profileFragment"
-			app:destination="@id/profileFragmentNav"
+			app:destination="@id/profileFragment"
 			
 			app:enterAnim="@anim/enter_from_top"
 			app:exitAnim="@anim/exit_to_bottom"
@@ -108,12 +108,12 @@
 	</fragment>
 
 	<!-- main conversations fragment-->
-	<fragment android:id="@+id/conversationsFragmentNav"
+	<fragment android:id="@+id/conversationsFragment"
 		android:name="com.mmdev.roove.ui.conversations.view.ConversationsFragment"
 		tools:layout="@layout/fragment_conversations" >
 
 		<action android:id="@+id/action_conversations_to_chatFragment"
-			app:destination="@id/chatFragmentNav"
+			app:destination="@id/chatFragment"
 			
 			app:enterAnim="@anim/enter_from_top"
 			app:exitAnim="@anim/exit_to_bottom"
@@ -123,13 +123,13 @@
 	</fragment>
 
 	<!-- main settings fragment-->
-	<fragment android:id="@+id/settingsFragmentNav"
+	<fragment android:id="@+id/settingsFragment"
 		android:label="Settings"
 		android:name="com.mmdev.roove.ui.settings.SettingsFragment"
 		tools:layout="@layout/fragment_settings" >
 
 		<action android:id="@+id/action_settings_to_settingsEditInfoFragment"
-			app:destination="@id/settingsEditInfoFragmentNav"
+			app:destination="@id/settingsEditInfoFragment"
 			
 			app:enterAnim="@anim/enter_from_right"
 			app:exitAnim="@anim/exit_to_left"
@@ -139,13 +139,13 @@
 	</fragment>
 
 	<!-- secondary settings edit fragment -->
-	<fragment android:id="@+id/settingsEditInfoFragmentNav"
+	<fragment android:id="@+id/settingsEditInfoFragment"
 		android:label="Edit"
 		android:name="com.mmdev.roove.ui.settings.edit.SettingsEditInfoFragment"
 		tools:layout="@layout/fragment_settings_edit_info" />
 
 	<!-- secondary profile view fragment-->
-	<fragment android:id="@+id/profileFragmentNav"
+	<fragment android:id="@+id/profileFragment"
 		android:name="com.mmdev.roove.ui.profile.view.ProfileFragment"
 		tools:layout="@layout/fragment_profile">
 
@@ -160,7 +160,7 @@
 			android:defaultValue="false" />
 
 		<action android:id="@+id/action_profile_to_chatFragment"
-			app:destination="@id/chatFragmentNav"
+			app:destination="@id/chatFragment"
 			
 			app:enterAnim="@anim/enter_from_top"
 			app:exitAnim="@anim/exit_to_bottom"
@@ -170,12 +170,12 @@
 	</fragment>
 
 	<!-- secondary conversations chat fragment-->
-	<fragment android:id="@+id/chatFragmentNav"
+	<fragment android:id="@+id/chatFragment"
 		android:name="com.mmdev.roove.ui.chat.view.ChatFragment"
 		tools:layout="@layout/fragment_chat">
 
 		<action android:id="@+id/action_chat_to_profileFragment"
-			app:destination="@id/profileFragmentNav"
+			app:destination="@id/profileFragment"
 			
 			app:enterAnim="@anim/enter_from_top"
 			app:exitAnim="@anim/exit_to_bottom"
@@ -191,6 +191,15 @@
 				android:name="FAB_VISIBLE" />
 
 		</action>
+		
+		<action android:id="@+id/action_chat_to_conversationsFragment"
+			app:destination="@id/conversationsFragment"
+			app:popUpToInclusive="true"
+			
+			app:enterAnim="@anim/enter_from_top"
+			app:exitAnim="@anim/exit_to_bottom"
+			app:popEnterAnim="@anim/enter_from_bottom"
+			app:popExitAnim="@anim/exit_to_top" />
 
 		<argument
 			android:name="CONVERSATION_ID"

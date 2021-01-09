@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (C) 2020. roove
+  ~ Copyright (C) 2021. roove
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -19,20 +19,19 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<item android:id="@+id/bottomPairs"
+	<item android:id="@+id/pairsFragment"
 		android:icon="@drawable/ic_pairs_24dp"
 		android:title="@string/bottom_navigation_pairs" />
 
-	<item android:id="@+id/bottomCards"
+	<item android:id="@+id/cardsFragment"
 		android:icon="@drawable/ic_cards_24dp"
-		android:title="@string/bottom_navigation_cards"
-		/>
+		android:title="@string/bottom_navigation_cards" />
 
-	<item android:id="@+id/bottomConversations"
+	<item android:id="@+id/conversationsFragment"
 		android:icon="@drawable/ic_inbox_24dp"
 		android:title="@string/bottom_navigation_chats" />
 
-	<item android:id="@+id/bottomSettings"
+	<item android:id="@+id/settingsFragment"
 		android:icon="@drawable/ic_settings_24dp"
 		android:title="@string/bottom_navigation_settings" />
 

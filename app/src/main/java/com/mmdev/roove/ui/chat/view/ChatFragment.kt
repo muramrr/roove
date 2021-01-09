@@ -228,7 +228,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 			}
 		}
 
-		toolbarChat.setNavigationOnClickListener { navController.navigateUp() }
+		toolbarChat.setNavigationOnClickListener { onBackPressed() }
 
 		toolbarChat.setOnMenuItemClickListener { item ->
 			when (item.itemId) {
@@ -247,19 +247,14 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 	 * else shake animation
 	 */
 	private fun sendMessageClick() = binding.run {
+		
 		if (edTextMessageInput.text.toString().trim().isNotEmpty()) {
-
-			val message = MessageItem(
-				sender = MainActivity.currentUser!!.baseUserInfo,
-				recipientId = currentConversation.partner.userId,
-				text = edTextMessageInput.text.toString().trim(),
-				photoItem = null,
-				conversationId = currentConversation.conversationId
-			)
-
-			mViewModel.sendMessage(message)
+			val text = edTextMessageInput.text.toString().trim()
+			
+			val message = mViewModel.sendMessage(text, currentConversation)
 			
 			//update local appearance (to avoid back pressure)
+			//there is no guarantee that message will be delivered
 			mChatAdapter.newMessage(message)
 			rvMessageList.scrollToPosition(0)
 			edTextMessageInput.text?.clear()
@@ -349,11 +344,8 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 					
 					val galleryUri = data?.data.toString()
 					// send photo from gallery
-					mViewModel.sendPhoto(
-						photoUri = galleryUri,
-						conversation = currentConversation,
-						sender = MainActivity.currentUser!!.baseUserInfo
-					)
+					mViewModel.sendPhoto(galleryUri, currentConversation)
+					
 					galleryUri
 				}
 				
@@ -361,11 +353,8 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 					if (mFilePathImageCamera.exists()) {
 						val cameraUri = Uri.fromFile(mFilePathImageCamera).toString()
 						// send photo taken by camera
-						mViewModel.sendPhoto(
-							photoUri = cameraUri,
-							conversation = currentConversation,
-							sender = MainActivity.currentUser!!.baseUserInfo
-						)
+						mViewModel.sendPhoto(cameraUri, currentConversation)
+						
 						cameraUri
 					}
 					else { requireContext().showToastText("filePathImageCamera is null or filePathImageCamera isn't exists")
@@ -411,9 +400,16 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		.apply { window?.attributes?.gravity = Gravity.CENTER }
 		.show()
 	
-
+	/**
+	 * if we enter chat from pairs fragment and start the conversation we should go back
+	 * not to pairs fragment but to conversations
+	 * if conversation is not started so return to profile and then to pairs
+	 */
 	override fun onBackPressed() {
-		navController.navigateUp()
+		if (mViewModel.chatIsEmpty.value == false) {
+			navController.navigate(R.id.action_chat_to_conversationsFragment)
+		}
+		else navController.navigateUp()
 	}
 
 }

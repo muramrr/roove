@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentMainFlowBinding
 import com.mmdev.roove.ui.common.base.FlowFragment
@@ -39,17 +40,16 @@ class MainFlowFragment: FlowFragment<Nothing, FragmentMainFlowBinding>(
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 		//set selected bottom menu item on startup
-		binding.bottomNavigationView.selectedItemId = R.id.bottomCards
+		binding.bottomNavigationView.selectedItemId = R.id.cardsFragment
 
-		val navHost =
-			childFragmentManager.findFragmentById(R.id.mainHostFragment) as NavHostFragment
+		val navHost = childFragmentManager.findFragmentById(R.id.mainHostFragment) as NavHostFragment
 		navController = navHost.findNavController()
 
 		navController.addOnDestinationChangedListener { _, destination, _ ->
 			if (destination.id in arrayOf(
-						R.id.chatFragmentNav,
-						R.id.profileFragmentNav,
-						R.id.settingsEditInfoFragmentNav
+						R.id.chatFragment,
+						R.id.profileFragment,
+						R.id.settingsEditInfoFragment
 					)
 			) {
 
@@ -62,33 +62,9 @@ class MainFlowFragment: FlowFragment<Nothing, FragmentMainFlowBinding>(
 	}
 	
 	private fun setupBottomNavigation() = binding.bottomNavigationView.run {
-		setOnNavigationItemSelectedListener {
-			val previousItem = selectedItemId
-			val nextItem = it.itemId
-			
-			if (previousItem != nextItem) {
-				
-				when (nextItem) {
-					R.id.bottomPairs -> {
-						navController.popBackStack()
-						navController.navigate(R.id.pairsFragmentNav)
-					}
-					R.id.bottomCards -> {
-						navController.popBackStack()
-						navController.navigate(R.id.cardsFragmentNav)
-					}
-					R.id.bottomConversations -> {
-						navController.popBackStack()
-						navController.navigate(R.id.conversationsFragmentNav)
-					}
-					R.id.bottomSettings -> {
-						navController.popBackStack()
-						navController.navigate(R.id.settingsFragmentNav)
-					}
-				}
-			}
-			
-			return@setOnNavigationItemSelectedListener true
+		setupWithNavController(navController)
+		setOnNavigationItemReselectedListener {
+			// do nothing here, it will prevent recreating same fragment
 		}
 	}
 

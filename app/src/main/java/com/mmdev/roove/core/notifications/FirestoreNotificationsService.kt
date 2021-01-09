@@ -85,7 +85,7 @@ class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserv
 		val pendingIntent = NavDeepLinkBuilder(this)
 			.setComponentName(MainActivity::class.java)
 			.setGraph(R.navigation.main_navigation)
-			.setDestination(R.id.chatFragmentNav)
+			.setDestination(R.id.chatFragment)
 			.setArguments(conversation)
 			.createPendingIntent()
 
@@ -122,7 +122,7 @@ class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserv
 		val pendingIntent = NavDeepLinkBuilder(this)
 			.setComponentName(MainActivity::class.java)
 			.setGraph(R.navigation.main_navigation)
-			.setDestination(R.id.pairsFragmentNav)
+			.setDestination(R.id.pairsFragment)
 			.createPendingIntent()
 
 		val notificationBuilder = NotificationCompat.Builder(this,

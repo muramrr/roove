@@ -25,7 +25,6 @@ import com.mmdev.domain.PaginationDirection.*
 import com.mmdev.domain.chat.ChatRepository
 import com.mmdev.domain.chat.MessageItem
 import com.mmdev.domain.conversations.ConversationItem
-import com.mmdev.domain.user.data.BaseUserInfo
 import com.mmdev.roove.core.log.logDebug
 import com.mmdev.roove.core.log.logInfo
 import com.mmdev.roove.ui.MainActivity
@@ -107,22 +106,31 @@ class ChatViewModel @ViewModelInject constructor(
 	//	)
 	//}
 
-	fun sendMessage(messageItem: MessageItem){
-		disposables.add(repo.sendMessage(messageItem, chatIsEmpty.value!!)
+	fun sendMessage(text: String, conversation: ConversationItem): MessageItem {
+		val message = MessageItem(
+			sender = MainActivity.currentUser!!.baseUserInfo,
+			recipientId = conversation.partner.userId,
+			text = text,
+			photoItem = null,
+			conversationId = conversation.conversationId
+		)
+		disposables.add(repo.sendMessage(message, chatIsEmpty.value!!)
             .observeOn(mainThread())
             .subscribe(
 				{ chatIsEmpty.postValue(false) },
 				{ error.value = MyError(ErrorType.SENDING, it) }
 			)
 		)
+		
+		return message
 	}
 
 	//upload photo then send it as message item
-	fun sendPhoto(photoUri: String, conversation: ConversationItem, sender: BaseUserInfo) {
+	fun sendPhoto(photoUri: String, conversation: ConversationItem) {
 		disposables.add(repo.uploadMessagePhoto(photoUri, conversation.conversationId)
             .flatMapCompletable {
 	            val photoMessage = MessageItem(
-		            sender = sender,
+		            sender = MainActivity.currentUser!!.baseUserInfo,
 		            recipientId = conversation.partner.userId,
 		            photoItem = it,
 		            conversationId = conversation.conversationId
