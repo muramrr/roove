@@ -20,8 +20,11 @@ package com.mmdev.data.repository.cards
 
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
+import com.firebase.geofire.GeoQueryBounds
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.MySchedulers
@@ -56,12 +59,14 @@ class CardsRepositoryImpl @Inject constructor(
 	companion object {
 		private const val USERS_FILTER_GENDER = "baseUserInfo.gender"
 		private const val USERS_FILTER_LOCATION_HASH = "location.hash"
-		private const val cardsLimit: Long = 20
  	}
 	
 	private val excludingIds: HashSet<String> = hashSetOf()
 	
-	private fun cardsQuery(user: UserItem) = with(user.location) {
+	private lateinit var cardsQueries: List<Query>
+	private var cardsCursor: List<DocumentSnapshot> = emptyList()
+	
+	private fun cardsQuery(user: UserItem): List<Query> = with(user.location) {
 		excludingIds.add(user.baseUserInfo.userId)
 		// Find cities within 50km of London
 		val center = GeoLocation(latitude, longitude)
@@ -70,7 +75,7 @@ class CardsRepositoryImpl @Inject constructor(
 		// Each item in 'bounds' represents a startAt/endAt pair. We have to issue
 		// a separate query for each pair. There can be up to 9 pairs of bounds
 		// depending on overlap, but in most cases there are 4.
-		val bounds = GeoFireUtils.getGeoHashQueryBounds(center, radiusInMeters)
+		val bounds: List<GeoQueryBounds> = GeoFireUtils.getGeoHashQueryBounds(center, radiusInMeters)
 		
 		//map calculated bounds for 'ready to execute' queries
 		bounds.map { bound ->
@@ -85,8 +90,7 @@ class CardsRepositoryImpl @Inject constructor(
 					if (user.preferences.gender != EVERYONE) listOf(user.preferences.gender.name)
 					else Gender.values().map { it.name }
 				)
-				.get()
-			//todo: is limit needed? or how to implement pagination?
+				.limit(20)
 		}
 		
 	}
@@ -138,13 +142,32 @@ class CardsRepositoryImpl @Inject constructor(
 	 */
 	private fun getUsersCardsByPreferences(user: UserItem): Single<List<UserItem>> =
 		SingleCreate<List<UserItem>> { emitter ->
-			val queries = cardsQuery(user)
+			//apply start after cursor for query
+			if (!this::cardsQueries.isInitialized) {
+				cardsQueries = cardsQuery(user)
+			}
+			
+			val queries = cardsQueries.mapIndexed { index, query ->
+				//todo careful!
+				if (cardsCursor.isNotEmpty())
+					query.startAfter(cardsCursor[index]).get()
+				else query.get()
+			}
 			Tasks.whenAllComplete(queries)
 				.addOnSuccessListener { tasks ->
 					emitter.onSuccess(
 						tasks
 							.map { task -> task.result }
-							.map { taskResult -> (taskResult as QuerySnapshot?)?.toObjects(UserItem::class.java) ?: emptyList() }
+							.also { results ->
+								//apply new
+								cardsCursor = results.map { taskResult ->
+									//todo careful!
+									(taskResult as QuerySnapshot?)?.documents?.last()!!
+								}
+							}
+							.map { taskResult ->
+								(taskResult as QuerySnapshot?)?.toObjects(UserItem::class.java) ?: emptyList()
+							}
 							.flatten()
 					)
 				}
@@ -154,7 +177,6 @@ class CardsRepositoryImpl @Inject constructor(
 				}
 		}.subscribeOn(MySchedulers.computation())
 	
-	private fun zipQueryResults() {}
 	
 	
 	/**
