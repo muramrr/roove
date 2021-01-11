@@ -21,6 +21,13 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	>
+	
+	<data>
+		<variable
+			name="viewModel"
+			type="com.mmdev.roove.ui.auth.AuthViewModel"
+			/>
+	</data>
 
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:id="@+id/authContainer"
@@ -113,5 +120,19 @@
 			app:layout_constraintTop_toTopOf="parent"
 			/>
 
+		
+		<include android:id="@+id/loadingView"
+			layout="@layout/loading"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			
+			app:invisibleIf="@{!viewModel.showLoading}"
+			
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			/>
+		
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

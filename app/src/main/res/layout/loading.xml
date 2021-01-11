@@ -28,7 +28,6 @@
 	>
 	
 	<com.mmdev.roove.ui.common.custom.components.LoadingView
-		android:id="@+id/loadingView"
 		android:layout_width="150dp"
 		android:layout_height="150dp"
 		android:layout_gravity="center"

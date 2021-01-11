@@ -85,7 +85,7 @@ class AuthFlowProvider @Inject constructor(
 		userDataSource.getFirestoreUser(firebaseUser.uid)
 			.zipWith(
 				//timeout if no location emitted
-				location.locationSingle().timeout(30, SECONDS),
+				location.locationSingle(),
 				BiFunction { user, location ->
 					return@BiFunction user.copy(location = location)
 				}
@@ -101,12 +101,19 @@ class AuthFlowProvider @Inject constructor(
 				}
 				UserState.registered(it)
 			}
-			.onErrorResumeNext {
-				logError(TAG, "$it")
-				//if no document stored on backend
-				if (it is NoSuchElementException && it.message == FIRESTORE_NO_DOCUMENT_EXCEPTION)
-					Observable.just(UserState.unregistered(firebaseUser.toUserItem()))
-				else Observable.just(UserState.UNDEFINED)
+			.onErrorResumeNext { throwable ->
+				logError(TAG, "$throwable")
+				when (throwable) {
+					is NoSuchElementException -> {
+						//if no document stored on backend
+						if (throwable.message == FIRESTORE_NO_DOCUMENT_EXCEPTION)
+							Observable.just(UserState.unregistered(firebaseUser.toUserItem()))
+						else Observable.just(UserState.UNDEFINED)
+					}
+					
+					else -> Observable.error(throwable)
+				}
+				
 			}
 	
 	

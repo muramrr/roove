@@ -34,6 +34,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.internal.operators.single.SingleCreate
 import java.security.NoSuchProviderException
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -135,6 +136,6 @@ class LocationDataSource @Inject constructor(
             logWarn(TAG, "Location listener detached")
             mLocationManager.removeUpdates(locationListener)
         }
-    }.subscribeOn(MySchedulers.trampoline())
+    }.subscribeOn(MySchedulers.trampoline()).timeout(30, SECONDS)
     
 }

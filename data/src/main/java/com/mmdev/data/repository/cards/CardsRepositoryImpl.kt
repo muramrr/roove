@@ -160,10 +160,17 @@ class CardsRepositoryImpl @Inject constructor(
 							.map { task -> task.result }
 							.also { results ->
 								//apply new
-								cardsCursor = results.map { taskResult ->
+								
+								cardsCursor = results.mapIndexed { index, taskResult ->
 									//todo careful!
-									(taskResult as QuerySnapshot?)?.documents?.last()!!
+									with(taskResult as QuerySnapshot) {
+										if (!documents.isNullOrEmpty()) documents.last()
+										else if (cardsCursor.isNotEmpty()) cardsCursor[index]
+											else return@also
+									}
 								}
+								
+								
 							}
 							.map { taskResult ->
 								(taskResult as QuerySnapshot?)?.toObjects(UserItem::class.java) ?: emptyList()

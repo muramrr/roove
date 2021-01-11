@@ -25,7 +25,9 @@ import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.core.log.logDebug
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
+import com.mmdev.roove.ui.common.errors.ErrorType.AUTHENTICATING
 import com.mmdev.roove.ui.common.errors.MyError
+import java.util.concurrent.TimeoutException
 
 
 class AuthViewModel @ViewModelInject constructor(
@@ -33,13 +35,30 @@ class AuthViewModel @ViewModelInject constructor(
 ) : BaseViewModel() {
 	
 	val signUpDone = MutableLiveData<UserItem>()
+	val showLoading = MutableLiveData<Boolean>()
 	
 	fun signIn(loginToken: String) {
 		disposables.add(repo.signIn(loginToken)
+			.doOnSubscribe { showLoading.value = true }
+			.doFinally { showLoading.value = false }
             .observeOn(mainThread())
             .subscribe(
 	            { logDebug(TAG, "Logged in successfully") },
-	            { error.value = MyError(ErrorType.AUTHENTICATING, it) }
+	            {
+					if (it is TimeoutException)
+						error.postValue(
+							MyError(
+								AUTHENTICATING,
+								Exception(
+									"Timeout occurred." +
+									"\nThere might be a server error or your location could not be determined." +
+									"\n Take into consideration that we can't retrieve your location from GPS if you are in the building." +
+									"\nPlease, enable full location access in settings."
+								)
+							)
+						)
+					else error.postValue(MyError(AUTHENTICATING, it))
+				}
             ))
 	}
 
