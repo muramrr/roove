@@ -79,8 +79,10 @@
 				android:id="@+id/tvGenderFemale"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_gravity="center|bottom"
+				android:layout_gravity="center"
 				android:padding="8dp"
+				android:drawableTop="@drawable/ic_registration_female_64dp"
+				android:drawablePadding="16dp"
 				
 				android:text="@string/genderFemale"
 				android:textAlignment="center"
@@ -89,16 +91,6 @@
 				app:autoSizeTextType="uniform"
 				app:autoSizeMaxTextSize="20sp"
 				app:autoSizeMinTextSize="14sp"
-				/>
-
-			<ImageView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center|top"
-				android:layout_marginTop="16dp"
-
-				app:srcCompat="@drawable/ic_registration_female_64dp"
-				android:contentDescription="@null"
 				/>
 
 		</com.google.android.material.card.MaterialCardView>
@@ -126,8 +118,10 @@
 				android:id="@+id/tvGenderMale"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_gravity="center|bottom"
+				android:layout_gravity="center"
 				android:padding="8dp"
+				android:drawableTop="@drawable/ic_registration_male_64dp"
+				android:drawablePadding="16dp"
 
 				android:text="@string/genderMale"
 				android:textAlignment="center"
@@ -136,16 +130,6 @@
 				app:autoSizeTextType="uniform"
 				app:autoSizeMaxTextSize="20sp"
 				app:autoSizeMinTextSize="14sp"
-				/>
-
-			<ImageView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center|top"
-				android:layout_marginTop="16dp"
-
-				app:srcCompat="@drawable/ic_registration_male_64dp"
-				android:contentDescription="@null"
 				/>
 
 		</com.google.android.material.card.MaterialCardView>
@@ -195,22 +179,16 @@
 				android:id="@+id/tvGenderEveryone"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_gravity="bottom|center"
+				android:layout_gravity="center"
 				android:padding="8dp"
+				android:drawableTop="@drawable/ic_registration_heart_64"
+				android:drawablePadding="16dp"
 
 				android:text="@string/preferredGenderEveryone"
 				android:textAlignment="center"
 				android:textAppearance="?textAppearanceHeadline6"
 				/>
-
-			<androidx.appcompat.widget.AppCompatImageView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center|top"
-				android:layout_marginTop="16dp"
-
-				app:srcCompat="@drawable/ic_registration_heart_64"
-				/>
+			
 
 		</com.google.android.material.card.MaterialCardView>
 

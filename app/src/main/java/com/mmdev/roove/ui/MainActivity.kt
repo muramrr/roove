@@ -99,8 +99,9 @@ class MainActivity: AppCompatActivity() {
 				currentUser = it
 				navController.navigate(R.id.action_global_mainFlowFragment)
 				
-				//for (i in 0 until Random.nextInt(5, 100)) {
-				//	sharedViewModel.updateUserItem(UtilityManager.generateFakeUser(user = it))
+				//generate new users todo: delete on release
+				//for (i in 0 until 200) {
+				//	sharedViewModel.updateUser(UtilityManager.generateFakeUser(user = it))
 				//}
 			},
 			unauthenticated = {

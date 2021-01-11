@@ -64,7 +64,7 @@ class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
 			override fun onTransitionCompleted(layout: MotionLayout, currentId: Int) {
 				when (currentId) {
 					R.id.topOffScreenSkip -> mViewModel.swipeTop(SKIP)
-					R.id.topOffScreenLike -> mViewModel.swipeBottom(LIKE)
+					R.id.topOffScreenLike -> mViewModel.swipeTop(LIKE)
 					
 					R.id.bottomOffScreenSkip -> mViewModel.swipeBottom(SKIP)
 					R.id.bottomOffScreenLike -> mViewModel.swipeBottom(LIKE)
@@ -119,7 +119,9 @@ class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
 				if (vpCardPhotos.currentItem != 0) vpCardPhotos.currentItem--
 			}
 			
-			tvCardUserName.text = userItem.baseUserInfo.name
+			tvCardUserName.text = getString(R.string.name_age_formatter).format(
+				userItem.baseUserInfo.name, userItem.baseUserInfo.age
+			)
 		}
 	}
 	
@@ -155,7 +157,10 @@ class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
 				if (vpCardPhotos.currentItem != 0) vpCardPhotos.currentItem--
 			}
 			
-			tvCardUserName.text = userItem.baseUserInfo.name
+			tvCardUserName.text = getString(R.string.name_age_formatter).format(
+				userItem.baseUserInfo.name, userItem.baseUserInfo.age
+			)
+			
 		}
 	}
 	

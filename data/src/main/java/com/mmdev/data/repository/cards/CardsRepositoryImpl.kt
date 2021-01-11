@@ -33,6 +33,7 @@ import com.mmdev.data.core.firebase.deleteAsCompletable
 import com.mmdev.data.core.firebase.setAsCompletable
 import com.mmdev.data.core.log.logDebug
 import com.mmdev.data.core.log.logError
+import com.mmdev.data.core.log.logWtf
 import com.mmdev.domain.cards.CardsRepository
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.domain.pairs.MatchedUserItem
@@ -64,9 +65,14 @@ class CardsRepositoryImpl @Inject constructor(
 	private val excludingIds: HashSet<String> = hashSetOf()
 	
 	private lateinit var cardsQueries: List<Query>
-	private var cardsCursor: List<DocumentSnapshot> = emptyList()
+	private var cardsCursor: MutableList<DocumentSnapshot?> = mutableListOf()
+	
+	//init with default
+	private var agesRange = IntRange(18, 24)
 	
 	private fun cardsQuery(user: UserItem): List<Query> = with(user.location) {
+		agesRange = IntRange(user.preferences.ageRange.minAge, user.preferences.ageRange.maxAge)
+		
 		excludingIds.add(user.baseUserInfo.userId)
 		// Find cities within 50km of London
 		val center = GeoLocation(latitude, longitude)
@@ -79,11 +85,12 @@ class CardsRepositoryImpl @Inject constructor(
 		
 		//map calculated bounds for 'ready to execute' queries
 		bounds.map { bound ->
+			logWtf(TAG, "${bound.startHash} ${bound.endHash}")
 			fs.collection(USERS_COLLECTION)
 				//people nearby
 				.orderBy(USERS_FILTER_LOCATION_HASH)
-				.startAt(bound.startHash)
-				.endAt(bound.endHash)
+				.startAt(bound.startHash.plus('~'))
+				.endAt(bound.endHash.plus('~'))
 				//filter by gender
 				.whereIn(
 					USERS_FILTER_GENDER,
@@ -113,28 +120,45 @@ class CardsRepositoryImpl @Inject constructor(
 	 */
 	override fun getUsersByPreferences(user: UserItem, initialLoading: Boolean): Single<List<UserItem>> =
 		if (initialLoading) {
+			//retrieve set of excluding ids
 			getExcludedUserIds(user).zipWith(
 				getUsersCardsByPreferences(user),
 				BiFunction { excludingIds, users ->
-					return@BiFunction users
-						//filter from excludingIds
-						.filterNot {
-							//logDebug(TAG, "Users retrieved by location and gender: $it")
-							excludingIds.contains(it.baseUserInfo.userId)
-						}
-						//filter by age preferences
-						.filter {
-							//logDebug(TAG, "Filtered users from excluding set: $it")
-							IntRange(
-								user.preferences.ageRange.minAge,
-								user.preferences.ageRange.maxAge
-							).contains(it.baseUserInfo.age)
-						}
+					logWtf(TAG, "Initial cards query")
+					return@BiFunction users.filterUsers(excludingIds)
 				}
-			)
+			).flatMap { filteredUsers ->
+				logWtf(TAG, "Filtered users on initial: ${filteredUsers.size}")
+				//if filtered users is null && cardsCursor contains at least one not null value
+				if (filteredUsers.isEmpty() && cardsCursor.any { it != null }) {
+					logWtf(TAG, "Filtered users is empty, but cursor contains non null, recursive call again")
+					getUsersCardsByPreferences(user)
+				}
+				else {
+					logWtf(TAG, "List is not empty or no profit for querying again")
+					Single.just(filteredUsers)
+				}
+			}
 		}
-		else { getUsersCardsByPreferences(user) }
-			.subscribeOn(MySchedulers.computation())
+		//no need to retrieve set of excluding ids, we already has it initialized
+		else {
+			logWtf(TAG, "Requested not initial loading")
+			getUsersCardsByPreferences(user).map {
+				logWtf(TAG, "Not initial cards query, filtering..")
+				it.filterUsers()
+			}.flatMap { filteredUsers ->
+				logWtf(TAG, "Filtered users: ${filteredUsers.size}")
+				//if filtered users is null && cardsCursor contains at least one not null value
+				if (filteredUsers.isEmpty() && cardsCursor.any { it != null }) {
+					logWtf(TAG, "Filtered users is empty, but cursor contains non null, recursive call again")
+					getUsersCardsByPreferences(user)
+				}
+				else {
+					logWtf(TAG, "List is not empty or no profit for querying again")
+					Single.just(filteredUsers)
+				}
+			}
+		}.subscribeOn(MySchedulers.computation())
 	
 	/**
 	 * GET USER CARDS BY PREFERENCES
@@ -148,33 +172,47 @@ class CardsRepositoryImpl @Inject constructor(
 			}
 			
 			val queries = cardsQueries.mapIndexed { index, query ->
-				//todo careful!
-				if (cardsCursor.isNotEmpty())
-					query.startAfter(cardsCursor[index]).get()
+				//check if cursor initialized
+				if (cardsCursor.isNotEmpty()) {
+					logWtf(TAG, "Applying cards cursor for query at $index position")
+					//and contains not null value -> apply startAfter cursor
+					if (cardsCursor[index] != null) query.startAfter(cardsCursor[index]).get()
+					//null tasks is not allowed, delete them
+					else {
+						cardsQueries.minus(query)
+						cardsCursor.removeAt(index)
+						null
+					}
+				}
+				//else run standard initial query
 				else query.get()
 			}
-			Tasks.whenAllComplete(queries)
+			Tasks.whenAllComplete(queries.filterNotNull())
 				.addOnSuccessListener { tasks ->
 					emitter.onSuccess(
 						tasks
+							//get results
 							.map { task -> task.result }
 							.also { results ->
-								//apply new
 								
-								cardsCursor = results.mapIndexed { index, taskResult ->
-									//todo careful!
+								//save last documents to apply them on next query call with startAfter
+								cardsCursor = results.map { taskResult ->
+									//for each snapshot check documents exists and save last
 									with(taskResult as QuerySnapshot) {
+										
 										if (!documents.isNullOrEmpty()) documents.last()
-										else if (cardsCursor.isNotEmpty()) cardsCursor[index]
-											else return@also
+										//else do not save anything item
+										else null
 									}
-								}
-								
+								} as MutableList<DocumentSnapshot?>
+								logWtf(TAG, "New cursors: ${cardsCursor.map { it?.reference?.path }}")
 								
 							}
+							//deserialize
 							.map { taskResult ->
 								(taskResult as QuerySnapshot?)?.toObjects(UserItem::class.java) ?: emptyList()
 							}
+							//flat list of lists into one list
 							.flatten()
 					)
 				}
@@ -185,19 +223,34 @@ class CardsRepositoryImpl @Inject constructor(
 		}.subscribeOn(MySchedulers.computation())
 	
 	
+	private fun List<UserItem>.filterUsers(excluding: HashSet<String> = excludingIds): List<UserItem> =
+		//filter from excludingIds
+		filterNot {
+			//logDebug(TAG, "Users retrieved by location and gender: $it")
+			excluding.contains(it.baseUserInfo.userId)
+		}
+		//filter by age preferences
+		.filter {
+			//logDebug(TAG, "Filtered users from excluding set: $it")
+			agesRange.contains(it.baseUserInfo.age)
+		}
+		
+	
+	
 	
 	/**
 	 * execute getters and merge lists inside zip stream
 	 */
-	private fun getExcludedUserIds(user: UserItem): Single<List<String>> =
+	private fun getExcludedUserIds(user: UserItem): Single<HashSet<String>> =
 		Single.zip(
 			getUsersIdsInCollection(user, USER_LIKED_COLLECTION),
 			getUsersIdsInCollection(user, USER_MATCHED_COLLECTION),
 			getUsersIdsInCollection(user, USER_SKIPPED_COLLECTION),
 			Function3 { likes: List<String>, matches: List<String>, skipped: List<String> ->
-				val combinedList = listOf(likes, matches, skipped).flatten()
-				excludingIds.addAll(combinedList)
-				return@Function3 combinedList
+				excludingIds.addAll(likes)
+				excludingIds.addAll(matches)
+				excludingIds.addAll(skipped)
+				return@Function3 excludingIds
 			}
 		).subscribeOn(MySchedulers.computation())
 	
