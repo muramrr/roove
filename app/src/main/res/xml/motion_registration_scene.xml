@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 08.04.20 17:04
+  ~ Copyright (C) 2021. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 <MotionScene
@@ -74,8 +82,7 @@
 
 	<ConstraintSet android:id="@+id/base">
 
-		<Constraint
-			android:id="@+id/tvSelectGender"
+		<Constraint android:id="@+id/tvSelectGender"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 
@@ -87,44 +94,45 @@
 			app:layout_constraintHorizontal_bias="0.1"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_bias="0.2" />
+			app:layout_constraintVertical_bias="0.2"
+			/>
 
-		<Constraint
-			android:id="@+id/btnGenderFemale"
+		<Constraint android:id="@+id/btnGenderFemale"
 			android:layout_width="0dp"
-			android:layout_height="@dimen/registration_button_step1_size"
-			android:layout_marginEnd="@dimen/general_size_8dp"
+			android:layout_height="0dp"
+			android:layout_marginEnd="4dp"
 
 			android:alpha="0"
 			android:rotationY="90"
-
+			
+			app:layout_constraintHeight_percent="0.3"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toStartOf="@id/btnGenderMale"
 			app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
-			app:layout_constraintVertical_bias="0.3" />
+			/>
 
-		<Constraint
-			android:id="@+id/btnGenderMale"
+		<Constraint android:id="@+id/btnGenderMale"
 			android:layout_width="0dp"
-			android:layout_height="@dimen/registration_button_step1_size"
+			android:layout_height="0dp"
+			android:layout_marginStart="4dp"
 
 			android:alpha="0"
 			android:rotationY="90"
-
+			
+			app:layout_constraintHeight_percent="0.3"
 			app:layout_constraintStart_toEndOf="@id/btnGenderFemale"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
-			app:layout_constraintVertical_bias="0.3" />
+			/>
 
 	</ConstraintSet>
 
 	<!-- step 1 your gender-->
 	<ConstraintSet android:id="@+id/step_1">
 
-		<Constraint
-			android:id="@+id/tvSelectGender"
+		<Constraint android:id="@+id/tvSelectGender"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 
@@ -134,50 +142,51 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_bias="0.2" />
+			app:layout_constraintVertical_bias="0.2"
+			/>
 
-		<Constraint
-			android:id="@+id/btnGenderFemale"
+		<Constraint android:id="@+id/btnGenderFemale"
 			android:layout_width="0dp"
-			android:layout_height="@dimen/registration_button_step1_size"
-			android:layout_marginEnd="@dimen/general_size_8dp"
-
+			android:layout_height="0dp"
+			android:layout_marginEnd="4dp"
+			
+			app:layout_constraintHeight_percent="0.3"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toStartOf="@id/btnGenderMale"
 			app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
-			app:layout_constraintVertical_bias="0.3" />
+			/>
 
-		<Constraint
-			android:id="@+id/btnGenderMale"
+		<Constraint android:id="@+id/btnGenderMale"
 			android:layout_width="0dp"
-			android:layout_height="@dimen/registration_button_step1_size"
-
+			android:layout_height="0dp"
+			android:layout_marginStart="4dp"
+			
+			app:layout_constraintHeight_percent="0.3"
 			app:layout_constraintStart_toEndOf="@id/btnGenderFemale"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
-			app:layout_constraintVertical_bias="0.3" />
+			/>
 
 	</ConstraintSet>
 
 	<!-- step 2 gender preferred-->
 	<ConstraintSet android:id="@+id/step_2">
 
-		<Constraint
-			android:id="@+id/tvInterested"
+		<Constraint android:id="@+id/tvInterested"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="50dp"
-			android:layout_marginBottom="@dimen/general_size_16dp"
+			android:layout_marginBottom="16dp"
 
 			app:layout_constraintBottom_toTopOf="@id/btnGenderFemale"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+			app:layout_constraintTop_toTopOf="parent"
+			/>
 
-		<Constraint
-			android:id="@+id/btnGenderFemale"
+		<Constraint android:id="@+id/btnGenderFemale"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 
@@ -187,22 +196,21 @@
 			app:layout_constraintTop_toBottomOf="@id/tvInterested"
 			/>
 
-		<Constraint
-			android:id="@+id/btnGenderMale"
+		<Constraint android:id="@+id/btnGenderMale"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			android:layout_marginTop="@dimen/general_size_8dp"
+			android:layout_marginTop="8dp"
 
 			app:layout_constraintBottom_toTopOf="@id/btnGenderEveryone"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/btnGenderFemale" />
+			app:layout_constraintTop_toBottomOf="@id/btnGenderFemale"
+			/>
 
-		<Constraint
-			android:id="@+id/btnGenderEveryone"
+		<Constraint android:id="@+id/btnGenderEveryone"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			android:layout_marginTop="@dimen/general_size_8dp"
+			android:layout_marginTop="8dp"
 			android:layout_marginBottom="24dp"
 
 			app:layout_constraintTop_toBottomOf="@id/btnGenderMale"
@@ -212,18 +220,18 @@
 			/>
 
 		<!-- fab -->
-		<Constraint
-			android:id="@+id/btnRegistrationNext"
+		<Constraint android:id="@+id/btnRegistrationNext"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/general_size_16dp"
+			android:layout_marginBottom="16dp"
 
 			android:rotationY="360"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintHorizontal_bias="0.8" />
+			app:layout_constraintHorizontal_bias="0.8"
+			/>
 
 	</ConstraintSet>
 
@@ -231,13 +239,12 @@
 	<ConstraintSet android:id="@+id/step_3">
 
 		<!-- step 2 items-->
-		<Constraint
-			android:id="@+id/btnGenderFemale"
+		<Constraint android:id="@+id/btnGenderFemale"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 
 			android:alpha="0"
-			android:translationX="-600dp"
+			android:translationX="-500dp"
 
 			app:layout_constraintBottom_toTopOf="@id/btnGenderMale"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -245,29 +252,28 @@
 			app:layout_constraintTop_toBottomOf="@id/tvInterested"
 			/>
 
-		<Constraint
-			android:id="@+id/btnGenderMale"
+		<Constraint android:id="@+id/btnGenderMale"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			android:layout_marginTop="@dimen/general_size_8dp"
+			android:layout_marginTop="8dp"
 
 			android:alpha="0"
-			android:translationX="-600dp"
+			android:translationX="-500dp"
 
 			app:layout_constraintBottom_toTopOf="@id/btnGenderEveryone"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/btnGenderFemale" />
+			app:layout_constraintTop_toBottomOf="@id/btnGenderFemale"
+			/>
 
-		<Constraint
-			android:id="@+id/btnGenderEveryone"
+		<Constraint android:id="@+id/btnGenderEveryone"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			android:layout_marginTop="@dimen/general_size_8dp"
+			android:layout_marginTop="8dp"
 			android:layout_marginBottom="24dp"
 
 			android:alpha="0"
-			android:translationX="-600dp"
+			android:translationX="-500dp"
 
 			app:layout_constraintTop_toBottomOf="@id/btnGenderMale"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -276,8 +282,7 @@
 			/>
 
 		<!-- step 3 items-->
-		<Constraint
-			android:id="@+id/step3View"
+		<Constraint android:id="@+id/step3View"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 
@@ -293,13 +298,12 @@
 	<ConstraintSet android:id="@+id/step_4">
 
 		<!-- step 3 items-->
-		<Constraint
-			android:id="@+id/step3View"
+		<Constraint android:id="@+id/step3View"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 
 			android:alpha="0"
-			android:translationX="-600dp"
+			android:translationX="-500dp"
 
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -308,8 +312,7 @@
 			/>
 
 		<!-- step 4 items-->
-		<Constraint
-			android:id="@+id/step4View"
+		<Constraint android:id="@+id/step4View"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 
@@ -320,18 +323,18 @@
 			/>
 
 		<!-- fab -->
-		<Constraint
-			android:id="@+id/btnRegistrationNext"
+		<Constraint android:id="@+id/btnRegistrationNext"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/general_size_16dp"
+			android:layout_marginBottom="16dp"
 
 			android:rotationY="360"
 
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintHorizontal_bias="0.8" />
+			app:layout_constraintHorizontal_bias="0.8"
+			/>
 
 	</ConstraintSet>
 
@@ -339,13 +342,12 @@
 	<ConstraintSet android:id="@+id/step_final">
 
 		<!-- step 4 items-->
-		<Constraint
-			android:id="@+id/step4View"
+		<Constraint android:id="@+id/step4View"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 
 			android:alpha="0"
-			android:translationX="-600dp"
+			android:translationX="-500dp"
 
 			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -354,8 +356,7 @@
 			/>
 
 		<!-- final step items -->
-		<Constraint
-			android:id="@+id/finalStepView"
+		<Constraint android:id="@+id/finalStepView"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 
@@ -365,31 +366,31 @@
 			app:layout_constraintBottom_toBottomOf="parent"
 			/>
 
-		<Constraint
-			android:id="@+id/btnRegistrationBack"
+		<Constraint android:id="@+id/btnRegistrationBack"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/general_size_16dp"
+			android:layout_marginBottom="16dp"
 
 			android:translationY="100dp"
 
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintHorizontal_bias="0.1"
-			app:layout_constraintStart_toStartOf="parent" />
+			app:layout_constraintStart_toStartOf="parent"
+			/>
 
-		<Constraint
-			android:id="@+id/btnRegistrationNext"
+		<Constraint android:id="@+id/btnRegistrationNext"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/general_size_16dp"
+			android:layout_marginBottom="16dp"
 
 			android:rotationY="360"
 			android:translationY="100dp"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintHorizontal_bias="0.8"
-			app:layout_constraintStart_toStartOf="parent" />
+			app:layout_constraintStart_toStartOf="parent"
+			/>
 
 
 	</ConstraintSet>

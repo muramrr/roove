@@ -1,11 +1,19 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2020. All rights reserved.
- * Last modified 07.03.20 19:17
+ * Copyright (C) 2021. roove
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
 package com.mmdev.roove.ui.common.custom
@@ -13,23 +21,26 @@ package com.mmdev.roove.ui.common.custom
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.roove.R
-import kotlin.math.round
+import kotlin.math.roundToInt
 
 /**
- * This is the documentation block about the class
+ * Decorator for center first and last item at RecyclerView
  */
 
-class CenterFirstLastItemDecoration: RecyclerView.ItemDecoration() {
+class CenterFirstLastItemDecoration(private val childWidth: Int): RecyclerView.ItemDecoration() {
 
-	override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView,
-	                            state: RecyclerView.State) {
+	override fun getItemOffsets(
+		outRect: Rect,
+		view: View,
+		parent: RecyclerView,
+		state: RecyclerView.State
+	) {
 		val position = parent.getChildViewHolder(view).adapterPosition
 		if (position == 0 || position == state.itemCount - 1) {
 			val displayWidth = parent.context.resources.displayMetrics.widthPixels
-			val childElementWidth = parent.context.resources.getDimension(R.dimen.rvSettingsPhotoElementWidth)
-			//val elementMargin = 160
-			val padding = round(displayWidth / 2f - childElementWidth / 2f).toInt()
+			
+			val padding = if (childWidth > displayWidth / 2) (displayWidth / 2f - childWidth / 2f).roundToInt()
+			else childWidth / 2
 			if (position == 0) { outRect.left = padding }
 			else { outRect.right = padding }
 		}

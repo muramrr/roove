@@ -1,64 +1,95 @@
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 12.04.20 14:55
+  ~ Copyright (C) 2021. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 <resources>
-
-	<!-- Base application theme. -->
-	<style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-		<!-- BASE THEME COLOR your theme here. -->
-		<item name="colorPrimary">@color/colorPrimary</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorPrimaryVariant">@color/colorPrimaryLight</item>
-		<item name="colorOnPrimary">@color/colorOnPrimary</item>
-
-		<item name="colorSecondary">@color/colorSecondary</item>
-		<item name="colorSecondaryVariant">@color/colorSecondaryLight</item>
-		<item name="colorOnSecondary">@color/colorOnSecondary</item>
-
-		<item name="colorError">@color/colorError</item>
-		<item name="colorOnError">@color/colorOnError</item>
-
-		<item name="colorSurface">@color/colorSurface</item>
-		<item name="colorOnSurface">@color/colorOnSurface</item>
-
-		<item name="android:colorBackground">@color/black</item>
-		<item name="colorOnBackground">@color/white</item>
-
-		<item name="android:textColor">@color/white</item>
-
-		<!-- display menu popup under toolbar -->
-		<item name="actionOverflowMenuStyle">@style/MyOverFlowMenuStyle</item>
-
-<!--		<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
-<!--		<item name="android:windowTranslucentStatus">true</item>-->
-<!--		<item name="android:windowTranslucentNavigation">true</item>-->
-
-		<item name="android:navigationBarColor">@color/black_1</item>
-		<item name="android:statusBarColor">@color/black_1</item>
-		<item name="android:windowBackground">@null</item>
-
-		<item name="materialAlertDialogTheme">@style/MyMaterialAlertDialog</item>
-
-		<item name="shapeAppearanceSmallComponent">@style/MyAppShapeAppearance.SmallComponent</item>
-		<item name="shapeAppearanceMediumComponent">@style/MyAppShapeAppearance.MediumComponent</item>
-		<item name="shapeAppearanceLargeComponent">@style/MyAppShapeAppearance.LargeComponent</item>
-
+	
+	<!-- circle button with icon at center -->
+	<style name="MyButtonIconOnly" parent="Widget.MaterialComponents.Button.Icon">
+		
+		<item name="iconPadding">0dp</item>
+		<item name="android:insetTop">0dp</item>
+		<item name="android:insetBottom">0dp</item>
+		<item name="android:insetLeft">0dp</item>
+		<item name="android:insetRight">0dp</item>
+		<item name="android:paddingLeft">12dp</item>
+		<item name="android:paddingRight">12dp</item>
+		<item name="android:minWidth">48dp</item>
+		<item name="android:minHeight">48dp</item>
+	
 	</style>
-
+	
+	<!-- button with icon at center -->
+	<style name="MyButtonIconOnly.Text" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+		
+		<item name="iconPadding">0dp</item>
+		<item name="android:insetTop">0dp</item>
+		<item name="android:insetBottom">0dp</item>
+		
+		<item name="android:insetLeft">0dp</item>
+		<item name="android:insetRight">0dp</item>
+		<item name="android:paddingLeft">12dp</item>
+		<item name="android:paddingRight">12dp</item>
+		<item name="android:minWidth">48dp</item>
+		<item name="android:minHeight">48dp</item>
+	
+	</style>
+	
+	<!-- button with icon at center -->
+	<style name="MyButtonIconOnly.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
+		
+		<item name="iconPadding">0dp</item>
+		<item name="android:insetTop">0dp</item>
+		<item name="android:insetBottom">0dp</item>
+		<item name="android:insetLeft">0dp</item>
+		<item name="android:insetRight">0dp</item>
+		<item name="android:paddingLeft">12dp</item>
+		<item name="android:paddingRight">12dp</item>
+		<item name="android:minWidth">48dp</item>
+		<item name="android:minHeight">48dp</item>
+	
+	</style>
+	
+	<!-- circle button with icon at center -->
+	<style name="MyButtonIconOnly.Unelevated" parent="Widget.MaterialComponents.Button.UnelevatedButton.Icon">
+		
+		<item name="iconSize">24dp</item>
+		<item name="iconPadding">0dp</item>
+		<item name="android:insetTop">0dp</item>
+		<item name="android:insetBottom">0dp</item>
+		<item name="android:insetLeft">0dp</item>
+		<item name="android:insetRight">0dp</item>
+		<item name="android:paddingLeft">12dp</item>
+		<item name="android:paddingRight">12dp</item>
+		<item name="android:minWidth">48dp</item>
+		<item name="android:minHeight">48dp</item>
+		
+	</style>
+	
+	<style name="My.Widget.TextView" parent="@style/Widget.MaterialComponents.TextView">
+		<item name="android:textAppearance">@style/My.TA.Body1</item>
+	</style>
+	
 	<!-- provided by theme settings vert dots style -->
 	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
 	<!-- custom appearance pop up menu items -->
 	<style name="MyMenuPopupStyle" parent="Widget.AppCompat.PopupMenu">
 		<item name="android:itemBackground">@color/colorPrimary</item>
-		<item name="android:itemTextAppearance">@style/regular_text</item>
 	</style>
 
 	<!-- display menu popup under toolbar -->
@@ -67,153 +98,21 @@
 		<item name="android:dropDownVerticalOffset">5dp</item>
 	</style>
 
+	
 
-	<!-- Alert dialog style	-->
-	<style name="MyMaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
-		<item name="materialAlertDialogTitleTextStyle">@style/MyMaterialAlertDialog.Title</item>
-		<item name="materialAlertDialogBodyTextStyle">@style/MyMaterialAlertDialog.Body</item>
-		<item name="buttonBarPositiveButtonStyle">@style/MyMaterialAlertDialog.ButtonPositive</item>
-		<item name="buttonBarNegativeButtonStyle">@style/MyMaterialAlertDialog.ButtonNegative</item>
-	</style>
-
-	<style name="MyMaterialAlertDialog.Title" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
-		<item name="android:fontFamily">@font/rubik_bold</item>
-		<item name="android:textColor">@color/white</item>
-		<item name="android:textSize">20sp</item>
-	</style>
-
-	<style name="MyMaterialAlertDialog.Body">
-		<item name="android:fontFamily">@font/rubik_light</item>
-		<item name="android:textColor">@color/white</item>
-		<item name="android:textSize">14sp</item>
-	</style>
-
-	<style name="MyMaterialAlertDialog.ButtonPositive" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+	<style name="MyConfirmationAlertDialog.ButtonPositive" parent="Widget.MaterialComponents.Button.UnelevatedButton">
 		<item name="backgroundTint">@color/material_red_a700</item>
 		<item name="android:textColor">@color/white</item>
 		<item name="android:textAllCaps">false</item>
-		<item name="android:textSize">14sp</item>
-		<item name="rippleColor">@color/black_50</item>
+		<item name="rippleColor">@color/material_red_a700</item>
 	</style>
 
-	<style name="MyMaterialAlertDialog.ButtonNegative" parent="Widget.MaterialComponents.Button.OutlinedButton">
+	<style name="MyConfirmationAlertDialog.ButtonNegative" parent="Widget.MaterialComponents.Button.OutlinedButton">
 		<item name="android:layout_marginEnd">8dp</item>
 		<item name="strokeColor">@color/material_blue_a700</item>
 		<item name="android:textColor">@color/white</item>
 		<item name="android:textAllCaps">false</item>
-		<item name="android:textSize">14sp</item>
 		<item name="rippleColor">@color/lolite</item>
-	</style>
-
-	<style name="FullScreenDialog" parent="Theme.AppCompat.Dialog">
-		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorPrimary">@color/colorPrimary</item>
-
-		<!-- Set this to true if you want Full Screen without status bar -->
-		<item name="android:windowFullscreen">true</item>
-
-		<item name="android:windowIsFloating">false</item>
-
-		<item name="android:windowNoTitle">true</item>
-		<!-- This is important! Don't forget to set window background -->
-		<item name="android:windowBackground">@color/colorPrimaryDark</item>
-
-	</style>
-
-	<style name="MyAppShapeAppearance.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
-		<item name="cornerSize">8dp</item>
-	</style>
-
-	<style name="MyAppShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
-		<item name="cornerSize">8dp</item>
-	</style>
-
-	<style name="MyAppShapeAppearance.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
-		<item name="cornerSize">8dp</item>
-	</style>
-
-	<style name="MyAppShapeAppearanceOverlay.Button.Rounded" parent="">
-		<item name="cornerFamily">rounded</item>
-		<item name="cornerSize">50%</item>
-	</style>
-
-	<style name="MyMaterialIconButton" parent="Widget.MaterialComponents.Button.TextButton">
-		<item name="android:minWidth">0dp</item>
-		<item name="android:insetLeft">0dp</item>
-		<item name="android:insetTop">0dp</item>
-		<item name="android:insetRight">0dp</item>
-		<item name="android:insetBottom">0dp</item>
-		<item name="iconGravity">textStart</item>
-		<item name="iconPadding">0dp</item>
-	</style>
-
-	<!-- SPECIFIC STYLES -->
-
-	<!-- auth tv 1 -->
-	<style name="auth_slogan1" parent="Widget.AppCompat.TextView">
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:layout_width">wrap_content</item>
-		<item name="android:fontFamily">@font/rubik_medium</item>
-		<item name="android:textSize">@dimen/auth_tv_slogan1</item>
-	</style>
-
-	<!-- auth tv 2 -->
-	<style name="auth_slogan2" parent="Widget.AppCompat.TextView">
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:layout_width">wrap_content</item>
-		<item name="android:fontFamily">@font/rubik_medium</item>
-		<item name="android:textSize">@dimen/auth_tv_slogan2</item>
-	</style>
-
-
-	<!-- unfocused tabs text -->
-	<style name="tab_text_32sp" parent="TextAppearance.Design.Tab">
-		<item name="android:fontFamily">@font/rubik_regular</item>
-		<item name="textAllCaps">false</item>
-		<item name="android:textColor">@color/white_10</item>
-		<item name="android:textSize">32sp</item>
-	</style>
-
-	<!-- uncollapsed toolbar profile title -->
-	<style name="CollapsingToolbarExpandedTitleWhite" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_medium</item>
-		<item name="android:textSize">30sp</item>
-	</style>
-
-	<!-- toolbar title -->
-	<style name="ToolbarTitle" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_regular</item>
-		<item name="android:textSize">20sp</item>
-	</style>
-
-
-	<!-- header text -->
-	<style name="header_text" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_medium</item>
-		<item name="android:padding">@dimen/general_size_16dp</item>
-		<item name="android:textSize">24sp</item>
-
-	</style>
-
-	<!-- general text styles -->
-	<style name="bold_text" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_bold</item>
-
-	</style>
-
-	<style name="medium_text" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_medium</item>
-
-	</style>
-
-	<style name="regular_text" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_regular</item>
-
-	</style>
-
-	<style name="light_text" parent="Widget.AppCompat.TextView">
-		<item name="android:fontFamily">@font/rubik_light</item>
-
 	</style>
 
 

@@ -1,86 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 30.03.20 17:59
+  ~ Copyright (C) 2021. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
-<layout
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools">
-
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	
 	<data>
-
+		
 		<variable
 			name="viewModel"
-			type="com.mmdev.roove.ui.dating.cards.CardsViewModel" />
-
+			type="com.mmdev.roove.ui.cards.CardsViewModel" />
+	
 	</data>
-
-	<androidx.constraintlayout.widget.ConstraintLayout
-		android:id="@+id/containerCards"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-		android:background="@color/colorPrimaryDark"
+	
+	
+	<androidx.constraintlayout.motion.widget.MotionLayout android:id="@+id/motionLayout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/colorBackground"
+		android:clipChildren="false"
+		app:paddingTopSystemWindowInsets="@{true}"
+		
+		app:layoutDescription="@xml/motion_cards_scene"
 		>
-
-		<com.yuyakaido.android.cardstackview.CardStackView
-			android:id="@+id/cardStackView"
+		
+		<include android:id="@+id/bottomCard"
+			layout="@layout/item_card"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			android:clipToPadding="false"
-			android:paddingStart="@dimen/general_size_16dp"
-			android:paddingEnd="@dimen/general_size_16dp"
-			android:paddingBottom="@dimen/general_size_8dp"
-
-			app:visibilityInvisible="@{!viewModel.showLoading}"
-
-			app:paddingTopSystemWindowInsets="@{true}"
-
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
+			android:layout_marginStart="32dp"
+			android:layout_marginTop="32dp"
+			android:layout_marginEnd="32dp"
+			android:layout_marginBottom="32dp"
+			
+			android:scaleX="0.8"
+			android:scaleY="0.8"
+			
+			app:goneIf="@{viewModel.bottomCard == null}"
+			
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-
-			tools:listitem="@layout/fragment_cards_item"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			
 			/>
-
-	    <com.mmdev.roove.ui.common.custom.components.LoadingView
-	        android:id="@+id/loadingViewCards"
-	        android:layout_width="120dp"
-	        android:layout_height="120dp"
-
-			app:visibilityInvisible="@{viewModel.showLoading}"
-
+		
+		<include android:id="@+id/topCard"
+			layout="@layout/item_card"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:layout_marginStart="32dp"
+			android:layout_marginTop="32dp"
+			android:layout_marginEnd="32dp"
+			android:layout_marginBottom="32dp"
+			
+			app:goneIf="@{viewModel.topCard == null}"
+			
+			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-	        app:layout_constraintEnd_toEndOf="parent"
-	        app:layout_constraintStart_toStartOf="parent"
-	        app:layout_constraintTop_toTopOf="parent"
-	        tools:ignore="ContentDescription" />
-
-	    <TextView
-		    android:id="@+id/tvCardHelperText"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-		    android:gravity="center"
-
-	        android:text="@string/fragment_cards_explanation_text"
-		    android:textSize="18sp"
-		    style="@style/regular_text"
-
-			app:visibilityInvisible="@{viewModel.showTextHelper}"
-
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			
+			/>
+		
+		<ImageView android:id="@+id/ivCardSkipIndicator"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:layout_gravity="center"
+			android:background="@drawable/fragment_card_item_skip_overlay"
+			android:elevation="1dp"
+			
+			android:src="@drawable/ic_card_skip_120dp"
+			android:scaleType="center"
+			
+			android:alpha="0"
+			
+			app:layout_constraintTop_toTopOf="@id/topCard"
+			app:layout_constraintBottom_toBottomOf="@id/topCard"
+			app:layout_constraintEnd_toEndOf="@id/topCard"
+			app:layout_constraintStart_toStartOf="@id/topCard"
+			
+			android:contentDescription="@string/fragment_card_skip_img_description"
+			/>
+		
+		<ImageView android:id="@+id/ivCardLikeIndicator"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:layout_gravity="center"
+			android:background="@drawable/fragment_card_item_like_overlay"
+			android:elevation="1dp"
+		
+			android:src="@drawable/ic_card_like_120dp"
+			android:scaleType="center"
+			
+			android:alpha="0"
+			
+			app:layout_constraintTop_toTopOf="@id/topCard"
+			app:layout_constraintBottom_toBottomOf="@id/topCard"
+			app:layout_constraintEnd_toEndOf="@id/topCard"
+			app:layout_constraintStart_toStartOf="@id/topCard"
+			
+			android:contentDescription="@string/fragment_card_like_img_description"
+			/>
+		
+		<com.mmdev.roove.ui.common.custom.components.LoadingView android:id="@+id/loadingView"
+			android:layout_width="120dp"
+			android:layout_height="120dp"
+			
+			app:invisibleIf="@{!viewModel.showLoading}"
+			
+			app:layout_constraintVertical_bias="0.6"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/tvCardHelperText"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			
+			android:contentDescription="@null"
+			/>
+		
+		<com.google.android.material.textview.MaterialTextView android:id="@+id/tvCardHelperText"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			
+			android:text="@string/fragment_cards_explanation_text"
+			android:textAppearance="?textAppearanceHeadline5"
+			android:visibility="invisible"
+			
+			app:invisibleIf="@{!viewModel.showEmptyIndicator}"
+			
+			app:layout_constraintTop_toBottomOf="@id/loadingView"
 			app:layout_constraintBottom_toBottomOf="parent"
-	        app:layout_constraintEnd_toEndOf="parent"
-	        app:layout_constraintStart_toStartOf="parent"
-		    app:layout_constraintTop_toBottomOf="@id/loadingViewCards"
-		    app:layout_constraintVertical_bias="0.3"
-		    />
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			/>
+		
+	</androidx.constraintlayout.motion.widget.MotionLayout>
 
-	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

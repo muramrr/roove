@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (C) 2021. roove
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
+  -->
+
+<layout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	>
+	
+	<LinearLayout
+		android:id="@+id/containerModalBottomSheet"
+		android:background="@color/colorBackground"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="vertical"
+		app:paddingBottomSystemWindowInsets="@{true}"
+		>
+		
+		<com.google.android.material.textview.MaterialTextView android:id="@+id/tvAgePicker"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:layout_marginHorizontal="8dp"
+			android:labelFor="@id/rangeSeekBarAgePicker"
+			android:padding="8dp"
+	
+			android:text="@string/tv_ages_you_prefer"
+			android:textAppearance="?textAppearanceHeadline6"
+			/>
+	
+		<com.google.android.material.card.MaterialCardView
+			android:id="@+id/cvContainerAgePicker"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginHorizontal="8dp"
+	
+			app:cardCornerRadius="16dp"
+			app:contentPadding="8dp"
+			
+			>
+			
+			<com.google.android.material.textview.MaterialTextView android:id="@+id/tvPickedAgeMin"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="start|center_vertical"
+				
+				android:textColor="?colorOnBackground"
+				android:textAppearance="?textAppearanceCaption"
+				/>
+			
+			<com.google.android.material.slider.RangeSlider
+				android:id="@+id/rangeSeekBarAgePicker"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="12dp"
+				
+				android:valueFrom="18"
+				android:valueTo="100"
+				android:stepSize="1"
+				
+				app:trackColorActive="?colorSecondary"
+				
+				app:thumbColor="?colorSecondary"
+				app:thumbRadius="12dp"
+				
+				/>
+			
+			<com.google.android.material.textview.MaterialTextView android:id="@+id/tvPickedAgeMax"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="end|center_vertical"
+				
+				android:textColor="?colorOnBackground"
+				android:textAppearance="?textAppearanceCaption"
+				/>
+			
+		</com.google.android.material.card.MaterialCardView>
+	
+		<com.google.android.material.textview.MaterialTextView
+			android:id="@+id/tvPreferredGenderPicker"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:layout_marginHorizontal="8dp"
+			android:labelFor="@id/toggleButtonPickerPreferredGender"
+			android:padding="8dp"
+	
+			android:text="@string/btm_sheet_prefs_tv_gender_showing"
+			android:textAppearance="?textAppearanceHeadline6"
+	
+			/>
+	
+		<com.google.android.material.button.MaterialButtonToggleGroup
+			android:id="@+id/toggleButtonPickerPreferredGender"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginHorizontal="8dp"
+			android:gravity="center"
+	
+			app:selectionRequired="true"
+			app:singleSelection="false"
+			>
+	
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/btnPickerPreferredGenderMale"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:padding="12dp"
+	
+				android:text="@string/preferredGenderMale"
+				android:textAllCaps="false"
+	
+				style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+				/>
+	
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/btnPickerPreferredGenderFemale"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:padding="12dp"
+	
+				android:text="@string/preferredGenderFemale"
+				android:textAllCaps="false"
+	
+				style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+				/>
+	
+		</com.google.android.material.button.MaterialButtonToggleGroup>
+		
+		<com.google.android.material.textview.MaterialTextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:layout_marginHorizontal="8dp"
+			android:labelFor="@id/sliderRadius"
+			android:padding="8dp"
+			
+			android:text="@string/btm_sheet_prefs_tv_radius"
+			android:textAppearance="?textAppearanceHeadline6"
+			
+			/>
+		
+		<com.google.android.material.card.MaterialCardView
+			android:id="@+id/cvContainerDistanceRange"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginHorizontal="8dp"
+			android:layout_marginBottom="32dp"
+			
+			app:cardCornerRadius="16dp"
+			app:contentPadding="8dp"
+			
+			>
+			
+			<com.google.android.material.slider.Slider
+				android:id="@+id/sliderRadius"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				
+				android:valueFrom="4"
+				android:valueTo="100"
+				android:stepSize="1"
+				
+				app:trackColorActive="?colorSecondary"
+				
+				app:thumbColor="?colorSecondary"
+				app:thumbRadius="12dp"
+				
+				/>
+		
+		</com.google.android.material.card.MaterialCardView>
+	
+	</LinearLayout>
+</layout>

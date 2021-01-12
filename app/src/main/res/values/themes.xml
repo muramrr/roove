@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (C) 2021. roove
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
+  -->
+
+<resources>
+	
+	<!-- Base application theme. -->
+	<style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+		
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryVariant">@color/colorPrimaryLight</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorOnPrimary">@color/colorOnPrimary</item>
+		
+		<item name="colorSecondary">@color/colorSecondary</item>
+		<item name="colorSecondaryVariant">@color/colorSecondaryLight</item>
+		<item name="colorOnSecondary">@color/colorOnSecondary</item>
+		
+		<item name="colorError">@color/colorError</item>
+		<item name="colorOnError">@color/colorOnError</item>
+		
+		<item name="colorSurface">@color/colorSurface</item>
+		<item name="colorOnSurface">@color/colorOnSurface</item>
+		
+		<item name="android:colorBackground">@color/colorBackground</item>
+		<item name="colorOnBackground">@color/colorOnBackground</item>
+		
+		<!-- display menu popup under toolbar -->
+		<item name="actionOverflowMenuStyle">@style/MyOverFlowMenuStyle</item>
+		
+		<!-- system colors -->
+		<item name="android:navigationBarColor">@android:color/transparent</item>
+		<item name="android:statusBarColor">@android:color/transparent</item>
+		<item name="android:windowBackground">@null</item>
+		
+		<item name="shapeAppearanceSmallComponent">@style/MyAppShapeAppearance.SmallComponent</item>
+		<item name="shapeAppearanceMediumComponent">@style/MyAppShapeAppearance.MediumComponent</item>
+		<item name="shapeAppearanceLargeComponent">@style/MyAppShapeAppearance.LargeComponent</item>
+		
+		<item name="android:textViewStyle">@style/My.Widget.TextView</item>
+		<item name="textAppearanceHeadline1">@style/My.TA.Headline1</item>
+		<item name="textAppearanceHeadline2">@style/My.TA.Headline2</item>
+		<item name="textAppearanceHeadline3">@style/My.TA.Headline3</item>
+		<item name="textAppearanceHeadline4">@style/My.TA.Headline4</item>
+		<item name="textAppearanceHeadline5">@style/My.TA.Headline5</item>
+		<item name="textAppearanceHeadline6">@style/My.TA.Headline6</item>
+		<item name="textAppearanceSubtitle1">@style/My.TA.Subtitle1</item>
+		<item name="textAppearanceSubtitle2">@style/My.TA.Subtitle2</item>
+		<item name="textAppearanceBody1">@style/My.TA.Body1</item>
+		<item name="textAppearanceBody2">@style/My.TA.Body2</item>
+		<item name="textAppearanceCaption">@style/My.TA.Caption</item>
+		<item name="textAppearanceButton">@style/My.TA.Button</item>
+		<item name="textAppearanceOverline">@style/My.TA.Overline</item>
+	
+	</style>
+	
+	<style name="FullScreenDialog" parent="Theme.AppCompat.Dialog">
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorPrimary">@color/colorPrimary</item>
+		
+		<!-- Set this to true if you want Full Screen without status bar -->
+		<item name="android:windowFullscreen">true</item>
+		
+		<item name="android:windowIsFloating">false</item>
+		
+		<item name="android:windowNoTitle">true</item>
+		<!-- This is important! Don't forget to set window background -->
+		<item name="android:windowBackground">@color/colorPrimaryDark</item>
+	
+	</style>
+	
+	<!-- Alert dialog style	-->
+	<style name="MyConfirmationMaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+		<item name="buttonBarPositiveButtonStyle">@style/MyConfirmationAlertDialog.ButtonPositive</item>
+		<item name="buttonBarNegativeButtonStyle">@style/MyConfirmationAlertDialog.ButtonNegative</item>
+	</style>
+	
+
+</resources>

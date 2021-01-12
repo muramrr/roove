@@ -1,22 +1,29 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2020. All rights reserved.
- * Last modified 02.06.20 17:43
+ * Copyright (C) 2021. roove
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
 
 android {
 
-	def globalConfiguration = rootProject.extensions.getByName("ext")
-	compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
+	compileSdkVersion 30
+	buildToolsVersion "30.0.3"
 
 	def keyPropertiesFile = rootProject.file("key.properties")
 	def keyProperties = new Properties()
@@ -28,17 +35,17 @@ android {
 		buildConfigField("String", "VALUE_ENCRYPTION_KEY", keyProperties['VALUE_ENCRYPTION_KEY'])
 		buildConfigField("String", "VALUE_ENCRYPTION_VECTOR_KEY", keyProperties['VALUE_ENCRYPTION_VECTOR_KEY'])
 
-		minSdkVersion globalConfiguration["androidMinSdkVersion"]
-		targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
-		versionCode globalConfiguration["androidVersionCode"]
-		versionName globalConfiguration["androidVersionName"]
+		minSdkVersion 21
+		targetSdkVersion 30
+		versionCode "$majorVersion$minorVersion$patchVersion".toInteger()
+		versionName "$majorVersion.$minorVersion.$patchVersion"
 		//testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
 	}
 
 	buildTypes {
 
 		release {
-			minifyEnabled false
+			minifyEnabled true
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 		}
 
@@ -48,40 +55,32 @@ android {
 		jvmTarget = JavaVersion.VERSION_1_8
 	}
 
-
-	sourceSets {
-		main.java.srcDirs += 'src/main/kotlin'
-	}
-
 }
 
 dependencies {
-	implementation project(':business')
+	implementation project(':domain')
 
 	// Kotlin
 	implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
 	//facebook auth
-	implementation libs.facebookLogin
+	implementation 'com.facebook.android:facebook-login:8.2.0'
 
-	// Firebase
-	implementation libs.firebaseAuth
-	implementation libs.firebaseCore
-	implementation libs.firestorage
-	implementation libs.firestore
+	//firebase
+	implementation platform('com.google.firebase:firebase-bom:26.2.0')
+	implementation 'com.google.firebase:firebase-auth-ktx'
+	implementation 'com.google.firebase:firebase-firestore-ktx'
+	implementation 'com.google.firebase:firebase-storage-ktx'
+	implementation 'com.google.firebase:firebase-installations-ktx'
+	implementation 'com.firebase:geofire-android-common:3.1.0'
 
 	// RxJava
-	implementation libs.rxJava
+	implementation "io.reactivex.rxjava3:rxjava:3.0.9"
 
-	// Retrofit
-	implementation libs.retrofit
+	// Dagger hilt
+	implementation "com.google.dagger:hilt-android:2.30.1-alpha"
+	kapt "com.google.dagger:hilt-android-compiler:2.30.1-alpha"
 
-	// Dagger
-	implementation libs.dagger
-	kapt libs.daggerCompiler
-
-	//binary prefs
-	implementation "com.github.yandextaxitech:binaryprefs:1.0.1"
-	implementation 'com.google.code.gson:gson:2.8.6'
+	implementation 'com.github.delight-im:Android-SimpleLocation:v1.1.0'
 
 }

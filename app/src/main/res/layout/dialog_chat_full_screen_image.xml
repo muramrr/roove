@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Andrii Kovalchuk
-  ~ Copyright (c) 2020. All rights reserved.
-  ~ Last modified 31.03.20 17:13
+  ~ Copyright (C) 2021. roove
   ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
   -->
 
 <layout
@@ -19,29 +27,23 @@
 			type="String" />
 	</data>
 
-	<androidx.constraintlayout.widget.ConstraintLayout
+	<FrameLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@color/black">
 
-		<com.github.chrisbanes.photoview.PhotoView
-			android:id="@+id/ivDialogFullScreen"
-			android:layout_width="0dp"
-			android:layout_height="0dp"
+		<com.github.chrisbanes.photoview.PhotoView android:id="@+id/ivDialogFullScreen"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
 			android:adjustViewBounds="true"
 			android:scaleType="centerInside"
 
 			app:bindImageUrl="@{photoUrl}"
 			app:progressBar="@{pbImageLoading}"
 
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
 			/>
 
-		<ProgressBar
-			android:id="@+id/pbImageLoading"
+		<ProgressBar android:id="@+id/pbImageLoading"
 			android:layout_width="150dp"
 			android:layout_height="150dp"
 			android:layout_gravity="center"
@@ -52,12 +54,7 @@
 			android:progressDrawable="@drawable/progress_drawable"
 
 			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
 			/>
 
-	</androidx.constraintlayout.widget.ConstraintLayout>
+	</FrameLayout>
 </layout>

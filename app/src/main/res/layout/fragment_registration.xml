@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Andrii Kovalchuk
+  ~ Copyright (C) 2021. roove
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see https://www.gnu.org/licenses
+  -->
+<!--	app:motionDebug="SHOW_ALL"-->
+
+<layout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<androidx.constraintlayout.motion.widget.MotionLayout
+		android:id="@+id/containerRegistration"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/colorBackground"
+		android:padding="8dp"
+		
+		app:layoutDescription="@xml/motion_registration_scene"
+
+		app:paddingBottomSystemWindowInsets="@{true}"
+		>
+
+
+		<!-- step 1 your gender-->
+		<com.google.android.material.textview.MaterialTextView
+			android:id="@+id/tvSelectGender"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+
+			android:maxLines="2"
+			android:lines="2"
+			android:text="@string/reg_step_1_tv_select_your_gender"
+			android:textAppearance="?textAppearanceHeadline5"
+
+			android:alpha="0"
+			android:rotationX="90"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_bias="0.2"
+			/>
+
+		<com.google.android.material.card.MaterialCardView android:id="@+id/btnGenderFemale"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:layout_marginEnd="4dp"
+
+			android:alpha="0"
+			android:rotationY="90"
+
+			app:cardElevation="0dp"
+			app:cardBackgroundColor="@color/material_registration_buttons"
+			app:cardCornerRadius="8dp"
+			
+			app:layout_constraintHeight_percent="0.3"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toStartOf="@id/btnGenderMale"
+			app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
+			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
+			>
+
+			<com.google.android.material.textview.MaterialTextView
+				android:id="@+id/tvGenderFemale"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:padding="8dp"
+				android:drawableTop="@drawable/ic_registration_female_64dp"
+				android:drawablePadding="16dp"
+				
+				android:text="@string/genderFemale"
+				android:textAlignment="center"
+				android:textAppearance="?textAppearanceHeadline6"
+				
+				app:autoSizeTextType="uniform"
+				app:autoSizeMaxTextSize="20sp"
+				app:autoSizeMinTextSize="14sp"
+				/>
+
+		</com.google.android.material.card.MaterialCardView>
+
+		<com.google.android.material.card.MaterialCardView android:id="@+id/btnGenderMale"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:layout_marginStart="4dp"
+
+			android:alpha="0"
+			android:rotationY="90"
+
+			app:cardElevation="0dp"
+			app:cardBackgroundColor="@color/material_registration_buttons"
+			app:cardCornerRadius="8dp"
+
+			app:layout_constraintHeight_percent="0.3"
+			app:layout_constraintStart_toEndOf="@id/btnGenderFemale"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/tvSelectGender"
+			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
+			>
+
+			<com.google.android.material.textview.MaterialTextView
+				android:id="@+id/tvGenderMale"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:padding="8dp"
+				android:drawableTop="@drawable/ic_registration_male_64dp"
+				android:drawablePadding="16dp"
+
+				android:text="@string/genderMale"
+				android:textAlignment="center"
+				android:textAppearance="?textAppearanceHeadline6"
+				
+				app:autoSizeTextType="uniform"
+				app:autoSizeMaxTextSize="20sp"
+				app:autoSizeMinTextSize="14sp"
+				/>
+
+		</com.google.android.material.card.MaterialCardView>
+
+
+		<!-- step 2 gender preferred-->
+		<com.google.android.material.textview.MaterialTextView
+			android:id="@+id/tvInterested"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="50dp"
+			android:layout_marginBottom="16dp"
+
+			android:alpha="0"
+			android:rotationX="-90"
+
+			android:text="@string/reg_hint_preferred_gender"
+			android:textAppearance="?textAppearanceHeadline5"
+
+			app:paddingTopSystemWindowInsets="@{true}"
+
+			app:layout_constraintBottom_toTopOf="@id/btnGenderFemale"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			/>
+
+		<com.google.android.material.card.MaterialCardView android:id="@+id/btnGenderEveryone"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginBottom="24dp"
+
+			app:cardElevation="0dp"
+			app:cardBackgroundColor="@color/material_registration_buttons"
+			app:cardCornerRadius="8dp"
+
+			android:alpha="0"
+			android:rotationX="90"
+
+			app:layout_constraintTop_toBottomOf="@id/btnGenderFemale"
+			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent" >
+
+			<com.google.android.material.textview.MaterialTextView
+				android:id="@+id/tvGenderEveryone"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:padding="8dp"
+				android:drawableTop="@drawable/ic_registration_heart_64"
+				android:drawablePadding="16dp"
+
+				android:text="@string/preferredGenderEveryone"
+				android:textAlignment="center"
+				android:textAppearance="?textAppearanceHeadline6"
+				/>
+			
+
+		</com.google.android.material.card.MaterialCardView>
+
+
+		<!-- step 3 age -->
+		<LinearLayout android:id="@+id/step3View"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:orientation="vertical"
+			android:gravity="center"
+			android:padding="32dp"
+
+			android:alpha="0"
+			android:translationX="500dp"
+
+			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			>
+
+			<com.google.android.material.textview.MaterialTextView android:id="@+id/tvSpecifyAge"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="16dp"
+
+				android:text="@string/reg_step_3_tv_specify_your_age"
+				android:textAppearance="?textAppearanceHeadline5"
+
+				/>
+			
+			<com.google.android.material.card.MaterialCardView android:id="@+id/cvContainerAgePicker"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="24dp"
+				android:layout_marginHorizontal="8dp"
+				
+				app:cardElevation="0dp"
+				app:cardCornerRadius="16dp"
+				app:contentPadding="16dp"
+				
+				>
+				
+				<com.google.android.material.slider.Slider
+					android:id="@+id/sliderAge"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					
+					android:value="18"
+					android:valueFrom="18"
+					android:valueTo="50"
+					android:stepSize="1"
+					
+					app:tickVisible="true"
+					app:labelBehavior="floating"
+					
+					app:trackColorActive="?colorSecondary"
+					
+					app:thumbColor="?colorSecondary"
+					app:thumbRadius="16dp"
+					/>
+			
+			</com.google.android.material.card.MaterialCardView>
+
+			<com.google.android.material.textview.MaterialTextView android:id="@+id/tvAgeDisplay"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="16dp"
+				android:labelFor="@id/sliderAge"
+
+				android:text="@string/reg_default_age_text"
+				android:textAlignment="center"
+				android:textAppearance="?textAppearanceHeadline4"
+				/>
+
+			<com.google.android.material.textview.MaterialTextView android:id="@+id/tvRegAgePicker"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="16dp"
+				android:labelFor="@id/rangeSeekBarRegAgePicker"
+				android:padding="8dp"
+
+				android:text="@string/tv_ages_you_prefer"
+				android:textAppearance="?textAppearanceHeadline5"
+				/>
+
+			<com.google.android.material.card.MaterialCardView
+				android:id="@+id/cvRegContainerAgePicker"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+
+				app:cardElevation="0dp"
+				app:cardCornerRadius="16dp"
+				app:contentPadding="16dp"
+				>
+				
+				<com.google.android.material.textview.MaterialTextView android:id="@+id/tvPickedAgeMin"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="start|center_vertical"
+					
+					android:textColor="?colorOnBackground"
+					android:textAppearance="?textAppearanceCaption"
+					/>
+				
+				<com.google.android.material.slider.RangeSlider
+					android:id="@+id/rangeSeekBarRegAgePicker"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginHorizontal="16dp"
+					
+					android:valueFrom="18"
+					android:valueTo="100"
+					android:stepSize="1"
+					
+					app:trackColorActive="?colorSecondary"
+					
+					app:thumbColor="?colorSecondary"
+					app:thumbRadius="16dp"
+					
+					/>
+				
+				<com.google.android.material.textview.MaterialTextView android:id="@+id/tvPickedAgeMax"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="end|center_vertical"
+					
+					android:textColor="?colorOnBackground"
+					android:textAppearance="?textAppearanceCaption"
+					/>
+
+			</com.google.android.material.card.MaterialCardView>
+
+		</LinearLayout>
+
+
+		<!-- step 4 name -->
+		<LinearLayout android:id="@+id/step4View"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:orientation="vertical"
+			android:padding="32dp"
+			android:gravity="center"
+
+			android:alpha="0"
+			android:translationX="500dp"
+
+			app:layout_constraintBottom_toTopOf="@id/btnRegistrationNext"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			>
+
+			<!-- name -->
+			<com.google.android.material.textview.MaterialTextView android:id="@+id/tvChangeName"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="50dp"
+				
+				android:maxLines="3"
+				android:text="@string/reg_step_4_tv_change_name"
+				android:textAppearance="?textAppearanceHeadline5"
+				/>
+
+			<com.google.android.material.textfield.TextInputLayout
+				android:id="@+id/layoutInputChangeName"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="24dp"
+
+				app:counterMaxLength="30"
+				app:counterEnabled="true"
+
+				app:errorEnabled="true"
+				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+				>
+
+
+				<com.google.android.material.textfield.TextInputEditText
+					android:id="@+id/edInputChangeName"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:background="@null"
+
+					android:gravity="center"
+
+					android:imeOptions="actionDone"
+					android:inputType="textPersonName"
+					android:maxLength="30"
+					android:maxLines="1"
+
+					android:textColor="@color/white"
+					android:textCursorDrawable="@color/lolite"
+					android:textSize="20sp"
+					
+					app:hideKeyboardOnInputDone="@{true}"
+					/>
+
+
+			</com.google.android.material.textfield.TextInputLayout>
+			
+
+		</LinearLayout>
+
+		<!-- final step -->
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/finalStepView"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+
+			android:alpha="0"
+			android:translationX="500dp"
+
+			app:paddingTopSystemWindowInsets="@{true}"
+
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			>
+
+
+			<com.google.android.material.textview.MaterialTextView android:id="@+id/tvAllCorrect"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="24dp"
+				android:padding="16dp"
+
+				android:text="@string/reg_step_final_tv_check_is_correct"
+				android:textAlignment="center"
+				android:maxLines="2"
+				android:textAppearance="?textAppearanceHeadline5"
+				
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				/>
+
+			<com.google.android.material.textfield.TextInputLayout android:id="@+id/layoutFinalName"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="16dp"
+				
+				android:hint="@string/reg_hint_name"
+				
+				app:errorEnabled="false"
+				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+				
+				app:layout_constraintVertical_bias="0.2"
+				app:layout_constraintTop_toBottomOf="@id/tvAllCorrect"
+				app:layout_constraintBottom_toTopOf="@id/btnFinalBack"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				>
+
+				<com.google.android.material.textfield.TextInputEditText
+					android:id="@+id/edFinalName"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:background="@null"
+					android:focusable="false"
+					
+					android:gravity="center"
+
+					android:text="@string/default_name"
+					/>
+
+			</com.google.android.material.textfield.TextInputLayout>
+			
+			<com.google.android.material.textfield.TextInputLayout android:id="@+id/layoutFinalAge"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+				android:layout_marginBottom="16dp"
+				
+				android:hint="@string/reg_hint_age"
+				app:errorEnabled="false"
+				
+				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+				
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/layoutFinalName"
+				>
+				
+				<com.google.android.material.textfield.TextInputEditText
+					android:id="@+id/edFinalAge"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:background="@null"
+					android:focusable="false"
+					
+					android:gravity="center"
+					
+					android:text="@string/reg_default_age_text"
+					/>
+			
+			</com.google.android.material.textfield.TextInputLayout>
+			
+			<com.google.android.material.textfield.TextInputLayout android:id="@+id/layoutFinalGender"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+				android:layout_marginEnd="4dp"
+
+				android:hint="@string/reg_hint_gender"
+				
+				app:errorEnabled="false"
+				
+				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+				
+				app:layout_constraintTop_toBottomOf="@id/layoutFinalAge"
+				app:layout_constraintEnd_toStartOf="@id/layoutFinalPreferredGender"
+				app:layout_constraintStart_toStartOf="parent"
+				>
+
+				<com.google.android.material.textfield.TextInputEditText
+					android:id="@+id/edFinalGender"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:background="@null"
+					android:focusable="false"
+					
+					android:gravity="center"
+
+					android:text="@string/genderMale"
+					/>
+
+			</com.google.android.material.textfield.TextInputLayout>
+
+			<com.google.android.material.textfield.TextInputLayout android:id="@+id/layoutFinalPreferredGender"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+				android:layout_marginStart="4dp"
+
+				android:hint="@string/reg_hint_preferred_gender"
+				
+				app:errorEnabled="false"
+				style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+				
+				app:layout_constraintTop_toBottomOf="@id/layoutFinalAge"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toEndOf="@id/layoutFinalGender"
+				>
+
+				<com.google.android.material.textfield.TextInputEditText
+					android:id="@+id/edFinalPreferredGender"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:background="@null"
+					android:focusable="false"
+					
+					android:gravity="center"
+
+					android:text="@string/preferredGenderEveryone"
+					/>
+
+			</com.google.android.material.textfield.TextInputLayout>
+
+			
+			
+			<com.google.android.material.button.MaterialButton android:id="@+id/btnFinalBack"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="16dp"
+				android:padding="16dp"
+
+				android:text="@string/reg_btn_back_text"
+				android:textColor="@color/material_red_a700"
+				android:textAllCaps="false"
+
+				app:rippleColor="@color/material_red_a700"
+				app:strokeColor="@color/material_red_a700"
+				app:strokeWidth="2dp"
+
+				style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+
+				app:layout_constraintBottom_toTopOf="@id/btnRegistrationDone"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				/>
+
+			<com.google.android.material.button.MaterialButton android:id="@+id/btnRegistrationDone"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="16dp"
+				android:padding="16dp"
+				
+				android:text="@string/reg_btn_done_text"
+				android:textColor="?colorOnBackground"
+				android:textAllCaps="false"
+
+				app:rippleColor="@color/lolite"
+				app:strokeColor="@color/lolite"
+				app:strokeWidth="2dp"
+
+				style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+				
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				/>
+
+		</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+		<com.google.android.material.button.MaterialButton android:id="@+id/btnRegistrationBack"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="16dp"
+
+			android:text="@string/reg_btn_back_text"
+			android:textAllCaps="false"
+			android:textColor="@color/white_50"
+			
+			style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+
+			app:cornerRadius="10dp"
+			app:icon="@drawable/ic_arrow_back_24dp"
+			app:iconTint="@color/white_50"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.1"
+			app:layout_constraintStart_toStartOf="parent"
+			/>
+
+		<com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/btnRegistrationNext"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="16dp"
+			android:src="@drawable/ic_arrow_forward_24dp"
+
+			app:backgroundTint="@color/material_registration_fab"
+			app:rippleColor="@color/material_registration_fab"
+
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.8"
+			app:layout_constraintStart_toStartOf="parent"
+			
+			android:contentDescription="@null"
+			/>
+
+
+	</androidx.constraintlayout.motion.widget.MotionLayout>
+</layout>

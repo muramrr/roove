@@ -1,15 +1,24 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (c) 2020. All rights reserved.
- * Last modified 03.03.20 16:23
+ * Copyright (C) 2021. roove
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
 package com.mmdev.roove.core.notifications
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -26,6 +35,7 @@ import com.mmdev.roove.core.glide.GlideApp
 import com.mmdev.roove.ui.MainActivity
 
 
+@SuppressLint("MissingFirebaseInstanceTokenRefresh")
 class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserver {
 
 	private var isAppInForeground = false
@@ -66,20 +76,22 @@ class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserv
 
 	private fun notifyNewMessage(remoteMessage: RemoteMessage){
 		val conversation = bundleOf(
-				"PARTNER_CITY" to remoteMessage.data["SENDER_CITY"],
-				"PARTNER_GENDER" to remoteMessage.data["SENDER_GENDER"],
-				"PARTNER_ID" to remoteMessage.data["SENDER_ID"],
-				"CONVERSATION_ID" to remoteMessage.data["CONVERSATION_ID"])
+			"PARTNER_CITY" to remoteMessage.data["SENDER_CITY"],
+			"PARTNER_GENDER" to remoteMessage.data["SENDER_GENDER"],
+			"PARTNER_ID" to remoteMessage.data["SENDER_ID"],
+			"CONVERSATION_ID" to remoteMessage.data["CONVERSATION_ID"]
+		)
 
 		val pendingIntent = NavDeepLinkBuilder(this)
 			.setComponentName(MainActivity::class.java)
 			.setGraph(R.navigation.main_navigation)
-			.setDestination(R.id.chatFragmentNav)
+			.setDestination(R.id.chatFragment)
 			.setArguments(conversation)
 			.createPendingIntent()
 
-		val notificationBuilder = NotificationCompat.Builder(this,
-		                                                     getString(R.string.notification_channel_id_messages))
+		val notificationBuilder = NotificationCompat.Builder(
+			this, getString(R.string.notification_channel_id_messages)
+		)
 			.setSmallIcon(R.drawable.ic_notification_message)
 			.setContentTitle(remoteMessage.data["SENDER_NAME"])
 			.setContentText(remoteMessage.data["CONTENT"])
@@ -110,7 +122,7 @@ class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserv
 		val pendingIntent = NavDeepLinkBuilder(this)
 			.setComponentName(MainActivity::class.java)
 			.setGraph(R.navigation.main_navigation)
-			.setDestination(R.id.pairsFragmentNav)
+			.setDestination(R.id.pairsFragment)
 			.createPendingIntent()
 
 		val notificationBuilder = NotificationCompat.Builder(this,
@@ -132,8 +144,7 @@ class FirestoreNotificationsService: FirebaseMessagingService(), LifecycleObserv
 		notificationBuilder.setLargeIcon(bitmap)
 
 		GlideApp.with(this).clear(futureTarget)
-
-
+		
 
 		val notificationId = System.currentTimeMillis().toInt()
 		// notificationId is a unique int for each notification that you must define
