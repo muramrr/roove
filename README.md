@@ -2,8 +2,6 @@
 
 **Dating app (tinder-clone).**
 
-*Note: Currently under maintenance!
-
 ![Logo](https://github.com/muramrr/roove/blob/master/media/roove_logo_1024_500.png)
 
 
