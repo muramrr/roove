@@ -5,13 +5,14 @@ admin.initializeApp();
 
 exports.notifyNewMatch = functions.region('europe-west1')
     .firestore
-    .document('users/{city}/{gender}/{userId}/matched/{cardItem}')
+    .document('users/{userId}/matched/{cardItem}')
     .onCreate((docSnapshot, context) => {
-        const cardUserToNotifiyItem = docSnapshot.data();
-        const cardUserToNotifiyId = cardUserToNotifiyItem['baseUserInfo'].userId;
 
-        return admin.firestore().doc('usersBase/' + cardUserToNotifiyId).get().then(userDoc => {
-            const registrationTokens = userDoc.get('registrationTokens');
+        const cardUserToNotifyItem = docSnapshot.data();
+        const cardUserToNotifyId = cardUserToNotifyItem['baseUserInfo'].userId;
+
+        return admin.firestore().doc('users/' + cardUserToNotifyId).get().then(userDoc => {
+            const registrationTokens = userDoc.get('installations');
 
             const notificationBody = "You've got a new match!";
             const payload = {
@@ -20,7 +21,7 @@ exports.notifyNewMatch = functions.region('europe-west1')
                   	TYPE: "NEW_MATCH"
                 }
             }
-
+			//send notification to device and check which notifications delivered with failure
             return admin.messaging().sendToDevice(registrationTokens, payload).then( response => {
                 const stillRegisteredTokens = registrationTokens;
 
@@ -29,17 +30,16 @@ exports.notifyNewMatch = functions.region('europe-west1')
                     if (error) {
                         const failedRegistrationToken = registrationTokens[index];
                         console.error('mylogs_fcm', failedRegistrationToken, error);
-                        if (error.code === 'messaging/invalid-registration-token'
-                            || error.code === 'messaging/registration-token-not-registered') {
-                                const failedIndex = stillRegisteredTokens.indexOf(failedRegistrationToken);
-                                if (failedIndex > -1) {
-                                    stillRegisteredTokens.splice(failedIndex, 1);
-                                }
+                        if (error.code === 'messaging/invalid-registration-token' || error.code === 'messaging/registration-token-not-registered') {
+                            const failedIndex = stillRegisteredTokens.indexOf(failedRegistrationToken);
+                            if (failedIndex > -1) {
+                                stillRegisteredTokens.splice(failedIndex, 1);
                             }
+                        }
                     }
                 })
-
-                return admin.firestore().doc("usersBase/" + cardUserToNotifiyId).update({
+				//delete obsolete installations to prevent sending notification again to this token
+                return admin.firestore().doc("users/" + cardUserToNotifyId).update({
                     registrationTokens: stillRegisteredTokens
                 })
             })
@@ -56,43 +56,43 @@ exports.notifyNewMessage = functions.region('europe-west1')
         const conversationId = message['conversationId'];
         const photoItem = message['photoItem']
 
-        return admin.firestore().doc('usersBase/' + recipientId).get().then(userDoc => {
-            const registrationTokens = userDoc.get('registrationTokens');
+        return admin.firestore().doc('users/' + recipientId).get().then(userDoc => {
+            const registrationTokens = userDoc.get('installations');
             var payload;
             if (photoItem === null) {
-              const notificationBody = message['text'];
-              payload = {
-                  data: {
-                        SENDER_NAME: sender.name,
-                        SENDER_CITY: sender.city,
-                        SENDER_GENDER: sender.gender,
-                        SENDER_PHOTO: sender.mainPhotoUrl,
-                        SENDER_ID: sender.userId,
-                        CONVERSATION_ID: conversationId,
-                        CONTENT: notificationBody,
-                        TYPE: "NEW_MESSAGE"
-                    }
-                }
+				const notificationBody = message['text'];
+				payload = {
+					data: {
+					    SENDER_NAME: sender.name,
+					    SENDER_CITY: sender.city,
+					    SENDER_GENDER: sender.gender,
+					    SENDER_PHOTO: sender.mainPhotoUrl,
+					    SENDER_ID: sender.userId,
+					    CONVERSATION_ID: conversationId,
+					    CONTENT: notificationBody,
+					    TYPE: "NEW_MESSAGE"
+					}
+				}
             }
             else {
-              const notificationBody = "Photo";
-              payload = {
-                  data: {
-                        SENDER_NAME: sender.name,
-                        SENDER_CITY: sender.city,
-                        SENDER_GENDER: sender.gender,
-                        SENDER_PHOTO: sender.mainPhotoUrl,
-                        SENDER_ID: sender.userId,
-                        CONVERSATION_ID: conversationId,
-                        CONTENT: notificationBody,
-                        CONTENT_PHOTO: photoItem['fileUrl'],
-                    	TYPE: "NEW_MESSAGE"
-                    }
-                }
+				const notificationBody = "Photo";
+				payload = {
+					data: {
+					    SENDER_NAME: sender.name,
+					    SENDER_CITY: sender.city,
+					    SENDER_GENDER: sender.gender,
+					    SENDER_PHOTO: sender.mainPhotoUrl,
+					    SENDER_ID: sender.userId,
+					    CONVERSATION_ID: conversationId,
+					    CONTENT: notificationBody,
+					    CONTENT_PHOTO: photoItem['fileUrl'],
+					    TYPE: "NEW_MESSAGE"
+					}
+				}
             }
 
 
-
+			//send notification to device and check which notifications delivered with failure
             return admin.messaging().sendToDevice(registrationTokens, payload).then( response => {
                 const stillRegisteredTokens = registrationTokens;
 
@@ -110,8 +110,8 @@ exports.notifyNewMessage = functions.region('europe-west1')
                             }
                     }
                 })
-
-                return admin.firestore().doc("usersBase/" + recipientId).update({
+				//delete obsolete installations to prevent sending notification again to this token
+                return admin.firestore().doc("users/" + recipientId).update({
                     registrationTokens: stillRegisteredTokens
                 })
             })

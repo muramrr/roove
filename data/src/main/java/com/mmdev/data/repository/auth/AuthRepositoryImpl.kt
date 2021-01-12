@@ -18,10 +18,9 @@
 
 package com.mmdev.data.repository.auth
 
-import android.content.Context
-import android.provider.Settings.Secure
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.installations.FirebaseInstallations
 import com.mmdev.data.core.BaseRepository
 import com.mmdev.data.core.firebase.asSingle
@@ -46,22 +45,12 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
 	private val auth: FirebaseAuth,
 	private val userDataSource: UserDataSource,
-	private val locationDataSource: LocationDataSource,
-	context: Context
+	private val locationDataSource: LocationDataSource
 ): BaseRepository(), AuthRepository {
 	
 	companion object {
 		private const val FS_INSTALLATIONS_FIELD = "installations"
-		private const val LOCATION_FIELD = "location"
 	}
-	
-	/**
-	 * Gets the hardware serial number of this device.
-	 *
-	 * @return serial number or Settings.Secure.ANDROID_ID if not available.
-	 * Credit: SecurePreferences for Android
-	 */
-	private val androidId: String = Secure.getString(context.contentResolver, Secure.ANDROID_ID)
 
 	override fun signIn(token: String): Completable = signInWithFacebook(token)
 
@@ -76,8 +65,8 @@ class AuthRepositoryImpl @Inject constructor(
 			}
 		)
 		.concatMapCompletable { userDataSource.writeFirestoreUser(it) }
-		.andThen(updateInstallations(userItem.baseUserInfo.userId))
 		.delay(500, MILLISECONDS)
+		.andThen(updateInstallations(userItem.baseUserInfo.userId))
 		.andThen(userDataSource.getFirestoreUser(userItem.baseUserInfo.userId))
 	
 	/**
@@ -103,7 +92,7 @@ class AuthRepositoryImpl @Inject constructor(
 			userDataSource.updateFirestoreUserField(
 				id,
 				FS_INSTALLATIONS_FIELD,
-				mapOf(androidId to token)
+				FieldValue.arrayUnion(token)
 			)
 		}
 
