@@ -46,6 +46,7 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 	private var newPreferredGender: PreferredGender? = null
 	private var newPreferredMinAge: Float? = null
 	private var newPreferredMaxAge: Float? = null
+	private var newRadius: Float? = null
 	
 	
 	override fun onCreateView(
@@ -64,6 +65,9 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 		rangeSeekBarAgePicker.addOnChangeListener { rangeSlider, value, fromUser ->
 			newPreferredMinAge = rangeSlider.values.first()
 			newPreferredMaxAge = rangeSlider.values.last()
+			
+			tvPickedAgeMin.text = "${rangeSlider.values.first().toInt()}"
+			tvPickedAgeMax.text = "${rangeSlider.values.last().toInt()}"
 		}
 
 		
@@ -77,9 +81,20 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 			if (group.checkedButtonIds.size == 1 && group.checkedButtonIds[0] == R.id.btnPickerPreferredGenderFemale)
 				newPreferredGender = FEMALE
 		}
+		
+		sliderRadius.addOnChangeListener { slider, value, fromUser ->
+			newRadius = value
+		}
 	}
 
 	private fun initProfile(userItem: UserItem) = binding.run {
+		rangeSeekBarAgePicker.setValues(
+			userItem.preferences.ageRange.minAge.toFloat(),
+			userItem.preferences.ageRange.maxAge.toFloat()
+		)
+		tvPickedAgeMin.text = "${userItem.preferences.ageRange.minAge}"
+		tvPickedAgeMax.text = "${userItem.preferences.ageRange.maxAge}"
+		
 		when (userItem.preferences.gender) {
 			MALE -> {
 				toggleButtonPickerPreferredGender.clearChecked()
@@ -94,14 +109,13 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 				toggleButtonPickerPreferredGender.check(R.id.btnPickerPreferredGenderFemale)
 			}
 		}
-		rangeSeekBarAgePicker.setValues(
-			userItem.preferences.ageRange.minAge.toFloat(),
-			userItem.preferences.ageRange.maxAge.toFloat()
-		)
+		
+		sliderRadius.value = userItem.preferences.radius.toFloat()
+		
 	}
 	
 	override fun onStop() {
-		if (newPreferredGender != null || newPreferredMaxAge != null || newPreferredMinAge != null)
+		if (newPreferredGender != null || newPreferredMaxAge != null || newPreferredMinAge != null || newRadius != null)
 			with(MainActivity.currentUser!!.preferences) {
 				sharedViewModel.updateUser(
 					MainActivity.currentUser!!.copy(
@@ -110,7 +124,8 @@ class SettingsPreferencesBottomSheet : BottomSheetDialogFragment() {
 							ageRange = ageRange.copy(
 								minAge = newPreferredMinAge?.toInt() ?: ageRange.minAge,
 								maxAge = newPreferredMaxAge?.toInt() ?: ageRange.maxAge
-							)
+							),
+							radius = (newRadius ?: radius).toDouble()
 						)
 					)
 				)

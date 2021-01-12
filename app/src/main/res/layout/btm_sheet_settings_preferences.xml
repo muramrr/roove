@@ -28,6 +28,7 @@
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="vertical"
+		app:paddingBottomSystemWindowInsets="@{true}"
 		>
 		
 		<com.google.android.material.textview.MaterialTextView android:id="@+id/tvAgePicker"
@@ -39,7 +40,7 @@
 			android:padding="8dp"
 	
 			android:text="@string/tv_ages_you_prefer"
-			android:textAppearance="?textAppearanceHeadline5"
+			android:textAppearance="?textAppearanceHeadline6"
 			/>
 	
 		<com.google.android.material.card.MaterialCardView
@@ -49,14 +50,24 @@
 			android:layout_marginHorizontal="8dp"
 	
 			app:cardCornerRadius="16dp"
-			app:contentPadding="16dp"
+			app:contentPadding="8dp"
 			
 			>
+			
+			<com.google.android.material.textview.MaterialTextView android:id="@+id/tvPickedAgeMin"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="start|center_vertical"
+				
+				android:textColor="?colorOnBackground"
+				android:textAppearance="?textAppearanceCaption"
+				/>
 			
 			<com.google.android.material.slider.RangeSlider
 				android:id="@+id/rangeSeekBarAgePicker"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="12dp"
 				
 				android:valueFrom="18"
 				android:valueTo="100"
@@ -65,8 +76,17 @@
 				app:trackColorActive="?colorSecondary"
 				
 				app:thumbColor="?colorSecondary"
-				app:thumbRadius="16dp"
+				app:thumbRadius="12dp"
 				
+				/>
+			
+			<com.google.android.material.textview.MaterialTextView android:id="@+id/tvPickedAgeMax"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="end|center_vertical"
+				
+				android:textColor="?colorOnBackground"
+				android:textAppearance="?textAppearanceCaption"
 				/>
 			
 		</com.google.android.material.card.MaterialCardView>
@@ -80,8 +100,8 @@
 			android:labelFor="@id/toggleButtonPickerPreferredGender"
 			android:padding="8dp"
 	
-			android:text="@string/tv_gender_showing"
-			android:textAppearance="?textAppearanceHeadline5"
+			android:text="@string/btm_sheet_prefs_tv_gender_showing"
+			android:textAppearance="?textAppearanceHeadline6"
 	
 			/>
 	
@@ -90,7 +110,6 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginHorizontal="8dp"
-			android:layout_marginBottom="32dp"
 			android:gravity="center"
 	
 			app:selectionRequired="true"
@@ -102,7 +121,7 @@
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:padding="16dp"
+				android:padding="12dp"
 	
 				android:text="@string/preferredGenderMale"
 				android:textAllCaps="false"
@@ -115,7 +134,7 @@
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:padding="16dp"
+				android:padding="12dp"
 	
 				android:text="@string/preferredGenderFemale"
 				android:textAllCaps="false"
@@ -124,6 +143,49 @@
 				/>
 	
 		</com.google.android.material.button.MaterialButtonToggleGroup>
+		
+		<com.google.android.material.textview.MaterialTextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:layout_marginHorizontal="8dp"
+			android:labelFor="@id/sliderRadius"
+			android:padding="8dp"
+			
+			android:text="@string/btm_sheet_prefs_tv_radius"
+			android:textAppearance="?textAppearanceHeadline6"
+			
+			/>
+		
+		<com.google.android.material.card.MaterialCardView
+			android:id="@+id/cvContainerDistanceRange"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginHorizontal="8dp"
+			android:layout_marginBottom="32dp"
+			
+			app:cardCornerRadius="16dp"
+			app:contentPadding="8dp"
+			
+			>
+			
+			<com.google.android.material.slider.Slider
+				android:id="@+id/sliderRadius"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				
+				android:valueFrom="4"
+				android:valueTo="100"
+				android:stepSize="1"
+				
+				app:trackColorActive="?colorSecondary"
+				
+				app:thumbColor="?colorSecondary"
+				app:thumbRadius="12dp"
+				
+				/>
+		
+		</com.google.android.material.card.MaterialCardView>
 	
 	</LinearLayout>
 </layout>

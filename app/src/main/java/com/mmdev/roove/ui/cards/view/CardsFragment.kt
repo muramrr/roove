@@ -31,9 +31,6 @@ import com.mmdev.roove.ui.cards.CardsViewModel
 import com.mmdev.roove.ui.cards.CardsViewModel.SwipeAction.*
 import com.mmdev.roove.ui.common.ImagePagerAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
-import com.mmdev.roove.utils.extensions.gone
-import com.mmdev.roove.utils.extensions.invisible
-import com.mmdev.roove.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -51,8 +48,6 @@ class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
 		observeTopCard()
 		observeBottomCard()
 		observeMatch()
-		observeLoading()
-		observeEmpty()
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
@@ -73,33 +68,10 @@ class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
 		})
 	}
 	
-	
-	private fun observeLoading() = mViewModel.showLoading.observe(this, {
-		if (it) binding.loadingView.visible()
-		else binding.loadingView.invisible()
-	})
-	private fun observeEmpty() = mViewModel.showEmptyIndicator.observe(this, {
-		if (it) {
-			binding.tvCardHelperText.visible()
-			binding.loadingView.visible()
-		} else {
-			binding.tvCardHelperText.invisible()
-			binding.loadingView.invisible()
-		}
-	})
-	
 	/** top card setup ui*/
 	private fun observeTopCard() = mViewModel.topCard.observe(this, { setTopCard(it) })
 	private fun setTopCard(userItem: UserItem?) = binding.topCard.run {
-		if (userItem == null) root.run {
-			gone()
-			alpha = 0f
-		}
-		else {
-			root.run {
-				visible()
-				alpha = 1f
-			}
+		if (userItem != null) root.run {
 			
 			mTopCardImagePagerAdapter.setData(userItem.photoURLs.map { it.fileUrl })
 			
@@ -129,15 +101,7 @@ class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
 	/** bottom card setup ui*/
 	private fun observeBottomCard() = mViewModel.bottomCard.observe(this, { setBottomCard(it) })
 	private fun setBottomCard(userItem: UserItem?) = binding.bottomCard.run {
-		if (userItem == null) root.run {
-			gone()
-			alpha = 0f
-		}
-		else {
-			root.run {
-				visible()
-				alpha = 1f
-			}
+		if (userItem != null) {
 			
 			mBottomCardImagePagerAdapter.setData(userItem.photoURLs.map { it.fileUrl })
 			

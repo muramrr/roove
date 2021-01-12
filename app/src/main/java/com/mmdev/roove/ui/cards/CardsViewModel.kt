@@ -81,6 +81,7 @@ class CardsViewModel @ViewModelInject constructor(
             .subscribe(
 				{ cards ->
 					showEmptyIndicator.postValue(cards.isNullOrEmpty())
+					showLoading.postValue(cards.isNullOrEmpty())
 					
 					if (cards.isNotEmpty()) {
 						cardIndex = 0
@@ -106,12 +107,11 @@ class CardsViewModel @ViewModelInject constructor(
 	fun swipeTop(swipeAction: SwipeAction) {
 		cardIndex += 2
 		when (swipeAction) {
-			SKIP -> addToSkipped(topCard.value!!)
-			LIKE -> checkMatch(topCard.value!!).also {
+			SKIP -> topCard.value?.let { addToSkipped(it) }
+			LIKE -> topCard.value?.let { checkMatch(it) }.also {
 				logInfo(TAG, "Liked top: ${topCard.value?.baseUserInfo?.name}")
 			}
 		}
-		logInfo(TAG, "index = $cardIndex")
 		
 		if (cardIndex >= usersCardsList.value!!.size) loadUsersByPreferences()
 		else topCard.postValue(usersCardsList.value!!.getOrNull(cardIndex))
@@ -120,12 +120,11 @@ class CardsViewModel @ViewModelInject constructor(
 	
 	fun swipeBottom(swipeAction: SwipeAction) {
 		when (swipeAction) {
-			SKIP -> addToSkipped(bottomCard.value!!)
-			LIKE -> checkMatch(bottomCard.value!!).also {
+			SKIP -> bottomCard.value?.let { addToSkipped(it) }
+			LIKE -> bottomCard.value?.let { checkMatch(it) }.also {
 				logInfo(TAG, "Liked bottom: ${bottomCard.value?.baseUserInfo?.name}")
 			}
 		}
-		logInfo(TAG, "index = $cardIndex")
 		bottomCard.postValue(usersCardsList.value!!.getOrNull(cardIndex + 1))
 	}
 	

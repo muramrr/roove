@@ -71,6 +71,7 @@ class CardsRepositoryImpl @Inject constructor(
 	private var agesRange = IntRange(18, 24)
 	
 	private fun cardsQuery(user: UserItem): List<Query> = with(user.location) {
+		//apply user ranges
 		agesRange = IntRange(user.preferences.ageRange.minAge, user.preferences.ageRange.maxAge)
 		
 		excludingIds.add(user.baseUserInfo.userId)
@@ -85,12 +86,13 @@ class CardsRepositoryImpl @Inject constructor(
 		
 		//map calculated bounds for 'ready to execute' queries
 		bounds.map { bound ->
-			logWtf(TAG, "${bound.startHash} ${bound.endHash}")
+			logDebug(TAG, "Query for ranges: ${bound.startHash} ${bound.endHash}")
+			
 			fs.collection(USERS_COLLECTION)
 				//people nearby
 				.orderBy(USERS_FILTER_LOCATION_HASH)
-				.startAt(bound.startHash.plus('~'))
-				.endAt(bound.endHash.plus('~'))
+				.startAt(bound.startHash)
+				.endAt(bound.endHash)
 				//filter by gender
 				.whereIn(
 					USERS_FILTER_GENDER,
@@ -124,37 +126,37 @@ class CardsRepositoryImpl @Inject constructor(
 			getExcludedUserIds(user).zipWith(
 				getUsersCardsByPreferences(user),
 				BiFunction { excludingIds, users ->
-					logWtf(TAG, "Initial cards query")
+					logDebug(TAG, "Initial cards query")
 					return@BiFunction users.filterUsers(excludingIds)
 				}
 			).flatMap { filteredUsers ->
 				logWtf(TAG, "Filtered users on initial: ${filteredUsers.size}")
 				//if filtered users is null && cardsCursor contains at least one not null value
 				if (filteredUsers.isEmpty() && cardsCursor.any { it != null }) {
-					logWtf(TAG, "Filtered users is empty, but cursor contains non null, recursive call again")
+					logDebug(TAG, "Filtered users is empty, but cursor contains non null, recursive call again")
 					getUsersCardsByPreferences(user)
 				}
 				else {
-					logWtf(TAG, "List is not empty or no profit for querying again")
+					logDebug(TAG, "List is not empty or no profit for querying again")
 					Single.just(filteredUsers)
 				}
 			}
 		}
 		//no need to retrieve set of excluding ids, we already has it initialized
 		else {
-			logWtf(TAG, "Requested not initial loading")
+			logDebug(TAG, "Requested not initial loading")
 			getUsersCardsByPreferences(user).map {
-				logWtf(TAG, "Not initial cards query, filtering..")
+				logDebug(TAG, "Not initial cards query, filtering..")
 				it.filterUsers()
 			}.flatMap { filteredUsers ->
-				logWtf(TAG, "Filtered users: ${filteredUsers.size}")
+				logDebug(TAG, "Filtered users: ${filteredUsers.size}")
 				//if filtered users is null && cardsCursor contains at least one not null value
 				if (filteredUsers.isEmpty() && cardsCursor.any { it != null }) {
-					logWtf(TAG, "Filtered users is empty, but cursor contains non null, recursive call again")
+					logDebug(TAG, "Filtered users is empty, but cursor contains non null, recursive call again")
 					getUsersCardsByPreferences(user)
 				}
 				else {
-					logWtf(TAG, "List is not empty or no profit for querying again")
+					logDebug(TAG, "List is not empty or no profit for querying again")
 					Single.just(filteredUsers)
 				}
 			}
@@ -174,7 +176,7 @@ class CardsRepositoryImpl @Inject constructor(
 			val queries = cardsQueries.mapIndexed { index, query ->
 				//check if cursor initialized
 				if (cardsCursor.isNotEmpty()) {
-					logWtf(TAG, "Applying cards cursor for query at $index position")
+					logDebug(TAG, "Applying cards cursor for query at $index position")
 					//and contains not null value -> apply startAfter cursor
 					if (cardsCursor[index] != null) query.startAfter(cardsCursor[index]).get()
 					//null tasks is not allowed, delete them
@@ -205,7 +207,7 @@ class CardsRepositoryImpl @Inject constructor(
 										else null
 									}
 								} as MutableList<DocumentSnapshot?>
-								logWtf(TAG, "New cursors: ${cardsCursor.map { it?.reference?.path }}")
+								logDebug(TAG, "New cursors: ${cardsCursor.map { it?.reference?.path }}")
 								
 							}
 							//deserialize

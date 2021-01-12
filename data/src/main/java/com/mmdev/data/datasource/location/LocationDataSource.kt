@@ -29,6 +29,7 @@ import com.firebase.geofire.GeoLocation
 import com.mmdev.data.core.MySchedulers
 import com.mmdev.data.core.log.logDebug
 import com.mmdev.data.core.log.logWarn
+import com.mmdev.data.core.roundTo
 import com.mmdev.domain.user.data.LocationPoint
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.internal.operators.single.SingleCreate
@@ -65,8 +66,10 @@ class LocationDataSource @Inject constructor(
     
         val locationListener = LocationListener { location ->
             logWarn(TAG, "Location listener attached")
-            val hash = GeoFireUtils.getGeoHashForLocation(GeoLocation(location.latitude, location.longitude))
-            emitter.onSuccess(LocationPoint(location.latitude, location.longitude, hash))
+            val lat = location.latitude.roundTo(6)
+            val lon = location.longitude.roundTo(6)
+            val hash = GeoFireUtils.getGeoHashForLocation(GeoLocation(lat, lon))
+            emitter.onSuccess(LocationPoint(lat, lon, hash))
             logDebug(TAG, "Location emitted from listener")
         }
         
@@ -99,12 +102,12 @@ class LocationDataSource @Inject constructor(
                         
                         //check if location is old
                         if (System.currentTimeMillis() - lastLocation.time > TimeUnit.HOURS.toMillis(1)) {
-                            val hash = GeoFireUtils.getGeoHashForLocation(
-                                GeoLocation(lastLocation.latitude, lastLocation.longitude)
-                            )
-                            emitter.onSuccess(LocationPoint(lastLocation.latitude, lastLocation.longitude, hash))
-                            logDebug(TAG, "Location emitted from cache")
-                            return@SingleCreate
+                            val lat = lastLocation.latitude.roundTo(6)
+                            val lon = lastLocation.longitude.roundTo(6)
+                            val hash = GeoFireUtils.getGeoHashForLocation(GeoLocation(lat, lon))
+                            emitter.onSuccess(LocationPoint(lat, lon, hash))
+                            logDebug(TAG, "Location emitted from $availableProvider cache")
+                           
                         }
                         
                         else {

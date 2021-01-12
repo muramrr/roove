@@ -100,7 +100,7 @@ class MainActivity: AppCompatActivity() {
 				navController.navigate(R.id.action_global_mainFlowFragment)
 				
 				//generate new users todo: delete on release
-				//for (i in 0 until 200) {
+				//for (i in 0 until 20) {
 				//	sharedViewModel.updateUser(UtilityManager.generateFakeUser(user = it))
 				//}
 			},

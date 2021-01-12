@@ -116,8 +116,9 @@
 	<string name="genderFemale">Девушка</string>
 	<string name="genderMale">Парень</string>
 	
-	<string name="tv_gender_showing">Тебя интересуют</string>
 	<string name="tv_ages_you_prefer">Возраст партнера</string>
+	<string name="btm_sheet_prefs_tv_gender_showing">Тебя интересуют</string>
+	<string name="btm_sheet_prefs_tv_radius">Растояние</string>
 
 	
 	<string name="dialog_error_title">Ошибка</string>

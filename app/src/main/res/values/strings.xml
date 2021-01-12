@@ -116,7 +116,8 @@
 	<string name="genderMale">male</string>
 	
 	<string name="tv_ages_you_prefer">Ages you prefer</string>
-	<string name="tv_gender_showing">Showing</string>
+	<string name="btm_sheet_prefs_tv_gender_showing">Showing</string>
+	<string name="btm_sheet_prefs_tv_radius">Distance radius</string>
 	
 	
 	<string name="dialog_error_title">Error</string>
