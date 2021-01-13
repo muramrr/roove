@@ -59,7 +59,7 @@ object BindingAdapterUtils {
 					      RequestOptions()
 						      .dontAnimate()
 						      .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-						      .error(R.drawable.placeholder_image)
+						      .error(R.color.colorPrimaryDark)
 					)
 			}
 			else {

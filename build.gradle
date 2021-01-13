@@ -22,7 +22,7 @@ buildscript {
 		kotlin_version = '1.4.21'
 		majorVersion = 2
 		minorVersion = 0
-		patchVersion = 0
+		patchVersion = 1
 	}
 
 
