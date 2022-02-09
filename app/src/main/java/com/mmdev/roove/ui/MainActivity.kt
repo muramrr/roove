@@ -92,29 +92,25 @@ class MainActivity: AppCompatActivity() {
 	}
 	
 	//start to listens auth status
-	private fun observeUser() = sharedViewModel.userState.observe(this, { userState ->
-		userState.fold(
-			authenticated = {
-				logInfo(TAG, "$it")
-				currentUser = it
-				navController.navigate(R.id.action_global_mainFlowFragment)
-				
-				//generate new users todo: delete on release
-				//for (i in 0 until 20) {
-				//	sharedViewModel.updateUser(UtilityManager.generateFakeUser(user = it))
-				//}
-			},
-			unauthenticated = {
-				currentUser = null
-				navController.navigate(R.id.action_global_authFragment)
-			},
-			unregistered = {
-				currentUser = null
-				sharedViewModel.userInfoForRegistration.postValue(it)
-				navController.navigate(R.id.action_global_registrationFragment)
-			}
-		)
-	})
+	private fun observeUser() = sharedViewModel.userState.observe(this) { userState ->
+		userState.fold(authenticated = {
+			logInfo(TAG, "$it")
+			currentUser = it
+			navController.navigate(R.id.action_global_mainFlowFragment)
+			
+			//generate new users todo: delete on release
+			//for (i in 0 until 20) {
+			//	sharedViewModel.updateUser(UtilityManager.generateFakeUser(user = it))
+			//}
+		}, unauthenticated = {
+			currentUser = null
+			navController.navigate(R.id.action_global_authFragment)
+		}, unregistered = {
+			currentUser = null
+			sharedViewModel.userInfoForRegistration.postValue(it)
+			navController.navigate(R.id.action_global_registrationFragment)
+		})
+	}
 	
 	/**
 	 * Whether the device has location access enabled in the settings

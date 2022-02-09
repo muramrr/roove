@@ -18,7 +18,6 @@
 
 package com.mmdev.roove.ui.auth
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.domain.auth.AuthRepository
 import com.mmdev.domain.user.data.UserItem
@@ -27,10 +26,12 @@ import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.ErrorType.AUTHENTICATING
 import com.mmdev.roove.ui.common.errors.MyError
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.concurrent.TimeoutException
+import javax.inject.Inject
 
-
-class AuthViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AuthViewModel @Inject constructor(
 	private val repo: AuthRepository
 ) : BaseViewModel() {
 	

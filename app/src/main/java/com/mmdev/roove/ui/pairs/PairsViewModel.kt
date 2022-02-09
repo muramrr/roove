@@ -18,7 +18,6 @@
 
 package com.mmdev.roove.ui.pairs
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.domain.PaginationDirection.*
 import com.mmdev.domain.pairs.MatchedUserItem
@@ -27,9 +26,12 @@ import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
+import javax.inject.Inject
 
-class PairsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class PairsViewModel @Inject constructor(
 	private val repo: PairsRepository
 ): BaseViewModel() {
 

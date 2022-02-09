@@ -18,7 +18,6 @@
 
 package com.mmdev.roove.ui.settings
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.domain.photo.PhotoItem
 import com.mmdev.domain.user.ISettingsRepository
@@ -28,12 +27,15 @@ import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.ErrorType.DELETING
 import com.mmdev.roove.ui.common.errors.MyError
 import com.mmdev.roove.ui.settings.SettingsViewModel.DeletingStatus.IN_PROGRESS
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 /**
  * ViewModel to edit user info, basically allows to start add/delete photo or delete account
  */
 
-class SettingsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
 	private val repo: ISettingsRepository
 ): BaseViewModel() {
 	

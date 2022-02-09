@@ -18,7 +18,6 @@
 
 package com.mmdev.roove.ui.cards
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.domain.cards.CardsRepository
 import com.mmdev.domain.user.data.UserItem
@@ -29,8 +28,11 @@ import com.mmdev.roove.ui.cards.CardsViewModel.SwipeAction.*
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class CardsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class CardsViewModel @Inject constructor(
 	private val repo: CardsRepository
 ): BaseViewModel() {
 	
