@@ -27,8 +27,3 @@ dependencies {
 	implementation "io.reactivex.rxjava3:rxjava:3.0.9"
 
 }
-compileKotlin {
-	kotlinOptions {
-		jvmTarget = JavaVersion.VERSION_1_8
-	}
-}
