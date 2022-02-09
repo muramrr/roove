@@ -22,6 +22,7 @@
 	package="com.mmdev.roove">
 	
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -35,10 +36,11 @@
 		</intent>
 	</queries>
 	
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	
 	<application
 		android:name=".core.RooveApp"
-		android:allowBackup="true"
-		android:fullBackupContent="@xml/backup_descriptor"
 		android:icon="@mipmap/ic_launcher"
 		android:label="@string/app_name"
 		android:roundIcon="@mipmap/ic_launcher_round"
@@ -47,10 +49,11 @@
 
 		<activity
 			android:name=".ui.MainActivity"
-			android:label="@string/app_name"
 			android:screenOrientation="portrait"
 			android:windowSoftInputMode="adjustPan"
-			tools:ignore="LockedOrientationActivity">
+			tools:ignore="LockedOrientationActivity"
+			android:exported="true"
+			>
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
@@ -64,6 +67,8 @@
 		<meta-data
 			android:name="com.facebook.sdk.ApplicationId"
 			android:value="@string/facebook_app_id" />
+		<meta-data android:name="com.facebook.sdk.ClientToken"
+			android:value="@string/facebook_client_token"/>
 		<meta-data
 			android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled"
 			android:value="false" />
@@ -77,7 +82,7 @@
 		<activity
 			android:name="com.facebook.FacebookActivity"
 			android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-			android:label="@string/app_name" />
+			/>
 		<activity
 			android:name="com.facebook.CustomTabActivity"
 			android:exported="true">
