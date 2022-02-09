@@ -18,7 +18,6 @@
 
 package com.mmdev.roove.ui.chat
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.domain.PaginationDirection
 import com.mmdev.domain.PaginationDirection.*
@@ -31,13 +30,15 @@ import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 
 /**
  * [chatIsEmpty] used to mark conversation started or not to move partner out of pairs section
  */
-
-class ChatViewModel @ViewModelInject constructor(
+@HiltViewModel
+class ChatViewModel @Inject constructor(
 	private val repo: ChatRepository
 ): BaseViewModel() {
 	

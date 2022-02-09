@@ -18,7 +18,6 @@
 
 package com.mmdev.roove.ui.profile
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.domain.pairs.MatchedUserItem
 import com.mmdev.domain.user.IUserRepository
@@ -29,12 +28,15 @@ import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 /**
  * This is the documentation block about the class
  */
 
-class RemoteRepoViewModel @ViewModelInject constructor(
+@HiltViewModel
+class RemoteRepoViewModel @Inject constructor(
 	private val repo: IUserRepository
 ) : BaseViewModel() {
 	

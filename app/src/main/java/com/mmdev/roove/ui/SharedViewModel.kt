@@ -18,7 +18,6 @@
 
 package com.mmdev.roove.ui
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.data.repository.auth.AuthFlowProvider
 import com.mmdev.domain.conversations.ConversationItem
@@ -29,8 +28,10 @@ import com.mmdev.roove.core.log.logError
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType.AUTHENTICATING
 import com.mmdev.roove.ui.common.errors.MyError
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.concurrent.TimeUnit.*
 import java.util.concurrent.TimeoutException
+import javax.inject.Inject
 
 /**
  * In general, you should strongly prefer passing only the minimal amount of data between destinations.
@@ -42,7 +43,8 @@ import java.util.concurrent.TimeoutException
  * @see https://developer.android.com/guide/navigation/navigation-pass-data
  */
 
-class SharedViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SharedViewModel @Inject constructor(
 	private val authFlow: AuthFlowProvider
 ): BaseViewModel() {
 

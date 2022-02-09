@@ -18,7 +18,6 @@
 
 package com.mmdev.roove.ui.conversations
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.mmdev.domain.PaginationDirection.*
 import com.mmdev.domain.conversations.ConversationItem
@@ -28,9 +27,12 @@ import com.mmdev.roove.ui.MainActivity
 import com.mmdev.roove.ui.common.base.BaseViewModel
 import com.mmdev.roove.ui.common.errors.ErrorType
 import com.mmdev.roove.ui.common.errors.MyError
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
+import javax.inject.Inject
 
-class ConversationsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class ConversationsViewModel @Inject constructor(
 	private val repo: ConversationsRepository
 ): BaseViewModel() {
 	
