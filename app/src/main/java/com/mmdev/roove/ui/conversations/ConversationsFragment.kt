@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2021. roove
+ * Copyright (C) 2022. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.roove.ui.conversations.view
+package com.mmdev.roove.ui.conversations
 
 import android.os.Bundle
 import android.view.View
@@ -32,7 +32,6 @@ import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentConversationsBinding
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.SwipeToDeleteCallback
-import com.mmdev.roove.ui.conversations.ConversationsViewModel
 import com.mmdev.roove.utils.extensions.showToastText
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -70,9 +69,9 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel, FragmentConver
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		
-		mViewModel.getDeleteConversationStatus().observe(this, {
+		mViewModel.getDeleteConversationStatus().observe(this) {
 			if (it) requireContext().showToastText(getString(R.string.toast_text_delete_success))
-		})
+		}
 		
 		observeInitConversations()
 		observeNextConversations()
@@ -116,16 +115,16 @@ class ConversationsFragment: BaseFragment<ConversationsViewModel, FragmentConver
 
 	}
 
-	private fun observeInitConversations() = mViewModel.initConversations.observe(this, {
+	private fun observeInitConversations() = mViewModel.initConversations.observe(this) {
 		mConversationsAdapter.setNewData(it)
-	})
+	}
 	
-	private fun observeNextConversations() = mViewModel.nextConversations.observe(this, {
+	private fun observeNextConversations() = mViewModel.nextConversations.observe(this) {
 		mConversationsAdapter.insertNextData(it)
-	})
+	}
 	
-	private fun observePrevConversations() = mViewModel.prevConversations.observe(this, {
+	private fun observePrevConversations() = mViewModel.prevConversations.observe(this) {
 		mConversationsAdapter.insertPreviousData(it)
-	})
+	}
 	
 }

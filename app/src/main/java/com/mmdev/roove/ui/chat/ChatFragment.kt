@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2021. roove
+ * Copyright (C) 2022. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.roove.ui.chat.view
+package com.mmdev.roove.ui.chat
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
@@ -50,7 +50,6 @@ import com.mmdev.roove.core.permissions.onRequestPermissionsResultReceived
 import com.mmdev.roove.core.permissions.requestAppPermissions
 import com.mmdev.roove.databinding.FragmentChatBinding
 import com.mmdev.roove.ui.MainActivity
-import com.mmdev.roove.ui.chat.ChatViewModel
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.extensions.hideKeyboard
@@ -212,8 +211,7 @@ class ChatFragment : BaseFragment<ChatViewModel, FragmentChatBinding>(
 		//if message contains photo then it opens in fullscreen dialog
 		mChatAdapter.setOnAttachedPhotoClickListener { view, position, photoItem ->
 			photoItem?.fileUrl?.let {
-				FullScreenDialogFragment
-					.newInstance(it)
+				FullScreenDialogFragment.newInstance(it)
 					.show(childFragmentManager, FullScreenDialogFragment::class.java.canonicalName)
 			}
 		}

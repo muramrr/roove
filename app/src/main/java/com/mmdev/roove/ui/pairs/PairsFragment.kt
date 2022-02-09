@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2021. roove
+ * Copyright (C) 2022. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.roove.ui.pairs.view
+package com.mmdev.roove.ui.pairs
 
 import android.os.Bundle
 import android.view.View
@@ -24,11 +24,9 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mmdev.domain.conversations.ConversationItem
 import com.mmdev.roove.R
-import com.mmdev.roove.core.log.logWtf
 import com.mmdev.roove.databinding.FragmentPairsBinding
 import com.mmdev.roove.ui.common.base.BaseFragment
 import com.mmdev.roove.ui.common.custom.GridItemDecoration
-import com.mmdev.roove.ui.pairs.PairsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -45,12 +43,10 @@ class PairsFragment: BaseFragment<PairsViewModel, FragmentPairsBinding>(
 	private val mPairsAdapter = PairsAdapter().apply {
 		
 		setLoadNextListener { matchDate, page ->
-			logWtf(TAG, "$page")
 			mViewModel.loadNextMatchedUsers(matchDate, page)
 		}
 		
 		setLoadPrevListener { page ->
-			logWtf(TAG, "$page")
 			mViewModel.loadPrevMatchedUsers(page)
 		}
 		
@@ -83,15 +79,15 @@ class PairsFragment: BaseFragment<PairsViewModel, FragmentPairsBinding>(
 	}
 	
 	
-	private fun observeInitPairs() = mViewModel.initPairs.observe(this, {
+	private fun observeInitPairs() = mViewModel.initPairs.observe(this) {
 		mPairsAdapter.setNewData(it)
-	})
+	}
 	
-	private fun observeNextPairs() = mViewModel.nextPairs.observe(this, {
+	private fun observeNextPairs() = mViewModel.nextPairs.observe(this) {
 		mPairsAdapter.insertNextData(it)
-	})
+	}
 	
-	private fun observePrevPairs() = mViewModel.prevPairs.observe(this, {
+	private fun observePrevPairs() = mViewModel.prevPairs.observe(this) {
 		mPairsAdapter.insertPreviousData(it)
-	})
+	}
 }

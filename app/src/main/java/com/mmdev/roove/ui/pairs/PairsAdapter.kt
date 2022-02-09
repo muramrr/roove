@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2021. roove
+ * Copyright (C) 2022. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,24 +16,26 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.roove.ui.conversations.view
+package com.mmdev.roove.ui.pairs
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import com.mmdev.domain.conversations.ConversationItem
+import com.mmdev.domain.pairs.MatchedUserItem
 import com.mmdev.roove.BR
-import com.mmdev.roove.databinding.ItemConversationBinding
+import com.mmdev.roove.databinding.ItemPairBinding
+import com.mmdev.roove.ui.pairs.PairsAdapter.ViewHolder
 import java.util.*
 
-class ConversationsAdapter(
-	private var data: MutableList<ConversationItem> = mutableListOf()
-): RecyclerView.Adapter<ConversationsAdapter.ViewHolder>() {
+
+class PairsAdapter(
+	private var data: MutableList<MatchedUserItem> = mutableListOf()
+): RecyclerView.Adapter<ViewHolder>() {
 	
 	private companion object{
 		private const val FIRST_POS = 0
-		private const val ITEMS_PER_PAGE = 20
+		private const val ITEMS_PER_PAGE = 10
 		private const val OPTIMAL_ITEMS_COUNT = ITEMS_PER_PAGE * 2
 	}
 	private var startPos = 0
@@ -48,38 +50,46 @@ class ConversationsAdapter(
 			if (value > 1) pageTop = value - 1
 			field = value
 		}
+		get() = if (field < 0) 0 else field
 	private var isLastPage = false
 	
 	
 	
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-		ItemConversationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-	)
+	
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+		val binding = ItemPairBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+		binding.root.post { binding.root.layoutParams.height = parent.height / 2 - 100 }
+		return ViewHolder(binding)
+	}
 	
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(data[position])
 	
 	override fun getItemCount() = data.size
 	
-	fun getItem(position: Int) = data[position]
 	
-	private var mClickListener: ((ConversationItem, Int) -> Unit)? = null
+	private var mClickListener: ((MatchedUserItem, Int) -> Unit)? = null
+	
 	// allows clicks events to be caught
-	fun setOnItemClickListener(listener: (ConversationItem, Int) -> Unit) { mClickListener = listener }
-	
+	fun setOnItemClickListener(listener: (MatchedUserItem, Int) -> Unit) {
+		mClickListener = listener
+	}
 	
 	private var loadPrevListener: ((Int) -> Unit)? = null
 	private var loadNextListener: ((Date, Int) -> Unit)? = null
 	
 	fun setLoadPrevListener(listener: (Int) -> Unit) { loadPrevListener = listener }
 	fun setLoadNextListener(listener: (Date, Int) -> Unit) { loadNextListener = listener }
-
-	fun setNewData(newData: List<ConversationItem>) {
+	
+	
+	fun setNewData(newData: List<MatchedUserItem>) {
 		data.clear()
 		data.addAll(newData)
+		itemsLoaded = newData.size
+		//data = newData as MutableList<MatchedUserItem>
 		notifyDataSetChanged()
 	}
 	
-	fun insertPreviousData(topData: List<ConversationItem>) {
+	fun insertPreviousData(topData: List<MatchedUserItem>) {
 		//update offsets
 		isLastPage = false
 		if (topData.size == ITEMS_PER_PAGE) pageBottom = pageTop
@@ -88,7 +98,7 @@ class ConversationsAdapter(
 		notifyItemRangeInserted(FIRST_POS, topData.size)
 		
 		if (data.size > OPTIMAL_ITEMS_COUNT) {
-			val shouldBeRemovedCount = data.size - OPTIMAL_ITEMS_COUNT
+			val shouldBeRemovedCount = ITEMS_PER_PAGE
 			data = data.dropLast(shouldBeRemovedCount).toMutableList()
 			itemsLoaded -= shouldBeRemovedCount
 			notifyItemRangeRemoved((data.size - 1), shouldBeRemovedCount)
@@ -96,7 +106,7 @@ class ConversationsAdapter(
 	}
 	
 	
-	fun insertNextData(bottomData: List<ConversationItem>) {
+	fun insertNextData(bottomData: List<MatchedUserItem>) {
 		//update offsets
 		pageBottom++
 		isLastPage = bottomData.size != ITEMS_PER_PAGE
@@ -106,14 +116,10 @@ class ConversationsAdapter(
 		itemsLoaded += bottomData.size
 		notifyItemRangeInserted(startPos, bottomData.size)
 		if (data.size > OPTIMAL_ITEMS_COUNT) {
-			data = data.drop(ITEMS_PER_PAGE).toMutableList()
-			notifyItemRangeRemoved(FIRST_POS, ITEMS_PER_PAGE)
+			val shouldBeRemovedCount = data.size - OPTIMAL_ITEMS_COUNT
+			data = data.drop(shouldBeRemovedCount).toMutableList()
+			notifyItemRangeRemoved(FIRST_POS, shouldBeRemovedCount)
 		}
-	}
-
-	fun removeAt(position: Int) {
-		data.removeAt(position)
-		notifyItemRemoved(position)
 	}
 	
 	inner class ViewHolder(private val binding: ViewDataBinding):
@@ -127,17 +133,16 @@ class ConversationsAdapter(
 			}
 		}
 		
-		fun bind(item: ConversationItem) {
-			if (adapterPosition > 9 && adapterPosition == (data.size - 5) && !isLastPage)
-				loadNextListener?.invoke(data.last().lastMessageTimestamp!!, pageBottom + 1)
+		fun bind(item: MatchedUserItem) {
+			if (adapterPosition > 5 && adapterPosition == (data.size - 2) && !isLastPage)
+				loadNextListener?.invoke(data.last().matchedDate, pageBottom + 1)
 			
-			if (itemsLoaded >= data.size && adapterPosition == 1)
+			if (itemsLoaded >= data.size && adapterPosition == 1 && pageTop > 0)
 				loadPrevListener?.invoke(pageTop - 1)
-			
-			
 			
 			binding.setVariable(BR.bindItem, item)
 			binding.executePendingBindings()
 		}
 	}
+	
 }

@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2021. roove
+ * Copyright (C) 2022. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.roove.ui.chat.view
+package com.mmdev.roove.ui.chat
 
 
 import android.view.LayoutInflater
@@ -30,7 +30,7 @@ import com.mmdev.domain.chat.MessageItem
 import com.mmdev.domain.photo.PhotoItem
 import com.mmdev.roove.R
 import com.mmdev.roove.core.glide.GlideApp
-import com.mmdev.roove.ui.chat.view.ChatAdapter.ChatViewHolder
+import com.mmdev.roove.ui.chat.ChatAdapter.ChatViewHolder
 
 class ChatAdapter(
 	private val data: MutableList<MessageItem> = mutableListOf()
