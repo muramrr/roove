@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2021. roove
+ * Copyright (C) 2022. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.roove.ui.cards.view
+package com.mmdev.roove.ui.cards
 
 import android.os.Bundle
 import android.view.View
@@ -27,7 +27,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentCardsBinding
-import com.mmdev.roove.ui.cards.CardsViewModel
 import com.mmdev.roove.ui.cards.CardsViewModel.SwipeAction.*
 import com.mmdev.roove.ui.common.ImagePagerAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
@@ -132,8 +131,8 @@ class CardsFragment: BaseFragment<CardsViewModel, FragmentCardsBinding>(
 		if (it != null) showMatchDialog(it)
 	})
 	private fun showMatchDialog(userItem: UserItem) = MatchDialogFragment.newInstance(
-		userItem.baseUserInfo.name, userItem.baseUserInfo.mainPhotoUrl
-	).show(childFragmentManager, MatchDialogFragment::class.java.canonicalName)
+        userItem.baseUserInfo.name, userItem.baseUserInfo.mainPhotoUrl
+    ).show(childFragmentManager, MatchDialogFragment::class.java.canonicalName)
 	
 	
 }

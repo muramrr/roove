@@ -61,7 +61,7 @@
 
 	<!-- main pairs fragment-->
 	<fragment android:id="@+id/pairsFragment"
-		android:name="com.mmdev.roove.ui.pairs.view.PairsFragment"
+		android:name="com.mmdev.roove.ui.pairs.PairsFragment"
 		tools:layout="@layout/fragment_pairs" >
 
 		<action android:id="@+id/action_pairs_to_profileFragment"
@@ -86,7 +86,7 @@
 
 	<!-- main cards fragment-->
 	<fragment android:id="@+id/cardsFragment"
-		android:name="com.mmdev.roove.ui.cards.view.CardsFragment"
+		android:name="com.mmdev.roove.ui.cards.CardsFragment"
 		android:label="Cards"
 		tools:layout="@layout/fragment_cards" >
 
@@ -109,7 +109,7 @@
 
 	<!-- main conversations fragment-->
 	<fragment android:id="@+id/conversationsFragment"
-		android:name="com.mmdev.roove.ui.conversations.view.ConversationsFragment"
+		android:name="com.mmdev.roove.ui.conversations.ConversationsFragment"
 		tools:layout="@layout/fragment_conversations" >
 
 		<action android:id="@+id/action_conversations_to_chatFragment"
@@ -146,7 +146,7 @@
 
 	<!-- secondary profile view fragment-->
 	<fragment android:id="@+id/profileFragment"
-		android:name="com.mmdev.roove.ui.profile.view.ProfileFragment"
+		android:name="com.mmdev.roove.ui.profile.ProfileFragment"
 		tools:layout="@layout/fragment_profile">
 
 		<argument
@@ -171,7 +171,7 @@
 
 	<!-- secondary conversations chat fragment-->
 	<fragment android:id="@+id/chatFragment"
-		android:name="com.mmdev.roove.ui.chat.view.ChatFragment"
+		android:name="com.mmdev.roove.ui.chat.ChatFragment"
 		tools:layout="@layout/fragment_chat">
 
 		<action android:id="@+id/action_chat_to_profileFragment"

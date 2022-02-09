@@ -1,6 +1,6 @@
 /*
  * Created by Andrii Kovalchuk
- * Copyright (C) 2021. roove
+ * Copyright (C) 2022. roove
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see https://www.gnu.org/licenses
  */
 
-package com.mmdev.roove.ui.profile.view
+package com.mmdev.roove.ui.profile
 
 import android.os.Bundle
 import android.view.Gravity
@@ -26,15 +26,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mmdev.domain.user.data.ReportType.DISRESPECTFUL_BEHAVIOR
-import com.mmdev.domain.user.data.ReportType.FAKE
-import com.mmdev.domain.user.data.ReportType.INELIGIBLE_PHOTOS
+import com.mmdev.domain.user.data.ReportType.*
 import com.mmdev.domain.user.data.UserItem
 import com.mmdev.roove.R
 import com.mmdev.roove.databinding.FragmentProfileBinding
 import com.mmdev.roove.ui.common.ImagePagerAdapter
 import com.mmdev.roove.ui.common.base.BaseFragment
-import com.mmdev.roove.ui.profile.RemoteRepoViewModel
 import com.mmdev.roove.utils.extensions.observeOnce
 import com.mmdev.roove.utils.extensions.showToastText
 import dagger.hilt.android.AndroidEntryPoint
