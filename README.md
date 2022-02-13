@@ -1,4 +1,4 @@
-# roove  [![GitHub license](https://img.shields.io/github/license/muramrr/roove)](https://github.com/muramrr/roove/blob/master/LICENSE) [![](https://img.shields.io/badge/minSDK-21-blue)](https://shields.io/) [![](https://img.shields.io/badge/targetSDK-30-dark_green)](https://shields.io/)
+# roove  [![GitHub license](https://img.shields.io/github/license/muramrr/roove)](https://github.com/muramrr/roove/blob/master/LICENSE) [![](https://img.shields.io/badge/minSDK-21-blue)](https://shields.io/) [![](https://img.shields.io/badge/targetSDK-31-dark_green)](https://shields.io/)
 
 **Dating app (tinder-clone).**
 
