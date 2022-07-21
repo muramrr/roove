@@ -1,5 +1,8 @@
 # roove  [![GitHub license](https://img.shields.io/github/license/muramrr/roove)](https://github.com/muramrr/roove/blob/master/LICENSE) [![](https://img.shields.io/badge/minSDK-21-blue)](https://shields.io/) [![](https://img.shields.io/badge/targetSDK-31-dark_green)](https://shields.io/)
 
+## ATTENTION
+I've tired to follow facebook new policies each 3 months and appeal my app on review to enable facebook login. I don't give a shit how facebook being so stupid so they can't test my app. So, facebook login will not work anymore, I don't want to support this feature in my app. It is easy to migrate to Google login, so you can use it for sure.
+
 **Dating app (tinder-clone).**
 
 ![Logo](https://github.com/muramrr/roove/blob/master/media/roove_logo_1024_500.png)
